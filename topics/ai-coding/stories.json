@@ -3,8 +3,8 @@
  "basis": {
   "claims": 385,
   "sources": 216,
-  "studies": 24,
-  "candidates": 67
+  "studies": 27,
+  "candidates": 66
  },
  "stories": [
   {
@@ -4020,479 +4020,6 @@
    }
   },
   {
-   "id": "gap:code-review-tools-catch-real-bugs",
-   "kind": "gap",
-   "title": "Do AI Code Reviewers Catch Bugs Humans Miss?",
-   "alternates": [
-    "Twelve Testimonials and No Measurement: AI Code Review",
-    "What Would It Take to Prove an AI Reviewer Works?"
-   ],
-   "question": "Do AI code review tools catch real bugs that human reviewers miss?",
-   "whyWatch": "Twelve sources, among them a long-time open-source maintainer, report real bugs found by AI reviewers; none reports how many it missed or how many of its flags were wrong, which is what a team deciding to adopt one needs.",
-   "tension": "Vivid anecdotes of caught bugs against no measured hit rate, miss rate or false-positive rate.",
-   "evidenceNeeded": "A study running AI reviewers over pull requests that human review approved, counting confirmed defects found (for example against later bug-fix commits), with the false-positive rate.",
-   "evidenceAvailable": [],
-   "gaps": [
-    "No study in the corpus checks the claim; the story is the search for evidence.",
-    "Has anyone measured whether AI code review tools catch real bugs that human reviewers miss?",
-    "Which study or dataset would settle it?"
-   ],
-   "premise": "12 sources assert \"AI code review tools catch real bugs that human reviewers miss\", and no study in the corpus bears on it. The story is the search for evidence, not a verdict.",
-   "claims": [
-    "ai-coding/code-review-tools-catch-real-bugs"
-   ],
-   "related": [
-    "ai-coding/current-code-review-tools-trade-precision"
-   ],
-   "arc": {
-    "hook": "How often this gets said, and how confidently.",
-    "conflict": "Ask for the evidence and find none in the corpus.",
-    "evidence": "What the sources offer instead (anecdote, authority, mechanism) and what a real test would need.",
-    "resolution": "Absence of evidence is not evidence of absence: what would change the picture.",
-    "takeaway": "How to treat the claim until it is checked."
-   },
-   "coherence": {
-    "score": 0.8,
-    "basis": "review",
-    "explanation": "One question about one practice: do AI reviewers find real defects that human review let through?"
-   },
-   "scores": {
-    "coherence": 0.8,
-    "relevance": 0.89,
-    "curiosity": 0.5,
-    "stakes": 0.7,
-    "depth": 0.35,
-    "originality": 1,
-    "evidence": 0,
-    "editorial": 0.65,
-    "overall": 0.39,
-    "explanation": "editorial 0.65 = mean of coherence 0.8 (review), relevance 0.89 (14 sources, 13 channels), curiosity 0.5 (gap), stakes 0.7 (lean: pro), depth 0.35 (0 studies, 1 claim); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: No study in the corpus checks the claim; the story is the search for evidence.",
-   "blocking": [
-    "No study in the corpus checks the claim; the story is the search for evidence."
-   ],
-   "reviewed": true,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "12 sources claim \"AI code review tools catch real bugs that human reviewers miss\"; no study in the corpus has checked it.",
-     "kind": "attribution",
-     "modality": "plain",
-     "status": "supported",
-     "decision": "approved",
-     "review": false,
-     "verbatim": true,
-     "strength": 0,
-     "independent": 0,
-     "supporting": [],
-     "contradicting": [],
-     "qualifying": [],
-     "context": [
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "3KAI__5dUn0"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Context Engineering & Coding Agents with Cursor",
-       "verdict": null,
-       "confidence": null,
-       "note": "it actually caught a lot of bugs that we missed on code reviews"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "6wYSwZ20NJU"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Open Source security in spite of AI - Daniel Stenberg",
-       "verdict": null,
-       "confidence": null,
-       "note": "I have fixed more than 100 bugs found by these tools when I started to use them"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "86UczUYjVQ0"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "AI-Accelerated Development: Practical Applications for Embedded Systems Engineers (Christophe Conil)",
-       "verdict": null,
-       "confidence": null,
-       "note": "he found two bugs, critical bug line 223 where I put uh humidity instead of outside air quality"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "KpbMfb_6EGs"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Claude Code Alternatives in 2026: Cursor, Qodo & GitHub Copilot Compared",
-       "verdict": null,
-       "confidence": null,
-       "note": "It says that there are open AI key exposed"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "NYFGCESmikA"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "DHH: Future of Programming, AI, Agentic Engineering, Vibe Coding & Linux | Lex Fridman Podcast #501",
-       "verdict": null,
-       "confidence": null,
-       "note": "the PRs that have been reviewed by agents caused far fewer issues in production"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "PlyzvM--xbQ"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Open-source, complexity & AI coding 🔧 — with Salvatore \"Antirez\" Sanfilippo",
-       "verdict": null,
-       "confidence": null,
-       "note": "I am 100% sure that AI can routinely find bugs before of users in complex C projects."
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "T14uF2J89eU"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Codex CLI: Everything You Need in 12 mins",
-       "verdict": null,
-       "confidence": null,
-       "note": "Codex came back with actionable items, and also sorted by priorities"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "XyQ4ZTS5dGw"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Agentic Engineering in Action with Mitchell Hashimoto",
-       "verdict": null,
-       "confidence": null,
-       "note": "oh, I actually forgot to update the code. Um, so it's found bugs that way."
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "antirez-news-154"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Coding with LLMs in the summer of 2025 (an update) - <antirez>",
-       "verdict": null,
-       "confidence": null,
-       "note": "many were just removed immediately by Gemini / Claude code reviews."
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "antirez-news-169"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Control the ideas, not the code - <antirez>",
-       "verdict": null,
-       "confidence": null,
-       "note": "Fable and GPT 5.6 reviews to the sorted sets memory saving are going to spot ways more errors and subtle race conditions"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "nolanlawson-using-ai-to-write-better-code-more-slowly"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Using AI to write better code more slowly",
-       "verdict": null,
-       "confidence": null,
-       "note": "the latest public models from Anthropic and OpenAI are good enough to find plenty of bugs in an unscrutinized codebase."
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "qcYHD3KruPI"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Comparing all AI Pull Request Review tools to find the best one",
-       "verdict": null,
-       "confidence": null,
-       "note": "they are definitely here to stay. They were all useful to some extent"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "rCIZflYEpEk"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Coding with AI episode 3: fixing a real world bug in Redis vector sets with LLMs",
-       "verdict": null,
-       "confidence": null,
-       "note": "it immediately found my bug, which was awesome."
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "wcRR5P0S2Us"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "My AI Coding Workflow That Actually Works",
-       "verdict": null,
-       "confidence": null,
-       "note": "you forgot about what happens if there's no audio"
-      }
-     ],
-     "problems": [],
-     "limitations": [
-      "Reports what the sources said, not whether it is true."
-     ],
-     "suggestions": [],
-     "explanation": "supported (approved): no direct support, 14 source statements."
-    },
-    "findings": [
-     {
-      "role": "belief",
-      "validation": {
-       "id": "f0",
-       "text": "12 sources claim \"AI code review tools catch real bugs that human reviewers miss\"; no study in the corpus has checked it.",
-       "kind": "attribution",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "3KAI__5dUn0"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Context Engineering & Coding Agents with Cursor",
-         "verdict": null,
-         "confidence": null,
-         "note": "it actually caught a lot of bugs that we missed on code reviews"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "6wYSwZ20NJU"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Open Source security in spite of AI - Daniel Stenberg",
-         "verdict": null,
-         "confidence": null,
-         "note": "I have fixed more than 100 bugs found by these tools when I started to use them"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "86UczUYjVQ0"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "AI-Accelerated Development: Practical Applications for Embedded Systems Engineers (Christophe Conil)",
-         "verdict": null,
-         "confidence": null,
-         "note": "he found two bugs, critical bug line 223 where I put uh humidity instead of outside air quality"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "KpbMfb_6EGs"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Claude Code Alternatives in 2026: Cursor, Qodo & GitHub Copilot Compared",
-         "verdict": null,
-         "confidence": null,
-         "note": "It says that there are open AI key exposed"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "NYFGCESmikA"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "DHH: Future of Programming, AI, Agentic Engineering, Vibe Coding & Linux | Lex Fridman Podcast #501",
-         "verdict": null,
-         "confidence": null,
-         "note": "the PRs that have been reviewed by agents caused far fewer issues in production"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "PlyzvM--xbQ"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Open-source, complexity & AI coding 🔧 — with Salvatore \"Antirez\" Sanfilippo",
-         "verdict": null,
-         "confidence": null,
-         "note": "I am 100% sure that AI can routinely find bugs before of users in complex C projects."
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "T14uF2J89eU"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Codex CLI: Everything You Need in 12 mins",
-         "verdict": null,
-         "confidence": null,
-         "note": "Codex came back with actionable items, and also sorted by priorities"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "XyQ4ZTS5dGw"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Agentic Engineering in Action with Mitchell Hashimoto",
-         "verdict": null,
-         "confidence": null,
-         "note": "oh, I actually forgot to update the code. Um, so it's found bugs that way."
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "antirez-news-154"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Coding with LLMs in the summer of 2025 (an update) - <antirez>",
-         "verdict": null,
-         "confidence": null,
-         "note": "many were just removed immediately by Gemini / Claude code reviews."
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "antirez-news-169"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Control the ideas, not the code - <antirez>",
-         "verdict": null,
-         "confidence": null,
-         "note": "Fable and GPT 5.6 reviews to the sorted sets memory saving are going to spot ways more errors and subtle race conditions"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "nolanlawson-using-ai-to-write-better-code-more-slowly"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Using AI to write better code more slowly",
-         "verdict": null,
-         "confidence": null,
-         "note": "the latest public models from Anthropic and OpenAI are good enough to find plenty of bugs in an unscrutinized codebase."
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "qcYHD3KruPI"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Comparing all AI Pull Request Review tools to find the best one",
-         "verdict": null,
-         "confidence": null,
-         "note": "they are definitely here to stay. They were all useful to some extent"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "rCIZflYEpEk"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Coding with AI episode 3: fixing a real world bug in Redis vector sets with LLMs",
-         "verdict": null,
-         "confidence": null,
-         "note": "it immediately found my bug, which was awesome."
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "wcRR5P0S2Us"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "My AI Coding Workflow That Actually Works",
-         "verdict": null,
-         "confidence": null,
-         "note": "you forgot about what happens if there's no audio"
-        }
-       ],
-       "problems": [],
-       "limitations": [
-        "Reports what the sources said, not whether it is true."
-       ],
-       "suggestions": [],
-       "explanation": "supported (approved): no direct support, 14 source statements."
-      }
-     }
-    ]
-   }
-  },
-  {
    "id": "gap:length-tasks-agents-can-complete-autonomously",
    "kind": "gap",
    "title": "Are AI Agents Really Doubling Every Seven Months?",
@@ -4776,6 +4303,243 @@
        ],
        "suggestions": [],
        "explanation": "supported (approved): no direct support, 7 source statements."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "gap:open-weight-coding-models-now-handle",
+   "kind": "gap",
+   "title": "Can a Free Open Model Do Your Everyday Coding?",
+   "alternates": [
+    "Open-Weight vs Closed Coding Models: How Big Is the Gap?",
+    "Do You Still Need to Pay for the Best Coding Model?"
+   ],
+   "question": "Are free open-weight models now good enough for everyday coding?",
+   "whyWatch": "Five sources say open-weight models now handle routine coding and only trail at the top, which decides whether a team can self-host instead of paying per token; none shows a measurement, and vendor leaderboard posts are the only numbers in circulation.",
+   "tension": "Benchmark announcements say the gap has nearly closed; the sources who say so offer impressions, and nothing in the corpus tests either model family on real work.",
+   "evidenceNeeded": "An independent evaluation running open-weight and closed models on the same realistic coding tasks, with contamination controls, reporting success rates on routine tasks and the gap at the hardest ones.",
+   "evidenceAvailable": [],
+   "gaps": [
+    "No study in the corpus checks the claim; the story is the search for evidence.",
+    "Has anyone measured whether open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models?",
+    "Which study or dataset would settle it?"
+   ],
+   "premise": "5 sources assert \"Open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models\", and no study in the corpus bears on it. The story is the search for evidence, not a verdict.",
+   "claims": [
+    "ai-coding/open-weight-coding-models-now-handle"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "How often this gets said, and how confidently.",
+    "conflict": "Ask for the evidence and find none in the corpus.",
+    "evidence": "What the sources offer instead (anecdote, authority, mechanism) and what a real test would need.",
+    "resolution": "Absence of evidence is not evidence of absence: what would change the picture.",
+    "takeaway": "How to treat the claim until it is checked."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "review",
+    "explanation": "One question: can a free, self-hostable model do everyday coding work, and how far behind the best closed models is it?"
+   },
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.72,
+    "curiosity": 0.5,
+    "stakes": 0.7,
+    "depth": 0.35,
+    "originality": 1,
+    "evidence": 0,
+    "editorial": 0.61,
+    "overall": 0.37,
+    "explanation": "editorial 0.61 = mean of coherence 0.8 (review), relevance 0.72 (8 sources, 8 channels), curiosity 0.5 (gap), stakes 0.7 (lean: pro), depth 0.35 (0 studies, 1 claim); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: No study in the corpus checks the claim; the story is the search for evidence.",
+   "blocking": [
+    "No study in the corpus checks the claim; the story is the search for evidence."
+   ],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "5 sources claim \"Open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models\"; no study in the corpus has checked it.",
+     "kind": "attribution",
+     "modality": "plain",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [],
+     "context": [
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/open-weight-coding-models-now-handle",
+        "source": "hFzapS8rhEs"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Two People Vibe Coded a $1.8B Company. Yes, This is AI Takeoff.",
+       "verdict": null,
+       "confidence": null,
+       "note": "85.2 compares to 92% for GPT 5.4 ... So, it's not all the way there, but these are tiny models"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/open-weight-coding-models-now-handle",
+        "source": "tFffUnSq7VA"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Birgitta Böckeler - State of Play: AI Coding Assistants - AI Native DevCon June 2026",
+       "verdict": null,
+       "confidence": null,
+       "note": "even that model was still struggling a bit with tool calling, which is really crucial for our workflows"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/open-weight-coding-models-now-handle",
+        "source": "ulfZwEa1x_o"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "DeepSeek R1 vs Kimi K2 vs Qwen3 Coder vs GLM 4.5 - Head-to-Head Testing!",
+       "verdict": null,
+       "confidence": null,
+       "note": "every single one of these is something that is open source ... All of the results were acceptable"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/open-weight-coding-models-now-handle",
+        "source": "zanlib-do-you-still-read-the-code"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "\"Do You Still Read the Code?\" • zanlib",
+       "verdict": null,
+       "confidence": null,
+       "note": "we have access to many providers of open-weights models of high enough quality to trundle along if it comes to it"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/open-weight-coding-models-now-handle",
+        "source": "zuJyJP517Uw"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Steve Yegge's Vibe Coding Manifesto: Why Claude Code Isn't It & What Comes After the IDE",
+       "verdict": null,
+       "confidence": null,
+       "note": "they're seven months behind and that gap is gradually narrowing"
+      }
+     ],
+     "problems": [],
+     "limitations": [
+      "Reports what the sources said, not whether it is true."
+     ],
+     "suggestions": [],
+     "explanation": "supported (approved): no direct support, 5 source statements."
+    },
+    "findings": [
+     {
+      "role": "belief",
+      "validation": {
+       "id": "f0",
+       "text": "5 sources claim \"Open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models\"; no study in the corpus has checked it.",
+       "kind": "attribution",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/open-weight-coding-models-now-handle",
+          "source": "hFzapS8rhEs"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Two People Vibe Coded a $1.8B Company. Yes, This is AI Takeoff.",
+         "verdict": null,
+         "confidence": null,
+         "note": "85.2 compares to 92% for GPT 5.4 ... So, it's not all the way there, but these are tiny models"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/open-weight-coding-models-now-handle",
+          "source": "tFffUnSq7VA"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Birgitta Böckeler - State of Play: AI Coding Assistants - AI Native DevCon June 2026",
+         "verdict": null,
+         "confidence": null,
+         "note": "even that model was still struggling a bit with tool calling, which is really crucial for our workflows"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/open-weight-coding-models-now-handle",
+          "source": "ulfZwEa1x_o"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "DeepSeek R1 vs Kimi K2 vs Qwen3 Coder vs GLM 4.5 - Head-to-Head Testing!",
+         "verdict": null,
+         "confidence": null,
+         "note": "every single one of these is something that is open source ... All of the results were acceptable"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/open-weight-coding-models-now-handle",
+          "source": "zanlib-do-you-still-read-the-code"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "\"Do You Still Read the Code?\" • zanlib",
+         "verdict": null,
+         "confidence": null,
+         "note": "we have access to many providers of open-weights models of high enough quality to trundle along if it comes to it"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/open-weight-coding-models-now-handle",
+          "source": "zuJyJP517Uw"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Steve Yegge's Vibe Coding Manifesto: Why Claude Code Isn't It & What Comes After the IDE",
+         "verdict": null,
+         "confidence": null,
+         "note": "they're seven months behind and that gap is gradually narrowing"
+        }
+       ],
+       "problems": [],
+       "limitations": [
+        "Reports what the sources said, not whether it is true."
+       ],
+       "suggestions": [],
+       "explanation": "supported (approved): no direct support, 5 source statements."
       }
      }
     ]

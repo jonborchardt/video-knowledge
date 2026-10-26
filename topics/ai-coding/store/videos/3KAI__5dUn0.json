@@ -106,6 +106,30 @@
           "note": "AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.",
           "confidence": 0.65,
           "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Run against 26,400 real PRs (78% of the ticket-generating ones had passed CI and a human approval), Claude Code and Cursor BugBot flagged only a small share of the 5,594 confirmed customer-facing failures (9% overlap with the vendor's own flags), and most of what they flagged never became a customer ticket within 30 days; so AI reviewers caught some defects that passed human review but missed most, in a vendor benchmark promoting a competing product whose failure set its own tool selected.",
+          "source": "ai-coding/sources/playerzero-deja-vu-benchmark.txt#L61-L75",
+          "date": "2026-10-26"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "On 1,000 verified GitHub PRs whose ground truth is the issues human reviewers raised, the best AI review setup reached only 19.38% F1 and most techniques had precision under 10%, so the tools do find some real issues but bury them in false positives; the benchmark scores agreement with what humans found and deliberately removed PRs with issues humans missed, so it cannot show bugs humans miss.",
+          "source": "ai-coding/sources/2509.01494.txt#L794-L809",
+          "date": "2026-10-26"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "In an industrial deployment of an LLM review bot (Qodo PR-Agent) at Beko, 73.8% of 1,408 bot comments on merged PRs were labelled Resolved by authors and 21.3% Won't Fix; authors acted on most comments, but the labels do not separate bugs from typos and style, nor compare against what human reviewers would have caught.",
+          "source": "ai-coding/sources/2412.18531.txt#L392-L405",
+          "date": "2026-10-26"
         }
       ]
     },

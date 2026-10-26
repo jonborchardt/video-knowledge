@@ -580,7 +580,11 @@
           ],
           "note": "AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/2412.18531.txt",
+            "ai-coding/sources/2509.01494.txt",
+            "ai-coding/sources/playerzero-deja-vu-benchmark.txt"
+          ]
         },
         {
           "id": "ai-coding/running-many-coding-agents-parallel-not",
@@ -5303,7 +5307,10 @@
           ],
           "note": "Independent and vendor benchmarks of PR review bots report recall well below 60% and wide precision variation; the specific ranking here is vendor-reported.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/2509.01494.txt",
+            "ai-coding/sources/playerzero-deja-vu-benchmark.txt"
+          ]
         },
         {
           "id": "ai-coding/reviewing-research-implementation-plans-can-replace",
@@ -11160,6 +11167,65 @@
         },
         {
           "claim": {
+            "id": "ai-coding/code-review-tools-catch-real-bugs",
+            "text": "AI code review tools catch real bugs that human reviewers miss",
+            "topic": "ai-coding",
+            "asserted": 12,
+            "denied": 0,
+            "tally": {
+              "right": 11,
+              "wrong": 0,
+              "partly": 0,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "right",
+            "confidence": 0.5,
+            "videos": [
+              "3KAI__5dUn0",
+              "6wYSwZ20NJU",
+              "86UczUYjVQ0",
+              "KpbMfb_6EGs",
+              "NYFGCESmikA",
+              "T14uF2J89eU",
+              "XyQ4ZTS5dGw",
+              "antirez-news-169",
+              "nolanlawson-using-ai-to-write-better-code-more-slowly",
+              "qcYHD3KruPI",
+              "rCIZflYEpEk",
+              "wcRR5P0S2Us"
+            ],
+            "note": "AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/2412.18531.txt",
+              "ai-coding/sources/2509.01494.txt",
+              "ai-coding/sources/playerzero-deja-vu-benchmark.txt"
+            ]
+          },
+          "prior": "right",
+          "evidence": "partly",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "right",
+            "note": "AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.",
+            "confidence": 0.65,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "partly",
+            "confidence": 0.3,
+            "note": "In an industrial deployment of an LLM review bot (Qodo PR-Agent) at Beko, 73.8% of 1,408 bot comments on merged PRs were labelled Resolved by authors and 21.3% Won't Fix; authors acted on most comments, but the labels do not separate bugs from typos and style, nor compare against what human reviewers would have caught.",
+            "source": "ai-coding/sources/2412.18531.txt#L392-L405",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
             "id": "ai-coding/handles-routine-coding-well-but-struggles",
             "text": "AI handles routine coding well but struggles with complex logic that depends on business or system context",
             "topic": "ai-coding",
@@ -12711,6 +12777,54 @@
             "source": "ai-coding/sources/2507.00788.txt#L2603-L2606",
             "confidence": 0.2,
             "date": "2026-10-14"
+          }
+        },
+        {
+          "claim": {
+            "id": "ai-coding/current-code-review-tools-trade-precision",
+            "text": "Current AI code-review tools trade precision against recall, and none catch most real bugs",
+            "topic": "ai-coding",
+            "asserted": 2,
+            "denied": 0,
+            "tally": {
+              "right": 2,
+              "wrong": 0,
+              "partly": 0,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "right",
+            "confidence": 0.5,
+            "videos": [
+              "TixGCWbrDU4",
+              "qcYHD3KruPI"
+            ],
+            "note": "Independent and vendor benchmarks of PR review bots report recall well below 60% and wide precision variation; the specific ranking here is vendor-reported.",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/2509.01494.txt",
+              "ai-coding/sources/playerzero-deja-vu-benchmark.txt"
+            ]
+          },
+          "prior": "right",
+          "evidence": "partly",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "right",
+            "note": "Independent and vendor benchmarks of PR review bots report recall well below 60% and wide precision variation; the specific ranking here is vendor-reported.",
+            "confidence": 0.6,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "partly",
+            "confidence": 0.4,
+            "note": "Recall of the best AI review setup fell from 38.35% on PRs with one human-raised issue to 8.88% on PRs with five or more, while precision stayed roughly between 30% and 44%; it confirms tools miss most real issues in complex PRs, but this passage shows recall dropping with complexity rather than a precision-recall trade-off.",
+            "source": "ai-coding/sources/2509.01494.txt#L884-L895",
+            "date": "2026-10-26"
           }
         },
         {
@@ -14929,40 +15043,6 @@
             "tidINuXB7PA"
           ],
           "note": "Through 2026 evidence points to role change and slower junior hiring, not elimination of the profession; long-run is uncertain.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/code-review-tools-catch-real-bugs",
-          "text": "AI code review tools catch real bugs that human reviewers miss",
-          "topic": "ai-coding",
-          "asserted": 12,
-          "denied": 0,
-          "tally": {
-            "right": 11,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "3KAI__5dUn0",
-            "6wYSwZ20NJU",
-            "86UczUYjVQ0",
-            "KpbMfb_6EGs",
-            "NYFGCESmikA",
-            "T14uF2J89eU",
-            "XyQ4ZTS5dGw",
-            "antirez-news-169",
-            "nolanlawson-using-ai-to-write-better-code-more-slowly",
-            "qcYHD3KruPI",
-            "rCIZflYEpEk",
-            "wcRR5P0S2Us"
-          ],
-          "note": "AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.",
           "source": null,
           "documents": []
         },
@@ -17545,30 +17625,6 @@
             "rUYP4C29yCw"
           ],
           "note": "Model weights are fixed at deployment; persistence relies on external memory or instruction files, which only partly substitute.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/current-code-review-tools-trade-precision",
-          "text": "Current AI code-review tools trade precision against recall, and none catch most real bugs",
-          "topic": "ai-coding",
-          "asserted": 2,
-          "denied": 0,
-          "tally": {
-            "right": 2,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "TixGCWbrDU4",
-            "qcYHD3KruPI"
-          ],
-          "note": "Independent and vendor benchmarks of PR review bots report recall well below 60% and wide precision variation; the specific ranking here is vendor-reported.",
           "source": null,
           "documents": []
         },
@@ -21052,7 +21108,7 @@
       "testable": 7,
       "novelty": 0.3154923507864684,
       "redundancy": 0,
-      "thinEvidence": 0.42857142857142855,
+      "thinEvidence": 0.2857142857142857,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/code-review-tools-catch-real-bugs",
@@ -21064,7 +21120,7 @@
         "ai-coding/running-many-coding-agents-parallel-not"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21371,7 +21427,7 @@
       "testable": 5,
       "novelty": 1.4166666666666665,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.8,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/code-review-complements-but-does-not",
@@ -21381,7 +21437,7 @@
         "ai-coding/tools-correctly-find-bugs-still-usually"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21425,7 +21481,7 @@
       "testable": 11,
       "novelty": 0.3606268731268731,
       "redundancy": 0,
-      "thinEvidence": 0.36363636363636365,
+      "thinEvidence": 0.2727272727272727,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assisted-development-shifts-developer-effort-toward",
@@ -21442,7 +21498,7 @@
         "ai-coding/coding-productivity-gains-appear-only-after",
         "ai-coding/open-weight-coding-models-now-handle"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22175,14 +22231,14 @@
       "testable": 3,
       "novelty": 0.11666666666666667,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.6666666666666666,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/claude-code-more-expensive-rate-limited",
         "ai-coding/code-review-tools-catch-real-bugs"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22468,7 +22524,7 @@
       "testable": 12,
       "novelty": 0.6454365079365079,
       "redundancy": 0,
-      "thinEvidence": 0.5833333333333334,
+      "thinEvidence": 0.5,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/code-review-tools-catch-real-bugs",
@@ -22704,7 +22760,7 @@
       "testable": 11,
       "novelty": 0,
       "redundancy": 0,
-      "thinEvidence": 0.36363636363636365,
+      "thinEvidence": 0.2727272727272727,
       "worthWatching": "superseded by antirez-news-169",
       "right": [
         "ai-coding/broad-proficiency-across-stack-shifts-value",
@@ -22721,7 +22777,7 @@
         "ai-coding/coding-tools-amplify-experienced-engineers-far",
         "ai-coding/developers-overestimate-how-much-tools-speed"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": "antirez-news-169"
     },
     {
@@ -23103,7 +23159,7 @@
       "testable": 5,
       "novelty": 0.3892857142857143,
       "redundancy": 0,
-      "thinEvidence": 0.8,
+      "thinEvidence": 0.6,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/code-review-tools-catch-real-bugs",
@@ -23114,7 +23170,7 @@
       "wrong": [
         "ai-coding/project-instruction-files-claude-agents-rules"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23154,14 +23210,14 @@
       "testable": 2,
       "novelty": 0.28846153846153844,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/current-code-review-tools-trade-precision",
         "ai-coding/giving-model-right-minimal-context-matters"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23630,7 +23686,7 @@
       "testable": 10,
       "novelty": 0.6385010822510823,
       "redundancy": 0,
-      "thinEvidence": 0.4,
+      "thinEvidence": 0.3,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/code-review-tools-catch-real-bugs",
@@ -23910,7 +23966,7 @@
       "testable": 7,
       "novelty": 0,
       "redundancy": 0,
-      "thinEvidence": 0.42857142857142855,
+      "thinEvidence": 0.2857142857142857,
       "worthWatching": "superseded by antirez-news-169",
       "right": [
         "ai-coding/code-review-tools-catch-real-bugs",
@@ -23923,7 +23979,7 @@
       "wrong": [
         "ai-coding/manually-feeding-code-frontier-chat-model"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": "antirez-news-169"
     },
     {
@@ -23939,7 +23995,7 @@
       "testable": 6,
       "novelty": 0.2393939393939394,
       "redundancy": 0,
-      "thinEvidence": 0.42857142857142855,
+      "thinEvidence": 0.2857142857142857,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/code-review-tools-catch-real-bugs",
@@ -25778,7 +25834,7 @@
       "testable": 6,
       "novelty": 0.5502976190476191,
       "redundancy": 0,
-      "thinEvidence": 0.3333333333333333,
+      "thinEvidence": 0.16666666666666666,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/agents-let-engineers-take-refactoring-tech",
@@ -25789,7 +25845,7 @@
         "ai-coding/system-design-architecture-judgment-remain-human"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25972,14 +26028,14 @@
       "testable": 3,
       "novelty": 0.2916666666666667,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.3333333333333333,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/code-review-tools-catch-real-bugs",
         "ai-coding/current-code-review-tools-trade-precision"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26049,7 +26105,7 @@
       "testable": 4,
       "novelty": 0.3301282051282051,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0.25,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/code-review-tools-catch-real-bugs",
@@ -26059,7 +26115,7 @@
       "wrong": [
         "ai-coding/coding-tools-amplify-experienced-engineers-far"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26879,7 +26935,7 @@
       "testable": 13,
       "novelty": 0.7353641456582632,
       "redundancy": 0,
-      "thinEvidence": 0.6153846153846154,
+      "thinEvidence": 0.5384615384615384,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assisted-changes-should-integrated-small-verifiable",

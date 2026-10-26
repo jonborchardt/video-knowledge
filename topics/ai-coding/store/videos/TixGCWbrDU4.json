@@ -26,6 +26,30 @@
           "note": "Independent and vendor benchmarks of PR review bots report recall well below 60% and wide precision variation; the specific ranking here is vendor-reported.",
           "confidence": 0.6,
           "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.55,
+          "note": "Across mainstream AI review techniques paired with leading LLMs on 1,000 real PRs with full repository context, the best combination reached only 19.38% F1, several produced multiple false positives per PR and four of five techniques had precision under 10%; no setup came close to finding most of the issues human reviewers raised.",
+          "source": "ai-coding/sources/2509.01494.txt#L794-L809",
+          "date": "2026-10-26"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Recall of the best AI review setup fell from 38.35% on PRs with one human-raised issue to 8.88% on PRs with five or more, while precision stayed roughly between 30% and 44%; it confirms tools miss most real issues in complex PRs, but this passage shows recall dropping with complexity rather than a precision-recall trade-off.",
+          "source": "ai-coding/sources/2509.01494.txt#L884-L895",
+          "date": "2026-10-26"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.3,
+          "note": "Of 5,594 confirmed customer-facing failures in 26,400 PRs, 83% were not flagged by either Claude Code or Cursor BugBot; supports that current tools miss most real production bugs, though it is a vendor benchmark and its failure set was chosen by the vendor's own tool.",
+          "source": "ai-coding/sources/playerzero-deja-vu-benchmark.txt#L141-L143",
+          "date": "2026-10-26"
         }
       ]
     },
