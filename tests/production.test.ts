@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { readJson, toJson } from '../src/lib/io';
+import { ROOT, readJson, toJson } from '../src/lib/io';
 import type { RenderCheckSummary } from '../src/lib/render-check';
 import { writeRenderCheck } from '../src/video/check';
 import {
@@ -714,5 +714,14 @@ describe('the article on the board', () => {
     expect(['released', 'stale', 'changed']).toContain(
       productionOf('heat-pumps', 'decision:is-it-cheaper-to-run-than-gas')?.article?.state,
     );
+  });
+});
+
+describe('the owner gate', () => {
+  it('halts a story whose topic no institution claims', () => {
+    const n = boardNext('heat-pumps', 'decision:is-it-cheaper-to-run-than-gas', ROOT, () => null);
+    expect(n.halt?.kind).toBe('no-institution');
+    expect(n.next).toBe('stop: no institution claims heat-pumps: add it to commissions in src/config/site.ts');
+    expect(n.done).toBe(false);
   });
 });

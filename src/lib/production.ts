@@ -64,6 +64,7 @@ import { chainOf, discover, loadStories, storiesPath, type Story } from './stori
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from './storyboard';
 import { loadTopic, topicNames, type Topic } from './topics';
 import type { BuildSummary, Clearance } from './build-report';
+import { type Commission, commissionOf } from '../config/site';
 
 /** Why a stage halted, for a loop that decides what to do next without parsing prose. */
 export type HaltKind =
@@ -81,6 +82,7 @@ export type HaltKind =
   | 'lock'
   | 'qa-failed'
   | 'story-left'
+  | 'no-institution' // no commission claims the topic: its videos have no brand to carry
   | 'published'; // the main output is live or scheduled: nothing rebuilds it; a re-release is a new output
 /** A blocked validation: the writer revises, unless the pass has spent its revisions. */
 export const validationHaltKind = (live: ScriptValidation): 'revision-limit' | 'blocking-findings' =>
@@ -1030,7 +1032,12 @@ export interface BoardNext {
   halt: Production['halt'];
   done: boolean;
 }
-export function boardNext(topic: string, storyId: string, root = ROOT): BoardNext {
+export function boardNext(
+  topic: string,
+  storyId: string,
+  root = ROOT,
+  owner: (topic: string) => Commission | null = commissionOf,
+): BoardNext {
   const short = shortOf(storyId);
   const story = loadStories(topic, root)?.stories.find((s) => s.id === storyId);
   // A follow-up question in another story's chain is produced inside that story's video, never on its own.
@@ -1063,6 +1070,19 @@ export function boardNext(topic: string, storyId: string, root = ROOT): BoardNex
         why: `the video is ${live.live ? 'live' : 'scheduled'} at ${live.url}`,
       },
       done: true,
+    };
+  }
+  if (!owner(topic)) {
+    const next = `stop: no institution claims ${topic}: add it to commissions in src/config/site.ts`;
+    const stage = prod?.stage ?? 'package';
+    return {
+      topic,
+      story: storyId,
+      stage,
+      next,
+      steps: stepsOf(next, topic, storyId),
+      halt: { kind: 'no-institution', stage, why: `no institution claims ${topic}` },
+      done: false,
     };
   }
   const { stage, next, halt } = prod ?? {
