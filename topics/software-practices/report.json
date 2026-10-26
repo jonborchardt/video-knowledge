@@ -1059,7 +1059,9 @@
           ],
           "note": "DORA surveys associate continuous delivery with lower burnout and higher job satisfaction, but causation is not isolated and this is one team's impression.",
           "source": null,
-          "documents": []
+          "documents": [
+            "software-practices/sources/savor2016-continuous-deployment.txt"
+          ]
         },
         {
           "id": "software-practices/feature-flags-carry-ongoing-removal-cost",
@@ -4381,7 +4383,9 @@
           ],
           "note": "Anecdotal; some companies did cut QA, but no study links this to measured quality loss.",
           "source": null,
-          "documents": []
+          "documents": [
+            "software-practices/sources/savor2016-continuous-deployment.txt"
+          ]
         },
         {
           "id": "software-practices/strict-tdd-which-forbids-production-code",
@@ -9924,7 +9928,9 @@
           "source": "software-practices/sources/sadowski2018-code-review-google.txt#L31-L34",
           "documents": [
             "software-practices/sources/dora2019-state-of-devops.txt",
-            "software-practices/sources/sadowski2018-code-review-google.txt"
+            "software-practices/sources/dora2023-state-of-devops.txt",
+            "software-practices/sources/sadowski2018-code-review-google.txt",
+            "software-practices/sources/savor2016-continuous-deployment.txt"
           ]
         },
         {
@@ -10223,7 +10229,9 @@
           "source": "software-practices/sources/sadowski2018-code-review-google.txt#L31-L34",
           "documents": [
             "software-practices/sources/dora2019-state-of-devops.txt",
-            "software-practices/sources/sadowski2018-code-review-google.txt"
+            "software-practices/sources/dora2023-state-of-devops.txt",
+            "software-practices/sources/sadowski2018-code-review-google.txt",
+            "software-practices/sources/savor2016-continuous-deployment.txt"
           ]
         },
         {
@@ -11475,6 +11483,52 @@
         },
         {
           "claim": {
+            "id": "software-practices/confidence-programmer-written-tests-led-many",
+            "text": "Confidence from programmer-written tests led many teams to drop QA and ship lower quality.",
+            "topic": "software-practices",
+            "asserted": 1,
+            "denied": 0,
+            "tally": {
+              "right": 0,
+              "wrong": 0,
+              "partly": 1,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "partly",
+            "confidence": 0.4,
+            "videos": [
+              "YNw4baDz6WA"
+            ],
+            "note": "Anecdotal; some companies did cut QA, but no study links this to measured quality loss.",
+            "source": null,
+            "documents": [
+              "software-practices/sources/savor2016-continuous-deployment.txt"
+            ]
+          },
+          "prior": "partly",
+          "evidence": "wrong",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "partly",
+            "confidence": 0.4,
+            "note": "Anecdotal; some companies did cut QA, but no study links this to measured quality loss.",
+            "date": "2026-10-15"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "wrong",
+            "confidence": 0.25,
+            "note": "Neither Facebook nor OANDA had a test team, and critical and medium failures at Facebook grew far slower than deployments as the product grew, though low-priority issues rose with code volume and one productivity surge brought more hotfixes; two firms, not many teams.",
+            "source": "software-practices/sources/savor2016-continuous-deployment.txt#L377-L411",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
             "id": "software-practices/pair-finishes-task-faster-one-person",
             "text": "A pair finishes a task faster than one person but spends more total person-hours on it",
             "topic": "software-practices",
@@ -12342,7 +12396,9 @@
             "source": "software-practices/sources/sadowski2018-code-review-google.txt#L31-L34",
             "documents": [
               "software-practices/sources/dora2019-state-of-devops.txt",
-              "software-practices/sources/sadowski2018-code-review-google.txt"
+              "software-practices/sources/dora2023-state-of-devops.txt",
+              "software-practices/sources/sadowski2018-code-review-google.txt",
+              "software-practices/sources/savor2016-continuous-deployment.txt"
             ]
           },
           "prior": "partly",
@@ -14559,29 +14615,6 @@
           "documents": []
         },
         {
-          "id": "software-practices/confidence-programmer-written-tests-led-many",
-          "text": "Confidence from programmer-written tests led many teams to drop QA and ship lower quality.",
-          "topic": "software-practices",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.4,
-          "videos": [
-            "YNw4baDz6WA"
-          ],
-          "note": "Anecdotal; some companies did cut QA, but no study links this to measured quality loss.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "software-practices/consistency-across-codebase-worth-more-any",
           "text": "Consistency across a codebase is worth more than any individual better idea that would break it",
           "topic": "software-practices",
@@ -14808,29 +14841,6 @@
             "H3nlvHQHb5E"
           ],
           "note": "A generalisation about motivation that varies by team.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "software-practices/developers-who-deploy-their-own-work",
-          "text": "Developers who deploy their own work to production are happier because they see its impact",
-          "topic": "software-practices",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.45,
-          "videos": [
-            "DDkjBqlks40"
-          ],
-          "note": "DORA surveys associate continuous delivery with lower burnout and higher job satisfaction, but causation is not isolated and this is one team's impression.",
           "source": null,
           "documents": []
         },
@@ -18218,7 +18228,7 @@
       "testable": 10,
       "novelty": 2.65,
       "redundancy": 0,
-      "thinEvidence": 0.6,
+      "thinEvidence": 0.5,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/developers-who-deploy-their-own-work",
@@ -18233,7 +18243,7 @@
         "software-practices/trunk-based-development-unsuited-products-must"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18916,7 +18926,7 @@
       "testable": 7,
       "novelty": 1.4833333333333334,
       "redundancy": 0,
-      "thinEvidence": 0.6666666666666666,
+      "thinEvidence": 0.5555555555555556,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/automated-tests-give-little-feedback-whether",
@@ -18928,7 +18938,7 @@
         "software-practices/trustworthy-automated-test-suite-lets-developers"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20590,7 +20600,7 @@
       "wrong": [
         "software-practices/per-change-pull-request-gates-break"
       ],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {

@@ -3,7 +3,7 @@
  "basis": {
   "claims": 413,
   "sources": 93,
-  "studies": 35,
+  "studies": 37,
   "candidates": 22
  },
  "stories": [
@@ -2899,6 +2899,254 @@
    "partOf": "surprise:relative-size-estimation-more-accurate-time"
   },
   {
+   "id": "surprise:per-change-pull-request-gates-break",
+   "kind": "surprise",
+   "title": "Can Code Review Keep Up With Continuous Delivery?",
+   "alternates": [
+    "Does Mandatory Review Slow Down Fast-Shipping Teams?",
+    "How Google Reviews 20,000 Changes a Day"
+   ],
+   "question": "Can reviewing every change keep up when you deploy many times a day?",
+   "whyWatch": "Teams moving to continuous delivery are told review gates will become the bottleneck. One company runs mandatory review on every change at enormous scale.",
+   "tension": "Critics say per-change gates cannot survive many deploys a day; Google does it, but Google is not a typical team.",
+   "evidenceNeeded": "Delivery throughput or lead time measured against per-change peer review in continuous-delivery teams, beyond one company.",
+   "evidenceAvailable": [
+    "Savor et al. 2016 (Facebook and OANDA deployment): wrong (0.2, direct)",
+    "Sadowski et al. 2018 (Google code review): wrong (0.4, direct)",
+    "DORA State of DevOps 2023: partly (0.35, direct)",
+    "DORA State of DevOps 2019: partly (0.3, direct)"
+   ],
+   "gaps": [
+    "Reviewer: The counter-evidence is Sadowski et al.'s description of Google (0.4: one highly tuned company and its own tooling, not a pull-request workflow, with no throughput comparison) and Savor et al.'s report that review is prevalent at Facebook and OANDA under continuous deployment (0.2: no measure of review's effect); DORA 2019 says per-change approval breaks down only for external boards, not teammate review, and DORA 2023 finds teams with faster reviews deliver better (0.35: review speed, not whether every change is gated, correlational). None compares teams that gate every change with teams that do not. Unblock with a study measuring lead time or deployment frequency against mandatory per-change peer review across several continuous-delivery organisations, for example DORA data split by review practice.",
+    "DORA State of DevOps 2023 differs: Across a survey of 36,000+ professionals, teams with shorter code review times have 50% better software delivery performance, so review is a bottleneck when it is slow; the survey measures review speed, not whether every change is gated, and is correlational.",
+    "DORA State of DevOps 2019 differs: DORA says approving each individual change by an external board is impossible in the continuous paradigm, but it recommends shifting to per-change peer review by a teammate during development, so the breakdown applies to external gates, not to peer review itself."
+   ],
+   "premise": "Before checking, the best guess was \"partly\": Google and others sustain high deploy rates with change-based review; the claim holds only when review latency is high. Sadowski et al. 2018 (Google code review): More than 25,000 Google developers put about 20,000 changes a day through mandatory per-change review into one trunk, with median latency under 4 hours and developers confirming the process works well at scale; one highly tuned company, not a GitHub pull-request setup. 1 source take a position on it.",
+   "claims": [
+    "software-practices/per-change-pull-request-gates-break"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "State the expectation everyone shares, with the sources that voice it.",
+    "conflict": "A study checked it and found something else.",
+    "evidence": "Sadowski et al. 2018 (Google code review): More than 25,000 Google developers put about 20,000 changes a day through mandatory per-change review into one trunk, with median latency under 4 hours and developers confirming the process works well at scale; one highly tuned company, not a GitHub pull-request setup.",
+    "resolution": "Why the expectation was wrong, or what the sources were missing.",
+    "takeaway": "The corrected belief, with its limits."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "review",
+    "explanation": "One question: can mandatory review of every change keep up with continuous delivery? Distinct from decision:pairing-and-code-review, which asks about change size."
+   },
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.23,
+    "curiosity": 0.8,
+    "stakes": 0.5,
+    "depth": 0.65,
+    "originality": 1,
+    "evidence": 0.58,
+    "editorial": 0.6,
+    "overall": 0.59,
+    "explanation": "editorial 0.6 = mean of coherence 0.8 (review), relevance 0.23 (1 source, 1 channel), curiosity 0.8 (surprise, a study overturned the guess), stakes 0.5 (lean: skeptic), depth 0.65 (4 studies, 1 claim, tension); evidence 0.58 = strongest Sadowski et al. 2018 (Google code review) at 0.4 (direct) across 4 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: Reviewer: The counter-evidence is Sadowski et al.'s description of Google (0.4: one highly tuned company and its own tooling, not a pull-request workflow, with no throughput comparison) and Savor et al.'s report that review is prevalent at Facebook and OANDA under continuous deployment (0.2: no measure of review's effect); DORA 2019 says per-change approval breaks down only for external boards, not teammate review, and DORA 2023 finds teams with faster reviews deliver better (0.35: review speed, not whether every change is gated, correlational). None compares teams that gate every change with teams that do not. Unblock with a study measuring lead time or deployment frequency against mandatory per-change peer review across several continuous-delivery organisations, for example DORA data split by review practice.",
+   "blocking": [
+    "Reviewer: The counter-evidence is Sadowski et al.'s description of Google (0.4: one highly tuned company and its own tooling, not a pull-request workflow, with no throughput comparison) and Savor et al.'s report that review is prevalent at Facebook and OANDA under continuous deployment (0.2: no measure of review's effect); DORA 2019 says per-change approval breaks down only for external boards, not teammate review, and DORA 2023 finds teams with faster reviews deliver better (0.35: review speed, not whether every change is gated, correlational). None compares teams that gate every change with teams that do not. Unblock with a study measuring lead time or deployment frequency against mandatory per-change peer review across several continuous-delivery organisations, for example DORA data split by review practice."
+   ],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "The evidence does not support \"Per-change pull request gates break down under continuous delivery with many deployments a day\"",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0.4,
+     "independent": 2,
+     "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "software-practices/per-change-pull-request-gates-break",
+        "cite": "software-practices/sources/savor2016-continuous-deployment.txt#L122-L125"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "Savor et al. 2016 (Facebook and OANDA deployment)",
+       "verdict": "wrong",
+       "confidence": 0.2,
+       "note": "The authors, describing Facebook and OANDA deploying continuously, say code reviews are prevalent in continuous deployment and taken more seriously when developers own the whole lifecycle; an experience report that does not say every change is gated or measure review's effect on throughput.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "software-practices/per-change-pull-request-gates-break",
+        "cite": "software-practices/sources/sadowski2018-code-review-google.txt#L31-L34"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "Sadowski et al. 2018 (Google code review)",
+       "verdict": "wrong",
+       "confidence": 0.4,
+       "note": "More than 25,000 Google developers put about 20,000 changes a day through mandatory per-change review into one trunk, with median latency under 4 hours and developers confirming the process works well at scale; one highly tuned company, not a GitHub pull-request setup.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "software-practices/per-change-pull-request-gates-break",
+        "cite": "software-practices/sources/dora2023-state-of-devops.txt#L777-L780"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "DORA State of DevOps 2023",
+       "verdict": "partly",
+       "confidence": 0.35,
+       "note": "Across a survey of 36,000+ professionals, teams with shorter code review times have 50% better software delivery performance, so review is a bottleneck when it is slow; the survey measures review speed, not whether every change is gated, and is correlational.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "software-practices/per-change-pull-request-gates-break",
+        "cite": "software-practices/sources/dora2019-state-of-devops.txt#L1297-L1299"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "DORA State of DevOps 2019",
+       "verdict": "partly",
+       "confidence": 0.3,
+       "note": "DORA says approving each individual change by an external board is impossible in the continuous paradigm, but it recommends shifting to per-change peer review by a teammate during development, so the breakdown applies to external gates, not to peer review itself.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "DORA State of DevOps 2023: Across a survey of 36,000+ professionals, teams with shorter code review times have 50% better software delivery performance, so review is a bottleneck when it is slow; the survey measures review speed, not whether every change is gated, and is correlational.",
+      "DORA State of DevOps 2019: DORA says approving each individual change by an external board is impossible in the continuous paradigm, but it recommends shifting to per-change peer review by a teammate during development, so the breakdown applies to external gates, not to peer review itself."
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.4), 2 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "The evidence does not support \"Per-change pull request gates break down under continuous delivery with many deployments a day\"",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.4,
+       "independent": 2,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/per-change-pull-request-gates-break",
+          "cite": "software-practices/sources/savor2016-continuous-deployment.txt#L122-L125"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Savor et al. 2016 (Facebook and OANDA deployment)",
+         "verdict": "wrong",
+         "confidence": 0.2,
+         "note": "The authors, describing Facebook and OANDA deploying continuously, say code reviews are prevalent in continuous deployment and taken more seriously when developers own the whole lifecycle; an experience report that does not say every change is gated or measure review's effect on throughput.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/per-change-pull-request-gates-break",
+          "cite": "software-practices/sources/sadowski2018-code-review-google.txt#L31-L34"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Sadowski et al. 2018 (Google code review)",
+         "verdict": "wrong",
+         "confidence": 0.4,
+         "note": "More than 25,000 Google developers put about 20,000 changes a day through mandatory per-change review into one trunk, with median latency under 4 hours and developers confirming the process works well at scale; one highly tuned company, not a GitHub pull-request setup.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/per-change-pull-request-gates-break",
+          "cite": "software-practices/sources/dora2023-state-of-devops.txt#L777-L780"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "DORA State of DevOps 2023",
+         "verdict": "partly",
+         "confidence": 0.35,
+         "note": "Across a survey of 36,000+ professionals, teams with shorter code review times have 50% better software delivery performance, so review is a bottleneck when it is slow; the survey measures review speed, not whether every change is gated, and is correlational.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/per-change-pull-request-gates-break",
+          "cite": "software-practices/sources/dora2019-state-of-devops.txt#L1297-L1299"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "DORA State of DevOps 2019",
+         "verdict": "partly",
+         "confidence": 0.3,
+         "note": "DORA says approving each individual change by an external board is impossible in the continuous paradigm, but it recommends shifting to per-change peer review by a teammate during development, so the breakdown applies to external gates, not to peer review itself.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "DORA State of DevOps 2023: Across a survey of 36,000+ professionals, teams with shorter code review times have 50% better software delivery performance, so review is a bottleneck when it is slow; the survey measures review speed, not whether every change is gated, and is correlational.",
+        "DORA State of DevOps 2019: DORA says approving each individual change by an external board is impossible in the continuous paradigm, but it recommends shifting to per-change peer review by a teammate during development, so the breakdown applies to external gates, not to peer review itself."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.4), 2 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
    "id": "decision:hours-interruptions-and-offices",
    "kind": "decision",
    "title": "Do Open-Plan Offices Make People Talk More?",
@@ -3221,185 +3469,6 @@
      "question": "Are software estimates so unreliable that you should stop making them?"
     }
    ]
-  },
-  {
-   "id": "surprise:per-change-pull-request-gates-break",
-   "kind": "surprise",
-   "title": "Can Code Review Keep Up With Continuous Delivery?",
-   "alternates": [
-    "Does Mandatory Review Slow Down Fast-Shipping Teams?",
-    "How Google Reviews 20,000 Changes a Day"
-   ],
-   "question": "Can reviewing every change keep up when you deploy many times a day?",
-   "whyWatch": "Teams moving to continuous delivery are told review gates will become the bottleneck. One company runs mandatory review on every change at enormous scale.",
-   "tension": "Critics say per-change gates cannot survive many deploys a day; Google does it, but Google is not a typical team.",
-   "evidenceNeeded": "Delivery throughput or lead time measured against per-change peer review in continuous-delivery teams, beyond one company.",
-   "evidenceAvailable": [
-    "Sadowski et al. 2018 (Google code review): wrong (0.4, direct)",
-    "DORA State of DevOps 2019: partly (0.3, direct)"
-   ],
-   "gaps": [
-    "Reviewer: The only counter-evidence is Sadowski et al.'s description of Google (0.4: one highly tuned company and its own tooling, not a pull-request workflow, with no throughput comparison), and DORA 2019 says per-change approval breaks down only for external boards, not teammate review. Unblock with a study measuring lead time or deployment frequency against mandatory per-change peer review across several continuous-delivery organisations, for example DORA data split by review practice.",
-    "DORA State of DevOps 2019 differs: DORA says approving each individual change by an external board is impossible in the continuous paradigm, but it recommends shifting to per-change peer review by a teammate during development, so the breakdown applies to external gates, not to peer review itself."
-   ],
-   "premise": "Before checking, the best guess was \"partly\": Google and others sustain high deploy rates with change-based review; the claim holds only when review latency is high. Sadowski et al. 2018 (Google code review): More than 25,000 Google developers put about 20,000 changes a day through mandatory per-change review into one trunk, with median latency under 4 hours and developers confirming the process works well at scale; one highly tuned company, not a GitHub pull-request setup. 1 source take a position on it.",
-   "claims": [
-    "software-practices/per-change-pull-request-gates-break"
-   ],
-   "related": [],
-   "arc": {
-    "hook": "State the expectation everyone shares, with the sources that voice it.",
-    "conflict": "A study checked it and found something else.",
-    "evidence": "Sadowski et al. 2018 (Google code review): More than 25,000 Google developers put about 20,000 changes a day through mandatory per-change review into one trunk, with median latency under 4 hours and developers confirming the process works well at scale; one highly tuned company, not a GitHub pull-request setup.",
-    "resolution": "Why the expectation was wrong, or what the sources were missing.",
-    "takeaway": "The corrected belief, with its limits."
-   },
-   "coherence": {
-    "score": 0.8,
-    "basis": "review",
-    "explanation": "One question: can mandatory review of every change keep up with continuous delivery? Distinct from decision:pairing-and-code-review, which asks about change size."
-   },
-   "scores": {
-    "coherence": 0.8,
-    "relevance": 0.23,
-    "curiosity": 0.8,
-    "stakes": 0.5,
-    "depth": 0.52,
-    "originality": 1,
-    "evidence": 0.46,
-    "editorial": 0.57,
-    "overall": 0.53,
-    "explanation": "editorial 0.57 = mean of coherence 0.8 (review), relevance 0.23 (1 source, 1 channel), curiosity 0.8 (surprise, a study overturned the guess), stakes 0.5 (lean: skeptic), depth 0.52 (2 studies, 1 claim, tension); evidence 0.46 = strongest Sadowski et al. 2018 (Google code review) at 0.4 (direct) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: Reviewer: The only counter-evidence is Sadowski et al.'s description of Google (0.4: one highly tuned company and its own tooling, not a pull-request workflow, with no throughput comparison), and DORA 2019 says per-change approval breaks down only for external boards, not teammate review. Unblock with a study measuring lead time or deployment frequency against mandatory per-change peer review across several continuous-delivery organisations, for example DORA data split by review practice.",
-   "blocking": [
-    "Reviewer: The only counter-evidence is Sadowski et al.'s description of Google (0.4: one highly tuned company and its own tooling, not a pull-request workflow, with no throughput comparison), and DORA 2019 says per-change approval breaks down only for external boards, not teammate review. Unblock with a study measuring lead time or deployment frequency against mandatory per-change peer review across several continuous-delivery organisations, for example DORA data split by review practice."
-   ],
-   "reviewed": true,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "The evidence does not support \"Per-change pull request gates break down under continuous delivery with many deployments a day\"",
-     "kind": "fact",
-     "modality": "plain",
-     "status": "qualified",
-     "decision": "qualify",
-     "review": true,
-     "verbatim": true,
-     "strength": 0.4,
-     "independent": 1,
-     "supporting": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "software-practices/per-change-pull-request-gates-break",
-        "cite": "software-practices/sources/sadowski2018-code-review-google.txt#L31-L34"
-       },
-       "cited": true,
-       "role": "supports",
-       "by": "Sadowski et al. 2018 (Google code review)",
-       "verdict": "wrong",
-       "confidence": 0.4,
-       "note": "More than 25,000 Google developers put about 20,000 changes a day through mandatory per-change review into one trunk, with median latency under 4 hours and developers confirming the process works well at scale; one highly tuned company, not a GitHub pull-request setup.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      }
-     ],
-     "contradicting": [],
-     "qualifying": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "software-practices/per-change-pull-request-gates-break",
-        "cite": "software-practices/sources/dora2019-state-of-devops.txt#L1297-L1299"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "DORA State of DevOps 2019",
-       "verdict": "partly",
-       "confidence": 0.3,
-       "note": "DORA says approving each individual change by an external board is impossible in the continuous paradigm, but it recommends shifting to per-change peer review by a teammate during development, so the breakdown applies to external gates, not to peer review itself.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      }
-     ],
-     "context": [],
-     "problems": [],
-     "limitations": [
-      "DORA State of DevOps 2019: DORA says approving each individual change by an external board is impossible in the continuous paradigm, but it recommends shifting to per-change peer review by a teammate during development, so the breakdown applies to external gates, not to peer review itself."
-     ],
-     "suggestions": [
-      "Add the qualification: the evidence supports a narrower or weaker statement."
-     ],
-     "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.4), 1 qualifying."
-    },
-    "findings": [
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f0",
-       "text": "The evidence does not support \"Per-change pull request gates break down under continuous delivery with many deployments a day\"",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0.4,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "software-practices/per-change-pull-request-gates-break",
-          "cite": "software-practices/sources/sadowski2018-code-review-google.txt#L31-L34"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Sadowski et al. 2018 (Google code review)",
-         "verdict": "wrong",
-         "confidence": 0.4,
-         "note": "More than 25,000 Google developers put about 20,000 changes a day through mandatory per-change review into one trunk, with median latency under 4 hours and developers confirming the process works well at scale; one highly tuned company, not a GitHub pull-request setup.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "software-practices/per-change-pull-request-gates-break",
-          "cite": "software-practices/sources/dora2019-state-of-devops.txt#L1297-L1299"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "DORA State of DevOps 2019",
-         "verdict": "partly",
-         "confidence": 0.3,
-         "note": "DORA says approving each individual change by an external board is impossible in the continuous paradigm, but it recommends shifting to per-change peer review by a teammate during development, so the breakdown applies to external gates, not to peer review itself.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "DORA State of DevOps 2019: DORA says approving each individual change by an external board is impossible in the continuous paradigm, but it recommends shifting to per-change peer review by a teammate during development, so the breakdown applies to external gates, not to peer review itself."
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.4), 1 qualifying."
-      }
-     }
-    ]
-   }
   },
   {
    "id": "gap:pairing-mobbing-puts-best-each-participant",
