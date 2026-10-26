@@ -61,7 +61,14 @@ it('has the built site to check (npm run build), one page per template', () => {
   expect(pages.length, 'no pages in dist/: run npm run build').toBeGreaterThan(0);
   if (process.env.WEB_QUALITY_FULL !== '1')
     expect(pages, 'representativePages() lost a template').toHaveLength(
-      pages.some((p) => readFileSync(join(DIST, p), 'utf8').includes('data-article')) ? 9 : 8,
+      // 6 fixed templates (home, about, directory, inquiries, a commission, 404); a topic, a story and an article page
+      // exist only once a story is live.
+      6 +
+        (pages.some((p) => p.split('/').length === 2 && !/^(about|commissions|inquiries|institutions)\//.test(p))
+          ? 1
+          : 0) +
+        (pages.some((p) => p.split('/').length === 3 && !p.startsWith('commissions/')) ? 1 : 0) +
+        (pages.some((p) => readFileSync(join(DIST, p), 'utf8').includes('data-article')) ? 1 : 0),
     );
 });
 

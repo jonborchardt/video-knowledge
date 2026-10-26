@@ -14,21 +14,22 @@ import VerdictBadge from '../../components/VerdictBadge.astro';
 import { groupSlug, loadStories, storyUrlSlug } from '../../lib/stories';
 import KindIcon from '../../components/KindIcon.astro';
 import MatterList from '../../components/MatterList.astro';
-import { contentGraph, inquiryMatters } from '../../lib/content-graph';
-import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
+import { inquiryMatters } from '../../lib/content-graph';
+import { siteGraph, siteTopics } from '../../lib/site-graph';
+import { loadTopic, type Topic } from '../../lib/topics';
 import { commissionBody, commissionKey, commissionOf, site } from '../../config/site';
 import { loadDatasets } from '../../lib/datasets';
 import { href } from '../../lib/url';
 
 export function getStaticPaths() {
-  return publicTopicNames().map((name) => ({ params: { topic: name }, props: { t: loadTopic(name) } }));
+  return siteTopics().map((name) => ({ params: { topic: name }, props: { t: loadTopic(name) } }));
 }
 const { t } = Astro.props as { t: Topic };
 const hasData = loadDatasets(t.name).length > 0;
 const stories = import.meta.env.DEV ? loadStories(t.name) : null; // the story ideas page exists on the dev server only
 const commission = commissionOf(t.name)!; // the institution that publishes this inquiry (every public topic has one)
 // Every matter of the inquiry (D9), a live video first; a claim group that is a story's links its matter.
-const graph = contentGraph();
+const graph = siteGraph();
 const matters = inquiryMatters(graph, t.name);
 const groupMatter = new Set((loadStories(t.name)?.stories ?? []).map(storyUrlSlug));
 

@@ -9,13 +9,16 @@ import { commissionKey, commissionOf, site } from '../../../config/site';
 import { chartProblems, datasetChart } from '../../../lib/chart-geometry';
 import { dataRef, loadDatasets, type DataTable } from '../../../lib/datasets';
 import { breadcrumbJsonLd } from '../../../lib/seo';
+import { siteGraph } from '../../../lib/site-graph';
 import { loadTopic, publicTopicNames, type Topic } from '../../../lib/topics';
 import { citeHref, citeLabel, datasetSource, href } from '../../../lib/url';
 
 export function getStaticPaths() {
+  const g = siteGraph();
+  const live = (name: string) => loadDatasets(name).filter((d) => g.nodes.get(dataRef(name, d.id))?.public);
   return publicTopicNames()
-    .filter((name) => loadDatasets(name).length > 0)
-    .map((name) => ({ params: { topic: name }, props: { t: loadTopic(name), datasets: loadDatasets(name) } }));
+    .filter((name) => live(name).length > 0)
+    .map((name) => ({ params: { topic: name }, props: { t: loadTopic(name), datasets: live(name) } }));
 }
 const { t, datasets } = Astro.props as { t: Topic; datasets: DataTable[] };
 const commission = commissionOf(t.name)!;

@@ -14,7 +14,8 @@ import HeatingCost from '../../components/tools/HeatingCost.astro';
 import MatterList from '../../components/MatterList.astro';
 import NextSteps from '../../components/NextSteps.astro';
 import { loadCta, resolveCtas } from '../../lib/cta';
-import { contentGraph, matterItem, matterPath, related, storyNode } from '../../lib/content-graph';
+import { matterItem, matterPath, related, storyNode } from '../../lib/content-graph';
+import { siteGraph } from '../../lib/site-graph';
 import { toolOf } from '../../tools';
 import { articleModified, loadArticleRelease } from '../../lib/article';
 import { articleView, type FigureDraw } from '../../lib/article-view';
@@ -36,10 +37,13 @@ import { readJson, ROOT, topicDir } from '../../lib/io';
 import { citeLabel, datasetSource, href } from '../../lib/url';
 
 export function getStaticPaths() {
+  const g = siteGraph();
   return publicTopicNames().flatMap((name) => {
     const t = loadTopic(name);
     const stories = loadStories(name)?.stories ?? [];
-    return stories.map((s) => ({ params: { topic: name, story: storyUrlSlug(s) }, props: { t, s, stories } }));
+    return stories
+      .filter((s) => g.nodes.get(storyNode(name, s.id))?.public)
+      .map((s) => ({ params: { topic: name, story: storyUrlSlug(s) }, props: { t, s, stories } }));
   });
 }
 const { t, s, stories } = Astro.props as { t: Topic; s: Story; stories: Story[] };
@@ -130,7 +134,7 @@ const h2 = 'mb-3 text-featured font-bold';
 // A story's calculator (src/tools); an id without a component here fails the build.
 const tool = toolOf(t.name, s.id);
 if (tool && tool.id !== 'heating-cost') throw new Error(`tool ${tool.id}: no component on the matter page`);
-const graph = contentGraph();
+const graph = siteGraph();
 const node = storyNode(t.name, s.id);
 // The calls to action of a ready first question (a follow-up's live on its first question's video); a file error
 // fails the build.

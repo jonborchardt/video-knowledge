@@ -1,8 +1,5 @@
 import { author, site } from '../config/site';
 import { absoluteUrl } from './url';
-import { matterPath } from './content-graph';
-import { loadStories } from './stories';
-import { publicTopicNames } from './topics';
 import type { PublicVideo } from './outputs';
 
 /** Everything a page needs to emit <head> metadata. Pages pass it as Base's props. */
@@ -28,20 +25,6 @@ export const websiteJsonLd = (siteUrl: URL) => ({
   url: absoluteUrl('/', siteUrl),
   publisher: person(),
 });
-
-/** Root-relative paths (`/<topic>/<slug>/`) of every public story that is not ready: its matter page is noindex and
- *  left out of the sitemap until it is, so search engines only send visitors to settled answers. */
-export const unlistedPaths = (): string[] =>
-  publicTopicNames().flatMap((t) =>
-    (loadStories(t)?.stories ?? []).filter((s) => s.readiness !== 'ready').map((s) => matterPath(t, s)),
-  );
-
-/** The sitemap filter: strips Astro's `base` from the page URL before matching. */
-export const isListed = (pageUrl: string, base: string, unlisted: Set<string>): boolean => {
-  const path = new URL(pageUrl).pathname;
-  const b = base.replace(/\/$/, '');
-  return !unlisted.has(b && path.startsWith(b) ? path.slice(b.length) : path);
-};
 
 // Per-page structured data (plan D11). The publisher is always the real person; an institution appears only as the
 // name of a series, never as an Organization, so search engines are not told a fictional government exists.

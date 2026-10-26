@@ -1,7 +1,6 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
-import { isListed, unlistedPaths } from './src/lib/seo.ts';
 import { movedRedirects } from './src/lib/content-graph.ts';
 
 // Two deploy targets while both run: Cloudflare serves https://commonwealthofreason.com/ at the root (the default,
@@ -34,17 +33,14 @@ const admin = {
   },
 };
 
-const unlisted = new Set(unlistedPaths());
-
 export default defineConfig({
   site: pages ? 'https://jonborchardt.github.io' : 'https://commonwealthofreason.com',
   base: pages ? '/video-knowledge' : '/',
-  // A matter whose story is not ready stays out of the sitemap (and is noindex) until it is; both read stories.json.
   // A story whose id changed keeps its old matter URL as a redirect page (topics/<topic>/moved.json).
   // Astro prefixes the base to the old path but not to the destination.
   redirects: Object.fromEntries(
     Object.entries(movedRedirects()).map(([from, to]) => [from, `${pages ? '/video-knowledge' : ''}${to}`]),
   ),
-  integrations: [sitemap({ filter: (page) => isListed(page, pages ? '/video-knowledge/' : '/', unlisted) }), admin],
+  integrations: [sitemap(), admin],
   vite: { plugins: [tailwindcss()] },
 });

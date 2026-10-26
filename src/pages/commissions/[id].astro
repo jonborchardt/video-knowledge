@@ -7,14 +7,15 @@ import ReportHeader from '../../components/ReportHeader.astro';
 import KindIcon from '../../components/KindIcon.astro';
 import MatterList from '../../components/MatterList.astro';
 import SourceIcons from '../../components/SourceIcons.astro';
-import { contentGraph, inquiryMatters } from '../../lib/content-graph';
+import { inquiryMatters } from '../../lib/content-graph';
+import { siteGraph, siteTopics } from '../../lib/site-graph';
 import { breadcrumbJsonLd, collectionJsonLd } from '../../lib/seo';
 import { type Commission, commissionBody, commissions, site } from '../../config/site';
-import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
+import { loadTopic, type Topic } from '../../lib/topics';
 import { href } from '../../lib/url';
 
 export function getStaticPaths() {
-  const names = new Set(publicTopicNames());
+  const names = new Set(siteTopics());
   return Object.entries(commissions).map(([id, c]) => ({
     params: { id },
     props: { c, topics: c.topics.filter((n) => names.has(n)).map(loadTopic) },
@@ -22,7 +23,7 @@ export function getStaticPaths() {
 }
 const { c, topics } = Astro.props as { c: Commission; topics: Topic[] };
 const fmt = (n: number) => n.toLocaleString('en-US');
-const graph = contentGraph();
+const graph = siteGraph();
 // Every matter of each inquiry in the one order (D9), a chain's follow-ups under their first question.
 const docket = topics.map((t) => ({
   t,
@@ -75,6 +76,8 @@ const body = commissionBody(c);
       <a href={href('/about/')}>How to read the record.</a>
     </p>
   </ReportHeader>
+
+  {topics.length === 0 && <p class="text-muted-foreground">No findings published yet.</p>}
 
   {
     topics.length > 0 && (

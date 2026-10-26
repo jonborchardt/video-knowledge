@@ -7,14 +7,15 @@ import Base from '../layouts/Base.astro';
 import KindIcon from '../components/KindIcon.astro';
 import MatterList from '../components/MatterList.astro';
 import SourceIcons from '../components/SourceIcons.astro';
-import { contentGraph, inquiryMatters } from '../lib/content-graph';
+import { inquiryMatters } from '../lib/content-graph';
+import { siteGraph, siteTopics } from '../lib/site-graph';
 import { commissionKey, commissions, site } from '../config/site';
 import { breadcrumbJsonLd, collectionJsonLd } from '../lib/seo';
-import { loadTopic, publicTopicNames } from '../lib/topics';
+import { loadTopic } from '../lib/topics';
 import { href } from '../lib/url';
 
-const names = new Set(publicTopicNames());
-const graph = contentGraph();
+const graph = siteGraph();
+const names = new Set(siteTopics(graph));
 const fmt = (n: number) => n.toLocaleString('en-US');
 const docket = Object.values(commissions)
   .map((c) => ({
@@ -57,6 +58,8 @@ const description = `Every public inquiry of ${site.name}, under the institution
       still being weighed.
     </p>
   </header>
+
+  {total === 0 && <p class="text-muted-foreground">No findings published yet.</p>}
 
   {
     docket.map(({ c, key, inquiries }) => (
