@@ -3,8 +3,8 @@
  "basis": {
   "claims": 182,
   "sources": 129,
-  "studies": 27,
-  "candidates": 37
+  "studies": 29,
+  "candidates": 38
  },
  "stories": [
   {
@@ -20,6 +20,7 @@
    "tension": "Dozens of videos say organic means pesticide-free; sceptics answer that organic pesticides are no safer than synthetic ones. The rules show organic farms do spray, and the hazard data show the organic list is mostly milder, with two real exceptions.",
    "evidenceNeeded": "The organic regulation's own rules on pest control and its list of allowed synthetic substances, the EU count of pesticides approved for organic use, and their hazard classifications against all approved pesticides.",
    "evidenceAvailable": [
+    "USDA AMS 2010-2011 pilot, residue testing of retail organic produce: wrong (0.55, direct)",
     "USDA organic regulations (7 CFR 205): wrong (0.85, direct)",
     "Mie 2017 review, health effects of organic food and farming: wrong (0.6, direct)",
     "Baranski 2014 meta-analysis, organic crops: wrong (0.55, direct)",
@@ -29,7 +30,7 @@
    ],
    "gaps": [
     "Baranski 2014 meta-analysis, organic crops is context only: a one-line background paraphrase of organic standards in the introduction of a crop-composition meta-analysis; it does not examine the rules, and the regulation's own list of allowed synthetics (7 CFR 205.601) decides whether every synthetic pesticide is banned",
-    "What explains the split between USDA organic regulations (7 CFR 205), Mie 2017 review, health effects of organic food and farming, Baranski 2014 meta-analysis, organic crops?"
+    "What explains the split between USDA AMS 2010-2011 pilot, residue testing of retail organic produce, USDA organic regulations (7 CFR 205), Mie 2017 review, health effects of organic food and farming, Baranski 2014 meta-analysis, organic crops?"
    ],
    "premise": "Organic farming does use pesticides. US rules (7 CFR 205.206) let organic producers apply biological, botanical or National List substances when preventive practices fail, and 7 CFR 205.601 lists synthetic ones among them, such as insecticidal soaps, horticultural oils, lime sulfur and copper fungicides. In the EU, 26 of 385 authorised pesticide substances are also approved for organic farming, plus two synthetic pyrethroids allowed only in insect traps. That list is mostly of low concern: 10 of the 26 have any identified toxicity, against 340 of all 385, and none is classed as a suspected carcinogen or reproductive toxicant (27 and 26 among all approved). The exceptions are real: pyrethrins act like synthetic pyrethroids, and copper is toxic at high intakes and harmful to aquatic life. These are EU hazard classes, not measured exposure or harm, and the US list differs.",
    "claims": [
@@ -46,7 +47,7 @@
    "arc": {
     "hook": "Ask what the viewer thinks organic farmers spray, then read the rule that says when they may.",
     "conflict": "The sources do not agree, and both sides have a case.",
-    "evidence": "Lay the studies side by side (USDA organic regulations (7 CFR 205), Mie 2017 review, health effects of organic food and farming, Baranski 2014 meta-analysis, organic crops): design, sample, what was measured.",
+    "evidence": "Lay the studies side by side (USDA AMS 2010-2011 pilot, residue testing of retail organic produce, USDA organic regulations (7 CFR 205), Mie 2017 review, health effects of organic food and farming, Baranski 2014 meta-analysis, organic crops): design, sample, what was measured.",
     "resolution": "Organic is a short list of pesticides used after prevention, mostly natural and mostly of low concern, with a few synthetic exceptions and two natural ones, pyrethrins and copper, that are not harmless; it is not pesticide-free farming.",
     "takeaway": "The conditions under which the claim holds, instead of a yes or no."
    },
@@ -65,7 +66,7 @@
     "evidence": 1,
     "editorial": 0.98,
     "overall": 0.99,
-    "explanation": "editorial 0.98 = mean of coherence 0.9 (review), relevance 1 (40 sources, 40 channels), curiosity 1 (conflict, a study overturned the guess), stakes 1 (lean: pro-hype), depth 1 (4 studies, 3 claims, tension); evidence 1 = strongest USDA organic regulations (7 CFR 205) at 0.85 (direct) across 3 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "explanation": "editorial 0.98 = mean of coherence 0.9 (review), relevance 1 (40 sources, 40 channels), curiosity 1 (conflict, a study overturned the guess), stakes 1 (lean: pro-hype), depth 1 (5 studies, 3 claims, tension); evidence 1 = strongest USDA organic regulations (7 CFR 205) at 0.85 (direct) across 4 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "ready",
    "readinessWhy": "Coherent (0.9), central conclusion supported, 3 essential findings verified, no pending review.",
@@ -82,8 +83,24 @@
      "review": false,
      "verbatim": true,
      "strength": 0.85,
-     "independent": 3,
+     "independent": 4,
      "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "organic-food/organic-farming-uses-pesticides",
+        "cite": "organic-food/sources/usda-ams-2012-organic-residue.txt#L60-L64"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "USDA AMS 2010-2011 pilot, residue testing of retail organic produce",
+       "verdict": "wrong",
+       "confidence": 0.55,
+       "note": "USDA's report states that organic agriculture uses permitted pest-control materials, mostly naturally derived (pyrethrum, Bt) plus a few synthetics such as sulfur, insecticidal soap, horticultural oils and copper hydroxide.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
       {
        "ref": {
         "kind": "study",
@@ -139,7 +156,7 @@
      "problems": [],
      "limitations": [],
      "suggestions": [],
-     "explanation": "supported (approved): 3 supporting (3 independent, strongest 0.85)."
+     "explanation": "supported (approved): 4 supporting (4 independent, strongest 0.85)."
     },
     "findings": [
      {
@@ -154,8 +171,24 @@
        "review": false,
        "verbatim": true,
        "strength": 0.85,
-       "independent": 3,
+       "independent": 4,
        "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/organic-farming-uses-pesticides",
+          "cite": "organic-food/sources/usda-ams-2012-organic-residue.txt#L60-L64"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "USDA AMS 2010-2011 pilot, residue testing of retail organic produce",
+         "verdict": "wrong",
+         "confidence": 0.55,
+         "note": "USDA's report states that organic agriculture uses permitted pest-control materials, mostly naturally derived (pyrethrum, Bt) plus a few synthetics such as sulfur, insecticidal soap, horticultural oils and copper hydroxide.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
         {
          "ref": {
           "kind": "study",
@@ -211,7 +244,7 @@
        "problems": [],
        "limitations": [],
        "suggestions": [],
-       "explanation": "supported (approved): 3 supporting (3 independent, strongest 0.85)."
+       "explanation": "supported (approved): 4 supporting (4 independent, strongest 0.85)."
       }
      },
      {
@@ -226,8 +259,24 @@
        "review": true,
        "verbatim": true,
        "strength": 0.85,
-       "independent": 2,
+       "independent": 3,
        "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/organic-farming-bans-all-synthetic-pesticides",
+          "cite": "organic-food/sources/usda-ams-2012-organic-residue.txt#L60-L64"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "USDA AMS 2010-2011 pilot, residue testing of retail organic produce",
+         "verdict": "wrong",
+         "confidence": 0.55,
+         "note": "USDA's report says organic standards prohibit most synthetic substances but list synthetic pest-control materials allowed in organic crop production: elemental sulfur, insecticidal soap, horticultural oils and copper hydroxide.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
         {
          "ref": {
           "kind": "study",
@@ -306,7 +355,7 @@
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.85), 1 qualifying, 1 context only."
+       "explanation": "qualified (qualify): 3 supporting (3 independent, strongest 0.85), 1 qualifying, 1 context only."
       }
      },
      {
@@ -1302,7 +1351,7 @@
    },
    "chainCandidates": [
     "conflict:regulators-assess-pesticides-one-time-ignore",
-    "decision:what-the-seal-actually-requires"
+    "decision:can-you-trust-the-label"
    ]
   },
   {
@@ -1322,6 +1371,7 @@
     "Mie 2017 review, health effects of organic food and farming: right (0.5, direct)",
     "Hyland 2019 organic diet intervention, abstract: right (0.45, direct)",
     "Smith-Spangler 2012 review (Stanford), abstract: right (0.4, direct)",
+    "CVUA Stuttgart 2021 organic monitoring report (Baden-Wuerttemberg): right (0.65, direct)",
     "baker-2002-residues.txt: right (0.6, direct)",
     "Mie 2017 review, health effects of organic food and farming: right (0.6, direct)",
     "Smith-Spangler 2012 review (Stanford), abstract: right (0.5, direct)",
@@ -1362,7 +1412,7 @@
     "evidence": 1,
     "editorial": 0.77,
     "overall": 0.86,
-    "explanation": "editorial 0.77 = mean of coherence 0.85 (review), relevance 1 (42 sources, 40 channels), curiosity 0.5 (decision), stakes 0.7 (lean: pro), depth 0.8 (8 studies, 2 claims); evidence 1 = strongest Vigar 2019 systematic review, organic diet and health at 0.75 (direct) across 4 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "explanation": "editorial 0.77 = mean of coherence 0.85 (review), relevance 1 (42 sources, 40 channels), curiosity 0.5 (decision), stakes 0.7 (lean: pro), depth 0.8 (9 studies, 2 claims); evidence 1 = strongest Vigar 2019 systematic review, organic diet and health at 0.75 (direct) across 4 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "ready",
    "readinessWhy": "Coherent (0.85), central conclusion supported, 2 essential findings verified, no pending review.",
@@ -1554,9 +1604,25 @@
        "decision": "qualify",
        "review": true,
        "verbatim": true,
-       "strength": 0.6,
-       "independent": 4,
+       "strength": 0.65,
+       "independent": 5,
        "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/organic-produce-carries-lower-pesticide-residues",
+          "cite": "organic-food/sources/cvuas-2021-organic-monitoring.txt#L51-L77"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "CVUA Stuttgart 2021 organic monitoring report (Baden-Wuerttemberg)",
+         "verdict": "right",
+         "confidence": 0.65,
+         "note": "Twenty years of state monitoring: about 76% of fresh organic samples had no detectable residue in 2021, and average residues were 0.002 mg/kg for organic fruit and vegetables against 0.40-0.48 mg/kg for conventional, a gap repeated every year since 2014.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
         {
          "ref": {
           "kind": "study",
@@ -1666,7 +1732,7 @@
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): 4 supporting (4 independent, strongest 0.6), 2 qualifying."
+       "explanation": "qualified (qualify): 5 supporting (5 independent, strongest 0.65), 2 qualifying."
       }
      }
     ]
@@ -2142,8 +2208,8 @@
     ]
    },
    "chainCandidates": [
-    "conflict:regulators-assess-pesticides-one-time-ignore",
-    "conflict:pesticide-residues-conventional-produce-too-low"
+    "decision:can-you-trust-the-label",
+    "conflict:regulators-assess-pesticides-one-time-ignore"
    ]
   },
   {
@@ -2693,7 +2759,7 @@
    },
    "chainCandidates": [
     "conflict:pesticide-residues-conventional-produce-too-low",
-    "decision:what-the-seal-actually-requires"
+    "decision:can-you-trust-the-label"
    ]
   },
   {
@@ -3274,6 +3340,414 @@
    "partOf": "conflict:eating-organic-food-has-proven-health"
   },
   {
+   "id": "decision:can-you-trust-the-label",
+   "kind": "decision",
+   "title": "How Common Is Organic Food Fraud?",
+   "alternates": [
+    "Can You Trust the Organic Label?",
+    "Organic Fraud: What Is Known and What Is Not"
+   ],
+   "question": "How often is food sold as organic not really organic?",
+   "whyWatch": "Fraud cases make the news and the organic premium is real money, so a viewer wants to know how often the label is actually false; two government residue-testing programs give a measured answer, and it is smaller than the claims suggest.",
+   "tension": "Fraud is real and documented, and the US checks on imports and testing were weak, yet when labs test organic food off the shelf only a few percent fails.",
+   "evidenceNeeded": "A measured rate of mislabelled organic food, and what the rules and audits say about where it can slip through.",
+   "evidenceAvailable": [
+    "CVUA Stuttgart 2021 organic monitoring report (Baden-Wuerttemberg): right (0.6, direct)",
+    "USDA AMS 2010-2011 pilot, residue testing of retail organic produce: right (0.5, direct)",
+    "USDA Strengthening Organic Enforcement rule: right (0.6, direct)",
+    "USDA AMS 2010-2011 pilot, residue testing of retail organic produce: wrong (0.45, direct)",
+    "CVUA Stuttgart 2021 organic monitoring report (Baden-Wuerttemberg): wrong (0.45, direct)",
+    "USDA Inspector General 2017 audit, organic imports: partly (0.4, direct)",
+    "USDA organic regulations (7 CFR 205): partly (0.55, direct)",
+    "USDA Strengthening Organic Enforcement rule: partly (0.4, direct)"
+   ],
+   "gaps": [
+    "No study strong enough to decide: \"Imported organic food is less trustworthy than domestic organic food\""
+   ],
+   "premise": "Some organic food is not organic: USDA cites documented fraud cases as the reason for its 2023 enforcement rule, and labs have caught conventional food sold as organic. But the measured rates are small. In a 2010-11 USDA pilot, 4% of 571 retail organic samples of six produce items carried residues above the organic limit, some of them probably mislabelled conventional produce; a German state lab judged no fresh organic produce falsely labelled in 2021 (always well under 5% since 2011), and 2-7% of processed organic foods. Both measure only pesticide residues, the USDA pilot was not a random sample, and the German figures are one state's market, so neither is a national fraud rate. On the weak points: certifiers must test only 5% of operations a year, and the 2017 audit found US port checks on organic import certificates could not be assured, but no source measures whether imports fail more often, and the 2023 rule is too new for data on whether it cut fraud.",
+   "claims": [
+    "organic-food/significant-share-food-sold-organic-not",
+    "organic-food/some-sellers-have-passed-off-conventional",
+    "organic-food/imported-organic-food-less-trustworthy-domestic",
+    "organic-food/organic-certifiers-rarely-test-soil-produce",
+    "organic-food/strengthening-organic-enforcement-rule-closes-supply"
+   ],
+   "related": [
+    "organic-food/organic-food-more-nutritious-conventional",
+    "organic-food/organic-food-costs-substantially-more-conventional",
+    "organic-food/organic-food-spoils-faster-conventional",
+    "organic-food/organic-farming-yields-less-food-per",
+    "organic-food/imported-organic-products-must-meet-same"
+   ],
+   "arc": {
+    "hook": "Buy organic produce off the shelf and send it to a government lab: how much of it is really organic?",
+    "conflict": "The claims pulling in different directions: \"A significant share of food sold as organic is not genuinely organic\"; \"Imported organic food is less trustworthy than domestic organic food\"; \"Some sellers have passed off conventional food as organic\"; \"Organic certifiers rarely test soil or produce for residues\"; \"Organic labelling is mainly a marketing tool to charge higher prices\"; \"The Strengthening Organic Enforcement rule closes supply-chain gaps that allowed organic fraud\".",
+    "evidence": "Each claim's verdict, strongest study first.",
+    "resolution": "Measured by residue testing, a few percent of organic food breaks the rules and only part of that is outright fraud; the label mostly holds, but testing is thin, imports were weakly checked, and whether the 2023 rule helped is not yet measured.",
+    "takeaway": "A decision rule the viewer can apply."
+   },
+   "coherence": {
+    "score": 0.7,
+    "basis": "review",
+    "explanation": "Pruned to one question, how often is organic food not what it says, with the fraud, imports, testing and enforcement claims that bear on it; the 'mainly marketing' claim is about price and has its own candidate."
+   },
+   "scores": {
+    "coherence": 0.7,
+    "relevance": 1,
+    "curiosity": 0.7,
+    "stakes": 0.7,
+    "depth": 1,
+    "originality": 1,
+    "evidence": 0.78,
+    "editorial": 0.82,
+    "overall": 0.8,
+    "explanation": "editorial 0.82 = mean of coherence 0.7 (review), relevance 1 (23 sources, 22 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 0.7 (lean: pro), depth 1 (5 studies, 5 claims, tension); evidence 0.78 = strongest CVUA Stuttgart 2021 organic monitoring report (Baden-Wuerttemberg) at 0.6 (direct) across 3 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.7), central conclusion supported, 5 essential findings verified, no pending review.",
+   "blocking": [],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Some sellers have passed off conventional food as organic",
+     "kind": "fact",
+     "modality": "possibility",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0.6,
+     "independent": 3,
+     "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "organic-food/some-sellers-have-passed-off-conventional",
+        "cite": "organic-food/sources/cvuas-2021-organic-monitoring.txt#L81-L85"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "CVUA Stuttgart 2021 organic monitoring report (Baden-Wuerttemberg)",
+       "verdict": "right",
+       "confidence": 0.6,
+       "note": "The state lab judged 3.1% of processed organic foods falsely labelled as organic in 2021 (2.2-7.0% in recent years, over 8% before 2011), naming each case: chives, US almonds, Chinese goji berries, Turkish figs and Ghanaian pineapple carrying prohibited herbicides or insecticides.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "organic-food/some-sellers-have-passed-off-conventional",
+        "cite": "organic-food/sources/usda-ams-2012-organic-residue.txt#L79-L85"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "USDA AMS 2010-2011 pilot, residue testing of retail organic produce",
+       "verdict": "right",
+       "confidence": 0.5,
+       "note": "Of 571 retail USDA-organic samples, 4% carried residues above the organic limit, and USDA says the findings suggest some were mislabeled conventional products, with bell peppers showing levels and numbers of detections pointing to misrepresentation.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "organic-food/some-sellers-have-passed-off-conventional",
+        "cite": "organic-food/sources/usda-soe-2023.txt#L21-L26"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "USDA Strengthening Organic Enforcement rule",
+       "verdict": "right",
+       "confidence": 0.6,
+       "note": "USDA's SOE fact sheet gives 'documented cases of organic fraud' in increasingly complex supply chains as the reason for the rule.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "contradicting": [],
+     "qualifying": [],
+     "context": [],
+     "problems": [],
+     "limitations": [],
+     "suggestions": [],
+     "explanation": "supported (approved): 3 supporting (3 independent, strongest 0.6)."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "The evidence does not support \"A significant share of food sold as organic is not genuinely organic\"",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.45,
+       "independent": 2,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/significant-share-food-sold-organic-not",
+          "cite": "organic-food/sources/usda-ams-2012-organic-residue.txt#L76-L85"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "USDA AMS 2010-2011 pilot, residue testing of retail organic produce",
+         "verdict": "wrong",
+         "confidence": 0.45,
+         "note": "USDA bought 571 USDA-organic samples of six produce items at retail in 2010-11: 57% had no detected residue, 39% traces under the 5%-of-tolerance allowance and 4% were in violation, only some of them likely mislabeled conventional; the study notes it was not a probability sample, covers six commodities and residue testing cannot see fraud that leaves no residue.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/significant-share-food-sold-organic-not",
+          "cite": "organic-food/sources/cvuas-2021-organic-monitoring.txt#L57-L83"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "CVUA Stuttgart 2021 organic monitoring report (Baden-Wuerttemberg)",
+         "verdict": "wrong",
+         "confidence": 0.45,
+         "note": "Baden-Wuerttemberg's state lab judged 0% of fresh organic produce falsely labelled in 2021 (always well under 5% in 2011-2020, up to 8.5% before 2010) and 3.1% of processed organic foods (2.2-7.0% in recent years, over 8% before 2011); a German market and residue-based detection only, with targeted projects limiting year-to-year comparison.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
+       "problems": [],
+       "limitations": [],
+       "suggestions": [
+        "The strongest support is weak (0.45); say \"one study suggests\" or find stronger evidence."
+       ],
+       "explanation": "supported (qualify): 2 supporting (2 independent, strongest 0.45)."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f1",
+       "text": "Some sellers have passed off conventional food as organic",
+       "kind": "fact",
+       "modality": "possibility",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0.6,
+       "independent": 3,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/some-sellers-have-passed-off-conventional",
+          "cite": "organic-food/sources/cvuas-2021-organic-monitoring.txt#L81-L85"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "CVUA Stuttgart 2021 organic monitoring report (Baden-Wuerttemberg)",
+         "verdict": "right",
+         "confidence": 0.6,
+         "note": "The state lab judged 3.1% of processed organic foods falsely labelled as organic in 2021 (2.2-7.0% in recent years, over 8% before 2011), naming each case: chives, US almonds, Chinese goji berries, Turkish figs and Ghanaian pineapple carrying prohibited herbicides or insecticides.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/some-sellers-have-passed-off-conventional",
+          "cite": "organic-food/sources/usda-ams-2012-organic-residue.txt#L79-L85"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "USDA AMS 2010-2011 pilot, residue testing of retail organic produce",
+         "verdict": "right",
+         "confidence": 0.5,
+         "note": "Of 571 retail USDA-organic samples, 4% carried residues above the organic limit, and USDA says the findings suggest some were mislabeled conventional products, with bell peppers showing levels and numbers of detections pointing to misrepresentation.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/some-sellers-have-passed-off-conventional",
+          "cite": "organic-food/sources/usda-soe-2023.txt#L21-L26"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "USDA Strengthening Organic Enforcement rule",
+         "verdict": "right",
+         "confidence": 0.6,
+         "note": "USDA's SOE fact sheet gives 'documented cases of organic fraud' in increasingly complex supply chains as the reason for the rule.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
+       "problems": [],
+       "limitations": [],
+       "suggestions": [],
+       "explanation": "supported (approved): 3 supporting (3 independent, strongest 0.6)."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f2",
+       "text": "Imported organic food is less trustworthy than domestic organic food",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/imported-organic-food-less-trustworthy-domestic",
+          "cite": "organic-food/sources/usda-oig-2017-imports.txt#L264-L273"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "USDA Inspector General 2017 audit, organic imports",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "OIG (2017) found AMS could not reasonably assure that import certificates were checked at ports and had no controls to keep fumigated imports from being sold as organic, which raises the risk for imports; it measured no fraud rate, and the findings predate the SOE rule.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "USDA Inspector General 2017 audit, organic imports: OIG (2017) found AMS could not reasonably assure that import certificates were checked at ports and had no controls to keep fumigated imports from being sold as organic, which raises the risk for imports; it measured no fraud rate, and the findings predate the SOE rule."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 1 qualifying."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f3",
+       "text": "Organic certifiers rarely test soil or produce for residues",
+       "kind": "fact",
+       "modality": "typical",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/organic-certifiers-rarely-test-soil-produce",
+          "cite": "organic-food/sources/ecfr-7cfr205.txt#L362-L363"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "USDA organic regulations (7 CFR 205)",
+         "verdict": "partly",
+         "confidence": 0.55,
+         "note": "The required floor is low: under 7 CFR 205.670(d) certifiers need sample only 5 percent of operations a year, plus for-cause tests, so most operations need not be tested in a given year; the rule says nothing about how much testing certifiers do above that floor.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "USDA organic regulations (7 CFR 205): The required floor is low: under 7 CFR 205.670(d) certifiers need sample only 5 percent of operations a year, plus for-cause tests, so most operations need not be tested in a given year; the rule says nothing about how much testing certifiers do above that floor."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 1 qualifying."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f4",
+       "text": "The Strengthening Organic Enforcement rule closes supply-chain gaps that allowed organic fraud",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/strengthening-organic-enforcement-rule-closes-supply",
+          "cite": "organic-food/sources/usda-soe-2023.txt#L73-L102"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "USDA Strengthening Organic Enforcement rule",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "SOE covers several known gaps: it brings uncertified importers, traders and brokers under oversight, requires electronic import certificates for all organic imports, and adds traceability audits and fraud-prevention plans; this is the agency describing its own rule, with no data on whether fraud fell.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "USDA Strengthening Organic Enforcement rule: SOE covers several known gaps: it brings uncertified importers, traders and brokers under oversight, requires electronic import certificates for all organic imports, and adds traceability audits and fraud-prevention plans; this is the agency describing its own rule, with no data on whether fraud fell."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 1 qualifying."
+      }
+     }
+    ]
+   },
+   "chainCandidates": [
+    "decision:what-the-seal-actually-requires",
+    "conflict:pesticide-residues-conventional-produce-too-low"
+   ]
+  },
+  {
    "id": "decision:price-and-the-planet",
    "kind": "decision",
    "title": "Is Organic Farming Better for the Planet?",
@@ -3591,405 +4065,6 @@
     ]
    },
    "partOf": "conflict:organic-farming-yields-less-food-per"
-  },
-  {
-   "id": "decision:can-you-trust-the-label",
-   "kind": "decision",
-   "title": "How Common Is Organic Food Fraud?",
-   "alternates": [
-    "Can You Trust the Organic Label?",
-    "Organic Fraud: What Is Known and What Is Not"
-   ],
-   "question": "How often is food sold as organic not really organic?",
-   "whyWatch": "The viewer faces a choice and has heard the claims on every side. This walks them from those claims to what the evidence settles.",
-   "tension": "The claims pull in different directions and not all of them survive a check.",
-   "evidenceNeeded": "A verdict, with its scope, on each claim the decision rests on.",
-   "evidenceAvailable": [
-    "USDA Strengthening Organic Enforcement rule: right (0.6, direct)",
-    "USDA Inspector General 2017 audit, organic imports: partly (0.4, direct)",
-    "USDA organic regulations (7 CFR 205): partly (0.55, direct)",
-    "USDA Strengthening Organic Enforcement rule: partly (0.4, direct)"
-   ],
-   "gaps": [
-    "Reviewer: Every source on this question is the agency describing its own rules or its auditor describing control gaps: documented fraud cases exist, certifiers must test only 5% of operations a year, and the 2017 audit found weak import checks, but nothing in the corpus measures how much organic food is mislabelled or whether the 2023 enforcement rule reduced it. Unblocking it needs a measured rate: residue or isotope testing of retail organic samples, NOP enforcement and residue-testing results over time, or an independent analysis of import volumes against certified production before and after the rule.",
-    "Unchecked: \"A significant share of food sold as organic is not genuinely organic\"",
-    "No study strong enough to decide: \"Imported organic food is less trustworthy than domestic organic food\""
-   ],
-   "premise": "6 claims bear on this choice; studies decide 3 of them. Walk the viewer from the claims they have heard to the decision the evidence supports.",
-   "claims": [
-    "organic-food/significant-share-food-sold-organic-not",
-    "organic-food/some-sellers-have-passed-off-conventional",
-    "organic-food/imported-organic-food-less-trustworthy-domestic",
-    "organic-food/organic-certifiers-rarely-test-soil-produce",
-    "organic-food/strengthening-organic-enforcement-rule-closes-supply"
-   ],
-   "related": [
-    "organic-food/organic-food-more-nutritious-conventional",
-    "organic-food/organic-food-costs-substantially-more-conventional",
-    "organic-food/organic-food-spoils-faster-conventional",
-    "organic-food/organic-farming-yields-less-food-per",
-    "organic-food/imported-organic-products-must-meet-same"
-   ],
-   "arc": {
-    "hook": "The decision a viewer faces, in their terms.",
-    "conflict": "The claims pulling in different directions: \"A significant share of food sold as organic is not genuinely organic\"; \"Imported organic food is less trustworthy than domestic organic food\"; \"Some sellers have passed off conventional food as organic\"; \"Organic certifiers rarely test soil or produce for residues\"; \"Organic labelling is mainly a marketing tool to charge higher prices\"; \"The Strengthening Organic Enforcement rule closes supply-chain gaps that allowed organic fraud\".",
-    "evidence": "Each claim's verdict, strongest study first.",
-    "resolution": "What the evidence settles and what it leaves open.",
-    "takeaway": "A decision rule the viewer can apply."
-   },
-   "coherence": {
-    "score": 0.7,
-    "basis": "review",
-    "explanation": "Pruned to one question, how often is organic food not what it says, with the fraud, imports, testing and enforcement claims that bear on it; the 'mainly marketing' claim is about price and has its own candidate."
-   },
-   "scores": {
-    "coherence": 0.7,
-    "relevance": 1,
-    "curiosity": 0.7,
-    "stakes": 0.7,
-    "depth": 1,
-    "originality": 1,
-    "evidence": 0.6,
-    "editorial": 0.82,
-    "overall": 0.73,
-    "explanation": "editorial 0.82 = mean of coherence 0.7 (review), relevance 1 (23 sources, 22 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 0.7 (lean: pro), depth 1 (3 studies, 5 claims, tension); evidence 0.6 = strongest USDA Strengthening Organic Enforcement rule at 0.6 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: Reviewer: Every source on this question is the agency describing its own rules or its auditor describing control gaps: documented fraud cases exist, certifiers must test only 5% of operations a year, and the 2017 audit found weak import checks, but nothing in the corpus measures how much organic food is mislabelled or whether the 2023 enforcement rule reduced it. Unblocking it needs a measured rate: residue or isotope testing of retail organic samples, NOP enforcement and residue-testing results over time, or an independent analysis of import volumes against certified production before and after the rule.",
-   "blocking": [
-    "Reviewer: Every source on this question is the agency describing its own rules or its auditor describing control gaps: documented fraud cases exist, certifiers must test only 5% of operations a year, and the 2017 audit found weak import checks, but nothing in the corpus measures how much organic food is mislabelled or whether the 2023 enforcement rule reduced it. Unblocking it needs a measured rate: residue or isotope testing of retail organic samples, NOP enforcement and residue-testing results over time, or an independent analysis of import volumes against certified production before and after the rule."
-   ],
-   "reviewed": true,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "Some sellers have passed off conventional food as organic",
-     "kind": "fact",
-     "modality": "possibility",
-     "status": "supported",
-     "decision": "approved",
-     "review": false,
-     "verbatim": true,
-     "strength": 0.6,
-     "independent": 1,
-     "supporting": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "organic-food/some-sellers-have-passed-off-conventional",
-        "cite": "organic-food/sources/usda-soe-2023.txt#L21-L26"
-       },
-       "cited": true,
-       "role": "supports",
-       "by": "USDA Strengthening Organic Enforcement rule",
-       "verdict": "right",
-       "confidence": 0.6,
-       "note": "USDA's SOE fact sheet gives 'documented cases of organic fraud' in increasingly complex supply chains as the reason for the rule.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      }
-     ],
-     "contradicting": [],
-     "qualifying": [],
-     "context": [],
-     "problems": [],
-     "limitations": [],
-     "suggestions": [],
-     "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.6)."
-    },
-    "findings": [
-     {
-      "role": "belief",
-      "validation": {
-       "id": "f0",
-       "text": "7 sources claim \"A significant share of food sold as organic is not genuinely organic\"; no study in the corpus has checked it.",
-       "kind": "attribution",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "organic-food/significant-share-food-sold-organic-not",
-          "source": "2P0Fh6wc-kI"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "If Organic Food Was Honest - Honest Ads",
-         "verdict": null,
-         "confidence": null,
-         "note": "if you ate organic grains between 2010 and 2017 there's a good chance that no you didn't"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "organic-food/significant-share-food-sold-organic-not",
-          "source": "Q9wvL24CpCg"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Are We Being Lied to About Organic Food?",
-         "verdict": null,
-         "confidence": null,
-         "note": "fraudulent labeling is not uncommon"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "organic-food/significant-share-food-sold-organic-not",
-          "source": "WWXKe5DgNMU"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "10 Common Myths About Organic Food",
-         "verdict": null,
-         "confidence": null,
-         "note": "a number of studies have shown that products that hit the market with the organic label are just not organic at all"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "organic-food/significant-share-food-sold-organic-not",
-          "source": "cfXQzAIaBnk"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Is Buying ORGANIC Just A SCAM?",
-         "verdict": null,
-         "confidence": null,
-         "note": "it's been found that 20% of non Organics are in or in things that are labeled organic"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "organic-food/significant-share-food-sold-organic-not",
-          "source": "lRPqZUegKyk"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Farmer Behind The U.S.'s Largest Organic Food Fraud Scheme Dies By Suicide | TIME",
-         "verdict": null,
-         "confidence": null,
-         "note": "his sales equaled up to seven percent of organic corn growth in the country in 2016"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "organic-food/significant-share-food-sold-organic-not",
-          "source": "u5l4cdUjau4"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Is organic food really better for you?",
-         "verdict": null,
-         "confidence": null,
-         "note": "being certified organic may not mean the product is truly organic"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "organic-food/significant-share-food-sold-organic-not",
-          "source": "vnews-millions-of-pounds-of-apparently-fake-organic-grains-convince-the-food-ind"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Fake ‘Organic’ Grain Raises Industry Alarm - Valley News",
-         "verdict": null,
-         "confidence": null,
-         "note": "large enough to constitute a meaningful proportion of the U.S. supply of those commodities"
-        }
-       ],
-       "problems": [],
-       "limitations": [
-        "Reports what the sources said, not whether it is true."
-       ],
-       "suggestions": [],
-       "explanation": "supported (approved): no direct support, 7 source statements."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f1",
-       "text": "Some sellers have passed off conventional food as organic",
-       "kind": "fact",
-       "modality": "possibility",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0.6,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "organic-food/some-sellers-have-passed-off-conventional",
-          "cite": "organic-food/sources/usda-soe-2023.txt#L21-L26"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "USDA Strengthening Organic Enforcement rule",
-         "verdict": "right",
-         "confidence": 0.6,
-         "note": "USDA's SOE fact sheet gives 'documented cases of organic fraud' in increasingly complex supply chains as the reason for the rule.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.6)."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f2",
-       "text": "Imported organic food is less trustworthy than domestic organic food",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "organic-food/imported-organic-food-less-trustworthy-domestic",
-          "cite": "organic-food/sources/usda-oig-2017-imports.txt#L264-L273"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "USDA Inspector General 2017 audit, organic imports",
-         "verdict": "partly",
-         "confidence": 0.4,
-         "note": "OIG (2017) found AMS could not reasonably assure that import certificates were checked at ports and had no controls to keep fumigated imports from being sold as organic, which raises the risk for imports; it measured no fraud rate, and the findings predate the SOE rule.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "USDA Inspector General 2017 audit, organic imports: OIG (2017) found AMS could not reasonably assure that import certificates were checked at ports and had no controls to keep fumigated imports from being sold as organic, which raises the risk for imports; it measured no fraud rate, and the findings predate the SOE rule."
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): no direct support, 1 qualifying."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f3",
-       "text": "Organic certifiers rarely test soil or produce for residues",
-       "kind": "fact",
-       "modality": "typical",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "organic-food/organic-certifiers-rarely-test-soil-produce",
-          "cite": "organic-food/sources/ecfr-7cfr205.txt#L362-L363"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "USDA organic regulations (7 CFR 205)",
-         "verdict": "partly",
-         "confidence": 0.55,
-         "note": "The required floor is low: under 7 CFR 205.670(d) certifiers need sample only 5 percent of operations a year, plus for-cause tests, so most operations need not be tested in a given year; the rule says nothing about how much testing certifiers do above that floor.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "USDA organic regulations (7 CFR 205): The required floor is low: under 7 CFR 205.670(d) certifiers need sample only 5 percent of operations a year, plus for-cause tests, so most operations need not be tested in a given year; the rule says nothing about how much testing certifiers do above that floor."
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): no direct support, 1 qualifying."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f4",
-       "text": "The Strengthening Organic Enforcement rule closes supply-chain gaps that allowed organic fraud",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "organic-food/strengthening-organic-enforcement-rule-closes-supply",
-          "cite": "organic-food/sources/usda-soe-2023.txt#L73-L102"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "USDA Strengthening Organic Enforcement rule",
-         "verdict": "partly",
-         "confidence": 0.4,
-         "note": "SOE covers several known gaps: it brings uncertified importers, traders and brokers under oversight, requires electronic import certificates for all organic imports, and adds traceability audits and fraud-prevention plans; this is the agency describing its own rule, with no data on whether fraud fell.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "USDA Strengthening Organic Enforcement rule: SOE covers several known gaps: it brings uncertified importers, traders and brokers under oversight, requires electronic import certificates for all organic imports, and adds traceability audits and fraud-prevention plans; this is the agency describing its own rule, with no data on whether fraud fell."
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): no direct support, 1 qualifying."
-      }
-     }
-    ]
-   }
   },
   {
    "id": "conflict:dirty-dozen-list-reliable-guide-which",
@@ -4721,6 +4796,11 @@
    "reason": "a chapter of conflict:organic-farming-uses-pesticides, which now carries this claim: whether organic pesticides are safer is the second half of the same answer, and alone it is a one-table story"
   },
   {
+   "id": "conflict:significant-share-food-sold-organic-not",
+   "title": "Is it true that A significant share of food sold as organic is not genuinely organic?",
+   "reason": "subsumed by decision:can-you-trust-the-label"
+  },
+  {
    "id": "contradicted:dirty-dozen-list-reliable-guide-which",
    "title": "Is it true that the Dirty Dozen list is a reliable guide to which produce to buy organic?",
    "reason": "a variation of conflict:dirty-dozen-list-reliable-guide-which (claims overlap 1)"
@@ -4741,9 +4821,9 @@
    "reason": "a variation of conflict:regulators-assess-pesticides-one-time-ignore (claims overlap 1)"
   },
   {
-   "id": "gap:significant-share-food-sold-organic-not",
-   "title": "What is the evidence that A significant share of food sold as organic is not genuinely organic?",
-   "reason": "a chapter of decision:can-you-trust-the-label, which holds this claim and the rest of the fraud evidence under the same question"
+   "id": "contradicted:significant-share-food-sold-organic-not",
+   "title": "Is it true that A significant share of food sold as organic is not genuinely organic?",
+   "reason": "subsumed by decision:can-you-trust-the-label"
   },
   {
    "id": "surprise:dirty-dozen-list-reliable-guide-which",
