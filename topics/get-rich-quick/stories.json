@@ -3,7 +3,7 @@
  "basis": {
   "claims": 708,
   "sources": 171,
-  "studies": 24,
+  "studies": 26,
   "candidates": 38
  },
  "stories": [
@@ -2550,23 +2550,25 @@
     "What Happened to the People Who Bought an AI Store"
    ],
    "question": "Can beginners really make money with AI side hustles?",
-   "whyWatch": "Six sources make the promise; the only evidence is what happened to the buyers of one company's AI-run stores.",
-   "tension": "A possibility claim against one enforcement case.",
+   "whyWatch": "Six sources make the promise; the evidence is one firm's AI-store buyers and one field trial of an AI business mentor, neither of them beginners starting AI side hustles.",
+   "tension": "A possibility claim against one enforcement case and one trial in which the AI helped only the owners who were already doing well.",
    "evidenceNeeded": "Outcomes for a sample of beginners across AI side hustles, not one firm's customers.",
-   "evidenceAvailable": [],
+   "evidenceAvailable": [
+    "AI mentor field experiment, Kenya (Otis et al.): wrong (0.35, partial)"
+   ],
    "gaps": [
-    "Reviewer: The only evidence is an FTC complaint about one firm's 'AI' store buyers; nothing measures beginners' results across AI side hustles.",
+    "Reviewer: Still no measure of beginners: the FTC Automators complaint covers one firm's store buyers and the Otis et al. Kenya trial covers existing small-business owners given AI advice (weaker ones did worse). It needs outcomes for a sample of beginners who started AI side hustles (earnings or profit after costs, e.g. a platform or survey study of new freelancers or sellers using generative AI).",
     "FTC v. Automators complaint is context only: allegations about buyers of one firm's 'AI' stores; it cannot rule out beginners earning from other AI side hustles"
    ],
-   "premise": "6 sources assert \"Beginners with no experience can make real money with AI side hustles because the tools do the hard part\". FTC v. Automators complaint: Empire/Automators claimed 'AI machine learning' would maximise store revenues for hands-off buyers; the FTC alleges virtually all purchasers failed to earn the advertised income and most lost their entire investment. The gap between what gets repeated and what the data shows is the story.",
+   "premise": "6 sources assert \"Beginners with no experience can make real money with AI side hustles because the tools do the hard part\". AI mentor field experiment, Kenya (Otis et al.): In a randomized trial of 640 Kenyan small-business owners given a GPT-4 business mentor, the average effect on revenue and profit was not distinguishable from zero and only above-median performers gained (about 15%), while below-median performers did nearly 10% worse: the tool did not do the hard part for the weakest operators (existing businesses in Kenya over two months, not beginners starting AI side hustles). The gap between what gets repeated and what the data shows is the story.",
    "claims": [
     "get-rich-quick/beginners-experience-can-make-real-money"
    ],
    "related": [],
    "arc": {
     "hook": "Open on the claim in the sources' own words.",
-    "conflict": "Then the study that checked it: FTC v. Automators complaint: Empire/Automators claimed 'AI machine learning' would maximise store revenues for hands-off buyers; the FTC alleges virtually all purchasers failed to earn the advertised income and most lost their entire investment.",
-    "evidence": "Walk through FTC v. Automators complaint: what was measured, on whom, and the caveats.",
+    "conflict": "Then the study that checked it: AI mentor field experiment, Kenya (Otis et al.): In a randomized trial of 640 Kenyan small-business owners given a GPT-4 business mentor, the average effect on revenue and profit was not distinguishable from zero and only above-median performers gained (about 15%), while below-median performers did nearly 10% worse: the tool did not do the hard part for the weakest operators (existing businesses in Kenya over two months, not beginners starting AI side hustles).",
+    "evidence": "Walk through AI mentor field experiment, Kenya (Otis et al.), FTC v. Automators complaint: what was measured, on whom, and the caveats.",
     "resolution": "Say exactly what the evidence rules out and what it leaves open, including any narrower version that survives.",
     "takeaway": "What a viewer should do differently now that the claim is not what it seemed."
    },
@@ -2580,17 +2582,17 @@
     "relevance": 0.64,
     "curiosity": 1,
     "stakes": 1,
-    "depth": 0.5,
+    "depth": 0.63,
     "originality": 1,
-    "evidence": 0,
-    "editorial": 0.79,
-    "overall": 0.47,
-    "explanation": "editorial 0.79 = mean of coherence 0.8 (review), relevance 0.64 (6 sources, 6 channels), curiosity 1 (contradicted, a study overturned the guess), stakes 1 (lean: pro-hype), depth 0.5 (0 studies, 1 claim, tension); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "evidence": 0.21,
+    "editorial": 0.81,
+    "overall": 0.57,
+    "explanation": "editorial 0.81 = mean of coherence 0.8 (review), relevance 0.64 (6 sources, 6 channels), curiosity 1 (contradicted, a study overturned the guess), stakes 1 (lean: pro-hype), depth 0.63 (1 study, 1 claim, tension); evidence 0.21 = strongest AI mentor field experiment, Kenya (Otis et al.) at 0.35 (partial) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: Reviewer: The only evidence is an FTC complaint about one firm's 'AI' store buyers; nothing measures beginners' results across AI side hustles.",
+   "readinessWhy": "Essential evidence is missing: Reviewer: Still no measure of beginners: the FTC Automators complaint covers one firm's store buyers and the Otis et al. Kenya trial covers existing small-business owners given AI advice (weaker ones did worse). It needs outcomes for a sample of beginners who started AI side hustles (earnings or profit after costs, e.g. a platform or survey study of new freelancers or sellers using generative AI).",
    "blocking": [
-    "Reviewer: The only evidence is an FTC complaint about one firm's 'AI' store buyers; nothing measures beginners' results across AI side hustles."
+    "Reviewer: Still no measure of beginners: the FTC Automators complaint covers one firm's store buyers and the Otis et al. Kenya trial covers existing small-business owners given AI advice (weaker ones did worse). It needs outcomes for a sample of beginners who started AI side hustles (earnings or profit after costs, e.g. a platform or survey study of new freelancers or sellers using generative AI)."
    ],
    "reviewed": true,
    "audit": {
@@ -2599,15 +2601,32 @@
      "text": "Contrary to the sources that repeat it, the evidence does not support \"Beginners with no experience can make real money with AI side hustles because the tools do the hard part\"",
      "kind": "fact",
      "modality": "possibility",
-     "status": "unverified",
-     "decision": "blocked",
-     "review": false,
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
      "verbatim": false,
      "strength": 0,
      "independent": 0,
      "supporting": [],
      "contradicting": [],
-     "qualifying": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "get-rich-quick/beginners-experience-can-make-real-money",
+        "cite": "get-rich-quick/sources/otis-genai-kenya-entrepreneurs.txt#L309-L333"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "AI mentor field experiment, Kenya (Otis et al.)",
+       "verdict": "wrong",
+       "confidence": 0.35,
+       "note": "In a randomized trial of 640 Kenyan small-business owners given a GPT-4 business mentor, the average effect on revenue and profit was not distinguishable from zero and only above-median performers gained (about 15%), while below-median performers did nearly 10% worse: the tool did not do the hard part for the weakest operators (existing businesses in Kenya over two months, not beginners starting AI side hustles).",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "a randomized trial showing a GPT-4 mentor did not do the hard part for below-median business owners (they did nearly 10% worse), which bears on the claim's mechanism; but the participants ran existing Kenyan small businesses and got advice, not beginners starting AI side hustles, so it cannot settle what beginners can earn"
+      }
+     ],
      "context": [
       {
        "ref": {
@@ -2628,13 +2647,14 @@
      ],
      "problems": [],
      "limitations": [
-      "The studies on this claim are context only: none decides the sentence as worded.",
-      "Context only, FTC v. Automators complaint (wrong): allegations about buyers of one firm's 'AI' stores; it cannot rule out beginners earning from other AI side hustles."
+      "AI mentor field experiment, Kenya (Otis et al.): In a randomized trial of 640 Kenyan small-business owners given a GPT-4 business mentor, the average effect on revenue and profit was not distinguishable from zero and only above-median performers gained (about 15%), while below-median performers did nearly 10% worse: the tool did not do the hard part for the weakest operators (existing businesses in Kenya over two months, not beginners starting AI side hustles). [partial: a randomized trial showing a GPT-4 mentor did not do the hard part for below-median business owners (they did nearly 10% worse), which bears on the claim's mechanism; but the participants ran existing Kenyan small businesses and got advice, not beginners starting AI side hustles, so it cannot settle what beginners can earn]",
+      "Context only, FTC v. Automators complaint (wrong): allegations about buyers of one firm's 'AI' stores; it cannot rule out beginners earning from other AI side hustles.",
+      "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
      ],
      "suggestions": [
-      "Reframe from \"can\" to what the base rate shows (\"most do not\"), which the evidence does decide."
+      "Add the qualification: the evidence supports a narrower or weaker statement."
      ],
-     "explanation": "unverified (blocked): no direct support, 1 context only."
+     "explanation": "qualified (qualify): no direct support, 1 qualifying, 1 context only."
     },
     "findings": [
      {
@@ -2644,15 +2664,32 @@
        "text": "The evidence does not support \"Beginners with no experience can make real money with AI side hustles because the tools do the hard part\"",
        "kind": "fact",
        "modality": "possibility",
-       "status": "unverified",
-       "decision": "blocked",
-       "review": false,
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
        "verbatim": false,
        "strength": 0,
        "independent": 0,
        "supporting": [],
        "contradicting": [],
-       "qualifying": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/beginners-experience-can-make-real-money",
+          "cite": "get-rich-quick/sources/otis-genai-kenya-entrepreneurs.txt#L309-L333"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "AI mentor field experiment, Kenya (Otis et al.)",
+         "verdict": "wrong",
+         "confidence": 0.35,
+         "note": "In a randomized trial of 640 Kenyan small-business owners given a GPT-4 business mentor, the average effect on revenue and profit was not distinguishable from zero and only above-median performers gained (about 15%), while below-median performers did nearly 10% worse: the tool did not do the hard part for the weakest operators (existing businesses in Kenya over two months, not beginners starting AI side hustles).",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "a randomized trial showing a GPT-4 mentor did not do the hard part for below-median business owners (they did nearly 10% worse), which bears on the claim's mechanism; but the participants ran existing Kenyan small businesses and got advice, not beginners starting AI side hustles, so it cannot settle what beginners can earn"
+        }
+       ],
        "context": [
         {
          "ref": {
@@ -2673,13 +2710,14 @@
        ],
        "problems": [],
        "limitations": [
-        "The studies on this claim are context only: none decides the sentence as worded.",
-        "Context only, FTC v. Automators complaint (wrong): allegations about buyers of one firm's 'AI' stores; it cannot rule out beginners earning from other AI side hustles."
+        "AI mentor field experiment, Kenya (Otis et al.): In a randomized trial of 640 Kenyan small-business owners given a GPT-4 business mentor, the average effect on revenue and profit was not distinguishable from zero and only above-median performers gained (about 15%), while below-median performers did nearly 10% worse: the tool did not do the hard part for the weakest operators (existing businesses in Kenya over two months, not beginners starting AI side hustles). [partial: a randomized trial showing a GPT-4 mentor did not do the hard part for below-median business owners (they did nearly 10% worse), which bears on the claim's mechanism; but the participants ran existing Kenyan small businesses and got advice, not beginners starting AI side hustles, so it cannot settle what beginners can earn]",
+        "Context only, FTC v. Automators complaint (wrong): allegations about buyers of one firm's 'AI' stores; it cannot rule out beginners earning from other AI side hustles.",
+        "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
        ],
        "suggestions": [
-        "Reframe from \"can\" to what the base rate shows (\"most do not\"), which the evidence does decide."
+        "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "unverified (blocked): no direct support, 1 context only."
+       "explanation": "qualified (qualify): no direct support, 1 qualifying, 1 context only."
       }
      }
     ]

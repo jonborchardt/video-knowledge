@@ -1,0 +1,1095 @@
+The Short-Term Effects of Generative Artificial Intelligence on
+     Employment: Evidence from an Online Labor Market*
+
+       Xiang Hui            Oren Reshef          Luofeng Zhou §
+Washington University  Washington University  New York University
+
+      in St. Louis           in St. Louis
+
+                           July 31, 2023
+
+                       Abstract
+
+    Generative Artificial Intelligence (AI) holds the potential to either complement knowledge
+workers by increasing their productivity or substitute them entirely. We examine the short-term
+effects of the recent release of the large language model (LLM), ChatGPT, on the employment
+outcomes of freelancers on a large online platform. We find that freelancers in highly affected
+occupations suffer from the introduction of generative AI, experiencing reductions in both em-
+ployment and earnings. We find similar effects studying the release of other image-based, gener-
+ative AI models. Exploring the heterogeneity by freelancers' employment history, we do not find
+evidence that high-quality service, measured by their past performance and employment, moder-
+ates the adverse effects on employment. In fact, we find suggestive evidence that top freelancers
+are disproportionately affected by AI. These results suggest that in the short term generative AI
+reduces overall demand for knowledge workers of all types, and may have the potential to narrow
+gaps among workers.
+
+    *We thank Avi Collis, Meng Liu, Lindsey Raymond, Dan Rock, Ananya Sen, and Catherine Tucker for very helpful
+comments and discussions.
+
+    hui@wustl.edu
+    oren@wustl.edu
+    §lz2198@stern.nyu.edu
+
+                                                            1
+
+                        Electronic copy available at: https://ssrn.com/abstract=4527336
+1 Introduction
+
+Recent developments, followed by the rapid adoption of generative Artificial Intelligence (AI) models,
+such as ChatGPT and Midjourney, have offered great promises and perils. Powerful AI tools have
+dramatically improved performance over previous versions and users are able to use them to complete
+a variety of tasks without requiring specialized knowledge. In that sense, they can be thought of as
+a general-purpose technology (Brynjolfsson and Mitchell, 2017), with the potential for far-ranging
+economic and societal effects.
+
+The effects of this new technology on workers remain unclear. On the one hand, AI can complement
+human workers by increasing their (Noy and Zhang, 2023); while on the other hand it may substitute
+workers, leading to mass layoffs and unemployment (Acemoglu and Autor, 2011; Brynjolfsson et al.,
+2018a; Agrawal et al., 2019a). AI may also alter the composition of workers in the labor market
+by either exacerbating or mitigating wage inequality within and across occupations. Accordingly,
+previous literature has attempted to evaluate the effects on labor market outcomes in other, similar
+technologies (Autor et al., 2003; Acemoglu and Restrepo, 2020). The direct effects of generative AI
+remain yet unexplored and current research offers predictions on the future implications of generative
+AI on various tasks and occupations (Eloundou et al., 2023; Felten et al., 2023).
+
+In this paper, we conduct an empirical investigation of the short-term effects of the introduction of gen-
+erative AI on labor market outcomes. Our empirical analysis focuses on the introduction of ChatGPT
+in November 2022. The data are obtained from a large online labor market, Upwork, which matches
+freelancers with short-term projects. Due to the flexibility of this spot market compared to traditional,
+formal employment, it is a great setting to explore the short-term effects of ChatGPT. We begin by
+obtaining publicly available data on the full employment histories of freelancers on the platform. We
+then use a difference-in-differences research design to study the differential change in employment
+outcomes of freelancers in more affected occupations compared to freelancers in less affected occupa-
+tions, following the release of ChatGPT. In particular, given results from previous research (Eloundou
+et al., 2023), anecdotal evidence, and the fact that ChatGPT is a large language model (LLM) specif-
+ically trained to predict and generate text, we focus on writing-related services as the main affected
+occupations.
+
+We find that ChatGPT has a substantial adverse affected workers' employment outcomes. Freelancers
+
+                                                            2
+
+                        Electronic copy available at: https://ssrn.com/abstract=4527336
+in more affected occupations experienced a decrease of 2% in the number of monthly jobs and a
+decrease of 5.2% in monthly earnings on the platform, following the release of ChatGPT, compared
+to freelancers in less-affected occupations. These effects represent an economically meaningful and
+statistically significant (at 1% level) reduction in employment on the platform. We observe adverse
+effects on both the intensive and extensive margins: freelancers are 1.2% less likely to receive any
+employment in a given month and take 4.7% less jobs, conditional on employment.
+
+We test the robustness of our findings to several alternative specifications. In particular, to assess both
+the generalizability as well as the validity of our design, we conduct an additional analysis in which we
+estimate the effect of the release of another generative AI at a different time and on another set of work-
+ers. Specifically, we study the effect of the April 2022 release of image-based LLMs, such as Dall-E
+2 and Midjourney, on freelancers offering image- and design-related occupations. Reassuringly, we
+observe qualitatively similar effects of the release of image-based AI models on the performance of
+freelancers on the platform, in terms of both the number of jobs and total earnings.
+
+Next, we study whether the quality of a freelancer mediates the effect on employment outcomes. We
+use several measures to determine freelancers' quality, including their past employment and earnings,
+the skill level necessitated by past jobs, past performance, and hourly rate. Across the board, we do not
+find evidence that being high-quality moderates the adverse effects of ChatGPT on a freelancer's em-
+ployment. In fact, evidence are consistent with high-quality workers being disproportionately affected
+by the release of generative AI tools, especially in the image-focused occupations.
+
+We interpret these findings as suggesting that generative AI models act as a substitute for knowledge
+workers of all quality types, at least in the short term, effectively reducing their employment and
+earnings. The heterogeneous effects are consistent with generative AI potentially reducing the pro-
+ductivity gap between low-quality and high-quality workers. We conclude by discussing the broader
+implications of these preliminary results on the effect of AI on the labor market.
+
+1.1 Related Literature
+
+Our results contribute to the growing literature on AI and labor markets. One common theme in the
+literature is that the effect of AI on the labor market is theoretically ambiguous: while AI can serve as
+a substitute for labor, it also has the potential to complement workers by increasing labor productivity
+
+                                                            3
+
+                        Electronic copy available at: https://ssrn.com/abstract=4527336
+(Autor et al., 2003; Acemoglu and Autor, 2011; Acemoglu and Restrepo, 2018; Brynjolfsson et al.,
+2018a; Agrawal et al., 2019a; Acemoglu and Restrepo, 2020).
+
+One of the most recent and influential developments is the release of new generative AI models and
+LLMs. Several papers have aimed to quantify their effects on the labor market, particularly a recent
+set of papers (Eloundou et al., 2023; Felten et al., 2023) that attempts to predict which industries will
+be most affected by LLMs in the future by using a measure of compatibility between the required tasks
+in an industry and the AI capabilities--a methodology first seen in Felten et al. (2018); Brynjolfsson
+et al. (2018a) and Webb (2019). Another stream of papers conducts field experiments randomizing
+access to generative AI tools and studies the effect on worker performance (Noy and Zhang, 2023;
+Brynjolfsson et al., 2023; van Inwegen et al., 2023; Peng et al., 2023). Lastly, Yilmaz et al. (2023)
+find that the introduction of Google's machine translation reduces translators' employment, especially
+for tasks with analytical elements. Perhaps most similarly to this work, the paper also finds that the
+introduction of ChatGPT reduced the number of questions and answers on Stack Exchange. Our
+paper contributes to this strand of literature by studying the short-run effect of ChatGPT on labor
+market outcomes, such as worker employment and income. Our granular worker-level data allows us
+to study how the effects differ by workers quality-level within a given occupation.
+
+More broadly, our results also contribute to the literature examining the effect of AI technologies on
+the economy. Past work has examined the consequences of deploying AI in areas such as machine
+translation (Brynjolfsson et al., 2019), customer service (Luo et al., 2019; Schanke et al., 2021), sales
+(Cao and Zhang, 2020; Luo et al., 2021), human resources (Tambe et al., 2019), online retail (Overby
+et al., 2010; Sun et al., 2019; Zhang et al., 2021), international trade (Goldfarb and Trefler, 2018),
+data market (Tucker, 2018; Jin, 2018), and programming (Cowgill et al., 2020; Cheng et al., 2022).
+As a general-purpose technology, AI has the potential to drastically change productivity (Brynjolfsson
+et al., 2018b; Agrawal et al., 2019b) as well as innovation (Cockburn et al., 2018) processes.
+
+2 Setting
+
+ChatGPT, released by OpenAI, is a powerful LLM that dramatically improves the performance of its
+predecessor, GPT-2. LLMs are a class of AI models that have a large number of parameters (175
+billion for ChatGPT) and are trained on large datasets of text. The trained data and flexibility of
+
+                                                            4
+
+                        Electronic copy available at: https://ssrn.com/abstract=4527336
+the models enables the learning of the statistical relationships between words and phrases, which in
+turn allows the model to generate text that is both natural and informative. Immediate use cases of
+GPT include content writing, copyediting, answering questions, and language translation. Besides its
+capability, ChatGPT is also free to use and accessible to the public. Perhaps unsurprisingly, ChatGPT's
+user base grew rapidly, reaching 100 million since its November 2022 launch. At the time of writing
+this paper, LLMs are still in a phase of rapid development, with recent developments such as GPT-4
+and Bard.
+
+We study the effect of ChatGPT on labor market outcomes in the context of Upwork, one of the largest
+online labor markets in the world. The platform matches employers with independent freelancers for
+small to medium size tasks. The services on Upwork are typically remote jobs, ranging from data
+entry and graphic design to software development and marketing (Horton, 2010). On Upwork, a
+typical workflow starts with the creation of a job posting by a would-be employer (buyer). The job
+posting includes a description of the job, the category of the service (e.g., writing or administrative
+support), the required skills or qualifications for the job, and the expected outputs and timeline. Once
+a job is posted, workers may apply to the job by submitting a proposal, or may be directly invited by
+the buyer (Barach and Horton, 2021).
+
+Upwork is a good setting to study the short-term effects of generative AI on labor outcomes. First, we
+are able to obtain the complete work histories of freelancers on the platform and to observe relevant
+freelancer attributes (or control for time invariant unobserved differences). Second, becasue this is
+a relatively-short-term, spot labor market, and employers are able renegotiate and rehire frequently,
+allowing for more flexibility compared to traditional, formal employment. Thus, while LLMs are still
+too young to replace full-time jobs, we may already be able to detect its effect in an online labor
+market.1
+
+    1A potential limitation is that we do not observe off-platform employment, and thus cannot say whether reduction is
+employment on the platform represents reduction in total employment, or is merely substituting other forms of employment.
+However, Horton (2017) provides evidence that multi-homing is rare and that online and offline hiring are not very substi-
+tutable. In addition, we are unable to evaluate whether high-skills Upwork workers are also highly skilled in the general
+population.
+
+                                                            5
+
+                        Electronic copy available at: https://ssrn.com/abstract=4527336
+3 Empirical Framework
+
+3.1 Data
+
+Our primary data set is obtained from Upwork's freelancers API. We scraped all available information
+on all searchable freelancers' profile pages,2 including their occupations, qualifications, and skills.
+We also observe metrics on past employment, such as total past earnings, number of previous jobs,
+success rate of completed jobs, and the reviews left by previous buyers. Notably, we are only able to
+observe a snapshot of the freelancer pool as it was in April 2023, and are unable to observe changes
+made in the profile page over time.3
+
+We restrict our attention to the period from January 2022 through April 2023. Employment outcomes
+are aggregated to the freelancer-month level by the date at which the job started, focusing on monthly
+number of jobs and monthly income.4 We winsorize both outcomes at the 1% and 99% levels. Because
+our research design uses variation across occupations, we restrict our attention to freelancers offering
+service in a single occupation (approximately 85% of freelancers). Our final data set consists of 92,547
+freelancers. Table 1 presents the summary statistics for the variables used in the main analysis. We
+note that, on average, a freelancer starts a job once every three months, for an average monthly pay of
+$171. There exists, however, substantial variation across both months and freelancers.
+
+Our secondary data set, which is used to provide descriptive motivation for our research design, con-
+sists of data obtained from Google Trends. The API provides relative interest in specific search terms
+on Google. For each one of the search terms, we obtain the change in interest in the United States over
+the duration of our sample period. Notably, Google only allows a comparison across five search terms
+at a time and always normalizes the results relative to highest value. Thus, when comparing across
+many search terms, we ran multiple queries, always including the highest value search term.
+
+    2We get data on freelancers that are available through the API. A subset of freelancers are not "searchable", and thus
+do not appear in our data. Unfortunately, we do not have an estimate of the share of non-searchable freelancers. In addi-
+tion, in order to reduce bias from fraudulent jobs, which are generated to improve a freelancer's employment history, we
+omit freelancers whose first job's income is less than 5% or more than 500% the average of their first five jobs, which is
+approximately the 10th and 90th percentiles. We discuss our data sample restrictions in detail in Appendix B.
+
+    3For example, our sample only includes freelancers with active profiles at the time of obtaining the data, as we do not
+observe terminated accounts. Similarly, we are unable to observe changes made to freelancers' cover letters or qualifications
+over time.
+
+    4We also observe the total number of hours for a subset of jobs. This measure, however, is poorly populated and is only
+available for per-hour jobs.
+
+                                                            6
+
+                        Electronic copy available at: https://ssrn.com/abstract=4527336
+3.2 Empirical Strategy
+
+The release of ChatGPT3 on November 30, 20225 provides a shock to both the salience and accessi-
+bility of generative AI and LLMs. Our primary goal is to estimate the direct short-term effect of this
+new technology on employment outcomes. Naturally, the release of ChatGPT has the potential to dis-
+rupt multiple industries and affect a large share of the workforce in the long term, similar to what has
+been observed for pre-GPT AI technologies (Acemoglu et al., 2022). Focusing on the short-, and even
+immediate-term effects of the release of generative AI, we focus on occupations that are most promi-
+nently affected by the current rather than future capabilities of the model. One such susceptible type
+of industry are writing-related occupations, such as content writing, editing, and proofreading.
+
+As an LLM, dialogue-based AI, GPT is specifically trained using large amount of text to predict and
+generate text. It particularly excels in understanding and generating human-like responses to a wide
+range of queries. Though similar to other general-purpose technologies, ChatGPT has the potential
+to transform multiple industries in the long term (Helpman and Trajtenberg, 1994; Eloundou et al.,
+2023), the tangibility of tasks in the writing industry allows for a straightforward application of GPT's
+text-generation capabilities even in the the short term. For example, users who are looking for copy-
+editing services can easily copy and paste paragraphs into the GPT prompt and immediately evaluate
+its output. As stated by the developers of ChatGPT, OpenAI, one of their main goals "is to improve
+their ability to understand and generate natural language text, particularly in more complex and
+nuanced scenarios" (OpenAI, 2023).
+
+Previous research has offered strong evidence that writing-related occupations are among the most
+affected. According to Eloundou et al. (2023), writing is consistently ranked among the top five oc-
+cupations most exposed to GPT, across different measurements based on models and human experts.6
+Finally, the relevance of ChatGPT to writing-related tasks is often highlighted in popular media, which
+is perhaps more accessible to casual ChatGPT users.7
+
+    5https://openai.com/blog/chatgpt
+    6Specifically, measurements are based on either human experts' opinions or GPT-4's ratings, and they measure how
+exposed an occupation is to either GPT or GPT-related software. More detailed results can be found in Table 4 of Eloundou
+et al. (2023) at https://arxiv.org/pdf/2303.10130.pdf, and the measurements are "Human ", "Human  ","Human
+ ", "Model ", "Model  ","Model  ". (Accessed 7/4/2023).
+    7For instance, https://www.businessinsider.com/chatgpt-jobs-at-risk-replacement-artificial-
+intelligence-ai-labor-trends-2023-02#media-jobs-advertising-content-creation-technical-
+writing-journalism-2 and https://www.nytimes.com/2022/12/06/opinion/chatgpt-ai-skilled-jobs-
+automation.html.
+
+                                                            7
+
+                        Electronic copy available at: https://ssrn.com/abstract=4527336
+Finally, in order to examine more directly the differential interest in ChatGPT by application type, we
+take advantage of Google Trends data. As presented in Panel A of Figure 1, we begin by examining the
+relative interest in the search terms "ChatGPT," "GPT," and "AI" over time. Consistent with the rapid
+growth in ChatGPT's user base, we document a sharp increase in the relative interest in ChatGPT-
+related queries following its launch on November 2022.
+
+We then examine the relative interest in various occupational domains combined with GPT, as is
+captured by Google search queries. We choose domains as they appear on the Upwork platform, and
+combine them with the term GPT, e.g., "GPT Translation," "GPT Mobile Development," etc. The
+results are presented in Panel B, which provides descriptive evidence to support our research design
+and the choice of writing-related jobs. "GPT Writing" is by far the most commonly search term
+compared to other domains, such as "GPT translation" or "GPT software development." This suggests
+that the public's attention and interest are skewed towards the implementation of AI technologies in
+the writing industry. We interpret these patterns as suggestive evidence, consistent with the notion that
+while multiple industries are affected by the introduction of ChatGPT, the short-term implications are
+much more pronounced in the writing-related tasks.
+
+3.3 Research Design
+
+The main specification uses the panel structure of the data to employ a difference-in-differences re-
+search design. In particular, we estimate the following specification:
+
+Yit =  Postt × Ti + Xit + i + t + it                             (1)
+
+where i and t are indices for freelancer and month, respectively, Post is an indicator for post November
+
+2022, and T denotes an occupations that were potentially more affected by ChatGPT, namely writing,
+
+proofreading, and copy-editing. Xit is a vector of time-varying freelancer-level characteristics, such
+as the average feedback score (and an indicator for whether a score is missing), logged past monthly
+income, and number of previous jobs completed.8 Y denotes our main outcomes of interest, monthly
+
+    8As presented in Appendix Table A1, we experiment with alternative control variables and clustering. Across the board,
+the results remain qualitatively similar and statistically significant.
+
+8
+
+Electronic copy available at: https://ssrn.com/abstract=4527336
+number of jobs and income, which we also decompose into the extensive and intensive margins. In
+particular, we first estimate the total effect on (logged) monthly number of jobs and income; second, on
+the intensive margin, as measured by the logged number of jobs and income conditional on working;
+and third, on the extensive margin, as measured by indicator for whether the freelancer accepted a
+new job at a given month. All regressions also include freelancer and month fixed effects. Finally, we
+cluster the standard errors for the error term it at the occupation-level, corresponding to the level at
+which treatment is assigned (Bertrand et al., 2004; Abadie et al., 2023).
+
+The key identifying assumption of the difference-in-differences design is that freelancers operating
+in more affected and less affected occupations would have evolved similarly, absent the release of
+GPT. To evaluate this assumption, we estimate a more flexible difference-in-differences event-study
+specification of the following form:
+
+-1 T1
+
+ Yit =  jPre j × Ti + kPostk × Ti + Xit + i + t + it             (2)
+
+j=T0  k=1
+
+where Pre j and Postk are dummy variables equal to 1 when an observation is j months before or k
+months after the addition of the label.
+
+4 Results
+
+4.1 Main Results
+
+We begin by estimating the effect of the release of ChatGPT on the employment and compensation of
+freelancers in more affected occupations, as described in Equation 1. Our main results are presented
+in Table 2. Across specifications, we find significant negative effects of the release of ChatGPT on
+freelancer employment on the platform. Columns (1) and (2) present the total effect on monthly em-
+ployment and earnings of freelancers in writing-related occupations, compared to freelancers in less
+affected occupations. Following the release, the monthly number of jobs on the platform for free-
+lancers in more affected occupations decreases by 2% (s.e.=0.004), and total monthly compensation
+decreases by 5.2% (s.e.=0.016).
+
+                                      9
+Electronic copy available at: https://ssrn.com/abstract=4527336
+In Columns (3) through (5), we decompose the total effect into the extensive and intensive margins.
+Column (3) presents the effect on the linear probability that a freelancer receives at least one job in
+a given month, which we interpret as the extensive margin of working on the platform. Following
+the release of GPT, the probability that a freelancer offering writing-related services starts a new job
+in a given month decreases by 1.2 percentage points, which is approximately a 10% drop compared
+to baseline employment. In Columns (4) and (5), we estimate the effect on the (log) number of jobs
+and monthly income, conditional on receiving at least one job in that month. The number of jobs
+decreases by approximately 4.7% (s.e.=0.011), which is substantially larger than the total effect, and
+the effect of income is approximately the same size, a decrease of 5.1%, though it is much noisier
+(s.e.=0.037).
+
+To alleviate concerns regarding unobserved secular trends in freelancers' employment driving the
+main results, in Figure 2 we present the event time for our main specification, as detailed in Equa-
+tion 2. Reassuringly, we observe similar pre-trends between freelancers in eventually treated and
+untreated occupations prior to the release of ChatGPT, which provides suggestive evidence in favor
+of the parallel trends assumption. Following its release, we see a persistent and growing decrease in
+both the monthly number of jobs (Panel A) and monthly compensation (Panel B) on the platform,
+suggesting a causal relationship.
+
+We test the robustness of our results to multiple alternative specifications, such as omitting our control
+variables Also, due to the small number of clusters, we also use wild bootstrap Cameron et al. (2008)
+to calculate our standard errors. Alternatively, we cluster at the industry rather than occupation level.
+The results are presented in Appendix Table A1. A related concern is that there exist unobserved
+differences between freelancers in affected and unaffected occupations that are driving the main re-
+sults, even without the introduction of generative AI. We thus conduct an additional analysis in which
+we match freelancers based on pre-release characteristics to account for observable, and potentially
+unobservable, differences,9 matching coarsely on the freelancer's past employment, past income, ed-
+ucation, badges, success rate, and hourly rate on the platform. As presented in Table A2, using the
+matched sample improves the precision of, and generally strengthens, the main results.
+
+Finally, in order to both evaluate the internal validity of our design and assess the generalizability
+
+    9Specifically, we use a coarsened exact matching (CEM) algorithm, where we match coarsely on the freelancer's past
+employment, past income, education, badges, success rate, and hourly rate on the platform.
+
+                                                           10
+
+                        Electronic copy available at: https://ssrn.com/abstract=4527336
+of our findings, we conduct an additional analysis in which we estimate the effect of the release of
+another generative AI, at a different time, and on another set of workers. In particular we study
+the effect of the release of DALL-E 2 and Midjourney, two models designed to generate images
+from natural language descriptions. Similar to our main specification, we define the affected group
+as the subset of freelancers who offer design, image editing, and art services.10 Both models were
+released at about the same time, with DALL-E 2 released in April 2022, and Midjourney in July. To
+be conservative, we code the post period as post-April 2022. The results are presented in Table A3,
+which has the same structure as the main analysis in Table 2. The estimate of the effect of image-
+focused generative AI echo our main results: we find consistent negative effects of the release of the
+new technology on the performance of freelancers on the platform, in terms of both number of jobs
+and total compensation.
+
+4.2 Heterogeneous Treatment Effects
+
+Having documented robust evidence of adverse effects of the introduction of a LLM on employment
+outcomes, we turn to explore the heterogeneity in treatment effects in order to shed light on the drivers
+of the main estimates. We are particularly interested in understanding whether freelancer's quality or
+experience can mitigate (or potentially exacerbate) the effects on employment outcomes. Our granular,
+freelancer-level data allow us to examine the heterogeneity in treatment effects by the attributes of
+workers performing similar jobs and tasks.
+
+Previous work suggests that high-quality suppliers may be generally less threatened by adverse market
+shocks (e.g., Syverson, 2004; Reshef, 2023). If that is the case, then AI may only hinder the perfor-
+mance of relatively low-quality freelancers. On the other hand, several papers also find that similar
+technology changes may differentially benefit low-skilled workers (Autor and Dorn, 2013; Noy and
+Zhang, 2023). Understanding the treatment effect heterogeneity by worker type can thus shed light
+on the nature of the technological shock and how pervasive are the implications of AI to the econ-
+omy.
+
+To this end, we interact our main estimator, Post × T , with several measures of freelancers' past
+performance: the number of past jobs on the platform, the total past income on the platform, and skill
+
+  10Another advantage of this analysis is that we have a well-defined treatment group, as the control groups are not directly
+affected the release of DALL-E 2 and Midjourney.
+
+                                                           11
+
+                        Electronic copy available at: https://ssrn.com/abstract=4527336
+level necessitated by past jobs.11 We define these heterogeneity measures based on their November
+2022 levels, right before the new LLM was launched. In addition, we also test for heterogeneity by
+the freelancers' attributes that are most salient on their freelancer page: whether they received a "top
+rated" badge from Upwork, their past success rate (as detailed by past employers), and their stated
+hourly rate.12 Notably, we only observe these three measures at the time of collecting the data and
+are unable to assess whether those changed over our sample period. For ease of interpretation, we
+create an indicator for above- or below-median values for each one of our six of our heterogeneity
+measures.13
+
+The results are presented in Table 3. Panel A presents the heterogeneous treatment effects on the
+monthly number of jobs, and Panel B present the effects on monthly income. In general, across the
+various measures of freelancers' quality, we can generally rule out that freelancers' quality moderates
+the adverse employment effects of generative AI. We mostly observe negative point estimates on the
+interaction terms, suggesting that, "top" freelancers are actually the ones most adversely affected by
+AI. These effect, however, are often not statistically significant, especially for monthly income, which
+tends to be substantially noisier. As presented in Appendix Table A4, we observe more negative and
+statistically significant effects when estimating the heterogeneous effects on image-based AI models.
+For example, observing Column 2 we find that freelancers with above median prior earnings suffer
+an additional reduction of 1.2% in the number of jobs (s.e.=0.007) and a 2.9% reduction in monthly
+income, though the result is not statistically significant. For image-based services, we estimate re-
+ductions of 7% and 14% for freelancers with above median prior earnings, both significant at the 1%
+level. One potential explanation for the stronger results on image-based LLM is the longer post-period
+time window, which may lead to higher adoption rates as well as technological improvements.
+
+We interpret the heterogeneous effects by worker types through the lenses of the canonical skill-biased
+technological change (SBTC) model presented in Card and DiNardo (2002). Assuming that the labor
+supply on Upwork does not change dramatically over the short run, the relative effect on both labor
+
+  11For each job posting, the buyer must indicate the desired level of freelancer's experience: entry, intermediate, and
+expert, coded as 1,2, and 3, respectively. For each worker we calculate the average desired experience level for all the jobs
+performed on the platform prior to the introduction of ChatGPT. We interpret this measure as a proxy for a freelancer's skill
+level.
+
+  12In Appendix Table A5, we explore heterogeneity by several additional measures of freelancer quality: namely their
+average rating on the platform, based on past employers feedback; tenure, as measured by the number of years since their
+first job on the platform; and whether they obtained college education. Similar to the main dimensions of heterogeneity, we
+discretize all three measures.
+
+  13The results are qualitatively robust to using the continuous values, as presented in Appendix Table A6.
+
+                                                           12
+
+                        Electronic copy available at: https://ssrn.com/abstract=4527336
+types would translate to changes in relative marginal product after the introduction of ChatGPT.14 If
+one were to interpret the results in Tables 3 and A4 as suggestive evidence that high-quality workers
+are disproportionately hurt, this interpretation would be consistent with the growing experimental
+evidence that the adoption of LLM differentially benefits low-ability workers relative to high-ability
+ones (Noy and Zhang, 2023; Brynjolfsson et al., 2023; Peng et al., 2023).
+
+5 Conclusion
+
+This paper studies the short-term effects of generative AI and LLMs on labor outcomes by estimating
+the effect of ChatGPT on the employment of workers in a large online labor market. Across the board,
+we find that freelancers who offer services in occupations most affected by AI experienced reductions
+in both employment and earnings. The release of ChatGPT leads to a 2% drop in the number of jobs
+on the platform, and a 5.2% drop in monthly earnings. The results are robust to several alternative
+tests, including a similar reduction in the employment outcomes of freelancers offering design and
+image-editing services following the introduction of image-focused generative AI. In addition, we
+find that offering high-quality service does not mitigate the negative effect of AI on freelancers, and
+in fact present suggestive evidence that top employees are disproportionately hurt by AI.
+
+The results have several implications to policymakers and business leaders. Aside from the many ben-
+efits of AI technology, it may also have substantial economic and societal ramifications. As the usage
+and development of generative AI continues to grow, there is thus room for additional scrutiny of the
+pervasive effects of the technology on various industries and the economy as a whole. Importantly,
+we find that top performance and high-quality service do not help mitigate or harness the introduc-
+tion of generative AI. Businesses leaders must carefully examine how to adapt and whether to adopt
+these technologies, as AI threats to indiscriminately disrupt incumbents and erode their competitive
+advantage.
+
+Notably, in this paper we provide novel, preliminary evidence on the short-term effects of generative
+AI. However, the long-term implications may be significantly different, and it is unclear how our
+findings extend to longer time horizons. On the one hand, the negative effects on labor outcomes
+may be exacerbated as the technology becomes more prevalent and penetrates additional industries
+
+  14Although our results, technically speaking, concern changes in the relative earnings rather than relative wages, the
+qualitative insight is similar.
+
+                                                           13
+
+                        Electronic copy available at: https://ssrn.com/abstract=4527336
+and occupations. In contrast, as the development of AI capabilities continues it may become more
+integrated with various tools and begin to better complement the performance of human workers.
+Finally, our paper focuses entirely on the (negative) effects on workers. Assessing the total welfare
+implications to the introduction of generative AI technology to all stakeholders is beyond the scope of
+this paper and remains a promising direction for future work.
+
+                                                           14
+                        Electronic copy available at: https://ssrn.com/abstract=4527336
+References
+
+ABADIE, A., S. ATHEY, G. W. IMBENS, AND J. M. WOOLDRIDGE (2023): "When should you
+   adjust standard errors for clustering?" The Quarterly Journal of Economics, 138, 1­35.
+
+ACEMOGLU, D. AND D. AUTOR (2011): "Skills, tasks and technologies: Implications for employ-
+   ment and earnings," in Handbook of labor economics, Elsevier, vol. 4, 1043­1171.
+
+ACEMOGLU, D., D. AUTOR, J. HAZELL, AND P. RESTREPO (2022): "Artificial intelligence and
+   jobs: evidence from online vacancies," Journal of Labor Economics, 40, S293­S340.
+
+ACEMOGLU, D. AND P. RESTREPO (2018): "Artificial intelligence, automation, and work," in The
+   economics of artificial intelligence: An agenda, University of Chicago Press, 197­236.
+
+------ (2020): "Robots and jobs: Evidence from US labor markets," Journal of political economy,
+   128, 2188­2244.
+
+AGRAWAL, A., J. S. GANS, AND A. GOLDFARB (2019a): "Artificial intelligence: the ambiguous
+   labor market impact of automating prediction," Journal of Economic Perspectives, 33, 31­50.
+
+------ (2019b): "Exploring the impact of artificial intelligence: Prediction versus judgment," Infor-
+   mation Economics and Policy, 47, 1­6.
+
+AUTOR, D. H. AND D. DORN (2013): "The growth of low-skill service jobs and the polarization of
+   the US labor market," American economic review, 103, 1553­1597.
+
+AUTOR, D. H., F. LEVY, AND R. J. MURNANE (2003): "The skill content of recent technological
+   change: An empirical exploration," The Quarterly journal of economics, 118, 1279­1333.
+
+BARACH, M. A. AND J. J. HORTON (2021): "How do employers use compensation history? Evidence
+   from a field experiment," Journal of Labor Economics, 39, 193­218.
+
+BERTRAND, M., E. DUFLO, AND S. MULLAINATHAN (2004): "How much should we trust
+   differences-in-differences estimates?" The Quarterly journal of economics, 119, 249­275.
+
+BRYNJOLFSSON, E., X. HUI, AND M. LIU (2019): "Does machine translation affect international
+   trade? Evidence from a large digital platform," Management Science, 65, 5449­5460.
+
+BRYNJOLFSSON, E., D. LI, AND L. R. RAYMOND (2023): "Generative AI at work," Tech. rep.,
+   National Bureau of Economic Research.
+
+BRYNJOLFSSON, E. AND T. MITCHELL (2017): "What can machine learning do? Workforce impli-
+   cations," Science, 358, 1530­1534.
+
+BRYNJOLFSSON, E., T. MITCHELL, AND D. ROCK (2018a): "What can machines learn and what
+   does it mean for occupations and the economy?" in AEA papers and proceedings, American Eco-
+   nomic Association 2014 Broadway, Suite 305, Nashville, TN 37203, vol. 108, 43­47.
+
+BRYNJOLFSSON, E., D. ROCK, AND C. SYVERSON (2018b): "Artificial intelligence and the modern
+   productivity paradox: A clash of expectations and statistics," in The economics of artificial intelli-
+   gence: An agenda, University of Chicago Press, 23­57.
+
+CAMERON, A. C., J. B. GELBACH, AND D. L. MILLER (2008): "Bootstrap-based improvements for
+   inference with clustered errors," The review of economics and statistics, 90, 414­427.
+
+CAO, X. AND D. ZHANG (2020): "The impact of forced intervention on AI adoption," Available at
+   SSRN 3640862.
+
+CARD, D. AND J. E. DINARDO (2002): "Skill-biased technological change and rising wage inequal-
+   ity: Some problems and puzzles," Journal of labor economics, 20, 733­783.
+
+CHENG, Z., D. LEE, AND P. TAMBE (2022): "Innovae: Generative ai for understanding patents and
+   innovation," Available at SSRN 3868599.
+
+COCKBURN, I. M., R. HENDERSON, AND S. STERN (2018): "The impact of artificial intelligence
+   on innovation: An exploratory analysis," in The economics of artificial intelligence: An agenda,
+
+                                                           15
+
+                        Electronic copy available at: https://ssrn.com/abstract=4527336
+   University of Chicago Press, 115­146.
+COWGILL, B., F. DELL'ACQUA, S. DENG, D. HSU, N. VERMA, AND A. CHAINTREAU (2020):
+
+   "Biased programmers? Or biased data? A field experiment in operationalizing AI ethics," in Pro-
+   ceedings of the 21st ACM Conference on Economics and Computation, 679­681.
+ELOUNDOU, T., S. MANNING, P. MISHKIN, AND D. ROCK (2023): "Gpts are gpts: An early look
+   at the labor market impact potential of large language models," arXiv preprint arXiv:2303.10130.
+FELTEN, E. W., M. RAJ, AND R. SEAMANS (2018): "A method to link advances in artificial intelli-
+   gence to occupational abilities," in AEA Papers and Proceedings, American Economic Association
+   2014 Broadway, Suite 305, Nashville, TN 37203, vol. 108, 54­57.
+------ (2023): "Occupational heterogeneity in exposure to generative ai," Available at SSRN
+   4414065.
+GOLDFARB, A. AND D. TREFLER (2018): "Artificial intelligence and international trade," in The
+   economics of artificial intelligence: an agenda, University of Chicago Press, 463­492.
+HELPMAN, E. AND M. TRAJTENBERG (1994): "A time to sow and a time to reap: growth based on
+   general purpose technologies," .
+HORTON, J. J. (2010): "Online labor markets," in Internet and Network Economics: 6th International
+   Workshop, WINE 2010, Stanford, CA, USA, December 13-17, 2010. Proceedings 6, Springer, 515­
+   522.
+------ (2017): "Price floors and employer preferences: Evidence from a minimum wage experiment,"
+   Available at SSRN 2898827.
+JIN, G. Z. (2018): "Artificial intelligence and consumer privacy," in The economics of artificial intel-
+   ligence: An agenda, University of Chicago Press, 439­462.
+LUO, X., M. S. QIN, Z. FANG, AND Z. QU (2021): "Artificial intelligence coaches for sales agents:
+   Caveats and solutions," Journal of Marketing, 85, 14­32.
+LUO, X., S. TONG, Z. FANG, AND Z. QU (2019): "Frontiers: Machines vs. humans: The impact of
+   artificial intelligence chatbot disclosure on customer purchases," Marketing Science, 38, 937­947.
+NOY, S. AND W. ZHANG (2023): "Experimental evidence on the productivity effects of generative
+   artificial intelligence," Available at SSRN 4375283.
+OPENAI (2023): "Gpt-4 technical report," Technical report.
+OVERBY, E., S. A. SLAUGHTER, AND B. KONSYNSKI (2010): "Research commentary--the design,
+   use, and consequences of virtual processes," Information Systems Research, 21, 700­710.
+PENG, S., E. KALLIAMVAKOU, P. CIHON, AND M. DEMIRER (2023): "The impact of ai on devel-
+   oper productivity: Evidence from github copilot," arXiv preprint arXiv:2302.06590.
+RESHEF, O. (2023): "Smaller slices of a growing pie: The effects of entry in platform markets,"
+   American Economic Journal: Microeconomics, Forthcoming.
+SCHANKE, S., G. BURTCH, AND G. RAY (2021): "Estimating the impact of "humanizing" customer
+   service chatbots," Information Systems Research, 32, 736­751.
+SUN, C., Z. J. SHI, X. LIU, A. GHOSE, X. LI, AND F. XIONG (2019): "The effect of voice ai on
+   consumer purchase and search behavior," NYU Stern School of Business.
+SYVERSON, C. (2004): "Market structure and productivity: A concrete example," Journal of political
+   Economy, 112, 1181­1222.
+TAMBE, P., P. CAPPELLI, AND V. YAKUBOVICH (2019): "Artificial intelligence in human resources
+   management: Challenges and a path forward," California Management Review, 61, 15­42.
+TUCKER, C. (2018): "Privacy, algorithms, and artificial intelligence," in The economics of artificial
+   intelligence: An agenda, University of Chicago Press, 423­437.
+VAN INWEGEN, E., Z. T. MUNYIKWA, AND J. J. HORTON (2023): "Algorithmic writing assistance
+
+                                                           16
+
+                        Electronic copy available at: https://ssrn.com/abstract=4527336
+  on jobseekers' resumes increases hires," Tech. rep., National Bureau of Economic Research.
+WEBB, M. (2019): "The impact of artificial intelligence on the labor market," Available at SSRN
+
+  3482150.
+YILMAZ, E. D., I. NAUMOVSKA, AND V. A. AGGARWAL (2023): "AI-Driven Labor Substitution:
+
+  Evidence from Google Translate and ChatGPT," Available at SSRN.
+ZHANG, M., T. SUN, L. LUO, AND J. GOLDEN (2021): "Consumer and AI Co-creation: When
+
+  and Why Human Participation Improves AI Creation." USC Marshall School of Business Research
+  Paper Sponsored by iORB, No. Forthcoming.
+
+                                                           17
+                        Electronic copy available at: https://ssrn.com/abstract=4527336
+Figures
+
+Figure 1: Descriptive Evidence on Interest in ChatGPT Over Time and Across Types of Occupations
+                                 Panel A: Relative Interest in ChatGPT and AI
+
+80 100
+
+Interest
+   40 60
+
+20
+
+0
+
+01jan2022 01apr2022              01jul2022 01oct2022  01jan2023  01apr2023
+                                              Date
+
+                                 ChatGPT              GPT
+                                 AI
+
+Panel B: Relative Interest in ChatGPT by Types of Occupation
+
+Interest
+   0 20 40 60 80 100
+
+01jan2022             01apr2022  01jul2022 01oct2022  01jan2023 01apr2023
+                                              Date
+
+                      Writing               Consulting
+                      Admin Support         Customer Service
+                      Creative              Engineering
+                      Architecture          IT
+                      Web Development       Mobile Development
+                      Software Dvelopment   Sales/Translation
+                      Marketing/Networking  Software/Legal
+                      Design/Accounting
+
+Notes: This figure displays the relative interest in separate search terms on Google Trends. Panel A presents relative
+interest in three separate search terms. Panel B presents the relative interest over time in nineteen separate search term,
+where each term represents a domain on the platform and was search together with the word "GPT." For example,
+"Writing" refers to interest in the search term "GPT Writing."
+
+                                     18
+Electronic copy available at: https://ssrn.com/abstract=4527336
+Figure 2: The Effect of generative AI on Freelancers' Employment on the Platform
+                             Panel A: Monthly Number of Jobs
+
+-.03 -.02 -.01 0 .01 .02
+
+                          0 5 10                                                 15
+                                                                          month
+
+                                       Panel B: Monthly Revenue
+
+-.15 -.1 -.05 0 .05 .1
+
+                                             0 5 10 15
+                                                                                              month
+
+Notes: The figure displays results for monthly jobs and revenue, where the estimate between treatment and control
+occupations is allowed to vary for each month around the launch of ChatGPT (see description around Equation 2).
+Each panel also report 95% confidence intervals. Standard errors are clustered at the occupation-level.
+
+                                                       19
+                   Electronic copy available at: https://ssrn.com/abstract=4527336
+Tables
+
+                      Table 1: Descriptive Statistics
+
+                            Mean SD P5 P95
+
+        No. of Freelancers  92,457 -                   --
+
+        Tenure              3.04 2.98 0 10
+
+        US-based            0.16 0.37 0 1
+
+        Badge               0.33 0.47 0 1
+
+        Success Rate        0.62 0.46 0 1
+
+        Hourly Rate         27.9 28.9 5 75
+
+        Worked in Month     0.18 0.39 0 1
+
+        Monthly Number of Jobs 0.36 1.35 0 2
+
+        Monthly Earnings    171.2 1548.5 0 550
+
+        Mean Monthly Score  4.82 0.59 4.0 5
+
+        Job Skill level     2.12 0.61 1 3
+
+Notes: This table provides the summary statistics of the variables used in the main analysis.
+
+                                             20
+        Electronic copy available at: https://ssrn.com/abstract=4527336
+Table 2: The Effect of generative AI on Freelancers' Employment on the Platform
+
+                        Total           Extensive Margin Intensive Margin
+
+                     (1) (2)              (3)            (4) (5)
+               Num. of Jobs Income      Worked     Num. of Jobs Income
+
+Post × Treatment -0.020*** -0.052***    -0.012***  -0.047*** -0.051
+                                         (0.002)    (0.011) (0.033)
+               (0.004)         (0.016)
+
+Observations   1236052         1236052  1236052    171541                       174697
+# of Clusters     195             195      195       193                          193
+
+Notes: This table presents OLS regressions results relating freelancers' employment on the platform to
+the introduction of ChatGPT in a difference-in-differences design (see description around Equation 1).
+Treatment is an indicator of whether an occupation is substantially affected by the introduction of Chat-
+GPT. The unit of observation is the freelancer-month. The dependent variables are the following: the total
+monthly number of jobs and income (Columns 1 & 2), an indicator for whether the freelancer had at least
+one job that month (Column 3), the monthly number of jobs and income conditional on working (Columns
+4 & 5). In columns 1, 2, 4, and 5, the dependent variables are inverse hyperbolic sine transformed. All
+regressions include freelancer and month fixed effects. Standard errors are in parentheses and are clustered
+at the occupation-level. *** p < 0.01, ** p < 0.05, * p < 0.1.
+
+                                                    21
+               Electronic copy available at: https://ssrn.com/abstract=4527336
+Table 3: The Effect of generative AI on Freelancers' Employment on the Platform ­ Heterogeneity by
+Freelancer Attributes and Performance
+
+                   (1) (2)             (3) (4)                          (5)       (6)
+
+                                       Panel A: Monthly Number of Jobs
+
+Post × T           -0.016***  -0.020*** -0.029*** -0.017*** -0.020***             -0.013**
+Post × T × Var.     (0.004)                                                        (0.005)
+                              (0.004)  (0.007) (0.003)          (0.003)
+                     -0.007                                                       -0.011*
+                    (0.006)   -0.012*  -0.019** -0.024***       -0.002             (0.006)
+                              (0.007)   (0.009) (0.007)         (0.005)
+
+                                       Panel B: Monthly Income
+
+Post × T           -0.031**   -0.074*** -0.077*** -0.054*** -0.045***             -0.010
+                    (0.015)                                                       (0.018)
+Post × T × Var.               (0.016)  (0.027) (0.010)          (0.013)
+                    -0.036
+Observations        (0.029)   -0.029   -0.015 -0.087***         -0.028            -0.051
+# of Clusters                 (0.032)  (0.035) (0.033)          (0.024)           (0.031)
+Heterogeneity By:  1236052
+                      195       1236052 611375         1236052  1236052           1236052
+                                   195 193                195
+                   Past Jobs                                            195 195
+                              Past Income Skill Level   Badge
+                                                                Success Rate Hourly Rate
+
+Notes: This table presents OLS regressions results relating freelancers' employment on the platform to
+the introduction of ChatGPT, examining heterogeneity by freelancers' attributes and past experiences.
+Treatment is an indicator for whether an occupation is substantially affected by the introduction of Chat-
+GPT, and Var. is the heterogeneity variable of interest, as indicated below each column. The unit of obser-
+vation is the freelancer-month. The dependent variable in Panel A is total monthly number of jobs and total
+monthly income in Panel B. Both dependent variables are inverse hyperbolic sine transformed. Hetero-
+geneity variables are an indicator for above (below) median. All regressions include freelancer and month
+fixed effects. Standard errors are in parentheses and are clustered at the occupation-level. *** p < 0.01, **
+p < 0.05, * p < 0.1.
+
+                                                      22
+                 Electronic copy available at: https://ssrn.com/abstract=4527336
+                                   Online Appendix
+
+A Additional Figures & Tables
+
+  Figure A1: The Effect of AI Art-generating Models on Freelancers' Employment on the Platform
+                                        Panel A: Monthly Number of Jobs
+
+-.04 -.03 -.02 -.01 0 .01 .02
+
+                               0 5 10                                                 15
+                                                                               month
+
+                                            Panel B: Monthly Revenue
+
+-.15 -.1 -.05 0 .05 .1
+
+                                             0 5 10 15
+                                                                                              month
+
+Notes: Figure displays results for monthly jobs and revenue, where the estimate between treatment and control occupa-
+tions is allowed to vary for each month around the launch of ChatGPT (see description around Equation 2). Each panel
+also reports 95% confidence intervals. Standard errors clustered at the occupation-level.
+
+                                                       23
+                   Electronic copy available at: https://ssrn.com/abstract=4527336
+Table A1: The Effect of generative AI on Freelancers' Employment on the Platform
+
+                              Total     Extensive Margin Intensive Margin
+
+                        (1) (2)           (3)            (4) (5)
+                  Num. of Jobs Income   Worked     Num. of Jobs Income
+
+                             Panel A: Without control Variables
+
+Post × Treatment  -0.015***  -0.035     -0.009***  -0.047***           -0.053
+                   (0.006)   (0.023)     (0.003)    (0.009)            (0.033)
+Observations
+# of Clusters     1236052    1236052    1236052            171541      174697
+                     195        195        195               193         193
+
+                             Panel B: With Wild Bootstrap
+
+Post × Treatment  -0.020***  -0.052***  -0.012***  -0.047***           -0.051
+                    [-5.53]    [-3.25]    [-5.19]   [ -4.36]           [-1.53]
+Observations
+# of Clusters     1236052    1236052    1236052            171541      174697
+                     195        195        195               193         193
+
+                             Panel C: Clustered at the Industry-level
+
+Post × Treatment  -0.020***  -0.052**   -0.012***  -0.047***           -0.051
+                   (0.004)    (0.022)    (0.003)    (0.011)            (0.046)
+Observations
+# of Clusters     1236052    1236052    1236052            171541      174697
+                      59        59         59                 59          59
+
+Notes: This table presents OLS regressions results relating freelancers' employment on the platform to
+the introduction of ChatGPT in a difference-in-differences design (see description around Equation 1).
+Treatment is an indicator for whether an occupation is substantially affected by the introduction of Chat-
+GPT. The unit of observation is the freelancer-month. The dependent variables are the following: the total
+monthly number of jobs and income (Columns 1 & 2), an indicator for whether the freelancer had at least
+one job that month (Column 3), the monthly number of jobs and income conditional on working (Columns
+4 & 5). In columns 1, 2, 4 and 5, the dependent variables are inverse hyperbolic sine transformed. All re-
+gressions include freelancer and month fixed effects. Panel A, does not control for time-varying occupation-
+level characteristics. The square parentheses in Panel B display the t-statistic using wild bootstrap Cameron
+et al. (2008). Standard errors are in parentheses and are clustered at the occupation-level. *** p < 0.01, **
+p < 0.05, * p < 0.1.
+
+                                     24
+Electronic copy available at: https://ssrn.com/abstract=4527336
+Table A2: The Effect of generative AI on Freelancers' Employment on the Platform ­ Matched Sample
+
+                        Total           Extensive Margin  Intensive Margin
+
+                     (1) (2)              (3)                   (4) (5)
+               Num. of Jobs Income      Worked            Num. of Jobs Income
+
+Post × Treatment -0.022*** -0.070***    -0.013***         -0.044**              -0.089***
+                                         (0.002)           (0.019)               (0.032)
+               (0.004)         (0.016)
+
+Observations   1303905         1303905  1303905           225948                188543
+# of Clusters     195             195      195              193                   193
+
+Notes: This table presents OLS regressions results relating freelancers' employment on the platform to
+the introduction of ChatGPT in a difference-in-differences design (see description around Equation 1).
+Treatment is an indicator for whether an occupation is substantially affected by the introduction of Chat-
+GPT. Results are based on the matched sample of freelancers, where we match coarsely on the freelancer's
+past employment, past income, education, badges, success rate, and hourly rate on the platform. The unit
+of observation is the freelancer-month.The dependent variables are the following: the total monthly number
+of jobs and income (Columns 1 & 2), an indicator for whether the freelancer had at least one job that month
+(Column 3), the monthly number of jobs and income conditional on working (Columns 4 & 5). In columns
+1, 2, 4, and 5, the dependent variables are inverse hyperbolic sine transformed. All regressions include free-
+lancer and month fixed effects. Standard errors are in parentheses and are clustered at the occupation-level.
+*** p < 0.01, ** p < 0.05, * p < 0.1.
+
+                                                    25
+               Electronic copy available at: https://ssrn.com/abstract=4527336
+Table A3: The Effect of AI Image-based Models on Freelancers' Employment on the Platform
+
+                        Total           Extensive Margin Intensive Margin
+
+                     (1) (2)              (3)            (4) (5)
+               Num. of Jobs Income      Worked     Num. of Jobs Income
+
+Post × Treatment -0.037*** -0.094***    -0.023***  -0.029**                     -0.034
+                                         (0.005)    (0.011)                     (0.022)
+               (0.010)         (0.023)
+
+Observations   2349076         2349076  2349076    619145                       539992
+# of Clusters     192             192      192       192                          192
+
+Notes: This table presents OLS regressions results relating freelancers' employment on the platform to the
+introduction of Dall-E 2 and Midjourney in a difference-in-differences design (see description around Equa-
+tion 1). Treatment is an indicator for whether an occupation is substantially affected by the introduction of
+these AI image-based models. The unit of observation is the freelancer-month. The dependent variables are
+the following: the total monthly number of jobs and income (Columns 1 & 2), an indicator for whether the
+freelancer had at least one job that month (Column 3), the monthly number of jobs and income conditional
+on working (Columns 4 & 5). In columns 1, 2, 4, and 5, the dependent variables are inverse hyperbolic sine
+transformed. All regressions include freelancer and month fixed effects. Standard errors are in parentheses
+and are clustered at the occupation-level. *** p < 0.01, ** p < 0.05, * p < 0.1.
+
+                                                    26
+               Electronic copy available at: https://ssrn.com/abstract=4527336
+Table A4: The Effect of AI Image-based Models on Freelancers' Employment on the Platform ­
+Heterogeneity by Freelancer Attributes and Performance
+
+                   (1) (2)               (3) (4)                         (5)      (6)
+
+                                        Panel A: Monthly Number of Jobs
+
+Post × T             0.000    -0.014**   -0.046** -0.033*** -0.031***             -0.032***
+Post × T × Var.     (0.004)    (0.006)                                             (0.008)
+                                         (0.020) (0.007)          (0.009)
+                   -0.042***                                                        -0.011
+                    (0.013)   -0.070*** -0.051*** -0.005          -0.016**         (0.010)
+                                                                   (0.007)
+                              (0.021)    (0.018) (0.012)
+
+                                         Panel B: Monthly Income
+
+Post × T            0.002     -0.056***  -0.052* -0.089*** -0.066***              -0.080***
+                   (0.018)     (0.017)                                             (0.023)
+                                         (0.028) (0.022)          (0.022)
+
+Post × T × Var.    -0.106*** -0.147***   -0.066         0.006     -0.071***       -0.034
+                                         (0.053)       (0.027)     (0.025)        (0.031)
+                   (0.031)    (0.044)
+
+Observations       2349076      2349076 610497         2349076    2349076         2349076
+# of Clusters         192          192 186                192
+Heterogeneity By:                                                        192 192
+                   Past Jobs  Past Income Skill Level   Badge
+                                                                  Success Rate Hourly Rate
+
+Notes: his table presents OLS regressions results relating freelancers' employment on the platform to the
+introduction of Dall-E 2 and Midjourney, examining heterogeneity by freelancers' attributes past experi-
+ences. Treatment is an indicator for whether an occupation is substantially affected by the introduction of
+AI image-based models, and Var. is the heterogeneity variable of interest, as indicated below each column.
+The unit of observation is the freelancer-month. The dependent variable in Panel A is total monthly number
+of jobs and total monthly income in Panel B. Both dependent variables, as well as the independent variables
+describing he heterogeneity, are inverse hyperbolic sine transformed. All regressions include freelancer
+and month fixed effects. Standard errors are in parentheses and are clustered at the occupation-level. ***
+p < 0.01, ** p < 0.05, * p < 0.1.
+
+                                                      27
+                 Electronic copy available at: https://ssrn.com/abstract=4527336
+Table A5: The Effect of generative AI on Freelancers' Employment on the Platform ­ Heterogeneity
+by Freelancer Attributes and Performance (Additional Measures)
+
+                   (1) (2) (3)
+
+                   Panel A: Monthly Number of Jobs
+
+Post × T           -0.023*** -0.025*** -0.014***
+Post × T × Var.     (0.004) (0.006) (0.005)
+
+                    0.007    0.007   -0.010*
+                   (0.006)  (0.007)  (0.006)
+
+                   Panel B: Monthly Income
+
+Post × T           -0.047** -0.054** -0.050**
+                    (0.018) (0.027) (0.021)
+Post × T × Var.
+                   -0.003    0.002   -0.008
+Observations       (0.028)  (0.033)  (0.029)
+# of Clusters
+Heterogeneity By:  1236052  1236052  1095560
+                      195      195      195
+                    Score
+                             Tenure  College
+
+Notes: This table presents OLS regressions results relating freelancers' employment on the platform to
+the introduction of ChatGPT, examining heterogeneity by freelancers' attributes and past experiences.
+Treatment is an indicator for whether an occupation is substantially affected by the introduction of Chat-
+GPT, and Var. is the heterogeneity variable of interest, as indicated below each column. The unit of obser-
+vation is the freelancer-month. The dependent variable in Panel A is total monthly number of jobs and total
+monthly income in Panel B. Both dependent variables are inverse hyperbolic sine transformed. Hetero-
+geneity variables are an indicator for above (below) median. All regressions include freelancer and month
+fixed effects. Standard errors are in parentheses and are clustered at the occupation-level. *** p < 0.01, **
+p < 0.05, * p < 0.1.
+
+                                     28
+Electronic copy available at: https://ssrn.com/abstract=4527336
+Table A6: The Effect of generative AI on Freelancers' Employment on the Platform ­ Heterogeneity
+by Freelancer Attributes and Performance (Continuous Measures)
+
+                 (1) (2) (3) (4)                                           (5)
+
+                          Panel A: Monthly Number of Jobs
+
+Post × T         -0.010    0.008    -0.009    0.020        -0.006***
+Post × T × Var.  (0.010)  (0.017)   (0.013)  (0.014)        (0.002)
+
+                 -0.002   -0.005**  -0.012** -0.010***     -0.028***
+                 (0.003)   (0.002)                          (0.007)
+                                    (0.006)  (0.003)
+
+                          Panel B: Monthly Income
+
+Post × T          0.006    0.028    -0.026   0.131*         0.001
+                 (0.037)  (0.069)   (0.041)  (0.067)       (0.009)
+
+Post × T × Var.  -0.015   -0.017*   -0.027   -0.043**      -0.107***
+                 (0.013)  (0.009)   (0.017)   (0.018)       (0.030)
+
+Observations     1225843 1225843 611375 1236052            1236052
+
+# of Clusters    195 195 193 195                                           195
+
+Heterogeneity By: Past Jobs Past Income Skill Level Hourly Rate Success Rate
+
+Notes: This table presents OLS regressions results relating freelancers' employment on the platform to
+the introduction of ChatGPT, examining heterogeneity by freelancers' attributes and past experiences.
+Treatment is an indicator for whether an occupation is substantially affected by the introduction of Chat-
+GPT, and Var. is the heterogeneity variable of interest, as indicated below each column. The unit of ob-
+servation is the freelancer-month. The dependent variable in Panel A is total monthly number of jobs and
+total monthly income in Panel B. Both dependent variables, as well as the independent variables describing
+he heterogeneity, are inverse hyperbolic sine transformed. All regressions include freelancer and month
+fixed effects. Standard errors are in parentheses and are clustered at the occupation-level. *** p < 0.01, **
+p < 0.05, * p < 0.1.
+
+                                               29
+          Electronic copy available at: https://ssrn.com/abstract=4527336
+B Data
+
+Our main data source is from Upwork, a leading international platform for freelancers. We are using
+three Upwork APIs to create our panel. First, we query the search API to collect a full list of free-
+lancers for each occupation. Second, according to IDs, for each freelancer, we use freelancer API
+to collect the freelancer's profile page with information that includes a self-introduction, summary
+statistics about the freelancer's earnings and total hours spent on jobs, rating badges by Upwork, and
+employment history. The employment history data for each freelancer contains information including
+job IDs, compensation, length of employment, hours worked, job titles, and feedback. Third, to com-
+plement employment history information with ex-ante information, we further collect job posting data
+via job posting API to fetch employer identifier, job description, required skills, expected occupation,
+expected hours or wage, and expected employee level.
+
+B.1 Freelancer Collection
+
+Upwork has a three-layer classification system of occupation, and we follow the finest level, in total
+215 occupations, to collect a list of freelancers. It is possible that one freelancer states that he/she can
+do jobs in multiple occupations, most of which are in the same industry. Some freelancers set their
+profiles to be private and are thus not searchable. Given our methodology, we do not collect these
+freelancers. We ended up with a panel of 568,647 freelancers across these 215 occupations.
+
+B.2 Freelancer Profile and Employment History Collection
+
+For each freelancer ID, we query the freelancer API to retrieve information on the freelancer's home-
+page, where the freelancers display self-introductions and their skills. Upwork reports job success
+rates and assigns tags in the form of badges on the freelancer homepage to indicate the excellence of
+a freelancer. Upwork also summarizes total hours, total earnings, and total number of jobs for each
+freelancer. All the above information is as of the collection date. In addition, we also collect the
+employment history of each freelancer with job ID, job title, job description, feedback, total hours,
+and earnings. We only keep freelancers that work in one single layer-two occupation (i.e., subindus-
+try). We also remove freelancers whose first job compensation exceeds 500% or is below 5% of the
+average compensation of the first five jobs. These two thresholds are determined based on 10-th and
+90-th percentiles of the empirical distribution. In total, we have 92,457 freelancers with at least one
+finished job from January 2022 through April 2023.
+
+B.3 Job Posting Collection
+
+For each employment record, we further supplement it using job posting API to get more information
+about job postings, including employers' expectations on hours, compensation, employee skills and
+level. About half the job postings are not private, meaning that we do not have access to additional in-
+formation about this job. We finally have 519,577 jobs that have been taken at least once by freelancers
+in our sample from January 2022 through April 2023.
+
+                                                           30
+
+                        Electronic copy available at: https://ssrn.com/abstract=4527336
+
