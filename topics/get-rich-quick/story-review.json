@@ -59,6 +59,10 @@
   "get-rich-quick/most-mlm-participants-earn-little-nothing|asserts|get-rich-quick/sources/aarp-2018-mlm-study.txt#L376-L392": {
    "level": "direct",
    "reason": "the survey measures exactly the claim's population and question (profit or loss over the whole time in the MLM, nationally representative sample); self-report limits precision, not scope, and the narration must say so"
+  },
+  "get-rich-quick/network-marketing-success-learnable-skill-rather|denies|get-rich-quick/sources/aarp-2018-mlm-study.txt#L394-L398": {
+   "level": "partial",
+   "reason": "self-reported survey across many MLMs; hours worked and money spent on inventory and training are proxies for effort and skill-building, not a measure of skill, and the correlations are cross-sectional"
   }
  },
  "stories": {
@@ -110,7 +114,7 @@
    "whyWatch": "Every MLM sells training on the premise that success is learnable. If position in the chain decides outcomes, the training is a fee for a lottery ticket.",
    "tension": "The industry says skill; the one court finding in the corpus says seniority.",
    "evidenceNeeded": "Earnings related to join date and to training received, within the same company.",
-   "research": "Only the UK Amway judgment quoted by Taylor bears on skill versus position, and it is one company; the talent-versus-luck simulation is generic. A study relating MLM earnings to join date or training would settle it."
+   "research": "Blocked: the UK Amway judgment quoted by Taylor (0.4, one company) and AARP's 2018 survey (0.35, hours and training spend predict losses as well as profits, self-reported proxies for skill) both point against the claim, but neither reaches 0.5 and no study measures skill directly. Unblocked by company or regulator data relating MLM earnings to join date or to training received across distributors (e.g. tenure-cohort income disclosures, or a court or FTC analysis of distributor records)."
   },
   "decision:trading-and-betting": {
    "coherence": {
@@ -262,7 +266,9 @@
     "takeaway": "Quote the curve, not the slogan."
    },
    "qualificationsAccepted": true,
-   "chain": ["decision:mlm-and-seminars"],
+   "chain": [
+    "decision:mlm-and-seminars"
+   ],
    "chainWhy": "Ordinary businesses survive far better than the 90-95% failure rate MLM promoters quote to make their opportunity look like the safer way to own a business (Taylor), so the next question is what MLM participants actually make."
   },
   "surprise:leverage-lets-small-account-take-large": {
@@ -353,10 +359,16 @@
    "research": "One FTC allegation about one firm's customers; no performance measurement of retail bots against a benchmark exists in the corpus."
   },
   "gap:technical-patterns-such-fibonacci-retracements-fair": {
-   "coherence": { "score": 0.8, "reason": "One question: do chart patterns such as Fibonacci levels and fair value gaps predict where price turns?" },
+   "coherence": {
+    "score": 0.8,
+    "reason": "One question: do chart patterns such as Fibonacci levels and fair value gaps predict where price turns?"
+   },
    "question": "Do Fibonacci levels and fair value gaps really predict where price will turn?",
    "title": "Do Fibonacci Levels Actually Predict the Market?",
-   "alternates": ["Fair Value Gaps and Fibonacci Lines, Put to the Test", "Why Trading Courses Teach Chart Patterns"],
+   "alternates": [
+    "Fair Value Gaps and Fibonacci Lines, Put to the Test",
+    "Why Trading Courses Teach Chart Patterns"
+   ],
    "whyWatch": "Eight sources teach these patterns as the edge that makes trading work, and the courses that sell them depend on it; nothing in the corpus tests whether price respects the lines more than chance.",
    "tension": "Chart examples always show price bouncing off the line; a fair test has to count the times it did not, and nobody here has.",
    "evidenceNeeded": "A backtest or study measuring whether price reacts at Fibonacci retracement levels or fair value gaps more often than at random levels, out of sample and after trading costs.",
