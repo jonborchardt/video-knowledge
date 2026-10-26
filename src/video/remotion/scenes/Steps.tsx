@@ -50,7 +50,7 @@ export const Steps: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const at = lineFrames(scene);
   const H = citationTop(scene);
   const end = scene.start + scene.duration;
-  const accents = [theme.slate, theme.green, theme.amber, theme.violet];
+  const accents = [theme.data, theme.gain, theme.glow, theme.accent2];
   const accent = (i: number) => accents[i % accents.length];
 
   // stops alternate above and below the middle; cards sit on the outer side of their stop
@@ -160,7 +160,7 @@ export const Steps: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 <g key={`s${i}`} transform={`translate(${p.x} ${p.y})`}>
                   <circle
                     r={R}
-                    fill={theme.bg}
+                    fill={theme.ground}
                     stroke={theme.line}
                     strokeWidth={4}
                     strokeDasharray="10 10"
@@ -193,7 +193,7 @@ export const Steps: FC<{ scene: TimelineScene }> = ({ scene }) => {
                         dominantBaseline="middle"
                         fontSize={52}
                         fontWeight={800}
-                        fill={theme.bg}
+                        fill={theme.ground}
                       >
                         {i + 1}
                       </text>

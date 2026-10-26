@@ -1,46 +1,110 @@
-// The look: saturated colour for each role (pink for losses, cyan for data, lime for gains, gold for the pitch, violet
-// for accents) over a drifting gradient backdrop, with a camera that pushes in, punches on every cue and zooms between
-// scenes (Video.tsx), and glowing springy charts. Fonts are system fonts so a render needs no network. ponytail: bundle a
-// webfont when renders must match across machines.
-/** The theme every scene reads at render time (never copied into a module-level constant). */
-export const theme = {
-  bg: '#0B0820', // the deepest field colour, and dark ink on coloured shapes
-  raised: 'rgba(255,255,255,0.07)',
-  line: 'rgba(255,255,255,0.16)',
-  fg: '#F7F4FF',
-  muted: '#B4ABD9',
-  amber: '#FFB020',
-  slate: '#22D3EE',
-  red: '#FF3D7F',
-  green: '#B6F23A',
-  violet: '#8B5CF6',
-  serif: 'Georgia, "Times New Roman", Times, serif',
-  sans: '"Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif',
-};
-export const GUTTER = 120;
+// The look: the owning institution's kit (brand/<key>/kit.json, carried on the timeline as `palette`) filled into one
+// set of roles, lifted for the screen: the kit's ground as the field, its accent glowing, its paper as the text, and
+// restrained semantic data colours bright enough on that ground (brand/design.md 1.2, 2.3). Over it a drifting
+// gradient backdrop, a camera that pushes in, punches on every cue and zooms between scenes (Video.tsx), and glowing
+// springy charts. The Commonwealth faces are embedded by fonts.ts.
+import type { KitPalette } from '../types';
 
-/** The Commonwealth of Reason look (brand/design.md 1.2, 1.3): Treasury Navy, archival gold rules, paper, slate
- *  annotations; Libre Baskerville for display, IBM Plex Sans for data and captions, IBM Plex Mono for citations (the
- *  faces are embedded by fonts.ts). Read at render time by the Short components and the portrait frame. The landscape
- *  videos keep `theme` until they are rebranded; then `theme` takes these values and this object goes. */
-export const brand = {
-  navy: '#172A45',
-  gold: '#C5A46A',
-  paper: '#F2EBDD',
-  slate: '#444E59',
-  ink: '#101D30', // text on paper
-  fg: '#F2EBDD', // text on navy
-  muted: 'rgba(242,235,221,0.68)',
-  rule: 'rgba(197,164,106,0.55)',
-  raised: 'rgba(242,235,221,0.08)',
-  // restrained semantic data colours: semantic colour outweighs brand uniformity (design.md 2.3)
-  data: '#8FB8D6',
-  loss: '#D0603F',
-  gain: '#7AA874',
-  serif: '"Libre Baskerville", Georgia, "Times New Roman", serif',
-  sans: '"IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif',
-  mono: '"IBM Plex Mono", Consolas, "Courier New", monospace',
+export type Theme = {
+  ground: string; // the field, and dark ink on coloured shapes
+  paper: string;
+  ink: string; // the kit's annotation slate
+  text: string; // text on paper
+  fg: string; // text on the ground
+  muted: string;
+  rule: string;
+  raised: string;
+  line: string;
+  accent: string; // the kit's accent as drawn on paper (rules, seal)
+  glow: string; // the accent lifted for the screen: the pitch, the highlight
+  accent2: string; // a hue-rotated companion of the accent
+  data: string;
+  loss: string;
+  gain: string;
+  serif: string;
+  sans: string;
+  mono: string;
 };
+
+const rgbOf = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
+const hexOf = (rgb: number[]) =>
+  '#' +
+  rgb
+    .map((c) =>
+      Math.round(Math.min(1, Math.max(0, c)) * 255)
+        .toString(16)
+        .padStart(2, '0'),
+    )
+    .join('')
+    .toUpperCase();
+function hslOf(hex: string): [number, number, number] {
+  const [r, g, b] = rgbOf(hex);
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  const d = max - min;
+  if (!d) return [0, 0, l];
+  const h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return [(h * 60 + 360) % 360, d / (1 - Math.abs(2 * l - 1)), l];
+}
+function fromHsl(h: number, s: number, l: number): string {
+  const k = (n: number) => (n + h / 30) % 12;
+  const a = s * Math.min(l, 1 - l);
+  return hexOf([0, 8, 4].map((n) => l - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1))));
+}
+const luminance = (hex: string) => {
+  const [r, g, b] = rgbOf(hex).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+/** A screen tone of hue `h`: saturation `s`, lightness raised from `l` until it reads on the ground at 4.5:1. */
+function onGround(h: number, s: number, l: number, ground: string): string {
+  const floor = luminance(ground);
+  let c = fromHsl(h, s, l);
+  while ((luminance(c) + 0.05) / (floor + 0.05) < 4.5 && l < 0.95) c = fromHsl(h, s, (l += 0.02));
+  return c;
+}
+/** A colour (#RRGGBB) at an opacity, for tints, shadows and fades. */
+export function alpha(hex: string, a: number): string {
+  const [r, g, b] = rgbOf(hex).map((c) => Math.round(c * 255));
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+/** Every role from the four kit colours: ground, paper and accent kept, the rest derived (hue stays the kit's). */
+export function themeOf(p: KitPalette): Theme {
+  const [h, s] = hslOf(p.accent);
+  const [gh, gs] = hslOf(p.ground);
+  return {
+    ground: p.ground,
+    paper: p.paper,
+    ink: p.ink,
+    text: fromHsl(gh, gs, 0.12),
+    fg: p.paper,
+    muted: alpha(p.paper, 0.68),
+    rule: alpha(p.accent, 0.55),
+    raised: alpha(p.paper, 0.08),
+    line: alpha(p.paper, 0.16),
+    accent: p.accent,
+    glow: onGround(h, Math.max(s + 0.3, 0.8), 0.6, p.ground),
+    accent2: onGround((h + 220) % 360, Math.max(s, 0.6), 0.68, p.ground),
+    // semantic colour outweighs brand uniformity (design.md 2.3): fixed hues, lifted for the screen
+    data: onGround(203, 0.75, 0.66, p.ground),
+    loss: onGround(12, 0.8, 0.6, p.ground),
+    gain: onGround(100, 0.55, 0.58, p.ground),
+    serif: '"Libre Baskerville", Georgia, "Times New Roman", serif',
+    sans: '"IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif',
+    mono: '"IBM Plex Mono", Consolas, "Courier New", monospace',
+  };
+}
+
+/** The Commonwealth's own kit (brand/cor/kit.json): the look before a timeline sets its institution's. */
+export const COR_PALETTE: KitPalette = { ground: '#14181F', accent: '#B8975A', paper: '#EFE8DA', ink: '#3D434B' };
+/** The theme every scene reads at render time (never copied into a module-level constant); `Video` fills it from the
+ *  timeline's palette before any scene renders. */
+export const theme: Theme = themeOf(COR_PALETTE);
+export function setTheme(t: Theme): void {
+  Object.assign(theme, t);
+}
+export const GUTTER = 120;
 
 export const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 export const easeOut = (t: number) => 1 - Math.pow(1 - clamp01(t), 3);

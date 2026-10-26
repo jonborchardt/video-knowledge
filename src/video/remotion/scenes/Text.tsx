@@ -37,7 +37,7 @@ export const Text: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   marginRight: '0.25em',
                   opacity: ramp(t, scene.start + 4 + k * 3, 6),
                   transform: `translateY(${(1 - g) * 40}px) scale(${0.85 + 0.15 * g})`,
-                  backgroundImage: `linear-gradient(90deg, ${theme.fg}, ${theme.slate} 60%, ${theme.red})`,
+                  backgroundImage: `linear-gradient(90deg, ${theme.fg}, ${theme.fg} 40%, ${theme.glow})`,
                   backgroundSize: '1500px 100%',
                   backgroundPosition: `${-k * 140}px 0`,
                   WebkitBackgroundClip: 'text',
@@ -54,8 +54,8 @@ export const Text: FC<{ scene: TimelineScene }> = ({ scene }) => {
             width: 420 * ramp(t, scene.start + 16, 14),
             height: 8,
             borderRadius: 4,
-            background: `linear-gradient(90deg, ${theme.slate}, ${theme.violet}, ${theme.red})`,
-            boxShadow: `0 0 24px ${theme.violet}`,
+            background: `linear-gradient(90deg, ${theme.accent}, ${theme.glow}, ${theme.accent2})`,
+            boxShadow: `0 0 24px ${theme.accent2}`,
             marginTop: 36,
           }}
         />
@@ -64,7 +64,7 @@ export const Text: FC<{ scene: TimelineScene }> = ({ scene }) => {
             style={{
               fontFamily: theme.sans,
               fontSize: 34,
-              color: theme.slate,
+              color: theme.data,
               marginTop: 22,
               letterSpacing: 6,
               textTransform: 'uppercase',
@@ -89,7 +89,7 @@ export const Text: FC<{ scene: TimelineScene }> = ({ scene }) => {
       <AbsoluteFill style={{ justifyContent: 'center', padding: `0 ${GUTTER + 40}px` }}>
         <div style={{ fontFamily: theme.serif, fontSize: 92, lineHeight: 1.2, color: theme.fg, maxWidth: 1500 }}>
           {line.slice(0, shown)}
-          <span style={{ color: theme.amber, opacity: blink ? 1 : 0.15 }}>|</span>
+          <span style={{ color: theme.glow, opacity: blink ? 1 : 0.15 }}>|</span>
         </div>
         {o.glyph === 'snowball' ? (
           <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
@@ -117,7 +117,7 @@ export const Text: FC<{ scene: TimelineScene }> = ({ scene }) => {
       >
         {lines.map((l, i) => {
           const a = ramp(t, frames[i], 10);
-          const accent = [theme.slate, theme.amber, theme.green, theme.red][i % 4];
+          const accent = [theme.data, theme.glow, theme.gain, theme.loss][i % 4];
           const later = i < lines.length - 1 ? ramp(t, frames[i + 1], 10) : 0;
           return (
             <div

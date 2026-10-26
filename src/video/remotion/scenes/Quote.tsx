@@ -1,16 +1,16 @@
 import type { FC } from 'react';
-import { AbsoluteFill, useCurrentFrame } from 'remotion';
+import { AbsoluteFill, interpolateColors, useCurrentFrame } from 'remotion';
 import { cue } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { alignLine } from '../../words';
 import { Citation } from '../Citation';
-import { GUTTER, ramp, theme } from '../theme';
+import { GUTTER, alpha, ramp, theme } from '../theme';
 
 const strip = (s: string) => s.replace(/^["“”]+|["“”]+$/g, '');
 
 /** Quoted lines, one card at a time. The card and its attribution slide in when the sentence that carries the quote
  *  begins; the words appear as they are spoken (aligned to the boundaries of whichever sentence carries them); the
- *  `emphasis` cue's word turns amber. With one citation per line, the attribution follows the line. */
+ *  `emphasis` cue's word turns glow. With one citation per line, the attribution follows the line. */
 export const Quote: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const t = scene.start + useCurrentFrame();
   const emphasis = scene.cues.emphasis;
@@ -67,7 +67,7 @@ export const Quote: FC<{ scene: TimelineScene }> = ({ scene }) => {
               style={{
                 fontFamily: theme.serif,
                 fontSize: 150,
-                color: theme.amber,
+                color: theme.glow,
                 lineHeight: 0.6,
                 opacity: 0.6,
                 height: 70,
@@ -97,11 +97,9 @@ export const Quote: FC<{ scene: TimelineScene }> = ({ scene }) => {
                     style={{
                       opacity: o,
                       transform: `translateY(${(1 - o) * 14}px) scale(${1 + 0.06 * e})`,
-                      color: hot
-                        ? `rgb(${236 + (227 - 236) * e}, ${233 + (163 - 233) * e}, ${226 + (58 - 226) * e})`
-                        : theme.fg,
+                      color: hot ? interpolateColors(e, [0, 1], [theme.fg, theme.glow]) : theme.fg,
                       fontWeight: hot ? 700 : 400,
-                      borderBottom: hot ? `4px solid rgba(227,163,58,${e})` : 'none',
+                      borderBottom: hot ? `4px solid ${alpha(theme.glow, e)}` : 'none',
                       display: 'inline-block',
                     }}
                   >

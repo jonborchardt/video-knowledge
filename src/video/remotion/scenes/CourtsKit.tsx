@@ -78,7 +78,7 @@ export const CourtsKit: FC<{ scene: TimelineScene }> = ({ scene }) => {
         viewBox={`-20 -140 ${CASE.w + 40} ${CASE.h + 160}`}
         style={{ position: 'absolute', left: CASE.x - 20, top: CASE.y - 140, overflow: 'visible' }}
         fill="none"
-        stroke={theme.violet}
+        stroke={theme.accent2}
         strokeWidth={6}
         strokeLinejoin="round"
         strokeLinecap="round"
@@ -88,7 +88,7 @@ export const CourtsKit: FC<{ scene: TimelineScene }> = ({ scene }) => {
         </g>
         <rect x={0} y={0} width={CASE.w} height={CASE.h} rx={14} fill={theme.raised} />
         <line x1={0} y1={60} x2={CASE.w} y2={60} stroke={theme.line} />
-        <rect x={CASE.w / 2 - 22} y={48} width={44} height={24} rx={4} fill={theme.bg} />
+        <rect x={CASE.w / 2 - 22} y={48} width={44} height={24} rx={4} fill={theme.ground} />
       </svg>
       {/* the gavel, beside the case */}
       <svg
@@ -104,7 +104,7 @@ export const CourtsKit: FC<{ scene: TimelineScene }> = ({ scene }) => {
           transformOrigin: '50% 80%',
         }}
         fill="none"
-        stroke={theme.slate}
+        stroke={theme.data}
         strokeWidth={4}
         strokeLinejoin="round"
         strokeLinecap="round"
@@ -124,16 +124,16 @@ export const CourtsKit: FC<{ scene: TimelineScene }> = ({ scene }) => {
           width: N * W + (N - 1) * GAP + 40,
           height: 96,
           borderRadius: 14,
-          background: `repeating-linear-gradient(135deg, ${theme.green}22 0 14px, transparent 14px 28px)`,
-          border: `3px solid ${theme.green}`,
-          boxShadow: `0 0 ${30 * g}px ${theme.green}66`,
+          background: `repeating-linear-gradient(135deg, ${theme.gain}22 0 14px, transparent 14px 28px)`,
+          border: `3px solid ${theme.gain}`,
+          boxShadow: `0 0 ${30 * g}px ${theme.gain}66`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           fontFamily: theme.sans,
           fontWeight: 700,
           fontSize: 44,
-          color: theme.green,
+          color: theme.gain,
           opacity: g,
           transform: `translateY(${(1 - g) * 30}px)`,
         }}
@@ -158,8 +158,8 @@ export const CourtsKit: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 top: TOP + H,
                 width: 4,
                 height: (groundY - TOP - H) * drop,
-                background: theme.green,
-                boxShadow: `0 0 10px ${theme.green}`,
+                background: theme.gain,
+                boxShadow: `0 0 10px ${theme.gain}`,
               }}
             />
             <div
@@ -172,8 +172,8 @@ export const CourtsKit: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 boxSizing: 'border-box',
                 borderRadius: 18,
                 background: theme.raised,
-                border: `3px solid ${theme.amber}`,
-                boxShadow: flash ? `0 0 ${40 * flash}px ${theme.amber}` : 'none',
+                border: `3px solid ${theme.glow}`,
+                boxShadow: flash ? `0 0 ${40 * flash}px ${theme.glow}` : 'none',
                 opacity: clamp01(k * 1.5),
                 transform: `scale(${0.4 + 0.6 * Math.max(0, k)})`,
                 display: 'flex',
@@ -188,7 +188,7 @@ export const CourtsKit: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 height={140}
                 viewBox="0 0 120 120"
                 fill="none"
-                stroke={theme.amber}
+                stroke={theme.glow}
                 strokeWidth={5}
                 strokeLinecap="round"
                 strokeLinejoin="round"

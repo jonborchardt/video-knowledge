@@ -11,7 +11,7 @@ const PAGE = { x: 440, y: 100, w: 1040, h: 880 };
 /** The line as a rubber stamp. Before it, a page behind writes itself out row by row (abstract strokes, no words)
  *  under a dashed target where the stamp will land. On the line's frame (`lineFrames`: its `line:1` cue or when it is
  *  spoken) the stamp drops from large onto the page, squashes, shakes the frame and throws a ring of dust; it is
- *  double-bordered, tilted a few degrees and worn (a seeded turbulence eats specks out of the ink), in amber, the
+ *  double-bordered, tilted a few degrees and worn (a seeded turbulence eats specks out of the ink), in glow, the
  *  colour of a claim. Afterwards the view pushes in slowly, the wear shimmers and the page drifts. The line breaks at
  *  its first comma. Reads no options. */
 export const Stamp: FC<{ scene: TimelineScene }> = ({ scene }) => {
@@ -48,7 +48,7 @@ export const Stamp: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const writeFrom = scene.start + 10;
   const per = Math.max(6, (land - DROP - 20 - writeFrom) / ROWS);
   const drift = (t - scene.start) * 0.03;
-  const ink = theme.amber;
+  const ink = theme.glow;
   const dust = 28;
 
   return (
@@ -115,7 +115,7 @@ export const Stamp: FC<{ scene: TimelineScene }> = ({ scene }) => {
               return (
                 <g key={i}>
                   <rect x={PAGE.x + 80} y={y} width={w} height={14} rx={7} fill={theme.muted} opacity={0.45} />
-                  {head ? <circle cx={PAGE.x + 80 + w} cy={y + 7} r={9} fill={theme.slate} /> : null}
+                  {head ? <circle cx={PAGE.x + 80 + w} cy={y + 7} r={9} fill={theme.data} /> : null}
                 </g>
               );
             })}
@@ -146,7 +146,7 @@ export const Stamp: FC<{ scene: TimelineScene }> = ({ scene }) => {
               cy={560}
               rx={(bw / 2) * (1.15 - 0.15 * lift)}
               ry={(bh / 2) * (1.15 - 0.15 * lift)}
-              fill="#000"
+              fill={theme.text}
               opacity={0.35 * (1 - lift)}
             />
           ) : null}
@@ -174,7 +174,7 @@ export const Stamp: FC<{ scene: TimelineScene }> = ({ scene }) => {
                     cx={960 + r0.x * d + Math.cos(a) * 90 * easeOut(k / 26)}
                     cy={540 + r0.y * d + Math.sin(a) * 60 * easeOut(k / 26) + k * 0.8}
                     r={7 * (1 - k / 45) + ((i * 7) % 4)}
-                    fill={i % 3 ? ink : theme.violet}
+                    fill={i % 3 ? ink : theme.accent2}
                   />
                 );
               })}

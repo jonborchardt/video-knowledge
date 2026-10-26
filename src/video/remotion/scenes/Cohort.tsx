@@ -72,7 +72,7 @@ export const Cohort: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const finder = photo ? grow(t, photo.frame, 14) : 0;
   const p = pts[cur];
   const pop = series ? grow(t, fills[cur], 12) : 1;
-  const color = theme.slate;
+  const color = theme.data;
   return (
     <AbsoluteFill style={{ fontFamily: theme.sans }}>
       <div
@@ -115,7 +115,7 @@ export const Cohort: FC<{ scene: TimelineScene }> = ({ scene }) => {
               const c = closeAt[i];
               const red = ramp(t, c, 6);
               const fall = ramp(t, c + 5, 16);
-              const fill = red > 0 ? theme.red : color;
+              const fill = red > 0 ? theme.loss : color;
               const lit = 0.5 + 0.5 * Math.sin(t / 9 + i * 1.7);
               const s = (cell / 48) * (0.92 - 0.12 * fall);
               return (
@@ -146,7 +146,7 @@ export const Cohort: FC<{ scene: TimelineScene }> = ({ scene }) => {
             </g>
           ) : null}
           {flash > 0 ? (
-            <rect x={-60} y={-60} width={gridW + 120} height={gridW + 120} fill="#FFFFFF" opacity={0.55 * flash} />
+            <rect x={-60} y={-60} width={gridW + 120} height={gridW + 120} fill={theme.fg} opacity={0.55 * flash} />
           ) : null}
         </g>
       </svg>
@@ -177,11 +177,11 @@ export const Cohort: FC<{ scene: TimelineScene }> = ({ scene }) => {
             fontWeight: 700,
             lineHeight: 1.05,
             letterSpacing: -3,
-            color: series && cur > 0 ? theme.fg : theme.slate,
+            color: series && cur > 0 ? theme.fg : theme.data,
             fontVariantNumeric: 'tabular-nums',
             transform: `scale(${0.9 + 0.1 * pop})`,
             transformOrigin: 'left center',
-            textShadow: `0 0 ${30 + 10 * Math.sin(t / 12)}px ${theme.slate}88`,
+            textShadow: `0 0 ${30 + 10 * Math.sin(t / 12)}px ${theme.data}88`,
             whiteSpace: 'nowrap',
           }}
         >
@@ -202,8 +202,8 @@ export const Cohort: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   borderRadius: 13,
                   boxSizing: 'border-box',
                   border: `3px solid ${j === cur ? theme.fg : theme.line}`,
-                  background: j < cur ? theme.red : j === cur ? theme.slate : 'transparent',
-                  boxShadow: j === cur ? `0 0 18px ${theme.slate}` : undefined,
+                  background: j < cur ? theme.loss : j === cur ? theme.data : 'transparent',
+                  boxShadow: j === cur ? `0 0 18px ${theme.data}` : undefined,
                 }}
               />
             ))}

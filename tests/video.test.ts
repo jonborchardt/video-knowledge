@@ -1,7 +1,8 @@
 // The video stage: segment selection against the validated script, narration caching, the timeline from measured
 // audio, cue resolution, chart timing, excerpt extraction, the render cache key, assembly contiguity, the ffmpeg
 // wrapper and the providers. Every test runs on the synthetic fixture (tests/video-helpers.ts) and needs no TTS.
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { ROOT } from '../src/lib/io';
 import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
@@ -31,7 +32,7 @@ import { buildStoryboard } from '../src/lib/storyboard';
 import { approveAll, good, plan, run } from './script-helpers';
 import { COMPONENTS } from '../src/video/remotion/scenes';
 import { headlineNumber, segmentColors } from '../src/video/remotion/scenes/StackedBar';
-import { countUp, theme } from '../src/video/remotion/theme';
+import { countUp, setTheme, theme, themeOf } from '../src/video/remotion/theme';
 import { narrate } from '../src/video/narration';
 import {
   TOLERANCE,
@@ -694,15 +695,43 @@ describe('StackedBar', () => {
   it('StackedBar headline and colours', () => {
     expect(headlineNumber('bills only')).toBeNull();
     expect(headlineNumber('601 people asked')).toBe(601);
-    expect(segmentColors('slate,red,muted')).toEqual([theme.slate, theme.red, theme.muted]);
-    expect(segmentColors('slate,purple')).toEqual([theme.slate, theme.muted]);
-    expect(segmentColors(undefined)).toEqual([theme.red, theme.slate, theme.green]);
+    expect(segmentColors('data,loss,muted')).toEqual([theme.data, theme.loss, theme.muted]);
+    expect(segmentColors('data,purple')).toEqual([theme.data, theme.muted]);
+    expect(segmentColors(undefined)).toEqual([theme.loss, theme.data, theme.gain]);
   });
 });
 
 describe('look', () => {
   it('renders the one look: scenes read the theme at render time', () => {
-    expect(segmentColors('red')).toEqual([theme.red]);
+    expect(segmentColors('loss')).toEqual([theme.loss]);
+  });
+  it('themeOf keeps the kit ground and paper and lifts the accent', () => {
+    const t = themeOf({ ground: '#172A45', accent: '#C5A46A', paper: '#F2EBDD', ink: '#444E59' });
+    expect(t.ground).toBe('#172A45');
+    expect(t.paper).toBe('#F2EBDD');
+    expect(t.accent).toBe('#C5A46A');
+    expect(hueOf(t.glow)).toBeCloseTo(hueOf('#C5A46A'), -1); // within 10 degrees
+    expect(satOf(t.glow)).toBeGreaterThan(satOf('#C5A46A'));
+    // the semantic data colours stay legible on the ground (WCAG AA large text)
+    for (const c of [t.data, t.loss, t.gain, t.glow, t.accent2])
+      expect(contrast(c, t.ground)).toBeGreaterThanOrEqual(3);
+  });
+  it('two institutions give two looks', () => {
+    const a = themeOf({ ground: '#172A45', accent: '#C5A46A', paper: '#F2EBDD', ink: '#444E59' });
+    const b = themeOf({ ground: '#12283A', accent: '#5FB3C9', paper: '#E9EEF0', ink: '#3E4B55' });
+    expect(a.ground).not.toBe(b.ground);
+    expect(a.glow).not.toBe(b.glow);
+  });
+  it('setTheme fills the one theme every scene reads', () => {
+    const before = { ...theme };
+    const t = themeOf({ ground: '#12283A', accent: '#5FB3C9', paper: '#E9EEF0', ink: '#3E4B55' });
+    setTheme(t);
+    expect(theme.glow).toBe(t.glow);
+    setTheme(before);
+  });
+  it('no scene or bespoke file holds a literal colour', () => {
+    // theme.ts is the only home of a colour value
+    expect(filesWithLiteralColours()).toEqual([]);
   });
   it('counts a figure up in its own format and lands on the display exactly', () => {
     expect(countUp('79.6', 79.6, 0.5)).toBe('39.8');
@@ -925,3 +954,41 @@ describe('kit palette', () => {
     for (const s of tl.scenes) expect(sceneKey(s, other)).not.toBe(sceneKey(s, tl));
   });
 });
+
+function hsl(hex: string): [number, number, number] {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  const d = max - min;
+  if (!d) return [0, 0, l];
+  const s = d / (1 - Math.abs(2 * l - 1));
+  const h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return [(h * 60 + 360) % 360, s, l];
+}
+function hueOf(hex: string): number {
+  return hsl(hex)[0];
+}
+function satOf(hex: string): number {
+  return hsl(hex)[1];
+}
+function contrast(a: string, b: string): number {
+  const lum = (hex: string) => {
+    const [r, g, bl] = [1, 3, 5].map((i) => {
+      const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+      return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
+  };
+  const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p);
+  return (x + 0.05) / (y + 0.05);
+}
+function filesWithLiteralColours(): string[] {
+  const dirs = ['src/video/remotion', 'src/video/bespoke'].map((d) => join(ROOT, d));
+  const files = dirs.flatMap((d) =>
+    readdirSync(d, { recursive: true, encoding: 'utf8' })
+      .filter((f) => /\.tsx?$/.test(f) && basename(f) !== 'theme.ts')
+      .map((f) => join(d, f)),
+  );
+  return files.filter((f) => /#[0-9A-Fa-f]{3,8}\b|rgba?\(/.test(readFileSync(f, 'utf8')));
+}

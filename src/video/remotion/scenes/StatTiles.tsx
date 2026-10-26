@@ -30,7 +30,7 @@ export const StatTiles: FC<{ scene: TimelineScene }> = ({ scene }) => {
       {chart.points.map((p, i) => {
         const a = ramp(t, fills[i], 14);
         const red = i === alert ? ramp(t, fills[i] + 14, 12) : 0;
-        const accent = red ? theme.red : [theme.slate, theme.green, theme.amber, theme.violet][i % 4];
+        const accent = red ? theme.loss : [theme.data, theme.gain, theme.glow, theme.accent2][i % 4];
         const pop = grow(t, fills[i], 14);
         return (
           <div

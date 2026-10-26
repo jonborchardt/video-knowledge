@@ -20,11 +20,11 @@ export const Waterfall: FC<{ scene: TimelineScene }> = ({ scene }) => {
         <defs>
           <pattern id="hatch" width={16} height={16} patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
             <rect width={16} height={16} fill={theme.raised} />
-            <line x1={0} y1={0} x2={0} y2={16} stroke={theme.red} strokeWidth={5} />
+            <line x1={0} y1={0} x2={0} y2={16} stroke={theme.loss} strokeWidth={5} />
           </pattern>
         </defs>
         <g transform={`translate(${GUTTER + 60} 0)`}>
-          <rect x={0} y={base - H * paid} width={260} height={H * paid} rx={8} fill={theme.slate} />
+          <rect x={0} y={base - H * paid} width={260} height={H * paid} rx={8} fill={theme.data} />
           <text x={130} y={base + 50} textAnchor="middle" fill={theme.fg} fontSize={32} opacity={paid}>
             paid by the company
           </text>
@@ -35,7 +35,7 @@ export const Waterfall: FC<{ scene: TimelineScene }> = ({ scene }) => {
             height={H * 0.55 * exp}
             rx={8}
             fill="url(#hatch)"
-            stroke={theme.red}
+            stroke={theme.loss}
             strokeWidth={3}
             opacity={exp}
           />
@@ -43,14 +43,14 @@ export const Waterfall: FC<{ scene: TimelineScene }> = ({ scene }) => {
             x={510}
             y={base - H - 60}
             textAnchor="middle"
-            fill={theme.red}
+            fill={theme.loss}
             fontSize={110}
             fontWeight={700}
             opacity={exp}
           >
             ?
           </text>
-          <text x={510} y={base + 50} textAnchor="middle" fill={theme.red} fontSize={32} opacity={exp}>
+          <text x={510} y={base + 50} textAnchor="middle" fill={theme.loss} fontSize={32} opacity={exp}>
             expenses: not reported
           </text>
           <rect
@@ -60,15 +60,15 @@ export const Waterfall: FC<{ scene: TimelineScene }> = ({ scene }) => {
             height={H * 0.45}
             rx={8}
             fill="none"
-            stroke={theme.amber}
+            stroke={theme.glow}
             strokeWidth={4}
             strokeDasharray="14 12"
             opacity={keep}
           />
-          <text x={890} y={base - H * 0.45 - 30} textAnchor="middle" fill={theme.amber} fontSize={40} opacity={keep}>
+          <text x={890} y={base - H * 0.45 - 30} textAnchor="middle" fill={theme.glow} fontSize={40} opacity={keep}>
             ?
           </text>
-          <text x={890} y={base + 50} textAnchor="middle" fill={theme.amber} fontSize={32} opacity={keep}>
+          <text x={890} y={base + 50} textAnchor="middle" fill={theme.glow} fontSize={32} opacity={keep}>
             what you keep: unknown
           </text>
           <line x1={-20} y1={base} x2={1060} y2={base} stroke={theme.line} strokeWidth={3} />
@@ -93,7 +93,7 @@ export const Waterfall: FC<{ scene: TimelineScene }> = ({ scene }) => {
               lineHeight: 1.3,
               color: theme.fg,
               opacity: ramp(t, frames[i], 12),
-              borderLeft: `5px solid ${i ? theme.amber : theme.red}`,
+              borderLeft: `5px solid ${i ? theme.glow : theme.loss}`,
               paddingLeft: 22,
             }}
           >

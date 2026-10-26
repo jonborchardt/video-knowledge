@@ -16,7 +16,7 @@ export const Dumbbell: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const chart = scene.chart!;
   const pts = chart.points;
   const fills = pointFrames(scene, 36);
-  const colors = [theme.amber, theme.slate];
+  const colors = [theme.glow, theme.data];
   const rows = Math.ceil(pts.length / 2);
   const L = GUTTER + 40;
   const W = 1920 - 2 * GUTTER - 80;
@@ -139,7 +139,7 @@ export const Dumbbell: FC<{ scene: TimelineScene }> = ({ scene }) => {
                     cy={cy - (1 - Math.min(1, drop)) * 120}
                     r={24 * Math.max(0, drop)}
                     fill={colors[i]}
-                    stroke={theme.bg}
+                    stroke={theme.ground}
                     strokeWidth={5}
                     opacity={ramp(t, f, 6)}
                     filter="url(#dumbbell-glow)"
@@ -170,10 +170,10 @@ export const Dumbbell: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   textAlign: 'center',
                   fontSize: 48,
                   fontWeight: 700,
-                  color: [theme.amber, theme.slate][i],
+                  color: [theme.glow, theme.data][i],
                   fontVariantNumeric: 'tabular-nums',
                   opacity: ramp(t, f + 4, 8),
-                  textShadow: `0 0 18px ${[theme.amber, theme.slate][i]}99`,
+                  textShadow: `0 0 18px ${[theme.glow, theme.data][i]}99`,
                 }}
               >
                 {countUp(p.display, p.value, ramp(t, f, 24))}

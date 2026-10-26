@@ -40,7 +40,7 @@ export const Choices: FC<{ scene: TimelineScene }> = ({ scene }) => {
     const fb = i === 0 ? typeAt + 20 : first + (i + 1) * spread;
     at.push(Math.max(s ?? fb, i ? at[i - 1] + 6 : scene.start));
   });
-  const accents = [theme.slate, theme.amber, theme.green, theme.violet];
+  const accents = [theme.data, theme.glow, theme.gain, theme.accent2];
   const accent = (i: number) => accents[i % accents.length];
 
   // chip size: big type, shrunk so the row fits the frame
@@ -145,7 +145,7 @@ export const Choices: FC<{ scene: TimelineScene }> = ({ scene }) => {
           <circle
             r={92}
             fill="none"
-            stroke={theme.violet}
+            stroke={theme.accent2}
             strokeWidth={4}
             strokeDasharray="14 12"
             transform={`rotate(${t * 0.8})`}
@@ -153,8 +153,8 @@ export const Choices: FC<{ scene: TimelineScene }> = ({ scene }) => {
           />
           <circle
             r={70 * Math.max(0, grow(t, typeAt, 16))}
-            fill={theme.violet}
-            stroke={theme.violet}
+            fill={theme.accent2}
+            stroke={theme.accent2}
             strokeWidth={5}
             filter="url(#choices-glow)"
           />
@@ -164,7 +164,7 @@ export const Choices: FC<{ scene: TimelineScene }> = ({ scene }) => {
             dominantBaseline="middle"
             fontSize={92}
             fontWeight={800}
-            fill={theme.bg}
+            fill={theme.ground}
             transform={`rotate(${6 * Math.sin(t / 30)})`}
           >
             ?
@@ -192,7 +192,7 @@ export const Choices: FC<{ scene: TimelineScene }> = ({ scene }) => {
               lineHeight: 1,
               padding: `${font * 0.42}px ${font * 0.8}px`,
               borderRadius: 999,
-              color: theme.bg,
+              color: theme.ground,
               background: `linear-gradient(135deg, ${c}, ${c}AA)`,
               border: `4px solid ${c}`,
               boxShadow: `0 0 ${20 + 40 * pulse}px ${c}${hot ? 'AA' : '44'}`,

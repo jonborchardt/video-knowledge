@@ -6,7 +6,7 @@ import { citationTop } from '../Citation';
 import { GUTTER, clamp01, easeOut, grow, ramp, theme } from '../theme';
 
 type Mark = 'check' | 'cross' | 'question';
-const markColor = (m: Mark) => (m === 'check' ? theme.green : m === 'cross' ? theme.red : theme.amber);
+const markColor = (m: Mark) => (m === 'check' ? theme.gain : m === 'cross' ? theme.loss : theme.glow);
 
 /** A verdict mark drawn in SVG, stroked on over `d` (0..1): a tick, a cross, or a question mark with its dot. */
 const Glyph: FC<{ mark: Mark; d: number; color: string }> = ({ mark, d, color }) => {

@@ -5,7 +5,7 @@ import { cue } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { GUTTER, easeOut, ramp, theme } from '../theme';
 
-const NAMED = ['red', 'slate', 'green', 'amber', 'muted'] as const;
+const NAMED = ['loss', 'data', 'gain', 'glow', 'accent2', 'muted'] as const;
 
 /** The big number a scene opens with: only when the first on-screen word starts with a digit ("601 people asked"),
  *  never from a label ("bills only" is not 0). */
@@ -13,11 +13,11 @@ export function headlineNumber(line: string): number | null {
   const first = line.split(/\s+/)[0] ?? '';
   return /^[0-9]/.test(first) ? Number(first.replace(/[^0-9.]/g, '')) : null;
 }
-/** options.colors: segment colours in point order as theme names, e.g. "slate,red,muted"; unknown names are muted;
- *  default red, slate, green. A layout choice, so "lower bills" need not be drawn red. */
+/** options.colors: segment colours in point order as theme names, e.g. "data,loss,muted"; unknown names are muted;
+ *  default loss, data, gain. A layout choice, so "lower bills" need not be drawn as a loss. */
 export function segmentColors(option: string | number | boolean | undefined): string[] {
   return option === undefined
-    ? [theme.red, theme.slate, theme.green]
+    ? [theme.loss, theme.data, theme.gain]
     : String(option)
         .split(',')
         .map((c) =>
@@ -100,7 +100,7 @@ export const StackedBar: FC<{ scene: TimelineScene }> = ({ scene }) => {
                     justifyContent: 'center',
                     fontSize: 58,
                     fontWeight: 700,
-                    color: theme.bg,
+                    color: theme.ground,
                     opacity: ramp(t, fills[i] + 10, 8),
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',

@@ -3,7 +3,7 @@ import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { cue, spokenAt } from '../../cues';
 import { excerptWindow } from '../../excerpt';
 import { SHORT_LAYOUT as L, type TimelineScene } from '../../types';
-import { brand, ramp } from '../theme';
+import { alpha, ramp, theme } from '../theme';
 
 const W = L.width - L.gutter - L.right;
 
@@ -27,9 +27,9 @@ export const ShortExcerpt: FC<{ scene: TimelineScene }> = ({ scene }) => {
           top: L.top,
           width: W,
           height: L.contentBottom - L.top,
-          background: brand.paper,
-          color: brand.ink,
-          boxShadow: '0 30px 80px rgba(0,0,0,.45)',
+          background: theme.paper,
+          color: theme.text,
+          boxShadow: `0 30px 80px ${alpha(theme.text, 0.45)}`,
           opacity: page,
           transform: `translateY(${(1 - page) * 24}px)`,
           padding: '44px 48px',
@@ -39,9 +39,9 @@ export const ShortExcerpt: FC<{ scene: TimelineScene }> = ({ scene }) => {
       >
         <div
           style={{
-            fontFamily: brand.mono,
+            fontFamily: theme.mono,
             fontSize: 22,
-            color: brand.slate,
+            color: theme.ink,
             letterSpacing: 2,
             textTransform: 'uppercase',
             marginBottom: 28,
@@ -52,13 +52,13 @@ export const ShortExcerpt: FC<{ scene: TimelineScene }> = ({ scene }) => {
         >
           {ex.doc} &middot; lines {ex.lines}
         </div>
-        <div style={{ fontFamily: brand.serif, fontSize: 32, lineHeight: 1.5 }}>
+        <div style={{ fontFamily: theme.serif, fontSize: 32, lineHeight: 1.5 }}>
           {win.before}{' '}
           {win.match ? (
             <span
               style={{
-                background: `rgba(197,164,106,${0.35 * hl})`,
-                borderBottom: `4px solid rgba(197,164,106,${hl})`,
+                background: alpha(theme.accent, 0.35 * hl),
+                borderBottom: `4px solid ${alpha(theme.accent, hl)}`,
                 fontWeight: 700,
               }}
             >

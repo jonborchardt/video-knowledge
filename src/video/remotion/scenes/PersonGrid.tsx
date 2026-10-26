@@ -52,7 +52,7 @@ export const PersonGrid: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 x={x}
                 y={y}
                 r={22}
-                color={isZero ? theme.red : isInactive ? theme.amber : theme.slate}
+                color={isZero ? theme.loss : isInactive ? theme.glow : theme.data}
                 opacity={a}
               />
               {isZero || isInactive ? (
@@ -60,7 +60,7 @@ export const PersonGrid: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   x={x}
                   y={y + 38}
                   textAnchor="middle"
-                  fill={isZero ? theme.red : theme.amber}
+                  fill={isZero ? theme.loss : theme.glow}
                   fontSize={14}
                   opacity={a}
                 >
@@ -78,7 +78,7 @@ export const PersonGrid: FC<{ scene: TimelineScene }> = ({ scene }) => {
             width={160}
             height={(cell * 10 + 60) * (0.25 + 0.25 * out1 + 0.3 * out2)}
             rx={8}
-            fill={theme.amber}
+            fill={theme.glow}
             opacity={0.85}
           />
           <text x={80} y={-16} textAnchor="middle" fill={theme.muted} fontSize={28}>
@@ -103,7 +103,7 @@ export const PersonGrid: FC<{ scene: TimelineScene }> = ({ scene }) => {
             style={{
               fontSize: 40,
               lineHeight: 1.3,
-              color: i ? theme.amber : theme.red,
+              color: i ? theme.glow : theme.loss,
               opacity: ramp(t, [l1, l2][i], 12),
             }}
           >

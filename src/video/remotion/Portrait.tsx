@@ -1,15 +1,15 @@
 import type { FC } from 'react';
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from 'remotion';
 import { SHORT_LAYOUT as L, type Timeline, type TimelineScene } from '../types';
-import { brand, ramp } from './theme';
+import { alpha, ramp, theme } from './theme';
 
-/** The Short's field (brand/design.md 1.1, 2.3): Treasury Navy with a faint lift behind the content band and the
+/** The Short's field (brand/design.md 1.1, 2.3): the kit's ground with a faint lift behind the content band and the
  *  formal inset rule, drawn once under every scene so cuts stay quiet. */
 export const PortraitBackdrop: FC = () => (
-  <AbsoluteFill style={{ background: brand.navy }}>
+  <AbsoluteFill style={{ background: theme.ground }}>
     <AbsoluteFill
       style={{
-        background: `radial-gradient(ellipse 900px 700px at 50% 38%, rgba(242,235,221,0.06), transparent 70%)`,
+        background: `radial-gradient(ellipse 900px 700px at 50% 38%, ${alpha(theme.paper, 0.06)}, transparent 70%)`,
       }}
     />
     <div
@@ -19,7 +19,7 @@ export const PortraitBackdrop: FC = () => (
         top: 36,
         width: L.width - 72,
         height: L.citationBottom + 30 - 36,
-        border: `1.5px solid ${brand.rule}`,
+        border: `1.5px solid ${theme.rule}`,
         borderRadius: 2,
         boxSizing: 'border-box',
       }}
@@ -30,14 +30,14 @@ export const PortraitBackdrop: FC = () => (
 /** The Commonwealth seal, as the site's logo.svg draws it (the parent seal is OPEN in brand/design.md). */
 export const Seal: FC<{ size: number }> = ({ size }) => (
   <svg width={size} height={size} viewBox="0 0 64 64" role="img" aria-label="Commonwealth of Reason">
-    <circle cx="32" cy="32" r="31" fill={brand.navy} />
-    <circle cx="32" cy="32" r="28.5" fill="none" stroke={brand.gold} strokeWidth="1.5" />
-    <circle cx="32" cy="32" r="24.5" fill="none" stroke={brand.gold} strokeWidth="0.75" />
-    <g fill="none" stroke={brand.gold} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="32" cy="32" r="31" fill={theme.ground} />
+    <circle cx="32" cy="32" r="28.5" fill="none" stroke={theme.accent} strokeWidth="1.5" />
+    <circle cx="32" cy="32" r="24.5" fill="none" stroke={theme.accent} strokeWidth="0.75" />
+    <g fill="none" stroke={theme.accent} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M32 18v24M24 42h16M18 26h28" />
       <path d="M18 26l-5 9h10zM46 26l-5 9h10z" />
     </g>
-    <circle cx="32" cy="18" r="2.2" fill={brand.gold} />
+    <circle cx="32" cy="18" r="2.2" fill={theme.accent} />
   </svg>
 );
 
@@ -57,10 +57,10 @@ export const PortraitBadge: FC<{ short: NonNullable<Timeline['short']> }> = ({ s
     <div style={{ position: 'absolute', left: L.gutter, top: 88, display: 'flex', alignItems: 'center', gap: 22 }}>
       <Mark short={short} size={72} />
       <div>
-        <div style={{ fontFamily: brand.mono, fontSize: 21, letterSpacing: 4, color: brand.gold }}>
+        <div style={{ fontFamily: theme.mono, fontSize: 21, letterSpacing: 4, color: theme.accent }}>
           COMMONWEALTH OF REASON
         </div>
-        <div style={{ fontFamily: brand.serif, fontSize: 30, color: brand.fg, marginTop: 6, whiteSpace: 'nowrap' }}>
+        <div style={{ fontFamily: theme.serif, fontSize: 30, color: theme.fg, marginTop: 6, whiteSpace: 'nowrap' }}>
           {short.commission}
         </div>
       </div>
@@ -72,7 +72,7 @@ export const PortraitBadge: FC<{ short: NonNullable<Timeline['short']> }> = ({ s
         top: 192,
         width: L.width - L.gutter - L.right,
         height: 1.5,
-        background: brand.rule,
+        background: theme.rule,
       }}
     />
     <div
@@ -80,10 +80,10 @@ export const PortraitBadge: FC<{ short: NonNullable<Timeline['short']> }> = ({ s
         position: 'absolute',
         left: L.gutter,
         top: 214,
-        fontFamily: brand.mono,
+        fontFamily: theme.mono,
         fontSize: 24,
         letterSpacing: 5,
-        color: brand.gold,
+        color: theme.accent,
         whiteSpace: 'nowrap',
       }}
     >
@@ -143,17 +143,17 @@ export const Captions: FC<{ scene: TimelineScene }> = ({ scene }) => {
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center',
-        fontFamily: brand.sans,
+        fontFamily: theme.sans,
         fontWeight: 600,
         fontSize: 42,
         lineHeight: 1.15,
-        color: brand.fg,
+        color: theme.fg,
         opacity: a,
       }}
     >
       <div style={{ maxWidth: '100%' }}>
         {card.words.map((w, k) => (
-          <span key={k} style={{ color: t >= w.frame && t < w.end + 3 ? brand.gold : brand.fg, marginRight: 12 }}>
+          <span key={k} style={{ color: t >= w.frame && t < w.end + 3 ? theme.accent : theme.fg, marginRight: 12 }}>
             {w.text}
           </span>
         ))}

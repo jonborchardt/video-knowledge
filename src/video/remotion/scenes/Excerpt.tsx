@@ -4,7 +4,7 @@ import { cue, lineFrames, spokenAt } from '../../cues';
 import { excerptWindow } from '../../excerpt';
 import type { TimelineScene } from '../../types';
 import { BlurLines } from '../glyphs';
-import { GUTTER, ramp, theme } from '../theme';
+import { GUTTER, alpha, ramp, theme } from '../theme';
 
 /** The cited passage as a document page: the window around the highlight, which underlines on its cue (or as it is
  *  spoken); a second highlight from options.highlight2; a caption line from the second on-screen line. `disclosures`
@@ -14,7 +14,7 @@ export const Excerpt: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const ex = scene.excerpt;
   if (!ex) return null;
   const win = excerptWindow(ex.text, ex.highlight);
-  const accent = scene.options.accent === 'slate' ? theme.slate : theme.amber;
+  const accent = scene.options.accent === 'data' ? theme.data : theme.glow;
   const spoken = ex.highlight ? spokenAt(scene, ex.highlight) : null;
   const hl = ramp(t, cue(scene, 'highlight', spoken?.frame ?? scene.sentences[0].start + 30), 14);
   const h2 = String(scene.options.highlight2 ?? '');
@@ -35,7 +35,7 @@ export const Excerpt: FC<{ scene: TimelineScene }> = ({ scene }) => {
     return (
       <>
         {text.slice(0, i)}
-        <span style={{ background: `rgba(111,143,179,${0.35 * a})`, borderBottom: `4px solid rgba(111,143,179,${a})` }}>
+        <span style={{ background: alpha(theme.data, 0.35 * a), borderBottom: `4px solid ${alpha(theme.data, a)}` }}>
           {text.slice(i, i + h2.length)}
         </span>
         {text.slice(i + h2.length)}
@@ -53,9 +53,9 @@ export const Excerpt: FC<{ scene: TimelineScene }> = ({ scene }) => {
           width: 1920 - 2 * GUTTER - 120,
           height: 760,
           borderRadius: 8,
-          background: '#F4F1EA',
-          color: '#1c1c1c',
-          boxShadow: '0 40px 120px rgba(0,0,0,.6)',
+          background: theme.paper,
+          color: theme.text,
+          boxShadow: `0 40px 120px ${alpha(theme.text, 0.6)}`,
           opacity: page * (1 - 0.55 * dim),
           transform: `scale(${page < 1 ? 0.9 + 0.1 * page : drift})`,
           transformOrigin: '50% 40%',
@@ -68,7 +68,7 @@ export const Excerpt: FC<{ scene: TimelineScene }> = ({ scene }) => {
           style={{
             fontFamily: theme.sans,
             fontSize: 24,
-            color: '#6b6b6b',
+            color: theme.ink,
             letterSpacing: 2,
             textTransform: 'uppercase',
             marginBottom: 28,
@@ -81,9 +81,8 @@ export const Excerpt: FC<{ scene: TimelineScene }> = ({ scene }) => {
           {win.match ? (
             <span
               style={{
-                background: `rgba(227,163,58,${0.3 * hl})`,
-                borderBottom: `5px solid ${accent}`,
-                borderBottomColor: `rgba(${accent === theme.amber ? '227,163,58' : '111,143,179'},${hl})`,
+                background: alpha(accent, 0.3 * hl),
+                borderBottom: `5px solid ${alpha(accent, hl)}`,
                 fontWeight: 600,
               }}
             >
@@ -103,10 +102,10 @@ export const Excerpt: FC<{ scene: TimelineScene }> = ({ scene }) => {
             textAlign: 'center',
             fontFamily: theme.sans,
             fontSize: 54,
-            color: theme.slate,
+            color: theme.data,
             opacity: dim,
             transform: `translateY(${(1 - dim) * 20}px)`,
-            textShadow: '0 4px 30px rgba(0,0,0,.9)',
+            textShadow: `0 4px 30px ${alpha(theme.text, 0.9)}`,
           }}
         >
           {caption}

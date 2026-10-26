@@ -8,7 +8,7 @@ import { GUTTER, grow, ramp, theme } from '../theme';
 /** A two-column board: onScreenText is [left header, right header, then left/right pairs]. The headers appear on
  *  `line:1`/`line:2`; each row on its left line's cue (`line:3`, `line:5`, ...), the right box a beat later. Each
  *  right box is drawn narrower than its left one, a dashed ghost of the left box's width behind it showing the gap.
- *  Left is the pitch (amber), right the document (slate). No options. */
+ *  Left is the pitch (glow), right the document (data). No options. */
 export const TrickVsDocument: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const t = scene.start + useCurrentFrame();
   const at = lineFrames(scene);
@@ -38,7 +38,7 @@ export const TrickVsDocument: FC<{ scene: TimelineScene }> = ({ scene }) => {
             fontWeight: 700,
             letterSpacing: 1,
             textTransform: 'uppercase',
-            color: i ? theme.slate : theme.amber,
+            color: i ? theme.data : theme.glow,
             opacity: head(i),
             transform: `translateY(${(1 - head(i)) * -16}px)`,
           }}
@@ -67,9 +67,9 @@ export const TrickVsDocument: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 display: 'flex',
                 alignItems: 'center',
                 background: theme.raised,
-                border: `3px solid ${theme.amber}`,
+                border: `3px solid ${theme.glow}`,
                 borderRadius: 14,
-                boxShadow: `0 0 26px ${theme.amber}55`,
+                boxShadow: `0 0 26px ${theme.glow}55`,
                 fontSize: 46,
                 fontWeight: 600,
                 color: theme.fg,
@@ -105,7 +105,7 @@ export const TrickVsDocument: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 height={boxH}
                 rx={14}
                 fill="none"
-                stroke={theme.red}
+                stroke={theme.loss}
                 strokeWidth={3}
                 strokeDasharray="10 10"
                 opacity={0.6 * ghost}
@@ -123,13 +123,13 @@ export const TrickVsDocument: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 display: 'flex',
                 alignItems: 'center',
                 overflow: 'hidden',
-                background: theme.slate,
+                background: theme.data,
                 borderRadius: 14,
-                boxShadow: `0 0 26px ${theme.slate}66`,
+                boxShadow: `0 0 26px ${theme.data}66`,
                 fontSize: 32,
                 fontWeight: 600,
                 lineHeight: 1.2,
-                color: theme.bg,
+                color: theme.ground,
                 opacity: Math.min(1, Math.max(0, b * 2)),
               }}
             >

@@ -59,9 +59,9 @@ export const Funnel: FC<{ scene: TimelineScene }> = ({ scene }) => {
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
         <defs>
           <linearGradient id={`${id}-band`} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor={theme.violet} />
-            <stop offset="0.5" stopColor={theme.slate} />
-            <stop offset="1" stopColor={theme.violet} />
+            <stop offset="0" stopColor={theme.accent2} />
+            <stop offset="0.5" stopColor={theme.data} />
+            <stop offset="1" stopColor={theme.accent2} />
           </linearGradient>
           <filter id={`${id}-glow`} x="-30%" y="-80%" width="160%" height="260%">
             <feGaussianBlur stdDeviation={16} />
@@ -87,7 +87,7 @@ export const Funnel: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 {i ? (
                   <path
                     d={`M ${cx - w[i - 1] / 2} ${y[i - 1] + bh} L ${cx + w[i - 1] / 2} ${y[i - 1] + bh} L ${cx + bw / 2} ${by} L ${cx - bw / 2} ${by} Z`}
-                    fill={theme.slate}
+                    fill={theme.data}
                     opacity={0.14 * a}
                   />
                 ) : null}
@@ -101,9 +101,9 @@ export const Funnel: FC<{ scene: TimelineScene }> = ({ scene }) => {
                         width={sliver}
                         height={bh}
                         rx={6}
-                        fill={theme.red}
+                        fill={theme.loss}
                         fillOpacity={(0.1 + 0.25 * ghostGlow * (0.6 + 0.4 * pulse)) * m0}
-                        stroke={theme.red}
+                        stroke={theme.loss}
                         strokeWidth={3}
                         strokeDasharray="10 8"
                         strokeOpacity={0.7 * m0}
@@ -117,7 +117,7 @@ export const Funnel: FC<{ scene: TimelineScene }> = ({ scene }) => {
                     width={bandW}
                     height={bh}
                     rx={14}
-                    fill={theme.slate}
+                    fill={theme.data}
                     opacity={0.6 * (0.6 + 0.4 * pulse)}
                     filter={`url(#${id}-glow)`}
                   />
@@ -144,7 +144,7 @@ export const Funnel: FC<{ scene: TimelineScene }> = ({ scene }) => {
                           width={Math.min(sliver, Math.max(0, shrinking))}
                           height={bh}
                           rx={6}
-                          fill={theme.red}
+                          fill={theme.loss}
                           opacity={1 - fall}
                           transform={`translate(${side * 60 * fall} ${220 * fall * fall}) rotate(${side * 24 * fall} ${edge + sliver / 2} ${by + bh / 2})`}
                         />
@@ -168,7 +168,7 @@ export const Funnel: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   textAnchor="middle"
                   fontSize={fs}
                   fontWeight={800}
-                  fill={theme.bg}
+                  fill={theme.ground}
                   opacity={ramp(t, fills[i] + 4, 8)}
                   style={{ fontVariantNumeric: 'tabular-nums' }}
                 >
@@ -203,10 +203,10 @@ export const Funnel: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 padding: '0 32px',
                 whiteSpace: 'nowrap',
                 color: theme.fg,
-                borderLeft: `8px solid ${theme.red}`,
+                borderLeft: `8px solid ${theme.loss}`,
                 borderRadius: 10,
-                background: `linear-gradient(90deg, ${theme.red}44, ${theme.bg}DD)`,
-                boxShadow: `0 0 ${24 + 12 * pulse}px ${theme.red}66`,
+                background: `linear-gradient(90deg, ${theme.loss}44, ${theme.ground}DD)`,
+                boxShadow: `0 0 ${24 + 12 * pulse}px ${theme.loss}66`,
               }}
             >
               {line}

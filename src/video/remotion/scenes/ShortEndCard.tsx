@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { AbsoluteFill, getInputProps, useCurrentFrame } from 'remotion';
 import { SHORT_LAYOUT as L, type Timeline, type TimelineScene } from '../../types';
 import { Mark } from '../Portrait';
-import { brand, easeOut, ramp } from '../theme';
+import { easeOut, ramp, theme } from '../theme';
 
 const W = L.width - L.gutter - L.right;
 
@@ -36,24 +36,26 @@ export const ShortEndCard: FC<{ scene: TimelineScene }> = ({ scene }) => {
           {short ? <Mark short={short} size={200} /> : null}
         </div>
         <div style={{ opacity: a(6) }}>
-          <div style={{ fontFamily: brand.mono, fontSize: 22, letterSpacing: 5, color: brand.gold }}>
+          <div style={{ fontFamily: theme.mono, fontSize: 22, letterSpacing: 5, color: theme.accent }}>
             COMMONWEALTH OF REASON
           </div>
-          <div style={{ fontFamily: brand.serif, fontSize: 40, color: brand.fg, marginTop: 8 }}>
+          <div style={{ fontFamily: theme.serif, fontSize: 40, color: theme.fg, marginTop: 8 }}>
             {short?.commission}
           </div>
         </div>
-        <div style={{ width: 140 * a(12, 16), height: 2, background: brand.gold }} />
+        <div style={{ width: 140 * a(12, 16), height: 2, background: theme.accent }} />
         <div style={{ opacity: a(16) }}>
-          <div style={{ fontFamily: brand.mono, fontSize: 22, letterSpacing: 5, color: brand.gold, marginBottom: 14 }}>
+          <div
+            style={{ fontFamily: theme.mono, fontSize: 22, letterSpacing: 5, color: theme.accent, marginBottom: 14 }}
+          >
             THE FULL INQUIRY
           </div>
           <div
             style={{
-              fontFamily: brand.serif,
+              fontFamily: theme.serif,
               fontSize: question.length > 70 ? 40 : 48,
               lineHeight: 1.25,
-              color: brand.fg,
+              color: theme.fg,
               maxWidth: W,
             }}
           >
@@ -61,7 +63,7 @@ export const ShortEndCard: FC<{ scene: TimelineScene }> = ({ scene }) => {
           </div>
         </div>
         {scene.onScreenText.slice(0, 2).map((l, i) => (
-          <div key={i} style={{ fontFamily: brand.sans, fontSize: 32, color: brand.muted, opacity: a(24 + i * 8) }}>
+          <div key={i} style={{ fontFamily: theme.sans, fontSize: 32, color: theme.muted, opacity: a(24 + i * 8) }}>
             {l}
           </div>
         ))}
@@ -75,11 +77,11 @@ export const ShortEndCard: FC<{ scene: TimelineScene }> = ({ scene }) => {
             opacity: a(30),
           }}
         >
-          <div style={{ fontFamily: brand.sans, fontWeight: 600, fontSize: 38, color: brand.gold }}>
+          <div style={{ fontFamily: theme.sans, fontWeight: 600, fontSize: 38, color: theme.accent }}>
             Tap the video linked below
           </div>
           <svg width={48} height={34} viewBox="0 0 48 34" style={{ transform: `translateY(${bob}px)` }}>
-            <path d="M4 6 L24 28 L44 6" fill="none" stroke={brand.gold} strokeWidth={4} strokeLinecap="round" />
+            <path d="M4 6 L24 28 L44 6" fill="none" stroke={theme.accent} strokeWidth={4} strokeLinecap="round" />
           </svg>
         </div>
       </div>

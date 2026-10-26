@@ -69,27 +69,20 @@ export const NationalCircles: FC<{ scene: TimelineScene }> = ({ scene }) => {
           </mask>
         </defs>
         {/* the crescent: nationals who are not citizens */}
-        <circle
-          cx={OUTER.x}
-          cy={cy}
-          r={OUTER.r}
-          fill={theme.amber}
-          opacity={0.28 * crescent}
-          mask="url(#sc-crescent)"
-        />
+        <circle cx={OUTER.x} cy={cy} r={OUTER.r} fill={theme.glow} opacity={0.28 * crescent} mask="url(#sc-crescent)" />
         {/* the citizen circle */}
-        <circle cx={INNER.x} cy={cy} r={INNER.r} fill={theme.slate} opacity={0.16 * inner} />
+        <circle cx={INNER.x} cy={cy} r={INNER.r} fill={theme.data} opacity={0.16 * inner} />
         <circle
           cx={INNER.x}
           cy={cy}
           r={INNER.r}
           fill="none"
-          stroke={theme.slate}
+          stroke={theme.data}
           strokeWidth={8}
           strokeDasharray={circumference(INNER.r)}
           strokeDashoffset={circumference(INNER.r) * (1 - inner)}
           transform={`rotate(-90 ${INNER.x} ${cy})`}
-          style={{ filter: `drop-shadow(0 0 14px ${theme.slate})` }}
+          style={{ filter: `drop-shadow(0 0 14px ${theme.data})` }}
         />
         {/* the national circle */}
         <circle
@@ -97,12 +90,12 @@ export const NationalCircles: FC<{ scene: TimelineScene }> = ({ scene }) => {
           cy={cy}
           r={OUTER.r}
           fill="none"
-          stroke={flash > 0 ? theme.red : theme.amber}
+          stroke={flash > 0 ? theme.loss : theme.glow}
           strokeWidth={8 + 6 * flash}
           strokeDasharray={circumference(OUTER.r)}
           strokeDashoffset={circumference(OUTER.r) * (1 - outer)}
           transform={`rotate(-90 ${OUTER.x} ${cy})`}
-          style={{ filter: `drop-shadow(0 0 ${14 + 20 * flash}px ${flash > 0 ? theme.red : theme.amber})` }}
+          style={{ filter: `drop-shadow(0 0 ${14 + 20 * flash}px ${flash > 0 ? theme.loss : theme.glow})` }}
         />
         {/* leaders from the labels into the circles */}
         <line
@@ -110,7 +103,7 @@ export const NationalCircles: FC<{ scene: TimelineScene }> = ({ scene }) => {
           y1={cy - 300}
           x2={OUTER.x + OUTER.r * 0.62}
           y2={cy - OUTER.r * 0.78}
-          stroke={theme.amber}
+          stroke={theme.glow}
           strokeWidth={4}
           opacity={ramp(t, L[0] + 10, 10)}
         />
@@ -119,7 +112,7 @@ export const NationalCircles: FC<{ scene: TimelineScene }> = ({ scene }) => {
           y1={cy - 60}
           x2={OUTER.x + OUTER.r - 50}
           y2={cy - 40}
-          stroke={theme.amber}
+          stroke={theme.glow}
           strokeWidth={4}
           opacity={crescent}
         />
@@ -127,7 +120,7 @@ export const NationalCircles: FC<{ scene: TimelineScene }> = ({ scene }) => {
         <g
           transform={`translate(${OUTER.x + OUTER.r - 72} ${cy + 10}) scale(${0.95 * Math.max(0, island)}) translate(-50 -50)`}
           fill="none"
-          stroke={theme.green}
+          stroke={theme.gain}
           strokeWidth={6}
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -138,7 +131,7 @@ export const NationalCircles: FC<{ scene: TimelineScene }> = ({ scene }) => {
         {/* the form */}
         <g
           transform={`translate(${formX + 40} ${formY}) rotate(${tilt}) translate(-50 -60)`}
-          fill={theme.bg}
+          fill={theme.ground}
           stroke={theme.fg}
           strokeWidth={5}
           strokeLinejoin="round"
@@ -174,7 +167,7 @@ export const NationalCircles: FC<{ scene: TimelineScene }> = ({ scene }) => {
           width: 700,
           fontSize: 68,
           fontWeight: 800,
-          color: theme.amber,
+          color: theme.glow,
           opacity: ramp(t, L[0], 10),
           transform: `translateX(${(1 - ramp(t, L[0], 14)) * 40}px)`,
         }}
@@ -193,7 +186,7 @@ export const NationalCircles: FC<{ scene: TimelineScene }> = ({ scene }) => {
           transform: `translateX(${(1 - crescent) * 40}px)`,
         }}
       >
-        <div style={{ fontSize: 60, fontWeight: 800, color: theme.amber }}>{txt[2]}</div>
+        <div style={{ fontSize: 60, fontWeight: 800, color: theme.glow }}>{txt[2]}</div>
         <div
           style={{
             marginTop: 10,
@@ -218,7 +211,7 @@ export const NationalCircles: FC<{ scene: TimelineScene }> = ({ scene }) => {
           fontSize: 44,
           fontWeight: 700,
           lineHeight: 1.2,
-          color: theme.red,
+          color: theme.loss,
           opacity: ramp(t, L[4], 10),
         }}
       >

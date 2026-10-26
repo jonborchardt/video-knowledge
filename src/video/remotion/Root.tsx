@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { AbsoluteFill, Composition, Img, staticFile } from 'remotion';
 import { FPS, HEIGHT, type Timeline, WIDTH } from '../types';
 import { Video } from './Video';
-import { theme } from './theme';
+import { COR_PALETTE, theme } from './theme';
 
 export const COMPOSITION = 'segment';
 export const CONTACT = 'contact';
@@ -16,7 +16,7 @@ const EMPTY: Timeline = {
   durationInFrames: 1,
   fingerprints: { script: '', storyboard: '', narration: '', config: '' },
   narration: { provider: '', voice: '', rate: '', licence: '' },
-  palette: { ground: '#14181F', accent: '#B8975A', paper: '#EFE8DA', ink: '#3D434B' }, // the cor kit
+  palette: COR_PALETTE,
   scenes: [],
 };
 
@@ -25,7 +25,7 @@ type ContactProps = { frames: { file: string; label: string }[] };
 const COLS = 4;
 const CELL = { w: 480, h: 270 + 44 };
 const ContactSheet: FC<ContactProps> = ({ frames }) => (
-  <AbsoluteFill style={{ background: theme.bg, fontFamily: theme.sans }}>
+  <AbsoluteFill style={{ background: theme.ground, fontFamily: theme.sans }}>
     {frames.map((f, i) => (
       <div
         key={f.file}

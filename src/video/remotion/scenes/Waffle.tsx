@@ -49,7 +49,7 @@ export const Waffle: FC<{ scene: TimelineScene }> = ({ scene }) => {
               width={cell - 3}
               height={cell - 3}
               rx={2}
-              fill={isRed ? theme.red : theme.green}
+              fill={isRed ? theme.loss : theme.gain}
               opacity={ramp(t, scene.start + 4 + i * 0.02, 6) * (i < red ? (isRed ? 0.95 : 0.35) : 1)}
             />
           );
@@ -62,7 +62,7 @@ export const Waffle: FC<{ scene: TimelineScene }> = ({ scene }) => {
             style={{
               fontSize: 64,
               fontWeight: 700,
-              color: i === 0 ? theme.red : theme.green,
+              color: i === 0 ? theme.loss : theme.gain,
               opacity: ramp(t, lines[i], 12),
               lineHeight: 1.1,
             }}
@@ -79,9 +79,9 @@ export const Waffle: FC<{ scene: TimelineScene }> = ({ scene }) => {
             right: GUTTER,
             top: 160,
             fontSize: 32,
-            color: theme.slate,
+            color: theme.data,
             opacity: ramp(t, lines[scene.onScreenText.length - 1], 12),
-            borderTop: `2px solid ${theme.slate}`,
+            borderTop: `2px solid ${theme.data}`,
             paddingTop: 10,
           }}
         >

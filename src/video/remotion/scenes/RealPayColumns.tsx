@@ -68,7 +68,7 @@ export const RealPayColumns: FC<{ scene: TimelineScene }> = ({ scene }) => {
       />
       {rows.map((r, i) => {
         const up = r.value >= 0;
-        const color = up ? theme.green : theme.red;
+        const color = up ? theme.gain : theme.loss;
         const h = (Math.abs(r.value) / maxAbs) * reach * Math.max(0, grow(t, at(i), 16));
         const x = L + pitch * i + (pitch - cw) / 2;
         const label = ramp(t, at(i) + 6, 10);
@@ -84,8 +84,8 @@ export const RealPayColumns: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 height: h,
                 borderRadius: up ? '8px 8px 0 0' : '0 0 8px 8px',
                 background: up
-                  ? `linear-gradient(0deg, ${theme.violet}, ${color})`
-                  : `linear-gradient(180deg, ${theme.violet}, ${color})`,
+                  ? `linear-gradient(0deg, ${theme.accent2}, ${color})`
+                  : `linear-gradient(180deg, ${theme.accent2}, ${color})`,
                 boxShadow: `0 0 ${newest ? 34 : 12}px ${color}${newest ? 'AA' : '55'}`,
               }}
             />

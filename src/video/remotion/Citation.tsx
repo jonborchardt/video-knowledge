@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useVideoConfig } from 'remotion';
 import { HEIGHT, SHORT_LAYOUT, WIDTH, type TimelineScene } from '../types';
-import { GUTTER, brand, ramp, theme } from './theme';
+import { GUTTER, ramp, theme } from './theme';
 
 const BOTTOM = 56;
 const ROW = 72; // label 30px x 1.2 + detail 23px x 1.3 + 6px gap
@@ -56,18 +56,18 @@ export const Citation: FC<{ scene: TimelineScene; frame: number }> = ({ scene, f
           transform: `translateY(${(1 - o) * 10}px)`,
         }}
       >
-        <div style={{ width: 3, background: brand.gold, borderRadius: 2 }} />
+        <div style={{ width: 3, background: theme.accent, borderRadius: 2 }} />
         <div>
           {scene.citations.map((c) => (
             <div key={c.label} style={{ marginBottom: 6, whiteSpace: 'nowrap' }}>
-              <div style={{ ...fitP(c.label, 34, 26), fontFamily: brand.sans, color: brand.fg, lineHeight: 1.2 }}>
+              <div style={{ ...fitP(c.label, 34, 26), fontFamily: theme.sans, color: theme.fg, lineHeight: 1.2 }}>
                 {c.label}
               </div>
               <div
                 style={{
                   ...fitP(shortDetail(c.detail), 24, 18),
-                  fontFamily: brand.mono,
-                  color: brand.muted,
+                  fontFamily: theme.mono,
+                  color: theme.muted,
                   lineHeight: 1.3,
                 }}
               >
@@ -93,7 +93,7 @@ export const Citation: FC<{ scene: TimelineScene; frame: number }> = ({ scene, f
         fontFamily: theme.sans,
       }}
     >
-      <div style={{ width: 5, background: theme.slate, borderRadius: 3 }} />
+      <div style={{ width: 5, background: theme.data, borderRadius: 3 }} />
       <div>
         {scene.citations.map((c) => (
           <div key={c.label} style={{ marginBottom: 6, whiteSpace: 'nowrap' }}>

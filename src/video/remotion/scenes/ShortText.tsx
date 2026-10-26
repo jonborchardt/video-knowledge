@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { cue, lineFrames, spokenAt } from '../../cues';
 import { SHORT_LAYOUT as L, type TimelineScene } from '../../types';
-import { brand, clamp01, grow, ramp } from '../theme';
+import { clamp01, grow, ramp, theme } from '../theme';
 
 const W = L.width - L.gutter - L.right;
 
@@ -20,7 +20,7 @@ export const ShortText: FC<{ scene: TimelineScene }> = ({ scene }) => {
     return (
       <AbsoluteFill>
         <div style={{ ...band, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <div style={{ fontFamily: brand.serif, fontWeight: 700, fontSize: size, lineHeight: 1.18, color: brand.fg }}>
+          <div style={{ fontFamily: theme.serif, fontWeight: 700, fontSize: size, lineHeight: 1.18, color: theme.fg }}>
             {line.split(' ').map((w, k) => {
               const g = grow(t, scene.start + 6 + k * 3, 12);
               return (
@@ -42,7 +42,7 @@ export const ShortText: FC<{ scene: TimelineScene }> = ({ scene }) => {
             style={{
               width: 180 * ramp(t, scene.start + 20, 16),
               height: 3,
-              background: brand.gold,
+              background: theme.accent,
               marginTop: 36,
             }}
           />
@@ -61,10 +61,10 @@ export const ShortText: FC<{ scene: TimelineScene }> = ({ scene }) => {
       <AbsoluteFill>
         <div style={{ ...band, display: 'flex', alignItems: 'center' }}>
           <div
-            style={{ fontFamily: brand.serif, fontSize: line.length > 50 ? 60 : 72, lineHeight: 1.25, color: brand.fg }}
+            style={{ fontFamily: theme.serif, fontSize: line.length > 50 ? 60 : 72, lineHeight: 1.25, color: theme.fg }}
           >
             {line.slice(0, shown)}
-            <span style={{ color: brand.gold, opacity: blink ? 1 : 0.15 }}>|</span>
+            <span style={{ color: theme.accent, opacity: blink ? 1 : 0.15 }}>|</span>
           </div>
         </div>
       </AbsoluteFill>
@@ -76,10 +76,10 @@ export const ShortText: FC<{ scene: TimelineScene }> = ({ scene }) => {
         <div style={{ ...band, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 34 }}>
           <div
             style={{
-              fontFamily: brand.serif,
+              fontFamily: theme.serif,
               fontSize: 140,
               lineHeight: 0.6,
-              color: brand.gold,
+              color: theme.accent,
               opacity: ramp(t, scene.start + 4, 10),
             }}
           >
@@ -89,11 +89,11 @@ export const ShortText: FC<{ scene: TimelineScene }> = ({ scene }) => {
             <div
               key={i}
               style={{
-                fontFamily: brand.serif,
+                fontFamily: theme.serif,
                 fontStyle: 'italic',
                 fontSize: l.length > 60 ? 44 : 54,
                 lineHeight: 1.3,
-                color: brand.fg,
+                color: theme.fg,
                 opacity: ramp(t, frames[i], 10),
                 transform: `translateY(${(1 - ramp(t, frames[i], 12)) * 14}px)`,
               }}
@@ -125,8 +125,8 @@ export const ShortText: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 transform: `translateX(${(1 - grow(t, frames[i], 12)) * -40}px)`,
               }}
             >
-              <div style={{ width: 14, height: 14, background: brand.gold, marginTop: size * 0.45, flexShrink: 0 }} />
-              <div style={{ fontFamily: brand.sans, fontSize: size, lineHeight: 1.25, color: brand.fg }}>{l}</div>
+              <div style={{ width: 14, height: 14, background: theme.accent, marginTop: size * 0.45, flexShrink: 0 }} />
+              <div style={{ fontFamily: theme.sans, fontSize: size, lineHeight: 1.25, color: theme.fg }}>{l}</div>
             </div>
           );
         })}
