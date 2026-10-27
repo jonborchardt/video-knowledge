@@ -161,3 +161,36 @@ export function checkApplicabilityFile(x: unknown): string[] {
   }
   return out;
 }
+
+/** applicability.json with these verdicts' levels merged in (a later entry for the same claim and cite wins), keys sorted. */
+export function withApplicability(
+  existing: Record<string, RecordedApplicability>,
+  verdicts: StudyVerdict[],
+): Record<string, RecordedApplicability> {
+  const all: Record<string, RecordedApplicability> = { ...existing };
+  for (const v of verdicts)
+    all[applicabilityKey(v.claim, v.source)] = {
+      level: v.applicability,
+      reason: v.why?.trim() || 'recorded as direct with the verdict',
+    };
+  return Object.fromEntries(
+    Object.keys(all)
+      .sort()
+      .map((k) => [k, all[k]]),
+  );
+}
+
+/** True when the store already holds this exact study verdict (so re-recording it changes only its applicability). */
+export function isStored(
+  x: StudyVerdict,
+  stored: { method?: string; source?: string; verdict: string; confidence?: number | null; note?: string }[],
+): boolean {
+  return stored.some(
+    (r) =>
+      r.method === 'source' &&
+      r.source === x.source &&
+      r.verdict === x.verdict &&
+      r.note === x.note &&
+      (r.confidence ?? null) === (x.confidence ?? null),
+  );
+}
