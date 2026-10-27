@@ -1,11 +1,11 @@
 {
  "topic": "heat-pumps",
  "story": "decision:what-happens-when-it-gets-cold",
- "revision": 2,
- "date": "2026-10-21T07:44:16.920Z",
+ "revision": 3,
+ "date": "2026-10-27T02:40:00.627Z",
  "status": "passed",
  "scriptFingerprint": "106cb5cd54",
- "packageFingerprint": "d8e5d3dd14",
+ "packageFingerprint": "8cb301861b",
  "wordsPerMinute": 150,
  "words": 1187,
  "spokenWords": 1220,
@@ -17,7 +17,7 @@
   "verified": 39,
   "blocking": 0,
   "warnings": 0,
-  "dispositioned": 29,
+  "dispositioned": 32,
   "unreviewed": 0
  },
  "revisionLimitReached": false,
@@ -91,6 +91,22 @@
       "independent": 0,
       "supporting": [],
       "contradicting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pumps-not-work-cold-climates",
+         "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L555-L557"
+        },
+        "cited": false,
+        "role": "contradicts",
+        "by": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes",
+        "verdict": "wrong",
+        "confidence": 0.55,
+        "note": "In 78 metered Maine homes with whole-home heat pump systems, the heat pumps provided over 70% of total heating needs, with wood 10% and fossil fuel 19%.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
        {
         "ref": {
          "kind": "study",
@@ -207,6 +223,7 @@
       "problems": [],
       "limitations": [
        "Reports what the sources said, not whether it is true.",
+       "Contradicted by Efficiency Maine 2026, whole-home heat pumps metered in Maine homes: In 78 metered Maine homes with whole-home heat pump systems, the heat pumps provided over 70% of total heating needs, with wood 10% and fossil fuel 19%.",
        "Contradicted by CEE 2018, ducted and ductless cold-climate heat pumps in the field: In monitored Minnesota homes cold-climate ASHPs cut heating costs 30-56%; cold weather raised backup and defrost use and lowered heat pump performance but overall system efficiencies remained high.",
        "Contradicted by Cadmus 2016, ductless mini-split evaluation (MA and RI): Across two New England winters, metered mini-splits kept heating below 0 F with average COP about 1.5 at -10 to 0 F, which the report calls far superior to resistance heat.",
        "Contradicted by PNNL 2025, DOE Cold Climate Heat Pump Challenge field results: Prototype cold-climate heat pumps in occupied northern US and Canadian homes kept a median COP of 1.9 at 0-5 F, with most units above the ENERGY STAR 1.75 threshold in the field.",
@@ -216,7 +233,7 @@
        "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
       ],
       "suggestions": [],
-      "explanation": "supported (approved): no direct support, 6 contradicting, 1 source statement."
+      "explanation": "supported (approved): no direct support, 7 contradicting, 1 source statement."
      },
      "issues": [
       {
@@ -1192,7 +1209,24 @@
       "independent": 0,
       "supporting": [],
       "contradicting": [],
-      "qualifying": [],
+      "qualifying": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+         "cite": "heat-pumps/sources/esc-2023-eoh-interim-heat-pump-performance.txt#L391-L394"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Energy Systems Catapult 2023, Electrification of Heat trial performance",
+        "verdict": "partly",
+        "confidence": 0.45,
+        "note": "Across the UK trial the measured COP fell as outdoor temperature fell, to a median 2.44 on the coldest day (mean -0.4C) against a seasonal 2.80; capacity was not reported.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
       "context": [
        {
         "ref": {
@@ -1214,7 +1248,7 @@
        "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
       ],
       "suggestions": [],
-      "explanation": "supported (approved): no direct support, 1 source statement."
+      "explanation": "supported (approved): no direct support, 1 qualifying, 1 source statement."
      },
      "issues": [
       {
@@ -1357,8 +1391,8 @@
       "text": "The unit continued to operate from -15 °F to -25 °F at reduced capacity; between -20 and -25 °F its median delivered capacity was approximately 20% of its rated capacity at 5 °F.",
       "kind": "fact",
       "modality": "plain",
-      "status": "supported",
-      "decision": "approved",
+      "status": "qualified",
+      "decision": "qualify",
       "review": true,
       "verbatim": false,
       "strength": 0.5,
@@ -1382,23 +1416,45 @@
        }
       ],
       "contradicting": [],
-      "qualifying": [],
+      "qualifying": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+         "cite": "heat-pumps/sources/esc-2023-eoh-interim-heat-pump-performance.txt#L391-L394"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Energy Systems Catapult 2023, Electrification of Heat trial performance",
+        "verdict": "partly",
+        "confidence": 0.45,
+        "note": "Across the UK trial the measured COP fell as outdoor temperature fell, to a median 2.44 on the coldest day (mean -0.4C) against a seasonal 2.80; capacity was not reported.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
       "context": [],
       "problems": [],
       "limitations": [
+       "Energy Systems Catapult 2023, Electrification of Heat trial performance: Across the UK trial the measured COP fell as outdoor temperature fell, to a median 2.44 on the coldest day (mean -0.4C) against a seasonal 2.80; capacity was not reported.",
        "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
       ],
-      "suggestions": [],
-      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.5)."
+      "suggestions": [
+       "Add the qualification: the evidence supports a narrower or weaker statement."
+      ],
+      "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.5), 1 qualifying."
      },
      "issues": [
       {
        "sentence": "s17",
-       "category": "wording",
-       "severity": "info",
-       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+       "category": "needs-qualification",
+       "severity": "warning",
+       "explanation": "Energy Systems Catapult 2023, Electrification of Heat trial performance: Across the UK trial the measured COP fell as outdoor temperature fell, to a median 2.44 on the coldest day (mean -0.4C) against a seasonal 2.80; capacity was not reported. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
-       "assertion": "s17.a"
+       "assertion": "s17.a",
+       "suggestion": "The writer says the narration carries it: The sentence names the ductless unit and its rated 5 °F output; the UK trial that did not report capacity is not cited here.",
+       "disposition": "The UK trial reports COP only, not capacity, so it cannot qualify an output figure for the named Minnesota ductless unit."
       }
      ]
     }
@@ -1532,8 +1588,8 @@
       "text": "In the Minnesota study, outdoor air temperature had the largest impact on COP; heat-pump-only heating events had COPs around 1.3 at 10 °F, rising to around 3.0 to 4.5 in the shoulder heating seasons (around 50 to 60 °F), so 1.3 is less than half of the mild-weather figure.",
       "kind": "fact",
       "modality": "plain",
-      "status": "supported",
-      "decision": "approved",
+      "status": "qualified",
+      "decision": "qualify",
       "review": true,
       "verbatim": false,
       "strength": 0.65,
@@ -1557,23 +1613,45 @@
        }
       ],
       "contradicting": [],
-      "qualifying": [],
+      "qualifying": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+         "cite": "heat-pumps/sources/esc-2023-eoh-interim-heat-pump-performance.txt#L391-L394"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Energy Systems Catapult 2023, Electrification of Heat trial performance",
+        "verdict": "partly",
+        "confidence": 0.45,
+        "note": "Across the UK trial the measured COP fell as outdoor temperature fell, to a median 2.44 on the coldest day (mean -0.4C) against a seasonal 2.80; capacity was not reported.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
       "context": [],
       "problems": [],
       "limitations": [
+       "Energy Systems Catapult 2023, Electrification of Heat trial performance: Across the UK trial the measured COP fell as outdoor temperature fell, to a median 2.44 on the coldest day (mean -0.4C) against a seasonal 2.80; capacity was not reported.",
        "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
       ],
-      "suggestions": [],
-      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.65)."
+      "suggestions": [
+       "Add the qualification: the evidence supports a narrower or weaker statement."
+      ],
+      "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.65), 1 qualifying."
      },
      "issues": [
       {
        "sentence": "s19",
-       "category": "wording",
-       "severity": "info",
-       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+       "category": "needs-qualification",
+       "severity": "warning",
+       "explanation": "Energy Systems Catapult 2023, Electrification of Heat trial performance: Across the UK trial the measured COP fell as outdoor temperature fell, to a median 2.44 on the coldest day (mean -0.4C) against a seasonal 2.80; capacity was not reported. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
-       "assertion": "s19.a"
+       "assertion": "s19.a",
+       "suggestion": "The writer says the narration carries it: The sentence names the Minnesota research and its heat-pump-only cycles; the UK trial's smaller fall in COP is a different fleet and is not cited here.",
+       "disposition": "The sentence is attributed to the Minnesota heat-pump-only cycles; the UK trial agrees on the direction (COP fell on the coldest day) and its smaller fall is a different fleet, while s09 and s12 already give higher field COPs."
       }
      ]
     }
@@ -1778,6 +1856,22 @@
         "ref": {
          "kind": "study",
          "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+         "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1714-L1726"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes",
+        "verdict": "partly",
+        "confidence": 0.35,
+        "note": "In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
          "cite": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L2150-L2157"
         },
         "cited": false,
@@ -1860,7 +1954,7 @@
        "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
       ],
       "suggestions": [],
-      "explanation": "supported (approved): no direct support, 4 qualifying, 1 source statement."
+      "explanation": "supported (approved): no direct support, 5 qualifying, 1 source statement."
      },
      "issues": [
       {
@@ -2050,6 +2144,22 @@
         "ref": {
          "kind": "study",
          "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+         "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1714-L1726"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes",
+        "verdict": "partly",
+        "confidence": 0.35,
+        "note": "In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
          "cite": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L2150-L2157"
         },
         "cited": false,
@@ -2114,6 +2224,7 @@
       "context": [],
       "problems": [],
       "limitations": [
+       "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes: In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs.",
        "Winkler 2023 (NREL), cold-climate heat pump field validation: Auxiliary heat runtime generally rose in colder bins and heavy use cut system COP over 30% at two sites, but the heavy users were undersized or faulty while six sites used little auxiliary heat.",
        "CEE 2018, ducted and ductless cold-climate heat pumps in the field: In all-electric systems the booster resistance heat ran at COP 1 below about 30F, but because the heat pump was prioritized the system COP stayed above 1.0 even at -7F, so backup use dented rather than erased efficiency. [partial: the verdict note limits its own scope (\"rather than\")]",
        "Wilson 2024 (NREL and LBNL), heat pumps for all?: In Minnesota a high-efficiency heat pump sized for the heating load saves a median $182/yr, but sized for cooling it raises bills $96/yr through more resistance backup; reliance and the bill hit depend on sizing, not cold-climate units as such. [partial: the verdict note limits its own scope (\"not cold-climate units as such\")]",
@@ -2123,18 +2234,18 @@
       "suggestions": [
        "Add the qualification: the evidence supports a narrower or weaker statement."
       ],
-      "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.45), 4 qualifying."
+      "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.45), 5 qualifying."
      },
      "issues": [
       {
        "sentence": "s26",
        "category": "needs-qualification",
        "severity": "warning",
-       "explanation": "Winkler 2023 (NREL), cold-climate heat pump field validation: Auxiliary heat runtime generally rose in colder bins and heavy use cut system COP over 30% at two sites, but the heavy users were undersized or faulty while six sites used little auxiliary heat. CEE 2018, ducted and ductless cold-climate heat pumps in the field: In all-electric systems the booster resistance heat ran at COP 1 below about 30F, but because the heat pump was prioritized the system COP stayed above 1.0 even at -7F, so backup use dented rather than erased efficiency. [partial: the verdict note limits its own scope (\"rather than\")] Wilson 2024 (NREL and LBNL), heat pumps for all?: In Minnesota a high-efficiency heat pump sized for the heating load saves a median $182/yr, but sized for cooling it raises bills $96/yr through more resistance backup; reliance and the bill hit depend on sizing, not cold-climate units as such. [partial: the verdict note limits its own scope (\"not cold-climate units as such\")] Canadian Climate Institute 2023, heat pumps pay off: In Edmonton's cold climate the model finds heat pumps less efficient and more reliant on the backup system, which together with cheap gas makes all-electric heat pumps less cost-competitive; how often backup runs is not reported. Add the qualification: the evidence supports a narrower or weaker statement.",
+       "explanation": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes: In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs. Winkler 2023 (NREL), cold-climate heat pump field validation: Auxiliary heat runtime generally rose in colder bins and heavy use cut system COP over 30% at two sites, but the heavy users were undersized or faulty while six sites used little auxiliary heat. CEE 2018, ducted and ductless cold-climate heat pumps in the field: In all-electric systems the booster resistance heat ran at COP 1 below about 30F, but because the heat pump was prioritized the system COP stayed above 1.0 even at -7F, so backup use dented rather than erased efficiency. [partial: the verdict note limits its own scope (\"rather than\")] Wilson 2024 (NREL and LBNL), heat pumps for all?: In Minnesota a high-efficiency heat pump sized for the heating load saves a median $182/yr, but sized for cooling it raises bills $96/yr through more resistance backup; reliance and the bill hit depend on sizing, not cold-climate units as such. [partial: the verdict note limits its own scope (\"not cold-climate units as such\")] Canadian Climate Institute 2023, heat pumps pay off: In Edmonton's cold climate the model finds heat pumps less efficient and more reliant on the backup system, which together with cheap gas makes all-electric heat pumps less cost-competitive; how often backup runs is not reported. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s26.a",
-       "suggestion": "The writer says the narration carries it: The sentence says only some of the sites had data that cold. s31 and s41 say how much backup runs depends on sizing and controls.",
-       "disposition": "The sentence says only some of the 22 sites had data that cold; s31 covers sizing."
+       "suggestion": "The writer says the narration carries it: The sentence says only some of the sites had data that cold. s31 and s41 say how much backup runs depends on sizing and controls. These are the 22 field-test sites; the Maine whole-home study found backup there was mostly fossil fuel and resistance backup rare, and this sentence does not generalise beyond its sites.",
+       "disposition": "The sentence says only some of the 22 sites had data that cold and is scoped to that test; the Maine whole-home homes ran fossil rather than resistance backup, which does not change a runtime share for these all-electric sites; s31 covers sizing."
       }
      ]
     }
@@ -2415,6 +2526,22 @@
         "ref": {
          "kind": "study",
          "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+         "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1714-L1726"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes",
+        "verdict": "partly",
+        "confidence": 0.35,
+        "note": "In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
          "cite": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L2150-L2157"
         },
         "cited": false,
@@ -2465,6 +2592,7 @@
       "limitations": [
        "CEE 2018, ducted and ductless cold-climate heat pumps in the field: In all-electric systems the booster resistance heat ran at COP 1 below about 30F, but because the heat pump was prioritized the system COP stayed above 1.0 even at -7F, so backup use dented rather than erased efficiency. [partial: the verdict note limits its own scope (\"rather than\")]",
        "Edwards 2024, inequities in heat pump bill savings: Edwards assumes single-stage heat pumps fall to COP 1 (no better than resistance) below 5F, while cold-climate two-stage units keep a higher COP, so the claim depends on equipment type.",
+       "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes: In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs.",
        "Winkler 2023 (NREL), cold-climate heat pump field validation: Auxiliary heat runtime generally rose in colder bins and heavy use cut system COP over 30% at two sites, but the heavy users were undersized or faulty while six sites used little auxiliary heat.",
        "Wilson 2024 (NREL and LBNL), heat pumps for all?: In Minnesota a high-efficiency heat pump sized for the heating load saves a median $182/yr, but sized for cooling it raises bills $96/yr through more resistance backup; reliance and the bill hit depend on sizing, not cold-climate units as such. [partial: the verdict note limits its own scope (\"not cold-climate units as such\")]",
        "Canadian Climate Institute 2023, heat pumps pay off: In Edmonton's cold climate the model finds heat pumps less efficient and more reliant on the backup system, which together with cheap gas makes all-electric heat pumps less cost-competitive; how often backup runs is not reported.",
@@ -2474,7 +2602,7 @@
       "suggestions": [
        "Add the qualification: the evidence supports a narrower or weaker statement."
       ],
-      "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.55), 5 qualifying."
+      "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.55), 6 qualifying."
      },
      "issues": [
       {
@@ -2657,6 +2785,22 @@
         "ref": {
          "kind": "study",
          "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+         "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1714-L1726"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes",
+        "verdict": "partly",
+        "confidence": 0.35,
+        "note": "In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
          "cite": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L2150-L2157"
         },
         "cited": false,
@@ -2706,6 +2850,7 @@
       "problems": [],
       "limitations": [
        "Wilson 2024 (NREL and LBNL), heat pumps for all?: In Minnesota a high-efficiency heat pump sized for the heating load saves a median $182/yr, but sized for cooling it raises bills $96/yr through more resistance backup; reliance and the bill hit depend on sizing, not cold-climate units as such. [partial: the verdict note limits its own scope (\"not cold-climate units as such\")]",
+       "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes: In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs.",
        "Winkler 2023 (NREL), cold-climate heat pump field validation: Auxiliary heat runtime generally rose in colder bins and heavy use cut system COP over 30% at two sites, but the heavy users were undersized or faulty while six sites used little auxiliary heat.",
        "CEE 2018, ducted and ductless cold-climate heat pumps in the field: In all-electric systems the booster resistance heat ran at COP 1 below about 30F, but because the heat pump was prioritized the system COP stayed above 1.0 even at -7F, so backup use dented rather than erased efficiency. [partial: the verdict note limits its own scope (\"rather than\")]",
        "Canadian Climate Institute 2023, heat pumps pay off: In Edmonton's cold climate the model finds heat pumps less efficient and more reliant on the backup system, which together with cheap gas makes all-electric heat pumps less cost-competitive; how often backup runs is not reported.",
@@ -2714,7 +2859,7 @@
       "suggestions": [
        "Add the qualification: the evidence supports a narrower or weaker statement."
       ],
-      "explanation": "qualified (qualify): no direct support, 4 qualifying."
+      "explanation": "qualified (qualify): no direct support, 5 qualifying."
      },
      "issues": [
       {
@@ -3463,6 +3608,22 @@
         "ref": {
          "kind": "study",
          "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+         "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1714-L1726"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes",
+        "verdict": "partly",
+        "confidence": 0.35,
+        "note": "In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
          "cite": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L2150-L2157"
         },
         "cited": false,
@@ -3516,6 +3677,7 @@
        "Cadmus 2016, ductless mini-split evaluation (MA and RI): Switching between heat pump and fuel at the crossover temperature is cheapest in principle, but at 2016 prices the gas crossover was above 70 F for the measured units, so pairing with gas saved nothing; only a modelled HSPF-13 unit (28-40 F crossover) would beat gas alone.",
        "Wilson 2024 (NREL and LBNL), heat pumps for all?: Hybrid heat pumps with fossil backup are said to mitigate bill increases without necessarily raising upfront cost, but they were not analysed.",
        "Deetjen 2021, private economics of US residential heat pumps: The authors note private economics might improve if supplemental heat came from gas rather than resistance, but they do not model it. [partial: the verdict note limits its own scope (\"rather than\")]",
+       "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes: In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs.",
        "Winkler 2023 (NREL), cold-climate heat pump field validation: Auxiliary heat runtime generally rose in colder bins and heavy use cut system COP over 30% at two sites, but the heavy users were undersized or faulty while six sites used little auxiliary heat.",
        "CEE 2018, ducted and ductless cold-climate heat pumps in the field: In all-electric systems the booster resistance heat ran at COP 1 below about 30F, but because the heat pump was prioritized the system COP stayed above 1.0 even at -7F, so backup use dented rather than erased efficiency. [partial: the verdict note limits its own scope (\"rather than\")]",
        "Wilson 2024 (NREL and LBNL), heat pumps for all?: In Minnesota a high-efficiency heat pump sized for the heating load saves a median $182/yr, but sized for cooling it raises bills $96/yr through more resistance backup; reliance and the bill hit depend on sizing, not cold-climate units as such. [partial: the verdict note limits its own scope (\"not cold-climate units as such\")]",
@@ -3524,7 +3686,7 @@
       "suggestions": [
        "Add the qualification: the evidence supports a narrower or weaker statement."
       ],
-      "explanation": "qualified (qualify): no direct support, 8 qualifying."
+      "explanation": "qualified (qualify): no direct support, 9 qualifying."
      },
      "issues": [
       {
@@ -3721,8 +3883,8 @@
       "text": "Their efficiency and output fell as it got colder.",
       "kind": "fact",
       "modality": "plain",
-      "status": "supported",
-      "decision": "approved",
+      "status": "qualified",
+      "decision": "qualify",
       "review": true,
       "verbatim": false,
       "strength": 0.65,
@@ -3762,23 +3924,45 @@
        }
       ],
       "contradicting": [],
-      "qualifying": [],
+      "qualifying": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+         "cite": "heat-pumps/sources/esc-2023-eoh-interim-heat-pump-performance.txt#L391-L394"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Energy Systems Catapult 2023, Electrification of Heat trial performance",
+        "verdict": "partly",
+        "confidence": 0.45,
+        "note": "Across the UK trial the measured COP fell as outdoor temperature fell, to a median 2.44 on the coldest day (mean -0.4C) against a seasonal 2.80; capacity was not reported.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
       "context": [],
       "problems": [],
       "limitations": [
+       "Energy Systems Catapult 2023, Electrification of Heat trial performance: Across the UK trial the measured COP fell as outdoor temperature fell, to a median 2.44 on the coldest day (mean -0.4C) against a seasonal 2.80; capacity was not reported.",
        "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
       ],
-      "suggestions": [],
-      "explanation": "supported (approved): 2 supporting (1 independent, strongest 0.65)."
+      "suggestions": [
+       "Add the qualification: the evidence supports a narrower or weaker statement."
+      ],
+      "explanation": "qualified (qualify): 2 supporting (1 independent, strongest 0.65), 1 qualifying."
      },
      "issues": [
       {
        "sentence": "s40",
-       "category": "wording",
-       "severity": "info",
-       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+       "category": "needs-qualification",
+       "severity": "warning",
+       "explanation": "Energy Systems Catapult 2023, Electrification of Heat trial performance: Across the UK trial the measured COP fell as outdoor temperature fell, to a median 2.44 on the coldest day (mean -0.4C) against a seasonal 2.80; capacity was not reported. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
-       "assertion": "s40.b"
+       "assertion": "s40.b",
+       "suggestion": "The writer says the narration carries it: The sentence speaks of the field tests the video cites (s17 for output, s19 for COP); s44 says each followed a limited number of units.",
+       "disposition": "The UK trial qualifies only by not reporting capacity and by a smaller COP fall; both agree with the direction s40 states, and s44 limits the samples."
       }
      ]
     },
@@ -3944,6 +4128,22 @@
         "ref": {
          "kind": "study",
          "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+         "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1714-L1726"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes",
+        "verdict": "partly",
+        "confidence": 0.35,
+        "note": "In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
          "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L425-L435"
         },
         "cited": false,
@@ -3993,6 +4193,7 @@
       "problems": [],
       "limitations": [
        "Winkler 2023 (NREL), cold-climate heat pump field validation: Auxiliary heat runtime generally rose in colder bins and heavy use cut system COP over 30% at two sites, but the heavy users were undersized or faulty while six sites used little auxiliary heat.",
+       "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes: In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs.",
        "CEE 2018, ducted and ductless cold-climate heat pumps in the field: In all-electric systems the booster resistance heat ran at COP 1 below about 30F, but because the heat pump was prioritized the system COP stayed above 1.0 even at -7F, so backup use dented rather than erased efficiency. [partial: the verdict note limits its own scope (\"rather than\")]",
        "Wilson 2024 (NREL and LBNL), heat pumps for all?: In Minnesota a high-efficiency heat pump sized for the heating load saves a median $182/yr, but sized for cooling it raises bills $96/yr through more resistance backup; reliance and the bill hit depend on sizing, not cold-climate units as such. [partial: the verdict note limits its own scope (\"not cold-climate units as such\")]",
        "Canadian Climate Institute 2023, heat pumps pay off: In Edmonton's cold climate the model finds heat pumps less efficient and more reliant on the backup system, which together with cheap gas makes all-electric heat pumps less cost-competitive; how often backup runs is not reported.",
@@ -4001,7 +4202,7 @@
       "suggestions": [
        "Add the qualification: the evidence supports a narrower or weaker statement."
       ],
-      "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.45), 4 qualifying."
+      "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.45), 5 qualifying."
      },
      "issues": [
       {
@@ -4050,6 +4251,22 @@
         "applicability": "partial",
         "basis": "heuristic",
         "why": "the verdict note limits its own scope (\"not cold-climate units as such\")"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+         "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1714-L1726"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes",
+        "verdict": "partly",
+        "confidence": 0.35,
+        "note": "In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
        },
        {
         "ref": {
@@ -4104,6 +4321,7 @@
       "problems": [],
       "limitations": [
        "Wilson 2024 (NREL and LBNL), heat pumps for all?: In Minnesota a high-efficiency heat pump sized for the heating load saves a median $182/yr, but sized for cooling it raises bills $96/yr through more resistance backup; reliance and the bill hit depend on sizing, not cold-climate units as such. [partial: the verdict note limits its own scope (\"not cold-climate units as such\")]",
+       "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes: In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs.",
        "Winkler 2023 (NREL), cold-climate heat pump field validation: Auxiliary heat runtime generally rose in colder bins and heavy use cut system COP over 30% at two sites, but the heavy users were undersized or faulty while six sites used little auxiliary heat.",
        "CEE 2018, ducted and ductless cold-climate heat pumps in the field: In all-electric systems the booster resistance heat ran at COP 1 below about 30F, but because the heat pump was prioritized the system COP stayed above 1.0 even at -7F, so backup use dented rather than erased efficiency. [partial: the verdict note limits its own scope (\"rather than\")]",
        "Canadian Climate Institute 2023, heat pumps pay off: In Edmonton's cold climate the model finds heat pumps less efficient and more reliant on the backup system, which together with cheap gas makes all-electric heat pumps less cost-competitive; how often backup runs is not reported.",
@@ -4112,7 +4330,7 @@
       "suggestions": [
        "Add the qualification: the evidence supports a narrower or weaker statement."
       ],
-      "explanation": "qualified (qualify): no direct support, 4 qualifying."
+      "explanation": "qualified (qualify): no direct support, 5 qualifying."
      },
      "issues": [
       {
@@ -4183,7 +4401,23 @@
      ]
     }
    ],
-   "issues": []
+   "issues": [
+    {
+     "sentence": "s41",
+     "assertion": "s41.a",
+     "fingerprint": "b70eb711c1",
+     "revision": 3,
+     "category": "omission",
+     "severity": "info",
+     "explanation": "The new Efficiency Maine 2026 study (78 metered whole-home installs) agrees that backup rose below 10 F, but there it was mostly the existing fossil system and only one home regularly used electric resistance; the script does not mention it. It does not contradict s41 (which says backup ran more in the cold, not which kind), and its COP of 2 at -10 F across 166 units supports s40.",
+     "refs": [
+      "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1714-L1726",
+      "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1911-L1918"
+     ],
+     "suggestion": "Optional on a later revision: one sentence after s29 that in Maine whole-home installs backup was mostly the old fossil system, and the 166-unit COP of 2 at -10 F as the largest field average.",
+     "by": "review"
+    }
+   ]
   },
   {
    "id": "s42",
@@ -4583,6 +4817,22 @@
         "ref": {
          "kind": "study",
          "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+         "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1714-L1726"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes",
+        "verdict": "partly",
+        "confidence": 0.35,
+        "note": "In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
          "cite": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L2150-L2157"
         },
         "cited": false,
@@ -4698,6 +4948,7 @@
       "limitations": [
        "CEE 2018, ducted and ductless cold-climate heat pumps in the field: A ductless cold-climate unit delivered a consistent median capacity from 10F to -15F and kept operating to -25F at reduced capacity, though the authors say it needs backup below -15F; one monitored unit. [partial: the verdict note limits its own scope (\"though\")]",
        "Wilson 2024 (NREL and LBNL), heat pumps for all?: Over 25,000 products on the NEEP cold-climate list keep a COP of 2 or more at full capacity at 5F, and modelled per-household GHG savings are generally higher in cold climates. [partial: a count of products rated at 5F on a certification list, not measured operation in homes]",
+       "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes: In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs.",
        "Winkler 2023 (NREL), cold-climate heat pump field validation: Auxiliary heat runtime generally rose in colder bins and heavy use cut system COP over 30% at two sites, but the heavy users were undersized or faulty while six sites used little auxiliary heat.",
        "CEE 2018, ducted and ductless cold-climate heat pumps in the field: In all-electric systems the booster resistance heat ran at COP 1 below about 30F, but because the heat pump was prioritized the system COP stayed above 1.0 even at -7F, so backup use dented rather than erased efficiency. [partial: the verdict note limits its own scope (\"rather than\")]",
        "Wilson 2024 (NREL and LBNL), heat pumps for all?: In Minnesota a high-efficiency heat pump sized for the heating load saves a median $182/yr, but sized for cooling it raises bills $96/yr through more resistance backup; reliance and the bill hit depend on sizing, not cold-climate units as such. [partial: the verdict note limits its own scope (\"not cold-climate units as such\")]",
@@ -4710,7 +4961,7 @@
       "suggestions": [
        "Add the qualification: the evidence supports a narrower or weaker statement."
       ],
-      "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.55), 8 qualifying, 1 context only."
+      "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.55), 9 qualifying, 1 context only."
      },
      "issues": [
       {
@@ -4766,6 +5017,20 @@
   }
  ],
  "issues": [
+  {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked package d8e5d3dd14; it is now 8cb301861b: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  },
+  {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked validation 2761b6fc2c; it is now c496fd3682: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  },
   {
    "sentence": "s08",
    "category": "needs-qualification",
@@ -4847,6 +5112,16 @@
    "disposition": "The sentence says one small unit; s17 and s18 give its reduced output and the backup advice below -15 F."
   },
   {
+   "sentence": "s17",
+   "category": "needs-qualification",
+   "severity": "warning",
+   "explanation": "Energy Systems Catapult 2023, Electrification of Heat trial performance: Across the UK trial the measured COP fell as outdoor temperature fell, to a median 2.44 on the coldest day (mean -0.4C) against a seasonal 2.80; capacity was not reported. Add the qualification: the evidence supports a narrower or weaker statement.",
+   "by": "deterministic",
+   "assertion": "s17.a",
+   "suggestion": "The writer says the narration carries it: The sentence names the ductless unit and its rated 5 °F output; the UK trial that did not report capacity is not cited here.",
+   "disposition": "The UK trial reports COP only, not capacity, so it cannot qualify an output figure for the named Minnesota ductless unit."
+  },
+  {
    "sentence": "s18",
    "category": "needs-qualification",
    "severity": "warning",
@@ -4855,6 +5130,16 @@
    "assertion": "s18.a",
    "suggestion": "The writer says the narration carries it: This sentence is the qualification on s16.",
    "disposition": "This sentence is the qualification on s16."
+  },
+  {
+   "sentence": "s19",
+   "category": "needs-qualification",
+   "severity": "warning",
+   "explanation": "Energy Systems Catapult 2023, Electrification of Heat trial performance: Across the UK trial the measured COP fell as outdoor temperature fell, to a median 2.44 on the coldest day (mean -0.4C) against a seasonal 2.80; capacity was not reported. Add the qualification: the evidence supports a narrower or weaker statement.",
+   "by": "deterministic",
+   "assertion": "s19.a",
+   "suggestion": "The writer says the narration carries it: The sentence names the Minnesota research and its heat-pump-only cycles; the UK trial's smaller fall in COP is a different fleet and is not cited here.",
+   "disposition": "The sentence is attributed to the Minnesota heat-pump-only cycles; the UK trial agrees on the direction (COP fell on the coldest day) and its smaller fall is a different fleet, while s09 and s12 already give higher field COPs."
   },
   {
    "sentence": "s25",
@@ -4870,11 +5155,11 @@
    "sentence": "s26",
    "category": "needs-qualification",
    "severity": "warning",
-   "explanation": "Winkler 2023 (NREL), cold-climate heat pump field validation: Auxiliary heat runtime generally rose in colder bins and heavy use cut system COP over 30% at two sites, but the heavy users were undersized or faulty while six sites used little auxiliary heat. CEE 2018, ducted and ductless cold-climate heat pumps in the field: In all-electric systems the booster resistance heat ran at COP 1 below about 30F, but because the heat pump was prioritized the system COP stayed above 1.0 even at -7F, so backup use dented rather than erased efficiency. [partial: the verdict note limits its own scope (\"rather than\")] Wilson 2024 (NREL and LBNL), heat pumps for all?: In Minnesota a high-efficiency heat pump sized for the heating load saves a median $182/yr, but sized for cooling it raises bills $96/yr through more resistance backup; reliance and the bill hit depend on sizing, not cold-climate units as such. [partial: the verdict note limits its own scope (\"not cold-climate units as such\")] Canadian Climate Institute 2023, heat pumps pay off: In Edmonton's cold climate the model finds heat pumps less efficient and more reliant on the backup system, which together with cheap gas makes all-electric heat pumps less cost-competitive; how often backup runs is not reported. Add the qualification: the evidence supports a narrower or weaker statement.",
+   "explanation": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes: In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs. Winkler 2023 (NREL), cold-climate heat pump field validation: Auxiliary heat runtime generally rose in colder bins and heavy use cut system COP over 30% at two sites, but the heavy users were undersized or faulty while six sites used little auxiliary heat. CEE 2018, ducted and ductless cold-climate heat pumps in the field: In all-electric systems the booster resistance heat ran at COP 1 below about 30F, but because the heat pump was prioritized the system COP stayed above 1.0 even at -7F, so backup use dented rather than erased efficiency. [partial: the verdict note limits its own scope (\"rather than\")] Wilson 2024 (NREL and LBNL), heat pumps for all?: In Minnesota a high-efficiency heat pump sized for the heating load saves a median $182/yr, but sized for cooling it raises bills $96/yr through more resistance backup; reliance and the bill hit depend on sizing, not cold-climate units as such. [partial: the verdict note limits its own scope (\"not cold-climate units as such\")] Canadian Climate Institute 2023, heat pumps pay off: In Edmonton's cold climate the model finds heat pumps less efficient and more reliant on the backup system, which together with cheap gas makes all-electric heat pumps less cost-competitive; how often backup runs is not reported. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s26.a",
-   "suggestion": "The writer says the narration carries it: The sentence says only some of the sites had data that cold. s31 and s41 say how much backup runs depends on sizing and controls.",
-   "disposition": "The sentence says only some of the 22 sites had data that cold; s31 covers sizing."
+   "suggestion": "The writer says the narration carries it: The sentence says only some of the sites had data that cold. s31 and s41 say how much backup runs depends on sizing and controls. These are the 22 field-test sites; the Maine whole-home study found backup there was mostly fossil fuel and resistance backup rare, and this sentence does not generalise beyond its sites.",
+   "disposition": "The sentence says only some of the 22 sites had data that cold and is scoped to that test; the Maine whole-home homes ran fossil rather than resistance backup, which does not change a runtime share for these all-electric sites; s31 covers sizing."
   },
   {
    "sentence": "s27",
@@ -4998,6 +5283,16 @@
    "sentence": "s40",
    "category": "needs-qualification",
    "severity": "warning",
+   "explanation": "Energy Systems Catapult 2023, Electrification of Heat trial performance: Across the UK trial the measured COP fell as outdoor temperature fell, to a median 2.44 on the coldest day (mean -0.4C) against a seasonal 2.80; capacity was not reported. Add the qualification: the evidence supports a narrower or weaker statement.",
+   "by": "deterministic",
+   "assertion": "s40.b",
+   "suggestion": "The writer says the narration carries it: The sentence speaks of the field tests the video cites (s17 for output, s19 for COP); s44 says each followed a limited number of units.",
+   "disposition": "The UK trial qualifies only by not reporting capacity and by a smaller COP fall; both agree with the direction s40 states, and s44 limits the samples."
+  },
+  {
+   "sentence": "s40",
+   "category": "needs-qualification",
+   "severity": "warning",
    "explanation": "Edwards 2024, inequities in heat pump bill savings: Edwards assumes single-stage heat pumps fall to COP 1 (no better than resistance) below 5F, while cold-climate two-stage units keep a higher COP, so the claim depends on equipment type. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s40.c",
@@ -5079,22 +5374,6 @@
    "assertion": "s15.a"
   },
   {
-   "sentence": "s17",
-   "category": "wording",
-   "severity": "info",
-   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
-   "by": "deterministic",
-   "assertion": "s17.a"
-  },
-  {
-   "sentence": "s19",
-   "category": "wording",
-   "severity": "info",
-   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
-   "by": "deterministic",
-   "assertion": "s19.a"
-  },
-  {
    "sentence": "s21",
    "category": "wording",
    "severity": "info",
@@ -5127,12 +5406,19 @@
    "assertion": "s28.a"
   },
   {
-   "sentence": "s40",
-   "category": "wording",
+   "sentence": "s41",
+   "assertion": "s41.a",
+   "fingerprint": "b70eb711c1",
+   "revision": 3,
+   "category": "omission",
    "severity": "info",
-   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
-   "by": "deterministic",
-   "assertion": "s40.b"
+   "explanation": "The new Efficiency Maine 2026 study (78 metered whole-home installs) agrees that backup rose below 10 F, but there it was mostly the existing fossil system and only one home regularly used electric resistance; the script does not mention it. It does not contradict s41 (which says backup ran more in the cold, not which kind), and its COP of 2 at -10 F across 166 units supports s40.",
+   "refs": [
+    "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1714-L1726",
+    "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1911-L1918"
+   ],
+   "suggestion": "Optional on a later revision: one sentence after s29 that in Maine whole-home installs backup was mostly the old fossil system, and the 166-unit COP of 2 at -10 F as the largest field average.",
+   "by": "review"
   },
   {
    "sentence": "s41",
@@ -5241,7 +5527,14 @@
   },
   {
    "revision": 2,
-   "date": "2026-10-21T07:44:16.920Z",
+   "date": "2026-10-27T02:36:54.009Z",
+   "status": "needs-review",
+   "blocking": 0,
+   "warnings": 33
+  },
+  {
+   "revision": 3,
+   "date": "2026-10-27T02:40:00.627Z",
    "status": "passed",
    "blocking": 0,
    "warnings": 0
