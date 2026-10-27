@@ -189,8 +189,11 @@ describe.skipIf(!pages.length).each(BROWSERS)('%s', (name) => {
       'inquiry page: an exhibit opens from the keyboard, its chips filter its claims, and the theme persists',
       async () => {
         const { page, close } = await open(p);
+        // An exhibit's link sits beside its disclosure, never inside the summary (axe nested-interactive).
+        expect(await page.locator('[data-source] summary a').count()).toBe(0);
+        expect(await page.locator('[data-source] > p a').count()).toBeGreaterThanOrEqual(1);
         const source = page.locator('[data-source]').first();
-        const details = source.locator('xpath=descendant-or-self::details').first(); // the exhibit's disclosure
+        const details = source.locator('details');
         await source.locator('summary').focus();
         await page.keyboard.press('Enter');
         expect(await details.evaluate((d: HTMLDetailsElement) => d.open)).toBe(true);
