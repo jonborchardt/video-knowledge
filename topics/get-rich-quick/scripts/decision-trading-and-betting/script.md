@@ -1,6 +1,6 @@
 # Do 97% of Day Traders Really Lose Money?
 
-Story `decision:trading-and-betting` (get-rich-quick), revision 1. About 4.2 minutes (613 words at 150 wpm). Validation: **passed**, 0 blocking, 2 warnings, 22/22 assertions verified.
+Story `decision:trading-and-betting` (get-rich-quick), revision 2. About 4.3 minutes (616 words at 150 wpm). Validation: **passed**, 0 blocking, 0 warnings, 22/22 assertions verified.
 
 Markers: `[s12 ok]` every assertion verified by the deterministic checks and the reviewer; `[s12 review]` awaiting review or carrying a warning; `[s12 BLOCKED]` an open blocking issue. Sentences without a marker make no factual claim.
 
@@ -14,7 +14,7 @@ Ross Cameron of Warrior Trading tells beginners to "learn a strategy that is pro
 
 ## Investigation
 
-The Brazilian study followed people who began day trading in the country's equity futures market between 2013 and 2015, and sorted them by how many days they kept at it. [s08 ok] Of those who tried it for a single day, 29.8 percent made a net profit, and the share fell at every step after that. [s09 ok] The authors compare it to roulette, where the more rounds people play, the fewer come out ahead. [s10 ok] Of the 1,551 who kept going for more than 300 days, 97 percent lost money after fees, and only 47 came out ahead. [s11 ok] Only 17 earned more than Brazil's minimum wage, and the single best averaged 310 dollars a day. [s12 ok] And the handful who beat a bank teller's starting pay got there on a roller coaster, their daily results swinging by hundreds to thousands of dollars. [s13 ok] Did the ones who stayed at least get better with practice? The study found no evidence that they learned. [s15 ok] A second study, of individual investors who day traded in Taiwan from 1992 to 2006, found the vast majority of them unprofitable. [s27 ok] Taken as a group, they lost 7 basis points a day before costs, where a basis point is a hundredth of a percent, and trading costs more than tripled that loss, to 23.9. [s16 ok] So is anyone reliably good at this? A few are: in Taiwan, traders who had already been profitable, with more than 40 days of day trading in the past year, went on to earn more than their trading costs. [s18 ok] But those predictably profitable traders made up less than 3 percent of all day traders on an average day. [s19 ok] Ross Cameron names one reason the rest struggle: "when you trade against the high frequency trading algorithms, trading large caps, you really don't have a good edge". [s20 ok] The Brazilian futures data point the same way in a different market: when high-frequency traders' share of deals rose by 10 percent, individuals' average loss was 19 percent higher. [s21 ok]
+The Brazilian study followed people who began day trading in the country's equity futures market between 2013 and 2015, and sorted them by how many days they kept at it. [s08 ok] Of those who tried it for a single day, 29.8 percent made a net profit, and the share fell at every step after that. [s09 ok] The authors compare it to roulette, where the more rounds people play, the fewer come out ahead. [s10 ok] Of the 1,551 who kept going for more than 300 days, 97 percent lost money after fees, and only 47 came out ahead. [s11 ok] Only 17 earned more than Brazil's minimum wage, and the single best averaged 310 dollars a day. [s12 ok] And the handful who beat a bank teller's starting pay got there on a roller coaster, their daily results swinging by hundreds to thousands of dollars. [s13 ok] Did the ones who stayed at least get better with practice? The study found no evidence that they learned. [s15 ok] A second study, of individual investors who day traded in Taiwan from 1992 to 2006, found the vast majority of them unprofitable. [s27 ok] Taken as a group, they trailed the market by 7 basis points a day before costs, where a basis point is a hundredth of a percent, and trading costs more than tripled that shortfall, to 23.9. [s16 ok] So is anyone reliably good at this? A few are: in Taiwan, traders who had already been profitable, with more than 40 days of day trading in the past year, went on to earn more than their trading costs. [s18 ok] But those predictably profitable traders made up less than 3 percent of all day traders on an average day. [s19 ok] Ross Cameron describes one obstacle he hit himself: "when you trade against the high frequency trading algorithms, trading large caps, you really don't have a good edge". [s20 ok] The Brazilian futures data point the same way in a different market: when high-frequency traders' share of deals rose by 10 percent, individuals' average loss was 19 percent higher. [s21 ok]
 
 ## Answer
 
@@ -26,8 +26,9 @@ If someone sells you a strategy as consistent, ask for audited results across ev
 
 ## Open issues
 
-- **warning** s16 (s16.a) missing-qualification (review): The 7 and 23.9 basis points are abnormal returns: the intercept of a regression against a value-weighted Taiwan market index (barber-odean L452-L458), weighted by the money invested. "They lost 7 basis points a day" reads as a raw loss on their accounts; it is a shortfall relative to simply holding the market. Suggestion: Say "Taken as a group, they trailed the market by 7 basis points a day before costs, ... and trading costs more than tripled that shortfall, to 23.9."
-- **warning** s20 (s20.a) overgeneralization (review): In context Cameron explains why his own accuracy fell when he traded large caps against HFT algorithms; he is not explaining why the traders in the Brazil and Taiwan studies lost. "Names one reason the rest struggle" gives his remark a scope it does not have. Suggestion: Say "Ross Cameron describes one obstacle he hit himself:" before the quote.
+- **warning** - release-stale (deterministic): release.json locked script a1196b72ff; it is now cf8aa41999: the approved package has changed, lock it again after review
+- **warning** - release-stale (deterministic): release.json locked package c10ea75b99; it is now ef97fa3eb7: the approved package has changed, lock it again after review
+- **warning** - release-stale (deterministic): release.json locked validation 37935de2ea; it is now 791be98faf: the approved package has changed, lock it again after review
 - **info** s01 (s01.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s04 (s04.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s05 (s05.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
@@ -87,8 +88,10 @@ If someone sells you a strategy as consistent, ask for audited results across ev
 > Yet the Warrior Trading blog itself carries the line "Trading is risky, and most day traders lose money."
 
 - **s06.a** [verified] The Warrior Trading blog says "Trading is risky, and most day traders lose money."
-  - supported (approved): no direct support, 1 qualifying, 1 source statement. modality: typical.
+  - supported (approved): no direct support, 2 qualifying, 1 source statement. modality: typical.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
+  - qualifies (uncited): FCA CFD consultation 2016 partly 0.4, partial `get-rich-quick/sources/fca-cp16-40-cfd.txt#L589-L591`
+    > In an FCA sample of client accounts at eight major UK CFD providers, more than 80% lost money over a year; this is leveraged retail CFD trading rather than day trading as such.
   - qualifies (uncited): ESMA CFD intervention 2018 partly 0.5, partial `get-rich-quick/sources/esma-2018-cfd-measures.txt#L59-L62`
     > EU regulators' studies found 74-89% of retail CFD accounts lose money, with average losses of 1,600 to 29,000 per investor; CFDs are short-term leveraged speculation rather than day trading as such.
   - statement: The Real Earnings of a Day Trader  `warriortrading-the-real-earnings-of-a-day-trader`
@@ -100,10 +103,12 @@ If someone sells you a strategy as consistent, ask for audited results across ev
 > The Brazilian study followed people who began day trading in the country's equity futures market between 2013 and 2015, and sorted them by how many days they kept at it.
 
 - **s08.a** [verified] The Brazil study observes individuals who began to day trade between 2013 and 2015 in the Brazilian equity futures market.
-  - qualified (qualify): 1 supporting (1 independent, strongest 0.7), 1 qualifying.
-  - warning needs-qualification: ESMA CFD intervention 2018: EU regulators' studies found 74-89% of retail CFD accounts lose money, with average losses of 1,600 to 29,000 per investor; CFDs are short-term leveraged speculation rather than day trading as such. [partial: retail CFD accounts are leveraged short-term speculation, overlapping with but not the same as day trading] Add the qualification: the evidence supports a narrower or weaker statement.
+  - qualified (qualify): 1 supporting (1 independent, strongest 0.7), 2 qualifying.
+  - warning needs-qualification: FCA CFD consultation 2016: In an FCA sample of client accounts at eight major UK CFD providers, more than 80% lost money over a year; this is leveraged retail CFD trading rather than day trading as such. [partial: the verdict note limits its own scope ("rather than")] ESMA CFD intervention 2018: EU regulators' studies found 74-89% of retail CFD accounts lose money, with average losses of 1,600 to 29,000 per investor; CFDs are short-term leveraged speculation rather than day trading as such. [partial: retail CFD accounts are leveraged short-term speculation, overlapping with but not the same as day trading] Add the qualification: the evidence supports a narrower or weaker statement.
   - supports: Brazil day-trader study (Chague et al.) right 0.7, direct `get-rich-quick/sources/chague-day-trading-for-a-living.txt#L30-L36`
     > We show that it is virtually impossible for individuals to compete with HFTs and day trade for a living, contrary to what course providers claim. We observe all individuals who began to day trade between 2013 and 2015 in the Brazilian equity futures market, the third in terms of volume in the world, and who persisted f…
+  - qualifies (uncited): FCA CFD consultation 2016 partly 0.4, partial `get-rich-quick/sources/fca-cp16-40-cfd.txt#L589-L591`
+    > In an FCA sample of client accounts at eight major UK CFD providers, more than 80% lost money over a year; this is leveraged retail CFD trading rather than day trading as such.
   - qualifies (uncited): ESMA CFD intervention 2018 partly 0.5, partial `get-rich-quick/sources/esma-2018-cfd-measures.txt#L59-L62`
     > EU regulators' studies found 74-89% of retail CFD accounts lose money, with average losses of 1,600 to 29,000 per investor; CFDs are short-term leveraged speculation rather than day trading as such.
 - **s08.b** [verified] The Brazil day-trader study computed the net profit of each new day trader, grouped by the number of days they day traded.
@@ -143,10 +148,12 @@ If someone sells you a strategy as consistent, ask for audited results across ev
 > Of the 1,551 who kept going for more than 300 days, 97 percent lost money after fees, and only 47 came out ahead.
 
 - **s11.a** [verified] In the Brazil study, 97% of the 1,551 individuals who day traded for more than 300 days lost money net of exchange and brokerage fees.
-  - qualified (qualify): 1 supporting (1 independent, strongest 0.7), 1 qualifying.
-  - warning needs-qualification: ESMA CFD intervention 2018: EU regulators' studies found 74-89% of retail CFD accounts lose money, with average losses of 1,600 to 29,000 per investor; CFDs are short-term leveraged speculation rather than day trading as such. [partial: retail CFD accounts are leveraged short-term speculation, overlapping with but not the same as day trading] Add the qualification: the evidence supports a narrower or weaker statement.
+  - qualified (qualify): 1 supporting (1 independent, strongest 0.7), 2 qualifying.
+  - warning needs-qualification: FCA CFD consultation 2016: In an FCA sample of client accounts at eight major UK CFD providers, more than 80% lost money over a year; this is leveraged retail CFD trading rather than day trading as such. [partial: the verdict note limits its own scope ("rather than")] ESMA CFD intervention 2018: EU regulators' studies found 74-89% of retail CFD accounts lose money, with average losses of 1,600 to 29,000 per investor; CFDs are short-term leveraged speculation rather than day trading as such. [partial: retail CFD accounts are leveraged short-term speculation, overlapping with but not the same as day trading] Add the qualification: the evidence supports a narrower or weaker statement.
   - supports: Brazil day-trader study (Chague et al.) right 0.7, direct `get-rich-quick/sources/chague-day-trading-for-a-living.txt#L394-L404`
     > We next evaluate the performance of the 1,551 individuals who day traded for at least 300 days in Table 2. Considering the performance net of exchange and brokerage fees (Panel C), we nd that 97% of all investors who persisted for more than 300 days lost money. The average daily net prot is US$ -48.81, the median is US…
+  - qualifies (uncited): FCA CFD consultation 2016 partly 0.4, partial `get-rich-quick/sources/fca-cp16-40-cfd.txt#L589-L591`
+    > In an FCA sample of client accounts at eight major UK CFD providers, more than 80% lost money over a year; this is leveraged retail CFD trading rather than day trading as such.
   - qualifies (uncited): ESMA CFD intervention 2018 partly 0.5, partial `get-rich-quick/sources/esma-2018-cfd-measures.txt#L59-L62`
     > EU regulators' studies found 74-89% of retail CFD accounts lose money, with average losses of 1,600 to 29,000 per investor; CFDs are short-term leveraged speculation rather than day trading as such.
 - **s11.b** [verified] Only 47 of the 1,551 persistent day traders in the Brazil study profited net of fees.
@@ -198,19 +205,20 @@ If someone sells you a strategy as consistent, ask for audited results across ev
 > A second study, of individual investors who day traded in Taiwan from 1992 to 2006, found the vast majority of them unprofitable.
 
 - **s27.a** [verified] In the Taiwan study of individual investors who day traded from 1992 to 2006, the vast majority of day traders are unprofitable.
-  - qualified (qualify): 1 supporting (1 independent, strongest 0.7), 1 qualifying. modality: typical.
-  - warning needs-qualification: ESMA CFD intervention 2018: EU regulators' studies found 74-89% of retail CFD accounts lose money, with average losses of 1,600 to 29,000 per investor; CFDs are short-term leveraged speculation rather than day trading as such. [partial: retail CFD accounts are leveraged short-term speculation, overlapping with but not the same as day trading] Add the qualification: the evidence supports a narrower or weaker statement.
+  - qualified (qualify): 1 supporting (1 independent, strongest 0.7), 2 qualifying. modality: typical.
+  - warning needs-qualification: FCA CFD consultation 2016: In an FCA sample of client accounts at eight major UK CFD providers, more than 80% lost money over a year; this is leveraged retail CFD trading rather than day trading as such. [partial: the verdict note limits its own scope ("rather than")] ESMA CFD intervention 2018: EU regulators' studies found 74-89% of retail CFD accounts lose money, with average losses of 1,600 to 29,000 per investor; CFDs are short-term leveraged speculation rather than day trading as such. [partial: retail CFD accounts are leveraged short-term speculation, overlapping with but not the same as day trading] Add the qualification: the evidence supports a narrower or weaker statement.
   - supports: Taiwan day-trader study (Barber et al.) right 0.7, direct `get-rich-quick/sources/barber-odean-day-traders-learn.txt#L39-L46`
     > We analyze the performance of and learning by individual investors who engage in day trading in Taiwan from 1992 to 2006 and test the proposition that individual investors rationally speculate as day traders in order to learn whether they possess the superior trading ability. Consistent with models of both rational and…
+  - qualifies (uncited): FCA CFD consultation 2016 partly 0.4, partial `get-rich-quick/sources/fca-cp16-40-cfd.txt#L589-L591`
+    > In an FCA sample of client accounts at eight major UK CFD providers, more than 80% lost money over a year; this is leveraged retail CFD trading rather than day trading as such.
   - qualifies (uncited): ESMA CFD intervention 2018 partly 0.5, partial `get-rich-quick/sources/esma-2018-cfd-measures.txt#L59-L62`
     > EU regulators' studies found 74-89% of retail CFD accounts lose money, with average losses of 1,600 to 29,000 per investor; CFDs are short-term leveraged speculation rather than day trading as such.
 
 ### s16 (factual, verified)
 
-> Taken as a group, they lost 7 basis points a day before costs, where a basis point is a hundredth of a percent, and trading costs more than tripled that loss, to 23.9.
+> Taken as a group, they trailed the market by 7 basis points a day before costs, where a basis point is a hundredth of a percent, and trading costs more than tripled that shortfall, to 23.9.
 
-- warning missing-qualification (review): The 7 and 23.9 basis points are abnormal returns: the intercept of a regression against a value-weighted Taiwan market index (barber-odean L452-L458), weighted by the money invested. "They lost 7 basis points a day" reads as a raw loss on their accounts; it is a shortfall relative to simply holding the market.
-- **s16.a** [verified] In the Taiwan study, day traders lose 7 basis points a day on average before costs, and trading costs more than triple the losses to 23.9 basis points per day.
+- **s16.a** [verified] In the Taiwan study, day traders trail the market by 7 basis points a day on average before costs, and trading costs more than triple the shortfall to 23.9 basis points per day.
   - qualified (qualify): no direct support, 2 qualifying. modality: typical.
   - warning needs-qualification: Taiwan day-trader study (Barber et al.): Fees turn a 7 bps gross daily loss into 23.9 bps net, showing transaction costs erode frequent traders' returns; fatigue and setup quality are not measured. Add the qualification: the evidence supports a narrower or weaker statement.
   - qualifies: Taiwan day-trader study (Barber et al.) partly 0.4, direct `get-rich-quick/sources/barber-odean-day-traders-learn.txt#L476-L479`
@@ -244,9 +252,8 @@ If someone sells you a strategy as consistent, ask for audited results across ev
 
 ### s20 (attributed, verified)
 
-> Ross Cameron names one reason the rest struggle: "when you trade against the high frequency trading algorithms, trading large caps, you really don't have a good edge".
+> Ross Cameron describes one obstacle he hit himself: "when you trade against the high frequency trading algorithms, trading large caps, you really don't have a good edge".
 
-- warning overgeneralization (review): In context Cameron explains why his own accuracy fell when he traded large caps against HFT algorithms; he is not explaining why the traders in the Brazil and Taiwan studies lost. "Names one reason the rest struggle" gives his remark a scope it does not have.
 - **s20.a** [verified] Ross Cameron says "when you trade against the high frequency trading algorithms, trading large caps, you really don't have a good edge".
   - supported (approved): no direct support, 1 qualifying, 1 source statement.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
@@ -272,21 +279,25 @@ If someone sells you a strategy as consistent, ask for audited results across ev
 
 - info needs-human (review): "So yes:" answers the title question (do most lose), but the viewer last heard s02, which asks "how many ... actually end up ahead?"; a yes does not answer a how-many question.
 - **s22.a** [verified] In the Brazil study 97% of those who day traded more than 300 days lost money net of fees, and the share with a positive net profit fell with the number of days traded.
-  - qualified (qualify): 1 supporting (1 independent, strongest 0.7), 3 qualifying.
+  - qualified (qualify): 1 supporting (1 independent, strongest 0.7), 4 qualifying.
   - warning needs-qualification: Brazil day-trader study (Chague et al.): The share of day traders with positive net profit falls monotonically with the number of days traded (29.8% at one day to 3.0% beyond 300), consistent with more trading eroding results, though setup quality is not studied. Add the qualification: the evidence supports a narrower or weaker statement.
   - supports: Brazil day-trader study (Chague et al.) right 0.7, direct `get-rich-quick/sources/chague-day-trading-for-a-living.txt#L394-L404`
     > We next evaluate the performance of the 1,551 individuals who day traded for at least 300 days in Table 2. Considering the performance net of exchange and brokerage fees (Panel C), we nd that 97% of all investors who persisted for more than 300 days lost money. The average daily net prot is US$ -48.81, the median is US…
   - qualifies: Brazil day-trader study (Chague et al.) partly 0.4, partial `get-rich-quick/sources/chague-day-trading-for-a-living.txt#L162-L178`
     > We compute the total net prot6 obtained by each one of the 19,646 new day traders. Considering those who day traded for only one day (1,111 individuals), 29.8% obtained positive net prot. Considering those who day traded for 2 to 50 days (9,978), 51 to 100 days (3,100), 101 to 200 days (2,738), 201 to 300 days (1,168),…
+  - qualifies (uncited): FCA CFD consultation 2016 partly 0.4, partial `get-rich-quick/sources/fca-cp16-40-cfd.txt#L589-L591`
+    > In an FCA sample of client accounts at eight major UK CFD providers, more than 80% lost money over a year; this is leveraged retail CFD trading rather than day trading as such.
   - qualifies (uncited): ESMA CFD intervention 2018 partly 0.5, partial `get-rich-quick/sources/esma-2018-cfd-measures.txt#L59-L62`
     > EU regulators' studies found 74-89% of retail CFD accounts lose money, with average losses of 1,600 to 29,000 per investor; CFDs are short-term leveraged speculation rather than day trading as such.
   - qualifies (uncited): Taiwan day-trader study (Barber et al.) partly 0.4, direct `get-rich-quick/sources/barber-odean-day-traders-learn.txt#L476-L479`
     > Fees turn a 7 bps gross daily loss into 23.9 bps net, showing transaction costs erode frequent traders' returns; fatigue and setup quality are not measured.
 - **s22.b** [verified] In the Taiwan study the vast majority of day traders are unprofitable.
-  - qualified (qualify): 1 supporting (1 independent, strongest 0.7), 1 qualifying. modality: typical.
-  - warning needs-qualification: ESMA CFD intervention 2018: EU regulators' studies found 74-89% of retail CFD accounts lose money, with average losses of 1,600 to 29,000 per investor; CFDs are short-term leveraged speculation rather than day trading as such. [partial: retail CFD accounts are leveraged short-term speculation, overlapping with but not the same as day trading] Add the qualification: the evidence supports a narrower or weaker statement.
+  - qualified (qualify): 1 supporting (1 independent, strongest 0.7), 2 qualifying. modality: typical.
+  - warning needs-qualification: FCA CFD consultation 2016: In an FCA sample of client accounts at eight major UK CFD providers, more than 80% lost money over a year; this is leveraged retail CFD trading rather than day trading as such. [partial: the verdict note limits its own scope ("rather than")] ESMA CFD intervention 2018: EU regulators' studies found 74-89% of retail CFD accounts lose money, with average losses of 1,600 to 29,000 per investor; CFDs are short-term leveraged speculation rather than day trading as such. [partial: retail CFD accounts are leveraged short-term speculation, overlapping with but not the same as day trading] Add the qualification: the evidence supports a narrower or weaker statement.
   - supports: Taiwan day-trader study (Barber et al.) right 0.7, direct `get-rich-quick/sources/barber-odean-day-traders-learn.txt#L39-L46`
     > We analyze the performance of and learning by individual investors who engage in day trading in Taiwan from 1992 to 2006 and test the proposition that individual investors rationally speculate as day traders in order to learn whether they possess the superior trading ability. Consistent with models of both rational and…
+  - qualifies (uncited): FCA CFD consultation 2016 partly 0.4, partial `get-rich-quick/sources/fca-cp16-40-cfd.txt#L589-L591`
+    > In an FCA sample of client accounts at eight major UK CFD providers, more than 80% lost money over a year; this is leveraged retail CFD trading rather than day trading as such.
   - qualifies (uncited): ESMA CFD intervention 2018 partly 0.5, partial `get-rich-quick/sources/esma-2018-cfd-measures.txt#L59-L62`
     > EU regulators' studies found 74-89% of retail CFD accounts lose money, with average losses of 1,600 to 29,000 per investor; CFDs are short-term leveraged speculation rather than day trading as such.
 

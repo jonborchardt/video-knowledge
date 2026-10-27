@@ -2,9 +2,9 @@
  "topic": "get-rich-quick",
  "story": "decision:trading-and-betting",
  "inputs": {
-  "stories": "3f9f8846d0",
-  "review": "bad35898d5",
-  "report": "02fa80173d"
+  "stories": "c1bacb291e",
+  "review": "eded5a5f59",
+  "report": "7f5ebc943a"
  },
  "audience": "General YouTube audience with no prior knowledge of MLM pay plans or research methods (default; set audience in story-review.json to change).",
  "title": "Do 97% of Day Traders Really Lose Money?",
@@ -29,7 +29,7 @@
   "status": "qualified",
   "decision": "qualify",
   "strength": 0.7,
-  "independent": 2
+  "independent": 3
  },
  "claims": [
   {
@@ -210,6 +210,19 @@
    ],
    "evidence": [
     {
+     "cite": "get-rich-quick/sources/barber-speculator-skill.txt#L796-L800",
+     "doc": "get-rich-quick/sources/barber-speculator-skill.txt",
+     "by": "Taiwan day-trader skill study (Barber et al. 2011)",
+     "verdict": "right",
+     "confidence": 0.6,
+     "note": "Of about 360,000 individual day traders in Taiwan in an average year, only about 15% profit after a reasonable accounting for trading costs.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
      "cite": "get-rich-quick/sources/chague-day-trading-for-a-living.txt#L30-L36",
      "doc": "get-rich-quick/sources/chague-day-trading-for-a-living.txt",
      "by": "Brazil day-trader study (Chague et al.)",
@@ -233,6 +246,19 @@
      "applicability": "direct",
      "basis": "heuristic",
      "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "get-rich-quick/sources/fca-cp16-40-cfd.txt#L589-L591",
+     "doc": "get-rich-quick/sources/fca-cp16-40-cfd.txt",
+     "by": "FCA CFD consultation 2016",
+     "verdict": "partly",
+     "confidence": 0.4,
+     "note": "In an FCA sample of client accounts at eight major UK CFD providers, more than 80% lost money over a year; this is leveraged retail CFD trading rather than day trading as such.",
+     "role": "qualifies",
+     "applicability": "partial",
+     "basis": "heuristic",
+     "why": "the verdict note limits its own scope (\"rather than\")",
      "audited": true
     },
     {
@@ -280,6 +306,7 @@
     "status": "qualified",
     "decision": "qualify",
     "limitations": [
+     "FCA CFD consultation 2016: In an FCA sample of client accounts at eight major UK CFD providers, more than 80% lost money over a year; this is leveraged retail CFD trading rather than day trading as such. [partial: the verdict note limits its own scope (\"rather than\")]",
      "ESMA CFD intervention 2018: EU regulators' studies found 74-89% of retail CFD accounts lose money, with average losses of 1,600 to 29,000 per investor; CFDs are short-term leveraged speculation rather than day trading as such. [partial: retail CFD accounts are leveraged short-term speculation, overlapping with but not the same as day trading]"
     ],
     "suggestions": [
@@ -641,6 +668,16 @@
    ]
   },
   {
+   "file": "get-rich-quick/sources/barber-speculator-skill.txt",
+   "name": "Taiwan day-trader skill study (Barber et al. 2011)",
+   "sha": "376c756d63",
+   "lines": 1068,
+   "sameStudyAs": null,
+   "cites": [
+    "get-rich-quick/sources/barber-speculator-skill.txt#L796-L800"
+   ]
+  },
+  {
    "file": "get-rich-quick/sources/chague-day-trading-for-a-living.txt",
    "name": "Brazil day-trader study (Chague et al.)",
    "sha": "507dec4051",
@@ -663,11 +700,21 @@
    "cites": [
     "get-rich-quick/sources/esma-2018-cfd-measures.txt#L59-L62"
    ]
+  },
+  {
+   "file": "get-rich-quick/sources/fca-cp16-40-cfd.txt",
+   "name": "FCA CFD consultation 2016",
+   "sha": "5ad10288dc",
+   "lines": 2712,
+   "sameStudyAs": null,
+   "cites": [
+    "get-rich-quick/sources/fca-cp16-40-cfd.txt#L589-L591"
+   ]
   }
  ],
  "gaps": [
   "No study strong enough to decide: \"Trading fewer, higher-quality setups beats frequent trading because fees and fatigue erode returns\""
  ],
- "fingerprint": "c10ea75b99",
- "generatedAt": "2026-10-21T14:59:04.897Z"
+ "fingerprint": "ef97fa3eb7",
+ "generatedAt": "2026-10-27T01:34:10.837Z"
 }
