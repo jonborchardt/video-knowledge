@@ -41,6 +41,7 @@ describe('chart geometry', () => {
       id: 't',
       title: 'T',
       asOf: '2024',
+      retrieved: '2026-10-18',
       columns: keys.map((k) => ({ key: k, label: k })),
       rows: rows.map((cells, i) => ({ label: `r${i}`, cells })),
     });
