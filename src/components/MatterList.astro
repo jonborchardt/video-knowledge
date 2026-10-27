@@ -15,7 +15,7 @@ const { items } = Astro.props;
 <ul class="grid list-none gap-3 p-0" data-matters>
   {
     items.map((m) => (
-      <li class="grid gap-0.5 border-l-2 pl-3">
+      <li class:list={['grid gap-0.5 border-l-2 pl-3', m.preview && 'dev-only']}>
         <a class="font-heading font-bold" href={href(m.href)}>
           {m.title}
         </a>

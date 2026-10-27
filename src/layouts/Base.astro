@@ -5,6 +5,8 @@ import SiteFooter from '../components/SiteFooter.astro';
 import { author, site } from '../config/site';
 import { absoluteUrl, href } from '../lib/url';
 import { websiteJsonLd, type PageMeta } from '../lib/seo';
+import { isPreview, urlOf } from '../lib/content-graph';
+import { siteGraph } from '../lib/site-graph';
 
 type Props = PageMeta;
 const {
@@ -24,9 +26,27 @@ const jsonLd = [websiteJsonLd(siteUrl), ...pageLd].map((x) => JSON.stringify(x).
 // Dev server only: a page injected by astro.config.mjs (src/admin) is framed in pink; so is any link to one and any
 // `.dev-only` section on a public page. A build renders none of it.
 const dev = import.meta.env.DEV;
-const devPage = dev && /^\/(admin|\[topic\]\/(stories|register|scripts|review))/.test(Astro.routePattern);
+// A preview matter (packaged, not live: the dev server's view of the site graph) counts as a dev-only page too.
+const graph = dev ? siteGraph() : null;
+const previews = graph
+  ? [...graph.nodes.entries()]
+      .filter(([id, n]) => n.kind === 'story' && isPreview(graph, id))
+      .map(([id]) => urlOf(graph, id))
+      .filter((u): u is string => !!u)
+      .map((u) => href(u))
+  : [];
+const devPage =
+  dev &&
+  (/^\/(admin|\[topic\]\/(stories|register|scripts|review))/.test(Astro.routePattern) ||
+    previews.includes(Astro.url.pathname));
+const devLinks = [
+  ...['/admin', '/stories/', '/register/', '/scripts/', '/review/', '/review-'].map(
+    (p) => `a[href^="/"][href*="${p}"]`,
+  ),
+  ...previews.map((p) => `a[href^="${p}"]`),
+];
 const devCss = `body[data-dev-page]::after { content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none; border: 4px solid #ff2d95; }
-.dev-only, a[href^="/"]:is([href*="/admin"], [href*="/stories/"], [href*="/register/"], [href*="/scripts/"], [href*="/review/"], [href*="/review-"]) { outline: 2px solid #ff2d95; outline-offset: 2px; }`;
+.dev-only, ${devLinks.join(', ')} { outline: 2px solid #ff2d95; outline-offset: 2px; }`;
 ---
 
 <!doctype html>

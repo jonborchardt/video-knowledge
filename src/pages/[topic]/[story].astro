@@ -207,7 +207,7 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
 
   {
     preview && !first && (
-      <section aria-label="The video">
+      <section class="dev-only" aria-label="The video">
         <video controls preload="none" src={reviewMediaHref(t.name, storySlug(rootId))} class="w-full" />
       </section>
     )
@@ -319,7 +319,7 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
     <ul class="grid list-none gap-1.5 p-0">
       {
         exhibits.map((x) => (
-          <li>
+          <li class:list={[!x.exhibit && 'dev-only']}>
             <span class="font-mono text-xs text-muted-foreground">
               {x.exhibit ? `Exhibit ${x.exhibit}` : 'Exhibit number assigned at release'}
             </span>{' '}
