@@ -1,6 +1,6 @@
 # Do Heat Pumps Cut Emissions on Today's Grid?
 
-Story `conflict:heat-pumps-cut-home-carbon-emissions` (heat-pumps), revision 4. About 4.8 minutes (706 words at 150 wpm). Validation: **passed**, 0 blocking, 0 warnings, 19/19 assertions verified.
+Story `conflict:heat-pumps-cut-home-carbon-emissions` (heat-pumps), revision 5. About 4.8 minutes (706 words at 150 wpm). Validation: **passed**, 0 blocking, 0 warnings, 19/19 assertions verified.
 
 Markers: `[s12 ok]` every assertion verified by the deterministic checks and the reviewer; `[s12 review]` awaiting review or carrying a warning; `[s12 BLOCKED]` an open blocking issue. Sentences without a marker make no factual claim.
 
@@ -26,8 +26,11 @@ If carbon is why you are looking at a heat pump, the question to put to your pow
 
 ## Open issues
 
+- **warning** - release-stale (deterministic): release.json locked package 22c48262b2; it is now 5108ce9ff2: the approved package has changed, lock it again after review
+- **warning** - release-stale (deterministic): release.json locked validation 0399ba9f4e; it is now 6c4cc118eb: the approved package has changed, lock it again after review
 - **info** s03 (s03.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s04 (s04.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
+- **info** s20 omission (review): The new package adds Fraunhofer ISE 2025 (64 percent less CO2 than gas on the 2024 German grid); the script leaves it out, but it uses the average quarterly grid mix, not the marginal power s21 points to, is a press release at 0.4 confidence, and only supports the claim, so leaving it out does not make any sentence stronger than the evidence. Suggestion: None needed; an editor may add it as a second measured reading of a current grid if wanted.
 
 ## Evidence by sentence
 
@@ -36,12 +39,14 @@ If carbon is why you are looking at a heat pump, the question to put to your pow
 > The doubters are easy to find: one letter to the Boston Globe warned that "the majority of electricity in Massachusetts is sourced from gas- and coal-fired power plants", and the American Gas Association argues that a gas home can have a smaller carbon footprint than a heat pump home.
 
 - **s03.a** [verified] A letter to the Boston Globe warned that most Massachusetts electricity comes from gas- and coal-fired plants, and the American Gas Association argues that a natural gas home can have a lower carbon footprint than a heat pump home.
-  - supported (approved): no direct support, 4 contradicting, 2 qualifying, 2 source statements. modality: typical.
+  - supported (approved): no direct support, 5 contradicting, 2 qualifying, 2 source statements. modality: typical.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - qualifies (uncited): RMI 2018, the economics of electrifying buildings partly 0.5, direct `heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L225-L231`
     > On 2016 short-term marginal grid data, heat pumps cut emissions versus gas in Oakland, Houston and Providence but raised them in coal-heavy Chicago (about 50% more), so the claim holds on most grids but not all.
   - qualifies (uncited): Less 2021 (LBNL), cost of decarbonization retrofits partly 0.35, direct `heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt#L1947-L1952`
     > LBNL: fuel switching boosted carbon cuts (68% vs 50%) in the electrification cluster, but those projects were mostly in states with low-carbon grids, and the authors expect lower carbon savings where electricity is more carbon-intensive.
+  - contradicts (uncited): Fraunhofer ISE 2025, heat pumps in existing buildings right 0.4, direct `heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt#L77-L83`
+    > Using quarterly emission factors for the German grid, the measured heat pumps emitted on average 64 percent less CO2 in 2024 than gas heating; a calculation on measured efficiency, reported in a press release.
   - contradicts (uncited): Wilson 2024 (NREL and LBNL), heat pumps for all? right 0.6, direct `heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L248-L258`
     > Average GHG savings are positive in every state for every heat pump and future grid scenario, even the conservative high-renewable-cost one, with emissions levelized over a 16-year equipment lifetime (projected grids, not today's).
   - contradicts (uncited): Deetjen 2021, private economics of US residential heat pumps right 0.5, direct `heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L635-L642`
@@ -266,6 +271,7 @@ If carbon is why you are looking at a heat pump, the question to put to your pow
 
 > How rare that exception is, the evidence can only estimate: the national American studies both build in a grid that gets cleaner, so neither is a reading of today's grid alone.
 
+- info omission (review): The new package adds Fraunhofer ISE 2025 (64 percent less CO2 than gas on the 2024 German grid); the script leaves it out, but it uses the average quarterly grid mix, not the marginal power s21 points to, is a press release at 0.4 confidence, and only supports the claim, so leaving it out does not make any sentence stronger than the evidence.
 - **s20.a** [verified] Deetjen et al. base their estimate on the assumption that electric grid CO2 emissions decrease over the heat pump's life.
   - qualified (qualify): 1 supporting (1 independent, strongest 0.5), 2 qualifying.
   - warning needs-qualification: RMI 2018, the economics of electrifying buildings: On 2016 short-term marginal grid data, heat pumps cut emissions versus gas in Oakland, Houston and Providence but raised them in coal-heavy Chicago (about 50% more), so the claim holds on most grids but not all. Less 2021 (LBNL), cost of decarbonization retrofits: LBNL: fuel switching boosted carbon cuts (68% vs 50%) in the electrification cluster, but those projects were mostly in states with low-carbon grids, and the authors expect lower carbon savings where electricity is more carbon-intensive. Add the qualification: the evidence supports a narrower or weaker statement.

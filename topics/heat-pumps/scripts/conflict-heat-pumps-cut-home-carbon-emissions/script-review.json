@@ -1,9 +1,9 @@
 {
   "reviewer": "scripts/briefs/script-review.md",
   "model": "claude-opus-5-5",
-  "date": "2026-10-20",
-  "revision": 4,
-  "packageFingerprint": "22c48262b2",
+  "date": "2026-10-26",
+  "revision": 5,
+  "packageFingerprint": "5108ce9ff2",
   "approved": {
     "s01": "82d278a0e5",
     "s02": "03c21ee424",
@@ -185,6 +185,18 @@
         "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L646-L648"
       ],
       "suggestion": "Drop the ranking: \"Know that, and you know the part of the answer these studies turn on.\""
+    },
+    {
+      "sentence": "s20",
+      "fingerprint": "4597c64cdd",
+      "revision": 5,
+      "category": "omission",
+      "severity": "info",
+      "explanation": "The new package adds Fraunhofer ISE 2025 (64 percent less CO2 than gas on the 2024 German grid); the script leaves it out, but it uses the average quarterly grid mix, not the marginal power s21 points to, is a press release at 0.4 confidence, and only supports the claim, so leaving it out does not make any sentence stronger than the evidence.",
+      "refs": [
+        "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt#L77-L83"
+      ],
+      "suggestion": "None needed; an editor may add it as a second measured reading of a current grid if wanted."
     }
   ]
 }
