@@ -1,0 +1,117 @@
+---
+// OWNER APPROVAL: Jon approves this text before the compliance form is submitted (plan 1.5, H3).
+// Out of character, on purpose, like About's Publisher section: plain type, the real publisher, no seal. Every statement
+// must stay true of the code: no analytics, cookies, forms or accounts on the site; the publishing tool in the repository
+// (src/lib/youtube.ts, src/lib/uploader.ts) is the only YouTube API client.
+import Base from '../layouts/Base.astro';
+import { author, site } from '../config/site';
+import { breadcrumbJsonLd } from '../lib/seo';
+import { href } from '../lib/url';
+
+const REVISED = '2026-10-27';
+const h2 = 'mt-10 mb-3 text-featured font-bold';
+const p = 'mt-3 max-w-prose';
+const list = 'mt-3 grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
+---
+
+<Base
+  title={`Privacy and terms · ${site.name}`}
+  description="What this site and its publishing tool collect, the services they use, the YouTube API Services terms, and how to reach the publisher."
+  jsonLd={[
+    breadcrumbJsonLd(
+      [
+        { name: site.name, path: '/' },
+        { name: 'Privacy and terms', path: '/privacy/' },
+      ],
+      Astro.site!,
+    ),
+  ]}
+>
+  <header class="grid gap-4 border-y-4 border-double py-5">
+    <div class="eyebrow text-muted-foreground">
+      <a class="text-muted-foreground no-underline hover:underline" href={href('/')}>{site.name}</a> · {
+        site.publicRecord
+      }
+    </div>
+    <h1 class="text-display font-bold">Privacy and terms</h1>
+    <p class={`${p} text-muted-foreground`}>
+      This page is written plainly, by the real publisher, {author.name}. It covers this website and the production tool
+      that uploads the videos to YouTube.
+    </p>
+  </header>
+
+  <h2 class={h2} id="site">Data the site collects</h2>
+  <ul class={list}>
+    <li>
+      This is a static website. It has no accounts, forms, comments, analytics or advertising, and it sets no cookies.
+    </li>
+    <li>
+      If you choose a light or dark theme, the choice is kept in your browser's local storage under the name
+      <code>theme</code>. It is never sent anywhere.
+    </li>
+    <li>The calculators run in your browser and send nothing.</li>
+  </ul>
+
+  <h2 class={h2} id="hosting">Hosting</h2>
+  <p class={p}>
+    The pages are served by Cloudflare (commonwealthofreason.com) and by GitHub Pages (a mirror). As with any web
+    server, these services receive your IP address and browser details when you request a page. See the
+    <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare privacy policy</a> and the
+    <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
+      >GitHub privacy statement</a
+    >.
+  </p>
+
+  <h2 class={h2} id="third-parties">Fonts and video</h2>
+  <ul class={list}>
+    <li>Fonts load from Google Fonts (fonts.googleapis.com and fonts.gstatic.com).</li>
+    <li>
+      A page with a video loads nothing from YouTube until you press play or pick a chapter. Then a player from
+      youtube-nocookie.com loads, and YouTube may store information on your device under Google's policies.
+    </li>
+    <li>
+      Google's handling of this data is described in the
+      <a href="http://www.google.com/policies/privacy">Google Privacy Policy</a>.
+    </li>
+  </ul>
+
+  <h2 class={h2} id="youtube-api">Use of YouTube API Services</h2>
+  <ul class={list}>
+    <li>
+      The publisher's own production tool (the <a href={site.repo}>open-source repository</a>, not this website) uses
+      YouTube API Services, through the YouTube Data API v3.
+    </li>
+    <li>
+      It signs in only to the publisher's own channels, with the OAuth scope
+      <code>https://www.googleapis.com/auth/youtube.force-ssl</code>. It uploads videos privately; sets their titles,
+      descriptions, tags, thumbnails and captions; publishes or schedules them; and reads back their status.
+    </li>
+    <li>It accesses no visitor's or other user's data.</li>
+    <li>
+      Its refresh token is stored on the publisher's computer and never committed to the repository. The public
+      publishing record keeps the video ids, what was done and when, and pass or fail checks; never data read from other
+      accounts.
+    </li>
+    <li>
+      Access granted to the tool can be revoked at any time on the
+      <a href="https://security.google.com/settings/security/permissions">Google security settings page</a>.
+    </li>
+    <li>
+      The tool and this site use YouTube API Services. By using them you agree to be bound by the
+      <a href="https://www.youtube.com/t/terms">YouTube Terms of Service</a>, and Google's use of data is covered by the
+      <a href="http://www.google.com/policies/privacy">Google Privacy Policy</a>.
+    </li>
+  </ul>
+
+  <h2 class={h2} id="contact">Questions or complaints</h2>
+  <p class={p}>
+    Questions, complaints and corrections go through the repository's issues:
+    <a href={`${site.repo}/issues`}>raise one</a>.
+  </p>
+
+  <h2 class={h2} id="changes">Changes to this page</h2>
+  <p class={p}>Last revised {REVISED}. A change to this page is recorded in the repository's history.</p>
+  <p class={`${p} text-sm text-muted-foreground`}>
+    <a href={href('/')}>Back to the Public Record</a>.
+  </p>
+</Base>

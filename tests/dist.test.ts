@@ -39,6 +39,7 @@ const liveData = (topic: string) => loadDatasets(topic).filter((d) => live.nodes
 const pages = [
   'index.html',
   'about/index.html',
+  'privacy/index.html',
   'inquiries/index.html',
   'institutions/index.html',
   ...Object.keys(commissions).map((k) => `commissions/${k}/index.html`),
@@ -107,7 +108,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       (d) => d.isDirectory() && !['_astro', 'og', 'stamps'].includes(d.name),
     );
     expect(dirs.map((d) => d.name).sort()).toEqual(
-      ['about', 'commissions', 'inquiries', 'institutions', ...liveTopics].sort(),
+      ['about', 'commissions', 'inquiries', 'institutions', 'privacy', ...liveTopics].sort(),
     );
     for (const n of topicNames()) {
       expect(existsSync(join(DIST, n, 'stories')), `${n}/stories`).toBe(false);
@@ -365,6 +366,21 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     }
     expect(sitemap).not.toContain('404');
     expect(sitemap).not.toContain('/admin');
+  });
+
+  it('privacy names the YouTube API Services, the Google policies and the revocation page, and is linked from every footer', () => {
+    const html = readFileSync(join(DIST, 'privacy/index.html'), 'utf8');
+    for (const s of [
+      'YouTube API Services',
+      'http://www.google.com/policies/privacy',
+      'https://security.google.com/settings/security/permissions',
+      'https://www.youtube.com/t/terms',
+      'youtube.force-ssl',
+      'id="contact"',
+    ])
+      expect(html).toContain(s);
+    expect(html).not.toContain('mailto:');
+    expect(readFileSync(join(DIST, 'index.html'), 'utf8')).toContain(`href="${BASE}privacy/"`);
   });
 
   it('about page marks its nav link as current', () => {
