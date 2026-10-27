@@ -1,6 +1,6 @@
 # Does Organic Mean No Pesticides?
 
-Story `conflict:organic-farming-uses-pesticides` (organic-food), revision 4. About 5.3 minutes (784 words at 150 wpm). Validation: **passed**, 0 blocking, 1 warnings, 28/28 assertions verified.
+Story `conflict:organic-farming-uses-pesticides` (organic-food), revision 5. About 5.3 minutes (784 words at 150 wpm). Validation: **passed**, 0 blocking, 1 warnings, 28/28 assertions verified.
 
 Markers: `[s12 ok]` every assertion verified by the deterministic checks and the reviewer; `[s12 review]` awaiting review or carrying a warning; `[s12 BLOCKED]` an open blocking issue. Sentences without a marker make no factual claim.
 
@@ -22,6 +22,8 @@ Put both answers together and the organic label reads differently. The answers c
 
 ## Open issues
 
+- **warning** - release-stale (deterministic): release.json locked package db3fc8d736; it is now 0a1129e37a: the approved package has changed, lock it again after review
+- **warning** - release-stale (deterministic): release.json locked validation 0f34bd6df9; it is now b59d3eac25: the approved package has changed, lock it again after review
 - **warning** s10 (s10.a) omission (review): The quote includes 'they're more closely regulated', and the script never comes back to it. The corpus speaks against it: Mie 2017 says the 26 EU organic substances are approved 'as evaluated in accordance with the same legal framework' as all pesticides. Only the 'not as harmful' half is investigated (s11 to s18), so a viewer may keep the regulation claim as true. Suggestion: Trim the quote to 'they're generally not as harmful', or have s11 say the 26 are approved under the same EU legal framework as the rest.
 - **info** s01 (s01.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s04 (s04.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
@@ -31,6 +33,7 @@ Put both answers together and the organic label reads differently. The answers c
 - **info** s11 (s11.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s18 (s18.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s20 (s20.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
+- **info** s23 (s23.a) omission (review): The new USDA AMS 2010-2011 pilot in the corpus found detectable residues on 42.7 percent of 571 US retail organic samples (lines 298-301, uncited). It only strengthens the point s23 makes (organic is lower, not none), so the sentence is not misleading without it. Suggestion: Optional: a writer could cite it through record-sources in a later revision; no change needed.
 - **info** s26 (s26.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s27 (s27.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s28 (s28.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
@@ -43,8 +46,10 @@ Put both answers together and the organic label reads differently. The answers c
 > Dr. Eric Berg puts it in one breath: "what does organic mean it means without pesticides herbicides fungicides and insecticides".
 
 - **s01.a** [verified] Dr. Eric Berg says organic means without pesticides, herbicides, fungicides and insecticides.
-  - supported (approved): no direct support, 3 contradicting, 1 source statement.
+  - supported (approved): no direct support, 4 contradicting, 1 source statement.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
+  - contradicts (uncited): USDA AMS 2010-2011 pilot, residue testing of retail organic produce wrong 0.55, direct `organic-food/sources/usda-ams-2012-organic-residue.txt#L60-L64`
+    > USDA's report states that organic agriculture uses permitted pest-control materials, mostly naturally derived (pyrethrum, Bt) plus a few synthetics such as sulfur, insecticidal soap, horticultural oils and copper hydroxide.
   - contradicts (uncited): USDA organic regulations (7 CFR 205) wrong 0.85, direct `organic-food/sources/ecfr-7cfr205.txt#L84-L84`
     > 7 CFR 205.206(e) lets organic producers apply biological or botanical substances or National List synthetics to control pests, weeds and diseases when cultural, mechanical and physical methods are not enough, so organic farming does use pesticides.
   - contradicts (uncited): Mie 2017 review, health effects of organic food and farming wrong 0.6, direct `organic-food/sources/mie-2017-health.txt#L76-L76`
@@ -60,8 +65,10 @@ Put both answers together and the organic label reads differently. The answers c
 > Dr. Mindy Pelz describes organic produce as "a food that has technically not been sprayed".
 
 - **s04.a** [verified] Dr. Mindy Pelz describes organic food as a food that has technically not been sprayed.
-  - supported (approved): no direct support, 3 contradicting, 1 source statement.
+  - supported (approved): no direct support, 4 contradicting, 1 source statement.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
+  - contradicts (uncited): USDA AMS 2010-2011 pilot, residue testing of retail organic produce wrong 0.55, direct `organic-food/sources/usda-ams-2012-organic-residue.txt#L60-L64`
+    > USDA's report states that organic agriculture uses permitted pest-control materials, mostly naturally derived (pyrethrum, Bt) plus a few synthetics such as sulfur, insecticidal soap, horticultural oils and copper hydroxide.
   - contradicts (uncited): USDA organic regulations (7 CFR 205) wrong 0.85, direct `organic-food/sources/ecfr-7cfr205.txt#L84-L84`
     > 7 CFR 205.206(e) lets organic producers apply biological or botanical substances or National List synthetics to control pests, weeds and diseases when cultural, mechanical and physical methods are not enough, so organic farming does use pesticides.
   - contradicts (uncited): Mie 2017 review, health effects of organic food and farming wrong 0.6, direct `organic-food/sources/mie-2017-health.txt#L76-L76`
@@ -263,6 +270,7 @@ Put both answers together and the organic label reads differently. The answers c
 
 > American monitoring data tell the same story from the other side: in the federal Pesticide Data Program, 23 percent of organic samples still tested positive.
 
+- info omission (review): The new USDA AMS 2010-2011 pilot in the corpus found detectable residues on 42.7 percent of 571 US retail organic samples (lines 298-301, uncited). It only strengthens the point s23 makes (organic is lower, not none), so the sentence is not misleading without it.
 - **s23.a** [verified] PDP data indicated that 23 percent of organic food samples tested positive for pesticide residues.
   - qualified (qualify): no direct support, 2 qualifying.
   - warning needs-qualification: Winter and Katz 2011, dietary risk on Dirty Dozen produce: Summarizing PDP, California DPR, Consumers Union and Belgian monitoring, conventional produce was 2.9-4.8 times more likely to carry detectable residues than organic, though 23% of PDP organic samples still had residues. Add the qualification: the evidence supports a narrower or weaker statement.

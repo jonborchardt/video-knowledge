@@ -41,3 +41,10 @@ Undertow (cleared): sc01-sc02, sc03-sc24, sc25-sc26. Music -20.6 dB under the vo
 ## Release build
 
 - 2026-10-22: `npm run video -- final organic-food conflict:organic-farming-uses-pesticides --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.
+
+## Re-lock after new verdicts (2026-10-26)
+
+- Approver: automated: /produce run started by jonathan m borchardt. Wall-clock about 10 min. The story was already packaged (release build); nothing was re-rendered.
+- Evidence package regenerated (db3fc8d736 -> 0a1129e37a): new supporting cites on cited claims (USDA AMS 2010-2011 residue pilot, Fagan 2020 urinary glyphosate, CVUA Stuttgart 2021 monitoring). Purely additive; nothing the script cites changed. No evidence recorded by this run.
+- Script r5: metadata only (package fingerprint, date); every sentence unchanged. Re-review approved 32 of 32 at unchanged fingerprints, 16 dispositions carried; one warning held (s10 "more closely regulated", as above); info: the USDA AMS pilot could also back s23.
+- Re-locked release.json (revision 5, script 1754c299c9, package 0a1129e37a). Storyboard, render.json and the build are unchanged, so the packaged release build (`video/review/conflict-organic-farming-uses-pesticides.mp4`, QA `RESULT: PASSED`) stands.

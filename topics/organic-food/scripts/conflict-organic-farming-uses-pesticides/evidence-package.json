@@ -2,9 +2,9 @@
  "topic": "organic-food",
  "story": "conflict:organic-farming-uses-pesticides",
  "inputs": {
-  "stories": "1135b5e737",
-  "review": "1b6b09c2bb",
-  "report": "4abb3d1b3a"
+  "stories": "494a03c0ce",
+  "review": "b285597a55",
+  "report": "8d770a5a13"
  },
  "audience": "General YouTube audience with no prior knowledge of MLM pay plans or research methods (default; set audience in story-review.json to change).",
  "title": "Does Organic Mean No Pesticides?",
@@ -19,7 +19,7 @@
  "arc": {
   "hook": "Ask what the viewer thinks organic farmers spray, then read the rule that says when they may.",
   "conflict": "The sources do not agree, and both sides have a case.",
-  "evidence": "Lay the studies side by side (USDA organic regulations (7 CFR 205), Mie 2017 review, health effects of organic food and farming, Baranski 2014 meta-analysis, organic crops): design, sample, what was measured.",
+  "evidence": "Lay the studies side by side (USDA AMS 2010-2011 pilot, residue testing of retail organic produce, USDA organic regulations (7 CFR 205), Mie 2017 review, health effects of organic food and farming, Baranski 2014 meta-analysis, organic crops): design, sample, what was measured.",
   "resolution": "Organic is a short list of pesticides used after prevention, mostly natural and mostly of low concern, with a few synthetic exceptions and two natural ones, pyrethrins and copper, that are not harmless; it is not pesticide-free farming.",
   "takeaway": "The conditions under which the claim holds, instead of a yes or no."
  },
@@ -29,7 +29,7 @@
   "status": "supported",
   "decision": "approved",
   "strength": 0.85,
-  "independent": 3
+  "independent": 4
  },
  "claims": [
   {
@@ -370,6 +370,19 @@
    ],
    "evidence": [
     {
+     "cite": "organic-food/sources/usda-ams-2012-organic-residue.txt#L60-L64",
+     "doc": "organic-food/sources/usda-ams-2012-organic-residue.txt",
+     "by": "USDA AMS 2010-2011 pilot, residue testing of retail organic produce",
+     "verdict": "wrong",
+     "confidence": 0.55,
+     "note": "USDA's report states that organic agriculture uses permitted pest-control materials, mostly naturally derived (pyrethrum, Bt) plus a few synthetics such as sulfur, insecticidal soap, horticultural oils and copper hydroxide.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
      "cite": "organic-food/sources/ecfr-7cfr205.txt#L84-L84",
      "doc": "organic-food/sources/ecfr-7cfr205.txt",
      "by": "USDA organic regulations (7 CFR 205)",
@@ -494,6 +507,19 @@
     }
    ],
    "evidence": [
+    {
+     "cite": "organic-food/sources/usda-ams-2012-organic-residue.txt#L60-L64",
+     "doc": "organic-food/sources/usda-ams-2012-organic-residue.txt",
+     "by": "USDA AMS 2010-2011 pilot, residue testing of retail organic produce",
+     "verdict": "wrong",
+     "confidence": 0.55,
+     "note": "USDA's report says organic standards prohibit most synthetic substances but list synthetic pest-control materials allowed in organic crop production: elemental sulfur, insecticidal soap, horticultural oils and copper hydroxide.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
     {
      "cite": "organic-food/sources/eu-2021-1165.txt#L181-L193",
      "doc": "organic-food/sources/eu-2021-1165.txt",
@@ -941,6 +967,19 @@
    ],
    "evidence": [
     {
+     "cite": "organic-food/sources/fagan-2020-glyphosate.txt#L9-L13",
+     "doc": "organic-food/sources/fagan-2020-glyphosate.txt",
+     "by": "Fagan 2020 organic diet and urinary glyphosate, abstract",
+     "verdict": "right",
+     "confidence": 0.45,
+     "note": "Urinary glyphosate fell about 71% in adults and children on an organic diet, dropping to the new baseline within three days; a small (n = 16) advocacy-funded intervention measuring one herbicide.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
      "cite": "organic-food/sources/vigar-2019-review.txt#L58-L59",
      "doc": "organic-food/sources/vigar-2019-review.txt",
      "by": "Vigar 2019 systematic review, organic diet and health",
@@ -1007,7 +1046,7 @@
    "stance": "asserts",
    "verdict": "right",
    "confidence": 0.65,
-   "decidedBy": "Baranski 2014 meta-analysis, organic crops",
+   "decidedBy": "CVUA Stuttgart 2021 organic monitoring report (Baden-Wuerttemberg)",
    "lean": "pro",
    "role": "evidence",
    "guess": {
@@ -1369,6 +1408,19 @@
    ],
    "evidence": [
     {
+     "cite": "organic-food/sources/cvuas-2021-organic-monitoring.txt#L51-L77",
+     "doc": "organic-food/sources/cvuas-2021-organic-monitoring.txt",
+     "by": "CVUA Stuttgart 2021 organic monitoring report (Baden-Wuerttemberg)",
+     "verdict": "right",
+     "confidence": 0.65,
+     "note": "Twenty years of state monitoring: about 76% of fresh organic samples had no detectable residue in 2021, and average residues were 0.002 mg/kg for organic fruit and vegetables against 0.40-0.48 mg/kg for conventional, a gap repeated every year since 2014.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
      "cite": "organic-food/sources/baker-2002-residues.txt#L20-L26",
      "doc": "organic-food/sources/baker-2002-residues.txt",
      "by": "baker-2002-residues.txt",
@@ -1495,6 +1547,16 @@
    ]
   },
   {
+   "file": "organic-food/sources/cvuas-2021-organic-monitoring.txt",
+   "name": "CVUA Stuttgart 2021 organic monitoring report (Baden-Wuerttemberg)",
+   "sha": "f272aeaa9a",
+   "lines": 386,
+   "sameStudyAs": null,
+   "cites": [
+    "organic-food/sources/cvuas-2021-organic-monitoring.txt#L51-L77"
+   ]
+  },
+  {
    "file": "organic-food/sources/ecfr-7cfr205.txt",
    "name": "USDA organic regulations (7 CFR 205)",
    "sha": "debe967975",
@@ -1513,6 +1575,16 @@
    "sameStudyAs": null,
    "cites": [
     "organic-food/sources/eu-2021-1165.txt#L181-L193"
+   ]
+  },
+  {
+   "file": "organic-food/sources/fagan-2020-glyphosate.txt",
+   "name": "Fagan 2020 organic diet and urinary glyphosate, abstract",
+   "sha": "22e61ad4ad",
+   "lines": 14,
+   "sameStudyAs": null,
+   "cites": [
+    "organic-food/sources/fagan-2020-glyphosate.txt#L9-L13"
    ]
   },
   {
@@ -1551,6 +1623,16 @@
    ]
   },
   {
+   "file": "organic-food/sources/usda-ams-2012-organic-residue.txt",
+   "name": "USDA AMS 2010-2011 pilot, residue testing of retail organic produce",
+   "sha": "2241a1e656",
+   "lines": 1283,
+   "sameStudyAs": null,
+   "cites": [
+    "organic-food/sources/usda-ams-2012-organic-residue.txt#L60-L64"
+   ]
+  },
+  {
    "file": "organic-food/sources/vigar-2019-review.txt",
    "name": "Vigar 2019 systematic review, organic diet and health",
    "sha": "a98d68f127",
@@ -1573,7 +1655,7 @@
  ],
  "gaps": [
   "Baranski 2014 meta-analysis, organic crops is context only: a one-line background paraphrase of organic standards in the introduction of a crop-composition meta-analysis; it does not examine the rules, and the regulation's own list of allowed synthetics (7 CFR 205.601) decides whether every synthetic pesticide is banned",
-  "What explains the split between USDA organic regulations (7 CFR 205), Mie 2017 review, health effects of organic food and farming, Baranski 2014 meta-analysis, organic crops?"
+  "What explains the split between USDA AMS 2010-2011 pilot, residue testing of retail organic produce, USDA organic regulations (7 CFR 205), Mie 2017 review, health effects of organic food and farming, Baranski 2014 meta-analysis, organic crops?"
  ],
  "chainWhy": "Once the viewer learns organic farms do spray, they ask whether eating organic still lowers the pesticides they take in, which residue monitoring and diet-switch trials answer.",
  "questions": [
@@ -1595,7 +1677,7 @@
    "arc": {
     "hook": "Ask what the viewer thinks organic farmers spray, then read the rule that says when they may.",
     "conflict": "The sources do not agree, and both sides have a case.",
-    "evidence": "Lay the studies side by side (USDA organic regulations (7 CFR 205), Mie 2017 review, health effects of organic food and farming, Baranski 2014 meta-analysis, organic crops): design, sample, what was measured.",
+    "evidence": "Lay the studies side by side (USDA AMS 2010-2011 pilot, residue testing of retail organic produce, USDA organic regulations (7 CFR 205), Mie 2017 review, health effects of organic food and farming, Baranski 2014 meta-analysis, organic crops): design, sample, what was measured.",
     "resolution": "Organic is a short list of pesticides used after prevention, mostly natural and mostly of low concern, with a few synthetic exceptions and two natural ones, pyrethrins and copper, that are not harmless; it is not pesticide-free farming.",
     "takeaway": "The conditions under which the claim holds, instead of a yes or no."
    }
@@ -1623,6 +1705,6 @@
    }
   }
  ],
- "fingerprint": "db3fc8d736",
- "generatedAt": "2026-10-21T03:31:15.401Z"
+ "fingerprint": "0a1129e37a",
+ "generatedAt": "2026-10-27T02:53:20.527Z"
 }
