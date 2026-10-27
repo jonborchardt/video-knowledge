@@ -1,6 +1,7 @@
 // The research corpus: what the evidence gate and the script stage judge with. It is its own type, not the site's
 // view model, so a page-only change to Topic cannot reach the gate. corpusOf is the one place that maps one to the other.
 import type { Topic } from './topics';
+import type { RecordedApplicability } from './batches';
 
 export type Verdict = 'right' | 'wrong' | 'partly' | 'untestable' | 'unknown';
 export interface CorpusVerdict {
@@ -10,6 +11,7 @@ export interface CorpusVerdict {
   note: string;
   cite: string | null; // '<topic>/sources/<file>.txt#L10-L24', a path in the repo
   date: string | null; // YYYY-MM-DD the verdict was recorded; a later record on the same document supersedes
+  applicability?: RecordedApplicability; // recorded with the verdict (applicability.json); a ceiling, absent means none
 }
 export interface CorpusSource {
   id: string;

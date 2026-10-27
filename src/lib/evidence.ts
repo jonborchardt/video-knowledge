@@ -18,6 +18,7 @@ import { join } from 'node:path';
 import { lf, TOPICS, ROOT } from './io';
 import { hasFigure, nums } from './numbers';
 import type { Corpus, CorpusClaim, CorpusVerdict, Verdict } from './corpus';
+import type { ApplicabilityLevel } from './batches';
 
 export type Stance = 'asserts' | 'denies';
 
@@ -42,7 +43,7 @@ export type Status = 'supported' | 'qualified' | 'disputed' | 'unsupported' | 'u
 export type Decision = 'approved' | 'qualify' | 'blocked';
 export type Role =
   'supports' | 'contradicts' | 'qualifies' | 'context' | 'inconclusive' | 'statement' | 'guess' | 'broken';
-export type Applicability = 'direct' | 'partial' | 'contextual';
+export type Applicability = ApplicabilityLevel;
 /** What the sentence claims: can/some (an outcome is possible), most/usually (typical), always/reliably (universal). */
 export type Modality = 'possibility' | 'typical' | 'universal' | 'plain';
 

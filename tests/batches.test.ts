@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { checkBatches, checkStudyVerdicts } from '../src/lib/batches';
+import { checkApplicabilityFile, checkBatches, checkStudyVerdicts } from '../src/lib/batches';
 import { citedPairs, replacedCited } from '../src/lib/cited';
 
 const claims = [{ id: 'demo/old-claim', text: 'An old claim.' }];
@@ -70,6 +70,7 @@ describe('study verdicts', () => {
       confidence: 0.6,
       note: 'gist',
       source: 'demo/sources/paper.txt#L10-L24',
+      applicability: 'direct',
     };
     expect(checkStudyVerdicts([good, { ...good, verdict: 'unknown', confidence: null }])).toEqual([]);
     expect(
@@ -82,6 +83,47 @@ describe('study verdicts', () => {
       '[0] demo/old-claim: verdict "yes" is not one of right, wrong, partly, untestable, unknown',
       '[1] demo/old-claim: confidence 1.5 is not a number in [0, 1]',
       '[2] demo/old-claim: "source" is not <topic>/sources/<file>.txt#L<a>-L<b>',
+    ]);
+  });
+
+  it('requires an applicability, and a why unless direct', () => {
+    const good = {
+      claim: 'demo/c',
+      verdict: 'right',
+      confidence: 0.7,
+      note: 'gist',
+      source: 'demo/sources/p.txt#L1-L2',
+      applicability: 'direct',
+    };
+    expect(
+      checkStudyVerdicts([good, { ...good, applicability: 'contextual', why: 'background on the mechanism' }]),
+    ).toEqual([]);
+    expect(
+      checkStudyVerdicts([
+        { ...good, applicability: undefined },
+        { ...good, applicability: 'background' },
+        { ...good, applicability: 'partial' },
+      ]),
+    ).toEqual([
+      '[0] demo/c: applicability undefined is not one of direct, partial, contextual',
+      '[1] demo/c: applicability "background" is not one of direct, partial, contextual',
+      '[2] demo/c: partial needs a "why"',
+    ]);
+  });
+  it('checkApplicabilityFile lists every malformed entry', () => {
+    expect(
+      checkApplicabilityFile({ 'demo/c|demo/sources/p.txt#L1-L2': { level: 'partial', reason: 'lab task' } }),
+    ).toEqual([]);
+    expect(checkApplicabilityFile([])).toEqual(['applicability.json is not an object']);
+    expect(
+      checkApplicabilityFile({
+        nopipe: { level: 'direct', reason: 'x' },
+        'demo/c|demo/sources/p.txt#L1': { level: 'background', reason: '' },
+      }),
+    ).toEqual([
+      'nopipe: key is not <claim>|<cite>',
+      'demo/c|demo/sources/p.txt#L1: level "background" is not one of direct, partial, contextual',
+      'demo/c|demo/sources/p.txt#L1: no reason',
     ]);
   });
 });

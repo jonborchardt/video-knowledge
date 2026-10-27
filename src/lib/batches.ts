@@ -36,12 +36,23 @@ export interface ExtractionBatch {
   sum?: string;
   as: BatchAssertion[];
 }
+/** How far a study verdict's passage reaches its claim. contextual is listed but never decides any sentence. */
+export const APPLICABILITY = ['direct', 'partial', 'contextual'] as const;
+export type ApplicabilityLevel = (typeof APPLICABILITY)[number];
+/** One entry of topics/<topic>/applicability.json, keyed applicabilityKey(claim, cite); written only by record-sources. */
+export interface RecordedApplicability {
+  level: ApplicabilityLevel;
+  reason: string;
+}
+export const applicabilityKey = (claim: string, cite: string) => `${claim}|${cite}`;
 export interface StudyVerdict {
   claim: string; // <topic>/<slug>
   verdict: VerdictValue;
   confidence?: number | null;
   note: string;
   source: string; // <topic>/sources/<file>.txt#L<start>-L<end>
+  applicability: ApplicabilityLevel;
+  why?: string; // one line, required unless direct
 }
 
 type Obj = Record<string, unknown>;
@@ -126,6 +137,27 @@ export function checkStudyVerdicts(x: unknown): string[] {
     if (!isText(v.note)) out.push(`${at}: no "note"`);
     if (!isText(v.source) || !CITE.test(v.source))
       out.push(`${at}: "source" is not <topic>/sources/<file>.txt#L<a>-L<b>`);
+    if (!isLevel(v.applicability))
+      out.push(`${at}: applicability ${JSON.stringify(v.applicability)} is not one of ${APPLICABILITY.join(', ')}`);
+    else if (v.applicability !== 'direct' && !isText(v.why)) out.push(`${at}: ${v.applicability} needs a "why"`);
   });
+  return out;
+}
+
+const isLevel = (x: unknown): x is ApplicabilityLevel => (APPLICABILITY as readonly unknown[]).includes(x);
+/** Every problem in topics/<topic>/applicability.json. */
+export function checkApplicabilityFile(x: unknown): string[] {
+  if (!isObj(x)) return ['applicability.json is not an object'];
+  const out: string[] = [];
+  for (const [k, e] of Object.entries(x)) {
+    const i = k.lastIndexOf('|');
+    if (i < 0 || !k.slice(0, i).includes('/') || !CITE.test(k.slice(i + 1))) {
+      out.push(`${k}: key is not <claim>|<cite>`);
+      continue;
+    }
+    const level = isObj(e) ? e.level : undefined;
+    if (!isLevel(level)) out.push(`${k}: level ${JSON.stringify(level)} is not one of ${APPLICABILITY.join(', ')}`);
+    if (!isObj(e) || !isText(e.reason)) out.push(`${k}: no reason`);
+  }
   return out;
 }
