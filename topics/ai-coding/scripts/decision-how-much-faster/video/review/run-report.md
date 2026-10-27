@@ -33,3 +33,12 @@ Undertow (cleared): opening sc01-sc02, evidence sc03-sc26, ending sc27. Music -2
 ## Release build
 
 - 2026-10-22: `npm run video -- final ai-coding decision:how-much-faster --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.
+
+## Re-render in the institution kit (2026-10-27)
+
+- Why: the release build above (uploaded private as YouTube `Ry9Va8V0vA8`, build 9b2dfb11fb) was rendered on 2026-10-22, before the institution-branding merge, so it shows the old look. The board was already `packaged`; nothing in the script, storyboard or render.json changed.
+- `npm run video -- spike ai-coding decision:how-much-faster`: 28 scenes rendered fresh in the institution kit (27 storyboard scenes plus the kit's `end` close card), 361.6 s; music -20.7 dB under the voice, peak -1.3 dB. `RESULT: PASSED`, 36 of 36 checks.
+- `npm run video -- package`: new draft build ad653caeae, packaged as `video/review/decision-how-much-faster-review-private.mp4` with `video/review/checklist.md`. Wall-clock about 30 min.
+- Evidence added: none. Script revisions: none. Graphics: none bespoke.
+- Article: the board on main has no article stage (the stage is on the unmerged branch feat/article-stage), so no article was written.
+- Release blockers: narration is draft again (edge-tts). After a person accepts the new draft, `npm run video -- final ai-coding decision:how-much-faster --approved-by <name>` re-narrates it with Azure; the private upload Ry9Va8V0vA8 is the old-look build and needs replacing by a new upload. Music: cleared.
