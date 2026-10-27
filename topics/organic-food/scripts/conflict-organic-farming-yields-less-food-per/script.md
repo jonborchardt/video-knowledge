@@ -1,6 +1,6 @@
 # Does Organic Farming Grow Less Food?
 
-Story `conflict:organic-farming-yields-less-food-per` (organic-food), revision 2. About 4.2 minutes (603 words at 150 wpm). Validation: **passed**, 0 blocking, 3 warnings, 25/25 assertions verified.
+Story `conflict:organic-farming-yields-less-food-per` (organic-food), revision 3. About 4.2 minutes (603 words at 150 wpm). Validation: **passed**, 0 blocking, 3 warnings, 25/25 assertions verified.
 
 Markers: `[s12 ok]` every assertion verified by the deterministic checks and the reviewer; `[s12 review]` awaiting review or carrying a warning; `[s12 BLOCKED]` an open blocking issue. Sentences without a marker make no factual claim.
 
@@ -22,6 +22,8 @@ The next time a label or a video says organic grows just as much, ask which stud
 
 ## Open issues
 
+- **warning** - release-stale (deterministic): release.json locked package 6688cc1dd7; it is now 0766e57110: the approved package has changed, lock it again after review
+- **warning** - release-stale (deterministic): release.json locked validation d87358ca90; it is now ed035c07d6: the approved package has changed, lock it again after review
 - **warning** s13 (s13.c) needs-human (review): The clause mirrors the authors' summary at L99, but the paper's results (L87, uncited) show the 9% and 8% gaps compare diversified organic fields with undiversified conventional ones; when both systems were polycultures the gap was 21 +/- 6%, and with similar rotations 20 +/- 2%. A viewer may hear that diversified farming in general nearly closes the gap. The writer cannot cite L87 without a person authorising a corpus change (one verdict per claim and document). Suggestion: Editor: either authorise widening the Ponisio citation to L87 and say 'where the organic farms rotated or mixed their crops and the conventional ones did not', or accept the authors' own summary wording as is.
 - **warning** s17 (s17.a) missing-qualification (review): Clark and Tilman say most of the 742 LCA analyses are from high-input systems in Europe and North America, so the results reflect industrialised, high-input farming; the package premise lists this limit. The narration gives the land, energy and eutrophication figures (s18-s19) without it; s21's local-scale caveat is a different limit. Suggestion: Say 'using studies, mostly of high-input farms in Europe and North America, that assessed both systems within the same publication.'
 - **warning** s17 (s17.a) needs-human (review): The revision-1 scope warning stands (Europe/North America, high-input systems, L468-L476), but the writer cannot cite it: the store already holds the one Clark and Tilman verdict for this claim. Approved because s21 carries a scope limit and the figures are not misleading for the viewer's likely context; only an editor can add the passage. Suggestion: Editor: authorise extending the cited range to L476 and add 'mostly of high-input farms in Europe and North America' to s17, or accept the omission.
@@ -30,6 +32,7 @@ The next time a label or a video says organic grows just as much, ask which stud
 - **info** s04 (s04.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s05 (s05.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s07 (s07.b) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
+- **info** s13 (s13.a) omission (review): The rebuilt package adds Crowder and Reganold 2015 (qualifies, 0.35): gross returns without premiums, which mirror yields, were 10% lower for organic crops and 18% lower for organic systems, which the authors call similar to all five yield meta-analyses. It corroborates the direction and rough size of the gap rather than narrowing it, and is inferred from returns, so leaving it uncited does not change what s07-s13 tell the viewer. Suggestion: None required; an editor could add it as independent corroboration if the section wants a second source for the gap.
 - **info** s13 (s13.b) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s13 (s13.c) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s15 (s15.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
@@ -53,8 +56,10 @@ The next time a label or a video says organic grows just as much, ask which stud
 > Ask around and you hear both answers with total confidence: organic grows less, or organic grows just as much.
 
 - **s02.a** [verified] Several sources say organic farming yields less than conventional farming.
-  - supported (approved): no direct support, 1 contradicting, 3 source statements.
+  - supported (approved): no direct support, 1 contradicting, 1 qualifying, 3 source statements.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
+  - qualifies (uncited): Crowder and Reganold 2015 meta-analysis, organic farm profitability right 0.35, partial `organic-food/sources/crowder-reganold-2015-profitability.txt#L183-L188`
+    > Gross returns without premiums, which mirror yields, were 10% lower for organic crops and 18% lower for organic systems across 44 studies, in line with the five yield meta-analyses; yields are inferred from returns rather than measured directly.
   - contradicts (uncited): AAP 2012 clinical report on organic foods, abstract wrong 0.25, direct `organic-food/sources/aap-2012-organic.txt#L31-L33`
     > AAP clinical report (abstract only) says well-designed farming studies show yields comparable to conventional farming.
   - statement: Is Organic Food Worse For You?  `PwRCZE0-P2I`
@@ -64,8 +69,10 @@ The next time a label or a video says organic grows just as much, ask which stud
   - statement: Organic food - hype or hope? | DW Documentary  `03vWwqYPf60`
     > yields on organic fields are around 20% less than in conventional farming
 - **s02.b** [verified] Other sources say organic farming yields as much as conventional farming or more.
-  - supported (approved): no direct support, 2 contradicting, 2 source statements.
+  - supported (approved): no direct support, 2 contradicting, 1 qualifying, 2 source statements.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
+  - qualifies (uncited): Crowder and Reganold 2015 meta-analysis, organic farm profitability right 0.35, partial `organic-food/sources/crowder-reganold-2015-profitability.txt#L183-L188`
+    > Gross returns without premiums, which mirror yields, were 10% lower for organic crops and 18% lower for organic systems across 44 studies, in line with the five yield meta-analyses; yields are inferred from returns rather than measured directly.
   - contradicts (uncited): Ponisio 2015 meta-analysis, organic yield gap right 0.75, direct `organic-food/sources/ponisio-2015-yield-gap.txt#L65-L65`
     > Hierarchical meta-analysis of 115 studies (1071 comparisons, 38 countries) found organic yields 19.2% lower (95% CI 15.5-22.9%), with conventional higher for all crop types; the authors note publication bias may overstate the gap.
   - contradicts (uncited): Mie 2017 review, health effects of organic food and farming right 0.3, direct `organic-food/sources/mie-2017-health.txt#L153-L157`
@@ -80,8 +87,10 @@ The next time a label or a video says organic grows just as much, ask which stud
 > AsapSCIENCE told its viewers that "organic crop yields are 25% lower on average than conventional ones".
 
 - **s04.a** [verified] AsapSCIENCE says organic crop yields are 25% lower on average than conventional ones.
-  - supported (approved): no direct support, 1 contradicting, 1 source statement. modality: typical.
+  - supported (approved): no direct support, 1 contradicting, 1 qualifying, 1 source statement. modality: typical.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
+  - qualifies (uncited): Crowder and Reganold 2015 meta-analysis, organic farm profitability right 0.35, partial `organic-food/sources/crowder-reganold-2015-profitability.txt#L183-L188`
+    > Gross returns without premiums, which mirror yields, were 10% lower for organic crops and 18% lower for organic systems across 44 studies, in line with the five yield meta-analyses; yields are inferred from returns rather than measured directly.
   - contradicts (uncited): AAP 2012 clinical report on organic foods, abstract wrong 0.25, direct `organic-food/sources/aap-2012-organic.txt#L31-L33`
     > AAP clinical report (abstract only) says well-designed farming studies show yields comparable to conventional farming.
   - statement: Is Organic Food Worse For You?  `PwRCZE0-P2I`
@@ -93,8 +102,10 @@ The next time a label or a video says organic grows just as much, ask which stud
 > Mark Hyman says the opposite: "you can grow as much food or more food better food without all those chemicals".
 
 - **s05.a** [verified] Mark Hyman says you can grow as much food or more without the chemicals conventional farming uses.
-  - supported (approved): no direct support, 2 contradicting, 1 source statement. modality: possibility.
+  - supported (approved): no direct support, 2 contradicting, 1 qualifying, 1 source statement. modality: possibility.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
+  - qualifies (uncited): Crowder and Reganold 2015 meta-analysis, organic farm profitability right 0.35, partial `organic-food/sources/crowder-reganold-2015-profitability.txt#L183-L188`
+    > Gross returns without premiums, which mirror yields, were 10% lower for organic crops and 18% lower for organic systems across 44 studies, in line with the five yield meta-analyses; yields are inferred from returns rather than measured directly.
   - contradicts (uncited): Ponisio 2015 meta-analysis, organic yield gap right 0.75, direct `organic-food/sources/ponisio-2015-yield-gap.txt#L65-L65`
     > Hierarchical meta-analysis of 115 studies (1071 comparisons, 38 countries) found organic yields 19.2% lower (95% CI 15.5-22.9%), with conventional higher for all crop types; the authors note publication bias may overstate the gap.
   - contradicts (uncited): Mie 2017 review, health effects of organic food and farming right 0.3, direct `organic-food/sources/mie-2017-health.txt#L153-L157`
@@ -108,10 +119,12 @@ The next time a label or a video says organic grows just as much, ask which stud
 > A meta-analysis by Lauren Ponisio and colleagues pooled side-by-side yield comparisons and found organic yields 19.2% lower than conventional, with a likely range of 15.5 to 22.9%, and the authors warn that even this may overstate the gap, because the published studies lean towards reporting bigger conventional wins.
 
 - **s07.a** [verified] Ponisio and colleagues' meta-analysis found organic yields 19.2% lower than conventional yields, with a 95% credible interval from 15.5% to 22.9%.
-  - disputed (qualify): 1 supporting (1 independent, strongest 0.75), 1 contradicting.
+  - disputed (qualify): 1 supporting (1 independent, strongest 0.75), 1 contradicting, 1 qualifying.
   - warning needs-qualification: Contradicted by AAP 2012 clinical report on organic foods, abstract: AAP clinical report (abstract only) says well-designed farming studies show yields comparable to conventional farming. Present the disagreement: name the studies on each side instead of stating one side as fact.
   - supports: Ponisio 2015 meta-analysis, organic yield gap right 0.75, direct `organic-food/sources/ponisio-2015-yield-gap.txt#L65-L65`
     > We found the data supported including random variation between studies and study-specific variation with a year, but not random variation between years of a study (electronic supplementary material, table S1 and figure S6). Using the selected hierarchical model, we found a smaller yield gap between conventional and org…
+  - qualifies (uncited): Crowder and Reganold 2015 meta-analysis, organic farm profitability right 0.35, partial `organic-food/sources/crowder-reganold-2015-profitability.txt#L183-L188`
+    > Gross returns without premiums, which mirror yields, were 10% lower for organic crops and 18% lower for organic systems across 44 studies, in line with the five yield meta-analyses; yields are inferred from returns rather than measured directly.
   - contradicts (uncited): AAP 2012 clinical report on organic foods, abstract wrong 0.25, direct `organic-food/sources/aap-2012-organic.txt#L31-L33`
     > AAP clinical report (abstract only) says well-designed farming studies show yields comparable to conventional farming.
 - **s07.b** [verified] Ponisio and colleagues found a bias in the literature towards reporting higher conventional to organic yield ratios, so their 15.5% to 22.9% yield gap may still be an overestimate.
@@ -125,10 +138,12 @@ The next time a label or a video says organic grows just as much, ask which stud
 > Conventional came out ahead for every crop type the study grouped, and for most of those types the gap was about the same size.
 
 - **s08.a** [verified] In Ponisio's meta-analysis conventional yields were significantly higher than organic for all crop types, and the yield ratios of most crop types did not differ significantly from one another.
-  - disputed (qualify): 1 supporting (1 independent, strongest 0.75), 1 contradicting. modality: universal.
+  - disputed (qualify): 1 supporting (1 independent, strongest 0.75), 1 contradicting, 1 qualifying. modality: universal.
   - warning needs-qualification: Contradicted by AAP 2012 clinical report on organic foods, abstract: AAP clinical report (abstract only) says well-designed farming studies show yields comparable to conventional farming. "all" is stronger than the evidence (strongest support 0.75). Present the disagreement: name the studies on each side instead of stating one side as fact.
   - supports: Ponisio 2015 meta-analysis, organic yield gap right 0.75, direct `organic-food/sources/ponisio-2015-yield-gap.txt#L65-L65`
     > We found the data supported including random variation between studies and study-specific variation with a year, but not random variation between years of a study (electronic supplementary material, table S1 and figure S6). Using the selected hierarchical model, we found a smaller yield gap between conventional and org…
+  - qualifies (uncited): Crowder and Reganold 2015 meta-analysis, organic farm profitability right 0.35, partial `organic-food/sources/crowder-reganold-2015-profitability.txt#L183-L188`
+    > Gross returns without premiums, which mirror yields, were 10% lower for organic crops and 18% lower for organic systems across 44 studies, in line with the five yield meta-analyses; yields are inferred from returns rather than measured directly.
   - contradicts (uncited): AAP 2012 clinical report on organic foods, abstract wrong 0.25, direct `organic-food/sources/aap-2012-organic.txt#L31-L33`
     > AAP clinical report (abstract only) says well-designed farming studies show yields comparable to conventional farming.
 
@@ -137,10 +152,12 @@ The next time a label or a video says organic grows just as much, ask which stud
 > That gap is real, but it is smaller than the ones earlier meta-analyses had reported.
 
 - **s09.a** [verified] Ponisio's meta-analysis found a smaller organic yield gap than recent earlier meta-analyses had reported.
-  - disputed (qualify): 1 supporting (1 independent, strongest 0.75), 1 contradicting.
+  - disputed (qualify): 1 supporting (1 independent, strongest 0.75), 1 contradicting, 1 qualifying.
   - warning needs-qualification: Contradicted by AAP 2012 clinical report on organic foods, abstract: AAP clinical report (abstract only) says well-designed farming studies show yields comparable to conventional farming. Present the disagreement: name the studies on each side instead of stating one side as fact.
   - supports: Ponisio 2015 meta-analysis, organic yield gap right 0.75, direct `organic-food/sources/ponisio-2015-yield-gap.txt#L65-L65`
     > We found the data supported including random variation between studies and study-specific variation with a year, but not random variation between years of a study (electronic supplementary material, table S1 and figure S6). Using the selected hierarchical model, we found a smaller yield gap between conventional and org…
+  - qualifies (uncited): Crowder and Reganold 2015 meta-analysis, organic farm profitability right 0.35, partial `organic-food/sources/crowder-reganold-2015-profitability.txt#L183-L188`
+    > Gross returns without premiums, which mirror yields, were 10% lower for organic crops and 18% lower for organic systems across 44 studies, in line with the five yield meta-analyses; yields are inferred from returns rather than measured directly.
   - contradicts (uncited): AAP 2012 clinical report on organic foods, abstract wrong 0.25, direct `organic-food/sources/aap-2012-organic.txt#L31-L33`
     > AAP clinical report (abstract only) says well-designed farming studies show yields comparable to conventional farming.
 
@@ -149,10 +166,12 @@ The next time a label or a video says organic grows just as much, ask which stud
 > Why lower at all? A review of organic food and health, citing earlier work, points to fertiliser: in organic systems crop yield is typically limited by how much nitrogen the plants can get, which is not the case in conventional systems.
 
 - **s10.a** [verified] Mie and colleagues' review, citing earlier work, says crop yield is typically limited by plant nitrogen availability in organic but not in conventional systems.
-  - disputed (qualify): 1 supporting (1 independent, strongest 0.3), 1 contradicting. modality: typical.
+  - disputed (qualify): 1 supporting (1 independent, strongest 0.3), 1 contradicting, 1 qualifying. modality: typical.
   - warning needs-qualification: Contradicted by AAP 2012 clinical report on organic foods, abstract: AAP clinical report (abstract only) says well-designed farming studies show yields comparable to conventional farming. Present the disagreement: name the studies on each side instead of stating one side as fact.
   - supports: Mie 2017 review, health effects of organic food and farming right 0.3, direct `organic-food/sources/mie-2017-health.txt#L153-L157`
     > Fertilisation in organic agriculture is based on organic fertilisers such as farmyard manure, compost and green fertilisers, while some inorganic mineral fertilisers are used as supplements. Nitrogen (N) input is limited to 170 kg/ha * year [5, 145]. In conventional agriculture, fertilisation is dominated by mineral fe…
+  - qualifies (uncited): Crowder and Reganold 2015 meta-analysis, organic farm profitability right 0.35, partial `organic-food/sources/crowder-reganold-2015-profitability.txt#L183-L188`
+    > Gross returns without premiums, which mirror yields, were 10% lower for organic crops and 18% lower for organic systems across 44 studies, in line with the five yield meta-analyses; yields are inferred from returns rather than measured directly.
   - contradicts (uncited): AAP 2012 clinical report on organic foods, abstract wrong 0.25, direct `organic-food/sources/aap-2012-organic.txt#L31-L33`
     > AAP clinical report (abstract only) says well-designed farming studies show yields comparable to conventional farming.
 
@@ -161,10 +180,12 @@ The next time a label or a video says organic grows just as much, ask which stud
 > Not everyone agrees: a clinical report for pediatricians says well-designed farming studies show organic yields comparable to conventional farming.
 
 - **s11.a** [verified] The AAP clinical report says well-designed farming studies demonstrate organic yields comparable to those of conventional farming techniques.
-  - disputed (qualify): 1 supporting (1 independent, strongest 0.25), 2 contradicting.
+  - disputed (qualify): 1 supporting (1 independent, strongest 0.25), 2 contradicting, 1 qualifying.
   - warning needs-qualification: Contradicted by Ponisio 2015 meta-analysis, organic yield gap: Hierarchical meta-analysis of 115 studies (1071 comparisons, 38 countries) found organic yields 19.2% lower (95% CI 15.5-22.9%), with conventional higher for all crop types; the authors note publication bias may overstate the gap. Contradicted by Mie 2017 review, health effects of organic food and farming: The review notes generally lower crop yields in organic systems, typically limited by nitrogen availability; cited in passing, not analysed. Present the disagreement: name the studies on each side instead of stating one side as fact.
   - supports: AAP 2012 clinical report on organic foods, abstract wrong 0.25, direct `organic-food/sources/aap-2012-organic.txt#L31-L33`
     > foods regularly command a significant price premium, well-designed farming studies demonstrate that costs can be competitive and yields comparable to those of conventional farming techniques. Pediatricians should incorporate this
+  - qualifies (uncited): Crowder and Reganold 2015 meta-analysis, organic farm profitability right 0.35, partial `organic-food/sources/crowder-reganold-2015-profitability.txt#L183-L188`
+    > Gross returns without premiums, which mirror yields, were 10% lower for organic crops and 18% lower for organic systems across 44 studies, in line with the five yield meta-analyses; yields are inferred from returns rather than measured directly.
   - contradicts (uncited): Ponisio 2015 meta-analysis, organic yield gap right 0.75, direct `organic-food/sources/ponisio-2015-yield-gap.txt#L65-L65`
     > Hierarchical meta-analysis of 115 studies (1071 comparisons, 38 countries) found organic yields 19.2% lower (95% CI 15.5-22.9%), with conventional higher for all crop types; the authors note publication bias may overstate the gap.
   - contradicts (uncited): Mie 2017 review, health effects of organic food and farming right 0.3, direct `organic-food/sources/mie-2017-health.txt#L153-L157`
@@ -175,10 +196,12 @@ The next time a label or a video says organic grows just as much, ask which stud
 > But in the report's summary, the part we could read, that is one sentence, with no yield figure and no studies named.
 
 - **s12.a** [verified] The AAP report's abstract states comparable yields in one sentence without giving a yield figure or naming the studies.
-  - disputed (qualify): 1 supporting (1 independent, strongest 0.25), 2 contradicting.
+  - disputed (qualify): 1 supporting (1 independent, strongest 0.25), 2 contradicting, 1 qualifying.
   - warning needs-qualification: Contradicted by Ponisio 2015 meta-analysis, organic yield gap: Hierarchical meta-analysis of 115 studies (1071 comparisons, 38 countries) found organic yields 19.2% lower (95% CI 15.5-22.9%), with conventional higher for all crop types; the authors note publication bias may overstate the gap. Contradicted by Mie 2017 review, health effects of organic food and farming: The review notes generally lower crop yields in organic systems, typically limited by nitrogen availability; cited in passing, not analysed. Present the disagreement: name the studies on each side instead of stating one side as fact.
   - supports: AAP 2012 clinical report on organic foods, abstract wrong 0.25, direct `organic-food/sources/aap-2012-organic.txt#L31-L33`
     > foods regularly command a significant price premium, well-designed farming studies demonstrate that costs can be competitive and yields comparable to those of conventional farming techniques. Pediatricians should incorporate this
+  - qualifies (uncited): Crowder and Reganold 2015 meta-analysis, organic farm profitability right 0.35, partial `organic-food/sources/crowder-reganold-2015-profitability.txt#L183-L188`
+    > Gross returns without premiums, which mirror yields, were 10% lower for organic crops and 18% lower for organic systems across 44 studies, in line with the five yield meta-analyses; yields are inferred from returns rather than measured directly.
   - contradicts (uncited): Ponisio 2015 meta-analysis, organic yield gap right 0.75, direct `organic-food/sources/ponisio-2015-yield-gap.txt#L65-L65`
     > Hierarchical meta-analysis of 115 studies (1071 comparisons, 38 countries) found organic yields 19.2% lower (95% CI 15.5-22.9%), with conventional higher for all crop types; the authors note publication bias may overstate the gap.
   - contradicts (uncited): Mie 2017 review, health effects of organic food and farming right 0.3, direct `organic-food/sources/mie-2017-health.txt#L153-L157`
@@ -189,11 +212,14 @@ The next time a label or a video says organic grows just as much, ask which stud
 > So on the pooled data, yes: organic fields grew less, by roughly a fifth or perhaps a little less, but where crops were rotated or grown in mixtures the gap shrank to about 8 or 9%.
 
 - warning needs-human (review): The clause mirrors the authors' summary at L99, but the paper's results (L87, uncited) show the 9% and 8% gaps compare diversified organic fields with undiversified conventional ones; when both systems were polycultures the gap was 21 +/- 6%, and with similar rotations 20 +/- 2%. A viewer may hear that diversified farming in general nearly closes the gap. The writer cannot cite L87 without a person authorising a corpus change (one verdict per claim and document).
+- info omission (review): The rebuilt package adds Crowder and Reganold 2015 (qualifies, 0.35): gross returns without premiums, which mirror yields, were 10% lower for organic crops and 18% lower for organic systems, which the authors call similar to all five yield meta-analyses. It corroborates the direction and rough size of the gap rather than narrowing it, and is inferred from returns, so leaving it uncited does not change what s07-s13 tell the viewer.
 - **s13.a** [verified] On Ponisio's pooled comparisons organic yields were lower than conventional, by 19.2% on average.
-  - disputed (qualify): 1 supporting (1 independent, strongest 0.75), 1 contradicting. modality: typical.
+  - disputed (qualify): 1 supporting (1 independent, strongest 0.75), 1 contradicting, 1 qualifying. modality: typical.
   - warning needs-qualification: Contradicted by AAP 2012 clinical report on organic foods, abstract: AAP clinical report (abstract only) says well-designed farming studies show yields comparable to conventional farming. Present the disagreement: name the studies on each side instead of stating one side as fact.
   - supports: Ponisio 2015 meta-analysis, organic yield gap right 0.75, direct `organic-food/sources/ponisio-2015-yield-gap.txt#L65-L65`
     > We found the data supported including random variation between studies and study-specific variation with a year, but not random variation between years of a study (electronic supplementary material, table S1 and figure S6). Using the selected hierarchical model, we found a smaller yield gap between conventional and org…
+  - qualifies (uncited): Crowder and Reganold 2015 meta-analysis, organic farm profitability right 0.35, partial `organic-food/sources/crowder-reganold-2015-profitability.txt#L183-L188`
+    > Gross returns without premiums, which mirror yields, were 10% lower for organic crops and 18% lower for organic systems across 44 studies, in line with the five yield meta-analyses; yields are inferred from returns rather than measured directly.
   - contradicts (uncited): AAP 2012 clinical report on organic foods, abstract wrong 0.25, direct `organic-food/sources/aap-2012-organic.txt#L31-L33`
     > AAP clinical report (abstract only) says well-designed farming studies show yields comparable to conventional farming.
 - **s13.b** [verified] Ponisio and colleagues say their yield-gap estimate may still be an overestimate.

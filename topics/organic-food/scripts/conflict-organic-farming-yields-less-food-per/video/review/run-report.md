@@ -40,3 +40,11 @@ Undertow (cleared): opening sc01-sc03, evidence sc04-sc18, ending sc19-sc20. Mus
 ## Release build
 
 - 2026-10-22: `npm run video -- final organic-food conflict:organic-farming-yields-less-food-per --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.
+
+## Re-lock, 2026-10-26
+
+- Wall-clock: about 7 min (approver jonathan m borchardt). Nothing re-rendered: the release build (`video/review/conflict-organic-farming-yields-less-food-per.mp4`, checklist `video/review/checklist.md`) still matches the script, storyboard and render.json.
+- Why: a new verdict (Crowder and Reganold 2015, organic farm profitability, L183-L188, right, 0.35, qualifies) on the yield claim made the evidence package stale. No evidence was added in this run.
+- Script r3: no sentence changed. The writer left Crowder and Reganold uncited (it infers yields from gross returns; s07-s09 already give the measured gap and its limits). The re-review approved all 26 sentences again, with no blocking findings. The s13 and s17 editor notes above still stand.
+- Validate: passed (25 of 25 assertions verified, 3 warnings, 13 dispositioned). Lock: revision 3, package 0766e57110.
+- QA: passed (36 of 36), from the existing build.
