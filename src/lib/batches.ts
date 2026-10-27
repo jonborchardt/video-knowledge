@@ -183,14 +183,26 @@ export function withApplicability(
 /** True when the store already holds this exact study verdict (so re-recording it changes only its applicability). */
 export function isStored(
   x: StudyVerdict,
-  stored: { method?: string; source?: string; verdict: string; confidence?: number | null; note?: string }[],
+  stored: {
+    method?: string;
+    source?: string;
+    verdict: string;
+    confidence?: number | null;
+    note?: string;
+    date?: string;
+  }[],
 ): boolean {
-  return stored.some(
-    (r) =>
-      r.method === 'source' &&
-      r.source === x.source &&
-      r.verdict === x.verdict &&
-      r.note === x.note &&
-      (r.confidence ?? null) === (x.confidence ?? null),
+  // Only the current record on that document counts (newest by date, the later one on a tie): re-recording a
+  // superseded verdict restores it, so it must reach the watcher.
+  const doc = (s?: string) => (s ?? '').split('#')[0];
+  let r: (typeof stored)[number] | undefined;
+  for (const s of stored)
+    if (s.method === 'source' && doc(s.source) === doc(x.source) && (!r || (s.date ?? '') >= (r.date ?? ''))) r = s;
+  return (
+    !!r &&
+    r.source === x.source &&
+    r.verdict === x.verdict &&
+    r.note === x.note &&
+    (r.confidence ?? null) === (x.confidence ?? null)
   );
 }

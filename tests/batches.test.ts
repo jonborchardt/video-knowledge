@@ -179,6 +179,29 @@ describe('recorded applicability', () => {
     expect(isStored(x, [{ ...rec, source: 'demo/sources/p.txt#L1-L3' }])).toBe(false);
     expect(isStored(x, [{ ...rec, method: 'prior' }])).toBe(false);
   });
+  it('isStored compares only with the current verdict on that document, so restoring a superseded one is recorded', () => {
+    const x = {
+      claim: 'demo/a',
+      verdict: 'right',
+      confidence: 0.7,
+      note: 'v1',
+      source: 'demo/sources/p.txt#L1-L2',
+      applicability: 'direct',
+    } as const;
+    const v1 = {
+      method: 'source',
+      verdict: 'right',
+      confidence: 0.7,
+      note: 'v1',
+      source: x.source,
+      date: '2026-10-01',
+    };
+    const v2 = { ...v1, verdict: 'wrong', note: 'v2', source: 'demo/sources/p.txt#L5-L9', date: '2026-10-05' };
+    expect(isStored(x, [v1, v2])).toBe(false);
+    expect(isStored(x, [v2, v1])).toBe(false); // by date, not array order
+    expect(isStored(x, [v1, { ...v2, source: 'demo/sources/q.txt#L1-L2' }])).toBe(true); // another document
+    expect(isStored(x, [v1, { ...v1, verdict: 'wrong', note: 'v2' }])).toBe(false); // same date: the later record wins
+  });
 });
 
 describe('cited verdicts', () => {
