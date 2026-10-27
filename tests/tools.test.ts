@@ -13,7 +13,7 @@ import {
   fromCentsPerKwh,
   fromDollarsPerMcf,
 } from '../src/tools/heating-cost/model';
-import { heatingCost } from '../src/tools/heating-cost/spec';
+import { heatingCost, priceNote } from '../src/tools/heating-cost/spec';
 
 // Every file under dir, as repo-relative paths with '/' separators.
 const walk = (dir: string) =>
@@ -148,6 +148,12 @@ describe('heating-cost units and limits', () => {
     expect(round2(convertPrice(1.4, 'therm', 'mcf'))).toBe(14.5);
     expect(convertPrice(convertPrice(3.21, 'kwh', 'therm'), 'therm', 'kwh')).toBeCloseTo(3.21, 9);
   });
+  it('the price note states year, retrieval date and the newer U.S. break-even', () => {
+    const d = loadDatasets('heat-pumps').find((x) => x.id === 'state-prices')!;
+    expect(priceNote(d, (heatingCost.defaults as { latest: { value: number; cite: string } }).latest)).toBe(
+      'Prices are EIA 2024 annual averages, the latest year with both annual prices, retrieved 2026-10-18. With January to July 2026 electricity and 2025 gas prices, the U.S. break-even rises to 3.42.',
+    );
+  });
   it('says the annual figures count every therm entered as heating', () => {
     expect(heatingCost.limitations.join(' ')).toMatch(/annual figures assume all the therms entered are for heating/);
   });
@@ -161,9 +167,14 @@ describe('tool registry', () => {
       expect(s.kind).toBe('decision');
       expect(toolOf(t.topic, t.story)).toBe(t);
       expect(read(t.justification.model)).toContain('293.07');
-      const d = t.defaults as { afue: { value: number; cite: string }[]; cops: { value: number[]; cite: string } };
+      const d = t.defaults as {
+        afue: { value: number; cite: string }[];
+        cops: { value: number[]; cite: string };
+        latest: { value: number; cite: string };
+      };
       for (const a of d.afue) expect(read(a.cite)).toContain(a.value.toFixed(2));
       expect(read(d.cops.cite)).toMatch(/COP 2\.5 .*COP 3\.0/);
+      expect(read(d.latest.cite)).toContain(`| 3.60 | ${d.latest.value.toFixed(2)}`);
     }
     expect(toolOf('heat-pumps', 'nope')).toBeNull();
   });

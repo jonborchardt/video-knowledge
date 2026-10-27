@@ -11,6 +11,7 @@ import type { Topic } from '../../lib/topics';
 import { citeHref, citeLines, href } from '../../lib/url';
 import type { ToolSpec } from '../../tools';
 import { estimate, type Result } from '../../tools/heating-cost/model';
+import { priceNote } from '../../tools/heating-cost/spec';
 
 interface Props {
   spec: ToolSpec;
@@ -20,7 +21,12 @@ interface Props {
 }
 const { spec, t, s, counts } = Astro.props;
 type Cited<T> = { value: T; cite: string };
-const d = spec.defaults as { prices: string; afue: Cited<number>[]; cops: Cited<[number, number]> };
+const d = spec.defaults as {
+  prices: string;
+  afue: Cited<number>[];
+  cops: Cited<[number, number]>;
+  latest: Cited<number>;
+};
 const table = loadDatasets(t.name).find((x) => dataRef(t.name, x.id) === d.prices);
 if (!table) throw new Error(`tool ${spec.id}: no dataset ${d.prices}`);
 const cell = (r: (typeof table.rows)[number], key: string) => r.cells[table.columns.findIndex((c) => c.key === key)];
@@ -44,6 +50,9 @@ const cite = (c: string) => {
   };
 };
 const usCite = cite(usBreakEven.cite);
+// the price note without its final full stop, so its last sentence (the newer break-even) ends on its cite
+const noteText = priceNote(table, d.latest).replace(/\.$/, '');
+const latestCite = cite(d.latest.cite);
 const found = `At ${year} ${us.label} average prices a heat pump needs a seasonal COP above ${usBreakEven.display} to beat a ${pct(afue.value)} furnace`;
 const caption = `Cost of a million Btu of delivered heat at ${year} average prices: the U.S. and the states with the lowest and highest price ratio, for a ${pct(afue.value)} furnace and a heat pump at seasonal COP ${cops[0].toFixed(2)} and ${cops[1].toFixed(2)}. Computed with the model below from the rounded prices in the `;
 const box = 'mt-4 grid gap-3 rounded-md border bg-card p-4';
@@ -68,7 +77,7 @@ const control = 'min-w-0 rounded-md border border-input bg-background px-2.5 py-
       <caption class="mb-1 text-left text-muted-foreground">
         {caption}
         <a href={href(`/${t.name}/data/`)}>state prices table</a>, so a figure can differ by a cent from the source's
-        own.
+        own. {noteText} (<a href={latestCite.href}>{latestCite.text}</a>).
       </caption>
       <thead>
         <tr class="border-b text-left text-muted-foreground">
@@ -118,6 +127,9 @@ const control = 'min-w-0 rounded-md border border-input bg-background px-2.5 py-
             }
           </select>
         </label>
+        <p class="text-sm text-muted-foreground">
+          {noteText} (<a href={latestCite.href}>{latestCite.text}</a>).
+        </p>
         <div class="flex flex-wrap items-end gap-2">
           <label class={`${field} flex-[1_1_8rem]`}>
             Electricity price (default: the {us.label} average)
