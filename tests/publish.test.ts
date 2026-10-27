@@ -44,7 +44,7 @@ import {
   publishPath,
   recordChangesRequested,
 } from '../src/lib/publish';
-import { type Fixture, syntheticProduction, syntheticShort } from './production-helpers';
+import { type Fixture, setLook, syntheticProduction, syntheticShort } from './production-helpers';
 
 const tmp = mkdtempSync(join(tmpdir(), 'vk-publish-'));
 afterAll(() => rmSync(tmp, { recursive: true, force: true }));
@@ -584,6 +584,21 @@ describe('derivative flows', () => {
       addOutputTo(f.topic, f.story, 'short-1', 'youtube-short', { root: f.root, derivedFrom: 'youtube', source: src });
       const r = recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', output: 'short-1', id: 'ggggggggggg' });
       expect(r.event!.build).toBe(sha(readFileSync(join(f.root, src))));
+    } finally {
+      f.cleanup();
+    }
+  });
+
+  it('a release build drawn with an older look is refused approval and nothing is written', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      setLook(f.dir, 'old');
+      expect(() => recordApproved(f.topic, f.story, { root: f.root, by: 'Jon' })).toThrow(
+        /rendered with look old.*npm run video -- final/,
+      );
+      expect(loadLedger(f.topic, f.story, f.root)?.outputs.youtube?.events ?? []).toHaveLength(0);
+      setLook(f.dir, undefined); // a report from before builds recorded their look
+      expect(() => recordApproved(f.topic, f.story, { root: f.root, by: 'Jon' })).toThrow(/before builds recorded/);
     } finally {
       f.cleanup();
     }

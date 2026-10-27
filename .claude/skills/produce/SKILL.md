@@ -65,6 +65,7 @@ What each halt kind means for you:
 | `graphics-review` | a fresh `visual-review.md` agent that built none of them; a `revise` verdict goes back to a graphics agent with the notes |
 | `render-check`, `qa-failed` | a fresh `video-fix.md` agent, then the command |
 | `revision-limit`, `story-left` | Stop |
+| `look-stale` | only at `packaged`, where `done` is true: the build's kit or theme is older and a person re-renders it with `video final`, never this run. Finish, and say so in the report |
 
 Caps (each one hit is a Stop, naming the cap): 60 loop iterations; 3 graphics revisions per scene
 (after the third, the builder may draw the scene as labelled text, and the report says so); 3

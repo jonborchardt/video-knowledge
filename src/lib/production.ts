@@ -73,6 +73,7 @@ import { chainOf, discover, loadStories, storiesPath, type Story } from './stori
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from './storyboard';
 import { loadTopic, topicNames, type Topic } from './topics';
 import type { BuildSummary, Clearance } from './build-report';
+import { lookFingerprint, lookStale } from './look';
 import { type Commission, commissionOf } from '../config/site';
 
 /** Why a stage halted, for a loop that decides what to do next without parsing prose. */
@@ -90,6 +91,7 @@ export type HaltKind =
   | 'graphics-review'
   | 'lock'
   | 'qa-failed'
+  | 'look-stale' // a packaged build drawn with an older kit or theme: a person runs video final before approving it
   | 'story-left'
   | 'no-institution' // no commission claims the topic: its videos have no brand to carry
   | 'published'; // the main output is live or scheduled: nothing rebuilds it; a re-release is a new output
@@ -855,9 +857,37 @@ const reviewPackageStage: BoardStage = (c, s) => {
   };
 };
 
-// 11. Clearance: a finished build whose release is blocked says why next to the next step.
+// 10b. Look: a packaged build drawn with an older kit palette, kit cards or theme (src/lib/look.ts) is drawn again with
+// video final before anyone approves it. The stage stays packaged, so /produce (done) never re-renders it; a live or
+// scheduled video is never replaced, so it does not halt.
+const lookStage: BoardStage = (c, s) => {
+  const { topic, storyId, root, r, vr } = c;
+  if (!vr) return {};
+  const stale = lookStale(vr, topic, root);
+  const check: Check = {
+    name: 'look',
+    health: stale ? 'stale' : 'current',
+    detail: stale ?? `look ${lookFingerprint(topic, root)}`,
+    file: r(VIDEO_REPORT),
+    date: vr.generatedAt,
+  };
+  const main = mainOf(c.publish)?.state;
+  if (!stale || s.stage !== 'packaged' || s.stopped || main?.live || main?.status === 'scheduled')
+    return { checks: [check] };
+  return {
+    checks: [check],
+    halt: {
+      stage: 'packaged',
+      kind: 'look-stale',
+      why: stale,
+      cmd: `npm run video -- final ${topic} ${storyId} --approved-by "<approver>"`,
+    },
+  };
+};
+
+// 11. Clearance: a finished build whose release is blocked says why next to the next step (a halt's command stands).
 const clearanceStage: BoardStage = ({ release, vr }, s) =>
-  vr && release && !vr.clearance.publishable && (s.stage === 'scored' || s.stage === 'packaged')
+  vr && release && !s.stopped && !vr.clearance.publishable && (s.stage === 'scored' || s.stage === 'packaged')
     ? { advance: { stage: s.stage, next: `${s.next}; public release is blocked: ${vr.clearance.why.join('; ')}` } }
     : {};
 
@@ -874,6 +904,7 @@ const BOARD_STAGES: BoardStage[] = [
   soundtrackStage,
   articleStage,
   reviewPackageStage,
+  lookStage,
   clearanceStage,
 ];
 

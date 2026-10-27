@@ -5,7 +5,9 @@
 // nothing new is versioned here. Library layer: it reads video/review/review.json by path and never imports src/video/.
 import { existsSync, readFileSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve } from 'node:path';
+import type { BuildSummary } from './build-report';
 import { lf, readJson, ROOT, sha, toJson } from './io';
+import { lookStale } from './look';
 import { approverProblem } from './release';
 import { scriptDir, shortId, shortOf, storySlug } from './script';
 import { loadStories } from './stories';
@@ -738,6 +740,15 @@ export function recordApproved(
     throw new Refusal(
       `build ${build} is a draft (edge voice): a draft is accepted by npm run video -- final, never approved for publication`,
     );
+  // the approval is given to the current look: a build on disk drawn with an older kit or theme is drawn again first
+  if (onDisk && !a.accepted) {
+    const why = lookStale(readJson<BuildSummary>(join(videoDirOf(o), 'build-report.json')), topic, o.root);
+    const target = !shortOf(storyId) && o.id.startsWith('short:') ? shortId(storyId, o.id.slice(6)) : storyId;
+    if (why)
+      throw new Refusal(
+        `build ${build} ${why}; npm run video -- final ${topic} ${target} --approved-by "<your name>" draws it again`,
+      );
+  }
   const localRelease = onDisk?.status === 'release';
   if (!generic && !a.accepted && !uploaded && !localRelease)
     throw new Refusal(
@@ -750,13 +761,14 @@ export function recordApproved(
   return write(o, e);
 }
 
-/** The output's review package (a Short's own, in its folder), or null. */
-const reviewJsonOf = (o: ReturnType<typeof openOutput>) => {
+/** The output's video folder (a Short's own, in its folder). */
+const videoDirOf = (o: ReturnType<typeof openOutput>) => {
   const nested = nestedSource(o.root, o.out);
-  return readJson<{ checklist?: string[] }>(
-    join(nested ? join(o.root, nested) : o.dir, 'video', 'review', 'review.json'),
-  );
+  return join(nested ? join(o.root, nested) : o.dir, 'video');
 };
+/** The output's review package, or null. */
+const reviewJsonOf = (o: ReturnType<typeof openOutput>) =>
+  readJson<{ checklist?: string[] }>(join(videoDirOf(o), 'review', 'review.json'));
 
 /** A person sends the current build back with notes; a later approval of the same build (or a new build) moves on. */
 export function recordChangesRequested(

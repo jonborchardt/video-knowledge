@@ -51,7 +51,7 @@ import {
   storySlug,
 } from '../src/lib/script';
 import { addOutputTo, recordApproved, recordPublished, recordUploaded, setThumbnail } from '../src/lib/publish';
-import { type Fixture, copyTopic, syntheticProduction, syntheticShort } from './production-helpers';
+import { type Fixture, copyTopic, setLook, syntheticProduction, syntheticShort } from './production-helpers';
 import { blockedScript, run } from './script-helpers';
 
 describe('production board', () => {
@@ -450,6 +450,51 @@ describe('publishing on the board', () => {
       fx.cleanup();
     }
   }, 60_000); // two whole topic boards
+});
+
+describe('the look on the board', { timeout: 60_000 }, () => {
+  const final = (f: Fixture) => `npm run video -- final ${f.topic} ${f.story} --approved-by "<approver>"`;
+  it('a packaged build drawn before the look was recorded halts look-stale and names video final', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      setLook(f.dir, undefined);
+      const n = boardNext(f.topic, f.story, f.root);
+      expect(n.stage).toBe('packaged');
+      expect(n.done).toBe(true); // /produce never re-renders it
+      expect(n.halt).toMatchObject({ kind: 'look-stale', stage: 'packaged' });
+      expect(n.next).toBe(final(f));
+      const prod = productionOf(f.topic, f.story, f.root)!;
+      expect(prod.checks.find((c) => c.name === 'look')?.health).toBe('stale');
+      const r = topicBoard(f.topic, f.root, {}).stories.find((s) => s.story.id === f.story)!;
+      expect(columnOf(r)).toBe('your-review'); // the column is unchanged
+    } finally {
+      f.cleanup();
+    }
+  });
+  it('redrawing a kit card after the build makes it look-stale; the current kit does not', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      expect(boardNext(f.topic, f.story, f.root).halt).toBeNull();
+      expect(productionOf(f.topic, f.story, f.root)!.checks.find((c) => c.name === 'look')?.health).toBe('current');
+      mkdirSync(join(f.root, 'brand', 'spending'), { recursive: true });
+      writeFileSync(join(f.root, 'brand', 'spending', 'close-card.svg'), '<svg/>');
+      expect(boardNext(f.topic, f.story, f.root).halt?.kind).toBe('look-stale');
+    } finally {
+      f.cleanup();
+    }
+  });
+  it('a Short with a legacy build halts look-stale the same way', () => {
+    const f = syntheticShort('packaged', { release: true });
+    try {
+      expect(boardNext(f.topic, f.story, f.root).halt?.kind).not.toBe('look-stale');
+      setLook(f.dir, undefined);
+      const n = boardNext(f.topic, f.story, f.root);
+      expect(n).toMatchObject({ stage: 'packaged', done: true, halt: { kind: 'look-stale', stage: 'packaged' } });
+      expect(n.next).toBe(final(f));
+    } finally {
+      f.cleanup();
+    }
+  });
 });
 
 describe('shorts on the board', () => {
