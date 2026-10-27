@@ -1,11 +1,11 @@
 {
  "topic": "heat-pumps",
  "story": "conflict:heat-pumps-cut-home-carbon-emissions",
- "revision": 4,
- "date": "2026-10-21T05:31:25.767Z",
+ "revision": 5,
+ "date": "2026-10-27T02:32:13.483Z",
  "status": "passed",
  "scriptFingerprint": "c826edc72b",
- "packageFingerprint": "22c48262b2",
+ "packageFingerprint": "5108ce9ff2",
  "wordsPerMinute": 150,
  "words": 706,
  "spokenWords": 716,
@@ -79,6 +79,22 @@
       "independent": 0,
       "supporting": [],
       "contradicting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+         "cite": "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt#L77-L83"
+        },
+        "cited": false,
+        "role": "contradicts",
+        "by": "Fraunhofer ISE 2025, heat pumps in existing buildings",
+        "verdict": "right",
+        "confidence": 0.4,
+        "note": "Using quarterly emission factors for the German grid, the measured heat pumps emitted on average 64 percent less CO2 in 2024 than gas heating; a calculation on measured efficiency, reported in a press release.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
        {
         "ref": {
          "kind": "study",
@@ -209,6 +225,7 @@
       "problems": [],
       "limitations": [
        "Reports what the sources said, not whether it is true.",
+       "Contradicted by Fraunhofer ISE 2025, heat pumps in existing buildings: Using quarterly emission factors for the German grid, the measured heat pumps emitted on average 64 percent less CO2 in 2024 than gas heating; a calculation on measured efficiency, reported in a press release.",
        "Contradicted by Wilson 2024 (NREL and LBNL), heat pumps for all?: Average GHG savings are positive in every state for every heat pump and future grid scenario, even the conservative high-renewable-cost one, with emissions levelized over a 16-year equipment lifetime (projected grids, not today's).",
        "Contradicted by Deetjen 2021, private economics of US residential heat pumps: Heat pump adoption raises CO2 for only 2.1% of US houses (1.7 million), but the estimate assumes grid CO2 emissions fall 45% over the heat pump's 15-year life.",
        "Contradicted by Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: On the 2024 UK grid, replacing a gas boiler with a heat pump cut household energy CO2eq by about 1.16 t/yr, 36% of the pre-adoption footprint, from measured consumption changes and government emission factors.",
@@ -216,7 +233,7 @@
        "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
       ],
       "suggestions": [],
-      "explanation": "supported (approved): no direct support, 4 contradicting, 2 qualifying, 2 source statements."
+      "explanation": "supported (approved): no direct support, 5 contradicting, 2 qualifying, 2 source statements."
      },
      "issues": [
       {
@@ -2070,7 +2087,21 @@
      ]
     }
    ],
-   "issues": []
+   "issues": [
+    {
+     "sentence": "s20",
+     "fingerprint": "4597c64cdd",
+     "revision": 5,
+     "category": "omission",
+     "severity": "info",
+     "explanation": "The new package adds Fraunhofer ISE 2025 (64 percent less CO2 than gas on the 2024 German grid); the script leaves it out, but it uses the average quarterly grid mix, not the marginal power s21 points to, is a press release at 0.4 confidence, and only supports the claim, so leaving it out does not make any sentence stronger than the evidence.",
+     "refs": [
+      "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt#L77-L83"
+     ],
+     "suggestion": "None needed; an editor may add it as a second measured reading of a current grid if wanted.",
+     "by": "review"
+    }
+   ]
   },
   {
    "id": "s21",
@@ -2098,6 +2129,20 @@
   }
  ],
  "issues": [
+  {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked package 22c48262b2; it is now 5108ce9ff2: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  },
+  {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked validation 0399ba9f4e; it is now 6c4cc118eb: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  },
   {
    "sentence": "s07",
    "category": "needs-qualification",
@@ -2283,6 +2328,19 @@
    "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
    "by": "deterministic",
    "assertion": "s04.a"
+  },
+  {
+   "sentence": "s20",
+   "fingerprint": "4597c64cdd",
+   "revision": 5,
+   "category": "omission",
+   "severity": "info",
+   "explanation": "The new package adds Fraunhofer ISE 2025 (64 percent less CO2 than gas on the 2024 German grid); the script leaves it out, but it uses the average quarterly grid mix, not the marginal power s21 points to, is a press release at 0.4 confidence, and only supports the claim, so leaving it out does not make any sentence stronger than the evidence.",
+   "refs": [
+    "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt#L77-L83"
+   ],
+   "suggestion": "None needed; an editor may add it as a second measured reading of a current grid if wanted.",
+   "by": "review"
   }
  ],
  "resolved": [
@@ -2382,7 +2440,14 @@
   },
   {
    "revision": 4,
-   "date": "2026-10-21T05:31:25.767Z",
+   "date": "2026-10-27T02:30:36.762Z",
+   "status": "needs-review",
+   "blocking": 0,
+   "warnings": 18
+  },
+  {
+   "revision": 5,
+   "date": "2026-10-27T02:32:13.483Z",
    "status": "passed",
    "blocking": 0,
    "warnings": 0

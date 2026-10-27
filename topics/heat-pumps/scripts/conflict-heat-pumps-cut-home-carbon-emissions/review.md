@@ -3,22 +3,23 @@
 | | |
 |---|---|
 | Story | `conflict:heat-pumps-cut-home-carbon-emissions` (heat-pumps) |
-| Revision | 4 (4 of at most 3 in this pass) |
-| Validation | **passed** (2026-10-21) |
+| Revision | 5 (5 of at most 3 in this pass) |
+| Validation | **passed** (2026-10-27) |
 | Words / runtime | 706 words, about 4.8 min at 150 wpm |
 | Sentences | 26 (17 factual or attributed) |
 | Assertions | 19, 19 verified |
 | Issues | 0 blocking, 0 warnings, 17 dispositioned |
 | Unreviewed sentences | 0 |
 | Scenes | 16, 4:53 (ok) |
-| Evidence package | 22c48262b2 (6 documents, 1 claims) |
+| Evidence package | 5108ce9ff2 (7 documents, 1 claims) |
 | Model | claude-opus-5-5 |
 
 Automated validation says whether the narration is eligible for human editorial review; it does not establish truth.
 
 ## Open issues
 
-None.
+- **warning** - release-stale (deterministic): release.json locked package 22c48262b2; it is now 5108ce9ff2: the approved package has changed, lock it again after review
+- **warning** - release-stale (deterministic): release.json locked validation 0399ba9f4e; it is now 6c4cc118eb: the approved package has changed, lock it again after review
 
 ## Dispositions
 
@@ -52,17 +53,19 @@ Deterministic warnings the reviewer judged false positives or already carried by
 
 ## Research gaps
 
-- What explains the split between Wilson 2024 (NREL and LBNL), heat pumps for all?, Deetjen 2021, private economics of US residential heat pumps, Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff, RMI 2018, the economics of electrifying buildings, Canadian Climate Institute 2023, heat pumps pay off, Less 2021 (LBNL), cost of decarbonization retrofits?
+- What explains the split between Fraunhofer ISE 2025, heat pumps in existing buildings, Wilson 2024 (NREL and LBNL), heat pumps for all?, Deetjen 2021, private economics of US residential heat pumps, Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff, RMI 2018, the economics of electrifying buildings, Canadian Climate Institute 2023, heat pumps pay off, Less 2021 (LBNL), cost of decarbonization retrofits?
 - RMI 2018, the economics of electrifying buildings: On 2016 short-term marginal grid data, heat pumps cut emissions versus gas in Oakland, Houston and Providence but raised them in coal-heavy Chicago (about 50% more), so the claim holds on most grids but not all.
 - Less 2021 (LBNL), cost of decarbonization retrofits: LBNL: fuel switching boosted carbon cuts (68% vs 50%) in the electrification cluster, but those projects were mostly in states with low-carbon grids, and the authors expect lower carbon savings where electricity is more carbon-intensive.
 
 ## Outstanding editorial decisions
 
-None.
+- -: release.json locked package 22c48262b2; it is now 5108ce9ff2: the approved package has changed, lock it again after review
+- -: release.json locked validation 0399ba9f4e; it is now 6c4cc118eb: the approved package has changed, lock it again after review
 
 ## History
 
 - revision 1, 2026-10-21: needs-review, 0 blocking, 14 warnings
 - revision 2, 2026-10-21: blocked, 1 blocking, 4 warnings
 - revision 3, 2026-10-21: passed, 0 blocking, 0 warnings
-- revision 4, 2026-10-21: passed, 0 blocking, 0 warnings
+- revision 4, 2026-10-27: needs-review, 0 blocking, 18 warnings
+- revision 5, 2026-10-27: passed, 0 blocking, 0 warnings
