@@ -291,7 +291,7 @@ export async function sync(topic: string, storyId: string, c: Ctx): Promise<Verb
   const v = await guarded(topic, storyId, c, 'sync', () => c.client.getVideo(id));
   const failed = (error: string): VerbResult => {
     // the same finding, with nothing since, is not recorded again on every sync
-    const last = o.out.events.at(-1);
+    const last = o.out.events.findLast((e) => e.type !== 'verified'); // a verification in between changes nothing
     if (last?.type === 'failed' && last.step === 'sync' && last.id === id && last.error === error)
       return { event: last, existing: true, message: `already recorded: sync failed: ${error}` };
     return recordFailed(topic, storyId, { ...c, step: 'sync', error, retryable: false });

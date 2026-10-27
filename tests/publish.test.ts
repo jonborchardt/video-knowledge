@@ -18,6 +18,7 @@ import {
   currentBuild,
   emptyLedger,
   eventKey,
+  failedSince,
   flowOf,
   lastCaptions,
   ledgerProblems,
@@ -33,6 +34,7 @@ import {
   recordSimple,
   recordUpdated,
   recordUploaded,
+  recordVerified,
   saveLedger,
   setThumbnail,
   uploadMetadataOf,
@@ -991,5 +993,98 @@ describe('a Studio upload recorded by hand', () => {
     const f = fresh();
     recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001' });
     expect(openOutput(f.topic, f.story, { root: f.root }).state.next).toContain('--checked <n>');
+  });
+});
+
+describe('verification events', () => {
+  const now = new Date('2026-10-27T00:00:00Z');
+  const fixtures: Fixture[] = [];
+  afterAll(() => fixtures.forEach((f) => f.cleanup()));
+  const fresh = () => {
+    const f = syntheticProduction('packaged', { release: true });
+    fixtures.push(f);
+    return f;
+  };
+  const events = (f: Fixture) => loadLedger(f.topic, f.story, f.root)!.outputs.youtube.events;
+  const a = (f: Fixture) => ({ root: f.root, by: 'Jon', now });
+
+  it('a verification is recorded with its checks and validated', () => {
+    const f = fresh();
+    recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
+    const r = recordVerified(f.topic, f.story, {
+      ...a(f),
+      result: 'passed',
+      checks: [{ name: 'title', result: 'pass' }],
+    });
+    expect(r.event).toMatchObject({ type: 'verified', id: 'studio00001', result: 'passed', build: 'releasesha' });
+    expect(r.event!.metadata).toBe(openOutput(f.topic, f.story, { root: f.root }).metadata!.sha);
+    const bad = {
+      video: 'v',
+      outputs: {
+        youtube: {
+          kind: 'youtube-video',
+          metadata: {},
+          events: [
+            {
+              at: '2026-10-27T00:00:00Z',
+              type: 'verified',
+              by: 'Jon',
+              id: 'x',
+              result: 'maybe',
+              checks: [{ result: 'pass' }],
+            },
+          ],
+        },
+      },
+    };
+    expect(ledgerProblems(bad, 'v')).toEqual(
+      expect.arrayContaining([expect.stringMatching(/result/), expect.stringMatching(/checks\[0\]\.name/)]),
+    );
+  });
+
+  it('a repeat of the latest verification is the same event', () => {
+    const f = fresh();
+    recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
+    const pass = { result: 'passed' as const, checks: [{ name: 'title', result: 'pass' as const }] };
+    const fail = { result: 'failed' as const, checks: [{ name: 'title', result: 'fail' as const, detail: 'differs' }] };
+    recordVerified(f.topic, f.story, { ...a(f), ...pass });
+    expect(recordVerified(f.topic, f.story, { ...a(f), ...pass }).existing).toBe(true);
+    recordVerified(f.topic, f.story, { ...a(f), ...fail });
+    expect(recordVerified(f.topic, f.story, { ...a(f), ...pass }).existing).toBe(false);
+    expect(events(f).filter((e) => e.type === 'verified')).toHaveLength(3);
+  });
+
+  it('a verification does not hide a failure and is shown on the state', () => {
+    const f = fresh();
+    recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
+    recordFailed(f.topic, f.story, { ...a(f), step: 'thumbnail', error: 'forbidden', retryable: false });
+    recordVerified(f.topic, f.story, { ...a(f), result: 'passed', checks: [{ name: 'title', result: 'pass' }] });
+    const s = openOutput(f.topic, f.story, { root: f.root }).state;
+    expect(s.failed?.step).toBe('thumbnail');
+    expect(s.verification?.result).toBe('passed');
+    expect(s.status).toBe('uploaded');
+  });
+
+  it('refuses a verification before any upload', () => {
+    const f = fresh();
+    expect(() => recordVerified(f.topic, f.story, { ...a(f), result: 'passed', checks: [] })).toThrow(
+      /nothing uploaded/,
+    );
+    expect(existsSync(publishPath(f.topic, f.story, f.root))).toBe(false);
+  });
+
+  it('failedSince reads only a verification after the last upload or update', () => {
+    const f = fresh();
+    recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
+    recordVerified(f.topic, f.story, {
+      ...a(f),
+      result: 'failed',
+      checks: [{ name: 'title', result: 'fail', detail: 'differs' }],
+    });
+    const out = () => loadLedger(f.topic, f.story, f.root)!.outputs.youtube;
+    expect(failedSince(out(), ['title'])).toBe(true);
+    expect(failedSince(out(), ['captions'])).toBe(false);
+    recordUpdated(f.topic, f.story, { ...a(f), fields: ['snippet'] });
+    expect(failedSince(out(), ['title'])).toBe(false);
   });
 });

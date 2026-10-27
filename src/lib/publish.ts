@@ -21,9 +21,23 @@ export const EVENT_TYPES = [
   'updated',
   'failed',
   'retracted',
+  'verified',
 ] as const;
 export type EventType = (typeof EVENT_TYPES)[number];
 export type Visibility = 'private' | 'unlisted' | 'public';
+/** One check of `npm run publish -- verify`: our own reason only, never a value read from the API (the ledger is public
+ *  and API data may not be kept). */
+export type CheckResult = 'pass' | 'fail' | 'pending' | 'skip';
+export interface LedgerCheck {
+  name: string;
+  result: CheckResult;
+  detail?: string;
+}
+export type Verdict = 'passed' | 'pending' | 'failed';
+const CHECK_RESULTS: CheckResult[] = ['pass', 'fail', 'pending', 'skip'];
+const VERDICTS: Verdict[] = ['passed', 'pending', 'failed'];
+/** The checks a `push` answers: a failed one makes the next push resend the snippet and thumbnail. */
+export const METADATA_CHECKS = ['title', 'description', 'tags', 'category', 'language', 'chapters', 'thumbnail'];
 
 /** One reviewer note on a build: where in the video it is (any of the three, all optional) and what to change. */
 export interface ReviewNote {
@@ -59,6 +73,8 @@ export interface PublishEvent {
   note?: string;
   notes?: ReviewNote[]; // changes-requested
   title?: string; // approved: the composed title the person approved with the build
+  result?: Verdict; // verified
+  checks?: LedgerCheck[]; // verified
 }
 export interface OutputMetadata {
   title?: string;
@@ -101,6 +117,7 @@ const REQUIRED: Record<EventType, (keyof PublishEvent)[]> = {
   updated: ['id', 'metadata', 'fields'],
   failed: ['step', 'error'],
   retracted: ['note'],
+  verified: ['id', 'result', 'checks'],
 };
 const isRecord = (x: unknown): x is Record<string, unknown> => !!x && typeof x === 'object' && !Array.isArray(x);
 
@@ -151,6 +168,19 @@ export function ledgerProblems(x: unknown, video: string): string[] {
         out.push(`${where}.captions: not a sha`);
       for (const k of REQUIRED[e.type as EventType])
         if (e[k] === undefined || e[k] === '') out.push(`${where}.${k}: ${e.type} needs it`);
+      if (e.result !== undefined && !VERDICTS.includes(e.result as Verdict))
+        out.push(`${where}.result: ${JSON.stringify(e.result)} is not ${VERDICTS.join(', ')}`);
+      if (e.checks !== undefined) {
+        if (!Array.isArray(e.checks)) out.push(`${where}.checks: not a list`);
+        else
+          e.checks.forEach((c, j) => {
+            if (!isRecord(c) || typeof c.name !== 'string' || !c.name) out.push(`${where}.checks[${j}].name: missing`);
+            if (!isRecord(c) || !CHECK_RESULTS.includes(c.result as CheckResult))
+              out.push(
+                `${where}.checks[${j}].result: ${JSON.stringify(isRecord(c) ? c.result : c)} is not ${CHECK_RESULTS.join(', ')}`,
+              );
+          });
+      }
     });
   }
   return out;
@@ -181,6 +211,8 @@ export function eventKey(e: PublishEvent): string | null {
       return `${e.type}|${e.id}`; // judged against the latest of the two for that id, see appendEvent
     case 'retracted':
       return 'retracted';
+    case 'verified': // judged against the latest verification of the id, see appendEvent
+      return `verified|${e.id}|${e.build}|${e.metadata}|${sha(JSON.stringify(e.checks))}`;
     case 'updated': // recordUpdated refuses an unchanged sha; A, B, A is three honest events
     case 'failed':
       return null;
@@ -206,6 +238,10 @@ export function appendEvent(
     const latest = o.events.findLast(
       (x) => (x.type === 'approved' || x.type === 'changes-requested') && x.build === e.build,
     );
+    existing = latest && eventKey(latest) === key ? latest : null;
+  } else if (e.type === 'verified') {
+    // pass, fail, pass are three findings; only a repeat of the latest verification of the id is the same one
+    const latest = o.events.findLast((x) => x.type === 'verified' && x.id === e.id);
     existing = latest && eventKey(latest) === key ? latest : null;
   } else if (key !== null) existing = o.events.find((x) => eventKey(x) === key) ?? null;
   if (existing) return { ledger, existing };
@@ -260,6 +296,12 @@ export const lastCaptions = (o: Pick<Output, 'events'>) => {
 /** The last upload or update that sent metadata: what the platform has now. */
 export const lastSent = (o: Pick<Output, 'events'>) =>
   o.events.findLast((e) => (e.type === 'uploaded' || e.type === 'updated') && e.metadata);
+/** Whether the latest verification since the last upload or update failed one of `names`: what push resends. */
+export const failedSince = (o: Pick<Output, 'events'>, names: string[]): boolean => {
+  const i = o.events.findLastIndex((e) => e.type === 'uploaded' || e.type === 'updated');
+  const v = o.events.slice(i + 1).findLast((e) => e.type === 'verified');
+  return !!v?.checks?.some((c) => c.result === 'fail' && names.includes(c.name));
+};
 
 // ---- state ------------------------------------------------------------------------------------------------------
 
@@ -301,7 +343,8 @@ export type OutputStatus =
 export interface OutputState {
   status: OutputStatus;
   live: boolean; // published and not since unpublished, whatever else the status says (metadata-behind keeps it live)
-  failed: PublishEvent | null; // an overlay: the last event, when it is a failure
+  failed: PublishEvent | null; // an overlay: the last event (a verification aside), when it is a failure
+  verification: PublishEvent | null; // the latest verified event for the uploaded id; it never changes the status
   requested: PublishEvent | null; // the changes-requested event that holds the current build, if any
   id: string | null;
   url: string | null;
@@ -340,7 +383,7 @@ export function outputState(
   const verb = (v: string, flags = '') =>
     `npm run publish -- ${v} ${ctx.topic} ${ctx.story}${ctx.output === 'youtube' ? '' : ` --output ${ctx.output}`}${flags}`;
   const ev = output.events;
-  const last = ev.at(-1) ?? null;
+  const last = ev.findLast((e) => e.type !== 'verified') ?? null;
   const failed = last?.type === 'failed' ? last : null;
   const uploads = ev.filter((e) => e.type === 'uploaded');
   const upload = uploads.at(-1) ?? null;
@@ -362,6 +405,7 @@ export function outputState(
   const base: Omit<OutputState, 'status' | 'next' | 'due'> = {
     live,
     failed,
+    verification: (id && ev.findLast((e) => e.type === 'verified' && e.id === id)) || null,
     requested: requested?.type === 'changes-requested' ? requested : null,
     id,
     url: id ? url : null,
@@ -788,8 +832,9 @@ export function recordUpdated(
   if (!o.state.id) throw new Refusal('nothing uploaded yet; there is nothing on YouTube to update');
   if (!o.metadata) throw new Refusal('no review package; the metadata cannot be composed');
   const sent = lastSent(o.out);
-  // unchanged text is nothing new unless captions landed that the video did not have
-  if (sent?.metadata === o.metadata.sha && (!a.captions || a.captions === lastCaptions(o.out)))
+  // unchanged text is nothing new unless captions landed that the video did not have, or a verification found it missing
+  const captionsNew = !!a.captions && (a.captions !== lastCaptions(o.out) || failedSince(o.out, ['captions']));
+  if (sent?.metadata === o.metadata.sha && !failedSince(o.out, METADATA_CHECKS) && !captionsNew)
     return { event: sent, existing: true, message: `the metadata is unchanged since ${describe(sent)}` };
   return write(o, {
     at: stamp(a),
@@ -800,6 +845,21 @@ export function recordUpdated(
     fields: a.fields,
     ...(a.captions ? { captions: a.captions } : {}),
   });
+}
+
+export function recordVerified(
+  topic: string,
+  storyId: string,
+  a: VerbArgs & { result: Verdict; checks: LedgerCheck[] },
+): VerbResult {
+  const o = openOutput(topic, storyId, a);
+  if (!o.state.id) throw new Refusal('nothing uploaded; there is nothing on YouTube to verify');
+  const e: PublishEvent = { at: stamp(a), type: 'verified', by: a.by, id: o.state.id };
+  if (o.state.uploadedBuild) e.build = o.state.uploadedBuild;
+  if (o.metadata?.sha) e.metadata = o.metadata.sha;
+  e.result = a.result;
+  e.checks = a.checks;
+  return write(o, e);
 }
 
 export function recordFailed(
