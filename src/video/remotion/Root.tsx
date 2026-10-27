@@ -14,7 +14,7 @@ const EMPTY: Timeline = {
   width: WIDTH,
   height: HEIGHT,
   durationInFrames: 1,
-  fingerprints: { script: '', storyboard: '', narration: '', config: '' },
+  fingerprints: { script: '', storyboard: '', narration: '', config: '', look: '' },
   narration: { provider: '', voice: '', rate: '', licence: '' },
   palette: COR_PALETTE,
   scenes: [],

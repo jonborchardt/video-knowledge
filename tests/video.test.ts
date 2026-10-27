@@ -3,6 +3,7 @@
 // wrapper and the providers. Every test runs on the synthetic fixture (tests/video-helpers.ts) and needs no TTS.
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { ROOT } from '../src/lib/io';
+import { LOOK_SLOTS, lookFingerprint } from '../src/lib/look';
 import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
@@ -165,6 +166,10 @@ describe('timeline', () => {
     expect(tl.fingerprints.script).toBe(scriptFingerprint(inp.script));
     expect(tl.scenes[1].options).toEqual({});
     expect(buildTimeline(seg, m)).toEqual(tl); // deterministic
+    expect(tl.fingerprints.look).toBe(lookFingerprint(tl.topic)); // the look it was drawn with
+    // the look is not part of the chunk cache key
+    const other = { ...tl, fingerprints: { ...tl.fingerprints, look: 'other' } };
+    expect(sceneKey(tl.scenes[0], other)).toBe(sceneKey(tl.scenes[0], tl));
   });
   it('ends a published story on the close card and end screen, after its last storyboard scene only', () => {
     const inp = inputs();
@@ -893,6 +898,25 @@ describe('shorts: portrait frame and kinds', () => {
     expect(kitSlots(wipe, tl)).toEqual(['seal']);
     const kit = (seal: string) => (_t: string, slot: string) => (slot === 'seal' ? seal : 'card');
     expect(sceneKey(wipe, tl, kit('a'))).not.toBe(sceneKey(wipe, tl, kit('b')));
+  });
+  it('every kit slot a scene draws is part of the look', () => {
+    const inp = inputs();
+    const tl = buildTimeline(
+      { ...checkSegment(inp), script: { ...inp.script, topic: 'heat-pumps' } },
+      manifest(inp),
+      30,
+      read,
+    );
+    const sInp = shortInputs({ config: { scenes: ['sc03'] } });
+    const st = buildTimeline(checkSegment(sInp), manifest(sInp), 30, read);
+    const sealed = { ...st, short: { ...st.short!, commissionKey: 'spending' } };
+    const scenes = [
+      ...tl.scenes,
+      { ...tl.scenes[0], kind: 'title' as const },
+      { ...tl.scenes[1], kind: 'transition' as const },
+    ];
+    const slots = [...scenes.flatMap((s) => kitSlots(s, tl)), ...sealed.scenes.flatMap((s) => kitSlots(s, sealed))];
+    expect(new Set(slots)).toEqual(new Set(LOOK_SLOTS));
   });
   it('checks the three-minute rule on portrait builds only', () => {
     expect(shortChecks({ duration: 181 }, { width: 1080, height: 1920 })[0]).toMatchObject({
