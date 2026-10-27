@@ -173,7 +173,11 @@ export function reviewView(topic: string, storyId: string, root = ROOT): ReviewV
     : null;
 
   const state = o?.state ?? null;
-  const lookWhy = lookStale(vr, topic, root); // an older kit or theme: video final draws it again before approval
+  // an older kit or theme: video final draws it again before approval (the page has no button for it)
+  const stale = lookStale(vr, topic, root);
+  const lookWhy = stale
+    ? `${stale}; npm run video -- final ${topic} ${storyId} --approved-by "<your name>" draws it again`
+    : null;
   const live = state?.live ? `live at ${state.url}; a re-release is a new output` : null;
   const can: ReviewView['can'] = {
     approve: !pkg

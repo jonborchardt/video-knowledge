@@ -63,7 +63,10 @@ describe('reviewView', { timeout: 30_000 }, () => {
     run(syntheticProduction('packaged', { release: true }), (f) => {
       expect(reviewView(f.topic, f.story, f.root).can.approve).toBe(true);
       setLook(f.dir, 'old');
-      expect(reviewView(f.topic, f.story, f.root).can.approve).toMatch(/rendered with look old/);
+      // the way forward is named: the release re-render
+      expect(reviewView(f.topic, f.story, f.root).can.approve).toMatch(
+        new RegExp(`rendered with look old.*npm run video -- final ${f.topic} ${f.story} --approved-by`),
+      );
     }));
 
   it('keeps every build in the history, newest first, the current one marked', () =>

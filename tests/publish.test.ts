@@ -604,6 +604,23 @@ describe('derivative flows', () => {
     }
   });
 
+  it('an approved build whose look went stale is never scheduled or published by hand', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      const a = { root: f.root, by: 'Jon' };
+      recordUploaded(f.topic, f.story, { ...a, id: 'hhhhhhhhhhh' });
+      recordApproved(f.topic, f.story, a);
+      setLook(f.dir, 'old');
+      const final = /rendered with look old.*npm run video -- final/;
+      expect(() => recordScheduled(f.topic, f.story, { ...a, at: '2099-01-01T00:00:00Z' })).toThrow(final);
+      expect(() => recordPublished(f.topic, f.story, { ...a, url: 'https://youtu.be/hhhhhhhhhhh' })).toThrow(final);
+      // what sync read back public is a fact, recorded whatever the look
+      expect(recordPublished(f.topic, f.story, { ...a, observed: true }).event?.type).toBe('published');
+    } finally {
+      f.cleanup();
+    }
+  });
+
   it('approve and publish a generic output through the verbs', () => {
     const f = syntheticProduction('packaged', { release: true });
     try {

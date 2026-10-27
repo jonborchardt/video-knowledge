@@ -647,7 +647,7 @@ export function openOutput(topic: string, storyId: string, a: { output?: string;
     parentLive,
     title: metadata?.title ?? null,
   });
-  return { root, dir, path, ledger, id, out, rel, build, metadata, state, parentLive };
+  return { root, topic, story: storyId, dir, path, ledger, id, out, rel, build, metadata, state, parentLive };
 }
 function write(o: ReturnType<typeof openOutput>, e: PublishEvent, then?: (l: Ledger) => Ledger): VerbResult {
   const r = appendEvent(o.ledger, o.id, e);
@@ -744,12 +744,8 @@ export function recordApproved(
     );
   // the approval is given to the current look: a build on disk drawn with an older kit or theme is drawn again first
   if (onDisk && !a.accepted) {
-    const why = lookStale(readJson<BuildSummary>(join(videoDirOf(o), 'build-report.json')), topic, o.root);
-    const target = !shortOf(storyId) && o.id.startsWith('short:') ? shortId(storyId, o.id.slice(6)) : storyId;
-    if (why)
-      throw new Refusal(
-        `build ${build} ${why}; npm run video -- final ${topic} ${target} --approved-by "<your name>" draws it again`,
-      );
+    const problem = lookProblem(o);
+    if (problem) throw new Refusal(problem);
   }
   const localRelease = onDisk?.status === 'release';
   if (!generic && !a.accepted && !uploaded && !localRelease)
@@ -768,6 +764,14 @@ const videoDirOf = (o: ReturnType<typeof openOutput>) => {
   const nested = nestedSource(o.root, o.out);
   return join(nested ? join(o.root, nested) : o.dir, 'video');
 };
+/** Why the output's build on disk is not drawn with the current look (src/lib/look.ts), with the step that draws it
+ *  again; null when it is, or for an output without a build report (a generic one). */
+export function lookProblem(o: ReturnType<typeof openOutput>): string | null {
+  const why = lookStale(readJson<BuildSummary>(join(videoDirOf(o), 'build-report.json')), o.topic, o.root);
+  if (!why) return null;
+  const target = o.id.startsWith('short:') ? shortId(o.story, o.id.slice(6)) : o.story;
+  return `build ${o.build?.sha ?? 'on disk'} ${why}; npm run video -- final ${o.topic} ${target} --approved-by "<your name>" draws it again`;
+}
 /** The output's review package, or null. */
 const reviewJsonOf = (o: ReturnType<typeof openOutput>) =>
   readJson<{ checklist?: string[] }>(join(videoDirOf(o), 'review', 'review.json'));
@@ -803,6 +807,8 @@ export function goLiveProblem(
   if ((buildStatus ?? o.out.events.findLast((e) => e.type === 'uploaded')?.buildStatus) === 'draft')
     return 'the upload is a draft build (edge voice); npm run video -- final makes the release build';
   if (!o.parentLive) return `${o.id} derives from ${o.out.derivedFrom}: publish ${o.out.derivedFrom} first`;
+  // a kit or theme redrawn since the approval: the build is drawn again before it goes public (a scheduled one has)
+  if (o.state.status !== 'scheduled') return lookProblem(o);
   return null;
 }
 const refuseGoLive = (o: ReturnType<typeof openOutput>, by: string) => {

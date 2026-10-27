@@ -30,7 +30,7 @@ import {
   verify,
 } from '../src/lib/uploader';
 import { type RemoteVideo, type YouTubeClient, YouTubeError } from '../src/lib/youtube';
-import { type Fixture, syntheticProduction, syntheticShort } from './production-helpers';
+import { type Fixture, setLook, syntheticProduction, syntheticShort } from './production-helpers';
 
 /** The packaged fixture has no media; give it an mp4 the review.json describes and the thumbnail it names. */
 function withMedia(f: Fixture): Fixture {
@@ -469,6 +469,19 @@ describe('goLive', () => {
         { status: { privacyStatus: 'public', selfDeclaredMadeForKids: false, containsSyntheticMedia: false } },
       ],
     });
+  });
+
+  it('an approved build whose look went stale afterwards never goes public or is scheduled', async () => {
+    const f = fresh();
+    const client = fakeClient({ getVideo: async (id) => ({ ...remoteOf(id), privacyStatus: 'public' }) });
+    await upload(f.topic, f.story, ctx(f, client));
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
+    setLook(f.dir, 'old');
+    const calls = client.calls.length;
+    const final = /rendered with look old.*npm run video -- final/;
+    await expect(goLive(f.topic, f.story, ctx(f, client))).rejects.toThrow(final);
+    await expect(goLive(f.topic, f.story, ctx(f, client, { at: '2026-10-28T15:00:00.000Z' }))).rejects.toThrow(final);
+    expect(client.calls).toHaveLength(calls); // YouTube was never asked
   });
 
   it('go-live records failed, not published, when YouTube keeps the video private', async () => {
