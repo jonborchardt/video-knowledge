@@ -2,9 +2,9 @@
  "topic": "ai-coding",
  "story": "decision:quality-and-understanding",
  "inputs": {
-  "stories": "a0bd96c4a9",
-  "review": "36e8a6703d",
-  "report": "edfb1fb041"
+  "stories": "b3edfc4e8c",
+  "review": "7f7da4503e",
+  "report": "63ddfb389b"
  },
  "audience": "General YouTube audience with no prior knowledge of MLM pay plans or research methods (default; set audience in story-review.json to change).",
  "title": "Is AI-Written Code Harder to Maintain?",
@@ -156,9 +156,9 @@
    "id": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
    "text": "AI-generated code frequently contains security vulnerabilities",
    "stance": "asserts",
-   "verdict": "partly",
-   "confidence": 0.55,
-   "decidedBy": "2310.02059.txt",
+   "verdict": "right",
+   "confidence": 0.6,
+   "decidedBy": "Vibe-coded apps security audit (200 deployed)",
    "lean": "skeptic",
    "role": "evidence",
    "guess": {
@@ -210,6 +210,45 @@
    ],
    "evidence": [
     {
+     "cite": "ai-coding/sources/2606.23130.txt#L457-L464",
+     "doc": "ai-coding/sources/2606.23130.txt",
+     "by": "Vibe-coded apps security audit (200 deployed)",
+     "verdict": "right",
+     "confidence": 0.6,
+     "note": "Of 200 randomly sampled publicly deployed apps that were at least 90% AI-authored, 91% contained at least one manually validated vulnerability, 65.8% of them Critical or High, concentrated in broken access control, injection and authentication; open-source GitHub apps from two agents only, with no human-written baseline.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2607.09902.txt#L469-L477",
+     "doc": "ai-coding/sources/2607.09902.txt",
+     "by": "Post-merge fate study (182 repos)",
+     "verdict": "partly",
+     "confidence": 0.4,
+     "note": "Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L32-L33",
+     "doc": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt",
+     "by": "CodeRabbit AI vs human PRs report",
+     "verdict": "partly",
+     "confidence": 0.25,
+     "note": "CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
      "cite": "ai-coding/sources/2310.02059.txt#L930-L936",
      "doc": "ai-coding/sources/2310.02059.txt",
      "by": "2310.02059.txt",
@@ -254,6 +293,8 @@
     "status": "qualified",
     "decision": "qualify",
     "limitations": [
+     "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+     "CodeRabbit AI vs human PRs report: CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
      "2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
      "Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate]",
      "Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized."
@@ -475,6 +516,26 @@
    ]
   },
   {
+   "file": "ai-coding/sources/2606.23130.txt",
+   "name": "Vibe-coded apps security audit (200 deployed)",
+   "sha": "58d94f5257",
+   "lines": 954,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/2606.23130.txt#L457-L464"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/2607.09902.txt",
+   "name": "Post-merge fate study (182 repos)",
+   "sha": "eb7364a217",
+   "lines": 899,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/2607.09902.txt#L469-L477"
+   ]
+  },
+  {
    "file": "ai-coding/sources/2607.21652v1.txt",
    "name": "Vibe-coding literature review",
    "sha": "b918616264",
@@ -505,12 +566,22 @@
     "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L880-L892",
     "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L700-L721"
    ]
+  },
+  {
+   "file": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt",
+   "name": "CodeRabbit AI vs human PRs report",
+   "sha": "ac6e3aa890",
+   "lines": 79,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L32-L33"
+   ]
   }
  ],
  "gaps": [
   "Code-ownership experiment (Martin-Lopez) is context only: a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers",
   "No study strong enough to decide: \"Developers should be able to explain AI-generated code without the AI's help before it is merged\""
  ],
- "fingerprint": "38da9c6bef",
- "generatedAt": "2026-10-21T15:13:37.891Z"
+ "fingerprint": "09874f191a",
+ "generatedAt": "2026-10-27T00:47:25.129Z"
 }

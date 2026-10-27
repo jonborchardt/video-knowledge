@@ -1,110 +1,114 @@
 # Build report: Is AI-Written Code Harder to Maintain?
 
-ai-coding / decision:quality-and-understanding, 2026-10-22T07:32:07.210Z. `npm run video -- final ai-coding decision:quality-and-understanding --approved-by Jon`
+ai-coding / decision:quality-and-understanding, 2026-10-27T01:26:54.524Z. `npm run video -- spike ai-coding decision:quality-and-understanding`
 
-**Segment.** 28 of 28 storyboard scenes (sc01 to sc28), 33 sentences. Kinds: sc01 question, sc02 title, sc03 excerpt, sc04 quote, sc05 question, sc06 excerpt, sc07 title, sc08 excerpt, sc09 excerpt, sc10 quote, sc11 question, sc12 list, sc13 stat-tiles, sc14 title, sc15 excerpt, sc16 excerpt, sc17 stat-tiles, sc18 stat-tiles, sc19 excerpt, sc20 title, sc21 title, sc22 stat-tiles, sc23 stat-tiles, sc24 title, sc25 title, sc26 title, sc27 quote, sc28 list.
+**Segment.** 32 of 31 storyboard scenes (sc01 to end), 36 sentences. Kinds: sc01 question, sc02 title, sc03 excerpt, sc04 quote, sc05 question, sc06 excerpt, sc07 title, sc08 excerpt, sc09 excerpt, sc10 quote, sc11 question, sc12 list, sc13 stat-tiles, sc14 title, sc15 excerpt, sc16 excerpt, sc17 stat-tiles, sc29 stat-tiles, sc30 list, sc18 stat-tiles, sc19 excerpt, sc20 title, sc21 title, sc22 stat-tiles, sc23 stat-tiles, sc24 title, sc25 title, sc31 title, sc26 title, sc27 quote, sc28 list, end close-card.
 
-**Output.** topics/ai-coding/scripts/decision-quality-and-understanding/video/segment.mp4: 295.15s, 1920x1080 @ 30 fps, h264 + aac, 8854 frames, rendered in 1251.1s ($0 (local CPU)).
+**Output.** topics/ai-coding/scripts/decision-quality-and-understanding/video/segment.mp4: 362.35s, 1920x1080 @ 30 fps, h264 + aac, 10870 frames, rendered in 1534.3s ($0 (local CPU)).
 
-**Narration.** azure / en-US-AndrewMultilingualNeural (rate +0%, neural), wav, 285.14s of speech at about 167 wpm, $0.0683 (estimated from characters). Licence: commercial: Azure AI Speech terms allow the generated audio in published media. Publishable.
+**Narration.** edge / en-US-AndrewMultilingualNeural (rate +0%), mp3, 335.21s of speech at about 163 wpm, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only, not publishable.**
 
 | Sentence | Seconds | Boundaries | Audio sha |
 |---|---|---|---|
-| s01 | 5.325 | 19 | 033e8fad94 |
-| s02 | 8.425 | 20 | e1d349e934 |
-| s03 | 11.675 | 31 | f87cab6289 |
-| s04 | 11.9875 | 24 | eb50621493 |
-| s05 | 4.8625 | 17 | d6e970bdf8 |
-| s06 | 5.7125 | 14 | 01724685a2 |
-| s07 | 9.125 | 27 | 00141730a5 |
-| s08 | 8.15 | 20 | d4630ed237 |
-| s09 | 9.6625 | 26 | a6bd5ff40f |
-| s10 | 7.5125 | 23 | 2e70207be5 |
-| s11 | 2.3 | 9 | 16fd7a74a4 |
-| s12 | 11.65 | 27 | 2da5e1a4c9 |
-| s13 | 5.8 | 17 | 5b4be39f99 |
-| s14 | 8 | 19 | fadfd8a785 |
-| s15 | 5.1625 | 16 | 784f1bef1d |
-| s16 | 10.05 | 32 | b8bd9230c3 |
-| s17 | 11.5875 | 28 | cc4ec42ae5 |
-| s18 | 9.575 | 28 | 52ab7cbb6c |
-| s30 | 11.55 | 23 | 3bc759b049 |
-| s31 | 8.0875 | 27 | 8132c4aaba |
-| s19 | 8.95 | 27 | 08d01db2fe |
-| s20 | 9.175 | 23 | dcc8b4c865 |
-| s21 | 5.1375 | 19 | 0e6f8e5278 |
-| s32 | 12 | 35 | 1a99857845 |
-| s33 | 7.925 | 22 | 165fa678ec |
-| s22 | 11.2125 | 25 | eeffa2bd64 |
-| s23 | 7.425 | 24 | 7099c569b5 |
-| s24 | 14.6 | 41 | ba8ee0bd4a |
-| s25 | 7.7875 | 19 | 59d93e4cc1 |
-| s26 | 14.2 | 47 | 76cb984691 |
-| s27 | 8.55 | 28 | deca801e2c |
-| s28 | 9 | 28 | d2410e678c |
-| s29 | 2.975 | 8 | 9983e925b8 |
+| s01 | 5.544 | 19 | 9fcc140354 |
+| s02 | 8.592 | 20 | e5fcff80fa |
+| s03 | 12.24 | 31 | 957e798268 |
+| s04 | 12.048 | 24 | d798c4d7d4 |
+| s05 | 5.04 | 17 | ce9ec11d95 |
+| s06 | 5.832 | 14 | ab42426a77 |
+| s07 | 8.952 | 27 | 4f3cc255fe |
+| s08 | 8.328 | 20 | 7e2773fb89 |
+| s09 | 9.792 | 26 | 98efbe6723 |
+| s10 | 7.368 | 23 | de051caa35 |
+| s11 | 2.256 | 9 | 49f552532e |
+| s12 | 11.832 | 27 | f7cb8fd74b |
+| s13 | 5.64 | 17 | ed68f6fe2b |
+| s14 | 8.352 | 19 | 4b62406c53 |
+| s15 | 4.992 | 16 | 621ec10935 |
+| s16 | 10.032 | 32 | ba1e5416c5 |
+| s17 | 11.688 | 28 | 4309574710 |
+| s18 | 9.816 | 28 | e76e8067ec |
+| s30 | 12 | 23 | 95d1fd86a6 |
+| s34 | 13.968 | 33 | eae55a6115 |
+| s31 | 8.712 | 26 | 6c0e74c808 |
+| s35 | 18.792 | 45 | fd57ce90ae |
+| s19 | 9.312 | 27 | 3e4fffb7d0 |
+| s20 | 9.456 | 23 | a75a71c599 |
+| s21 | 5.496 | 19 | da503ad13d |
+| s32 | 12.408 | 35 | 52af6a3855 |
+| s33 | 8.256 | 22 | 8120d19507 |
+| s22 | 11.136 | 25 | 06c859d077 |
+| s23 | 7.632 | 24 | cd7b383a1a |
+| s24 | 13.944 | 41 | de8363522d |
+| s25 | 8.064 | 20 | 740a1153fe |
+| s36 | 12.168 | 35 | d8e0534075 |
+| s26 | 14.496 | 47 | 7b4413bd41 |
+| s27 | 8.688 | 28 | 80e9b2e7c7 |
+| s28 | 9.24 | 28 | 3a24966c38 |
+| s29 | 3.096 | 8 | eaf49c629f |
 
 **Architecture.** Remotion (React, frame-based) rendered scene by scene into cached chunks through @remotion/renderer; chunks concatenated and the narration track laid down with the ffmpeg in the Remotion compositor (loudnorm to -16 LUFS).
 
-**Soundtrack.** Undertow (strudel-bench f63f2c5 (songs/undertow.strudel not yet committed), songs/undertow.strudel c7fbeafb07, 84 bpm D:minor; cleared; no samples). Mix 545d941aca: music -19.9 dB under the voice while it speaks, peak -1.3 dB.
+**Soundtrack.** Undertow (strudel-bench f63f2c5 (songs/undertow.strudel not yet committed), songs/undertow.strudel c7fbeafb07, 84 bpm D:minor; cleared; no samples). Mix 386db46166: music -19.7 dB under the voice while it speaks, peak -1.3 dB.
 
 | Cue | Asset | From | To | Gain | Level |
 |---|---|---|---|---|---|
-| opening | undertow/pulse | 0.0s | 14.9s | -11 dB | -38.0 dB |
-| setup | undertow/active | 14.9s | 39.1s | -13 dB | -38.0 dB |
-| evidence | undertow/texture | 39.1s | 235.2s | -13 dB | -40.3 dB |
-| ending | undertow/pulse | 235.2s | 295.1s | -11 dB | -37.0 dB |
+| opening | undertow/pulse | 0.0s | 15.3s | -11 dB | -37.9 dB |
+| setup | undertow/active | 15.3s | 40.1s | -13 dB | -38.0 dB |
+| evidence | undertow/texture | 40.1s | 272.7s | -13 dB | -40.3 dB |
+| ending | undertow/pulse | 272.7s | 362.3s | -11 dB | -36.4 dB |
 
-**Clearance.** Narration and music are both cleared for publication. A passing build is technical completion only; a person approves the release.
+**Clearance.** **Not cleared for public release:** narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final ai-coding decision:quality-and-understanding --approved-by <name>" re-narrates it for release. A passing build is technical completion only; a person approves the release.
 
-**Fingerprints.** script 577b3309e7, storyboard 1b019b912d, narration 6333a288cd, config 988a67486a, music 545d941aca.
+**Fingerprints.** script cfd7e3449b, storyboard 8b8372dc42, narration 78250d6a47, config 3249740624, music 386db46166.
 
 ## QA: passed (36 of 36)
 
 | Check | Result | Detail |
 |---|---|---|
-| mp4 decodable | ok | 295.146s |
+| mp4 decodable | ok | 362.346s |
 | video stream | ok | h264 1920x1080 @ 30 |
 | resolution | ok | 1920x1080 |
 | frame rate | ok | 30 |
 | h264 | ok | h264 |
-| frame count | ok | 8854 frames, timeline 8854 |
-| duration in range | ok | 295.15s in [294.1,296.1] |
-| duration matches timeline | ok | 295.146s vs 295.133s (8854 frames) |
+| frame count | ok | 10870 frames, timeline 10870 |
+| duration in range | ok | 362.35s in [361.3,363.3] |
+| duration matches timeline | ok | 362.346s vs 362.333s (10870 frames) |
 | audio stream | ok | aac 48000 Hz x2 |
 | aac | ok | aac |
 | audio length matches video | ok | 0.013s apart |
-| no clipping | ok | peak -1.4 dB, mean -19.4 dB |
-| no long silence | ok | none >= 3s |
-| narration not truncated | ok | 33 sentences fit their slots |
-| scene order | ok | sc01 to sc28 (28) |
+| no clipping | ok | peak -1.3 dB, mean -19.6 dB |
+| no long silence | ok | none >= 3s before the end scene |
+| narration not truncated | ok | 36 sentences fit their slots |
+| scene order | ok | sc01 to sc28 (31) |
 | scenes contiguous in storyboard | ok | from sc01 |
-| every storyboard scene rendered | ok | 28 scenes |
-| every script sentence narrated | ok | 33 sentences in script order |
-| sentences in script order | ok | 33 sentences |
+| every storyboard scene rendered | ok | 31 scenes |
+| every script sentence narrated | ok | 36 sentences in script order |
+| sentences in script order | ok | 36 sentences |
 | narration matches script | ok | every sentence verbatim |
-| fingerprints | ok | script 577b3309e7, storyboard 1b019b912d (locked) |
-| citations present | ok | 23 on-screen citations resolved |
-| chart data matches storyboard | ok | 5 charts |
+| fingerprints | ok | script cfd7e3449b, storyboard 8b8372dc42 (locked) |
+| citations present | ok | 26 on-screen citations resolved |
+| chart data matches storyboard | ok | 6 charts |
 | excerpts resolve | ok | 7 excerpts with their highlights |
-| assets and kinds supported | ok | 6 kinds |
+| assets and kinds supported | ok | 7 kinds |
 | music cues resolve | ok | 4 cues over 1 compositions |
-| soundtrack mixed | ok | 4 cues, 2026-10-22T07:30:54.825Z |
-| mix is of this cue sheet | ok | mix 545d941aca, cue sheet 545d941aca |
+| soundtrack mixed | ok | 4 cues, 2026-10-27T01:25:27.291Z |
+| mix is of this cue sheet | ok | mix 386db46166, cue sheet 386db46166 |
 | every cue sounded | ok | 4 cues audible where placed |
-| music under the voice | ok | -19.9 dB relative to speech (want -40 to -10) |
+| music under the voice | ok | -19.7 dB relative to speech (want -40 to -10) |
 | mix under the ceiling | ok | peak -1.3 dB, ceiling -1 dB |
-| scene boundaries follow measured audio | ok | 28 scenes, 33 sentences |
+| scene boundaries follow measured audio | ok | 32 scenes, 36 sentences |
 | cues inside their sentences | ok | 3 cues |
-| final scene complete | ok | ends 295.13s |
+| final scene complete | ok | ends 362.33s |
 | no blank sections | ok | none |
 | every scene has content | ok | mid-scene luma varies in every scene |
 
-Inspection frames: 60 in video/frames/; contact sheet topics/ai-coding/scripts/decision-quality-and-understanding/video/contact-sheet.png.
+Inspection frames: 68 in video/frames/; contact sheet topics/ai-coding/scripts/decision-quality-and-understanding/video/contact-sheet.png.
 
 ## Known limitations
 
-- narration licence: commercial: Azure AI Speech terms allow the generated audio in published media
+- NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; once the draft is accepted, "npm run video -- final <topic> <story-id> --approved-by <name>" re-narrates it with Azure for release
+- word boundaries from edge-tts group a numeral with the word before it; the span is split by letters, so a numeral cue can be a few frames early
 - system fonts (Georgia, Segoe UI): renders on another machine may set type differently
 - scene transitions are a short fade over the field; no cross-dissolve between scenes
 - automated QA checks integrity and consistency, not editorial quality: a person reviews the contact sheet and the video before any publication decision
