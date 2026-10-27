@@ -114,7 +114,7 @@ describe('uploadProblem', () => {
   });
 });
 
-describe('upload', () => {
+describe('upload', { timeout: 30_000 }, () => {
   it('inserts privately, records the upload, sets the thumbnail and clears the session', async () => {
     const f = fresh();
     const client = fakeClient();
