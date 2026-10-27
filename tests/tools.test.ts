@@ -1,6 +1,7 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { loadDatasets } from '../src/lib/datasets';
 import { ROOT } from '../src/lib/io';
 import { passageReader } from '../src/lib/evidence';
 import { loadStories } from '../src/lib/stories';
@@ -106,6 +107,37 @@ describe('heating-cost against hand-computed fixtures', () => {
     }) as Result;
     expect(viaUnits.breakEven).toBeCloseTo(3.2783, 3);
     expect(convertPrice(14.5, 'mcf', 'therm')).toBeCloseTo(1.3996, 3);
+  });
+});
+
+describe('heat-pumps state prices against the raw EIA columns', () => {
+  it('every state-prices row recomputes from Parts 1 and 2 of the EIA source to the cent', () => {
+    const lines = readFileSync(
+      join(ROOT, 'topics/heat-pumps/sources/eia-2026-state-residential-energy-prices.txt'),
+      'utf8',
+    ).split(/\r?\n/);
+    // field 1 of Part 1 (L7-L58) is 2024 c/kWh; field 5 of Part 2 (L64-L115) is 2024 $/Mcf
+    const part = (from: number, to: number, field: number) =>
+      new Map(
+        lines
+          .slice(from - 1, to)
+          .filter((l) => l.includes('|'))
+          .map((l) => l.split('|').map((f) => f.trim()))
+          .map((f) => [f[0] === 'U.S. Total' ? 'U.S.' : f[0], Number(f[field])]),
+      );
+    const cents = part(7, 58, 1);
+    const mcf = part(64, 115, 5);
+    const d = loadDatasets('heat-pumps').find((x) => x.id === 'state-prices')!;
+    expect(d.rows.length).toBe(52);
+    expect(cents.size).toBe(52);
+    expect(mcf.size).toBe(52);
+    for (const row of d.rows) {
+      const e = fromCentsPerKwh(cents.get(row.label)!);
+      const g = fromDollarsPerMcf(mcf.get(row.label)!);
+      const R = e / g;
+      const want: Record<string, number> = { elec: e, gas: g, ratio: R, breakEven95: R * 0.95, breakEven80: R * 0.8 };
+      d.columns.forEach((c, i) => expect(row.cells[i].display, `${row.label}/${c.key}`).toBe(want[c.key].toFixed(2)));
+    }
   });
 });
 
