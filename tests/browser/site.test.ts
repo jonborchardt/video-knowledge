@@ -21,6 +21,8 @@ const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select, textarea, summary, [tabindex]:not([tabindex="-1"])';
 const isTopic = (p: string) =>
   /^[^/]+\/index\.html$/.test(p) && !/^(about|commissions|inquiries|institutions|privacy)\//.test(p);
+/** A matter (story) page: <topic>/<slug>/index.html, not a commission or an inquiry's data page. */
+const isMatter = (p: string) => /^[^/]+\/[^/]+\/index\.html$/.test(p) && !/^commissions\/|^[^/]+\/data\//.test(p);
 
 let server: Awaited<ReturnType<typeof preview>>;
 let origin = '';
@@ -183,38 +185,65 @@ describe.skipIf(!pages.length).each(BROWSERS)('%s', (name) => {
       gate(findings);
     });
 
-    it.runIf(isTopic(p))('topic page: tabs, claim filter, disclosures and theme work from the keyboard', async () => {
-      const { page, close } = await open(p);
-      const selected = () => page.locator('[role=tab][aria-selected=true]').getAttribute('aria-controls');
-      const first = await selected();
-      await page.locator('[role=tab][aria-selected=true]').focus();
-      await page.keyboard.press('ArrowRight');
-      const second = await selected();
-      expect(second).not.toBe(first);
-      expect(page.url()).toContain(`#${second}`);
-      await expect.poll(() => page.locator(`#${second}`).isVisible()).toBe(true);
-      expect(await page.locator(`#${first}`).isVisible()).toBe(false);
+    it.runIf(isTopic(p))(
+      'inquiry page: an exhibit opens from the keyboard, its chips filter its claims, and the theme persists',
+      async () => {
+        const { page, close } = await open(p);
+        const source = page.locator('[data-source]').first();
+        const details = source.locator('xpath=descendant-or-self::details').first(); // the exhibit's disclosure
+        await source.locator('summary').focus();
+        await page.keyboard.press('Enter');
+        expect(await details.evaluate((d: HTMLDetailsElement) => d.open)).toBe(true);
 
-      await page.locator('[role=tab][aria-controls=claims]').click();
-      await page.locator('#q').fill('zzzz-no-claim-says-this');
-      await expect.poll(() => page.locator('[data-status]').textContent()).toBe('No claims match.');
-      await page.locator('#q').fill('');
-      expect(await page.locator('[data-status]').textContent()).toMatch(/^Showing \d+ of \d+ claims\.$/);
+        const chip = source.locator('label:has(input:not([disabled]))').nth(1);
+        const v = await chip.locator('input').getAttribute('value');
+        await chip.click();
+        const rows = await source
+          .locator('li')
+          .evaluateAll((ls) =>
+            ls
+              .filter((l) => (l as HTMLElement).offsetParent)
+              .map((l) => ({ v: l.getAttribute('data-v'), novel: l.hasAttribute('data-novel') })),
+          );
+        expect(rows.length, `rows under chip ${v}`).toBeGreaterThan(0);
+        for (const r of rows)
+          expect(
+            v === 'all' ||
+              (v === 'novel' ? r.novel : v === 'untestable' ? ['untestable', 'unknown'].includes(r.v!) : r.v === v),
+            `${JSON.stringify(r)} under chip ${v}`,
+          ).toBe(true);
 
-      const card = page.locator('[data-claims] details').first();
-      await card.locator('summary').focus();
-      await page.keyboard.press('Enter');
-      expect(await card.evaluate((d: HTMLDetailsElement) => d.open)).toBe(true);
+        const toggle = page.locator('[data-theme-toggle]');
+        const before = await toggle.getAttribute('aria-label');
+        await toggle.click();
+        expect(await toggle.getAttribute('aria-label')).not.toBe(before);
+        const theme = await page.evaluate(() => document.documentElement.dataset.theme);
+        await page.reload();
+        expect(await page.evaluate(() => document.documentElement.dataset.theme), 'the choice persists').toBe(theme);
+        await close();
+      },
+    );
 
-      const toggle = page.locator('[data-theme-toggle]');
-      const before = await toggle.getAttribute('aria-label');
-      await toggle.click();
-      expect(await toggle.getAttribute('aria-label')).not.toBe(before);
-      const theme = await page.evaluate(() => document.documentElement.dataset.theme);
-      await page.reload();
-      expect(await page.evaluate(() => document.documentElement.dataset.theme), 'the choice persists').toBe(theme);
-      await close();
-    });
+    it.runIf(isMatter(p))(
+      'matter page: a stat-line shortcut opens its card on that chip and keeps it open',
+      async () => {
+        const { page, close } = await open(p);
+        const card = page.locator('[data-claim]:has([data-pick] ~ [data-pick])').first();
+        const isOpen = () => card.evaluate((d: HTMLDetailsElement) => d.open);
+        const checked = () => card.locator('input:checked').getAttribute('value');
+        const picks = card.locator('[data-pick]');
+        await picks.first().click();
+        expect(await isOpen()).toBe(true);
+        expect(await checked()).toBe(await picks.first().getAttribute('data-pick'));
+        await picks.nth(1).click();
+        expect(await isOpen(), 'a second shortcut on an open card keeps it open').toBe(true);
+        expect(await checked()).toBe(await picks.nth(1).getAttribute('data-pick'));
+        await card.locator('summary').focus();
+        await page.keyboard.press('Enter');
+        expect(await isOpen()).toBe(false);
+        await close();
+      },
+    );
 
     it.runIf(name === 'chromium')(
       'has no WCAG 2.2 A/AA violations axe can detect (light 320 and 1280, dark 1280)',
