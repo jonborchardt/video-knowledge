@@ -34,6 +34,19 @@ const isActive = (path: string) => current.startsWith(href(path));
             </li>
           ))
         }
+        {
+          import.meta.env.DEV && (
+            <li>
+              <a
+                href={href('/admin')}
+                aria-current={isActive('/admin') ? 'page' : undefined}
+                class="rounded-sm px-2 py-1 text-muted-foreground no-underline hover:text-foreground aria-[current=page]:font-medium aria-[current=page]:text-foreground"
+              >
+                Admin
+              </a>
+            </li>
+          )
+        }
         <li><ThemeToggle /></li>
       </ul>
     </nav>

@@ -1,6 +1,13 @@
 # Storyboard: Do 97% of Day Traders Really Lose Money?
 
-24 scenes, 4:24 at 150 wpm including pauses. Script a1196b72ff (passed). Storyboard status: **ok**.
+24 scenes, 4:25 at 150 wpm including pauses. Script cf8aa41999 (passed). Storyboard status: **ok**.
+
+## Issues
+
+- **warning** - release-stale: release.json locked script a1196b72ff; it is now cf8aa41999: the approved package has changed, lock it again after review
+- **warning** - release-stale: release.json locked package c10ea75b99; it is now ef97fa3eb7: the approved package has changed, lock it again after review
+- **warning** - release-stale: release.json locked validation 37935de2ea; it is now 791be98faf: the approved package has changed, lock it again after review
+- **warning** - release-stale: release.json locked storyboard c2f52b25bb; it is now 0c4a7f06d6: the approved package has changed, lock it again after review
 
 ## 1. sc01 (0:00 to 0:11, 11.3s incl. 0.5s pause)
 
@@ -282,15 +289,15 @@ Note: Standard deviation of daily profit, per trader.
 
 **Direction.** Wipe from the Brazil excerpt; highlight on 'vast majority'.
 
-## 16. sc16 (2:13 to 2:27, 14s)
+## 16. sc16 (2:13 to 2:29, 15.2s)
 
-**Purpose.** Costs more than triple the daily loss.
+**Purpose.** Costs more than triple the daily shortfall against the market.
 
-**Narration** (s16). Taken as a group, they lost 7 basis points a day before costs, where a basis point is a hundredth of a percent, and trading costs more than tripled that loss, to 23.9.
+**Narration** (s16). Taken as a group, they trailed the market by 7 basis points a day before costs, where a basis point is a hundredth of a percent, and trading costs more than tripled that shortfall, to 23.9.
 
 **Visual** (data-chart). Two tiles: 7 basis points a day before costs, then 23.9 after costs, the second tile visibly larger.
 
-**Chart** (stat-tiles: Average daily loss, in basis points).
+**Chart** (stat-tiles: Average daily shortfall against the market, in basis points).
 
 | Label | Display | Value | Unit | Source |
 |---|---|---|---|---|
@@ -303,7 +310,7 @@ Note: A basis point is a hundredth of a percent; day traders as a group.
 
 **Direction.** Second tile lands on '23.9' with a punch.
 
-## 17. sc17 (2:27 to 2:31, 3.3s incl. 0.5s pause)
+## 17. sc17 (2:29 to 2:32, 3.3s incl. 0.5s pause)
 
 **Purpose.** Turn: is anyone reliably good?
 
@@ -315,7 +322,7 @@ Note: A basis point is a hundredth of a percent; day traders as a group.
 
 **Direction.** Type on; hold 0.5 s.
 
-## 18. sc18 (2:31 to 2:44, 13.2s)
+## 18. sc18 (2:32 to 2:45, 13.2s)
 
 **Purpose.** Yes: a few past winners kept winning.
 
@@ -354,7 +361,7 @@ Note: A basis point is a hundredth of a percent; day traders as a group.
 
 **Direction.** Highlight on 'earn more than their trading costs'.
 
-## 19. sc19 (2:44 to 2:52, 8.6s incl. 1s pause)
+## 19. sc19 (2:45 to 2:54, 8.6s incl. 1s pause)
 
 **Purpose.** But they were a sliver of everyone.
 
@@ -374,11 +381,11 @@ Note: An upper bound: the study says less than 3%.
 
 **Direction.** Squares light on 'less than 3 percent'; hold 1 s.
 
-## 20. sc20 (2:52 to 3:03, 10.8s)
+## 20. sc20 (2:54 to 3:04, 10.8s)
 
-**Purpose.** An educator names one reason: the algorithms on the other side.
+**Purpose.** An educator describes an obstacle he hit himself: the algorithms on the other side.
 
-**Narration** (s20). Ross Cameron names one reason the rest struggle: "when you trade against the high frequency trading algorithms, trading large caps, you really don't have a good edge".
+**Narration** (s20). Ross Cameron describes one obstacle he hit himself: "when you trade against the high frequency trading algorithms, trading large caps, you really don't have a good edge".
 
 **Visual** (typography). Quote card: quoted words only, 'you really don't have a good edge' in accent colour.
 
@@ -388,7 +395,7 @@ Note: An upper bound: the study says less than 3%.
 
 **Direction.** Hard cut in.
 
-## 21. sc21 (3:03 to 3:17, 13.4s incl. 1s pause)
+## 21. sc21 (3:04 to 3:18, 13.4s incl. 1s pause)
 
 **Purpose.** The Brazil data agree: more high-frequency trading, bigger losses for individuals.
 
@@ -409,7 +416,7 @@ Note: An association in the Brazilian futures data, not a controlled experiment.
 
 **Direction.** Second tile lands on '19 percent'; hold 1 s before the answer.
 
-## 22. sc22 (3:17 to 3:37, 20.8s)
+## 22. sc22 (3:18 to 3:39, 20.8s)
 
 **Purpose.** The answer in two lines.
 
@@ -423,7 +430,7 @@ Note: An association in the Brazilian futures data, not a controlled experiment.
 
 **Direction.** Line one on 'most people lost', line two on 'a sliver'.
 
-## 23. sc23 (3:37 to 4:02, 24.9s incl. 0.5s pause)
+## 23. sc23 (3:39 to 4:04, 24.9s incl. 0.5s pause)
 
 **Purpose.** What the studies cannot tell you.
 
@@ -435,7 +442,7 @@ Note: An association in the Brazilian futures data, not a controlled experiment.
 
 **Direction.** Line one on 'other markets', line two on 'neither confirmed nor ruled out'.
 
-## 24. sc24 (4:02 to 4:24, 21.5s incl. 1.5s pause)
+## 24. sc24 (4:04 to 4:25, 21.5s incl. 1.5s pause)
 
 **Purpose.** Two things to do.
 
