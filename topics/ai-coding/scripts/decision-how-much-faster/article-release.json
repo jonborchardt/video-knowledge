@@ -1,0 +1,1322 @@
+{
+ "topic": "ai-coding",
+ "story": "decision:how-much-faster",
+ "approvedBy": "automated: /produce run started by Jon Borchardt",
+ "date": "2026-10-27",
+ "revision": 1,
+ "fingerprints": {
+  "article": "0b11ac608d",
+  "package": "17538cd756",
+  "validation": "cb6504fde8"
+ },
+ "article": {
+  "topic": "ai-coding",
+  "story": "decision:how-much-faster",
+  "revision": 2,
+  "generation": {
+   "model": "claude-opus-5-5",
+   "brief": "scripts/briefs/article.md",
+   "date": "2026-10-27",
+   "wordsPerMinute": 150,
+   "evidencePackage": "17538cd756"
+  },
+  "meta": {
+   "headline": "How much faster does AI make programmers? What the trials actually measured",
+   "seoTitle": "How much faster does AI make programmers?",
+   "dek": {
+    "id": "meta.dek",
+    "text": "Workplace trials of AI coding assistants estimated modest average gains, while a randomized trial found early-2025 tools slowed experienced developers on mature projects they knew well.",
+    "type": "factual",
+    "assertions": [
+     {
+      "id": "meta.dek.a",
+      "text": "Field and trial estimates in workplaces with the assistants they tested (26.08% more output; a roughly 21% speed increase that missed significance) show modest average gains, far below headline claims.",
+      "kind": "fact",
+      "claims": [
+       {
+        "id": "ai-coding/real-enterprise-codebases-yields-modest-average",
+        "stance": "asserts"
+       }
+      ],
+      "evidence": [
+       {
+        "kind": "study",
+        "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+        "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784"
+       },
+       {
+        "kind": "study",
+        "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+        "cite": "ai-coding/sources/2410.12944.txt#L519-L528"
+       }
+      ],
+      "qualifications": [
+       "The dek says \"estimated\", and question-1 carries the limits of the estimates in an unresolved callout."
+      ]
+     },
+     {
+      "id": "meta.dek.b",
+      "text": "Early-2025 AI tools increased completion time for experienced open-source developers on mature projects they knew well.",
+      "kind": "fact",
+      "claims": [
+       {
+        "id": "ai-coding/tools-slowed-experienced-open-source-developers",
+        "stance": "asserts"
+       }
+      ],
+      "evidence": [
+       {
+        "kind": "study",
+        "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+        "cite": "ai-coding/sources/2507.09089v2.txt#L11-L27"
+       }
+      ]
+     }
+    ]
+   },
+   "description": {
+    "id": "meta.description",
+    "text": "Trials of AI coding tools estimate modest average gains at work, and early-2025 tools slowed experienced developers in mature projects they knew.",
+    "type": "factual",
+    "assertions": [
+     {
+      "id": "meta.description.a",
+      "text": "Field and trial estimates in workplaces with the assistants they tested (26.08% more output; a roughly 21% speed increase that missed significance) show modest average gains, far below headline claims.",
+      "kind": "fact",
+      "claims": [
+       {
+        "id": "ai-coding/real-enterprise-codebases-yields-modest-average",
+        "stance": "asserts"
+       }
+      ],
+      "evidence": [
+       {
+        "kind": "study",
+        "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+        "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784"
+       },
+       {
+        "kind": "study",
+        "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+        "cite": "ai-coding/sources/2410.12944.txt#L519-L528"
+       }
+      ],
+      "qualifications": [
+       "The description says \"estimate\", not a settled figure."
+      ]
+     },
+     {
+      "id": "meta.description.b",
+      "text": "Early-2025 AI tools increased completion time for experienced open-source developers on mature projects they knew well.",
+      "kind": "fact",
+      "claims": [
+       {
+        "id": "ai-coding/tools-slowed-experienced-open-source-developers",
+        "stance": "asserts"
+       }
+      ],
+      "evidence": [
+       {
+        "kind": "study",
+        "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+        "cite": "ai-coding/sources/2507.09089v2.txt#L11-L27"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "sections": [
+   {
+    "name": "hook",
+    "heading": "Ten times faster, or slower than before?",
+    "blocks": [
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s01",
+        "text": "Claims about how much AI speeds up programming run from enormous multiples to an outright slowdown, and both ends of that range point to evidence of their own.",
+        "type": "rhetorical"
+       },
+       {
+        "id": "s02",
+        "text": "This article sets those claims beside the studies that measured programmers at work, and asks of each study who was measured, on what work, and with which tools.",
+        "type": "transitional"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "name": "question-1",
+    "heading": "How much faster does AI actually make programmers?",
+    "blocks": [
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s03",
+        "text": "DHH, speaking on the Lex Fridman Podcast, described \"that magical 10X, 100X, in a few rare cases, 1000X productivity boost\" and tied it to working with the agents directly.",
+        "type": "attributed",
+        "assertions": [
+         {
+          "id": "s03.a",
+          "text": "DHH, on the Lex Fridman Podcast, said that getting a 10X, 100X or in rare cases 1000X productivity boost requires interacting with the agents directly.",
+          "kind": "attribution",
+          "claims": [
+           {
+            "id": "ai-coding/engineers-who-adopt-agentic-coding-about",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "statement",
+            "claim": "ai-coding/engineers-who-adopt-agentic-coding-about",
+            "source": "NYFGCESmikA"
+           }
+          ],
+          "quote": {
+           "text": "that magical 10X, 100X, in a few rare cases, 1000X productivity boost",
+           "source": "NYFGCESmikA",
+           "speaker": "DHH"
+          }
+         }
+        ]
+       },
+       {
+        "id": "s04",
+        "text": "At the other end, many videos and posts repeat a single trial's finding, which the channel Macro Lens put as \"they were 19% slower than when they weren't\".",
+        "type": "attributed",
+        "assertions": [
+         {
+          "id": "s04.a",
+          "text": "Several videos and posts report that experienced developers were 19% slower with AI tools.",
+          "kind": "attribution",
+          "claims": [
+           {
+            "id": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "statement",
+            "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "source": "9wF0n48k6JU"
+           },
+           {
+            "kind": "statement",
+            "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "source": "Zdus-d4ehN0"
+           },
+           {
+            "kind": "statement",
+            "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "source": "rdcjMm11TUU"
+           },
+           {
+            "kind": "statement",
+            "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "source": "j-ZEhEiHzjg"
+           },
+           {
+            "kind": "statement",
+            "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "source": "seangoedecke-impact-of-ai-study"
+           }
+          ]
+         },
+         {
+          "id": "s04.b",
+          "text": "The channel Macro Lens said that when the developers were allowed AI tools they were 19% slower than when they weren't.",
+          "kind": "attribution",
+          "claims": [
+           {
+            "id": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "statement",
+            "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "source": "haWve-6WgW4"
+           }
+          ],
+          "quote": {
+           "text": "they were 19% slower than when they weren't",
+           "source": "haWve-6WgW4",
+           "speaker": "Macro Lens"
+          }
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s05",
+        "text": "Field experiments at three companies, which followed almost five thousand software developers in their regular jobs and partly over years, estimated that an AI code suggestion tool raised their output by about 26 percent.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s05.a",
+          "text": "Observing the output of almost 5000 software developers at three companies in their regular jobs, partly over years, the authors estimate that a generative AI code suggestion tool raised developer productivity by 26.08%, about 26%.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784"
+           }
+          ],
+          "calc": {
+           "expression": "26.08",
+           "inputs": [
+            {
+             "value": "26.08",
+             "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784"
+            }
+           ],
+           "result": "26"
+          },
+          "qualifications": [
+           "The METR trial (s11 to s14) found experienced developers in large, mature open-source projects slowed, and the unresolved callout after s09 gives the limits of these estimates."
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s06",
+        "text": "Its authors call that substantially smaller than the earlier lab result, and suggest why: some kinds of coding are less readily helped by the tool, and coding is only part of a developer's job.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s06.a",
+          "text": "The field estimate is substantially smaller than the lab result of Peng et al.; the authors suggest some coding tasks are less readily assisted by the tool and coding is only part of a developer's job.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784"
+           }
+          ],
+          "qualifications": [
+           "The METR trial (s11 to s14) found experienced developers in large, mature open-source projects slowed, and the unresolved callout after s09 gives the limits of these estimates."
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s07",
+        "text": "Another trial put the gain in development speed attributable to AI at roughly 21 percent, an estimate that did not reach the usual threshold for statistical significance.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s07.a",
+          "text": "The trial estimated a roughly 21% increase in development speed attributable to AI in its best-fit model, an effect that did not meet the usual significance threshold.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "cite": "ai-coding/sources/2410.12944.txt#L519-L528"
+           }
+          ],
+          "qualifications": [
+           "s07 says the estimate missed statistical significance."
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "table",
+      "id": "t1",
+      "caption": "Measured change with AI coding tools, by study; the rows measure different things (output, development speed, task completion time, lab productivity) on different baselines",
+      "columns": [
+       "Measured change"
+      ],
+      "rows": [
+       {
+        "label": "Field experiments at three companies: increase in output with an AI code suggestion tool",
+        "cells": [
+         {
+          "label": "Measured change",
+          "value": 26.08,
+          "unit": "percent",
+          "display": "26.08%",
+          "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784"
+         }
+        ]
+       },
+       {
+        "label": "Trial of development speed: increase attributable to AI, not statistically significant",
+        "cells": [
+         {
+          "label": "Measured change",
+          "value": 21,
+          "unit": "percent",
+          "display": "21%",
+          "qualifier": "about",
+          "cite": "ai-coding/sources/2410.12944.txt#L519-L528"
+         }
+        ]
+       },
+       {
+        "label": "METR randomized trial, experienced open-source developers, early-2025 tools: increase in task completion time, a slowdown",
+        "cells": [
+         {
+          "label": "Measured change",
+          "value": 19,
+          "unit": "percent",
+          "display": "19%",
+          "cite": "ai-coding/sources/2507.09089v2.txt#L11-L27"
+         }
+        ]
+       },
+       {
+        "label": "Copilot lab trial, greenfield-style task: increase in productivity",
+        "cells": [
+         {
+          "label": "Measured change",
+          "value": 55.8,
+          "unit": "percent",
+          "display": "55.8%",
+          "cite": "ai-coding/sources/2302.06590.txt#L184-L188"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "callout": "unresolved",
+      "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+      "sentences": [
+       {
+        "id": "s09",
+        "text": "These estimates do not settle how much AI helps across workplaces: the field estimate carries a standard error of 10.3 percent, and the other trial's estimate missed statistical significance.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s09.a",
+          "text": "The field estimate of the productivity increase is 26.08% with a standard error of 10.3%.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784"
+           }
+          ],
+          "qualifications": [
+           "s09 states the standard error beside the estimate."
+          ]
+         },
+         {
+          "id": "s09.b",
+          "text": "The trial estimated a roughly 21% increase in development speed attributable to AI in its best-fit model, an effect that did not meet the usual significance threshold.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "cite": "ai-coding/sources/2410.12944.txt#L519-L528"
+           }
+          ],
+          "qualifications": [
+           "s09 says the estimate missed statistical significance."
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s10",
+        "text": "The slowdown figure comes from METR, which had 16 experienced open-source developers complete 246 tasks in mature projects where they had an average of 5 years of prior experience, with AI tools allowed or disallowed at random for each task.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s10.a",
+          "text": "METR's randomized controlled trial had 16 experienced open-source developers complete 246 tasks in mature projects on which they had an average of 5 years of prior experience, with each task randomly assigned to allow or disallow AI tools.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L11-L27"
+           },
+           {
+            "kind": "study",
+            "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "cite": "ai-coding/sources/metr-2026-experiment-design.txt#L58-L62"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s11",
+        "text": "The tools were the February to June 2025 frontier, chiefly the Cursor Pro editor with Claude 3.5 and 3.7 Sonnet.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s11.a",
+          "text": "The trial tested AI tools at the February-June 2025 frontier; developers primarily used Cursor Pro with Claude 3.5/3.7 Sonnet.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L11-L27"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s12",
+        "text": "When AI was allowed, tasks took 19 percent longer to complete.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s12.a",
+          "text": "Allowing AI increased task completion time by 19%.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L11-L27"
+           }
+          ],
+          "qualifications": [
+           "s10 and s11 give the developers, the projects and the early-2025 tools beside this figure."
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s13",
+        "text": "METR's own hypothesis is that AI helped its developers less than earlier trials found because their projects were large and old, on average about 10 years old with more than 1,100,000 lines of code, where earlier trials used more greenfield projects.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s13.a",
+          "text": "METR hypothesizes that AI helped its developers less than in earlier RCTs because of the size and complexity of the repositories, which average about 10 years old and >1,100,000 lines of code, compared with the more greenfield projects in Peng et al. and other trials.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L995-L1001"
+           }
+          ],
+          "qualifications": [
+           "s13 presents it as METR's hypothesis, not a finding.",
+           "The projects are open-source projects in METR's trial (s10), not workplace codebases."
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "figure",
+      "ref": "decision-how-much-faster/sc11",
+      "caption": "The average age and size of the projects in the METR trial, which the researchers offer as a hypothesis for the slowdown."
+     },
+     {
+      "kind": "prose",
+      "callout": "qualification",
+      "claim": "ai-coding/measured-slowdown-mainly-artifact-older-models",
+      "sentences": [
+       {
+        "id": "s14",
+        "text": "METR's 2026 update compares periods, not models: from conversations with participants, it believes developers are likely more sped up from AI tools in early 2026 than in early 2025, and it does not say how much of that is due to newer models.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s14.a",
+          "text": "Based on conversations with study participants, METR believes it is likely that developers are more sped up from AI tools in early 2026 than in its early 2025 estimates.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/measured-slowdown-mainly-artifact-older-models",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/measured-slowdown-mainly-artifact-older-models",
+            "cite": "ai-coding/sources/metr-2026-experiment-design.txt#L61-L62"
+           }
+          ],
+          "qualifications": [
+           "s16 says METR calls its new data only very weak evidence because of selection effects."
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s15",
+        "text": "Its newer raw results estimate that tasks took 18 percent less time for returning developers and 4 percent less for newly recruited ones, yet both confidence intervals reach plus 9 percent, which would be a slowdown.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s15.a",
+          "text": "METR's later study estimates a speedup of -18% (confidence interval -38% to +9%) for returning developers and -4% (confidence interval -15% to +9%) for newly recruited developers; both intervals reach into longer task times.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/measured-slowdown-mainly-artifact-older-models",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/measured-slowdown-mainly-artifact-older-models",
+            "cite": "ai-coding/sources/metr-2026-experiment-design.txt#L61-L62"
+           }
+          ],
+          "qualifications": [
+           "s15 says both intervals include a slowdown; s16 gives the selection problem."
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s16",
+        "text": "METR calls this only very weak evidence for the size of the change, because significantly more developers now choose not to take part since they do not wish to work without AI, which it says likely biases its estimate of the speedup downwards.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s16.a",
+          "text": "Because of the selection effects in its new experiment, METR calls its data only very weak evidence for the size of the increase in speedup.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/measured-slowdown-mainly-artifact-older-models",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/measured-slowdown-mainly-artifact-older-models",
+            "cite": "ai-coding/sources/metr-2026-experiment-design.txt#L61-L62"
+           }
+          ],
+          "qualifications": [
+           "s16 is itself the qualification."
+          ]
+         },
+         {
+          "id": "s16.b",
+          "text": "METR observed a significant increase in developers choosing not to participate in its new experiment because they do not wish to work without AI, which it says likely biases its estimate of AI-assisted speedup downwards.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "cite": "ai-coding/sources/metr-2026-experiment-design.txt#L58-L62"
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "figure",
+      "ref": "decision-how-much-faster/sc14",
+      "caption": "METR's 2026 estimates of the cut in task time with AI, for returning and newly recruited developers."
+     },
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s17",
+        "text": "The largest figures in this evidence come from Anthropic's report on its own staff: employees self-reported a 50 percent productivity gain from Claude on average, and merged pull requests per engineer per day rose 67 percent when its engineering org adopted Claude Code.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s17.a",
+          "text": "Anthropic employees self-reported that they now use Claude in 59% of their work and get +50% productivity gains from it on average.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/engineers-who-adopt-agentic-coding-about",
+            "stance": "denies"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/engineers-who-adopt-agentic-coding-about",
+            "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L35-L35"
+           }
+          ],
+          "qualifications": [
+           "s18 says the 50 percent is self-reported and the 67 percent counts merged changes, not time saved."
+          ]
+         },
+         {
+          "id": "s17.b",
+          "text": "Anthropic saw a 67% increase in merged pull requests per engineer per day when it adopted Claude Code across its engineering org.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/engineers-who-adopt-agentic-coding-about",
+            "stance": "denies"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/engineers-who-adopt-agentic-coding-about",
+            "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L35-L35"
+           }
+          ],
+          "qualifications": [
+           "s18 says the 67 percent counts merged changes, not time saved."
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s18",
+        "text": "A self-report and a count of merged changes are not measured time saved, and even read at face value both figures are an order of magnitude short of ten times.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s18.a",
+          "text": "A self-reported +50% gain and 67% more merged pull requests are an order of magnitude below 10x.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/engineers-who-adopt-agentic-coding-about",
+            "stance": "denies"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/engineers-who-adopt-agentic-coding-about",
+            "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L35-L35"
+           }
+          ],
+          "qualifications": [
+           "s18 names both figures as a self-report and a count, from one company's report on its own staff."
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "callout": "unresolved",
+      "gap": 1,
+      "sentences": [
+       {
+        "id": "s19",
+        "text": "The tenfold claim for agentic coding is unmeasured rather than disproved: the largest workplace estimate above is for a code suggestion tool, and Anthropic's figures are its staff's self-reports and a count of merged changes.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s19.a",
+          "text": "Anthropic's figures are employees' self-reported +50% productivity gains and a 67% increase in merged pull requests per engineer per day.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/engineers-who-adopt-agentic-coding-about",
+            "stance": "denies"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/engineers-who-adopt-agentic-coding-about",
+            "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L35-L35"
+           }
+          ],
+          "qualifications": [
+           "s19 says the claim is unmeasured, not disproved."
+          ]
+         },
+         {
+          "id": "s19.b",
+          "text": "The field estimate is for usage of a generative AI code suggestion tool.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784"
+           }
+          ],
+          "qualifications": [
+           "s19 limits the field estimate to a code suggestion tool."
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "callout": "unresolved",
+      "gap": 0,
+      "sentences": [
+       {
+        "id": "s20",
+        "text": "A report on code migrations gives a larger saving in total migration time against a similar exercise without LLM assistance, but that estimate was reported by the engineers doing the migration and concerns migration work, so it cannot decide how much AI speeds up everyday development.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s20.a",
+          "text": "The total time spent on the migration was reduced, as estimated by the engineers doing the migration, compared with a similar exercise without LLM assistance.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "cite": "ai-coding/sources/2501.06972.txt#L245-L251"
+           }
+          ],
+          "qualifications": [
+           "s20 says the figure is the engineers' estimate for migration work and cannot decide the claim."
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "callout": "unresolved",
+      "gap": 2,
+      "sentences": [
+       {
+        "id": "s21",
+        "text": "Why the trials split is not established: METR offers project size and complexity only as a hypothesis, and says the data from its newer experiment give an unreliable signal of the current effect of AI tools.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s21.a",
+          "text": "METR hypothesizes that AI helped its developers less than in earlier RCTs because of the size and complexity of the repositories, which average about 10 years old and >1,100,000 lines of code, compared with the more greenfield projects in Peng et al. and other trials.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L995-L1001"
+           }
+          ],
+          "qualifications": [
+           "s21 presents it as a hypothesis."
+          ]
+         },
+         {
+          "id": "s21.b",
+          "text": "METR believes the data from its new experiment give an unreliable signal of the current productivity effect of AI tools, mainly because developers who do not wish to work without AI choose not to participate.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "cite": "ai-coding/sources/metr-2026-experiment-design.txt#L58-L62"
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s22",
+        "text": "So, with the assistants they tested, the workplace studies estimated modest average gains, far below the multiples in the hype.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s22.a",
+          "text": "Field and trial estimates in workplaces with the assistants they tested (26.08% more output; a roughly 21% speed increase that missed significance) show modest average gains, far below headline claims.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784"
+           },
+           {
+            "kind": "study",
+            "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "cite": "ai-coding/sources/2410.12944.txt#L519-L528"
+           }
+          ],
+          "qualifications": [
+           "s09 gives the limits of the estimates; s10 to s13 give the exception for experienced developers in mature projects."
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s23",
+        "text": "Experienced developers in large, mature projects they knew well were slowed by early-2025 tools, and METR's newer data are too weak to say whether today's tools reverse that.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s23.a",
+          "text": "Early-2025 AI tools increased completion time for experienced open-source developers on mature projects they knew well.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L11-L27"
+           }
+          ]
+         },
+         {
+          "id": "s23.b",
+          "text": "METR's newer data is only very weak evidence for how much developers are sped up now, because of selection effects.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/measured-slowdown-mainly-artifact-older-models",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/measured-slowdown-mainly-artifact-older-models",
+            "cite": "ai-coding/sources/metr-2026-experiment-design.txt#L61-L62"
+           }
+          ],
+          "qualifications": [
+           "s23 says the newer data cannot settle it."
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "name": "question-2",
+    "heading": "Do developers know whether AI is actually making them faster?",
+    "blocks": [
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s24",
+        "text": "Josh Anderson, discussing a Stanford study on his channel, said that people \"estimating how their productivity was affected by AI is effectively a coin flip\".",
+        "type": "attributed",
+        "assertions": [
+         {
+          "id": "s24.a",
+          "text": "Josh Anderson said that people estimating how their productivity was affected by AI is effectively a coin flip.",
+          "kind": "attribution",
+          "claims": [
+           {
+            "id": "ai-coding/developers-overestimate-how-much-tools-speed",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "statement",
+            "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+            "source": "5tmWlvn-uLY"
+           }
+          ],
+          "quote": {
+           "text": "estimating how their productivity was affected by AI is effectively a coin flip",
+           "source": "5tmWlvn-uLY",
+           "speaker": "Josh Anderson"
+          }
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s25",
+        "text": "Before starting, METR's developers forecast that allowing AI would cut their completion time by 24 percent; after finishing, they estimated it had cut it by 20 percent, in the trial that measured them taking longer.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s25.a",
+          "text": "Before starting tasks, the developers forecast that allowing AI would reduce completion time by 24%.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/developers-overestimate-how-much-tools-speed",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L17-L24"
+           }
+          ],
+          "qualifications": [
+           "s27 gives the Copilot trial, where participants underestimated their gain, so overestimation is not stated as the rule."
+          ]
+         },
+         {
+          "id": "s25.b",
+          "text": "After completing the study, the developers estimated that allowing AI had reduced completion time by 20%, while the trial found it increased completion time.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/developers-overestimate-how-much-tools-speed",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L17-L24"
+           }
+          ],
+          "qualifications": [
+           "s27 gives the Copilot trial, where participants underestimated their gain."
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s26",
+        "text": "Forecasters outside the trial were further off: experts in economics predicted completion times 39 percent shorter, and machine learning experts 38 percent shorter.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s26.a",
+          "text": "Experts in economics predicted 39% shorter completion times and experts in ML predicted 38% shorter.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/developers-overestimate-how-much-tools-speed",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L17-L24"
+           }
+          ],
+          "qualifications": [
+           "s27 gives the Copilot trial, where participants underestimated their gain."
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "figure",
+      "ref": "decision-how-much-faster/sc21",
+      "caption": "Predicted cuts in completion time in the METR trial, from the developers before and after and from outside experts."
+     },
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s27",
+        "text": "An earlier randomized trial of Copilot, a lab task on a more greenfield project, went the other way: participants in both groups estimated a 35 percent productivity gain on average, against a measured 55.8 percent.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s27.a",
+          "text": "In the Copilot trial, participants in both treated and control groups estimated a 35% increase in productivity on average, an underestimation compared with the 55.8% increase in their revealed productivity.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/developers-overestimate-how-much-tools-speed",
+            "stance": "denies"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+            "cite": "ai-coding/sources/2302.06590.txt#L184-L188"
+           }
+          ],
+          "qualifications": [
+           "s26 to s28 give the METR trial, where developers and experts overestimated."
+          ]
+         },
+         {
+          "id": "s27.b",
+          "text": "Peng et al.'s Copilot result came from a software engineering task in the lab, on a more greenfield project.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784"
+           },
+           {
+            "kind": "study",
+            "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L995-L1001"
+           }
+          ],
+          "qualifications": [
+           "s30 names it as a lab task on a greenfield-style project."
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "figure",
+      "ref": "decision-how-much-faster/sc23",
+      "caption": "The Copilot lab trial: the measured productivity gain beside the participants' average estimate."
+     },
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s28",
+        "text": "Across these trials, self-estimates missed in opposite directions: too high for experienced developers in mature projects they knew, too low on a fresh lab task.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s28.a",
+          "text": "METR's experienced developers on their mature projects overestimated their speedup, while participants in the Copilot lab trial underestimated theirs.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/developers-overestimate-how-much-tools-speed",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L17-L24"
+           },
+           {
+            "kind": "study",
+            "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+            "cite": "ai-coding/sources/2302.06590.txt#L184-L188"
+           }
+          ],
+          "qualifications": [
+           "s28 presents both trials, one overestimate and one underestimate, so neither is stated as the rule."
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "callout": "unresolved",
+      "gap": 3,
+      "sentences": [
+       {
+        "id": "s29",
+        "text": "For today's tools the question is open: METR's later update notes that some developers self-report very high speedups, recalls that its earlier study found such estimates can be quite unreliable, and adds that the true speedup could be much higher among the developers and tasks selected out of its experiment.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s29.a",
+          "text": "METR's later update says some developers self-report very high speedups, and that as its earlier study documented those estimates can be quite unreliable.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/developers-overestimate-how-much-tools-speed",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+            "cite": "ai-coding/sources/metr-2026-experiment-design.txt#L63-L63"
+           },
+           {
+            "kind": "study",
+            "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L17-L24"
+           }
+          ],
+          "qualifications": [
+           "s29 says the true speedup could be higher among those selected out."
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "name": "close",
+    "heading": "What to take from the trials",
+    "blocks": [
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s31",
+        "text": "Every figure here belongs to particular developers, doing particular work, with particular tools, so a claimed speedup is worth only as much as the measurement behind it.",
+        "type": "rhetorical"
+       },
+       {
+        "id": "s32",
+        "text": "To learn what an AI tool does for your own work, time comparable tasks with it and without it rather than going by how fast it feels.",
+        "type": "rhetorical"
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "history": [
+  {
+   "revision": 1,
+   "date": "2026-10-27",
+   "approvedBy": "automated: /produce run started by Jon Borchardt",
+   "fingerprint": "0b11ac608d"
+  }
+ ],
+ "recordSeen": 0
+}
