@@ -154,13 +154,13 @@ A section is `{ "name", "heading", "blocks": [...] }`. Three kinds of block:
   named by a callout, or carried by an assertion on that claim with `qualifications`. Every gap needs an
   `unresolved` callout naming it by `gap` (a `gap-coverage` warning otherwise, which only you can close).
 - **Tables.** Cells are `ChartPoint`s, checked by the storyboard's own point check: `value` a number, `unit`
-  one of `percent`, `usd`, `count`, `ratio`, `display` the figure as the passage states it (it must state the
+  one of `percent`, `usd`, `gbp`, `count`, `ratio`, `display` the figure as the passage states it (it must state the
   value; for a ratio, "1 in 238" with value 238), `cite` a cite in the package whose passage holds every figure
   in `display` and in the cell's own `label`. Optional `qualifier`: `lt`, `lte`, `gt`, `gte`, `about`. A table
   never holds a figure the passage does not. The row's `label` names the population and year but is not checked
-  for figures, so put every figure in a cell's own `label` or `display`. There is no currency but `usd` and no
-  unit for years or a COP: as the storyboard does, pounds go under `usd` with a "£" display ("£120"), and years
-  or a COP under `count`.
+  for figures, so put every figure in a cell's own `label` or `display`. Dollars are `usd` and pounds `gbp`; the
+  display keeps the passage's sign ("$120", "£120"), and a sign that contradicts the unit is wrong. Years and a
+  COP go under `count`.
 - **Figures.** `ref` is `<story-slug>/<scene-id>` of a storyboard scene that has a chart
   (`figuresOf` in `src/lib/article-validation.ts`); anything else blocks. The caption describes the chart and
   carries no figure of its own.

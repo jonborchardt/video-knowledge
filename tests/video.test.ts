@@ -846,6 +846,21 @@ describe('shorts: portrait frame and kinds', () => {
     expect(tiles.problems).toEqual([]);
     expect(tiles.scenes[0].kind).toBe('short-stat-tiles');
   });
+  it('a gbp point draws as stat tiles and is refused by a bar', () => {
+    const gbp = [{ label: 'participants', value: 601, unit: 'gbp' as const, display: '£601', cite: DOC_D }];
+    const plan = scenes();
+    plan[1] = scene('sc02', ['s02'], {
+      visual: { category: 'data-chart', description: 'bar', chart: { type: 'bar', points: gbp } },
+      citations: [{ label: 'Survey D', cite: DOC_D }],
+    });
+    const b = checkSegment(shortInputs({ plan, config: { scenes: ['sc02'] } }));
+    expect(b.problems.join()).toMatch(/short-bar draws percent and count/);
+    plan[1] = scene('sc02', ['s02'], {
+      visual: { category: 'data-chart', description: 'tiles', chart: { type: 'stat-tiles', points: gbp } },
+      citations: [{ label: 'Survey D', cite: DOC_D }],
+    });
+    expect(checkSegment(shortInputs({ plan, config: { scenes: ['sc02'] } })).problems).toEqual([]);
+  });
   it('builds a portrait timeline that names the format and the institution', () => {
     const inp = shortInputs({ config: { scenes: ['sc03'] } });
     const tl = buildTimeline(checkSegment(inp), manifest(inp), 30, read);
