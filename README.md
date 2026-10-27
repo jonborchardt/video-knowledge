@@ -382,9 +382,12 @@ The flow, as the board's next step walks it (every step is one `npm run publish 
 2. Watch it with `checklist.md`; `npm run video -- final --approved-by "<name>"` accepts the draft (recorded as
    `approved` for the draft build) and packages the release build.
 3. `upload` again (the release build is a new private video; the draft's id is kept as superseded), watch it, then
-   `approve --by "<name>"`. Only an approved build may go public.
-4. `go-live` makes it public now; `go-live --at <ISO>` schedules it (YouTube keeps it private until then; at least
-   five minutes ahead). After the time, `sync` reads YouTube and records `published`.
+   `approve --by "<name>" --checked <n>` (n: the checklist items ticked; every one is needed). Only an approved
+   build may go public.
+4. `go-live` makes it public now and reads the video back: it records `published` only when YouTube says public,
+   else a `failed` event naming the Studio route (below) and exit 1. `go-live --at <ISO>` schedules it (YouTube
+   keeps it private until then; at least five minutes ahead). After the time, `sync` reads YouTube and records
+   `published`; a schedule more than 15 minutes past with the video still private is a `failed` event.
 5. Later changes to the title, tags, thumbnail (`thumbnail <file>`) or the `metadata` block: `push` sends them and
    records `updated`. A live video is never replaced: a re-release is a new output, `add <id> --kind youtube-video`.
 
@@ -394,7 +397,8 @@ they launch together: the video goes live first, its Shorts right after (`go-liv
 video once that is live (so its metadata is pushed once more); the related
 video is set in YouTube Studio (the API has no field for it).
 
-`show` prints the state, the composed upload metadata and the event log. Every verb is idempotent (an event already
+`show` prints the state, the composed upload metadata (with the `description:` to paste into Studio) and the event
+log. Every verb is idempotent (an event already
 recorded prints and exits 0) and refuses, without writing, what the files do not support (exit 2). The hand verbs
 (`uploaded --id`, `scheduled --at`, `published`, `updated --fields`) record what was done in the browser instead.
 
@@ -404,8 +408,10 @@ Once, by a person (Google's console; nothing here can do it):
 
 1. Create or pick a Google Cloud project and enable the YouTube Data API v3.
 2. OAuth consent screen: external, publishing status **In production** (a screen left in Testing issues refresh
-   tokens that expire after 7 days), scope `https://www.googleapis.com/auth/youtube.force-ssl`. Verification is
-   not needed for one channel owner; accept the unverified-app warning once.
+   tokens that expire after 7 days), scope `https://www.googleapis.com/auth/youtube.force-ssl`. In production
+   without OAuth verification, Google shows the unverified-app warning at consent and caps the project at 100 users
+   over its lifetime, which one owner never reaches; accept the warning once. Run `auth` again after switching from
+   Testing, so the stored token is one without the 7-day expiry.
 3. Create an OAuth client of type **Desktop app** and download its JSON. Save it as `.secrets/youtube-oauth.json`
    (`.secrets/` is gitignored) and point `.env` at it: `YOUTUBE_OAUTH_CREDENTIALS_PATH=./.secrets/youtube-oauth.json`.
    (`YOUTUBE_CLIENT_ID` and `YOUTUBE_CLIENT_SECRET` in `.env` work too.)
@@ -414,11 +420,13 @@ Once, by a person (Google's console; nothing here can do it):
    JSON file (mode 0600; without the path variable, in `.youtube-token.json`). A refresh token in `.env` as
    `YOUTUBE_REFRESH_TOKEN` is used instead when set.
 
-What the API does and costs (checked 2026-10-23): `videos.insert` is 1 of 100 uploads per project per day in its own
-quota bucket; `thumbnails.set` 50, `captions.insert` 400, `videos.update` 50 and `videos.list` 1 unit of the 10,000 a
-day for everything else, so one video is about 500 units and all 18 fit in a day. Google's `videos.insert` reference
-says uploads from unverified API projects are **not** restricted to private viewing; if YouTube locks one anyway, set
-it public in Studio and record `published` by hand. `publishAt` only works on a never-published private video; a past
+What the API does and costs (https://developers.google.com/youtube/v3/determine_quota_cost, checked 2026-10-27 for
+list and set): `videos.insert` is 1 of 100 calls per project per day in its own quota bucket (since 2026-06-01);
+`thumbnails.set` 50, `captions.insert` 400, `videos.update` 50 and `videos.list` 1 unit of the 10,000 a day for
+everything else, so one video is about 500 units and all 18 fit in a day. Google's `videos.insert` reference
+(2026-10-15) says uploads from unverified API projects are **not** restricted to private viewing, while its 2020
+revision note says they are until the project passes an audit; nothing here assumes either. `go-live` believes only
+what YouTube reads back, and a video YouTube keeps private goes out through Studio (below). `publishAt` only works on a never-published private video; a past
 time publishes immediately, which is why `go-live --at` refuses anything under five minutes ahead. There is no Shorts
 flag: a vertical or square video up to three minutes is a Short.
 
@@ -427,6 +435,58 @@ resumable session) before the first byte and deletes it after the ledger has the
 a network drop is a `failed` event with `retryable` and the same `upload` resumes the same YouTube video. A session
 YouTube no longer knows is a final failure: look for the title in Studio and record it with `uploaded --id`, or delete
 the session file to upload again. `sync` reconciles what happened on YouTube (rejected, deleted, gone public).
+
+#### Publishing through YouTube Studio
+
+The route when the API keeps a video private, or by choice. In this order:
+
+1. `npm run video -- final <topic> <story-id> --approved-by "<name>"` makes the release build.
+2. `npm run publish -- show <topic> <story-id>` prints the title, the tags and the `description:` block to paste.
+3. In YouTube Studio, on the institution's channel, upload exactly `video/review/<slug>.mp4` as **Private**. Paste the
+   title, description and tags. Set the thumbnail to `video/review/thumbnail.png`. Under Subtitles, upload
+   `video/review/captions.en.srt` as English. Set "No, it's not made for kids", the altered-content answer to the
+   ledger's `containsSyntheticMedia` (default No), and the category to Education.
+4. `npm run publish -- uploaded <topic> <story-id> --id <id> --captions` records it against the build on disk
+   (`--captions`: the package's captions went up with it, so a later `push` does not add a second track).
+5. Watch it, then approve on the review page, or `npm run publish -- approve <topic> <story-id> --by "<name>"
+--checked <n>`. The approval names the latest upload of the build.
+6. Either `go-live` (the API makes it public and the read-back confirms it), or set Public or a schedule in Studio
+   and record it with `published` or `scheduled --at <ISO>`, or let `sync` observe it.
+7. A Short: the same steps with `<story-id>/shorts/<slug>`, after its video is live.
+
+A metadata change made in Studio afterwards is recorded with `updated --fields <list>`. An earlier API upload of the
+same build stays in the log; leave it private, or delete it in Studio.
+
+#### API compliance
+
+An audit (https://developers.google.com/youtube/v3/guides/quota_and_compliance_audits) comes before any quota beyond
+the default and may be what lifts a private lock; it runs alongside Studio publication, which needs none. The form is
+https://support.google.com/youtube/contact/yt_api_form (appeals: https://support.google.com/youtube/contact/yt_api_appeals).
+It asks for:
+
+- **Organisation:** name ("self" for an individual), an https website, legal address, category, size, contacts.
+- **Business model:** the work as it relates to YouTube (100 characters or more), audience, monetisation (a free
+  service), Google representative and Content Owner or Ads ids (none).
+- **API client:** a name without "YouTube", the access URL, the **privacy policy URL** (`/privacy/` on the site, which
+  also holds the terms), whether it is public, and demo credentials or an end-to-end screencast.
+- **Per Cloud project:** the project number, the use case ("Video Uploading & Account Management"), OAuth (yes),
+  volume (under 1,000 requests a day), the endpoints (`videos.insert`, `videos.update`, `videos.list`,
+  `thumbnails.set`, `captions.insert`) and the quota (the default is enough).
+- **Evidence (720p or larger, address bar visible, one file under 10 MB each):** the privacy page showing its YouTube
+  sections, the Google Privacy Policy link and what is kept; the home page showing the footer's Privacy link beside the
+  channel links; the terms; the consent screen, scopes and revocation; for uploading, the upload script
+  (`src/lib/uploader.ts` with `scripts/publish.ts`, public in this repository) or a screencast.
+- **Attestations:** the YouTube API Services Terms of Service, the Google Privacy Policy, the Developer Policies,
+  termination and accuracy.
+
+The privacy policy must (Developer Policies III.A, https://developers.google.com/youtube/terms/developer-policies) be
+always reachable, say the client uses YouTube API Services, link the Google Privacy Policy
+(http://www.google.com/policies/privacy), say what user data is accessed, stored, used and shared, disclose third-party
+content and device storage, link the revocation page (https://security.google.com/settings/security/permissions),
+give a contact, and link the YouTube Terms of Service (https://www.youtube.com/t/terms) with the statement that users
+agree to be bound by them. `/privacy/` does all of it; change it with the code it describes. Stored API data is
+refreshed or deleted within 30 days and deleted when access is revoked (III.E.4): the ledger keeps only ids and our own
+events.
 
 ## Producing a story
 
