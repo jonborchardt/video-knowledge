@@ -1,0 +1,1307 @@
+{
+ "topic": "ai-coding",
+ "story": "decision:who-benefits",
+ "approvedBy": "automated: /produce run started by Jon Borchardt",
+ "date": "2026-10-27",
+ "revision": 1,
+ "fingerprints": {
+  "article": "edb69ee77d",
+  "package": "5315c81f0b",
+  "validation": "82cbf984b5"
+ },
+ "article": {
+  "topic": "ai-coding",
+  "story": "decision:who-benefits",
+  "revision": 2,
+  "generation": {
+   "model": "claude-opus-5-5",
+   "brief": "scripts/briefs/article.md",
+   "date": "2026-10-27",
+   "wordsPerMinute": 150,
+   "evidencePackage": "5315c81f0b"
+  },
+  "meta": {
+   "headline": "Does AI help junior or senior developers more? What the trials found",
+   "seoTitle": "Does AI help junior or senior developers more?",
+   "dek": {
+    "id": "meta.dek",
+    "text": "Trials that split their results by experience mostly leaned toward less experienced developers, often without statistical significance, and none showed AI coding tools helping experts far more.",
+    "type": "factual",
+    "assertions": [
+     {
+      "id": "meta.dek.a",
+      "text": "None of the trials shows AI amplifying experienced engineers far more than novices: the Microsoft/Accenture, Shan and Peng trials found larger gains for less experienced developers, though the Microsoft/Accenture estimates are noisy and not statistically significant and Peng's result is conditional on persisting in further studies, and the Google trial's seniority interaction was not significant either.",
+      "kind": "fact",
+      "claims": [
+       {
+        "id": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+        "stance": "denies"
+       }
+      ],
+      "evidence": [
+       {
+        "kind": "study",
+        "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+        "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+       },
+       {
+        "kind": "study",
+        "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+        "cite": "ai-coding/sources/4859137.txt#L872-L878"
+       },
+       {
+        "kind": "study",
+        "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+        "cite": "ai-coding/sources/2302.06590.txt#L221-L225"
+       },
+       {
+        "kind": "study",
+        "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+        "cite": "ai-coding/sources/2410.12944.txt#L490-L505"
+       }
+      ],
+      "qualifications": [
+       "The dek says the lean was often without statistical significance; s16 gives the Google trial that leaned toward seniors."
+      ]
+     }
+    ]
+   },
+   "description": {
+    "id": "meta.description",
+    "text": "Trials that split AI coding gains by experience mostly leaned toward newer developers, without settling it; none showed experts gaining far more.",
+    "type": "factual",
+    "assertions": [
+     {
+      "id": "meta.description.a",
+      "text": "None of the trials shows AI amplifying experienced engineers far more than novices: the Microsoft/Accenture, Shan and Peng trials found larger gains for less experienced developers, though the Microsoft/Accenture estimates are noisy and not statistically significant and Peng's result is conditional on persisting in further studies, and the Google trial's seniority interaction was not significant either.",
+      "kind": "fact",
+      "claims": [
+       {
+        "id": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+        "stance": "denies"
+       }
+      ],
+      "evidence": [
+       {
+        "kind": "study",
+        "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+        "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+       },
+       {
+        "kind": "study",
+        "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+        "cite": "ai-coding/sources/4859137.txt#L872-L878"
+       },
+       {
+        "kind": "study",
+        "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+        "cite": "ai-coding/sources/2302.06590.txt#L221-L225"
+       },
+       {
+        "kind": "study",
+        "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+        "cite": "ai-coding/sources/2410.12944.txt#L490-L505"
+       }
+      ],
+      "qualifications": [
+       "The description says the evidence does not settle it; s16 gives the trial on the other side."
+      ]
+     }
+    ]
+   }
+  },
+  "sections": [
+   {
+    "name": "hook",
+    "heading": "Veteran or newcomer: who gets more from an AI coding assistant?",
+    "blocks": [
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s01",
+        "text": "Imagine a veteran engineer and a recent hire who start using the same coding assistant this week.",
+        "type": "hypothetical"
+       },
+       {
+        "id": "s02",
+        "text": "Popular commentary expects the veteran to pull away; this article checks that expectation against the trials that split their results by experience, and then asks why expertise can make the tool slower rather than faster.",
+        "type": "transitional"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "name": "question-1",
+    "heading": "Does AI help junior or senior developers more?",
+    "blocks": [
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s03",
+        "text": "The case for experts is usually made by practitioners: on The Pragmatic Engineer, in a conversation about Shopify, the guest suggested that \"the AI agents are going to help the best engineers more than the mediocre engineer\".",
+        "type": "attributed",
+        "assertions": [
+         {
+          "id": "s03.a",
+          "text": "In The Pragmatic Engineer episode on AI at Shopify, it was said that AI agents will help the best engineers more than mediocre ones.",
+          "kind": "attribution",
+          "claims": [
+           {
+            "id": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "statement",
+            "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "source": "u-3IILWQPRM"
+           }
+          ],
+          "quote": {
+           "text": "the AI agents are going to help the best engineers more than the mediocre engineer",
+           "source": "u-3IILWQPRM",
+           "speaker": "The Pragmatic Engineer"
+          }
+         }
+        ]
+       },
+       {
+        "id": "s04",
+        "text": "Simon Willison, on the same podcast, expected his experience combined with the tools to let him \"run circles around somebody who's never written a code line of code in their life\".",
+        "type": "attributed",
+        "assertions": [
+         {
+          "id": "s04.a",
+          "text": "Simon Willison said that combining his programming knowledge with these tools lets him run circles around someone who has never written code.",
+          "kind": "attribution",
+          "claims": [
+           {
+            "id": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "statement",
+            "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "source": "uRuLgar5XZw"
+           }
+          ],
+          "quote": {
+           "text": "run circles around somebody who's never written a code line of code in their life",
+           "source": "uRuLgar5XZw",
+           "speaker": "Simon Willison"
+          }
+         }
+        ]
+       },
+       {
+        "id": "s05",
+        "text": "Willison's comparison is with someone who has never programmed, which none of the trials below makes; what they can check is whether experienced developers gained more than less experienced ones.",
+        "type": "transitional"
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s06",
+        "text": "A field experiment at Microsoft that gave developers Copilot in their jobs points the opposite way: the output gain for short-tenure developers was 27 to 39 percent, against 8 to 13 percent for long-tenure ones.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s06.a",
+          "text": "In the Microsoft Copilot field experiment, short-tenure developers increased output by 27% to 39% while long-tenure developers gained 8% to 13%.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "stance": "denies"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+           }
+          ],
+          "qualifications": [
+           "s07 says the differences were not statistically significant."
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s07",
+        "text": "Those differences fell short of conventional statistical significance, yet all three main output measures showed the same ordering.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s07.a",
+          "text": "The tenure estimates are noisy and not statistically significant at conventional levels, but the pattern is the same across all three main outcome measures.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "stance": "denies"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s08",
+        "text": "The authors caution that longer-tenure developers who dropped the tool after trying it may pull their estimate down, but juniors and seniors used it equally once they had adopted it, and juniors still gained more.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s08.a",
+          "text": "The authors say longer-tenure estimates may be attenuated by developers abandoning the tool after an initial trial, but with no difference in usage between junior and senior developers conditional on adoption, juniors still increased output more than seniors.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "stance": "denies"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "table",
+      "id": "t1",
+      "caption": "Output gain with Copilot in the Microsoft field experiment, by tenure and by seniority; ranges span the main output measures, and the estimates are noisy and not statistically significant",
+      "columns": [
+       "Output gain"
+      ],
+      "rows": [
+       {
+        "label": "Short-tenure developers",
+        "cells": [
+         {
+          "label": "Output gain",
+          "value": 27,
+          "unit": "percent",
+          "display": "27% to 39%",
+          "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+         }
+        ]
+       },
+       {
+        "label": "Long-tenure developers",
+        "cells": [
+         {
+          "label": "Output gain",
+          "value": 8,
+          "unit": "percent",
+          "display": "8% to 13%",
+          "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+         }
+        ]
+       },
+       {
+        "label": "Junior developers",
+        "cells": [
+         {
+          "label": "Output gain",
+          "value": 21,
+          "unit": "percent",
+          "display": "21% to 40%",
+          "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+         }
+        ]
+       },
+       {
+        "label": "Senior developers",
+        "cells": [
+         {
+          "label": "Output gain",
+          "value": 7,
+          "unit": "percent",
+          "display": "7% to 16%",
+          "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s09",
+        "text": "A separate experiment's moderation analysis found that developers with fewer years of experience gained speed from generative AI with no change in the quality of their code.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s09.a",
+          "text": "In Shan et al.'s moderation analysis, developers with fewer years of experience benefited in faster coding while coding quality remained unaffected.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "stance": "denies"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "cite": "ai-coding/sources/4859137.txt#L872-L878"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s10",
+        "text": "In a Copilot lab trial, programmers with less experience benefited more, a result its authors describe as promising for people moving into software development, provided further studies confirm it.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s10.a",
+          "text": "Peng et al.'s Copilot trial suggests less experienced programmers benefit more, which the authors say, if it persists in further studies, points to possibilities for job transitions into software development.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "stance": "denies"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "cite": "ai-coding/sources/2302.06590.txt#L221-L225"
+           }
+          ],
+          "qualifications": [
+           "s10 carries the authors' condition: provided further studies confirm it."
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s11",
+        "text": "A study spanning bachelor's students to working professionals found that every group completed significantly more of its task with AI, and the authors judged the differences between groups unrelated to experience.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s11.a",
+          "text": "In the code-ownership experiment, all participant categories (BSc, MSc, Researcher, Professional) had a significant increase in completeness with AI, and differences between categories were not related to their level of experience.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "stance": "denies"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L556-L569"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s12",
+        "text": "Professionals did gain more than bachelor's students there, but the groups were given different tasks matched to their level, with the most complex going to professionals and researchers.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s12.a",
+          "text": "Professional developers benefited more than BSc students, but each category got tasks suited to its level, with researchers and professionals given the most complex tasks.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "stance": "denies"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L556-L569"
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s13",
+        "text": "METR's trial went to the other extreme: open-source maintainers averaging 5 years and 1,500 commits in the very repositories they worked on.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s13.a",
+          "text": "METR's developers had on average 5 years and 1,500 commits of experience on their respective repositories.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/productivity-gains-concentrate-among-developers-new",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L960-L984"
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "figure",
+      "ref": "decision-who-benefits/sc11",
+      "caption": "How long, on average, the METR trial's developers had worked in their own repositories."
+     },
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s14",
+        "text": "Given AI, these maintainers were slowed rather than sped up, with moderate evidence of a larger slowdown on issues they had high prior exposure to, and they themselves reported AI helping most on unfamiliar issues and least on familiar ones.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s14.a",
+          "text": "AI helped METR's developers less than in existing literature, with a baseline slowdown estimate, and METR presents moderate evidence that developers are slowed down more when they have high prior task exposure.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/productivity-gains-concentrate-among-developers-new",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L960-L984"
+           }
+          ],
+          "qualifications": [
+           "s14 keeps the authors' strength (moderate evidence) and gives no slowdown figure; s16 gives the Google trial that leaned the other way."
+          ]
+         },
+         {
+          "id": "s14.b",
+          "text": "Qualitatively, METR's developers note that AI is particularly helpful on unfamiliar issues and less helpful on familiar ones.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/productivity-gains-concentrate-among-developers-new",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L960-L984"
+           }
+          ],
+          "qualifications": [
+           "s14 says this is what the developers reported."
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s15",
+        "text": "One developer wrote: \"if I am the dedicated maintainer of a very specialized part of the codebase, there is no way agent mode can do better than me.\"",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s15.a",
+          "text": "One METR developer said that as the dedicated maintainer of a very specialized part of the codebase, agent mode could not do better than them.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/productivity-gains-concentrate-among-developers-new",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L960-L984"
+           }
+          ],
+          "quote": {
+           "text": "if I am the dedicated maintainer of a very specialized part of the codebase, there is no way agent mode can do better than me.",
+           "cite": "ai-coding/sources/2507.09089v2.txt#L960-L984",
+           "speaker": "developer"
+          }
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "callout": "unresolved",
+      "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+      "sentences": [
+       {
+        "id": "s16",
+        "text": "Google's trial, on a complex task, pointed the other way: more senior engineers were if anything faster with AI than junior ones, but the interaction between AI and seniority was not statistically significant.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s16.a",
+          "text": "In the Google trial on a complex task, the AI x seniority interaction was negative, suggesting more senior participants were faster with AI, but not statistically significant.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "stance": "denies"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "cite": "ai-coding/sources/2410.12944.txt#L490-L505"
+           }
+          ],
+          "qualifications": [
+           "s16 says the difference was not statistically significant."
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s17",
+        "text": "Its authors think AI may not yet be able to close a skill gap on tasks as complex as the one they set.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s17.a",
+          "text": "The Google trial's authors believe this may be because AI is not yet able to close a skill gap on complex tasks like the one they tested.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "stance": "denies"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "cite": "ai-coding/sources/2410.12944.txt#L490-L505"
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s18",
+        "text": "A softer version of the expert claim holds that using AI well is a skill in itself, so practised users should pull ahead.",
+        "type": "transitional"
+       },
+       {
+        "id": "s19",
+        "text": "In METR's trial, more Cursor experience did not broadly shrink the slowdown up to 50 hours of use, a count that includes hours the developers reported from before the study.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s19.a",
+          "text": "Up to 50 hours of Cursor experience (self-reported prior hours plus hours in the study), more experience broadly did not reduce METR's slowdown effect.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/getting-good-results-coding-tools-takes",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/getting-good-results-coding-tools-takes",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L1217-L1234"
+           }
+          ],
+          "qualifications": [
+           "s19 says the prior hours were self-reported; s20 gives the correction; s21 gives Google's null result for prior use."
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s20",
+        "text": "The lone developer beyond 50 hours did show a speedup, but after another participant corrected their reported experience, the estimate for that group dropped from roughly 25 percent to roughly 0 percent.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s20.a",
+          "text": "METR saw a speedup for the one developer with more than 50 hours of Cursor experience, but after a second developer corrected their reported experience, the over-50-hours bucket moved from roughly 25% speedup to roughly 0%.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/getting-good-results-coding-tools-takes",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/getting-good-results-coding-tools-takes",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L1217-L1234"
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "figure",
+      "ref": "decision-who-benefits/sc16",
+      "caption": "METR's estimate for developers with the most Cursor experience, before and after a participant corrected their reported hours."
+     },
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s21",
+        "text": "Google's trial found no significant link between how often engineers already used AI tools and their speed with AI; the authors' candidate explanations include too little statistical power, a low usability floor, and prompting skills that may not yet be universal.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s21.a",
+          "text": "The Google trial, which sampled only full-time Googlers, found no statistically significant evidence that more frequent prior use of AI coding tools increased speed with AI; the authors list inadequate statistical power, a low usability floor (benefits accruing quickly), and Natural Language to Code requiring familiarity with LLMs and prompting, skills which might not be universal at this time, among possible reasons.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/getting-good-results-coding-tools-takes",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/getting-good-results-coding-tools-takes",
+            "cite": "ai-coding/sources/2410.12944.txt#L522-L543"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s22",
+        "text": "The strongest support for tool skill comes from the Echoes of AI maintainability trial: the more practised with AI the original developers were, the more their use of AI raised the CodeHealth of the code someone else then built on it, though the original developer's Java proficiency mattered more.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s22.a",
+          "text": "In the Echoes of AI trial, the more AI-skilled the Task 1 participants were, the stronger the effect of their AI use on Task 2 CodeHealth, but building on code from a proficient Java developer mattered even more.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/getting-good-results-coding-tools-takes",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/getting-good-results-coding-tools-takes",
+            "cite": "ai-coding/sources/2507.00788.txt#L2541-L2551"
+           }
+          ],
+          "qualifications": [
+           "s22 says Java proficiency mattered more."
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s23",
+        "text": "Taken together, no trial shows AI amplifying experienced engineers far more than novices: several found larger gains for less experienced developers, with noisy or provisional estimates, and the one result favouring seniors was not significant.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s23.a",
+          "text": "None of the trials shows AI amplifying experienced engineers far more than novices: the Microsoft/Accenture, Shan and Peng trials found larger gains for less experienced developers, though the Microsoft/Accenture estimates are noisy and not statistically significant and Peng's result is conditional on persisting in further studies, and the Google trial's seniority interaction was not significant either.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "stance": "denies"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+           },
+           {
+            "kind": "study",
+            "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "cite": "ai-coding/sources/4859137.txt#L872-L878"
+           },
+           {
+            "kind": "study",
+            "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "cite": "ai-coding/sources/2302.06590.txt#L221-L225"
+           },
+           {
+            "kind": "study",
+            "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+            "cite": "ai-coding/sources/2410.12944.txt#L490-L505"
+           }
+          ],
+          "qualifications": [
+           "s23 qualifies both sides: noisy or provisional estimates, and a non-significant result for seniors."
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s24",
+        "text": "The common thread is context: gains were larger for developers newer to the company in the Microsoft field experiment and on unfamiliar issues in METR's trial, and smaller for maintainers on tasks they knew well.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s24.a",
+          "text": "Gains were larger for short-tenure developers in the Microsoft Copilot field experiment, and METR's developers found AI more helpful on unfamiliar issues and were slowed more on tasks with high prior exposure.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/productivity-gains-concentrate-among-developers-new",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+            "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+           },
+           {
+            "kind": "study",
+            "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L960-L984"
+           }
+          ],
+          "qualifications": [
+           "s07 and s14 carry the limits (not significant; moderate evidence and the developers' own reports); s16 gives the trial that leaned the other way."
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "name": "question-2",
+    "heading": "Why can AI assistance cost expert programmers more time than it saves?",
+    "blocks": [
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s25",
+        "text": "The METR maintainers kept fewer than 44 percent of Cursor's generations.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s25.a",
+          "text": "When using Cursor, METR's developers accepted less than 44% of the generations.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/assistance-must-reliable-save-experts-time",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/assistance-must-reliable-save-experts-time",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L1004-L1012"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s26",
+        "text": "Rejected output was not free: developers re-prompted or gave up, and the researchers observed significant time spent reviewing, testing or modifying code that was then thrown away.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s26.a",
+          "text": "When METR's developers did not accept generations they reattempted with different prompts or gave up, and the low reliability qualitatively resulted in significant wasted time spent reviewing, testing or modifying AI code before rejecting it.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/assistance-must-reliable-save-experts-time",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/assistance-must-reliable-save-experts-time",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L1004-L1012"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s27",
+        "text": "Accepted output had a cost too, by the developers' own account: 75 percent read every line of it, and 56 percent often had to make major changes to clean it up.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s27.a",
+          "text": "Of METR's experienced developers, 75% report reading every line of AI generated code and 56% report often needing to make major changes to clean it up.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/developers-need-solid-programming-knowledge-validate",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/developers-need-solid-programming-knowledge-validate",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L1015-L1021"
+           }
+          ],
+          "qualifications": [
+           "s27 says these are the developers' own reports."
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "table",
+      "id": "t2",
+      "caption": "What METR's experienced developers did with AI-generated code; the review shares are the developers' own reports",
+      "columns": [
+       "Share"
+      ],
+      "rows": [
+       {
+        "label": "Cursor generations accepted",
+        "cells": [
+         {
+          "label": "Share",
+          "value": 44,
+          "unit": "percent",
+          "display": "<44%",
+          "cite": "ai-coding/sources/2507.09089v2.txt#L1004-L1012",
+          "qualifier": "lt"
+         }
+        ]
+       },
+       {
+        "label": "Developers who read every line of AI code",
+        "cells": [
+         {
+          "label": "Share",
+          "value": 75,
+          "unit": "percent",
+          "display": "75%",
+          "cite": "ai-coding/sources/2507.09089v2.txt#L1015-L1021"
+         }
+        ]
+       },
+       {
+        "label": "Developers who often make major changes to clean it up",
+        "cells": [
+         {
+          "label": "Share",
+          "value": 56,
+          "unit": "percent",
+          "display": "56%",
+          "cite": "ai-coding/sources/2507.09089v2.txt#L1015-L1021"
+         }
+        ]
+       },
+       {
+        "label": "Developers who report needing to modify AI code",
+        "cells": [
+         {
+          "label": "Share",
+          "value": 100,
+          "unit": "percent",
+          "display": "100%",
+          "cite": "ai-coding/sources/2507.09089v2.txt#L1015-L1021"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s28",
+        "text": "METR counts that unreliability, and the review time it wastes, as one of the factors that held back AI for its developers.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s28.a",
+          "text": "METR lists low AI reliability, which results in significant wasted time reviewing, testing or modifying AI generated code before rejecting it, as one factor limiting AI performance for its developers.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/assistance-must-reliable-save-experts-time",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/assistance-must-reliable-save-experts-time",
+            "cite": "ai-coding/sources/2507.09089v2.txt#L1004-L1012"
+           }
+          ],
+          "qualifications": [
+           "s28 says unreliability is one factor among several; s31 and s35 say the other accounts do not measure time."
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s29",
+        "text": "Engineers at Anthropic weigh a related cost when choosing what to delegate: whether prompting would take longer than doing the job. Of a job expected to take less than 10 minutes, one said, \"I'm probably not going to bother using Claude.\"",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s29.a",
+          "text": "In the Anthropic study, an engineer said that for a task they expect to take less than 10 minutes they probably will not bother using Claude.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/assistance-must-reliable-save-experts-time",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/assistance-must-reliable-save-experts-time",
+            "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L67-L69"
+           }
+          ],
+          "quote": {
+           "text": "I'm probably not going to bother using Claude.",
+           "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L67-L69"
+          }
+         }
+        ]
+       },
+       {
+        "id": "s30",
+        "text": "Another pointed to knowledge about the team's code that Claude lacks by default and, rather than refine a prompt, concluded: \"I'm just going to go and do it myself.\"",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s30.a",
+          "text": "Another engineer described a cold start problem: intrinsic information about their team's codebase that Claude does not have by default, so rather than iterate on the perfect prompt they do it themselves.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/assistance-must-reliable-save-experts-time",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/assistance-must-reliable-save-experts-time",
+            "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L67-L69"
+           }
+          ],
+          "quote": {
+           "text": "I'm just going to go and do it myself.",
+           "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L67-L69"
+          }
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "callout": "unresolved",
+      "gap": 0,
+      "sentences": [
+       {
+        "id": "s31",
+        "text": "These are interview accounts of what engineers choose to delegate, not a measurement of how much time checking costs.",
+        "type": "factual",
+        "assertions": [
+         {
+          "text": "Anthropic engineers described not using Claude for short tasks or tasks needing intrinsic knowledge of their team's codebase.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/assistance-must-reliable-save-experts-time",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/assistance-must-reliable-save-experts-time",
+            "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L67-L69"
+           }
+          ],
+          "id": "s31.a",
+          "qualifications": [
+           "s31 says these are interview accounts, not a measurement of time."
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s32",
+        "text": "Review capacity limited a much larger job as well: in an AI-assisted migration of 5,359 files at one company, engineers' review speed was the bottleneck, and the team throttled how many changes it generated each week.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s32.a",
+          "text": "In the migration report, 5,359 files were migrated with AI-generated changes; the bottleneck was the speed at which engineers could review them, and the number of changes generated each week was purposefully limited to avoid overwhelming reviewers.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/speeds-generation-human-attention-review-understanding",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/speeds-generation-human-attention-review-understanding",
+            "cite": "ai-coding/sources/2501.06972.txt#L417-L423"
+           }
+          ],
+          "qualifications": [
+           "s32 says this is one company's migration."
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s33",
+        "text": "A review of the vibe-coding literature puts a verification gap at the centre of its findings: AI-assisted workflows generate code faster than developers and their processes can check it for correctness, security and provenance.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s33.a",
+          "text": "The vibe-coding literature review finds the central risk is a verification gap, a mismatch between the speed at which AI-assisted workflows generate code and the capacity of developers and processes to verify correctness, security and provenance.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/speeds-generation-human-attention-review-understanding",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/speeds-generation-human-attention-review-understanding",
+            "cite": "ai-coding/sources/2607.21652v1.txt#L1906-L1914"
+           }
+          ],
+          "qualifications": [
+           "s33 presents it as a review's synthesis of the literature."
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s34",
+        "text": "The same review suggests that the skills of verifying, specifying constraints and reviewing may count for as much as the skill of writing code.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s34.a",
+          "text": "The review suggests that skill in verification, constraint specification and review may matter as much as authoring skill.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/developers-need-solid-programming-knowledge-validate",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/developers-need-solid-programming-knowledge-validate",
+            "cite": "ai-coding/sources/2607.21652v1.txt#L1929-L1932"
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "callout": "unresolved",
+      "gap": 1,
+      "sentences": [
+       {
+        "id": "s35",
+        "text": "The review's link between speed and checking is indirect: it notes that sources often discuss defects alongside productivity gains and suggests that faster development may add verification work, without measuring the time that work takes.",
+        "type": "factual",
+        "assertions": [
+         {
+          "text": "Sources in the vibe-coding review frequently discuss defects alongside productivity gains, suggesting that increased development speed may introduce additional verification burdens.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/assistance-must-reliable-save-experts-time",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/assistance-must-reliable-save-experts-time",
+            "cite": "ai-coding/sources/2607.21652v1.txt#L1454-L1458"
+           }
+          ],
+          "id": "s35.a",
+          "qualifications": [
+           "s35 says the review does not measure the time involved."
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s36",
+        "text": "Anthropic's study names the bind a \"paradox of supervision\": getting value from Claude means supervising it, and supervising it takes the coding skills that heavy use may erode.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s36.a",
+          "text": "The Anthropic study describes a paradox of supervision: effectively using Claude requires supervision, and supervising Claude requires the coding skills that may atrophy from AI overuse.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "ai-coding/developers-need-solid-programming-knowledge-validate",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "ai-coding/developers-need-solid-programming-knowledge-validate",
+            "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L93-L94"
+           }
+          ],
+          "quote": {
+           "text": "paradox of supervision",
+           "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L93-L94"
+          }
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "name": "close",
+    "heading": "What to do with this",
+    "blocks": [
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s37",
+        "text": "Before handing a task to an assistant, weigh how much of it you already know against how long it would take to check what comes back.",
+        "type": "rhetorical"
+       },
+       {
+        "id": "s38",
+        "text": "Expect the most from it on code that is new to you, be wary of promises that it multiplies experts, and if most of its output ends up deleted, keep the work you know for yourself.",
+        "type": "rhetorical"
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "history": [
+  {
+   "revision": 1,
+   "date": "2026-10-27",
+   "approvedBy": "automated: /produce run started by Jon Borchardt",
+   "fingerprint": "edb69ee77d"
+  }
+ ],
+ "recordSeen": 0
+}
