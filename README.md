@@ -563,6 +563,8 @@ npm run quality    # web-quality gate for site changes (build, static checks, br
 
 Pushing to `main` runs `.github/workflows/pages.yml`: `npm ci`, `npm run validate`, `npm audit` of shipped dependencies, the browser suite in Chromium, Firefox and WebKit, then deploy `dist/`. What each check enforces and what still needs a person: `.claude/skills/web-quality/reference/enforcement-matrix.md`.
 
+Rehearsing a go-live: the public build shows only stories with a live video, so the live-only templates and tests meet real content only at the first go-live. `npm run rehearse -- <topic> <story-id> [--keep]` copies the working tree (tracked and untracked files, not gitignored ones) into a temp folder outside the repo, junctions `node_modules`, writes a fixture `published` event (video id `REHEARSAL00`) into the copy's `publish.json`, and runs the go-live sequence there (`report -- seed`, `brand`, `build`, `links -- freeze`, `quality -- --no-build` with every page checked). The real checkout is never written. It prints `RESULT: PASSED` or `RESULT: FAILED (<step>)` and refuses (exit 2) a follow-up, a story already live or one not packaged. `DEPLOY_TARGET=pages` rehearses the mirror; `--keep` leaves the copy to preview (`npm run preview` in it).
+
 The data scripts (`report`, `record`, `record-sources`, `watcher`) run the watcher CLI from `../retire-sim/watcher` (or `$WATCHER_DIR`). It isn't an npm dependency, so CI, which only builds the site, doesn't need it.
 
 The watcher's agent contract is `.claude/skills/watcher/SKILL.md`, a copy of `../retire-sim/watcher/SKILL.md`. Re-copy it when the library changes.
