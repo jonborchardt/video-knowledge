@@ -46,6 +46,17 @@ export function distPages(): string[] {
     .sort();
 }
 
+/** The opening tag of every control (a link, button, form field or tabindex) inside a <summary>: axe's
+ *  nested-interactive. Summaries do not nest, so the non-greedy match is exact. */
+export const summaryControls = (html: string): string[] =>
+  [...html.matchAll(/<summary\b[\s\S]*?<\/summary>/g)].flatMap((m) =>
+    [
+      ...m[0].matchAll(
+        /<(?:a\b[^>]*\shref=|button\b|input\b|select\b|textarea\b|[a-z][\w-]*\b[^>]*\stabindex=)[^>]*>/gi,
+      ),
+    ].map((t) => t[0]),
+  );
+
 /** One page per template (home, about, directory, commission, topic, story, 404, and a story with its article when
  *  one is released): the representative set the browser suite runs. */
 export function representativePages(all = distPages()): string[] {

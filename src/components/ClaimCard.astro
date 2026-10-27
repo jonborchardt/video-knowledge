@@ -60,9 +60,9 @@ const small = 'text-sm text-muted-foreground';
           <>
             {i > 0 && ' · '}
             {x.n ? (
-              <button type="button" class="cursor-pointer hover:text-foreground hover:underline" data-pick={x.v}>
+              <span class="cursor-pointer hover:text-foreground hover:underline" data-pick={x.v}>
                 {x.text}
-              </button>
+              </span>
             ) : (
               x.text
             )}
@@ -140,11 +140,14 @@ const small = 'text-sm text-muted-foreground';
 </style>
 
 <script>
-  // Stat-line shortcuts ("denied 6", "decided by study"): open the card on that chip.
+  // Stat-line shortcuts ("denied 6", "decided by study"): open the card on that chip, for pointer users. They are
+  // plain spans (no control inside a summary); preventDefault keeps the summary from also toggling. Keyboard users
+  // open the card with its summary and pick the chip with the radios.
   document.addEventListener('click', (e) => {
     const pick = (e.target as HTMLElement).closest<HTMLElement>('[data-pick]');
     const card = pick?.closest<HTMLDetailsElement>('details');
     if (!pick || !card) return;
+    e.preventDefault();
     card.open = true;
     card.querySelector<HTMLInputElement>(`input[value="${pick.dataset.pick}"]`)!.checked = true;
   });

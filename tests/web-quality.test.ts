@@ -5,7 +5,16 @@ import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 import { FileSystemConfigLoader, HtmlValidate } from 'html-validate';
 import { describe, expect, it } from 'vitest';
-import { config, DIST, distPages, triage, summarize, type Exception, type Finding } from './web-quality-helpers';
+import {
+  config,
+  DIST,
+  distPages,
+  summarize,
+  summaryControls,
+  triage,
+  type Exception,
+  type Finding,
+} from './web-quality-helpers';
 
 const pages = distPages();
 const SITE_ORIGINS = ['https://commonwealthofreason.com', 'https://jonborchardt.github.io'];
@@ -97,6 +106,18 @@ describe.skipIf(!existsSync(DIST))('web-quality: built pages', () => {
       ),
     ].map((m) => new URL(m[1]).origin);
     expect(loads.filter((o) => !allowed.includes(o))).toEqual([]);
+  });
+
+  it('summaryControls finds a control inside a summary and ignores one after it', () => {
+    expect(
+      summaryControls('<details><summary>x <button type="button">b</button></summary><a href="/y">y</a></details>'),
+    ).toEqual(['<button type="button">']);
+    expect(summaryControls('<summary>plain <span data-pick="a">a</span></summary>')).toEqual([]);
+  });
+
+  // The real checkout has no live page yet, so this guards the first go-live and the rehearsal (npm run rehearse).
+  it.each(pages)('%s: no control inside a <summary> (axe nested-interactive)', (page) => {
+    expect(summaryControls(readFileSync(join(DIST, page), 'utf8'))).toEqual([]);
   });
 
   it('serves the security headers (public/_headers, honoured by Cloudflare; GitHub Pages ignores it)', () => {
