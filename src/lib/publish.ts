@@ -245,9 +245,18 @@ export function saveLedger(path: string, ledger: Ledger): void {
   renameSync(tmp, path);
 }
 
-/** The captions sha the platform has: the latest upload or update that recorded one (none: unknown, send them). */
-export const lastCaptions = (o: Pick<Output, 'events'>) =>
-  o.events.findLast((e) => (e.type === 'uploaded' || e.type === 'updated') && e.captions)?.captions ?? null;
+/** The captions sha the current video has: the latest upload, or an update of that same video since, that recorded
+ *  one (none: unknown, send them). An earlier upload's captions are another video's. */
+export const lastCaptions = (o: Pick<Output, 'events'>) => {
+  const i = o.events.findLastIndex((e) => e.type === 'uploaded');
+  const id = o.events[i]?.id;
+  return (
+    o.events
+      .slice(Math.max(i, 0))
+      .findLast((e) => (e.type === 'uploaded' || e.type === 'updated') && e.captions && (i < 0 || e.id === id))
+      ?.captions ?? null
+  );
+};
 /** The last upload or update that sent metadata: what the platform has now. */
 export const lastSent = (o: Pick<Output, 'events'>) =>
   o.events.findLast((e) => (e.type === 'uploaded' || e.type === 'updated') && e.metadata);
@@ -779,7 +788,8 @@ export function recordUpdated(
   if (!o.state.id) throw new Refusal('nothing uploaded yet; there is nothing on YouTube to update');
   if (!o.metadata) throw new Refusal('no review package; the metadata cannot be composed');
   const sent = lastSent(o.out);
-  if (sent?.metadata === o.metadata.sha)
+  // unchanged text is nothing new unless captions landed that the video did not have
+  if (sent?.metadata === o.metadata.sha && (!a.captions || a.captions === lastCaptions(o.out)))
     return { event: sent, existing: true, message: `the metadata is unchanged since ${describe(sent)}` };
   return write(o, {
     at: stamp(a),

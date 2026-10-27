@@ -197,7 +197,8 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
   const o = openOutput(topic, storyId, c);
   if (!o.state.id) throw new Refusal(`${o.id} is ${o.state.status}; there is nothing on YouTube to update`);
   if (!o.metadata) throw new Refusal('no review package; the metadata cannot be composed');
-  if (lastSent(o.out)?.metadata === o.metadata.sha)
+  const captionsCurrent = !o.metadata.captions || o.metadata.captions.sha === lastCaptions(o.out);
+  if (lastSent(o.out)?.metadata === o.metadata.sha && captionsCurrent)
     return { event: null, existing: true, message: `the metadata on YouTube is current (${o.metadata.sha})` };
   const problem = uploadProblem(o.metadata);
   if (problem) throw new Refusal(problem);
@@ -205,7 +206,7 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
   const thumbnail = o.metadata.thumbnail ? join(o.root, o.metadata.thumbnail.file) : null;
   if (thumbnail && !existsSync(thumbnail)) throw new Refusal(`${o.metadata.thumbnail!.file} is missing on disk`);
   // captions.insert adds a track: send them only when they are not the ones YouTube already has
-  const captions = o.metadata.captions?.sha === lastCaptions(o.out) ? null : o.metadata.captions;
+  const captions = captionsCurrent ? null : o.metadata.captions;
   await guarded(topic, storyId, c, 'update', () => c.client.updateVideo(id, { snippet: snippetOf(o.metadata!) }));
   // the snippet landed: record it even if an asset fails, so the board does not stay metadata-behind and resend it
   const landed = ['snippet'];
@@ -243,7 +244,7 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
 export const SCHEDULE_GRACE_MS = 15 * 60_000;
 /** Why a video is not public after go-live (or its schedule), and the Studio route that gets it out. */
 export const keptPrivate = (id: string, privacy: string): string =>
-  `YouTube kept ${id} ${privacy} after go-live (an upload from an unaudited API project can be locked private): upload the same video/review file in YouTube Studio, record it with npm run publish -- uploaded --id <id> [--captions], approve it, then go live; if Studio shows ${id} public, npm run publish -- sync records it`;
+  `YouTube kept ${id} ${privacy} after go-live (an upload from an unaudited API project can be locked private): upload the same video/review file in YouTube Studio, record it with npm run publish -- uploaded --id <id> [--captions], approve it if it is not yet approved, then go live; if Studio shows ${id} public, npm run publish -- sync records it`;
 
 /** Makes the approved upload public now, or schedules it (private with a publishAt) for `at`. Going public now is
  *  recorded only when the read-back says public: YouTube can keep an upload private whatever the write asked. */
@@ -288,7 +289,13 @@ export async function sync(topic: string, storyId: string, c: Ctx): Promise<Verb
   if (!o.state.id) throw new Refusal(`${o.id} is ${o.state.status}; nothing on YouTube to read`);
   const id = o.state.id;
   const v = await guarded(topic, storyId, c, 'sync', () => c.client.getVideo(id));
-  const failed = (error: string) => recordFailed(topic, storyId, { ...c, step: 'sync', error, retryable: false });
+  const failed = (error: string): VerbResult => {
+    // the same finding, with nothing since, is not recorded again on every sync
+    const last = o.out.events.at(-1);
+    if (last?.type === 'failed' && last.step === 'sync' && last.id === id && last.error === error)
+      return { event: last, existing: true, message: `already recorded: sync failed: ${error}` };
+    return recordFailed(topic, storyId, { ...c, step: 'sync', error, retryable: false });
+  };
   if (!v) return failed(`${id} is not on YouTube (deleted?); a person decides`);
   if (v.uploadStatus === 'rejected') return failed(`rejected: ${v.rejectionReason ?? 'no reason given'}`);
   if (v.privacyStatus === 'public' && (o.state.status === 'scheduled' || o.state.status === 'approved'))

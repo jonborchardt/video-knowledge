@@ -299,6 +299,21 @@ describe('upload', { timeout: 30_000 }, () => {
 });
 
 describe('push', () => {
+  it('sends the captions to a Studio re-upload recorded without them, even when the metadata is current', async () => {
+    const f = fresh();
+    const client = fakeClient();
+    await upload(f.topic, f.story, ctx(f, client)); // the API upload carried the captions
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001' }); // no --captions
+    const r = await push(f.topic, f.story, ctx(f, client));
+    const sent = client.calls.filter((c) => c.method === 'insertCaptions');
+    expect(sent.at(-1)?.args[0]).toBe('studio00001');
+    expect(r.event).toMatchObject({ type: 'updated', id: 'studio00001' });
+    expect(r.event!.captions).toBeTruthy();
+    const n = sent.length;
+    await push(f.topic, f.story, ctx(f, client)); // now recorded: not a second track
+    expect(client.calls.filter((c) => c.method === 'insertCaptions')).toHaveLength(n);
+  });
+
   it('sends nothing when the metadata is unchanged, and the new snippet when it is', async () => {
     const f = fresh();
     const client = fakeClient();
@@ -522,6 +537,10 @@ describe('sync', () => {
     const late = await sync(f.topic, f.story, ctx(f, client, { now: new Date(T + 20 * 60_000) }));
     expect('event' in late && late.event).toMatchObject({ type: 'failed', step: 'sync', retryable: false });
     expect('event' in late && late.event!.error).toContain('still private');
+    const n2 = events(f).length;
+    const again = await sync(f.topic, f.story, ctx(f, client, { now: new Date(T + 30 * 60_000) }));
+    expect('existing' in again && again.existing).toBe(true); // the same finding is not recorded twice
+    expect(events(f)).toHaveLength(n2);
   });
 });
 void readFileSync;
