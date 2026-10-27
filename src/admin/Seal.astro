@@ -1,0 +1,20 @@
+---
+// The seal of the institution that owns a topic, named on hover; nothing for an unclaimed topic.
+import { commissionKey, commissionOf } from '../config/site';
+import { href } from '../lib/url';
+
+const c = commissionOf(Astro.props.topic as string);
+---
+
+{
+  c && (
+    <img
+      class="inline-block size-5 shrink-0 align-text-bottom"
+      src={href(`/commissions/${commissionKey(c)}.png`)}
+      alt={c.name}
+      title={c.name}
+      width="256"
+      height="256"
+    />
+  )
+}
