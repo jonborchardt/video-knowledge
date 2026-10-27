@@ -2,9 +2,9 @@
  "topic": "organic-food",
  "story": "conflict:eating-organic-food-has-proven-health",
  "inputs": {
-  "stories": "1135b5e737",
-  "review": "1b6b09c2bb",
-  "report": "4abb3d1b3a"
+  "stories": "494a03c0ce",
+  "review": "b285597a55",
+  "report": "8d770a5a13"
  },
  "audience": "General YouTube audience with no prior knowledge of MLM pay plans or research methods (default; set audience in story-review.json to change).",
  "title": "Does Eating Organic Make You Healthier?",
@@ -580,6 +580,19 @@
      "audited": true
     },
     {
+     "cite": "organic-food/sources/sandoval-insausti-2021-cancer.txt#L244-L248",
+     "doc": "organic-food/sources/sandoval-insausti-2021-cancer.txt",
+     "by": "Sandoval-Insausti 2021, high-residue produce and cancer in three US cohorts",
+     "verdict": "wrong",
+     "confidence": 0.3,
+     "note": "Low-residue produce intake was not associated with the cancers (NHL, breast) earlier linked inversely to organic food, so the authors suggest those organic-food associations reflect education, activity and other confounders rather than lower pesticide exposure; organic intake itself was not measured.",
+     "role": "qualifies",
+     "applicability": "partial",
+     "basis": "heuristic",
+     "why": "the verdict note limits its own scope (\"rather than\")",
+     "audited": true
+    },
+    {
      "cite": "organic-food/sources/baudry-2018-nutrinet.txt#L183-L185",
      "doc": "organic-food/sources/baudry-2018-nutrinet.txt",
      "by": "Baudry 2018 NutriNet-Sante cohort, organic food and cancer",
@@ -611,6 +624,7 @@
     "status": "qualified",
     "decision": "qualify",
     "limitations": [
+     "Sandoval-Insausti 2021, high-residue produce and cancer in three US cohorts: Low-residue produce intake was not associated with the cancers (NHL, breast) earlier linked inversely to organic food, so the authors suggest those organic-food associations reflect education, activity and other confounders rather than lower pesticide exposure; organic intake itself was not measured. [partial: the verdict note limits its own scope (\"rather than\")]",
      "Baudry 2018 NutriNet-Sante cohort, organic food and cancer: In 68,946 French adults followed about 4.6 years, the top quartile of organic-food frequency had HR 0.75 for any cancer (absolute risk reduction 0.6%), with signals only for NHL, lymphomas and postmenopausal breast cancer; observational, short follow-up, health-conscious volunteers, residual confounding acknowledged.",
      "Vigar 2019 systematic review, organic diet and health: Million Women Study (UK) found no overall cancer reduction except possibly NHL; NutriNet-Sante (France) found 25% lower hazard in top organic quartile (0.6% absolute) mainly for NHL and postmenopausal breast cancer; both observational and confounded."
     ],
@@ -676,6 +690,19 @@
     }
    ],
    "evidence": [
+    {
+     "cite": "organic-food/sources/sandoval-insausti-2021-cancer.txt#L265-L278",
+     "doc": "organic-food/sources/sandoval-insausti-2021-cancer.txt",
+     "by": "Sandoval-Insausti 2021, high-residue produce and cancer in three US cohorts",
+     "verdict": "right",
+     "confidence": 0.3,
+     "note": "The authors argue that organic consumption is a complex behaviour that adjustment cannot fully capture, and that NutriNet-Sante's organic-cancer associations were confined to subgroups likelier to buy organic, raising residual confounding; this is their argument, not a measurement.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
     {
      "cite": "organic-food/sources/baudry-2018-nutrinet.txt#L102-L102",
      "doc": "organic-food/sources/baudry-2018-nutrinet.txt",
@@ -797,6 +824,17 @@
    ]
   },
   {
+   "file": "organic-food/sources/sandoval-insausti-2021-cancer.txt",
+   "name": "Sandoval-Insausti 2021, high-residue produce and cancer in three US cohorts",
+   "sha": "7fcae079bb",
+   "lines": 327,
+   "sameStudyAs": null,
+   "cites": [
+    "organic-food/sources/sandoval-insausti-2021-cancer.txt#L244-L248",
+    "organic-food/sources/sandoval-insausti-2021-cancer.txt#L265-L278"
+   ]
+  },
+  {
    "file": "organic-food/sources/smith-spangler-2012.txt",
    "name": "Smith-Spangler 2012 review (Stanford), abstract",
    "sha": "1ae49348a1",
@@ -851,7 +889,7 @@
  ],
  "gaps": [
   "What explains the split between Vigar 2019 systematic review, organic diet and health, Mie 2017 review, health effects of organic food and farming, Smith-Spangler 2012 review (Stanford), abstract, AAP 2012 clinical report on organic foods, abstract, Srednicka-Tober 2016 meta-analysis, organic milk, Srednicka-Tober 2016 meta-analysis, organic meat, Winter and Katz 2011, dietary risk on Dirty Dozen produce?",
-  "What explains the split between Bradbury 2014 Million Women Study, organic food and cancer, Baudry 2018 NutriNet-Sante cohort, organic food and cancer, Vigar 2019 systematic review, organic diet and health?",
+  "What explains the split between Sandoval-Insausti 2021, high-residue produce and cancer in three US cohorts, Bradbury 2014 Million Women Study, organic food and cancer, Baudry 2018 NutriNet-Sante cohort, organic food and cancer, Vigar 2019 systematic review, organic diet and health?",
   "Baudry 2018 NutriNet-Sante cohort, organic food and cancer: In 68,946 French adults followed about 4.6 years, the top quartile of organic-food frequency had HR 0.75 for any cancer (absolute risk reduction 0.6%), with signals only for NHL, lymphomas and postmenopausal breast cancer; observational, short follow-up, health-conscious volunteers, residual confounding acknowledged.",
   "Vigar 2019 systematic review, organic diet and health: Million Women Study (UK) found no overall cancer reduction except possibly NHL; NutriNet-Sante (France) found 25% lower hazard in top organic quartile (0.6% absolute) mainly for NHL and postmenopausal breast cancer; both observational and confounded."
  ],
@@ -895,12 +933,12 @@
    "arc": {
     "hook": "Open on the 25% headline, then the bigger study that found nothing.",
     "conflict": "The sources do not agree, and both sides have a case.",
-    "evidence": "Lay the studies side by side (Bradbury 2014 Million Women Study, organic food and cancer, Baudry 2018 NutriNet-Sante cohort, organic food and cancer, Vigar 2019 systematic review, organic diet and health): design, sample, what was measured.",
+    "evidence": "Lay the studies side by side (Sandoval-Insausti 2021, high-residue produce and cancer in three US cohorts, Bradbury 2014 Million Women Study, organic food and cancer, Baudry 2018 NutriNet-Sante cohort, organic food and cancer, Vigar 2019 systematic review, organic diet and health): design, sample, what was measured.",
     "resolution": "Not shown: one large cohort finds no overall effect, the other a small absolute difference in people who also live healthier lives; the shared lymphoma signal is worth watching, not a reason to buy.",
     "takeaway": "The conditions under which the claim holds, instead of a yes or no."
    }
   }
  ],
- "fingerprint": "12b788b39e",
- "generatedAt": "2026-10-21T06:43:50.050Z"
+ "fingerprint": "ce1d8b6558",
+ "generatedAt": "2026-10-27T02:45:17.113Z"
 }
