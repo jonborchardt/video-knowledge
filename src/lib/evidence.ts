@@ -64,7 +64,7 @@ export interface EvidenceItem {
   confidence: number | null;
   note: string;
   applicability?: Applicability; // study verdicts only
-  basis?: 'review' | 'heuristic'; // where the applicability came from
+  basis?: Basis; // where the applicability came from
   why?: string; // the applicability reason
   passage?: string; // the cited lines, when the reader could fetch them (not persisted)
   problem?: string;
@@ -181,6 +181,26 @@ export function applicabilityOf(modality: Modality, verdict: Verdict | null, not
   return { level: 'direct', reason: 'the verdict bears on the claim as worded' };
 }
 
+export type Basis = 'recorded' | 'review' | 'heuristic';
+const RANK: Record<Applicability, number> = { contextual: 0, partial: 1, direct: 2 };
+/** The one precedence: the reviewer's judgment, else the wording heuristic, capped by the level recorded with the
+ *  verdict (applicability.json). A reviewer may narrow anything and widen the heuristic up to the recorded level, never
+ *  above it; on a tie the base wins, so a recorded direct changes nothing. The cap ignores stance: a passage reaches
+ *  the claim, not one side of it. */
+export function applicabilityFor(
+  claim: string,
+  stance: Stance,
+  modality: Modality,
+  v: CorpusVerdict,
+  judgments: Judgments = {},
+): Judgment & { basis: Basis } {
+  const reviewed = judgments[judgmentKey(claim, stance, v.cite!)];
+  const base = reviewed ?? applicabilityOf(modality, v.verdict, v.note);
+  const r = v.applicability;
+  if (r && RANK[r.level] < RANK[base.level]) return { level: r.level, reason: r.reason, basis: 'recorded' };
+  return { level: base.level, reason: base.reason, basis: reviewed ? 'review' : 'heuristic' };
+}
+
 const applyLevel = (direction: Role, level: Applicability): Role =>
   level === 'contextual' ? 'context' : level === 'partial' && direction !== 'inconclusive' ? 'qualifies' : direction;
 
@@ -215,13 +235,12 @@ export function validate(
   // A study verdict, placed by direction then by how far it reaches this sentence.
   const studyItem = (claim: string, stance: Stance, v: CorpusVerdict, cited: boolean, passage?: string) => {
     const direction = directionOf(v.verdict, stance);
-    const reviewed = judgments[judgmentKey(claim, stance, v.cite!)];
-    const j = reviewed ?? applicabilityOf(modality, v.verdict, v.note);
+    const j = applicabilityFor(claim, stance, modality, v, judgments);
     return {
       ...item({ kind: 'study', claim, cite: v.cite! }, cited, v),
       role: direction === 'inconclusive' ? direction : applyLevel(direction, j.level),
       applicability: j.level,
-      basis: reviewed ? ('review' as const) : ('heuristic' as const),
+      basis: j.basis,
       why: j.reason,
       ...(passage !== undefined ? { passage } : {}),
     };

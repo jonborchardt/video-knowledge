@@ -3,7 +3,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Corpus } from './corpus';
-import { type PassageReader, type Stance, applicabilityOf, judgmentKey } from './evidence';
+import { type PassageReader, type Stance, applicabilityFor } from './evidence';
 import { lf, sha, topicDir, TOPICS, ROOT } from './io';
 import { MAX_QUESTIONS, type ReviewFile } from './review';
 import {
@@ -145,8 +145,7 @@ export function buildPackage(
     for (const x of c.verdicts) {
       if (x.by === 'AI guess' || !x.cite || evidence.some((e) => e.cite === x.cite)) continue;
       const d = doc(x.cite);
-      const j =
-        review.applicability?.[judgmentKey(c.id, stance, x.cite)] ?? applicabilityOf('plain', x.verdict, x.note);
+      const j = applicabilityFor(c.id, stance, 'plain', x, review.applicability);
       const direction =
         x.verdict === 'partly'
           ? 'qualifies'
@@ -169,7 +168,7 @@ export function buildPackage(
               ? 'qualifies'
               : direction,
         applicability: j.level,
-        basis: review.applicability?.[judgmentKey(c.id, stance, x.cite)] ? 'review' : 'heuristic',
+        basis: j.basis,
         why: j.reason,
         passage: read(x.cite),
         audited: false,

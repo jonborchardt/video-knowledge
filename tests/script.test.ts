@@ -118,6 +118,19 @@ describe('evidence package', () => {
     expect(gone.documents.every((d) => d.lines === 0)).toBe(true);
     expect(docHasher(() => 'one\ntwo')('any')).toBe(sha('one\ntwo'));
   });
+
+  it('an uncited verdict recorded as contextual is context in the package', () => {
+    const x = asTopic(t());
+    const cite = `${TOPIC}/sources/other-e.txt#L1-L2`;
+    x.claims
+      .find((c) => c.id === MLM)!
+      .verdicts.push({
+        ...study('Other E', 'right', 0.8, cite),
+        applicability: { level: 'contextual', reason: 'background on the mechanism' },
+      });
+    const e = buildPackage(story(), x, read, { review }).claims[0].evidence.find((y) => y.cite === cite)!;
+    expect(e).toMatchObject({ role: 'context', applicability: 'contextual', basis: 'recorded', audited: false });
+  });
 });
 
 describe('chained questions', () => {
