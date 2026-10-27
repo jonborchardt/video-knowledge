@@ -8,6 +8,7 @@ import {
   type Ledger,
   addOutputTo,
   loadLedger,
+  openOutput,
   recordApproved,
   recordUploaded,
   saveLedger,
@@ -18,6 +19,7 @@ import { storySlug } from '../src/lib/script';
 import {
   CATEGORY_DEFAULT,
   MIN_SCHEDULE_LEAD_MS,
+  SCHEDULE_GRACE_MS,
   SESSION_FILE,
   type Session,
   goLive,
@@ -25,9 +27,10 @@ import {
   sync,
   upload,
   uploadProblem,
+  verify,
 } from '../src/lib/uploader';
 import { type RemoteVideo, type YouTubeClient, YouTubeError } from '../src/lib/youtube';
-import { type Fixture, syntheticProduction, syntheticShort } from './production-helpers';
+import { type Fixture, setLook, syntheticProduction, syntheticShort } from './production-helpers';
 
 /** The packaged fixture has no media; give it an mp4 the review.json describes and the thumbnail it names. */
 function withMedia(f: Fixture): Fixture {
@@ -42,6 +45,15 @@ function withMedia(f: Fixture): Fixture {
 const BUILD = sha(Buffer.alloc(1024, 3));
 
 type Calls = { method: string; args: unknown[] }[];
+/** What the fake client's getVideo answers by default: a processed private video. */
+const remoteOf = (id: string): RemoteVideo => ({
+  id,
+  privacyStatus: 'private',
+  uploadStatus: 'processed',
+  rejectionReason: null,
+  publishAt: null,
+  processingStatus: 'succeeded',
+});
 function fakeClient(over: Partial<YouTubeClient> = {}): YouTubeClient & { calls: Calls } {
   const calls: Calls = [];
   const rec = <K extends keyof YouTubeClient>(method: K, impl: YouTubeClient[K]) =>
@@ -57,14 +69,9 @@ function fakeClient(over: Partial<YouTubeClient> = {}): YouTubeClient & { calls:
     setThumbnail: async () => undefined,
     insertCaptions: async () => undefined,
     updateVideo: async () => undefined,
-    getVideo: async (id) => ({
-      id,
-      privacyStatus: 'private',
-      uploadStatus: 'processed',
-      rejectionReason: null,
-      publishAt: null,
-      processingStatus: 'succeeded',
-    }),
+    getVideo: async (id) => remoteOf(id),
+    listCaptions: async () => [],
+    deleteCaptions: async () => undefined,
   };
   const c = { ...base, ...over };
   return {
@@ -74,6 +81,8 @@ function fakeClient(over: Partial<YouTubeClient> = {}): YouTubeClient & { calls:
     insertCaptions: rec('insertCaptions', c.insertCaptions),
     updateVideo: rec('updateVideo', c.updateVideo),
     getVideo: rec('getVideo', c.getVideo),
+    listCaptions: rec('listCaptions', c.listCaptions),
+    deleteCaptions: rec('deleteCaptions', c.deleteCaptions),
   };
 }
 const err = (status: number, reason: string, retryable: boolean, message = reason) =>
@@ -114,7 +123,7 @@ describe('uploadProblem', () => {
   });
 });
 
-describe('upload', () => {
+describe('upload', { timeout: 30_000 }, () => {
   it('inserts privately, records the upload, sets the thumbnail and clears the session', async () => {
     const f = fresh();
     const client = fakeClient();
@@ -296,6 +305,21 @@ describe('upload', () => {
 });
 
 describe('push', () => {
+  it('sends the captions to a Studio re-upload recorded without them, even when the metadata is current', async () => {
+    const f = fresh();
+    const client = fakeClient();
+    await upload(f.topic, f.story, ctx(f, client)); // the API upload carried the captions
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001' }); // no --captions
+    const r = await push(f.topic, f.story, ctx(f, client));
+    const sent = client.calls.filter((c) => c.method === 'insertCaptions');
+    expect(sent.at(-1)?.args[0]).toBe('studio00001');
+    expect(r.event).toMatchObject({ type: 'updated', id: 'studio00001' });
+    expect(r.event!.captions).toBeTruthy();
+    const n = sent.length;
+    await push(f.topic, f.story, ctx(f, client)); // now recorded: not a second track
+    expect(client.calls.filter((c) => c.method === 'insertCaptions')).toHaveLength(n);
+  });
+
   it('sends nothing when the metadata is unchanged, and the new snippet when it is', async () => {
     const f = fresh();
     const client = fakeClient();
@@ -433,18 +457,43 @@ describe('goLive', () => {
 
   it('without --at it goes public now', async () => {
     const f = fresh();
-    const client = fakeClient();
+    const client = fakeClient({ getVideo: async (id) => ({ ...remoteOf(id), privacyStatus: 'public' }) });
     await upload(f.topic, f.story, ctx(f, client));
     recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
     const r = await goLive(f.topic, f.story, ctx(f, client));
     expect(r.event).toMatchObject({ type: 'published', id: 'vid00000001', url: 'https://youtu.be/vid00000001' });
-    expect(client.calls.at(-1)).toMatchObject({
+    expect(client.calls.at(-2)).toMatchObject({
       method: 'updateVideo',
       args: [
         'vid00000001',
         { status: { privacyStatus: 'public', selfDeclaredMadeForKids: false, containsSyntheticMedia: false } },
       ],
     });
+  });
+
+  it('an approved build whose look went stale afterwards never goes public or is scheduled', async () => {
+    const f = fresh();
+    const client = fakeClient({ getVideo: async (id) => ({ ...remoteOf(id), privacyStatus: 'public' }) });
+    await upload(f.topic, f.story, ctx(f, client));
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
+    setLook(f.dir, 'old');
+    const calls = client.calls.length;
+    const final = /rendered with look old.*npm run video -- final/;
+    await expect(goLive(f.topic, f.story, ctx(f, client))).rejects.toThrow(final);
+    await expect(goLive(f.topic, f.story, ctx(f, client, { at: '2026-10-28T15:00:00.000Z' }))).rejects.toThrow(final);
+    expect(client.calls).toHaveLength(calls); // YouTube was never asked
+  });
+
+  it('go-live records failed, not published, when YouTube keeps the video private', async () => {
+    const f = fresh();
+    const client = fakeClient(); // getVideo answers privacyStatus 'private'
+    await upload(f.topic, f.story, ctx(f, client));
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
+    const r = await goLive(f.topic, f.story, ctx(f, client));
+    expect(r.event).toMatchObject({ type: 'failed', step: 'go-live', retryable: false });
+    expect(r.event!.error).toContain('YouTube Studio');
+    expect(events(f).some((e) => e.type === 'published')).toBe(false);
+    expect(client.calls.map((c) => c.method)).toEqual(expect.arrayContaining(['updateVideo', 'getVideo']));
   });
 });
 
@@ -490,6 +539,28 @@ describe('sync', () => {
     const f = fresh();
     await expect(sync(f.topic, f.story, ctx(f, fakeClient()))).rejects.toThrow(Refusal);
   });
+
+  it('sync flags a schedule that passed while the video stayed private', async () => {
+    const f = fresh();
+    const client = fakeClient();
+    await upload(f.topic, f.story, ctx(f, client));
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
+    const at = '2026-10-28T15:00:00.000Z';
+    await goLive(f.topic, f.story, ctx(f, client, { at }));
+    const T = Date.parse(at);
+    const n = events(f).length;
+    const inGrace = await sync(f.topic, f.story, ctx(f, client, { now: new Date(T + 10 * 60_000) }));
+    expect(inGrace).toMatchObject({ privacyStatus: 'private' });
+    expect(events(f)).toHaveLength(n);
+    expect(SCHEDULE_GRACE_MS).toBe(15 * 60_000);
+    const late = await sync(f.topic, f.story, ctx(f, client, { now: new Date(T + 20 * 60_000) }));
+    expect('event' in late && late.event).toMatchObject({ type: 'failed', step: 'sync', retryable: false });
+    expect('event' in late && late.event!.error).toContain('still private');
+    const n2 = events(f).length;
+    const again = await sync(f.topic, f.story, ctx(f, client, { now: new Date(T + 30 * 60_000) }));
+    expect('existing' in again && again.existing).toBe(true); // the same finding is not recorded twice
+    expect(events(f)).toHaveLength(n2);
+  });
 });
 void readFileSync;
 
@@ -520,5 +591,133 @@ describe('goLive refusals before any call', () => {
     const n = client.calls.length;
     await expect(goLive(f.topic, f.story, ctx(f, client, { by: 'automated: /produce run' }))).rejects.toThrow(/person/);
     expect(client.calls).toHaveLength(n);
+  });
+});
+
+describe('verify', () => {
+  /** A read-back that matches the composed package: the fixture's metadata, thumbnail set, the 1024-byte mp4. */
+  const matching =
+    (f: Fixture, over: Partial<RemoteVideo> = {}) =>
+    async (id: string): Promise<RemoteVideo> => {
+      const m = openOutput(f.topic, f.story, { root: f.root }).metadata!;
+      return {
+        ...remoteOf(id),
+        title: m.title,
+        description: m.description,
+        tags: m.tags,
+        categoryId: '27',
+        defaultLanguage: 'en',
+        license: 'youtube',
+        embeddable: true,
+        madeForKids: false,
+        selfDeclaredMadeForKids: false,
+        containsSyntheticMedia: false,
+        hasCustomThumbnail: true,
+        fileSize: 1024,
+        fileAvailability: 'available',
+        ...over,
+      };
+    };
+  const serving = async () => [{ id: 'c1', language: 'en', name: 'English', trackKind: 'standard', status: 'serving' }];
+  const anonymous = (async () => new Response('', { status: 403 })) as unknown as typeof fetch;
+  const events = (f: Fixture, output = 'youtube') => loadLedger(f.topic, f.story, f.root)!.outputs[output].events;
+
+  it('records a passing verification of an API upload', async () => {
+    const f = fresh();
+    const client = fakeClient({ getVideo: matching(f), listCaptions: serving });
+    await upload(f.topic, f.story, ctx(f, client));
+    const r = await verify(f.topic, f.story, ctx(f, client, { anonymous }));
+    expect(r.checks.filter((k) => k.result === 'fail' || k.result === 'pending')).toEqual([]);
+    expect(r.result.event).toMatchObject({ type: 'verified', result: 'passed', id: 'vid00000001', build: BUILD });
+    expect(client.calls.filter((c) => c.method === 'listCaptions')).toHaveLength(1);
+    const again = await verify(f.topic, f.story, ctx(f, client, { anonymous }));
+    expect(again.result.existing).toBe(true);
+    expect(events(f).filter((e) => e.type === 'verified')).toHaveLength(1);
+  });
+
+  it('verifies a Studio upload recorded by hand, and its size binds the build', async () => {
+    const f = fresh();
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001', captionsSent: true });
+    const client = fakeClient({ getVideo: matching(f, { fileSize: 999 }), listCaptions: serving });
+    const r = await verify(f.topic, f.story, ctx(f, client, { anonymous }));
+    expect(r.checks.find((k) => k.name === 'file')!.result).toBe('fail');
+    expect(r.result.event).toMatchObject({ type: 'verified', result: 'failed', id: 'studio00001' });
+    expect(JSON.stringify(r.result.event)).not.toContain('x.mp4');
+  });
+
+  it('a failed metadata check makes push resend the snippet', async () => {
+    const f = fresh();
+    const client = fakeClient({ getVideo: matching(f, { defaultLanguage: undefined }), listCaptions: serving });
+    await upload(f.topic, f.story, ctx(f, client));
+    expect((await push(f.topic, f.story, ctx(f, client))).existing).toBe(true); // current by the shas
+    const r = await verify(f.topic, f.story, ctx(f, client, { anonymous }));
+    expect(r.checks.find((k) => k.name === 'language')!.detail).toMatch(/push/);
+    const p = await push(f.topic, f.story, ctx(f, client));
+    expect(client.calls.filter((c) => c.method === 'updateVideo')).toHaveLength(1);
+    expect(p.event).toMatchObject({ type: 'updated', id: 'vid00000001' });
+    expect(client.calls.filter((c) => c.method === 'insertCaptions')).toHaveLength(1); // captions were fine
+  });
+
+  it('a missing captions track makes push resend the captions', async () => {
+    const f = fresh();
+    const client = fakeClient({ getVideo: matching(f) });
+    await upload(f.topic, f.story, ctx(f, client));
+    const r = await verify(f.topic, f.story, ctx(f, client, { anonymous }));
+    expect(r.checks.find((k) => k.name === 'captions')!.result).toBe('fail');
+    const p = await push(f.topic, f.story, ctx(f, client));
+    expect(client.calls.filter((c) => c.method === 'insertCaptions')).toHaveLength(2);
+    expect(p.event!.captions).toBeTruthy();
+  });
+
+  it('a failed captions track is replaced on resend, not piled up', async () => {
+    const f = fresh();
+    const failed = { id: 'old1', language: 'en', name: 'English', trackKind: 'standard', status: 'failed' };
+    const client = fakeClient({ getVideo: matching(f), listCaptions: async () => [failed] });
+    await upload(f.topic, f.story, ctx(f, client));
+    const r = await verify(f.topic, f.story, ctx(f, client, { anonymous }));
+    expect(r.checks.find((k) => k.name === 'captions')!.result).toBe('fail');
+    await push(f.topic, f.story, ctx(f, client));
+    expect(client.calls.filter((c) => c.method === 'deleteCaptions').map((c) => c.args[0])).toEqual(['old1']);
+    expect(client.calls.filter((c) => c.method === 'insertCaptions')).toHaveLength(2);
+  });
+
+  it('verifies a Short against its own package', async () => {
+    const f = syntheticShort('packaged', { release: true });
+    fixtures.push(f);
+    const source = relative(f.root, f.dir).split(sep).join('/');
+    addOutputTo(f.topic, f.parent, 'short:fixture-short', 'youtube-short', {
+      derivedFrom: 'youtube',
+      source,
+      root: f.root,
+    });
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'bbbbbbbbbbb' });
+    const client = fakeClient({ getVideo: matching(f), listCaptions: serving });
+    const r = await verify(f.topic, f.story, ctx(f, client, { anonymous }));
+    expect(r.expected.title).toBe(openOutput(f.topic, f.story, { root: f.root }).metadata!.title);
+    expect(r.expected.captionsLanguage).toBe('en');
+    expect(r.checks.find((k) => k.name === 'chapters')!.result).toBe('skip');
+    expect(r.result.event).toMatchObject({ type: 'verified', id: 'bbbbbbbbbbb' });
+    expect(loadLedger(f.topic, f.parent, f.root)!.outputs['short:fixture-short'].events.at(-1)!.type).toBe('verified');
+  });
+
+  it('captions.list failing leaves captions pending and records no failed event', async () => {
+    const f = fresh();
+    const client = fakeClient({
+      getVideo: matching(f),
+      listCaptions: async () => {
+        throw err(403, 'forbidden', false);
+      },
+    });
+    await upload(f.topic, f.story, ctx(f, client));
+    const r = await verify(f.topic, f.story, ctx(f, client, { anonymous }));
+    expect(r.checks.find((k) => k.name === 'captions')!.result).toBe('pending');
+    expect(r.result.event!.result).toBe('pending');
+    expect(events(f).some((e) => e.type === 'failed')).toBe(false);
+  });
+
+  it('refuses before an upload and writes nothing', async () => {
+    const f = fresh();
+    await expect(verify(f.topic, f.story, ctx(f, fakeClient(), { anonymous }))).rejects.toThrow(Refusal);
+    expect(existsSync(publishPath(f.topic, f.story, f.root))).toBe(false);
   });
 });

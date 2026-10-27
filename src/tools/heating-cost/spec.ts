@@ -1,4 +1,4 @@
-import { dataRef } from '../../lib/datasets';
+import { type DataTable, dataRef } from '../../lib/datasets';
 import type { ToolSpec } from '../index';
 
 const SRC = 'heat-pumps/sources/eia-2026-state-residential-energy-prices.txt';
@@ -17,6 +17,8 @@ export const heatingCost: ToolSpec = {
       { value: 0.8, cite: `${SRC}#L131` },
     ],
     cops: { value: [2.5, 3.0], cite: `${SRC}#L133` },
+    // the U.S. break-even at the source's "latest" prices (Jan-Jul 2026 electricity, 2025 gas), stated, not used
+    latest: { value: 3.42, cite: `${SRC}#L135` },
   },
   assumptions: [
     '1 MMBtu = 293.07 kWh.',
@@ -37,3 +39,7 @@ export const heatingCost: ToolSpec = {
   whyDefaults:
     'The efficiencies are the source’s own illustrative values: furnace AFUE 0.95 and 0.80, heat pump seasonal COP 2.5 and 3.0. Prices are the state averages from the same source, starting from the U.S. average. None was chosen to favour either machine.',
 };
+
+/** The page's provenance sentence: the price year, why that year, the retrieval date and the newer U.S. break-even. */
+export const priceNote = (table: DataTable, latest: { value: number; cite: string }) =>
+  `Prices are EIA ${table.asOf} averages, the latest year with both annual prices, retrieved ${table.retrieved}. With January to July 2026 electricity and 2025 gas prices, the U.S. break-even rises to ${latest.value.toFixed(2)}.`;

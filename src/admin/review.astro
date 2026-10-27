@@ -1,7 +1,7 @@
 ---
 // The review page for one output: the landscape video or one of its Shorts (`path` is its folder under
 // topics/<topic>/scripts/). A person watches the packaged build, sees every QA and script finding at its moment, and
-// decides: approve, send back with notes, accept a draft, upload privately, push metadata, go live now or at a time.
+// decides: approve, send back with notes, accept a draft, upload privately, push metadata, verify, go live now or at a time.
 // Dev server only (astro.config.mjs). Rendered per request so it shows the ledger as it is; the forms post to
 // review-action.ts and come back here. The video streams from disk through media.ts and is never part of the site.
 import { execFileSync } from 'node:child_process';
@@ -246,6 +246,12 @@ const sentenceStarts = JSON.stringify(v.sentences.map((s) => [s.at.seconds, s.at
                 v.state?.id ? true : 'nothing uploaded yet',
               ],
               ['sync', 'Sync', 'Reads the video back from YouTube.', v.state?.id ? true : 'nothing uploaded yet'],
+              [
+                'verify',
+                'Verify',
+                'Compares YouTube with the approved package: metadata, chapters, captions, thumbnail, file, visibility.',
+                v.state?.id ? true : 'nothing uploaded yet',
+              ],
             ].map(([a, label, help, can]) => (
               <form method="post" action={action(a as string)} class="grid gap-1 text-sm">
                 <input type="hidden" name="build" value={v.pkg!.mp4Sha} />
@@ -330,6 +336,17 @@ const sentenceStarts = JSON.stringify(v.sentences.map((s) => [s.at.seconds, s.at
                   {e.title && <span class={small}> · title "{e.title}"</span>}
                   {e.publishAt && <span class={small}> · for {e.publishAt}</span>}
                   {e.error && <span class="text-destructive"> · {e.error}</span>}
+                  {e.result && (
+                    <span class={small}>
+                      {' '}
+                      · {e.result}
+                      {e.checks?.some((c) => c.result === 'fail') &&
+                        `: ${e.checks
+                          .filter((c) => c.result === 'fail')
+                          .map((c) => c.name)
+                          .join(', ')}`}
+                    </span>
+                  )}
                   {e.note && <span class={small}> · {e.note}</span>}
                   {e.notes && (
                     <ul class="mt-1 list-disc pl-5">

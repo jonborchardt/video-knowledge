@@ -1,3 +1,5 @@
+import { site } from '../config/site';
+
 /** Site-relative href that respects Astro's `base` (`/` on commonwealthofreason.com, `/video-knowledge/` on the GitHub
  *  Pages mirror). Pass root-relative paths. */
 export function href(path: string): string {
@@ -8,9 +10,14 @@ export function href(path: string): string {
 /** The URLs in plain text (a video description), without the punctuation that closes the sentence around them. */
 export const textUrls = (text: string) => [...text.matchAll(/https?:\/\/\S+/g)].map(([u]) => u.replace(/[),.;]+$/, ''));
 
-/** Absolute URL for canonical and social tags. Requires `site` in astro.config. */
-export function absoluteUrl(path: string, site: URL | string): string {
-  return new URL(href(path), site).toString();
+/** A root-relative site path as its absolute URL on the canonical host `site.url`, from both deploy targets (the
+ *  mirror's canonical, og and JSON-LD URLs point at commonwealthofreason.com), never with the build's base. */
+export const absoluteUrl = (path: string): string => new URL(path.replace(/^\//, ''), site.url).href;
+
+/** A built page's pathname without the build's base (`/video-knowledge/about/` on the mirror is `/about/`). */
+export function sitePath(pathname: string): string {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  return pathname.startsWith(base + '/') ? pathname.slice(base.length) : pathname;
 }
 
 /** A study cite (`<topic>/sources/<file>.txt#L10-L24`, relative to topics/) as a link to the committed text in the

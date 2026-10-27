@@ -36,12 +36,23 @@ export interface ExtractionBatch {
   sum?: string;
   as: BatchAssertion[];
 }
+/** How far a study verdict's passage reaches its claim. contextual is listed but never decides any sentence. */
+export const APPLICABILITY = ['direct', 'partial', 'contextual'] as const;
+export type ApplicabilityLevel = (typeof APPLICABILITY)[number];
+/** One entry of topics/<topic>/applicability.json, keyed applicabilityKey(claim, cite); written only by record-sources. */
+export interface RecordedApplicability {
+  level: ApplicabilityLevel;
+  reason: string;
+}
+export const applicabilityKey = (claim: string, cite: string) => `${claim}|${cite}`;
 export interface StudyVerdict {
   claim: string; // <topic>/<slug>
   verdict: VerdictValue;
   confidence?: number | null;
   note: string;
   source: string; // <topic>/sources/<file>.txt#L<start>-L<end>
+  applicability: ApplicabilityLevel;
+  why?: string; // one line, required unless direct
 }
 
 type Obj = Record<string, unknown>;
@@ -126,6 +137,72 @@ export function checkStudyVerdicts(x: unknown): string[] {
     if (!isText(v.note)) out.push(`${at}: no "note"`);
     if (!isText(v.source) || !CITE.test(v.source))
       out.push(`${at}: "source" is not <topic>/sources/<file>.txt#L<a>-L<b>`);
+    if (!isLevel(v.applicability))
+      out.push(`${at}: applicability ${JSON.stringify(v.applicability)} is not one of ${APPLICABILITY.join(', ')}`);
+    else if (v.applicability !== 'direct' && !isText(v.why)) out.push(`${at}: ${v.applicability} needs a "why"`);
   });
   return out;
+}
+
+const isLevel = (x: unknown): x is ApplicabilityLevel => (APPLICABILITY as readonly unknown[]).includes(x);
+/** Every problem in topics/<topic>/applicability.json. */
+export function checkApplicabilityFile(x: unknown): string[] {
+  if (!isObj(x)) return ['applicability.json is not an object'];
+  const out: string[] = [];
+  for (const [k, e] of Object.entries(x)) {
+    const i = k.lastIndexOf('|');
+    if (i < 0 || !k.slice(0, i).includes('/') || !CITE.test(k.slice(i + 1))) {
+      out.push(`${k}: key is not <claim>|<cite>`);
+      continue;
+    }
+    const level = isObj(e) ? e.level : undefined;
+    if (!isLevel(level)) out.push(`${k}: level ${JSON.stringify(level)} is not one of ${APPLICABILITY.join(', ')}`);
+    if (!isObj(e) || !isText(e.reason)) out.push(`${k}: no reason`);
+  }
+  return out;
+}
+
+/** applicability.json with these verdicts' levels merged in (a later entry for the same claim and cite wins), keys sorted. */
+export function withApplicability(
+  existing: Record<string, RecordedApplicability>,
+  verdicts: StudyVerdict[],
+): Record<string, RecordedApplicability> {
+  const all: Record<string, RecordedApplicability> = { ...existing };
+  for (const v of verdicts)
+    all[applicabilityKey(v.claim, v.source)] = {
+      level: v.applicability,
+      reason: v.why?.trim() || 'recorded as direct with the verdict',
+    };
+  return Object.fromEntries(
+    Object.keys(all)
+      .sort()
+      .map((k) => [k, all[k]]),
+  );
+}
+
+/** True when the store already holds this exact study verdict (so re-recording it changes only its applicability). */
+export function isStored(
+  x: StudyVerdict,
+  stored: {
+    method?: string;
+    source?: string;
+    verdict: string;
+    confidence?: number | null;
+    note?: string;
+    date?: string;
+  }[],
+): boolean {
+  // Only the current record on that document counts (newest by date, the later one on a tie): re-recording a
+  // superseded verdict restores it, so it must reach the watcher.
+  const doc = (s?: string) => (s ?? '').split('#')[0];
+  let r: (typeof stored)[number] | undefined;
+  for (const s of stored)
+    if (s.method === 'source' && doc(s.source) === doc(x.source) && (!r || (s.date ?? '') >= (r.date ?? ''))) r = s;
+  return (
+    !!r &&
+    r.source === x.source &&
+    r.verdict === x.verdict &&
+    r.note === x.note &&
+    (r.confidence ?? null) === (x.confidence ?? null)
+  );
 }

@@ -18,6 +18,7 @@ that supports it. You never edit `script.json`.
    with a first line `Source: <url>`; convert a PDF with `pdftotext -layout`. One document per file.
 4. Judge every passage you use per `scripts/briefs/sources.md` (verdict, confidence, one-line
    note, the tightest line range), and record a verdict on the claim the passage actually decides.
+   Record its applicability per `sources.md`; a passage that is only `contextual` does not close the gap.
    Write the verdicts to `topics/<topic>/work/sv_<story slug>-<n>.json` (the next unused `n`).
 5. Run, in order:
    - `npm run record-sources -- <topic> topics/<topic>/work/sv_<story slug>-<n>.json` (never with

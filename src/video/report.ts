@@ -210,7 +210,7 @@ export function renderReportMd(r: BuildReport): string {
       : ['**Soundtrack.** none (narration only).', '']),
     `**Clearance.** ${r.clearance.publishable ? 'Narration and music are both cleared for publication.' : `**Not cleared for public release:** ${r.clearance.why.join('; ')}.`} A passing build is technical completion only; a person approves the release.`,
     '',
-    `**Fingerprints.** script ${r.fingerprints.script}, storyboard ${r.fingerprints.storyboard}, narration ${r.fingerprints.narration}, config ${r.fingerprints.config}${r.music ? `, music ${r.music.fingerprint}` : ''}.`,
+    `**Fingerprints.** script ${r.fingerprints.script}, storyboard ${r.fingerprints.storyboard}, narration ${r.fingerprints.narration}, config ${r.fingerprints.config}, look ${r.fingerprints.look}${r.music ? `, music ${r.music.fingerprint}` : ''}.`,
     '',
     `## QA: ${r.qa.ok ? 'passed' : 'FAILED'} (${r.qa.checks.filter((c) => c.ok).length} of ${r.qa.checks.length})`,
     '',

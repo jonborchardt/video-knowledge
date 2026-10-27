@@ -13,7 +13,9 @@ const { table, caption, dataHref } = Astro.props;
 <section class="max-w-wide overflow-x-auto" aria-label={table.title} tabindex="0">
   <table class="w-full border-collapse text-sm">
     <caption class="mb-1 text-left text-muted-foreground">
-      {caption ? `${caption} ` : ''}{table.title}, {table.asOf}.{table.note ? ` ${table.note}` : ''}
+      {caption ? `${caption} ` : ''}{table.title}, {table.asOf}, retrieved {table.retrieved}.{
+        table.note ? ` ${table.note}` : ''
+      }
       {dataHref && <a href={dataHref}> All figures in this inquiry.</a>}
     </caption>
     <thead>

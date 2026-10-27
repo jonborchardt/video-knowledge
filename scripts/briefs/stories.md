@@ -82,6 +82,9 @@ conclusion is built from it for every kind except decision groups.
 }
 ```
 
+- A level recorded with the verdict (`topics/<topic>/applicability.json`, written by `record-sources`) is a
+  ceiling: your judgment may narrow it, or widen the wording heuristic up to it, never above it. A wrong
+  recorded level is re-recorded, not overridden here.
 - Story ids come from `stories.json` and are stable; claim ids must exist in the topic.
 - Review the whole list, including the rejected and lower-ranked candidates in the
   `rejected` block: a rejected variation may be the better framing.

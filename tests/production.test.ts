@@ -33,21 +33,25 @@ import {
 import { corpusOf } from '../src/lib/corpus';
 import { loadStories } from '../src/lib/stories';
 import { passageReader } from '../src/lib/evidence';
+import { storyboardFingerprint } from '../src/lib/release';
+import type { Storyboard } from '../src/lib/storyboard';
 import { docHasher, docReader } from '../src/lib/evidence-package';
 import { loadReview } from '../src/lib/review';
 import { validateScript } from '../src/lib/script-validation';
 import { loadTopic } from '../src/lib/topics';
 import {
   type EvidencePackage,
+  type Release,
   type Script,
   type ScriptReviewFile,
   type ScriptValidation,
   scriptDir,
   sentenceFingerprint,
   shortId,
+  storySlug,
 } from '../src/lib/script';
 import { addOutputTo, recordApproved, recordPublished, recordUploaded, setThumbnail } from '../src/lib/publish';
-import { type Fixture, copyTopic, syntheticProduction, syntheticShort } from './production-helpers';
+import { type Fixture, copyTopic, setLook, syntheticProduction, syntheticShort } from './production-helpers';
 import { blockedScript, run } from './script-helpers';
 
 describe('production board', () => {
@@ -448,6 +452,51 @@ describe('publishing on the board', () => {
   }, 60_000); // two whole topic boards
 });
 
+describe('the look on the board', { timeout: 60_000 }, () => {
+  const final = (f: Fixture) => `npm run video -- final ${f.topic} ${f.story} --approved-by "<approver>"`;
+  it('a packaged build drawn before the look was recorded halts look-stale and names video final', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      setLook(f.dir, undefined);
+      const n = boardNext(f.topic, f.story, f.root);
+      expect(n.stage).toBe('packaged');
+      expect(n.done).toBe(true); // /produce never re-renders it
+      expect(n.halt).toMatchObject({ kind: 'look-stale', stage: 'packaged' });
+      expect(n.next).toBe(final(f));
+      const prod = productionOf(f.topic, f.story, f.root)!;
+      expect(prod.checks.find((c) => c.name === 'look')?.health).toBe('stale');
+      const r = topicBoard(f.topic, f.root, {}).stories.find((s) => s.story.id === f.story)!;
+      expect(columnOf(r)).toBe('your-review'); // the column is unchanged
+    } finally {
+      f.cleanup();
+    }
+  });
+  it('redrawing a kit card after the build makes it look-stale; the current kit does not', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      expect(boardNext(f.topic, f.story, f.root).halt).toBeNull();
+      expect(productionOf(f.topic, f.story, f.root)!.checks.find((c) => c.name === 'look')?.health).toBe('current');
+      mkdirSync(join(f.root, 'brand', 'spending'), { recursive: true });
+      writeFileSync(join(f.root, 'brand', 'spending', 'close-card.svg'), '<svg/>');
+      expect(boardNext(f.topic, f.story, f.root).halt?.kind).toBe('look-stale');
+    } finally {
+      f.cleanup();
+    }
+  });
+  it('a Short with a legacy build halts look-stale the same way', () => {
+    const f = syntheticShort('packaged', { release: true });
+    try {
+      expect(boardNext(f.topic, f.story, f.root).halt?.kind).not.toBe('look-stale');
+      setLook(f.dir, undefined);
+      const n = boardNext(f.topic, f.story, f.root);
+      expect(n).toMatchObject({ stage: 'packaged', done: true, halt: { kind: 'look-stale', stage: 'packaged' } });
+      expect(n.next).toBe(final(f));
+    } finally {
+      f.cleanup();
+    }
+  });
+});
+
 describe('shorts on the board', () => {
   it(
     'drives a packaged short through the same stages and stales its package when the parent is revised',
@@ -585,7 +634,7 @@ describe('the article on the board', () => {
     approvedBy: 'fixture approver',
     date: '2026-01-02',
     revision: 1,
-    fingerprints: { article: articleFingerprint(a), package: '', validation: '' },
+    fingerprints: { article: articleFingerprint(a), package: a.generation.evidencePackage ?? '', validation: '' },
     article: a,
     history: [],
   });
@@ -631,8 +680,9 @@ describe('the article on the board', () => {
       expect(articleState(fx)).toEqual({ state: 'released', next: 'none' });
       const headlined = { ...a, meta: { ...a.meta, headline: 'Is a heat pump cheaper to run than gas?' } };
       write(fx, 'article.json', headlined);
-      // the new headline is unapproved: the review still covers this revision, so it is the writer's
+      // the new headline is unapproved and no finding holds it: the reviewer's
       expect(articleState(fx)?.state).toBe('review');
+      expect(articleState(fx)?.next).toContain('article-review.md');
       const reviewed = readJson<{ approved: Record<string, string> }>(join(fx.dir, 'article-review.json'))!;
       write(fx, 'article-review.json', {
         ...reviewed,
@@ -683,6 +733,209 @@ describe('the article on the board', () => {
         ]),
       });
       expect(articleState(fx)?.state).toBe('changed');
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  it('a released article whose package moved a cite shows blocked', { timeout: 30_000 }, () => {
+    const fx = syntheticProduction('locked');
+    try {
+      const pkg = readJson<EvidencePackage>(join(fx.dir, 'evidence-package.json'))!;
+      // a table cell stating a figure of a cited passage in the package
+      const cite = pkg.documents[0].cites[0];
+      const n = Number(passageReader(fx.root)(cite)!.match(/\d+/)![0]);
+      const a = articleOf(fx);
+      const cell = { label: 'Figure', value: n, unit: 'count' as const, display: String(n), cite };
+      a.sections[0].blocks.push({
+        kind: 'table',
+        id: 't1',
+        caption: 'c',
+        columns: ['n'],
+        rows: [{ label: 'r', cells: [cell] }],
+      });
+      write(fx, 'article.json', a);
+      write(fx, 'article-release.json', {
+        ...released(a),
+        fingerprints: { ...released(a).fingerprints, package: pkg.fingerprint },
+      });
+      expect(articleState(fx)).toEqual({ state: 'released', next: 'none' });
+      // the rebuilt package cites that passage at other lines
+      const documents = pkg.documents.map((d, i) =>
+        i ? d : { ...d, cites: d.cites.map((c) => (c === cite ? `${c.split('#')[0]}#L999999` : c)) },
+      );
+      write(fx, 'evidence-package.json', { ...pkg, fingerprint: 'moved', documents });
+      expect(articleState(fx)).toEqual({
+        state: 'blocked',
+        next: `agent: scripts/briefs/article.md (revise) -> ${relative(fx.root, join(fx.dir, 'article.json')).replaceAll(sep, '/')}`,
+      });
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  // A released article with one figure over a chart on the first storyboard scene, reviewed at the current package.
+  const point = { label: 'Homes', value: 40, unit: 'percent', display: '40%', cite: 'x#L1' };
+  const chart = { type: 'stat-tiles', points: [point] };
+  const figured = (fx: Fixture, figures: boolean) => {
+    const sb = readJson<Storyboard>(join(fx.dir, 'storyboard.json'))!;
+    (sb.scenes[0].visual as { chart?: unknown }).chart = chart;
+    write(fx, 'storyboard.json', sb);
+    const ref = `${storySlug(fx.story)}/${sb.scenes[0].id}`;
+    const a = articleOf(fx);
+    a.sections[0].blocks.push({ kind: 'figure', ref, caption: 'Homes' });
+    write(fx, 'article.json', a);
+    const pkg = readJson<EvidencePackage>(join(fx.dir, 'evidence-package.json'))!;
+    write(fx, 'article-review.json', {
+      reviewer: 'fixture reviewer',
+      date: '2026-01-02',
+      revision: 1,
+      packageFingerprint: pkg.fingerprint,
+      approved: Object.fromEntries([
+        ...articleSentences(a).map((x) => [x.id, sentenceFingerprint(x)]),
+        ...articleReviewUnits(a),
+      ]),
+      findings: [],
+    });
+    const r = { ...released(a), fingerprints: { ...released(a).fingerprints, package: pkg.fingerprint } };
+    write(fx, 'article-release.json', figures ? { ...r, figures: { [ref]: { chart } } } : r);
+    const recut = () => {
+      (sb.scenes[0].visual as { chart?: unknown }).chart = {
+        ...chart,
+        points: [{ ...point, value: 41, display: '41%' }],
+      };
+      write(fx, 'storyboard.json', sb);
+    };
+    return { sb, pkg, recut };
+  };
+  const reviewer = (fx: Fixture) =>
+    `agent: scripts/briefs/article-review.md -> ${relative(fx.root, join(fx.dir, 'article-review.json')).replaceAll(sep, '/')}`;
+  const correctCmd = (fx: Fixture) =>
+    `npm run article -- correct ${fx.topic} ${fx.story} --approved-by "<your name>" --note "<what changed>"`;
+
+  it('a released article whose chart changed shows changed with the correct command', { timeout: 30_000 }, () => {
+    const fx = syntheticProduction('locked');
+    try {
+      const { recut } = figured(fx, true);
+      expect(articleState(fx)).toEqual({ state: 'released', next: 'none' });
+      recut();
+      expect(articleState(fx)).toEqual({ state: 'changed', next: correctCmd(fx) });
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  it(
+    'a rebuilt package the review does not cover goes to the reviewer, with or without a re-cut chart',
+    { timeout: 30_000 },
+    () => {
+      const fx = syntheticProduction('locked');
+      try {
+        const { pkg, recut } = figured(fx, true);
+        write(fx, 'evidence-package.json', { ...pkg, fingerprint: 'rebuilt' });
+        expect(articleState(fx)).toEqual({ state: 'review', next: reviewer(fx) });
+        recut(); // correct would refuse: the validation does not pass
+        expect(articleState(fx)).toEqual({ state: 'review', next: reviewer(fx) });
+      } finally {
+        fx.cleanup();
+      }
+    },
+  );
+
+  it(
+    'a release without a figure copy asks for the copy-only lock while its storyboard is the locked one',
+    { timeout: 30_000 },
+    () => {
+      const fx = syntheticProduction('locked');
+      try {
+        const { sb } = figured(fx, false);
+        // the storyboard edited after the script lock: its charts were never approved, a correction
+        expect(articleState(fx)).toEqual({ state: 'changed', next: correctCmd(fx) });
+        const locked = readJson<Release>(join(fx.dir, 'release.json'))!;
+        write(fx, 'release.json', {
+          ...locked,
+          fingerprints: { ...locked.fingerprints, storyboard: storyboardFingerprint(sb) },
+        });
+        expect(articleState(fx)).toEqual({
+          state: 'changed',
+          next: `npm run article -- lock ${fx.topic} ${fx.story}`,
+        });
+      } finally {
+        fx.cleanup();
+      }
+    },
+  );
+
+  // A review at revision 1 approving every unit but the first sentence, which carries a finding of this severity.
+  const heldReview = (fx: Fixture, severity: 'warning' | 'info') => {
+    const a = articleOf(fx);
+    write(fx, 'article.json', a);
+    const [s0] = articleSentences(a);
+    write(fx, 'article-review.json', {
+      reviewer: 'fixture reviewer',
+      date: '2026-01-02',
+      revision: 1,
+      packageFingerprint: a.generation.evidencePackage,
+      approved: Object.fromEntries([
+        ...articleSentences(a)
+          .filter((x) => x.id !== s0.id)
+          .map((x) => [x.id, sentenceFingerprint(x)]),
+        ...articleReviewUnits(a),
+      ]),
+      findings: [
+        { sentence: s0.id, fingerprint: sentenceFingerprint(s0), severity, category: 'wording', explanation: 'x' },
+      ],
+    });
+    return a;
+  };
+
+  it('A: an edit beside a held sentence goes to the reviewer, not back to the writer', { timeout: 30_000 }, () => {
+    const fx = syntheticProduction('locked');
+    try {
+      const a = heldReview(fx, 'warning');
+      const edited = structuredClone(a);
+      articleSentences(edited)[1].text += ' Indeed.'; // a sentence beside the held one, at the same revision
+      write(fx, 'article.json', edited);
+      expect(articleState(fx)).toMatchObject({
+        state: 'review',
+        kind: 'review-pending',
+        next: expect.stringContaining('article-review.md'),
+      });
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  it('B: only held sentences unapproved: the writer revises them', { timeout: 30_000 }, () => {
+    const fx = syntheticProduction('locked');
+    try {
+      heldReview(fx, 'warning');
+      expect(articleState(fx)).toMatchObject({
+        state: 'review',
+        kind: 'review-findings',
+        next: expect.stringContaining('article.md (revise)'),
+      });
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  it('C: an edited headline with no finding goes to the reviewer', { timeout: 30_000 }, () => {
+    const fx = syntheticProduction('locked');
+    try {
+      const a = heldReview(fx, 'warning');
+      write(fx, 'article.json', { ...a, meta: { ...a.meta, headline: 'Is a heat pump cheaper than gas?' } });
+      expect(articleState(fx)).toMatchObject({ kind: 'review-pending' });
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  it('D: an info finding never holds a sentence', { timeout: 30_000 }, () => {
+    const fx = syntheticProduction('locked');
+    try {
+      heldReview(fx, 'info');
+      expect(articleState(fx)).toMatchObject({ kind: 'review-pending' });
     } finally {
       fx.cleanup();
     }

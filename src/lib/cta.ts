@@ -6,8 +6,9 @@
 import { join } from 'node:path';
 import { toolOf } from '../tools';
 import { loadArticleRelease } from './article';
-import { absolute, absoluteOf, chainRoot, type Graph, matterPath } from './content-graph';
+import { absoluteOf, chainRoot, type Graph, matterPath } from './content-graph';
 import { readJson, ROOT } from './io';
+import { absoluteUrl } from './url';
 import { approverProblem } from './release';
 import { FILES, type Script, scriptDir, sentences } from './script';
 
@@ -83,7 +84,7 @@ export function resolveCtas(file: CtaFile | null, g: Graph, story: string, root 
   const fallback: ResolvedCta = {
     type: 'evidence',
     text: 'The evidence and the full answer',
-    url: absolute(matterPath(topic, s)),
+    url: absoluteUrl(matterPath(topic, s)),
     node: story,
     disclosure: null,
   };

@@ -11,7 +11,7 @@
 // This file holds the shared types, fingerprints and folder conventions; each stage's code lives in its own module.
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import type { Applicability, Assertion, EvidenceRef, Stance, Validation } from './evidence';
+import type { Applicability, Assertion, Basis, EvidenceRef, Stance, Validation } from './evidence';
 import { sha, topicDir, TOPICS, ROOT } from './io';
 import type { Story } from './stories';
 
@@ -63,7 +63,7 @@ export interface PackageEvidence {
   /** supports: establishes the claim; qualifies: partly or in a narrower setting; contradicts; context: background only. */
   role: EvidenceRole;
   applicability: Applicability;
-  basis: 'review' | 'heuristic';
+  basis: Basis;
   why: string;
   passage: string | null;
   audited: boolean; // used by the story audit (the newest verdict per document); older passages stay citable

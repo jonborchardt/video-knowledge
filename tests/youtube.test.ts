@@ -13,6 +13,7 @@ import {
   authorize,
   classify,
   loadCredentials,
+  oembedStatus,
   youtubeClient,
 } from '../src/lib/youtube';
 
@@ -425,8 +426,87 @@ describe('thumbnail, captions, update, list', () => {
       publishAt: '2026-10-28T15:00:00Z',
       processingStatus: 'succeeded',
     });
-    expect(f.calls.at(-1)!.url).toContain('part=status,processingDetails');
+    expect(f.calls.at(-1)!.url).toContain('part=snippet,status,contentDetails,processingDetails,fileDetails');
     expect(await client.getVideo('gone')).toBeNull();
+  });
+
+  it('getVideo reads snippet, status, contentDetails, processing and file details in one call', async () => {
+    const f = fakeFetch([
+      token,
+      {
+        match: /\/youtube\/v3\/videos\?/,
+        reply: () =>
+          json({
+            items: [
+              {
+                id: 'vid00000001',
+                snippet: { title: 'T', description: 'D', tags: ['a'], categoryId: '27', defaultLanguage: 'en' },
+                status: {
+                  privacyStatus: 'public',
+                  uploadStatus: 'processed',
+                  license: 'youtube',
+                  embeddable: true,
+                  madeForKids: false,
+                  selfDeclaredMadeForKids: false,
+                  containsSyntheticMedia: false,
+                },
+                contentDetails: { hasCustomThumbnail: true, contentRating: {} },
+                processingDetails: { processingStatus: 'succeeded', fileAvailability: 'available' },
+                fileDetails: { fileName: 'x.mp4', fileSize: '1024' },
+              },
+            ],
+          }),
+      },
+    ]);
+    const v = await youtubeClient(creds(), f.fn).getVideo('vid00000001');
+    expect(f.calls.at(-1)!.url).toContain('part=snippet,status,contentDetails,processingDetails,fileDetails');
+    expect(v).toMatchObject({
+      title: 'T',
+      tags: ['a'],
+      hasCustomThumbnail: true,
+      fileSize: 1024,
+      fileAvailability: 'available',
+      privacyStatus: 'public',
+    });
+  });
+
+  it('listCaptions maps the snippet of each track', async () => {
+    const f = fakeFetch([
+      token,
+      {
+        match: /youtube\/v3\/captions\?/,
+        method: 'GET',
+        reply: () =>
+          json({
+            items: [
+              { id: 'c1', snippet: { language: 'en', name: 'English', trackKind: 'standard', status: 'serving' } },
+            ],
+          }),
+      },
+    ]);
+    const tracks = await youtubeClient(creds(), f.fn).listCaptions('vid00000001');
+    expect(f.calls.at(-1)!.url).toContain('captions?part=snippet&videoId=vid00000001');
+    expect(tracks).toEqual([{ id: 'c1', language: 'en', name: 'English', trackKind: 'standard', status: 'serving' }]);
+  });
+
+  it('deleteCaptions deletes the track by id', async () => {
+    const f = fakeFetch([
+      token,
+      { match: /youtube\/v3\/captions\?/, method: 'DELETE', reply: () => new Response(null, { status: 204 }) },
+    ]);
+    await youtubeClient(creds(), f.fn).deleteCaptions('cap1');
+    expect(f.calls.at(-1)!.url).toContain('captions?id=cap1');
+  });
+
+  it('oembedStatus asks anonymously and returns the status, 0 on a network error', async () => {
+    const f = fakeFetch([{ match: /youtube\.com\/oembed\?/, reply: () => json({}, 403) }]);
+    expect(await oembedStatus('vid00000001', f.fn)).toBe(403);
+    expect(f.calls[0].headers.authorization).toBeUndefined();
+    expect(f.calls[0].url).toContain(encodeURIComponent('https://www.youtube.com/watch?v=vid00000001'));
+    const down = (async () => {
+      throw new TypeError('fetch failed');
+    }) as unknown as typeof fetch;
+    expect(await oembedStatus('vid00000001', down)).toBe(0);
   });
 });
 

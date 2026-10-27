@@ -132,16 +132,12 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
       `/${t.name}/`,
       t.revised,
       commission.fullName,
-      Astro.site!,
     ),
-    breadcrumbJsonLd(
-      [
-        { name: site.name, path: '/' },
-        { name: commission.name, path: `/commissions/${commissionKey(commission)}/` },
-        { name: t.label, path: `/${t.name}/` },
-      ],
-      Astro.site!,
-    ),
+    breadcrumbJsonLd([
+      { name: site.name, path: '/' },
+      { name: commission.name, path: `/commissions/${commissionKey(commission)}/` },
+      { name: t.label, path: `/${t.name}/` },
+    ]),
   ]}
 >
   <SourceIcons />

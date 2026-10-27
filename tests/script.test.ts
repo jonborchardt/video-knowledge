@@ -22,6 +22,7 @@ import {
   words,
 } from '../src/lib/script';
 import { evalExpr, repetitions, validateScript } from '../src/lib/script-validation';
+import type { PassageReader } from '../src/lib/evidence';
 import { sha } from '../src/lib/io';
 import { spokenWords } from '../src/lib/numbers';
 import {
@@ -29,6 +30,7 @@ import {
   type ChartSpec,
   type ChartType,
   type StoryboardPlan,
+  type Unit,
   buildStoryboard,
   pointProblems,
 } from '../src/lib/storyboard';
@@ -115,6 +117,19 @@ describe('evidence package', () => {
     const gone = buildPackage(story(), asTopic(t()), read, { review, readDoc: () => null });
     expect(gone.documents.every((d) => d.lines === 0)).toBe(true);
     expect(docHasher(() => 'one\ntwo')('any')).toBe(sha('one\ntwo'));
+  });
+
+  it('an uncited verdict recorded as contextual is context in the package', () => {
+    const x = asTopic(t());
+    const cite = `${TOPIC}/sources/other-e.txt#L1-L2`;
+    x.claims
+      .find((c) => c.id === MLM)!
+      .verdicts.push({
+        ...study('Other E', 'right', 0.8, cite),
+        applicability: { level: 'contextual', reason: 'background on the mechanism' },
+      });
+    const e = buildPackage(story(), x, read, { review }).claims[0].evidence.find((y) => y.cite === cite)!;
+    expect(e).toMatchObject({ role: 'context', applicability: 'contextual', basis: 'recorded', audited: false });
   });
 });
 
@@ -1159,5 +1174,24 @@ describe('short ids', () => {
   it('selects the short sections from the package', () => {
     expect(sectionsFor({ short: {} as never })).toEqual(['hook', 'finding', 'close']);
     expect(sectionsFor(null)).toEqual(['hook', 'setup', 'investigation', 'answer', 'takeaway']);
+  });
+});
+
+describe('chart point units', () => {
+  const CITE = 'x/sources/uk.txt#L1';
+  const read: PassageReader = (c) => (c === CITE ? 'running costs rose by £190 a year' : null);
+  const p = (x: Partial<ChartPoint>): ChartPoint => ({
+    label: 'Extra cost',
+    value: 190,
+    unit: 'gbp',
+    display: '£190',
+    cite: CITE,
+    ...x,
+  });
+  it('accepts a pound point', () => {
+    expect(pointProblems(p({}), new Set([CITE]), read)).toEqual([]);
+  });
+  it('refuses a unit outside UNITS', () => {
+    expect(pointProblems(p({ unit: 'eur' as Unit }), new Set([CITE]), read)).toContain('unknown unit "eur"');
   });
 });

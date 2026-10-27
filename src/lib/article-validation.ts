@@ -3,7 +3,15 @@
 // prose, table cells that state their cited values, figures that name a chart the story has, and prose that is not
 // the narration read back.
 import { join } from 'node:path';
-import { ARTICLE_FILES, type Article, articleAsScript, articleReviewUnits, articleSentences, proseOf } from './article';
+import {
+  ARTICLE_FILES,
+  type Article,
+  type FigureData,
+  articleAsScript,
+  articleReviewUnits,
+  articleSentences,
+  proseOf,
+} from './article';
 import type { Corpus, Verdict } from './corpus';
 import { dataRef, loadDatasets } from './datasets';
 import type { PassageReader } from './evidence';
@@ -239,12 +247,17 @@ export function validateArticleIn(
   });
 }
 
-/** The ids an article's figures may name: `<story-slug>/<scene-id>` for every storyboard scene with a chart, and
- *  `data:<topic>/<id>` for every evidence dataset of the topic. */
-export function figuresOf(topic: string, storyId: string, root = ROOT): Set<string> {
+/** What an article's figures may name, with the data each draws: `<story-slug>/<scene-id>` for every storyboard scene
+ *  with a chart, and `data:<topic>/<id>` for every evidence dataset of the topic. */
+export function figureData(topic: string, storyId: string, root = ROOT): Map<string, FigureData> {
   const sb = readJson<StoryboardPlan>(join(scriptDir(topic, storyId, root), FILES.storyboard));
-  return new Set([
-    ...(sb?.scenes ?? []).filter((s) => s.visual?.chart).map((s) => `${storySlug(storyId)}/${s.id}`),
-    ...loadDatasets(topic, root).map((d) => dataRef(topic, d.id)),
+  return new Map<string, FigureData>([
+    ...(sb?.scenes ?? []).flatMap((s) =>
+      s.visual?.chart ? [[`${storySlug(storyId)}/${s.id}`, { chart: s.visual.chart }] as const] : [],
+    ),
+    ...loadDatasets(topic, root).map((d) => [dataRef(topic, d.id), { table: d }] as const),
   ]);
 }
+
+export const figuresOf = (topic: string, storyId: string, root = ROOT): Set<string> =>
+  new Set(figureData(topic, storyId, root).keys());

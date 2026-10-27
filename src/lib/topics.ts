@@ -5,6 +5,10 @@ import { join } from 'node:path';
 import { readJson, topicDir, TOPICS, ROOT } from './io';
 import { commissionOf } from '../config/site';
 import { type ClaimRevision, isClaimRevision, loadPublicRecord } from './public-record';
+import { type RecordedApplicability, applicabilityKey, checkApplicabilityFile } from './batches';
+
+/** Each study verdict's recorded applicability, beside the store; written only by scripts/record-sources.mjs. */
+export const APPLICABILITY_FILE = 'applicability.json';
 
 import type { Verdict } from './corpus';
 export type { Verdict };
@@ -107,6 +111,7 @@ export interface ClaimVerdictView {
   note: string;
   cite: string | null; // '<topic>/sources/<file>.txt#L10-L24', a path in the repo
   date: string | null; // YYYY-MM-DD the verdict was recorded; a later record on the same document supersedes
+  applicability?: RecordedApplicability; // from applicability.json, keyed <claim>|<cite>; absent when unrecorded
 }
 export interface SourceClaimView {
   id: string;
@@ -193,6 +198,9 @@ export function loadTopic(name: string): Topic {
   const t = r.topics[0];
   const cfg = readJson<SiteConfig>(join(dir, 'site.json')) ?? {};
   const lean = readJson<Record<string, string>>(join(dir, 'lean.json')) ?? {};
+  const applicability = readJson<Record<string, RecordedApplicability>>(join(dir, APPLICABILITY_FILE)) ?? {};
+  const malformed = checkApplicabilityFile(applicability);
+  if (malformed.length) throw new Error(`${name}/applicability.json: ${malformed.join('; ')}`);
   const record = loadPublicRecord(name);
   const revisions = record.revisions.filter(isClaimRevision); // an article's corrections are shown on its story
   // Sorted: readdirSync order differs by file system, and the order reaches every claim's sources and the packages.
@@ -223,13 +231,15 @@ export function loadTopic(name: string): Topic {
       for (const v of a.verdicts ?? []) {
         const vs = claimVerdicts.get(a.claim) ?? [];
         const by = v.method === 'prior' || !v.source ? 'AI guess' : docName(v.source);
-        const view = {
+        const recorded = v.source ? applicability[applicabilityKey(a.claim, v.source)] : undefined;
+        const view: ClaimVerdictView = {
           by,
           verdict: v.verdict,
           confidence: v.confidence ?? null,
           note: v.note ?? '',
           cite: v.source ?? null,
           date: v.date ?? null,
+          ...(recorded ? { applicability: recorded } : {}),
         };
         // The same verdict re-recorded (say, on a wider range) replaces the older copy instead of being dropped.
         const i = vs.findIndex((o) => o.by === by && o.note === view.note);

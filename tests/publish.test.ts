@@ -18,7 +18,9 @@ import {
   currentBuild,
   emptyLedger,
   eventKey,
+  failedSince,
   flowOf,
+  lastCaptions,
   ledgerProblems,
   loadLedger,
   mainOutput,
@@ -32,6 +34,7 @@ import {
   recordSimple,
   recordUpdated,
   recordUploaded,
+  recordVerified,
   saveLedger,
   setThumbnail,
   uploadMetadataOf,
@@ -41,7 +44,7 @@ import {
   publishPath,
   recordChangesRequested,
 } from '../src/lib/publish';
-import { type Fixture, syntheticProduction, syntheticShort } from './production-helpers';
+import { type Fixture, setLook, syntheticProduction, syntheticShort } from './production-helpers';
 
 const tmp = mkdtempSync(join(tmpdir(), 'vk-publish-'));
 afterAll(() => rmSync(tmp, { recursive: true, force: true }));
@@ -586,6 +589,38 @@ describe('derivative flows', () => {
     }
   });
 
+  it('a release build drawn with an older look is refused approval and nothing is written', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      setLook(f.dir, 'old');
+      expect(() => recordApproved(f.topic, f.story, { root: f.root, by: 'Jon' })).toThrow(
+        /rendered with look old.*npm run video -- final/,
+      );
+      expect(loadLedger(f.topic, f.story, f.root)?.outputs.youtube?.events ?? []).toHaveLength(0);
+      setLook(f.dir, undefined); // a report from before builds recorded their look
+      expect(() => recordApproved(f.topic, f.story, { root: f.root, by: 'Jon' })).toThrow(/before builds recorded/);
+    } finally {
+      f.cleanup();
+    }
+  });
+
+  it('an approved build whose look went stale is never scheduled or published by hand', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      const a = { root: f.root, by: 'Jon' };
+      recordUploaded(f.topic, f.story, { ...a, id: 'hhhhhhhhhhh' });
+      recordApproved(f.topic, f.story, a);
+      setLook(f.dir, 'old');
+      const final = /rendered with look old.*npm run video -- final/;
+      expect(() => recordScheduled(f.topic, f.story, { ...a, at: '2099-01-01T00:00:00Z' })).toThrow(final);
+      expect(() => recordPublished(f.topic, f.story, { ...a, url: 'https://youtu.be/hhhhhhhhhhh' })).toThrow(final);
+      // what sync read back public is a fact, recorded whatever the look
+      expect(recordPublished(f.topic, f.story, { ...a, observed: true }).event?.type).toBe('published');
+    } finally {
+      f.cleanup();
+    }
+  });
+
   it('approve and publish a generic output through the verbs', () => {
     const f = syntheticProduction('packaged', { release: true });
     try {
@@ -908,5 +943,191 @@ describe('going live is a person, on the latest decision, after the parent', () 
     } finally {
       f.cleanup();
     }
+  });
+});
+
+describe('a Studio upload recorded by hand', () => {
+  const now = new Date('2026-10-26T00:00:00Z');
+  const later = new Date('2026-10-26T01:00:00Z');
+  const later2 = new Date('2026-10-26T02:00:00Z');
+  const fixtures: Fixture[] = [];
+  afterAll(() => fixtures.forEach((f) => f.cleanup()));
+  const fresh = (release = true) => {
+    const f = syntheticProduction('packaged', { release });
+    fixtures.push(f);
+    return f;
+  };
+  const events = (f: Fixture) => loadLedger(f.topic, f.story, f.root)!.outputs.youtube.events;
+  const reviewPath = (f: Fixture) => join(f.dir, 'video', 'review', 'review.json');
+  const patchReview = (f: Fixture, extra: Record<string, unknown>) =>
+    writeFileSync(reviewPath(f), JSON.stringify({ ...readJson<object>(reviewPath(f)), ...extra }));
+
+  it('uploaded --captions records the package captions sha so push does not resend them', () => {
+    const f = fresh();
+    const r = recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001', captionsSent: true });
+    expect(r.event!.captions).toBe(openOutput(f.topic, f.story, { root: f.root }).metadata!.captions!.sha);
+    expect(lastCaptions(loadLedger(f.topic, f.story, f.root)!.outputs.youtube)).toBe(r.event!.captions);
+  });
+
+  it('uploaded --captions is refused when the package has none', () => {
+    const f = fresh();
+    patchReview(f, { captionsSha: null });
+    expect(() =>
+      recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001', captionsSent: true }),
+    ).toThrow(/has no captions/);
+  });
+
+  it('approve after a Studio re-upload of the same build names the latest upload', () => {
+    const f = fresh();
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'apiupload01' });
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now: later, id: 'studio00001' });
+    const a = recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now: later2 });
+    expect(a.event!.id).toBe('studio00001');
+    expect(openOutput(f.topic, f.story, { root: f.root }).state).toMatchObject({
+      status: 'approved',
+      id: 'studio00001',
+    });
+  });
+
+  it('a public Studio upload of the release build after a recorded draft upload records uploaded and published', () => {
+    const f = fresh(false);
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'apiupload01' });
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, build: 'draftsha', accepted: true });
+    patchReview(f, { status: 'release build', mp4Sha: 'releasesha' }); // final made the release build
+    expect(openOutput(f.topic, f.story, { root: f.root }).build).toMatchObject({
+      sha: 'releasesha',
+      status: 'release',
+    });
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now: later });
+    const r = recordUploaded(f.topic, f.story, {
+      root: f.root,
+      by: 'Jon',
+      now: later2,
+      id: 'studio00001',
+      visibility: 'public',
+    });
+    expect(r.event).toMatchObject({ type: 'uploaded', buildStatus: 'release', visibility: 'public' });
+    expect(events(f).at(-1)).toMatchObject({ type: 'published', id: 'studio00001' });
+  });
+
+  it('the CLI approve passes --checked and refuses without it', () => {
+    const f = fresh();
+    patchReview(f, { checklist: ['watched it', 'captions read'] });
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001' });
+    expect(() => recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', checked: 0 })).toThrow(
+      /pass --checked \d+/,
+    );
+    const n = readJson<{ checklist: string[] }>(reviewPath(f))!.checklist.length;
+    expect(recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', checked: n }).event!.type).toBe('approved');
+  });
+
+  it('the release next step names --checked', () => {
+    const f = fresh();
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001' });
+    expect(openOutput(f.topic, f.story, { root: f.root }).state.next).toContain('--checked <n>');
+  });
+});
+
+describe('verification events', () => {
+  const now = new Date('2026-10-27T00:00:00Z');
+  const fixtures: Fixture[] = [];
+  afterAll(() => fixtures.forEach((f) => f.cleanup()));
+  const fresh = () => {
+    const f = syntheticProduction('packaged', { release: true });
+    fixtures.push(f);
+    return f;
+  };
+  const events = (f: Fixture) => loadLedger(f.topic, f.story, f.root)!.outputs.youtube.events;
+  const a = (f: Fixture) => ({ root: f.root, by: 'Jon', now });
+
+  it('a verification is recorded with its checks and validated', () => {
+    const f = fresh();
+    recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
+    const r = recordVerified(f.topic, f.story, {
+      ...a(f),
+      result: 'passed',
+      checks: [{ name: 'title', result: 'pass' }],
+    });
+    expect(r.event).toMatchObject({ type: 'verified', id: 'studio00001', result: 'passed', build: 'releasesha' });
+    expect(r.event!.metadata).toBe(openOutput(f.topic, f.story, { root: f.root }).metadata!.sha);
+    const bad = {
+      video: 'v',
+      outputs: {
+        youtube: {
+          kind: 'youtube-video',
+          metadata: {},
+          events: [
+            {
+              at: '2026-10-27T00:00:00Z',
+              type: 'verified',
+              by: 'Jon',
+              id: 'x',
+              result: 'maybe',
+              checks: [{ result: 'pass' }],
+            },
+          ],
+        },
+      },
+    };
+    expect(ledgerProblems(bad, 'v')).toEqual(
+      expect.arrayContaining([expect.stringMatching(/result/), expect.stringMatching(/checks\[0\]\.name/)]),
+    );
+  });
+
+  it('a repeat of the latest verification is the same event', () => {
+    const f = fresh();
+    recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
+    const pass = { result: 'passed' as const, checks: [{ name: 'title', result: 'pass' as const }] };
+    const fail = { result: 'failed' as const, checks: [{ name: 'title', result: 'fail' as const, detail: 'differs' }] };
+    recordVerified(f.topic, f.story, { ...a(f), ...pass });
+    expect(recordVerified(f.topic, f.story, { ...a(f), ...pass }).existing).toBe(true);
+    recordVerified(f.topic, f.story, { ...a(f), ...fail });
+    expect(recordVerified(f.topic, f.story, { ...a(f), ...pass }).existing).toBe(false);
+    expect(events(f).filter((e) => e.type === 'verified')).toHaveLength(3);
+  });
+
+  it('the same failure after a push is a new verification', () => {
+    const f = fresh();
+    recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
+    const fail = { result: 'failed' as const, checks: [{ name: 'title', result: 'fail' as const, detail: 'differs' }] };
+    recordVerified(f.topic, f.story, { ...a(f), ...fail });
+    recordUpdated(f.topic, f.story, { ...a(f), fields: ['snippet'] }); // push resent it
+    const again = recordVerified(f.topic, f.story, { ...a(f), ...fail });
+    expect(again.existing).toBe(false);
+    expect(failedSince(loadLedger(f.topic, f.story, f.root)!.outputs.youtube, ['title'])).toBe(true);
+  });
+
+  it('a verification does not hide a failure and is shown on the state', () => {
+    const f = fresh();
+    recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
+    recordFailed(f.topic, f.story, { ...a(f), step: 'thumbnail', error: 'forbidden', retryable: false });
+    recordVerified(f.topic, f.story, { ...a(f), result: 'passed', checks: [{ name: 'title', result: 'pass' }] });
+    const s = openOutput(f.topic, f.story, { root: f.root }).state;
+    expect(s.failed?.step).toBe('thumbnail');
+    expect(s.verification?.result).toBe('passed');
+    expect(s.status).toBe('uploaded');
+  });
+
+  it('refuses a verification before any upload', () => {
+    const f = fresh();
+    expect(() => recordVerified(f.topic, f.story, { ...a(f), result: 'passed', checks: [] })).toThrow(
+      /nothing uploaded/,
+    );
+    expect(existsSync(publishPath(f.topic, f.story, f.root))).toBe(false);
+  });
+
+  it('failedSince reads only a verification after the last upload or update', () => {
+    const f = fresh();
+    recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
+    recordVerified(f.topic, f.story, {
+      ...a(f),
+      result: 'failed',
+      checks: [{ name: 'title', result: 'fail', detail: 'differs' }],
+    });
+    const out = () => loadLedger(f.topic, f.story, f.root)!.outputs.youtube;
+    expect(failedSince(out(), ['title'])).toBe(true);
+    expect(failedSince(out(), ['captions'])).toBe(false);
+    recordUpdated(f.topic, f.story, { ...a(f), fields: ['snippet'] });
+    expect(failedSince(out(), ['title'])).toBe(false);
   });
 });

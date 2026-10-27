@@ -30,7 +30,8 @@ export type VisualCategory = (typeof VISUALS)[number];
 // What a renderer can draw without reading English: a closed set of chart types and numeric points.
 export const CHART_TYPES = ['bar', 'stacked-bar', 'dot-plot', 'waffle', 'table', 'stat-tiles'] as const;
 export type ChartType = (typeof CHART_TYPES)[number];
-export type Unit = 'percent' | 'usd' | 'count' | 'ratio';
+export const UNITS = ['percent', 'usd', 'gbp', 'count', 'ratio'] as const;
+export type Unit = (typeof UNITS)[number];
 export interface ChartPoint {
   label: string;
   value: number; // the number to draw; for 'ratio' the denominator ("1 in 238" -> 238)
@@ -124,7 +125,7 @@ export function pointProblems(pt: ChartPoint, known: Set<string>, read: PassageR
   } else if (!figures.some((n) => Number(n) === pt.value))
     bad(`display "${pt.display}" does not state the value ${pt.value}`);
   if (pt.unit === 'percent' && (pt.value < 0 || pt.value > 100)) bad(`${pt.value} is not a percentage`);
-  if (!['percent', 'usd', 'count', 'ratio'].includes(pt.unit)) bad(`unknown unit "${pt.unit}"`);
+  if (!(UNITS as readonly string[]).includes(pt.unit)) bad(`unknown unit "${pt.unit}"`);
   for (const n of figures) if (passage === null || !hasFigure(passage, n)) bad(`"${n}" is not in ${pt.cite}`);
   for (const n of nums(pt.label ?? ''))
     if (passage === null || !hasFigure(passage, n)) bad(`label figure "${n}" is not in ${pt.cite}`);

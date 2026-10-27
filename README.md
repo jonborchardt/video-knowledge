@@ -369,7 +369,7 @@ Short; the board's "Watch and review" link) plays the packaged build streamed fr
 site or git), lists every failed QA check, validation issue, review finding and pacing warning with a link to its moment,
 and does every step below from buttons: approve (every checklist item ticked, a person's name), request changes (one
 note per line, `[m:ss sc20 s31]` places it; "Note at current time" stamps the player's position), accept a draft
-(`video final`), upload privately, push, sync, go live now or at a time (a confirmation box). Each form carries the
+(`video final`), upload privately, push, sync, verify, go live now or at a time (a confirmation box). Each form carries the
 build it judged and is refused if a newer build was packaged since. Long verbs run the CLI in the background; the page
 shows the job and its log. A change request (`request-changes`) moves the card to "changes requested" and its
 send-back prompt carries the notes; an approval binds the build **and** the title, so a new render or a changed title
@@ -382,11 +382,15 @@ The flow, as the board's next step walks it (every step is one `npm run publish 
 2. Watch it with `checklist.md`; `npm run video -- final --approved-by "<name>"` accepts the draft (recorded as
    `approved` for the draft build) and packages the release build.
 3. `upload` again (the release build is a new private video; the draft's id is kept as superseded), watch it, then
-   `approve --by "<name>"`. Only an approved build may go public.
-4. `go-live` makes it public now; `go-live --at <ISO>` schedules it (YouTube keeps it private until then; at least
-   five minutes ahead). After the time, `sync` reads YouTube and records `published`.
+   `approve --by "<name>" --checked <n>` (n: the checklist items ticked; every one is needed). Only an approved
+   build may go public.
+4. `go-live` makes it public now and reads the video back: it records `published` only when YouTube says public,
+   else a `failed` event naming the Studio route (below) and exit 1. `go-live --at <ISO>` schedules it (YouTube
+   keeps it private until then; at least five minutes ahead). After the time, `sync` reads YouTube and records
+   `published`; a schedule more than 15 minutes past with the video still private is a `failed` event.
 5. Later changes to the title, tags, thumbnail (`thumbnail <file>`) or the `metadata` block: `push` sends them and
    records `updated`. A live video is never replaced: a re-release is a new output, `add <id> --kind youtube-video`.
+6. After any upload, push or go-live, `verify` checks what YouTube holds against the package (below).
 
 A Short is another output of the same ledger: `add short-1 --kind youtube-short --from youtube --source <file>`,
 then the same `upload`, `approve`, `go-live`. Shorts are made and approved before the full video launches, and
@@ -394,7 +398,8 @@ they launch together: the video goes live first, its Shorts right after (`go-liv
 video once that is live (so its metadata is pushed once more); the related
 video is set in YouTube Studio (the API has no field for it).
 
-`show` prints the state, the composed upload metadata and the event log. Every verb is idempotent (an event already
+`show` prints the state, the composed upload metadata (with the `description:` to paste into Studio) and the event
+log. Every verb is idempotent (an event already
 recorded prints and exits 0) and refuses, without writing, what the files do not support (exit 2). The hand verbs
 (`uploaded --id`, `scheduled --at`, `published`, `updated --fields`) record what was done in the browser instead.
 
@@ -404,8 +409,10 @@ Once, by a person (Google's console; nothing here can do it):
 
 1. Create or pick a Google Cloud project and enable the YouTube Data API v3.
 2. OAuth consent screen: external, publishing status **In production** (a screen left in Testing issues refresh
-   tokens that expire after 7 days), scope `https://www.googleapis.com/auth/youtube.force-ssl`. Verification is
-   not needed for one channel owner; accept the unverified-app warning once.
+   tokens that expire after 7 days), scope `https://www.googleapis.com/auth/youtube.force-ssl`. In production
+   without OAuth verification, Google shows the unverified-app warning at consent and caps the project at 100 users
+   over its lifetime, which one owner never reaches; accept the warning once. Run `auth` again after switching from
+   Testing, so the stored token is one without the 7-day expiry.
 3. Create an OAuth client of type **Desktop app** and download its JSON. Save it as `.secrets/youtube-oauth.json`
    (`.secrets/` is gitignored) and point `.env` at it: `YOUTUBE_OAUTH_CREDENTIALS_PATH=./.secrets/youtube-oauth.json`.
    (`YOUTUBE_CLIENT_ID` and `YOUTUBE_CLIENT_SECRET` in `.env` work too.)
@@ -414,11 +421,13 @@ Once, by a person (Google's console; nothing here can do it):
    JSON file (mode 0600; without the path variable, in `.youtube-token.json`). A refresh token in `.env` as
    `YOUTUBE_REFRESH_TOKEN` is used instead when set.
 
-What the API does and costs (checked 2026-10-23): `videos.insert` is 1 of 100 uploads per project per day in its own
-quota bucket; `thumbnails.set` 50, `captions.insert` 400, `videos.update` 50 and `videos.list` 1 unit of the 10,000 a
-day for everything else, so one video is about 500 units and all 18 fit in a day. Google's `videos.insert` reference
-says uploads from unverified API projects are **not** restricted to private viewing; if YouTube locks one anyway, set
-it public in Studio and record `published` by hand. `publishAt` only works on a never-published private video; a past
+What the API does and costs (https://developers.google.com/youtube/v3/determine_quota_cost, checked 2026-10-27 for
+list and set): `videos.insert` is 1 of 100 calls per project per day in its own quota bucket (since 2026-06-01);
+`thumbnails.set` 50, `captions.insert` 400, `videos.update` 50 and `videos.list` 1 unit of the 10,000 a day for
+everything else, so one video is about 500 units and all 18 fit in a day. Google's `videos.insert` reference
+(2026-10-15) says uploads from unverified API projects are **not** restricted to private viewing, while its 2020
+revision note says they are until the project passes an audit; nothing here assumes either. `go-live` believes only
+what YouTube reads back, and a video YouTube keeps private goes out through Studio (below). `publishAt` only works on a never-published private video; a past
 time publishes immediately, which is why `go-live --at` refuses anything under five minutes ahead. There is no Shorts
 flag: a vertical or square video up to three minutes is a Short.
 
@@ -427,6 +436,75 @@ resumable session) before the first byte and deletes it after the ledger has the
 a network drop is a `failed` event with `retryable` and the same `upload` resumes the same YouTube video. A session
 YouTube no longer knows is a final failure: look for the title in Studio and record it with `uploaded --id`, or delete
 the session file to upload again. `sync` reconciles what happened on YouTube (rejected, deleted, gone public).
+
+`verify` reads the video back and checks it against the approved package and the ledger, for an API upload, a Studio
+upload recorded by hand and a Short alike: it exists, the upload and processing finished, the privacy (and schedule) is
+what the ledger says, an anonymous request reaches it only when it should (YouTube's oEmbed: 200 is reachable without
+signing in), the title, description, tags, category and language are the composed ones, the description's chapter
+lines are the measured chapters, nobody marked it made for kids or changed the altered-content answer, no age, region,
+embedding or licence restriction is set, a custom thumbnail is set (the API cannot return the image), an English
+standard captions track is serving, and the uploaded file's size is the packaged mp4's (the build binding for a Studio
+upload; the API offers no hash). It costs one `videos.list` unit plus 50 for `captions.list` when the package has
+captions; oEmbed is free. Each check is `pass`, `fail`, `pending` or `skip`, and the run is recorded once per distinct
+outcome as a `verified` event holding the check names, results and our own reasons, never YouTube's values (API data may
+not be kept; the CLI prints them live). `RESULT: PENDING` means YouTube is still processing or syncing, or the
+anonymous request had no network: run `verify` again later. `RESULT: FAILED` (exit 1) names the checks: a failed
+metadata or captions check makes the next `push` resend them (a captions track that is not serving is deleted and
+replaced, never added to: 100 more units); fix anything else in Studio (then `updated --fields`).
+A verification never changes the output's status or hides a failure.
+
+#### Publishing through YouTube Studio
+
+The route when the API keeps a video private, or by choice. In this order:
+
+1. `npm run video -- final <topic> <story-id> --approved-by "<name>"` makes the release build.
+2. `npm run publish -- show <topic> <story-id>` prints the title, the tags and the `description:` block to paste.
+3. In YouTube Studio, on the institution's channel, upload exactly `video/review/<slug>.mp4` as **Private**. Paste the
+   title, description and tags. Set the thumbnail to `video/review/thumbnail.png`. Under Subtitles, upload
+   `video/review/captions.en.srt` as English. Set "No, it's not made for kids", the altered-content answer to the
+   ledger's `containsSyntheticMedia` (default No), and the category to Education.
+4. `npm run publish -- uploaded <topic> <story-id> --id <id> --captions` records it against the build on disk
+   (`--captions`: the package's captions went up with it, so a later `push` does not add a second track).
+5. Watch it, then approve on the review page, or `npm run publish -- approve <topic> <story-id> --by "<name>"
+--checked <n>`. The approval names the latest upload of the build.
+6. Either `go-live` (the API makes it public and the read-back confirms it), or set Public or a schedule in Studio
+   and record it with `published` or `scheduled --at <ISO>`, or let `sync` observe it.
+7. `npm run publish -- verify <topic> <story-id>`; on `PENDING` run it again once Studio shows processing finished.
+8. A Short: the same steps with `<story-id>/shorts/<slug>`, after its video is live.
+
+A metadata change made in Studio afterwards is recorded with `updated --fields <list>`. An earlier API upload of the
+same build stays in the log; leave it private, or delete it in Studio.
+
+#### API compliance
+
+An audit (https://developers.google.com/youtube/v3/guides/quota_and_compliance_audits) comes before any quota beyond
+the default and may be what lifts a private lock; it runs alongside Studio publication, which needs none. The form is
+https://support.google.com/youtube/contact/yt_api_form (appeals: https://support.google.com/youtube/contact/yt_api_appeals).
+It asks for:
+
+- **Organisation:** name ("self" for an individual), an https website, legal address, category, size, contacts.
+- **Business model:** the work as it relates to YouTube (100 characters or more), audience, monetisation (a free
+  service), Google representative and Content Owner or Ads ids (none).
+- **API client:** a name without "YouTube", the access URL, the **privacy policy URL** (`/privacy/` on the site, which
+  also holds the terms), whether it is public, and demo credentials or an end-to-end screencast.
+- **Per Cloud project:** the project number, the use case ("Video Uploading & Account Management"), OAuth (yes),
+  volume (under 1,000 requests a day), the endpoints (`videos.insert`, `videos.update`, `videos.list`,
+  `thumbnails.set`, `captions.insert`, `captions.list`) and the quota (the default is enough).
+- **Evidence (720p or larger, address bar visible, one file under 10 MB each):** the privacy page showing its YouTube
+  sections, the Google Privacy Policy link and what is kept; the home page showing the footer's Privacy link beside the
+  channel links; the terms; the consent screen, scopes and revocation; for uploading, the upload script
+  (`src/lib/uploader.ts` with `scripts/publish.ts`, public in this repository) or a screencast.
+- **Attestations:** the YouTube API Services Terms of Service, the Google Privacy Policy, the Developer Policies,
+  termination and accuracy.
+
+The privacy policy must (Developer Policies III.A, https://developers.google.com/youtube/terms/developer-policies) be
+always reachable, say the client uses YouTube API Services, link the Google Privacy Policy
+(http://www.google.com/policies/privacy), say what user data is accessed, stored, used and shared, disclose third-party
+content and device storage, link the revocation page (https://security.google.com/settings/security/permissions),
+give a contact, and link the YouTube Terms of Service (https://www.youtube.com/t/terms) with the statement that users
+agree to be bound by them. `/privacy/` does all of it; change it with the code it describes. Stored API data is
+refreshed or deleted within 30 days and deleted when access is revoked (III.E.4): the ledger keeps only ids and our own
+events.
 
 ## Producing a story
 
@@ -502,6 +580,22 @@ npm run quality    # web-quality gate for site changes (build, static checks, br
 ```
 
 Pushing to `main` runs `.github/workflows/pages.yml`: `npm ci`, `npm run validate`, `npm audit` of shipped dependencies, the browser suite in Chromium, Firefox and WebKit, then deploy `dist/`. What each check enforces and what still needs a person: `.claude/skills/web-quality/reference/enforcement-matrix.md`.
+
+Rehearsing a go-live: the public build shows only stories with a live video, so the live-only templates and tests meet real content only at the first go-live. `npm run rehearse -- <topic> <story-id> [--keep]` copies the working tree (tracked and untracked files, not gitignored ones) into a temp folder outside the repo, junctions `node_modules`, writes a fixture `published` event (video id `REHEARSAL00`) into the copy's `publish.json`, and runs the go-live sequence there (`report -- seed`, `brand`, `build`, `links -- freeze`, `quality -- --no-build` with every page checked). The real checkout is never written. It prints `RESULT: PASSED` or `RESULT: FAILED (<step>)` and refuses (exit 2) a follow-up, a story already live or one not packaged. `DEPLOY_TARGET=pages` rehearses the mirror; `--keep` leaves the copy to preview (`npm run preview` in it).
+
+### Refreshing a dataset
+
+A dataset (`topics/<topic>/data/<id>.json`) needs a refresh when `tests/datasets.test.ts` fails with "refresh it", which it does once the dataset's `retrieved` date is older than `DATASET_MAX_AGE_DAYS` (`src/lib/datasets.ts`), or when EIA publishes a newer full year of prices (the Electric Power Annual and the Natural Gas Annual).
+
+The new figures come in as a new source document. A source agent (`scripts/briefs/sources.md`) writes `topics/<topic>/sources/eia-<year>-state-residential-energy-prices.txt` in the same layout as the current one: line 1 names the tables and ends `(retrieved YYYY-MM-DD)`, Parts 1 and 2 hold the raw prices, and the derived section shows its method. It never edits the old file, whose cites stay valid for everything that already cites it.
+
+The document enters the corpus through `npm run record-sources -- <topic> topics/<topic>/work/sv_*.json`, with a verdict on `heat-pumps/whether-heat-pump-cheaper-run-gas` that cites the method lines, as `topics/heat-pumps/work/sv_A.json` does for the current file. The store is never hand-edited. Then run `npm run report`; if the claim's finding changes, it prints the revision that needs a `note`.
+
+Then rewrite the dataset: its cites point into the new file, and `asOf` and `retrieved` say what the new file says. Point the tool's own cites (`src/tools/heating-cost/spec.ts`: `justification`, `afue`, `cops`, `latest`) at the new file as well, and update `latest.value` to the new file's figure. Rewrite the period in `priceNote`'s wording there ("January to July 2026 electricity and 2025 gas prices") to the new file's, and in `tests/tools.test.ts` update the expected note and the `3.60` in the `latest` passage check to the new file's values. A `retrieved` date after today fails `datasetProblems`.
+
+Check with `npx vitest run tests/datasets.test.ts tests/tools.test.ts`. The recompute test in `tests/tools.test.ts` reads the raw columns by line range: update the ranges and the file name for the new file, never the expected arithmetic. Then run `npm run validate` and `npm run quality`.
+
+A new verdict can change the story's evidence package on its next `npm run script -- package`, and the board then says what to re-bind. A changed finding makes released articles stale, and `npm run board -- next` names the article step.
 
 The data scripts (`report`, `record`, `record-sources`, `watcher`) run the watcher CLI from `../retire-sim/watcher` (or `$WATCHER_DIR`). It isn't an npm dependency, so CI, which only builds the site, doesn't need it.
 

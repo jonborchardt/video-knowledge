@@ -4,6 +4,7 @@
 import { commissionKey, commissionOf, site } from '../config/site';
 import type { PassageReader } from '../lib/evidence';
 import { sha } from '../lib/io';
+import { lookFingerprint } from '../lib/look';
 import { kitPalette } from './brand';
 import { narrationFingerprint } from './files';
 import { ALL_KINDS } from './kinds';
@@ -146,6 +147,7 @@ export function buildTimeline(
       ...seg.fingerprints,
       narration: narrationFingerprint(manifest),
       config: sha(JSON.stringify(seg.config)),
+      look: lookFingerprint(seg.script.topic),
     },
     narration: { provider: manifest.provider, voice: manifest.voice, rate: manifest.rate, licence: manifest.licence },
     palette: kitPalette(seg.script.topic),

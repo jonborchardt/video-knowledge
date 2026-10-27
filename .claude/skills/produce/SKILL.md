@@ -49,6 +49,8 @@ Repeat, at most 60 times:
      notes for a notes pass. Never reuse an agent across briefs: the script writer and the script
      reviewer, the graphics builder and the visual reviewer, the writer and the evidence agent are
      always different agents, and so are the article writer and the article reviewer. A reviewer sees only the artifacts, never the writer's reasoning.
+     Run it in the foreground (`run_in_background: false`) and wait for its result before the next step. A background
+     helper's completion notice goes to whoever owns the session, not to you, and this run would sit idle with no halt.
    - a step after `packaged` (the board names `npm run publish -- upload ...` or a hand upload): publishing is a
      person's, never this run's. Go to Finish.
 4. Go to 1.
@@ -63,6 +65,7 @@ What each halt kind means for you:
 | `graphics-review` | a fresh `visual-review.md` agent that built none of them; a `revise` verdict goes back to a graphics agent with the notes |
 | `render-check`, `qa-failed` | a fresh `video-fix.md` agent, then the command |
 | `revision-limit`, `story-left` | Stop |
+| `look-stale` | only at `packaged`, where `done` is true: the build's kit or theme is older and a person re-renders it with `video final`, never this run. Finish, and say so in the report |
 
 Caps (each one hit is a Stop, naming the cap): 60 loop iterations; 3 graphics revisions per scene
 (after the third, the builder may draw the scene as labelled text, and the report says so); 3
@@ -74,6 +77,10 @@ kept). A transient narration failure (edge-tts "No audio was received", or a cli
 truncated, whose cached mp3 you delete first) is retried the same way. Three hung or failed attempts at
 one step is a Stop. Each render leaves a ~1 GB `remotion-webpack-bundle-*` folder in `%TEMP%`; with no render
 running, delete those (and `react-motion-render*`) before the next one, or the system drive fills up.
+A command that can outlast the Bash tool's 10-minute foreground limit is started with `run_in_background` and waited on
+in the same turn by polling the output file the tool names, in one foreground Bash call (timeout 590000), repeated
+until it exits: `until grep -q "RESULT:" "<output file>"; do sleep 10; done` (or append `; echo exited=$?` to the
+command and grep for `exited=`). The run never ends its turn while a step is running.
 
 Never edit a review file, a validation or any derived file to get past a check, never soften a
 sentence because evidence is missing when evidence could be gathered, and never pass
@@ -97,6 +104,14 @@ Route each note to the artifact that owns it, then run the Loop:
   `video/render.json` (cues, options) yourself.
 
 Notes never touch derived files. The lock is redone through the board's lock step.
+
+## Several stories at once
+
+1. The person's session that starts several story agents never answers a helper's completion notice itself. When a
+   notice names a helper that a story agent started, forward it with `SendMessage` to that story agent and say so.
+2. Each story agent runs its own helpers in the foreground (Loop step 3), so this is a safety net, not the mechanism.
+3. A story agent with no output for 30 minutes while its board `next` is a `prompt` step is idle, not working. Resume
+   it with `SendMessage` and the board's current `next`.
 
 ## Finish
 

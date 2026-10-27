@@ -3,7 +3,13 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { checkBatches, checkStudyVerdicts } from '../src/lib/batches';
+import {
+  checkApplicabilityFile,
+  checkBatches,
+  checkStudyVerdicts,
+  isStored,
+  withApplicability,
+} from '../src/lib/batches';
 import { citedPairs, replacedCited } from '../src/lib/cited';
 
 const claims = [{ id: 'demo/old-claim', text: 'An old claim.' }];
@@ -70,6 +76,7 @@ describe('study verdicts', () => {
       confidence: 0.6,
       note: 'gist',
       source: 'demo/sources/paper.txt#L10-L24',
+      applicability: 'direct',
     };
     expect(checkStudyVerdicts([good, { ...good, verdict: 'unknown', confidence: null }])).toEqual([]);
     expect(
@@ -84,9 +91,127 @@ describe('study verdicts', () => {
       '[2] demo/old-claim: "source" is not <topic>/sources/<file>.txt#L<a>-L<b>',
     ]);
   });
+
+  it('requires an applicability, and a why unless direct', () => {
+    const good = {
+      claim: 'demo/c',
+      verdict: 'right',
+      confidence: 0.7,
+      note: 'gist',
+      source: 'demo/sources/p.txt#L1-L2',
+      applicability: 'direct',
+    };
+    expect(
+      checkStudyVerdicts([good, { ...good, applicability: 'contextual', why: 'background on the mechanism' }]),
+    ).toEqual([]);
+    expect(
+      checkStudyVerdicts([
+        { ...good, applicability: undefined },
+        { ...good, applicability: 'background' },
+        { ...good, applicability: 'partial' },
+      ]),
+    ).toEqual([
+      '[0] demo/c: applicability undefined is not one of direct, partial, contextual',
+      '[1] demo/c: applicability "background" is not one of direct, partial, contextual',
+      '[2] demo/c: partial needs a "why"',
+    ]);
+  });
+  it('checkApplicabilityFile lists every malformed entry', () => {
+    expect(
+      checkApplicabilityFile({ 'demo/c|demo/sources/p.txt#L1-L2': { level: 'partial', reason: 'lab task' } }),
+    ).toEqual([]);
+    expect(checkApplicabilityFile([])).toEqual(['applicability.json is not an object']);
+    expect(
+      checkApplicabilityFile({
+        nopipe: { level: 'direct', reason: 'x' },
+        'demo/c|demo/sources/p.txt#L1': { level: 'background', reason: '' },
+      }),
+    ).toEqual([
+      'nopipe: key is not <claim>|<cite>',
+      'demo/c|demo/sources/p.txt#L1: level "background" is not one of direct, partial, contextual',
+      'demo/c|demo/sources/p.txt#L1: no reason',
+    ]);
+  });
+});
+
+describe('recorded applicability', () => {
+  it('withApplicability merges by claim and cite, latest wins, keys sorted', () => {
+    const v = (claim: string, applicability: string, why?: string) => ({
+      claim,
+      verdict: 'right',
+      confidence: 0.7,
+      note: 'n',
+      source: 'demo/sources/p.txt#L1-L2',
+      applicability,
+      ...(why ? { why } : {}),
+    });
+    const out = withApplicability({ 'demo/z|demo/sources/p.txt#L1-L2': { level: 'partial', reason: 'old' } }, [
+      v('demo/z', 'contextual', 'background'),
+      v('demo/a', 'direct'),
+    ] as never);
+    expect(Object.keys(out)).toEqual(['demo/a|demo/sources/p.txt#L1-L2', 'demo/z|demo/sources/p.txt#L1-L2']);
+    expect(out['demo/z|demo/sources/p.txt#L1-L2']).toEqual({ level: 'contextual', reason: 'background' });
+    expect(out['demo/a|demo/sources/p.txt#L1-L2']).toEqual({
+      level: 'direct',
+      reason: 'recorded as direct with the verdict',
+    });
+  });
+  it('isStored matches only an identical source record', () => {
+    const x = {
+      claim: 'demo/a',
+      verdict: 'partly',
+      confidence: 0.6,
+      note: 'n',
+      source: 'demo/sources/p.txt#L1-L2',
+      applicability: 'partial',
+      why: 'w',
+    } as const;
+    const rec = {
+      method: 'source',
+      verdict: 'partly',
+      confidence: 0.6,
+      note: 'n',
+      source: 'demo/sources/p.txt#L1-L2',
+      date: '2026-10-01',
+    };
+    expect(isStored(x, [rec])).toBe(true);
+    expect(isStored(x, [{ ...rec, note: 'other' }])).toBe(false);
+    expect(isStored(x, [{ ...rec, source: 'demo/sources/p.txt#L1-L3' }])).toBe(false);
+    expect(isStored(x, [{ ...rec, method: 'prior' }])).toBe(false);
+  });
+  it('isStored compares only with the current verdict on that document, so restoring a superseded one is recorded', () => {
+    const x = {
+      claim: 'demo/a',
+      verdict: 'right',
+      confidence: 0.7,
+      note: 'v1',
+      source: 'demo/sources/p.txt#L1-L2',
+      applicability: 'direct',
+    } as const;
+    const v1 = {
+      method: 'source',
+      verdict: 'right',
+      confidence: 0.7,
+      note: 'v1',
+      source: x.source,
+      date: '2026-10-01',
+    };
+    const v2 = { ...v1, verdict: 'wrong', note: 'v2', source: 'demo/sources/p.txt#L5-L9', date: '2026-10-05' };
+    expect(isStored(x, [v1, v2])).toBe(false);
+    expect(isStored(x, [v2, v1])).toBe(false); // by date, not array order
+    expect(isStored(x, [v1, { ...v2, source: 'demo/sources/q.txt#L1-L2' }])).toBe(true); // another document
+    expect(isStored(x, [v1, { ...v1, verdict: 'wrong', note: 'v2' }])).toBe(false); // same date: the later record wins
+  });
 });
 
 describe('cited verdicts', () => {
+  it('an applicability-only entry on a cited pair is still a replacement', () => {
+    const source = 'demo/sources/p.txt#L1-L2';
+    expect(replacedCited([{ claim: 'demo/a', source }], new Map([['demo/a|demo/sources/p.txt', source]]))).toHaveLength(
+      1,
+    );
+  });
+
   it('replacedCited flags any new verdict on a cited claim and document', () => {
     const cited = new Map([['t/c1|t/sources/a.txt', 't/sources/a.txt#L10-L20']]);
     expect(replacedCited([{ claim: 't/c1', source: 't/sources/a.txt#L30-L40' }], cited)).toHaveLength(1);

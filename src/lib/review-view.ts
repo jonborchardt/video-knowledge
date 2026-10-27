@@ -6,6 +6,7 @@ import { existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import type { BuildSummary } from './build-report';
 import { ROOT, readJson } from './io';
+import { lookStale } from './look';
 import {
   type OutputState,
   type OutputStatus,
@@ -172,6 +173,11 @@ export function reviewView(topic: string, storyId: string, root = ROOT): ReviewV
     : null;
 
   const state = o?.state ?? null;
+  // an older kit or theme: video final draws it again before approval (the page has no button for it)
+  const stale = lookStale(vr, topic, root);
+  const lookWhy = stale
+    ? `${stale}; npm run video -- final ${topic} ${storyId} --approved-by "<your name>" draws it again`
+    : null;
   const live = state?.live ? `live at ${state.url}; a re-release is a new output` : null;
   const can: ReviewView['can'] = {
     approve: !pkg
@@ -181,11 +187,13 @@ export function reviewView(topic: string, storyId: string, root = ROOT): ReviewV
           ? 'a draft (edge voice) is never approved: Accept draft makes the release build'
           : !pkg.qaOk
             ? 'QA failed on this build'
-            : !o
-              ? 'no ledger entry yet: npm run video -- package records it'
-              : state!.status === 'approved' || state!.status === 'scheduled'
-                ? `already ${state!.status}`
-                : true)),
+            : lookWhy
+              ? lookWhy
+              : !o
+                ? 'no ledger entry yet: npm run video -- package records it'
+                : state!.status === 'approved' || state!.status === 'scheduled'
+                  ? `already ${state!.status}`
+                  : true)),
     requestChanges: !pkg
       ? 'no review package yet'
       : !o

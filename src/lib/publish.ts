@@ -5,7 +5,9 @@
 // nothing new is versioned here. Library layer: it reads video/review/review.json by path and never imports src/video/.
 import { existsSync, readFileSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve } from 'node:path';
+import type { BuildSummary } from './build-report';
 import { lf, readJson, ROOT, sha, toJson } from './io';
+import { lookStale } from './look';
 import { approverProblem } from './release';
 import { scriptDir, shortId, shortOf, storySlug } from './script';
 import { loadStories } from './stories';
@@ -21,9 +23,23 @@ export const EVENT_TYPES = [
   'updated',
   'failed',
   'retracted',
+  'verified',
 ] as const;
 export type EventType = (typeof EVENT_TYPES)[number];
 export type Visibility = 'private' | 'unlisted' | 'public';
+/** One check of `npm run publish -- verify`: our own reason only, never a value read from the API (the ledger is public
+ *  and API data may not be kept). */
+export type CheckResult = 'pass' | 'fail' | 'pending' | 'skip';
+export interface LedgerCheck {
+  name: string;
+  result: CheckResult;
+  detail?: string;
+}
+export type Verdict = 'passed' | 'pending' | 'failed';
+const CHECK_RESULTS: CheckResult[] = ['pass', 'fail', 'pending', 'skip'];
+const VERDICTS: Verdict[] = ['passed', 'pending', 'failed'];
+/** The checks a `push` answers: a failed one makes the next push resend the snippet and thumbnail. */
+export const METADATA_CHECKS = ['title', 'description', 'tags', 'category', 'language', 'chapters', 'thumbnail'];
 
 /** One reviewer note on a build: where in the video it is (any of the three, all optional) and what to change. */
 export interface ReviewNote {
@@ -59,6 +75,8 @@ export interface PublishEvent {
   note?: string;
   notes?: ReviewNote[]; // changes-requested
   title?: string; // approved: the composed title the person approved with the build
+  result?: Verdict; // verified
+  checks?: LedgerCheck[]; // verified
 }
 export interface OutputMetadata {
   title?: string;
@@ -101,6 +119,7 @@ const REQUIRED: Record<EventType, (keyof PublishEvent)[]> = {
   updated: ['id', 'metadata', 'fields'],
   failed: ['step', 'error'],
   retracted: ['note'],
+  verified: ['id', 'result', 'checks'],
 };
 const isRecord = (x: unknown): x is Record<string, unknown> => !!x && typeof x === 'object' && !Array.isArray(x);
 
@@ -151,6 +170,19 @@ export function ledgerProblems(x: unknown, video: string): string[] {
         out.push(`${where}.captions: not a sha`);
       for (const k of REQUIRED[e.type as EventType])
         if (e[k] === undefined || e[k] === '') out.push(`${where}.${k}: ${e.type} needs it`);
+      if (e.result !== undefined && !VERDICTS.includes(e.result as Verdict))
+        out.push(`${where}.result: ${JSON.stringify(e.result)} is not ${VERDICTS.join(', ')}`);
+      if (e.checks !== undefined) {
+        if (!Array.isArray(e.checks)) out.push(`${where}.checks: not a list`);
+        else
+          e.checks.forEach((c, j) => {
+            if (!isRecord(c) || typeof c.name !== 'string' || !c.name) out.push(`${where}.checks[${j}].name: missing`);
+            if (!isRecord(c) || !CHECK_RESULTS.includes(c.result as CheckResult))
+              out.push(
+                `${where}.checks[${j}].result: ${JSON.stringify(isRecord(c) ? c.result : c)} is not ${CHECK_RESULTS.join(', ')}`,
+              );
+          });
+      }
     });
   }
   return out;
@@ -181,6 +213,8 @@ export function eventKey(e: PublishEvent): string | null {
       return `${e.type}|${e.id}`; // judged against the latest of the two for that id, see appendEvent
     case 'retracted':
       return 'retracted';
+    case 'verified': // judged against the latest verification of the id, see appendEvent
+      return `verified|${e.id}|${e.build}|${e.metadata}|${sha(JSON.stringify(e.checks))}`;
     case 'updated': // recordUpdated refuses an unchanged sha; A, B, A is three honest events
     case 'failed':
       return null;
@@ -207,6 +241,12 @@ export function appendEvent(
       (x) => (x.type === 'approved' || x.type === 'changes-requested') && x.build === e.build,
     );
     existing = latest && eventKey(latest) === key ? latest : null;
+  } else if (e.type === 'verified') {
+    // pass, fail, pass are three findings; only a repeat of the latest verification of the id, with no upload or
+    // update since (the boundary failedSince reads), is the same one
+    const i = o.events.findLastIndex((x) => x.type === 'verified' && x.id === e.id);
+    const sent = o.events.findLastIndex((x) => x.type === 'uploaded' || x.type === 'updated');
+    existing = i > sent && eventKey(o.events[i]) === key ? o.events[i] : null;
   } else if (key !== null) existing = o.events.find((x) => eventKey(x) === key) ?? null;
   if (existing) return { ledger, existing };
   return {
@@ -245,12 +285,27 @@ export function saveLedger(path: string, ledger: Ledger): void {
   renameSync(tmp, path);
 }
 
-/** The captions sha the platform has: the latest upload or update that recorded one (none: unknown, send them). */
-export const lastCaptions = (o: Pick<Output, 'events'>) =>
-  o.events.findLast((e) => (e.type === 'uploaded' || e.type === 'updated') && e.captions)?.captions ?? null;
+/** The captions sha the current video has: the latest upload, or an update of that same video since, that recorded
+ *  one (none: unknown, send them). An earlier upload's captions are another video's. */
+export const lastCaptions = (o: Pick<Output, 'events'>) => {
+  const i = o.events.findLastIndex((e) => e.type === 'uploaded');
+  const id = o.events[i]?.id;
+  return (
+    o.events
+      .slice(Math.max(i, 0))
+      .findLast((e) => (e.type === 'uploaded' || e.type === 'updated') && e.captions && (i < 0 || e.id === id))
+      ?.captions ?? null
+  );
+};
 /** The last upload or update that sent metadata: what the platform has now. */
 export const lastSent = (o: Pick<Output, 'events'>) =>
   o.events.findLast((e) => (e.type === 'uploaded' || e.type === 'updated') && e.metadata);
+/** Whether the latest verification since the last upload or update failed one of `names`: what push resends. */
+export const failedSince = (o: Pick<Output, 'events'>, names: string[]): boolean => {
+  const i = o.events.findLastIndex((e) => e.type === 'uploaded' || e.type === 'updated');
+  const v = o.events.slice(i + 1).findLast((e) => e.type === 'verified');
+  return !!v?.checks?.some((c) => c.result === 'fail' && names.includes(c.name));
+};
 
 // ---- state ------------------------------------------------------------------------------------------------------
 
@@ -292,7 +347,8 @@ export type OutputStatus =
 export interface OutputState {
   status: OutputStatus;
   live: boolean; // published and not since unpublished, whatever else the status says (metadata-behind keeps it live)
-  failed: PublishEvent | null; // an overlay: the last event, when it is a failure
+  failed: PublishEvent | null; // an overlay: the last event (a verification aside), when it is a failure
+  verification: PublishEvent | null; // the latest verified event for the uploaded id; it never changes the status
   requested: PublishEvent | null; // the changes-requested event that holds the current build, if any
   id: string | null;
   url: string | null;
@@ -331,7 +387,7 @@ export function outputState(
   const verb = (v: string, flags = '') =>
     `npm run publish -- ${v} ${ctx.topic} ${ctx.story}${ctx.output === 'youtube' ? '' : ` --output ${ctx.output}`}${flags}`;
   const ev = output.events;
-  const last = ev.at(-1) ?? null;
+  const last = ev.findLast((e) => e.type !== 'verified') ?? null;
   const failed = last?.type === 'failed' ? last : null;
   const uploads = ev.filter((e) => e.type === 'uploaded');
   const upload = uploads.at(-1) ?? null;
@@ -353,6 +409,7 @@ export function outputState(
   const base: Omit<OutputState, 'status' | 'next' | 'due'> = {
     live,
     failed,
+    verification: (id && ev.findLast((e) => e.type === 'verified' && e.id === id)) || null,
     requested: requested?.type === 'changes-requested' ? requested : null,
     id,
     url: id ? url : null,
@@ -435,7 +492,7 @@ export function outputState(
       'uploaded',
       status === 'draft'
         ? `watch ${url} with video/review/checklist.md, then npm run video -- final ${ctx.topic} ${ctx.story} --approved-by "<name>"`
-        : `watch ${url} with video/review/checklist.md, then ${verb('approve', ' --by "<name>"')}`,
+        : `watch ${url} with video/review/checklist.md, then ${verb('approve', ' --by "<name>" --checked <n>')}`,
     );
   }
   if (metadataSha && sentSha && metadataSha !== sentSha) return done('metadata-behind', behind);
@@ -590,7 +647,7 @@ export function openOutput(topic: string, storyId: string, a: { output?: string;
     parentLive,
     title: metadata?.title ?? null,
   });
-  return { root, dir, path, ledger, id, out, rel, build, metadata, state, parentLive };
+  return { root, topic, story: storyId, dir, path, ledger, id, out, rel, build, metadata, state, parentLive };
 }
 function write(o: ReturnType<typeof openOutput>, e: PublishEvent, then?: (l: Ledger) => Ledger): VerbResult {
   const r = appendEvent(o.ledger, o.id, e);
@@ -605,7 +662,8 @@ const stamp = (a: { now?: Date }) => (a.now ?? new Date()).toISOString();
 export function recordUploaded(
   topic: string,
   storyId: string,
-  a: VerbArgs & { id: string; url?: string; visibility?: Visibility; captions?: string },
+  // captionsSent: the package's captions went up with the upload (a Studio upload recorded by hand)
+  a: VerbArgs & { id: string; url?: string; visibility?: Visibility; captions?: string; captionsSent?: boolean },
 ): VerbResult {
   const o = openOutput(topic, storyId, a);
   if (o.out.kind.startsWith('youtube') && !YOUTUBE_ID.test(a.id)) {
@@ -629,9 +687,11 @@ export function recordUploaded(
       throw new Refusal(
         `build ${o.build.sha} is not approved under the title "${o.metadata.title}"; a public upload needs npm run publish -- approve first`,
       );
-    const problem = goLiveProblem(o, a.by);
+    const problem = goLiveProblem(o, a.by, o.build.status);
     if (problem) throw new Refusal(problem);
   }
+  if (a.captionsSent && !a.captions && !o.metadata.captions)
+    throw new Refusal('the package has no captions; upload without --captions');
   const at = stamp(a);
   const e: PublishEvent = {
     at,
@@ -644,7 +704,8 @@ export function recordUploaded(
     visibility,
   };
   if (a.url) e.url = a.url;
-  if (a.captions) e.captions = a.captions;
+  const captions = a.captions ?? (a.captionsSent ? o.metadata.captions?.sha : undefined);
+  if (captions) e.captions = captions;
   return write(o, e, (l) =>
     visibility === 'public'
       ? appendEvent(l, o.id, { at, type: 'published', by: a.by, id: a.id, ...(a.url ? { url: a.url } : {}) }).ledger
@@ -666,19 +727,26 @@ export function recordApproved(
   if (a.checked !== undefined) {
     const list = reviewJsonOf(o)?.checklist ?? [];
     if (a.checked < list.length)
-      throw new Refusal(`${a.checked} of ${list.length} checklist items ticked; every one is needed to approve`);
+      throw new Refusal(
+        `${a.checked} of ${list.length} checklist items ticked; every one is needed to approve (tick them on the review page, or pass --checked ${list.length} after going through video/review/checklist.md)`,
+      );
   }
   // a generic output (blog post, page, post) is approved as its source file: that file's sha stands in for the build
   const generic = flowOf(o.out.kind) === 'generic';
   const build = a.build ?? o.build?.sha ?? (generic ? 'none' : undefined);
   if (!build) throw new Refusal('nothing to approve: no review package, no source file and no build named');
-  const uploaded = o.out.events.find((e) => e.type === 'uploaded' && e.build === build);
+  const uploaded = o.out.events.findLast((e) => e.type === 'uploaded' && e.build === build);
   const onDisk = o.build?.sha === build ? o.build : null;
   // `accepted` is `npm run video -- final` naming the draft it accepted; nobody else approves a draft (edge voice)
   if (!a.accepted && (uploaded?.buildStatus === 'draft' || onDisk?.status === 'draft'))
     throw new Refusal(
       `build ${build} is a draft (edge voice): a draft is accepted by npm run video -- final, never approved for publication`,
     );
+  // the approval is given to the current look: a build on disk drawn with an older kit or theme is drawn again first
+  if (onDisk && !a.accepted) {
+    const problem = lookProblem(o);
+    if (problem) throw new Refusal(problem);
+  }
   const localRelease = onDisk?.status === 'release';
   if (!generic && !a.accepted && !uploaded && !localRelease)
     throw new Refusal(
@@ -691,13 +759,22 @@ export function recordApproved(
   return write(o, e);
 }
 
-/** The output's review package (a Short's own, in its folder), or null. */
-const reviewJsonOf = (o: ReturnType<typeof openOutput>) => {
+/** The output's video folder (a Short's own, in its folder). */
+const videoDirOf = (o: ReturnType<typeof openOutput>) => {
   const nested = nestedSource(o.root, o.out);
-  return readJson<{ checklist?: string[] }>(
-    join(nested ? join(o.root, nested) : o.dir, 'video', 'review', 'review.json'),
-  );
+  return join(nested ? join(o.root, nested) : o.dir, 'video');
 };
+/** Why the output's build on disk is not drawn with the current look (src/lib/look.ts), with the step that draws it
+ *  again; null when it is, or for an output without a build report (a generic one). */
+export function lookProblem(o: ReturnType<typeof openOutput>): string | null {
+  const why = lookStale(readJson<BuildSummary>(join(videoDirOf(o), 'build-report.json')), o.topic, o.root);
+  if (!why) return null;
+  const target = o.id.startsWith('short:') ? shortId(o.story, o.id.slice(6)) : o.story;
+  return `build ${o.build?.sha ?? 'on disk'} ${why}; npm run video -- final ${o.topic} ${target} --approved-by "<your name>" draws it again`;
+}
+/** The output's review package, or null. */
+const reviewJsonOf = (o: ReturnType<typeof openOutput>) =>
+  readJson<{ checklist?: string[] }>(join(videoDirOf(o), 'review', 'review.json'));
 
 /** A person sends the current build back with notes; a later approval of the same build (or a new build) moves on. */
 export function recordChangesRequested(
@@ -721,11 +798,17 @@ export function recordChangesRequested(
 
 /** Why `o` may not go public or be scheduled by `by`, or null: only a person does it, never with a draft upload (edge
  *  voice), and a derivative (a Short) only after the output it derives from is live. go-live asks before calling YouTube. */
-export function goLiveProblem(o: ReturnType<typeof openOutput>, by: string): string | null {
+export function goLiveProblem(
+  o: ReturnType<typeof openOutput>,
+  by: string,
+  buildStatus?: 'draft' | 'release', // the build about to go public (a public upload), else the last upload's
+): string | null {
   if (by.trim().startsWith('automated:')) return 'an output goes live by a person, never by an automated run';
-  if (o.out.events.findLast((e) => e.type === 'uploaded')?.buildStatus === 'draft')
+  if ((buildStatus ?? o.out.events.findLast((e) => e.type === 'uploaded')?.buildStatus) === 'draft')
     return 'the upload is a draft build (edge voice); npm run video -- final makes the release build';
   if (!o.parentLive) return `${o.id} derives from ${o.out.derivedFrom}: publish ${o.out.derivedFrom} first`;
+  // a kit or theme redrawn since the approval: the build is drawn again before it goes public (a scheduled one has)
+  if (o.state.status !== 'scheduled') return lookProblem(o);
   return null;
 }
 const refuseGoLive = (o: ReturnType<typeof openOutput>, by: string) => {
@@ -769,7 +852,9 @@ export function recordUpdated(
   if (!o.state.id) throw new Refusal('nothing uploaded yet; there is nothing on YouTube to update');
   if (!o.metadata) throw new Refusal('no review package; the metadata cannot be composed');
   const sent = lastSent(o.out);
-  if (sent?.metadata === o.metadata.sha)
+  // unchanged text is nothing new unless captions landed that the video did not have, or a verification found it missing
+  const captionsNew = !!a.captions && (a.captions !== lastCaptions(o.out) || failedSince(o.out, ['captions']));
+  if (sent?.metadata === o.metadata.sha && !failedSince(o.out, METADATA_CHECKS) && !captionsNew)
     return { event: sent, existing: true, message: `the metadata is unchanged since ${describe(sent)}` };
   return write(o, {
     at: stamp(a),
@@ -780,6 +865,21 @@ export function recordUpdated(
     fields: a.fields,
     ...(a.captions ? { captions: a.captions } : {}),
   });
+}
+
+export function recordVerified(
+  topic: string,
+  storyId: string,
+  a: VerbArgs & { result: Verdict; checks: LedgerCheck[] },
+): VerbResult {
+  const o = openOutput(topic, storyId, a);
+  if (!o.state.id) throw new Refusal('nothing uploaded; there is nothing on YouTube to verify');
+  const e: PublishEvent = { at: stamp(a), type: 'verified', by: a.by, id: o.state.id };
+  if (o.state.uploadedBuild) e.build = o.state.uploadedBuild;
+  if (o.metadata?.sha) e.metadata = o.metadata.sha;
+  e.result = a.result;
+  e.checks = a.checks;
+  return write(o, e);
 }
 
 export function recordFailed(

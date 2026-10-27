@@ -10,6 +10,7 @@ import { corpusOf } from '../src/lib/corpus';
 import { passageReader } from '../src/lib/evidence';
 import { buildPackage, docHasher, docReader } from '../src/lib/evidence-package';
 import { fileSha, readJson, sha, toJson, topicDir } from '../src/lib/io';
+import { lookFingerprint } from '../src/lib/look';
 import { storyboardFingerprint, validationFingerprint } from '../src/lib/release';
 import { renderCheckProblems } from '../src/lib/render-check';
 import { loadReview, reviewPath } from '../src/lib/review';
@@ -44,6 +45,16 @@ import { initVideo } from '../src/video/init';
 // Matched against the path inside the topic, never the checkout's own path (CI checks out under .../work/...).
 const SKIP = ['/store/transcripts', '/work', '/video/scenes', '/video/narration', '/video/frames'];
 const SKIP_EXT = ['.pdf', '.mp4', '.wav', '.png'];
+
+/** Re-record a build's look (undefined: a report from before builds recorded it) and re-point the review package at
+ *  the edited report, so only the look differs. */
+export function setLook(dir: string, look: string | undefined): void {
+  const rp = join(dir, 'video', 'build-report.json');
+  const r = readJson<BuildSummary>(rp)!;
+  writeFileSync(rp, toJson({ ...r, fingerprints: { ...r.fingerprints, look } }));
+  const pp = join(dir, 'video', 'review', 'review.json');
+  writeFileSync(pp, toJson({ ...readJson<object>(pp)!, buildReport: fileSha(rp) }));
+}
 
 export function copyTopic(topic: string): { root: string; dir: (storyId: string) => string; cleanup: () => void } {
   const root = mkdtempSync(join(tmpdir(), 'vk-topic-'));
@@ -221,7 +232,7 @@ export function syntheticProduction(upTo: FixtureStage, opts: { release?: boolea
     clearance: opts.release
       ? { narration: true, music: true, publishable: true, why: [] }
       : { narration: false, music: false, publishable: false, why: ['draft voice'] },
-    fingerprints: { ...release.fingerprints, config: sha(JSON.stringify(config)) },
+    fingerprints: { ...release.fingerprints, config: sha(JSON.stringify(config)), look: lookFingerprint(TOPIC, root) },
     qa: { ok: true, checks: [{ name: 'fixture', ok: true }] },
   };
   write('video/build-report.json', report);
@@ -406,7 +417,7 @@ export function syntheticShort(upTo: 'reviewed' | 'packaged', opts: { release?: 
     clearance: opts.release
       ? { narration: true, music: null, publishable: true, why: [] }
       : { narration: false, music: null, publishable: false, why: ['draft voice'] },
-    fingerprints: { ...release.fingerprints, config: sha(JSON.stringify(config)) },
+    fingerprints: { ...release.fingerprints, config: sha(JSON.stringify(config)), look: lookFingerprint(TOPIC, root) },
     qa: { ok: true, checks: [{ name: 'fixture', ok: true }] },
   };
   write('video/build-report.json', report);

@@ -1,4 +1,4 @@
-// The uploader verbs: what `npm run publish -- upload | push | go-live | sync` do between the ledger and YouTube.
+// The uploader verbs: what `npm run publish -- upload | push | go-live | sync | verify` do between the ledger and YouTube.
 // Each one reads the output's state, refuses what the files do not support, calls the client, and records through the
 // ledger verbs in publish.ts, so a hand upload and an API upload leave the same events. `upload` is always private;
 // `go-live` is the only path to public or a schedule, and it needs the ledger's `approved` for the uploaded build.
@@ -8,6 +8,8 @@ import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT, readJson, sha, toJson } from './io';
 import {
+  type LedgerCheck,
+  METADATA_CHECKS,
   type Output,
   type PublishEvent,
   Refusal,
@@ -21,10 +23,21 @@ import {
   recordScheduled,
   recordUpdated,
   recordUploaded,
+  recordVerified,
+  failedSince,
   lastCaptions,
   lastSent,
 } from './publish';
-import { type RemoteVideo, type Snippet, type VideoStatus, type YouTubeClient, YouTubeError } from './youtube';
+import { type Expected, expectedOf, verdictOf, verificationChecks } from './verify';
+import {
+  type RemoteCaption,
+  type RemoteVideo,
+  type Snippet,
+  type VideoStatus,
+  type YouTubeClient,
+  YouTubeError,
+  oembedStatus,
+} from './youtube';
 
 export const SESSION_FILE = (output: string) =>
   output === 'youtube' ? 'video/upload-session.json' : `video/upload-session.${output}.json`;
@@ -197,7 +210,10 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
   const o = openOutput(topic, storyId, c);
   if (!o.state.id) throw new Refusal(`${o.id} is ${o.state.status}; there is nothing on YouTube to update`);
   if (!o.metadata) throw new Refusal('no review package; the metadata cannot be composed');
-  if (lastSent(o.out)?.metadata === o.metadata.sha)
+  // what a verification since the last send found missing is sent again, whatever the shas say
+  const captionsCurrent =
+    !o.metadata.captions || (o.metadata.captions.sha === lastCaptions(o.out) && !failedSince(o.out, ['captions']));
+  if (lastSent(o.out)?.metadata === o.metadata.sha && !failedSince(o.out, METADATA_CHECKS) && captionsCurrent)
     return { event: null, existing: true, message: `the metadata on YouTube is current (${o.metadata.sha})` };
   const problem = uploadProblem(o.metadata);
   if (problem) throw new Refusal(problem);
@@ -205,7 +221,7 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
   const thumbnail = o.metadata.thumbnail ? join(o.root, o.metadata.thumbnail.file) : null;
   if (thumbnail && !existsSync(thumbnail)) throw new Refusal(`${o.metadata.thumbnail!.file} is missing on disk`);
   // captions.insert adds a track: send them only when they are not the ones YouTube already has
-  const captions = o.metadata.captions?.sha === lastCaptions(o.out) ? null : o.metadata.captions;
+  const captions = captionsCurrent ? null : o.metadata.captions;
   await guarded(topic, storyId, c, 'update', () => c.client.updateVideo(id, { snippet: snippetOf(o.metadata!) }));
   // the snippet landed: record it even if an asset fails, so the board does not stay metadata-behind and resend it
   const landed = ['snippet'];
@@ -221,9 +237,15 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
   };
   if (thumbnail) await asset('thumbnail', () => c.client.setThumbnail(id, thumbnail));
   if (captions)
-    await asset('captions', () =>
-      c.client.insertCaptions(id, join(o.root, captions.file), captions.language, 'English'),
-    );
+    await asset('captions', async () => {
+      // a verification found no serving track: replace the ones not serving rather than pile up another
+      // (captions.list and captions.delete, 50 units each, only on this path)
+      if (failedSince(o.out, ['captions']))
+        for (const t of await c.client.listCaptions(id))
+          if (t.trackKind.toLowerCase() === 'standard' && t.language === captions.language && t.status !== 'serving')
+            await c.client.deleteCaptions(t.id);
+      await c.client.insertCaptions(id, join(o.root, captions.file), captions.language, 'English');
+    });
   const r = recordUpdated(topic, storyId, {
     ...c,
     fields: landed,
@@ -239,7 +261,14 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
   return r;
 }
 
-/** Makes the approved upload public now, or schedules it (private with a publishAt) for `at`. */
+/** How long after a schedule's publishAt sync waits before calling a still-private video a failure. */
+export const SCHEDULE_GRACE_MS = 15 * 60_000;
+/** Why a video is not public after go-live (or its schedule), and the Studio route that gets it out. */
+export const keptPrivate = (id: string, privacy: string): string =>
+  `YouTube kept ${id} ${privacy} after go-live (an upload from an unaudited API project can be locked private): upload the same video/review file in YouTube Studio, record it with npm run publish -- uploaded --id <id> [--captions], approve it if it is not yet approved, then go live; if Studio shows ${id} public, npm run publish -- sync records it`;
+
+/** Makes the approved upload public now, or schedules it (private with a publishAt) for `at`. Going public now is
+ *  recorded only when the read-back says public: YouTube can keep an upload private whatever the write asked. */
 export async function goLive(topic: string, storyId: string, c: Ctx & { at?: string }): Promise<VerbResult> {
   const o = openOutput(topic, storyId, c);
   if (o.state.status === 'scheduled' || o.state.status === 'published')
@@ -263,6 +292,14 @@ export async function goLive(topic: string, storyId: string, c: Ctx & { at?: str
   await guarded(topic, storyId, c, 'go-live', () =>
     c.client.updateVideo(id, { status: { ...statusOf(o.out), privacyStatus: 'public' } }),
   );
+  const v = await guarded(topic, storyId, c, 'go-live', () => c.client.getVideo(id));
+  if (v?.privacyStatus !== 'public')
+    return recordFailed(topic, storyId, {
+      ...c,
+      step: 'go-live',
+      error: keptPrivate(id, v?.privacyStatus ?? 'missing'),
+      retryable: false,
+    });
   return recordPublished(topic, storyId, { ...c, url: urlOf(id) });
 }
 
@@ -273,10 +310,52 @@ export async function sync(topic: string, storyId: string, c: Ctx): Promise<Verb
   if (!o.state.id) throw new Refusal(`${o.id} is ${o.state.status}; nothing on YouTube to read`);
   const id = o.state.id;
   const v = await guarded(topic, storyId, c, 'sync', () => c.client.getVideo(id));
-  const failed = (error: string) => recordFailed(topic, storyId, { ...c, step: 'sync', error, retryable: false });
+  const failed = (error: string): VerbResult => {
+    // the same finding, with nothing since, is not recorded again on every sync
+    const last = o.out.events.findLast((e) => e.type !== 'verified'); // a verification in between changes nothing
+    if (last?.type === 'failed' && last.step === 'sync' && last.id === id && last.error === error)
+      return { event: last, existing: true, message: `already recorded: sync failed: ${error}` };
+    return recordFailed(topic, storyId, { ...c, step: 'sync', error, retryable: false });
+  };
   if (!v) return failed(`${id} is not on YouTube (deleted?); a person decides`);
   if (v.uploadStatus === 'rejected') return failed(`rejected: ${v.rejectionReason ?? 'no reason given'}`);
   if (v.privacyStatus === 'public' && (o.state.status === 'scheduled' || o.state.status === 'approved'))
     return recordPublished(topic, storyId, { ...c, url: urlOf(id), observed: true });
+  const publishAt = o.out.events.findLast((e) => e.type === 'scheduled' && e.id === id)?.publishAt;
+  if (
+    o.state.status === 'scheduled' &&
+    publishAt &&
+    Date.parse(publishAt) + SCHEDULE_GRACE_MS < (c.now ?? new Date()).getTime()
+  )
+    return failed(
+      `the schedule ${publishAt} passed and ${id} is still ${v.privacyStatus}: ${keptPrivate(id, v.privacyStatus)}`,
+    );
   return v;
+}
+
+/** Reads the video back (one videos.list, a captions.list when the package has captions, an anonymous oEmbed request)
+ *  and records the checks against the package as a `verified` event. `remote` and `expected` are for the CLI to print;
+ *  they are never written. A captions.list failure leaves that check pending rather than recording a failure. */
+export async function verify(
+  topic: string,
+  storyId: string,
+  c: Ctx & { anonymous?: typeof fetch },
+): Promise<{ result: VerbResult; checks: LedgerCheck[]; remote: RemoteVideo | null; expected: Expected }> {
+  const o = openOutput(topic, storyId, c);
+  if (!o.state.id) throw new Refusal(`${o.id} is ${o.state.status}; nothing on YouTube to verify`);
+  const expected = expectedOf(o);
+  if (!expected) throw new Refusal('no review package; nothing to verify against');
+  const id = o.state.id;
+  const remote = await guarded(topic, storyId, c, 'verify', () => c.client.getVideo(id));
+  let captions: RemoteCaption[] | null = null;
+  if (expected.captionsLanguage && remote)
+    try {
+      captions = await c.client.listCaptions(id);
+    } catch (e) {
+      if (!(e instanceof YouTubeError)) throw e;
+    }
+  const anonymous = await oembedStatus(id, c.anonymous ?? fetch);
+  const checks = verificationChecks(expected, remote, captions, anonymous, c.now ?? new Date());
+  const result = recordVerified(topic, storyId, { ...c, result: verdictOf(checks), checks });
+  return { result, checks, remote, expected };
 }

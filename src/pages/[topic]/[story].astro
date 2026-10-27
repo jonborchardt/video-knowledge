@@ -18,12 +18,10 @@ import { isPreview, matterItem, matterPath, related, storyNode } from '../../lib
 import { siteGraph } from '../../lib/site-graph';
 import { toolOf } from '../../tools';
 import { articleModified, loadArticleRelease } from '../../lib/article';
-import { articleView, type FigureDraw } from '../../lib/article-view';
-import { chartProblems, datasetChart } from '../../lib/chart-geometry';
-import { dataRef, loadDatasets } from '../../lib/datasets';
+import { articleView, releaseFigureDraws } from '../../lib/article-view';
+import { loadDatasets } from '../../lib/datasets';
 import { reviewMediaHref } from '../../lib/review-view';
-import { FILES, storySlug } from '../../lib/script';
-import type { Storyboard } from '../../lib/storyboard';
+import { storySlug } from '../../lib/script';
 import { storyOutputs } from '../../lib/outputs';
 import { articleJsonLd, breadcrumbJsonLd, videoJsonLd } from '../../lib/seo';
 import { loadPublicRecord, revisionLine } from '../../lib/public-record';
@@ -34,8 +32,8 @@ import Stamp from '../../components/Stamp.astro';
 import { commissionBody, commissionKey, commissionOf, site } from '../../config/site';
 import { loadStories, type Story, storyUrlSlug } from '../../lib/stories';
 import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
-import { readJson, ROOT, topicDir } from '../../lib/io';
-import { citeLabel, datasetSource, href } from '../../lib/url';
+import { ROOT } from '../../lib/io';
+import { href } from '../../lib/url';
 
 export function getStaticPaths() {
   const g = siteGraph();
@@ -72,65 +70,30 @@ const outputs = storyOutputs(t.name, s.partOf ?? s.id);
 const card = `/og/stories/${t.name}/${storyUrlSlug(s)}.jpg`;
 const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionKey(commission)}.jpg`;
 const path = matterPath(t.name, s);
-// The released companion article, each figure drawn from its storyboard chart ('<story slug>/<scene id>') or
-// evidence dataset ('data:<topic>/<id>'). A follow-up links to its first question's article, so the two pages never share a title.
+// The released companion article, each figure drawn from the release's snapshot of its storyboard chart or evidence
+// dataset, never the live files. A follow-up links to its first question's article, so the two pages never share a title.
 const release = first ? null : loadArticleRelease(t.name, s.id);
 const firstArticle = !!first && !!loadArticleRelease(t.name, first.id);
-const figures = new Map<string, FigureDraw>();
-// "Document name, lines 10-24" for each distinct passage a figure's points cite.
-const sourceOf = (cites: string[]) => [...new Set(cites)].map((c) => citeLabel(t.docNames, c)).join('; ');
-const datasets = loadDatasets(t.name);
-for (const b of release?.article.sections.flatMap((x) => x.blocks) ?? []) {
-  if (b.kind !== 'figure') continue;
-  const table = datasets.find((d) => dataRef(t.name, d.id) === b.ref);
-  if (table) {
-    const chart = datasetChart(table);
-    const problems = chart ? chartProblems(chart) : [];
-    if (problems.length) throw new Error(`figure ${b.ref}: ${problems.join('; ')}`);
-    figures.set(b.ref, {
-      table,
-      ...(chart && { chart }),
-      source: datasetSource(
-        t.docNames,
-        table.rows.flatMap((r) => r.cells.map((c) => c.cite)),
-        table.asOf,
-      ),
-    });
-    continue;
-  }
-  const [slug, scene] = b.ref.split('/');
-  const sb = readJson<Storyboard>(join(topicDir(t.name), 'scripts', slug, FILES.storyboard));
-  const chart = sb?.scenes.find((x) => x.id === scene)?.visual.chart;
-  if (!chart) continue;
-  const problems = chartProblems(chart);
-  if (problems.length) throw new Error(`figure ${b.ref}: ${problems.join('; ')}`);
-  figures.set(b.ref, { chart, source: sourceOf(chart.points.map((p) => p.cite)) });
-}
+const figures = release ? releaseFigureDraws(release, t.docNames) : new Map();
 const view = release && articleView(release, t, loadPublicRecord(t.name), site.repo, figures);
 const meta = release?.article.meta;
 const jsonLd = [
-  articleJsonLd(
-    {
-      headline: meta?.headline ?? s.title,
-      description: meta?.description.text ?? s.question,
-      path,
-      image,
-      series: commission.fullName,
-      datePublished: outputs.video?.publishedAt,
-      dateModified: (release && articleModified(release)) ?? revised ?? undefined,
-    },
-    Astro.site!,
-  ),
-  ...(outputs.video && !first ? [videoJsonLd(outputs.video, s.question, image, Astro.site!)] : []),
-  breadcrumbJsonLd(
-    [
-      { name: site.name, path: '/' },
-      { name: commission.name, path: `/commissions/${commissionKey(commission)}/` },
-      { name: t.label, path: `/${t.name}/` },
-      { name: s.title, path },
-    ],
-    Astro.site!,
-  ),
+  articleJsonLd({
+    headline: meta?.headline ?? s.title,
+    description: meta?.description.text ?? s.question,
+    path,
+    image,
+    series: commission.fullName,
+    datePublished: outputs.video?.publishedAt,
+    dateModified: (release && articleModified(release)) ?? revised ?? undefined,
+  }),
+  ...(outputs.video && !first ? [videoJsonLd(outputs.video, s.question, image)] : []),
+  breadcrumbJsonLd([
+    { name: site.name, path: '/' },
+    { name: commission.name, path: `/commissions/${commissionKey(commission)}/` },
+    { name: t.label, path: `/${t.name}/` },
+    { name: s.title, path },
+  ]),
 ];
 const storyHref = (x: Pick<Story, 'id'>) => href(matterPath(t.name, x));
 const body = commissionBody(commission);
@@ -248,7 +211,7 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
     }
     {
       view ? (
-        <ArticleBody view={view} dataHref={datasets.length ? href(`/${t.name}/data/`) : undefined} />
+        <ArticleBody view={view} dataHref={loadDatasets(t.name).length ? href(`/${t.name}/data/`) : undefined} />
       ) : (
         <>
           <section aria-labelledby="dispute">

@@ -16,7 +16,7 @@ import {
 } from '../src/lib/publish';
 import { parseNotes, reviewMediaHref, reviewView } from '../src/lib/review-view';
 import { href } from '../src/lib/url';
-import { type Fixture, syntheticProduction, syntheticShort } from './production-helpers';
+import { type Fixture, setLook, syntheticProduction, syntheticShort } from './production-helpers';
 
 const now = new Date('2026-10-26T00:00:00Z');
 const timeline = {
@@ -48,7 +48,7 @@ const run = <F extends Fixture, T>(f: F, body: (f: F) => T) => {
   }
 };
 
-describe('reviewView', () => {
+describe('reviewView', { timeout: 30_000 }, () => {
   it('links a failed QA check to its sentence and sorts it first', () =>
     run(placed(syntheticProduction('packaged', { release: true })), (f) => {
       const v = reviewView(f.topic, f.story, f.root);
@@ -57,6 +57,16 @@ describe('reviewView', () => {
       expect(v.sentences.map((s) => s.id)).toEqual(['s01', 's02']);
       expect(v.pkg).toMatchObject({ status: 'release', mp4Sha: 'releasesha', portrait: false });
       expect(v.kind).toBe('youtube-video');
+    }));
+
+  it('explains that a build with an older look cannot be approved', () =>
+    run(syntheticProduction('packaged', { release: true }), (f) => {
+      expect(reviewView(f.topic, f.story, f.root).can.approve).toBe(true);
+      setLook(f.dir, 'old');
+      // the way forward is named: the release re-render
+      expect(reviewView(f.topic, f.story, f.root).can.approve).toMatch(
+        new RegExp(`rendered with look old.*npm run video -- final ${f.topic} ${f.story} --approved-by`),
+      );
     }));
 
   it('keeps every build in the history, newest first, the current one marked', () =>

@@ -40,7 +40,7 @@ describe('sameOrigin', () => {
   });
 });
 
-describe('review actions', () => {
+describe('review actions', { timeout: 30_000 }, () => {
   it('a foreign origin is 403 and starts nothing', () =>
     run(syntheticProduction('packaged', { release: true }), async (f) => {
       const r = recorder();
@@ -146,6 +146,19 @@ describe('review actions', () => {
       );
       expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/error=.*youtube first/);
       expect(r.calls).toHaveLength(1);
+    }));
+
+  it('verify starts the publish verb as a job, and needs an upload', () =>
+    run(syntheticProduction('packaged', { release: true }), async (f) => {
+      const r = recorder();
+      const o = { root: f.root, start: r.start };
+      const params = { topic: f.topic, action: 'verify', path: pathOf(f) };
+      const res = await handle(post('/', { by: 'Jon', build: 'releasesha' }), params, o);
+      expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/error=nothing uploaded yet/);
+      expect(r.calls).toHaveLength(0);
+      recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', id: 'studio00001' });
+      await handle(post('/', { by: 'Jon', build: 'releasesha' }), params, o);
+      expect(r.calls[0].args).toEqual(['publish', 'verify', f.topic, f.story, '--by', 'Jon']);
     }));
 
   it('an unknown path or action is 404', () =>

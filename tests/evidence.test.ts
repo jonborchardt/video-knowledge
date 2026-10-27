@@ -405,6 +405,146 @@ describe('evidence validator', () => {
   });
 });
 
+describe('recorded applicability', () => {
+  const rec = (level: 'direct' | 'partial' | 'contextual', reason = 'recorded reason') => ({
+    applicability: { level, reason },
+  });
+  const key = `${faster()}|asserts|${DOC_A}`;
+
+  it('a verdict recorded as contextual never supports, whatever a reviewer says', () => {
+    const c = claim('faster', FASTER, {
+      verdicts: [{ ...study('RCT A', 'right', 0.8, DOC_A), ...rec('contextual', 'background on the mechanism') }],
+    });
+    const v = validate(fact(FASTER, [studyRef(DOC_A)]), corpus(c), reader, {
+      [key]: { level: 'direct', reason: 'same task' },
+    });
+    expect(v.supporting).toHaveLength(0);
+    expect(v.context[0].basis).toBe('recorded');
+    expect(v.context[0].why).toBe('background on the mechanism');
+    expect(v.status).toBe('unverified');
+    expect(v.decision).toBe('blocked');
+  });
+
+  it('a recorded partial caps a reviewer direct at partial', () => {
+    const c = claim('faster', FASTER, { verdicts: [{ ...study('RCT A', 'right', 0.8, DOC_A), ...rec('partial') }] });
+    const v = validate(fact(FASTER, [studyRef(DOC_A)]), corpus(c), reader, {
+      [key]: { level: 'direct', reason: 'same task' },
+    });
+    expect(v.qualifying[0].applicability).toBe('partial');
+    expect(v.qualifying[0].basis).toBe('recorded');
+    expect(v.status).toBe('qualified');
+  });
+
+  it('a reviewer may narrow a recorded direct', () => {
+    const c = claim('faster', FASTER, { verdicts: [{ ...study('RCT A', 'right', 0.8, DOC_A), ...rec('direct') }] });
+    const v = validate(fact(FASTER, [studyRef(DOC_A)]), corpus(c), reader, {
+      [key]: { level: 'contextual', reason: 'different task' },
+    });
+    expect(v.context[0].basis).toBe('review');
+    expect(v.status).toBe('unverified');
+  });
+
+  it('a reviewer may widen the wording heuristic up to the recorded level', () => {
+    const c = claim('faster', FASTER, {
+      verdicts: [{ ...study('RCT A', 'right', 0.8, DOC_A, 'Faster, though in a lab task.'), ...rec('direct') }],
+    });
+    const v = validate(fact(FASTER, [studyRef(DOC_A)]), corpus(c), reader, {
+      [key]: { level: 'direct', reason: 'the lab task is the claim' },
+    });
+    expect(v.supporting[0].basis).toBe('review');
+    expect(v.status).toBe('supported');
+  });
+
+  it('an unrecorded verdict keeps the heuristic exactly', () => {
+    const a = fact(FASTER, [studyRef(DOC_A), studyRef(DOC_B)]);
+    const plain = claim('faster', FASTER, {
+      verdicts: [study('RCT A', 'right', 0.8, DOC_A), study('Survey B', 'right', 0.6, DOC_B, 'though self-reported')],
+    });
+    const recorded = claim('faster', FASTER, {
+      verdicts: [
+        { ...study('RCT A', 'right', 0.8, DOC_A), ...rec('direct') },
+        { ...study('Survey B', 'right', 0.6, DOC_B, 'though self-reported'), ...rec('direct') },
+      ],
+    });
+    expect(validate(a, corpus(plain), reader)).toEqual(validate(a, corpus(recorded), reader));
+  });
+
+  it('the recorded ceiling holds for either stance', () => {
+    const c = claim('faster', FASTER, {
+      verdicts: [{ ...study('RCT A', 'wrong', 0.8, DOC_A), ...rec('contextual', 'background') }],
+    });
+    const v = validate(
+      fact(`The evidence does not support "${FASTER}"`, [studyRef(DOC_A)], 'denies'),
+      corpus(c),
+      reader,
+      {
+        [`${faster()}|denies|${DOC_A}`]: { level: 'direct', reason: 'same task' },
+      },
+    );
+    expect(v.supporting).toHaveLength(0);
+    expect(v.context[0].basis).toBe('recorded');
+  });
+
+  it('a recorded level belongs to its cite, not to the document', () => {
+    const wider = 'demo/sources/rct-a.txt#L10-L14';
+    const read = (cite: string) =>
+      cite === wider ? 'Developers finished tasks faster, across all three sites.' : reader(cite);
+    const c = claim('faster', FASTER, {
+      verdicts: [
+        { ...study('RCT A', 'right', 0.8, DOC_A), ...rec('contextual', 'background') },
+        { ...study('RCT A', 'right', 0.8, wider, 'RCT A wider note'), date: '2026-02-01', ...rec('direct') },
+      ],
+    });
+    const v = validate(fact(FASTER, [studyRef(wider)]), corpus(c), read);
+    expect(v.supporting[0].ref).toMatchObject({ cite: wider });
+    expect(v.status).toBe('supported');
+  });
+
+  it('a figure only in a contextual passage is not verified', () => {
+    const c = claim('faster', FASTER, {
+      verdicts: [
+        { ...study('RCT A', 'right', 0.8, DOC_A), ...rec('contextual', 'background') },
+        { ...study('Survey B', 'right', 0.8, DOC_B), ...rec('direct') },
+      ],
+    });
+    const v = validate(
+      fact('AI tools make experienced developers 26 percent faster', [studyRef(DOC_A), studyRef(DOC_B)]),
+      corpus(c),
+      reader,
+    );
+    expect(v.limitations).toContain('The figure "26" does not appear in the cited passages.');
+    expect(v.decision).toBe('blocked');
+  });
+
+  it('a contextual passage cannot make one side of a disagreement', () => {
+    const c = claim('faster', FASTER, {
+      verdicts: [
+        { ...study('RCT A', 'right', 0.8, DOC_A), ...rec('contextual', 'background') },
+        study('Field C', 'wrong', 0.7, DOC_C),
+      ],
+    });
+    const v = validate(
+      { ...fact(`Studies disagree on whether ${FASTER}`, [studyRef(DOC_A), studyRef(DOC_C)]), kind: 'disagreement' },
+      corpus(c),
+      reader,
+    );
+    expect(v.status).toBe('unsupported');
+  });
+
+  it('a recorded contextual contradiction is listed, not hidden', () => {
+    const c = claim('faster', FASTER, {
+      verdicts: [
+        { ...study('RCT A', 'right', 0.8, DOC_A), ...rec('direct') },
+        { ...study('Field C', 'wrong', 0.7, DOC_C), ...rec('contextual', 'background') },
+      ],
+    });
+    const v = validate(fact(FASTER, [studyRef(DOC_A)]), corpus(c), reader);
+    expect(v.status).toBe('supported');
+    expect(v.contradicting).toHaveLength(0);
+    expect(v.limitations.some((l) => l.startsWith('Context only, '))).toBe(true);
+  });
+});
+
 describe('line endings', () => {
   it('passageReader returns the same text for an LF and a CRLF checkout', () => {
     const dir = mkdtempSync(join(tmpdir(), 'vk-eol-'));

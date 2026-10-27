@@ -6,6 +6,7 @@
 //                                                                      as a revision in the topic's public-record.json
 //   reaffirm <topic> <story-id> --approved-by "<name>" --note "<why unchanged>"  a stale article's text stands
 // lock and correct validate afresh and refuse (exit 2, nothing written) unless it passes; a real name or "automated: ...".
+// Both copy each figure's data into the release; lock on an unchanged release without that copy adds only the copy.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import {
@@ -15,17 +16,28 @@ import {
   loadArticleRelease,
   lockArticle,
   reaffirmArticle,
+  releaseFigures,
   renderArticleMd,
 } from '../src/lib/article';
 import { articleStale } from '../src/lib/article-view';
-import { validateArticleIn } from '../src/lib/article-validation';
+import { figureData, validateArticleIn } from '../src/lib/article-validation';
+import { storyOutputs } from '../src/lib/outputs';
 import { corpusOf } from '../src/lib/corpus';
 import { passageReader } from '../src/lib/evidence';
 import { readJson, toJson, writeArtifact, ROOT } from '../src/lib/io';
 import { loadPublicRecord, publicRecordPath, withArticleRevision } from '../src/lib/public-record';
 import { Refusal } from '../src/lib/publish';
 import { loadReview } from '../src/lib/review';
-import { type EvidencePackage, FILES, type Script, type ScriptValidation, scriptDir } from '../src/lib/script';
+import { storyboardFingerprint } from '../src/lib/release';
+import {
+  type EvidencePackage,
+  FILES,
+  type Release,
+  type Script,
+  type ScriptValidation,
+  scriptDir,
+} from '../src/lib/script';
+import type { Storyboard } from '../src/lib/storyboard';
 import { loadTopic } from '../src/lib/topics';
 
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
@@ -37,7 +49,7 @@ if (!['validate', 'show', 'lock', 'correct', 'reaffirm'].includes(cmd) || !topic
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 8)
+      .slice(0, 9)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -94,8 +106,21 @@ function run() {
     case 'lock': {
       const { a, v } = releasable();
       const prev = loadArticleRelease(topic, storyId);
-      const r = lockArticle(prev, a, v, flag('--approved-by') ?? '', today);
+      const figures = releaseFigures(a, figureData(topic, storyId));
+      const locked = readJson<Release>(p(FILES.release));
+      const sb = readJson<Storyboard>(p(FILES.storyboard));
+      const r = lockArticle(prev, a, v, flag('--approved-by') ?? '', today, figures, {
+        live: !!storyOutputs(topic, storyId).video,
+        storyboardLocked: !!locked && !!sb && locked.fingerprints.storyboard === storyboardFingerprint(sb),
+      });
       if (r === prev) return console.log(`${rel(p(ARTICLE_FILES.release))} unchanged: revision ${r.revision}`);
+      if (prev) {
+        // a release from before figure snapshots: the snapshot added, nothing else (approver, history, recordSeen)
+        writeArtifact(dir, ARTICLE_FILES.release, toJson(r));
+        return console.log(
+          `${rel(p(ARTICLE_FILES.release))}: figure snapshot added (${Object.keys(figures).join(', ') || 'no figures'}); revision ${r.revision}, approval and history unchanged, no public-record revision`,
+        );
+      }
       // the revisions it has seen: any appended later makes it stale, the same day too
       writeArtifact(dir, ARTICLE_FILES.release, toJson({ ...r, recordSeen: loadPublicRecord(topic).revisions.length }));
       console.log(`released ${rel(p(ARTICLE_FILES.release))}: revision ${r.revision}, approved by ${r.approvedBy}`);
@@ -112,6 +137,7 @@ function run() {
         flag('--approved-by') ?? '',
         flag('--note') ?? '',
         today,
+        releaseFigures(a, figureData(topic, storyId)),
       );
       const record = loadPublicRecord(topic);
       // the record first: if the release write then fails, correct can be re-run against the old release, and the

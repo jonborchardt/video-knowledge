@@ -54,7 +54,7 @@ function printValidation(v: Validation, indent = '  ') {
     for (const x of items) {
       const cite = 'cite' in x.ref ? x.ref.cite : 'source' in x.ref ? x.ref.source : 'AI guess';
       line(
-        `  ${label}${x.cited ? '' : ' (uncited)'}: ${x.by} ${x.verdict ?? ''} ${x.confidence ?? ''} ${x.applicability ?? ''}${x.basis === 'review' ? ' [reviewed]' : ''} ${cite}`,
+        `  ${label}${x.cited ? '' : ' (uncited)'}: ${x.by} ${x.verdict ?? ''} ${x.confidence ?? ''} ${x.applicability ?? ''}${x.basis === 'review' ? ' [reviewed]' : x.basis === 'recorded' ? ' [recorded]' : ''} ${cite}`,
       );
       if (x.note) line(`    ${x.note}`);
       if (x.why && x.applicability !== 'direct') line(`    applicability: ${x.why}`);

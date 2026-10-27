@@ -1,12 +1,13 @@
 // The released article as the matter page shows it: the release's snapshot (never article.json), each sentence's
 // source marks numbered in first-use order, the noted corrections and a revised finding it relies on.
 import { type ArticleRelease, type Callout, articleSentences } from './article';
+import { chartProblems, datasetChart } from './chart-geometry';
 import { type PublicRecord, type Revision, isClaimRevision } from './public-record';
 import type { Sentence } from './script';
 import type { DataTable } from './datasets';
 import type { ChartSpec } from './storyboard';
 import type { Topic } from './topics';
-import { citeHref, citeLabel } from './url';
+import { citeHref, citeLabel, datasetSource } from './url';
 
 /** What a figure draws: a storyboard chart or an evidence dataset, with the source line its caption carries. */
 export interface FigureDraw {
@@ -29,6 +30,40 @@ export interface ArticleView {
   refs: { n: number; label: string; href: string }[];
   corrections: { date: string; note: string; sentences: string[] }[];
   stale: Revision | null;
+}
+
+/** What each figure of the release draws, only ever from the release's own snapshot: a release without one fails
+ *  (the build stops), never falling back to the live storyboard or dataset. */
+export function releaseFigureDraws(r: ArticleRelease, docNames: Record<string, string>): Map<string, FigureDraw> {
+  const out = new Map<string, FigureDraw>();
+  for (const b of r.article.sections.flatMap((s) => s.blocks)) {
+    if (b.kind !== 'figure') continue;
+    const d = r.figures?.[b.ref];
+    if (!d)
+      throw new Error(
+        `figure ${b.ref}: the release has no snapshot of its data; run npm run article -- lock ${r.topic} ${r.story} (before its video is live) or npm run article -- correct ${r.topic} ${r.story}`,
+      );
+    const chart = 'chart' in d ? d.chart : datasetChart(d.table);
+    const problems = chart ? chartProblems(chart) : [];
+    if (problems.length) throw new Error(`figure ${b.ref}: ${problems.join('; ')}`);
+    if ('chart' in d)
+      out.set(b.ref, {
+        chart: d.chart,
+        // "Document name, lines 10-24" for each distinct passage its points cite
+        source: [...new Set(d.chart.points.map((p) => p.cite))].map((c) => citeLabel(docNames, c)).join('; '),
+      });
+    else
+      out.set(b.ref, {
+        table: d.table,
+        ...(chart && { chart }),
+        source: datasetSource(
+          docNames,
+          d.table.rows.flatMap((x) => x.cells.map((c) => c.cite)),
+          d.table.asOf,
+        ),
+      });
+  }
+  return out;
 }
 
 /** The newest revision of a claim the release asserts, made after the release. */

@@ -17,12 +17,12 @@ export interface PageMeta {
 
 const person = () => ({ '@type': 'Person', name: author.name, url: author.links.GitHub });
 
-export const websiteJsonLd = (siteUrl: URL) => ({
+export const websiteJsonLd = () => ({
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: site.name,
   description: site.description,
-  url: absoluteUrl('/', siteUrl),
+  url: absoluteUrl('/'),
   publisher: person(),
 });
 
@@ -37,33 +37,30 @@ export const isoDuration = (seconds: number) => {
   return `PT${Math.floor(s / 60)}M${s % 60}S`;
 };
 
-export const breadcrumbJsonLd = (items: { name: string; path: string }[], siteUrl: URL) => ({
+export const breadcrumbJsonLd = (items: { name: string; path: string }[]) => ({
   ...ld('BreadcrumbList'),
   itemListElement: items.map((x, i) => ({
     '@type': 'ListItem',
     position: i + 1,
     name: x.name,
-    item: absoluteUrl(x.path, siteUrl),
+    item: absoluteUrl(x.path),
   })),
 });
 
-export const articleJsonLd = (
-  a: {
-    headline: string;
-    description: string;
-    path: string;
-    image: string;
-    series: string;
-    datePublished?: string;
-    dateModified?: string;
-  },
-  siteUrl: URL,
-) => ({
+export const articleJsonLd = (a: {
+  headline: string;
+  description: string;
+  path: string;
+  image: string;
+  series: string;
+  datePublished?: string;
+  dateModified?: string;
+}) => ({
   ...ld('Article'),
   headline: a.headline,
   description: a.description,
-  url: absoluteUrl(a.path, siteUrl),
-  image: absoluteUrl(a.image, siteUrl),
+  url: absoluteUrl(a.path),
+  image: absoluteUrl(a.image),
   ...(a.datePublished && { datePublished: a.datePublished }),
   ...(a.dateModified && { dateModified: a.dateModified }),
   author: person(),
@@ -71,11 +68,11 @@ export const articleJsonLd = (
   isPartOf: { '@type': 'CreativeWorkSeries', name: a.series },
 });
 
-export const videoJsonLd = (v: PublicVideo, description: string, thumbnail: string, siteUrl: URL) => ({
+export const videoJsonLd = (v: PublicVideo, description: string, thumbnail: string) => ({
   ...ld('VideoObject'),
   name: v.title,
   description,
-  thumbnailUrl: absoluteUrl(thumbnail, siteUrl),
+  thumbnailUrl: absoluteUrl(thumbnail),
   uploadDate: v.publishedAt,
   ...(v.seconds !== null && { duration: isoDuration(v.seconds) }),
   embedUrl: v.embedUrl,
@@ -88,22 +85,21 @@ export const reportJsonLd = (
   path: string,
   dateModified: string | null,
   series: string,
-  siteUrl: URL,
 ) => ({
   ...ld('Report'),
   name,
   description,
-  url: absoluteUrl(path, siteUrl),
+  url: absoluteUrl(path),
   ...(dateModified && { dateModified }),
   author: person(),
   publisher: person(),
   isPartOf: { '@type': 'CreativeWorkSeries', name: series },
 });
 
-export const collectionJsonLd = (name: string, description: string, path: string, siteUrl: URL) => ({
+export const collectionJsonLd = (name: string, description: string, path: string) => ({
   ...ld('CollectionPage'),
   name,
   description,
-  url: absoluteUrl(path, siteUrl),
+  url: absoluteUrl(path),
   publisher: person(),
 });

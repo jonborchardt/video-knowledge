@@ -2,7 +2,8 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { topicDir } from '../src/lib/io';
-import { loadTopic, publicTopicNames, topicNames } from '../src/lib/topics';
+import { checkApplicabilityFile } from '../src/lib/batches';
+import { APPLICABILITY_FILE, loadTopic, publicTopicNames, topicNames } from '../src/lib/topics';
 
 describe('topics', () => {
   const names = topicNames();
@@ -20,6 +21,24 @@ describe('topics', () => {
       expect(nums.every((x) => typeof x === 'number')).toBe(true);
       expect(new Set(nums).size).toBe(nums.length);
     }
+  });
+
+  it.each(names)('%s: every recorded applicability names a recorded study verdict', (name) => {
+    const path = join(topicDir(name), APPLICABILITY_FILE);
+    if (!existsSync(path)) return;
+    const file = JSON.parse(readFileSync(path, 'utf8')) as Record<string, unknown>;
+    expect(checkApplicabilityFile(file)).toEqual([]);
+    // The store itself, not loadTopic, whose by+note dedup can hide an older cite.
+    const keys = new Set<string>();
+    const videos = join(topicDir(name), 'store', 'videos');
+    for (const f of readdirSync(videos)) {
+      const x = JSON.parse(readFileSync(join(videos, f), 'utf8')) as {
+        assertions?: { claim: string; verdicts?: { method?: string; source?: string }[] }[];
+      };
+      for (const a of x.assertions ?? [])
+        for (const v of a.verdicts ?? []) if (v.method === 'source' && v.source) keys.add(`${a.claim}|${v.source}`);
+    }
+    expect(Object.keys(file).filter((k) => !keys.has(k))).toEqual([]);
   });
 
   it.each(names)('%s: page data is consistent', (name) => {

@@ -31,6 +31,13 @@ often has one between cells): the passage reader treats it as a line break, and 
    - source: `"<topic>/sources/<file>.txt#L<start>-L<end>"` (a cite is relative to `topics/`: the file is
      `topics/<topic>/sources/<file>.txt`), the tightest range holding the
      passage. Re-read those lines to check them.
+   - applicability ∈ direct | partial | contextual: how far the passage reaches the claim.
+     `direct`: it measures the claim's own outcome in its population and setting. `partial`: it measures
+     it in a narrower or different setting, population or instrument, or through a proxy. `contextual`:
+     background, mechanism, a definition, a base rate on a different question, a press release's
+     description. A contextual passage is listed but never decides any sentence, and no reviewer can raise
+     it: the level is a ceiling (`topics/<topic>/applicability.json`, written only by `record-sources`).
+   - why: one line saying what limits the reach; required unless `direct`.
 5. Be even-handed: report what the source shows, whether it helps or hurts the claim.
 
 ## Output
@@ -44,7 +51,9 @@ Write `topics/<topic>/work/sv_G.json`:
     "verdict": "partly",
     "confidence": 0.6,
     "note": "...",
-    "source": "<topic>/sources/<file>.txt#L10-L24"
+    "source": "<topic>/sources/<file>.txt#L10-L24",
+    "applicability": "partial",
+    "why": "lab task, not production work"
   }
 ]
 ```

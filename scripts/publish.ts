@@ -1,8 +1,8 @@
 // npm run publish -- <verb> <topic> <story-id> [--output <id>] [flags]
-//   show <topic> <story-id>                                   the build, every output's state and next step, the composed upload metadata, the event log
-//   uploaded <topic> <story-id> --id <youtube id> [--url <u>] [--visibility private|unlisted|public] [--by <name>]
-//                                                             record an upload of the packaged build (public needs a prior approve; it also records published)
-//   approve <topic> <story-id> --by <name> [--note <text>]    approve the uploaded build, or the release build on disk (a draft is accepted by video final)
+//   show <topic> <story-id>                                   the build, every output's state and next step, the composed upload metadata (the description to paste into Studio), the event log
+//   uploaded <topic> <story-id> --id <youtube id> [--url <u>] [--visibility private|unlisted|public] [--captions] [--by <name>]
+//                                                             record an upload of the packaged build (public needs a prior approve; it also records published; --captions: the package's captions went up with it)
+//   approve <topic> <story-id> --by <name> --checked <n> [--note <text>]  approve the uploaded build, or the release build on disk, with n checklist items ticked (a draft is accepted by video final)
 //   thumbnail <topic> <story-id> <file>                       use this PNG/JPEG (under the script directory, e.g. video/publish/) as the output's thumbnail
 //   request-changes <topic> <story-id> --by <name> --note <text> [--note <text> ...]
 //                                                             send the current build back; a note may start [m:ss sc20 s31]
@@ -20,6 +20,8 @@
 //   push <topic> <story-id> [--output <id>]                   send the composed title, description, tags, thumbnail and captions when they changed
 //   go-live <topic> <story-id> [--at <ISO>] [--output <id>]   make the APPROVED upload public now, or schedule it (private until --at); records it
 //   sync <topic> <story-id> [--output <id>]                   read the video back: records a scheduled video gone public, a rejection, a deletion
+//   verify <topic> <story-id> [--output <id>]                 compare what YouTube holds with the package (metadata, chapters, captions, thumbnail,
+//                                                             file size, visibility, restrictions) and record it; exit 1 on a failed check
 // Every verb is idempotent: a key already in the ledger prints the existing event and exits 0. A refusal prints one line and
 // exits 2 without writing. --by defaults to $PUBLISH_BY, else git's user.name; approve needs it explicitly.
 // The ledger is topics/<topic>/scripts/<slug>/publish.json (src/lib/publish.ts); events are written only here, metadata may
@@ -51,7 +53,8 @@ import {
   uploadMetadataOf,
 } from '../src/lib/publish';
 import { scriptDir, shortOf, storySlug } from '../src/lib/script';
-import { goLive, push, sync, upload } from '../src/lib/uploader';
+import { goLive, push, sync, upload, verify } from '../src/lib/uploader';
+import { METADATA_CHECKS } from '../src/lib/verify';
 import { TOKEN_FILE, YouTubeError, authorize, loadCredentials, youtubeClient } from '../src/lib/youtube';
 
 if (existsSync(join(ROOT, '.env'))) process.loadEnvFile(join(ROOT, '.env')); // keys only; never committed
@@ -79,13 +82,14 @@ const VALUED = [
   '--kind',
   '--from',
   '--source',
+  '--checked',
 ];
 const positional = rest.filter((a, i) => !a.startsWith('--') && !VALUED.includes(rest[i - 1]));
 const usage = () => {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 25)
+      .slice(0, 27)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -135,11 +139,13 @@ function show() {
         `  thumbnail: ${meta.thumbnail ? `${meta.thumbnail.file} (${meta.thumbnail.sha})` : 'none'}`,
         `  captions: ${meta.captions ? `${meta.captions.file} (${meta.captions.sha})` : 'none'}`,
         `  metadata sha: ${meta.sha}`,
+        '  description:',
+        ...meta.description.split('\n').map((l) => (l ? `  ${l}` : '')),
       );
     }
     for (const e of out.events)
       lines.push(
-        `  ${e.at} ${e.type}${e.id ? ` ${e.id}` : ''}${e.build ? ` build ${e.build}` : ''}${e.publishAt ? ` at ${e.publishAt}` : ''}${e.fields ? ` ${e.fields.join(',')}` : ''}${e.error ? ` ${e.step}: ${e.error}` : ''} by ${e.by}${e.note ? ` (${e.note})` : ''}`,
+        `  ${e.at} ${e.type}${e.id ? ` ${e.id}` : ''}${e.build ? ` build ${e.build}` : ''}${e.publishAt ? ` at ${e.publishAt}` : ''}${e.fields ? ` ${e.fields.join(',')}` : ''}${e.result ? ` ${e.result}` : ''}${e.error ? ` ${e.step}: ${e.error}` : ''} by ${e.by}${e.note ? ` (${e.note})` : ''}`,
       );
   }
   console.log(lines.join('\n'));
@@ -157,11 +163,17 @@ async function main() {
         id: need('--id'),
         url: flag('--url'),
         visibility: flag('--visibility') as Visibility | undefined,
+        captionsSent: has('--captions'),
       });
       break;
-    case 'approve':
-      r = recordApproved(topic, storyId, { output, by: flag('--by') ?? '', note: flag('--note') });
+    case 'approve': {
+      // without --checked the count is 0: a package with a checklist refuses, as the review page does
+      const checked = Number(flag('--checked') ?? 0);
+      if (!Number.isInteger(checked) || checked < 0)
+        throw new Refusal('--checked needs the number of checklist items you ticked');
+      r = recordApproved(topic, storyId, { output, by: flag('--by') ?? '', note: flag('--note'), checked });
       break;
+    }
     case 'request-changes': {
       const notes = rest.flatMap((x, i) => (rest[i - 1] === '--note' ? [{ text: x }] : []));
       const build = openOutput(topic, storyId, { output }).build?.sha ?? '';
@@ -230,10 +242,46 @@ async function main() {
         );
       break;
     }
+    case 'verify': {
+      const v = await verify(topic, storyId, api());
+      for (const k of v.checks) console.log(`${k.result.padEnd(7)}  ${k.name.padEnd(12)}  ${k.detail ?? ''}`.trimEnd());
+      // the remote values are printed for the person, never stored (API data may not be kept)
+      const remote = v.remote;
+      const pairs: Record<string, [unknown, unknown]> = {
+        title: [remote?.title, v.expected.title],
+        description: [remote?.description, v.expected.description],
+        tags: [remote?.tags, v.expected.tags],
+        category: [remote?.categoryId, v.expected.category],
+        language: [remote?.defaultLanguage, v.expected.language],
+        chapters: [remote?.description, v.expected.chapters.map((c) => `${c.stamp} ${c.title}`).join('\n')],
+      };
+      for (const k of v.checks)
+        if (k.result === 'fail' && METADATA_CHECKS.includes(k.name) && pairs[k.name])
+          console.log(
+            `    youtube:  ${JSON.stringify(pairs[k.name][0] ?? null)}\n    composed: ${JSON.stringify(pairs[k.name][1])}`,
+          );
+      const names = (r: string) =>
+        v.checks
+          .filter((k) => k.result === r)
+          .map((k) => k.name)
+          .join(', ');
+      console.log(v.result.message);
+      const result = v.result.event!.result;
+      if (result === 'failed') {
+        console.log(`RESULT: FAILED (${names('fail')})`);
+        process.exitCode = 1;
+      } else if (result === 'pending')
+        console.log(
+          `RESULT: PENDING (${names('pending')}): YouTube is still processing or syncing; run npm run publish -- verify again later`,
+        );
+      else console.log('RESULT: PASSED');
+      break;
+    }
     default:
       usage();
   }
   if (r) console.log(r.message + (r.event && !r.existing ? `\n${toJson(r.event).trim()}` : ''));
+  if (r?.event?.type === 'failed' && !r.existing) process.exitCode = 1; // e.g. go-live that YouTube kept private
 }
 
 main().catch((e: unknown) => {

@@ -21,6 +21,10 @@ describe('chart geometry', () => {
     expect(chartProblems({ type: 'bar', points: [pt('a', 1, 'usd'), pt('b', 1, 'percent')] })).toEqual([
       'mixed units: usd, percent',
     ]));
+  it('dollars and pounds on one chart are mixed units', () =>
+    expect(chartProblems({ type: 'stat-tiles', points: [pt('a', 1, 'usd'), pt('b', 1, 'gbp')] })).toEqual([
+      'mixed units: usd, gbp',
+    ]));
   it('a ratio point in a chart drawn to length is a problem (its value is a denominator); stat tiles only print it', () => {
     const ratio: ChartPoint = { label: 'odds', value: 238, unit: 'ratio', display: '1 in 238', cite: 'x#L1' };
     for (const type of ['bar', 'stacked-bar', 'dot-plot'] as const)
@@ -37,6 +41,7 @@ describe('chart geometry', () => {
       id: 't',
       title: 'T',
       asOf: '2024',
+      retrieved: '2026-10-18',
       columns: keys.map((k) => ({ key: k, label: k })),
       rows: rows.map((cells, i) => ({ label: `r${i}`, cells })),
     });

@@ -5,8 +5,15 @@
 // queue, park or mark a story published, which no artifact records.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { ARTICLE_FILES, type Article, articleFingerprint, loadArticleRelease } from './article';
-import { validateArticleIn } from './article-validation';
+import {
+  ARTICLE_FILES,
+  type Article,
+  articleDrift,
+  articleFingerprint,
+  articleReviewUnits,
+  loadArticleRelease,
+} from './article';
+import { figureData, validateArticleIn } from './article-validation';
 import { articleStale } from './article-view';
 import { type Corpus, corpusOf } from './corpus';
 import { type PassageReader, passageReader } from './evidence';
@@ -36,12 +43,14 @@ import {
 } from './publish';
 import { type ReviewFile, loadReview, reviewPath } from './review';
 import { buildPackage, docHasher, docReader } from './evidence-package';
+import { storyOutputs } from './outputs';
 import { loadPublicRecord } from './public-record';
 import { releaseCheck, storyboardFingerprint, validationFingerprint } from './release';
 import {
   type EvidencePackage,
   FILES,
   type Release,
+  type ReviewFinding,
   type Script,
   type ScriptReviewFile,
   type ScriptValidation,
@@ -64,6 +73,7 @@ import { chainOf, discover, loadStories, storiesPath, type Story } from './stori
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from './storyboard';
 import { loadTopic, topicNames, type Topic } from './topics';
 import type { BuildSummary, Clearance } from './build-report';
+import { lookFingerprint, lookStale } from './look';
 import { type Commission, commissionOf } from '../config/site';
 
 /** Why a stage halted, for a loop that decides what to do next without parsing prose. */
@@ -81,6 +91,7 @@ export type HaltKind =
   | 'graphics-review'
   | 'lock'
   | 'qa-failed'
+  | 'look-stale' // a packaged build drawn with an older kit or theme: a person runs video final before approving it
   | 'story-left'
   | 'no-institution' // no commission claims the topic: its videos have no brand to carry
   | 'published'; // the main output is live or scheduled: nothing rebuilds it; a re-release is a new output
@@ -490,6 +501,21 @@ const validationStage: BoardStage = ({ topic, storyId, root, r, read, t, review,
   return { checks: [check], halt, live };
 };
 
+/** The units a review holds on open findings at their current text (an info finding holds nothing). The writer's turn
+ *  only when every unapproved unit is held; any other unapproved unit needs the reviewer. Script and article alike. */
+export function heldOnFindings(
+  units: { id: string; fingerprint: string; approved: boolean }[],
+  findings: ReviewFinding[],
+): { held: string[]; writer: boolean } {
+  const open = units.filter((u) => !u.approved);
+  const held = open
+    .filter((u) =>
+      findings.some((f) => f.sentence === u.id && f.fingerprint === u.fingerprint && f.severity !== 'info'),
+    )
+    .map((u) => u.id);
+  return { held, writer: held.length > 0 && held.length === open.length };
+}
+
 // 4. Independent review: present, bound to this package, and the revision it reviewed.
 const reviewStage: BoardStage = ({ topic, storyId, r, pkg, script, sreview, live }) => {
   if (!script || !pkg) return {};
@@ -509,12 +535,8 @@ const reviewStage: BoardStage = ({ topic, storyId, r, pkg, script, sreview, live
   const health: Health = !bound || !sameRev ? 'stale' : unreviewed ? 'pending' : 'current';
   // The reviewer has judged the current revision and holds sentences on findings at their current text: those are the
   // writer's to fix (a warning is not a blocker, so the validation is not blocked), not another review's.
-  const held = (live?.sentences ?? []).filter(
-    (x) =>
-      !x.approved &&
-      sreview.findings.some((f) => f.sentence === x.id && f.fingerprint === x.fingerprint && f.severity !== 'info'),
-  );
-  const writer = health === 'pending' && held.length === unreviewed;
+  const { held, writer: allHeld } = heldOnFindings(live?.sentences ?? [], sreview.findings);
+  const writer = health === 'pending' && allHeld;
   return {
     checks: [
       {
@@ -532,7 +554,7 @@ const reviewStage: BoardStage = ({ topic, storyId, r, pkg, script, sreview, live
           ? {
               stage: 'script',
               kind: 'review-findings',
-              why: `the reviewer holds ${held.map((x) => x.id).join(', ')} on findings`,
+              why: `the reviewer holds ${held.join(', ')} on findings`,
               cmd: `agent: scripts/briefs/script.md (revise), then npm run script -- validate ${topic} ${storyId}`,
             }
           : {
@@ -835,9 +857,37 @@ const reviewPackageStage: BoardStage = (c, s) => {
   };
 };
 
-// 11. Clearance: a finished build whose release is blocked says why next to the next step.
+// 10b. Look: a packaged build drawn with an older kit palette, kit cards or theme (src/lib/look.ts) is drawn again with
+// video final before anyone approves it. The stage stays packaged, so /produce (done) never re-renders it; a live or
+// scheduled video is never replaced, so it does not halt.
+const lookStage: BoardStage = (c, s) => {
+  const { topic, storyId, root, r, vr } = c;
+  if (!vr) return {};
+  const stale = lookStale(vr, topic, root);
+  const check: Check = {
+    name: 'look',
+    health: stale ? 'stale' : 'current',
+    detail: stale ?? `look ${lookFingerprint(topic, root)}`,
+    file: r(VIDEO_REPORT),
+    date: vr.generatedAt,
+  };
+  const main = mainOf(c.publish)?.state;
+  if (!stale || s.stage !== 'packaged' || s.stopped || main?.live || main?.status === 'scheduled')
+    return { checks: [check] };
+  return {
+    checks: [check],
+    halt: {
+      stage: 'packaged',
+      kind: 'look-stale',
+      why: stale,
+      cmd: `npm run video -- final ${topic} ${storyId} --approved-by "<approver>"`,
+    },
+  };
+};
+
+// 11. Clearance: a finished build whose release is blocked says why next to the next step (a halt's command stands).
 const clearanceStage: BoardStage = ({ release, vr }, s) =>
-  vr && release && !vr.clearance.publishable && (s.stage === 'scored' || s.stage === 'packaged')
+  vr && release && !s.stopped && !vr.clearance.publishable && (s.stage === 'scored' || s.stage === 'packaged')
     ? { advance: { stage: s.stage, next: `${s.next}; public release is blocked: ${vr.clearance.why.join('; ')}` } }
     : {};
 
@@ -854,6 +904,7 @@ const BOARD_STAGES: BoardStage[] = [
   soundtrackStage,
   articleStage,
   reviewPackageStage,
+  lookStage,
   clearanceStage,
 ];
 
@@ -872,45 +923,68 @@ function articleOf({
   pkg,
   script,
   release,
+  plan,
   short,
 }: BoardContext): Production['article'] {
   if (!release || short) return null;
   const writer = `agent: scripts/briefs/article.md (revise) -> ${r(ARTICLE_FILES.article)}`;
   const a = readJson<Article>(p(ARTICLE_FILES.article));
   const out = loadArticleRelease(topic, storyId, root);
+  const correct: Production['article'] = {
+    state: 'changed',
+    next: `npm run article -- correct ${topic} ${storyId} --approved-by "<your name>" --note "<what changed>"`,
+  };
+  // After a release, what a passing validation asks for (lock refuses changed text: a correction).
+  let passed: Production['article'] = out ? correct : null;
+  let text = a;
   // The released text stands until article.json differs from it (or is gone); a revised text takes the live path.
   if (out && (!a || articleFingerprint(out.article) === articleFingerprint(a))) {
     const stale = articleStale(out, loadPublicRecord(topic, root));
-    return stale
-      ? {
-          state: 'stale',
-          next: `${stale.id} was revised on ${stale.at}: ${stale.note}, then ${writer}, or if the text stands: npm run article -- reaffirm ${topic} ${storyId} --approved-by "<your name>" --note "<why unchanged>"`,
-        }
-      : { state: 'released', next: 'none' };
+    if (stale)
+      return {
+        state: 'stale',
+        next: `${stale.id} was revised on ${stale.at}: ${stale.note}, then ${writer}, or if the text stands: npm run article -- reaffirm ${topic} ${storyId} --approved-by "<your name>" --note "<why unchanged>"`,
+      };
+    // A rebuilt package or a re-cut chart moves under the release: the text is judged again below, as an unreleased
+    // one is. Passing, a package that moved changes nothing a reader sees; a figure whose data changed is a correction,
+    // or for a release without a figure copy whose video is not live, the copy-only lock (no public revision).
+    const drift = articleDrift(out, { package: pkg?.fingerprint ?? '', figures: figureData(topic, storyId, root) });
+    if (!drift.length) return { state: 'released', next: 'none' };
+    text = a ?? out.article;
+    passed = !drift.some((d) => d.startsWith('figure '))
+      ? { state: 'released', next: 'none' }
+      : !out.figures &&
+          !drift.some((d) => d.startsWith('package ')) &&
+          !!plan &&
+          release.fingerprints.storyboard === storyboardFingerprint(plan as Storyboard) &&
+          !storyOutputs(topic, storyId, root).video
+        ? { state: 'changed', next: `npm run article -- lock ${topic} ${storyId}` }
+        : correct;
   }
   // Nothing released yet: each state says how it halts the video.
   const k = (kind: HaltKind) => (out ? {} : { kind });
-  if (!a)
+  if (!text)
     return { state: 'none', next: `agent: scripts/briefs/article.md -> ${r(ARTICLE_FILES.article)}`, kind: 'missing' };
-  if (a.generation?.needsEvidence?.length)
+  if (text.generation?.needsEvidence?.length)
     return { state: 'writing', next: 'agent: scripts/briefs/evidence.md', ...k('needs-evidence') };
   if (!pkg) return { state: 'blocked', next: `npm run script -- package ${topic} ${storyId}`, ...k('missing') };
   const areview = readJson<ScriptReviewFile>(p(ARTICLE_FILES.review));
-  const live = validateArticleIn(topic, storyId, a, t, read, { judgments: review.applicability, pkg, script }, root);
+  const live = validateArticleIn(topic, storyId, text, t, read, { judgments: review.applicability, pkg, script }, root);
   if (live.status === 'blocked')
     return {
       state: 'blocked',
       next: live.revisionLimitReached ? 'stop: revision limit reached with blocking findings' : writer,
       ...k(validationHaltKind(live)),
     };
-  // A review of this revision that still holds sentences is the writer's to answer, not another review's.
-  const covered = areview?.revision === a.revision && areview.packageFingerprint === pkg.fingerprint;
-  // After a release, lock refuses: a passing revision is a correction.
-  if (out && live.status === 'passed')
-    return {
-      state: 'changed',
-      next: `npm run article -- correct ${topic} ${storyId} --approved-by "<your name>" --note "<what changed>"`,
-    };
+  // A review of this package that holds every unapproved unit on findings is the writer's to answer; any other
+  // unapproved unit (an edit beside a held sentence, a new headline) is the reviewer's, whatever the revision.
+  const units = [
+    ...live.sentences,
+    ...articleReviewUnits(text).map(([id, fp]) => ({ id, fingerprint: fp, approved: areview?.approved?.[id] === fp })),
+  ];
+  const covered =
+    areview?.packageFingerprint === pkg.fingerprint && heldOnFindings(units, areview.findings ?? []).writer;
+  if (passed && live.status === 'passed') return passed;
   return live.status === 'passed'
     ? { state: 'review', next: `npm run article -- lock ${topic} ${storyId} --approved-by "<approver>"`, kind: 'lock' }
     : covered
