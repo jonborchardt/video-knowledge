@@ -23,7 +23,24 @@
       "claim": "ai-coding/higher-adoption-has-associated-lower-team",
       "stance": "asserts",
       "quote": "AI has a negative impact on throughput, stability, and time spent on valuable work.",
-      "verdicts": []
+      "verdicts": [
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.55,
+          "note": "DORA's 2024 survey estimates that each 25% increase in AI adoption is associated with about 1.5% lower delivery throughput and 7.2% lower delivery stability, contrary to the authors' expectations; an association in survey data, not a causal estimate.",
+          "source": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L1295-L1310",
+          "date": "2026-10-26"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "DORA 2025 confirms that its 2024 survey linked AI use to lower throughput and more instability, but finds that in 2025 the throughput association turned positive while the instability association remains, so the claim holds for 2024 and for stability only.",
+          "source": "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt#L3337-L3344",
+          "date": "2026-10-26"
+        }
+      ]
     },
     {
       "claim": "ai-coding/individual-productivity-gains-have-not-reliably",
@@ -41,7 +58,24 @@
       "claim": "ai-coding/adoption-has-not-reduced-developer-burnout",
       "stance": "asserts",
       "quote": "Similar levels of burnout",
-      "verdicts": []
+      "verdicts": [
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.45,
+          "note": "DORA's 2024 survey found toil and burnout essentially unchanged with AI adoption (burnout about -0.6% per 25% more adoption), saying AI is not helping with meetings, bureaucracy and other toil; survey associations.",
+          "source": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L1115-L1126",
+          "date": "2026-10-26"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.45,
+          "note": "In DORA's 2025 survey, higher AI adoption showed no relationship with friction or burnout (similar levels for higher and lower adopters) while it was associated with more delivery instability; a cross-sectional association.",
+          "source": "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt#L1677-L1690",
+          "date": "2026-10-26"
+        }
+      ]
     },
     {
       "claim": "ai-coding/most-developers-report-has-improved-quality",

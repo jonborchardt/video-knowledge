@@ -664,15 +664,17 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
           "confidence": 0.5,
           "videos": [
             "5qjvluMnyAw"
           ],
-          "note": "Oil futures price expected supply, so prices jump on announcements and shift on sentiment before physical flows change.",
-          "source": null,
-          "documents": []
+          "note": "In a calibrated model of geopolitical oil-supply risk, a rise in the probability of a production disaster raises the oil price through precautionary inventory demand even when no disaster occurs (about 4% for a 10pp shock to 9% for a 40pp shock), consistent with the 1979 and 1990 episodes; a model result, not a direct test of trader behaviour.",
+          "source": "inflation-2026/sources/dallasfed-wp2403-geopolitical-oil-risk.txt#L1064-L1077",
+          "documents": [
+            "inflation-2026/sources/dallasfed-wp2403-geopolitical-oil-risk.txt"
+          ]
         },
         {
           "id": "inflation-2026/withdrawal-war-risk-insurance-can-halt",
@@ -706,19 +708,21 @@
           "tally": {
             "right": 0,
             "wrong": 0,
-            "partly": 0,
+            "partly": 1,
             "untestable": 0,
-            "unknown": 1
+            "unknown": 0
           },
-          "strongest": "prior",
-          "effective": "unknown",
-          "confidence": 0,
+          "strongest": "source",
+          "effective": "partly",
+          "confidence": 0.3,
           "videos": [
             "5qjvluMnyAw"
           ],
-          "note": "A prediction; risk premia faded within months after the 1991 Gulf War and the 2019 Abqaiq attack, but a demonstrated closure is a larger shock.",
-          "source": null,
-          "documents": []
+          "note": "The paper shows markets price the probability of a Gulf supply disruption (the June 2025 Iran-Israel war lifted the Hormuz-closure probability 13 points and the oil price 9%), but it calls that rise temporary and models the premium as fading with the probability, so it supports the risk-pricing mechanism without showing that prices stay above pre-war levels once a conflict ends.",
+          "source": "inflation-2026/sources/dallasfed-wp2403-geopolitical-oil-risk.txt#L1680-L1712",
+          "documents": [
+            "inflation-2026/sources/dallasfed-wp2403-geopolitical-oil-risk.txt"
+          ]
         },
         {
           "id": "inflation-2026/gasoline-prices-falling-spring-2026",
@@ -787,15 +791,16 @@
           },
           "strongest": "source",
           "effective": "partly",
-          "confidence": 0.5,
+          "confidence": 0.6,
           "videos": [
             "0ILSOv_yPUw",
             "ZPxMG5eHKZw"
           ],
-          "note": "The quick rise is clear in both shocks (a 0.49 jump in one week, 03/02-03/09/2026, and 02/28-03/07/2022), but the slow fall is not: in 2026 the national average dropped from the 05/11 peak of 4.500 to 3.777 by 07/06 (eight weeks, -16%) about as fast as it rose, before climbing again; in 2022 the fall from 5.006 (06/13) back to the 3.6 pre-spike level took about five months versus three months up.",
-          "source": "inflation-2026/sources/eia-gasoline-regular-weekly.txt#L468-L473",
+          "note": "In daily and weekly US station prices for 2002-2009, the rockets-and-feathers asymmetry is strongest from wholesale (rack and spot) to retail, where retail rises more than four times as fast as it falls, but it is statistically gone after about seven to ten days, and from crude oil to gasoline prices it is weak or even reversed, so the slow fall is real but short-lived and sits in the retail margin rather than in the response to crude.",
+          "source": "inflation-2026/sources/ftc-wp302-asymmetric-gasoline.txt#L700-L716",
           "documents": [
-            "inflation-2026/sources/eia-gasoline-regular-weekly.txt"
+            "inflation-2026/sources/eia-gasoline-regular-weekly.txt",
+            "inflation-2026/sources/ftc-wp302-asymmetric-gasoline.txt"
           ]
         },
         {
@@ -7472,15 +7477,16 @@
             },
             "strongest": "source",
             "effective": "partly",
-            "confidence": 0.5,
+            "confidence": 0.6,
             "videos": [
               "0ILSOv_yPUw",
               "ZPxMG5eHKZw"
             ],
-            "note": "The quick rise is clear in both shocks (a 0.49 jump in one week, 03/02-03/09/2026, and 02/28-03/07/2022), but the slow fall is not: in 2026 the national average dropped from the 05/11 peak of 4.500 to 3.777 by 07/06 (eight weeks, -16%) about as fast as it rose, before climbing again; in 2022 the fall from 5.006 (06/13) back to the 3.6 pre-spike level took about five months versus three months up.",
-            "source": "inflation-2026/sources/eia-gasoline-regular-weekly.txt#L468-L473",
+            "note": "In daily and weekly US station prices for 2002-2009, the rockets-and-feathers asymmetry is strongest from wholesale (rack and spot) to retail, where retail rises more than four times as fast as it falls, but it is statistically gone after about seven to ten days, and from crude oil to gasoline prices it is weak or even reversed, so the slow fall is real but short-lived and sits in the retail margin rather than in the response to crude.",
+            "source": "inflation-2026/sources/ftc-wp302-asymmetric-gasoline.txt#L700-L716",
             "documents": [
-              "inflation-2026/sources/eia-gasoline-regular-weekly.txt"
+              "inflation-2026/sources/eia-gasoline-regular-weekly.txt",
+              "inflation-2026/sources/ftc-wp302-asymmetric-gasoline.txt"
             ]
           },
           "prior": "right",
@@ -7497,10 +7503,10 @@
           "evidenceRecord": {
             "method": "source",
             "verdict": "partly",
-            "confidence": 0.5,
-            "note": "The quick rise is clear in both shocks (a 0.49 jump in one week, 03/02-03/09/2026, and 02/28-03/07/2022), but the slow fall is not: in 2026 the national average dropped from the 05/11 peak of 4.500 to 3.777 by 07/06 (eight weeks, -16%) about as fast as it rose, before climbing again; in 2022 the fall from 5.006 (06/13) back to the 3.6 pre-spike level took about five months versus three months up.",
-            "source": "inflation-2026/sources/eia-gasoline-regular-weekly.txt#L468-L473",
-            "date": "2026-10-16"
+            "confidence": 0.6,
+            "note": "In daily and weekly US station prices for 2002-2009, the rockets-and-feathers asymmetry is strongest from wholesale (rack and spot) to retail, where retail rises more than four times as fast as it falls, but it is statistically gone after about seven to ten days, and from crude oil to gasoline prices it is weak or even reversed, so the slow fall is real but short-lived and sits in the retail margin rather than in the response to crude.",
+            "source": "inflation-2026/sources/ftc-wp302-asymmetric-gasoline.txt#L700-L716",
+            "date": "2026-10-26"
           }
         },
         {
@@ -10840,29 +10846,6 @@
           "documents": []
         },
         {
-          "id": "inflation-2026/oil-prices-will-stay-above-their",
-          "text": "Oil prices will stay above their pre-war level after the Iran conflict because markets now price in Gulf supply risk",
-          "topic": "inflation-2026",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 1
-          },
-          "strongest": "prior",
-          "effective": "unknown",
-          "confidence": 0,
-          "videos": [
-            "5qjvluMnyAw"
-          ],
-          "note": "A prediction; risk premia faded within months after the 1991 Gulf War and the 2019 Abqaiq attack, but a demonstrated closure is a larger shock.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "inflation-2026/oil-prices-will-stay-elevated-years",
           "text": "Oil prices will stay elevated for years after the Iran conflict ends because lost Gulf supply cannot be recovered",
           "topic": "inflation-2026",
@@ -11967,29 +11950,6 @@
           "documents": []
         },
         {
-          "id": "inflation-2026/traders-expectations-move-oil-prices-ahead",
-          "text": "Traders' expectations move oil prices ahead of actual changes in supply and demand",
-          "topic": "inflation-2026",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 1,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "5qjvluMnyAw"
-          ],
-          "note": "Oil futures price expected supply, so prices jump on announcements and shift on sentiment before physical flows change.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "inflation-2026/vat-acts-like-tariff-exports",
           "text": "The EU's VAT acts like a tariff on US exports",
           "topic": "inflation-2026",
@@ -12202,7 +12162,7 @@
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 2.35,
+      "novelty": 2.375,
       "redundancy": 0,
       "thinEvidence": 0.14285714285714285,
       "worthWatching": "new and sound",
@@ -12216,7 +12176,7 @@
         "inflation-2026/spring-refinery-maintenance-switch-summer-gasoline"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-16",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12315,24 +12275,25 @@
       "channel": "Wendover Productions",
       "topic": "inflation-2026",
       "watched": false,
-      "score": 1,
+      "score": 0.9166666666666666,
       "scaled": 2,
       "rating": null,
       "assertions": 6,
       "testable": 6,
-      "novelty": 2.05,
+      "novelty": 2.1999999999999997,
       "redundancy": 0,
-      "thinEvidence": 0.8333333333333334,
+      "thinEvidence": 0.5,
       "worthWatching": "new and sound",
       "right": [
         "inflation-2026/iran-conflict-has-materially-raised-gasoline",
+        "inflation-2026/oil-prices-will-stay-above-their",
         "inflation-2026/pipelines-bypass-strait-hormuz-cushion-loss",
         "inflation-2026/short-run-oil-demand-inelastic-small",
         "inflation-2026/traders-expectations-move-oil-prices-ahead",
         "inflation-2026/withdrawal-war-risk-insurance-can-halt"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-16",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13174,7 +13135,7 @@
       "rating": null,
       "assertions": 6,
       "testable": 6,
-      "novelty": 0.6616666666666666,
+      "novelty": 0.6866666666666666,
       "redundancy": 0,
       "thinEvidence": 0.5,
       "worthWatching": "mixed",
@@ -13186,7 +13147,7 @@
         "inflation-2026/strong-employment-gdp-growth-can-coexist"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-16",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -14434,6 +14395,7 @@
       "harmful": 0,
       "right": [
         "inflation-2026/iran-conflict-has-materially-raised-gasoline",
+        "inflation-2026/oil-prices-will-stay-above-their",
         "inflation-2026/pipelines-bypass-strait-hormuz-cushion-loss",
         "inflation-2026/short-run-oil-demand-inelastic-small",
         "inflation-2026/traders-expectations-move-oil-prices-ahead",

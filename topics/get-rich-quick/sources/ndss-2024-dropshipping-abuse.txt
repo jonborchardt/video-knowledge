@@ -1,0 +1,1380 @@
+The Dark Side of E-Commerce: Dropshipping Abuse
+                    as a Business Model
+
+Arjun Arunasalam, Andrew Chu, Muslum Ozgur Ozmen, Habiba Farrukh¶, and Z. Berkay Celik
+                         Purdue University, {aarunasa, mozmen, zcelik}@purdue.edu
+                                University of Chicago, andrewcchu@uchicago.edu
+                              ¶ University of California, Irvine, hfarrukh@uci.edu
+
+    Abstract--The impact of e-commerce on today's society is           or source vendors, to fulfill customers' orders without holding
+a global phenomenon. Given the increased demand for online             physical item stock. An e-commerce seller implementing a
+purchases of items, e-commerce platforms often defer item sales        dropshipping business is called a dropshipper. These formal
+to third-party sellers. A number of these sellers are dropshippers,    agreements allow dropshippers to (1) leverage source vendors'
+sellers acting as middlemen who fulfill their customers' orders        fulfillment supply chain and (2) brand the items supplied by
+through third-party suppliers. While this allows customers to          the third-party seller as their own, in exchange for a fee or
+access more products on e-commerce sites, we uncover that abusive      percentage of sale profit. For instance, a dropshipper who
+dropshippers, who exploit the standard permitted dropshipping          wishes to sell pet toys first reaches out to a source vendor
+model, exist, deceiving customers, and damaging other e-commerce       who manufactures pet toys and establishes a formal selling
+sellers. In this paper, we present the first comprehensive study       agreement. After confirming the agreement, the dropshipper
+on the characterization of abusive dropshippers and uncover            lists the products of the partnered supplier as their own in
+harmful strategies they use to list items and evade account            an e-commerce marketplace store. On receiving a customer
+suspension on e-commerce marketplaces. We crawled the web              order, the dropshipper forwards the order information to their
+to discover online forums, instructional material, and software        partnered supplier. Their supplier then ships the purchased
+used by the abusive dropshipping community. We inductively             item(s) to the customer on behalf of the dropshipper, and the
+code forum threads and instructional material and read software        dropshipper makes sales without holding physical item stock.
+documentation, installing when possible, to create an end-to-end
+lifecycle of this abuse. We also identify exploitative strategies          Dropshipping is governed by e-commerce platform regu-
+abusive dropshippers use to ensure persistence on platforms. We        lations, defining the responsibilities of dropshippers on item
+then interviewed six individuals experienced in e-commerce (legal      fulfillment, handling returns or damaged products, and paying
+consultants and sellers) and developed an understanding of how         sales tax [4], [6], [36], [87]. Despite regulations, we have seen
+abusive dropshipping harms customers and sellers. Through this,        a recent proliferation of exploitative sellers who abuse this
+we present five characteristics that warrant future investigation      business model for economic gain in "get-rich-quick schemes"
+into automated detection of abusive dropshippers on e-commerce         [16], [45], [98]. These sellers, whom we refer to as abusive
+platforms. Our efforts present a comprehensive view of how             dropshippers, circumvent regulations to profit from the efforts
+abusive dropshippers operate and how sellers and consumers             of other sellers while exerting minimum effort in running an
+interact with them, providing a framework to motivate future           abusive dropshipping business.
+investigations into countering these harmful operations.
+                                                                           Similar to conventional dropshippers, abusive dropshippers
+                          I. INTRODUCTION                              do not keep physical stock of their products. However, they do
+                                                                       not establish formal selling agreements with source vendors
+    The convenience of purchasing products over the internet           and instead directly list items of other e-commerce sellers
+has caused a 55% rise in online spending and more than half a          on their own marketplace stores. On receiving a customer
+trillion more transactions compared to pre-pandemic levels [28],       order, an abusive dropshipper purchases the ordered item using
+[32], [33]. In response, e-commerce platforms such as Amazon,          the customer's name and shipping address from another e-
+Shopify, Wish, and eBay offer greater accessibility and variety        commerce seller who ships the order to the customer. In this
+of products to their customers globally. As a result, existing         way, abusive dropshippers execute an exploitative method of
+"marketplace" environments have grown, with an increase in             item sourcing to fulfill customer orders without notifying sellers
+independent sellers who list items and fulfill customer orders.        of the items they sell. For instance, abusive dropshippers may
+                                                                       source items from Amazon and sell them on their own website
+    A popular fulfillment method of independent sellers is drop-       for three times the price the original seller lists them for [90].
+shipping [31], [67], a form of retail business in which e-sellers      Customers are unaware that they purchase from an abusive
+establish formal selling agreements with third-party suppliers         dropshipper, and original sellers are unaware they fulfill an
+                                                                       abusive dropshipper's order.
+   *Authors Arunasalam and Chu made equal contributions to this work.
+                                                                           Abusive dropshippers profit from listing products that are
+Network and Distributed System Security (NDSS) Symposium 2024          not theirs, harming e-commerce stakeholders. They disservice
+26 February - 1 March 2024, San Diego, CA, USA                         customers by not personally fulfilling orders (e.g., neglected
+ISBN 1-891562-93-2                                                     orders due to lack of stock, missing tracking numbers) and
+https://dx.doi.org/10.14722/ndss.2024.23039                            exploit other sellers by listing their items without permission.
+www.ndss-symposium.org
+    Abusive dropshipping is attractive to prospective malicious           To understand how abusive dropshippers operate their stores
+e-commerce sellers because it can be quickly configured, is           and uncover strategies they use to evade account suspension for
+highly profitable, and requires minimal maintenance. To detail,       exploitative monetization, we randomly sampled threads and
+the lack of formal agreements with source vendors allows an           conducted inductive coding until we reached thematic saturation
+abusive dropshipper to immediately accept customer orders             at 1,050 threads. We discovered references to instructional
+and payment after listing an item in their store. Here, they          material and software tools. We analyzed four instructional
+avoid time spent negotiating a formal selling agreement and           materials by inductively coding text guides and transcripts of
+maintaining this partnership. The lack of partnership also allows     86 video guides. We then studied the execution behavior of 13
+an abusive dropshipper to list nearly any item they wish, easily      most frequently mentioned software tools to understand how
+catering to many e-commerce customers.                                software amplifies abusive dropshipping. We also sought to
+                                                                      understand how the operation can impact sellers, customers,
+    Abusive dropshippers additionally have the flexibility of         and e-commerce platforms. To accomplish this, we interviewed
+selling items without requiring physical presence in the country      six individuals with e-commerce expertise who were either
+where they list their products. They exploit this flexibility         (1) legal consultants to sellers affected by abusive dropshipping
+by listing items in one country and fulfilling them from              or (2) experienced sellers on e-commerce platforms.
+another country by leveraging e-commerce platforms that offer
+international shipping. For instance, an abusive dropshipper in           Our analysis reveals exploitative strategies consistent across
+Turkey observes a popular personal care product (e.g., cosmetic,      forums, instructional material, and interviews. These strategies
+men's grooming products) is available from another e-commerce         lead to abusive consequences harming e-commerce stakeholders:
+seller in the United States, but not listed on any marketplace in     customers, sellers, and the platform. To illustrate, because
+Mexico1. Since there is no competition, the abusive dropshipper       abusive dropshippers have no access to information about their
+lists these products for much higher prices than the combined         private seller's inventory, customers may never receive orders
+cost of purchasing this item from another e-commerce seller           when the private seller has no stock or have tracking numbers
+and paying shipping costs to customers in Mexico.                     withheld/provided fake numbers. These experiences harm sellers
+                                                                      whose products' reputation is affected by online reviews/posts
+    This ease of execution and generation of profit has led           from customers with negative experiences. Abusive dropship-
+to a thriving global underground community where individ-             pers' consequences can propagate harm to the platform, due to
+uals discuss a variety of abusive dropshipping-related topics,        the negative experiences of customers and sellers that, in turn,
+e.g., finding profitable and regional popular products, software      impact platform traffic.
+to know the availability of popular online product sales in a
+specific country, and fake order tracking services.                       With the knowledge of abusive dropshipping operation
+                                                                      modes and software use, we discovered five distinct traits
+    Despite the malicious effects brought on by abusive drop-         associated with abusive dropshippers, such as listing items with
+shippers, it is difficult for e-commerce platforms to effectively     a high distinct brand count and low pricing range. Our findings
+implement abusive dropshipping prevention measures [7], [9],          motivate further investigation into how abusive dropshippers
+[35], [88], as abusive dropshippers' non-conventional methods         on e-commerce platforms operate and methods to mitigate the
+of operation are challenging to identify. Current customer            harm caused by abusive dropshippers to users.
+protection methods employed by e-commerce platforms rely
+mostly on manual reporting of offending sellers [8], [37], [89].          In this work, we make the following contributions:
+Platforms suspend or remove a seller from their marketplace
+only when a certain volume of reports is reached for that seller.        · We present the first study of abusive dropshipping on
+This allows abusive dropshippers to persist in marketplaces,                e-commerce platforms by discovering and examining
+continuing to deceive customers and other sellers.                          discussion forums and software used in this community.
+
+    Previous technical community efforts have explored e-                · We conducted semi-structured interviews with legal consul-
+commerce fraud focusing on buyer-initiated abusive behav-                   tants and sellers to understand how abusive dropshipping
+ior, e.g., credit card fraud [77], and suspicious shopping                  can impact e-commerce parties.
+patterns [113]. Other works examining the reshipping mule
+monetization scheme [49] and concession abuse scam [92]                  · We identify and characterize abusive dropshipping tech-
+(both also buyer-initiated) come closest to exploring similar               niques that harm customers, other sellers on e-commerce
+fraudulent operations on e-commerce platforms. However, these               platforms, and the platforms themselves.
+works differ in regard to operation and parties involved. As
+such, we see that work examining seller-initiated e-commerce             · We present five distinct abusive dropshipping characteris-
+fraud, specifically dropshipping, is largely absent.                        tics that can inform users of this activity online.
+
+    In this paper, we present the first study characterizing          Ethical Considerations & Responsible Disclosure. The data
+abusive dropshippers and uncover how their strategies harm cus-       we analyze in this work comprise online communications,
+tomers, other sellers, and e-commerce platforms. To accomplish        software, and interview data. For online communication data,
+this, we collected abusive dropshipping-related keywords, which       we take the following steps to preserve privacy and minimize
+we developed by analyzing dropshipping-related materials from         re-identification risks. Our data collection recorded only non-
+an initial crawl. We discovered seven forums where abusive            sensitive information. We collected and analyzed forum threads,
+dropshipping discussion occurs. We crawled these forums and           and did not examine usernames, locations, or any account
+collected 3,651 relevant discussion threads.                          metrics that may reveal a user's identity. For forum posts quoted
+                                                                      in this paper, we provide only relevant fragments/paraphrases
+   1Countries align with discussions from our studied forums.         from original quotes. For software, we analyze tools found
+                                                                      by studying forums, which are publicly accessible. To avoid
+                                                                      supporting exploitative material, we did not pay for tools/guides
+
+                                                                   2
+marketed for such purposes and only examined available public                                              aii
+content, such as descriptions, free video previews, and tutorials                                                     Fulfillment  Compliant Dropshipper
+on YouTube channels. For interview data, we did not collect any
+personally identifiable information and anonymized participant                             Shipped by:     i
+identities. Our study was considered exempt by our IRB.                                    Source Vendor
+                                                                                           Return to:              w
+    As our findings present a selling method that harms e-                                 Dropshipper
+commerce platforms, customers, and other sellers, we prepared                                              u
+a report detailing abusive dropshippers' abusive strategies and                                   v
+harm. We shared the report with 10 e-commerce platforms2                                                      Dropshipper          Source Vendor
+and the Federal Trade Commission (FTC) via relevant channels.                            Customer v
+Our reports are being reviewed by these parties and we are                                                 u
+currently coordinating with them for next steps.                                           Shipped by:
+                                                                                           Private Seller               No Agreement
+              II. BACKGROUND AND MOTIVATION                                                Return to:
+                                                                                           Private Seller                                    Private Sellers
+A. Dropshipping E-commerce
+                                                                                                           w b Abusive Dropshipper
+    Dropshipping is a form of retail business where the seller
+establishes formal agreements (i.e., supply contracts) with                              Fig. 1: Compliant and abusive dropshippers' operations.
+source vendors to handle customers' orders without holding
+physical item stock [31], [67]. Dropshippers can host their                              source vendor(s), allowing consumers to begin purchasing
+business on various e-commerce platforms, such as Shopify,                               their items ( 2 ). On receiving customer orders, compliant
+eBay, Etsy, and Amazon, where each platform presents different                           dropshippers fulfill purchases in one of two ways: (a) source
+advantages and disadvantages. For example, Shopify offers low                            vendor fulfillment and (b) fulfillment services ( 3 ).
+transaction fees but has comparatively lower consumer traffic
+than established big-box e-commerce sites (e.g., Amazon).                                    In source vendor fulfillment, a dropshipper forwards
+Dropshippers can also sell a variety of items on these platforms,                        customers' information to the source vendor(s), who then
+selecting them by various means, such as through market                                  fulfills the order, dispatching customers' items using shipping
+research, personal interest, and current item availability.                              labels containing the dropshipper's contact information ( i ). In
+                                                                                         fulfillment services, the dropshipper pays a fee for a third-party
+    Dropshipping is regulated under regulations defined by e-                            service that physically stores items and ships them to customers
+commerce platforms. We refer to dropshippers who follow                                  (e.g., Amazon's Fulfilled by Amazon (FBA) service [5] and
+platform regulations as compliant dropshippers, conducting                               Rakuten Logistics [79]). Here, a dropshipper will instruct the
+dropshipping operations that accommodate e-commerce guide-                               source vendors to ship customers' orders to the fulfillment
+lines. We studied the regulations of four major e-commerce plat-                         service's warehouse, from where they will then be forwarded
+forms (eBay [36], Amazon [6], Shopify [87], AliExpress [4])                              to the customer ( ii ). These services simplify item returns or
+to understand the compliant dropshipping process. Fig. 1- a                              refunds by multiplexing items from potentially many source
+illustrates the three phases of a compliant dropshipper operation,                       vendors to one location that the dropshipper can later manage.
+involving themselves, source vendors, and customers.
+                                                                                         B. Abusive Dropshipping
+Sourcing Items. Before listing items to sell, a compliant
+dropshipper must establish a formal agreement with the source                                An abusive dropshipper models their operation after com-
+vendor(s) that carries their items ( 1 ). For instance, a USA                            pliant dropshipping but covertly sources items in their exploit
+dropshipper enters an agreement with a Japanese premium                                  (Fig. 1- b ). To start the abusive dropshipping operation, they
+kitchenware supplier. The supplier agrees to a price of $80 per                          first decide on two e-commerce platform domains: (1) the
+chef's knife, which the dropshipper lists for $120.                                      source domain, from which they fulfill customers' items via
+                                                                                         other sellers, and (2) the target domain, where they list items for
+    The agreement consists of two parts: (a) the vendor agrees                           customers to buy. After deciding on source and target domains,
+to fulfill the customer orders of the compliant dropshipper,                             abusive dropshippers proceed to sourcing items to sell.
+and (b) the compliant dropshipper agrees to be listed as the
+source shipping address on the package. With part (a), the                               Abusive Items Sourcing. Abusive dropshippers do not establish
+compliant dropshipper is guaranteed an allotted quantity of                              formal agreements with source vendors of the items they list
+the vendor's item stock, for any item(s) detailed in the formal                          on their target domain ( 1 ). Thus, they violate e-commerce
+agreement. This ensures all customer orders for the dropshipper                          platform regulations by listing a private seller's items without
+will be fulfilled in a consistent and timely manner. Part (b)                            said seller's consent or knowledge. In this work, we refer to
+transfers all legal liability for customer interactions (including                       sellers exploited by abusive dropshippers as private sellers.
+returns/refunds and customer support) from the source vendor
+to the compliant dropshipper. Dropshippers may source items                              Exploitative Fulfillment. The abusive dropshipper chooses a
+via bulk sourcing (all listings from a single source vendor) and                         single or multiple target domain(s) in a country to market goods
+independent sourcing (items from multiple source vendors) [30].                          to customers. Common target domains include e-commerce
+                                                                                         platforms such as Amazon, Flipkart, or AliBaba. Some abusive
+Item Fulfillment. A compliant dropshipper opens their store                              dropshippers host their own commerce websites as target
+on an e-commerce platform after establishing agreement with                              domains via services such as Shopify. To fulfill a customer's
+                                                                                         order (placed on a target domain- 2 ), the abusive dropshipper
+   2Amazon, eBay, Flipkart, Etsy, Wish, Noon, Shopify, Myantra, Wal-Mart, and Coppel     buys the desired item(s) from a private seller using the
+                                                                                         customer's shipping information. The private seller uses their
+                                                                                         own label and address to ship the order placed by the abusive
+
+                                                                                      3
+dropshipper ( 3 ). Customers are unaware that other private              u Query-Based         v Web               w Forums         Method:
+sellers fulfill their orders, and private sellers are unaware that               Search              Crawler            Threads
+the customer is not the one directly placing the order.                                                                             Inductive
+                                                                         { Abusive             z Interview         x Instructional  Coding
+    To understand if these operations abide by platform                     Dropshipping         w/consultants           Material   per thread
+guidelines for selling, we analyze the guidelines for 20 e-                    Findings             & sellers
+commerce platforms. We selected popular platforms serving                                                          y Software       Inductive
+diverse regions - Asia, Africa, North America, South America,            Methods, Harm, Tools  Method:                    Tools     Coding per
+and Europe. Our analysis shows that abusive dropshippers'                                                                           guide/video
+operations clearly violate e-commerce guidelines of appropriate                                 Inductive Coding
+selling conduct. Because abusive dropshippers do not have an                                       per transcript                   Analysis via
+agreement/contract with their "supplier" (private seller), their                                                                    download &
+operations violate platform rules for (1) agreement/communica-                                                                      doc. review
+tions with suppliers, (2) shipping and packaging requirements,
+and (3) control of stock requirements (e.g., ensuring sufficient         Fig. 2: Abusive dropshipping data collection process.
+stock for an existing listing). We present a summary of relevant
+excerpts from platform guidelines in Appendix Table V.                   Abusive dropshipping vs. Gray-Market Sellers. Abusive
+                                                                         dropshippers and gray-market resellers differ in operation, e-
+    Because these operations violate guidelines stipulated by the        commerce platform regulation, and impact on customers and
+e-commerce platform, we refer to such operations as abusive              other sellers. By definition, gray-market items are "goods
+dropshipping. This framing is consistent with works violating            manufactured by or with the consent of the brand owner,
+online platforms' guidelines, such as toxic content [95],                purchased by a third-party seller, and sold outside of the brand
+misinformation [64] and search-rank manipulation [78], which             owner's approved distribution channels" [48]. For instance, a
+the S&P community has long explored.                                     gray-market seller purchases iPhones in bulk and sells them on
+                                                                         an online platform or in their store that Apple has not permitted.
+Example Abusive Dropshipping Operation. We illustrate                    Thus, gray-market sellers hold physical stock and fulfill orders
+an operation exemplified amongst abusive dropshippers in                 without the brand owner's consent via unauthorized channels.
+studied forums. We will fully describe how abusive dropshippers
+execute this abusive operation and outline how it harms                       In contrast, abusive dropshippers do not hold physical stock
+customers, other sellers, and e-commerce platforms in Sec. IV.           but fulfill customer orders from private sellers using customer
+                                                                         addresses. Therefore, an abusive dropshipper presents a more
+    An abusive dropshipper is located in Russia and opens a              obscured risk to manufacturers and customers due to three
+marketplace account in Amazon CA (Canada) after observing                reasons. They (a) sell items on an e-commerce platform with
+item listing gaps on the Canadian e-commerce platform and                the flexibility of ordering them from different private sellers,
+lists their chosen gap items for purchase. Gap items are products        (b) operate remotely from different countries with minimal
+absent or highly priced in an abusive dropshipper's target               maintenance by not holding item stocks, and (c) take advantage
+domain but available and cheaper for fulfillment through the             of gap items in different countries and fulfill those items from
+abusive dropshipper's source domain.                                     private sellers by exploiting the international free (or low-priced)
+                                                                         shipping of e-commerce platforms.
+    When a customer purchases from the abusive dropshipper's
+store in Amazon CA, the dropshipper finds a private seller to                     III. DATA COLLECTION AND METHODOLOGY
+fulfill the customer's order. This private seller can be located
+in a different country than Canada, e.g., Amazon US, eBay                     We study abusive dropshipping methods and behavior
+US. Sourcing from outside the country allows the abusive                 for monetization on e-commerce platforms and answer the
+dropshipper to easily profit as either no other seller in Canada         following research questions:
+sells the gap item, or they buy the item cheaply from a foreign
+private seller and list it for less than existing listings on Amazon     RQ1 What are the abusive dropshipping methods used by sellers
+CA. When a customer orders from the abusive dropshipper's                      that violate e-commerce policies?
+store, the abusive dropshipper fulfills the purchase by placing
+an order with the private seller using the customer's address.           RQ2 What tools are used to carry out such methods?
+                                                                         RQ3 How do these abusive operations harm customers, other
+    The abusive dropshipper, for instance, sells a popular pet
+toy from a US company on Amazon CA for $40 USD and                             sellers, or e-commerce platforms?
+fulfills customer orders from an Amazon US private seller for
+$22 USD (by taking advantage of Amazon's free international                   Fig. 2 presents our data collection process and analysis
+shipping from US to CA [11]). When a customer buys the                   to answer these questions. Using a query-based search, we
+toy from the abusive dropshipper's store in Amazon CA, the               crawled Google to discover forum threads discussing abusive
+abusive dropshipper uses the customer's shipping information to          dropshipping ( 1 - 3 ). We inductively coded threads to gain
+purchase the toy from the US-based private seller. The private           insight into abusive dropshipping operations. During this
+seller then ships the toy to the Canadian customer, unaware              process, we discovered instructional materials (e.g., text guides
+that the order comes from the abusive dropshipper.                       and videos) and software tools used by abusive dropshippers.
+                                                                         We analyzed instructional materials via inductive coding after
+    The dropshipper repeats this process of listing (gap) items          reviewing text guides and viewing videos ( 4 ). We read soft-
+on different popular e-commerce platforms in Canada and other            ware documentation and locally downloaded when applicable
+countries (e.g., Mexico) and aims to purchase them cheaply               (e.g., browser extensions) to understand their operation ( 5 ).
+from unwitting private sellers to maximize total profits.
+                                                                              We conducted interviews with consultants and sellers and
+                                                                         inductively coded the resulting transcripts ( 6 ). Our findings
+                                                                         from our internet crawl and interviews help illustrate abusive
+                                                                         dropshipping methods, tools, and harm against customers,
+                                                                         sellers, and e-commerce platforms ( 7 ).
+
+                                                                      4
+TABLE I: Studied forums and instructional materials discussing       terestingly, forums 5 - 7 involved discussion in non-English
+abusive dropshipping.                                                languages (Turkish, Vietnamese, Indonesian, respectively). Our
+                                                                     crawler discovered these forums due to forum users' use of the
+# Name                              Details                          words from our query list in their English form. The discussion
+                                                                     of abusive dropshipping from non-English speakers is plausible
+                     A. Discussion Forums                            due to an abusive dropshipper's ability to operate from any
+                                                                     country. We included these forums as (1) our initial query-based
+1 Reddit /r/dropship [80]           1,253 Threads                    crawl captures them, and (2) they provide additional insight
+                                                                     into abusive dropshipping from non-English speakers.
+2 Warrior Forum [106]               166 Threads
+                                                                         After selecting relevant forums, we recrawled the Google
+3 BlackHatWorld [19]                989 Threads                      search engine, using our query list and site filter, which
+                                                                     allows returned links to be restricted to a high-level domain
+4 forum.alidropship [41]            534 Threads                      name (e.g., site:reddit.com/r/dropship/). This feature allows
+                                                                     us to extract abusive dropshipping threads hosted on these
+5 forum.donanimhaber [42]           183 Threads                      forums. To better capture abusive dropshipping discussions
+                                                                     hosted on Forums 5-7, we translated queries in our list to the
+6 voz.vn [103]                      250 Threads                      forum's respective languages using the Python Google Translate
+                                                                     API [47]. After deploying our crawler, which ran for  114
+7 kaskus.co.id [57]                 276 Threads                      hours, we curated a dataset of abusive dropshipping discussion
+                                                                     consisting of 3,651 threads across seven forums.
+                B. Online Courses and Guides
+                                                                     Analyzing Forum Threads. To analyze our collected threads,
+1 Dropshipping Business Details [73] Paid (8 Text-based Guides)      we randomly sampled 30 threads for each forum (210 threads).
+                                                                     We leveraged the Python Google Translate API [47] to translate
+2 Dropshipping Success Stories [2]  Free (42 Text-based Guides)      the non-English forum threads. After sampling and translation,
+                                                                     two authors conducted thematic analysis, independently per-
+3 Amazon VN [109]                   Free (62 Video Guides)           forming inductive coding per thread. We focused on generating
+                                                                     themes of abusive dropshipping methods, tools, and harms.
+4 Dropshipping Case Studies [110]   Free (24 Video Guides)
+                                                                         Per guidelines from prior work [82], our thematic analysis
+A. Forum, Instructional Material, and Software Data                  was iterative and involved multiple rounds. We continually
+                                                                     sampled 30 threads across each of the seven forums (210
+    To answer our research questions, we started an initial          threads per round), repeating our analysis until we generated
+crawl of the Google search engine via a Python API [46] for          a stable codebook and reached thematic saturation. Between
+dropshipping-related information. In this step, we used the          each round of coding, authors who independently coded threads
+queries "dropshipping" and "dropship" (and the alternative           met to reconcile differences. Authors achieved high agreement
+form - "drop ship") for our initial crawl. Using these queries,      (Cohen's Kappa,  > 0.80) before each round of coding recon-
+we collected 238 unique web pages.                                   ciliation. We reached saturation after analyzing 1050 threads
+                                                                     ( 30% of collected threads). To avoid presenting anecdotal
+    Two authors read each page, labeled it benign or abusive,        themes, we ensure themes in our analysis are prevalent across
+and found that only 24% of web pages discuss abusive                 all forums (See Appendix C-A for full codebook).
+dropshipping. To increase the likelihood of collecting abusive
+dropshipping content, authors extracted phrases for each abusive         Approximately 25% of analyzed threads included discussion
+web page to supplement our query list. Authors focused on            from sellers who allege they have been used as a source
+phrases that describe abusive dropshipping operations, such          (private sellers) by abusive dropshippers. 70% of threads
+as "dropshipping without permission" and "dropshipping no            involved discussion amongst abusive dropshippers. We refrained
+agreement." We enriched our list with a total of 24 queries          from pruning/filtering via machine learning classification as
+that focused on discovering abusive dropshipping content (See        only  5% of threads analyzed were related to compliant
+Appendix B Table VI for queries). Using this query list, we          dropshipping (with no mention of abusive dropshipping).
+crawled the Google search engine to discover 931 web pages.
+                                                                         To develop a better understanding of the types of external
+    Two authors examined a random sample (20%) of returned           resources used by abusive dropshippers, we noted resources
+web pages to determine if our crawler returned dropshipping-         referenced by forum users during our inductive coding. We
+relevant content. If any dropshipping practice was discussed         discovered two groups of commonly mentioned external
+(e.g., discovering suppliers, choosing items to sell), authors       resources - (1) instructional material in the form of online
+labeled the web page as relevant. Of the randomly sampled web        courses or guides and (2) software tools. We further analyzed
+pages, 82% contained dropshipping-relevant content, verifying        instructional material and software upon criteria that they are
+our crawler's ability to capture dropshipping content.               discussed amongst abusive dropshippers, and have a prevalence
+                                                                     of at least 10% within any analyzed forums. We selected this
+    To curate a dataset with a high density of abusive dropship-     threshold to ensure resources selected for further analysis were
+ping content, we sought to discover popular domains discussing       not singularities but rather have been leveraged by multiple
+the operation. We grouped web pages by their top-level domain        users while also generating a diverse list of resources to analyze.
+and discovered that 40% discussed abusive dropshipping. Of
+this, approximately 30% comprised non-forum domains such as          B. Instructional Material. Table I-B presents four widely-
+blog entries, news articles, and YouTube videos. We discovered
+that a high volume (70%) of abusive dropshipping content
+emerged as threads on discussion boards and online forums,
+which we further crawled, as detailed below.
+
+A. Discussion Forums. Table I-A presents seven discovered
+popular online forums. Users on forums 1 and 4 solely discuss
+dropshipping, while the remaining forums contain a subgroup
+that discusses the operation. We note that all forums are
+marketed as benign yet contain a subgroup of users who
+discuss abusive dropshipping methods. We selected the top
+seven forums (by quantity) detected from our crawler run, after
+filtering out irrelevant forums (e.g., forum threads discussing
+e-commerce and only briefly mentioning dropshipping). In-
+
+                                                                  5
+TABLE II: Discovered software tools used by abusive drop-                     Yet, it remains not fully clear from crawled data how this tactic
+shippers, grouped into three categories.                                      affects sellers of such products. Similarly, forum data may not
+                                                                              yield insights into how sellers' perceptions of platforms are
+# Tool Name                Type                        Details                affected due to the persistence of abusive dropshippers.
+
+                     C1. Product Research and Listing                             To bridge this gap of how abusive dropshipping affects
+                                                                              customers, sellers, and the e-commerce platform itself, we
+1 Helium 10 [50]           Chrome (900K+ users) Free trial (+$97-$397/mo)     conducted semi-structured interviews with qualified individuals
+                                                                              who have experience with e-commerce, detailed subsequently.
+2 AMZScout [14]            Chrome (100K+ users) Free trial (+$44.99/mo)
+                                                                              B. Semi-Structured Interviews
+3 Jungle Scout [56]        Web $39-$129/mo
+                                                                                  We collected data from two types of qualified experts:
+4 Viral Launch [102]       Web $59-$199/mo                                    (a) consultants who provide legal and business-strategy advice
+                                                                              to e-commerce sellers and (b) experienced e-commerce sellers
+5 AMZ Blast [13]           Chrome  $65-$175/mo                                who have been involved for at least two years. Our interview
+                                                                              questions are designed to gather insights into participants'
+                  C2. Repricing and Revenue Analytics                         perspectives of abusive dropshipping, with follow-up questions
+                                                                              asked based on participant answers and experiences.
+1 Informed Repricing [53] Web Monthly revenue-based
+                                                                              Recruitment. We started recruitment via purposive sampling,
+2 BQool Repricing [22]     Web Free trial (+$25-$100/mo)                      reaching out to known (1) legal consultants with expertise in
+                                                                              the domain of abusive dropshipping and (2) experienced sellers.
+3 Aura Repricer [15]       Web $97/mo                                         We note that our criteria for purposively sampling sellers did
+                                                                              not mandate any knowledge of abusive dropshipping.
+4 Repricer Express [81]    Web Free trial (+$55-$249/mo)
+                                                                                  We reached out to 11 individuals for initial screening.
+5 Seller Engine Plus [83]  Web Free trial (+$49.95/mo)                        We also leveraged snowball sampling, where interviewed
+                                                                              participants passed along our contact information to other
+C3. Product Reviews and Seller Feedback                                       potential candidates. In recruitment, we framed our study as a
+                                                                              study to understand perceptions of dropshipping methods.
+1 Feedback Express [39]    Web Free trial (+$23-$119/mo)
+                                                                                  All potential participants underwent screening to ensure they
+2 Feedback Genius [84]     Web Free trial (+49$-499$/mo)                      were qualified for our study. We required all participants to
+                                                                              (1) consult e-commerce sellers affected by abusive dropshipping
+ Chrome is for Chrome Extension, Web is for Web-based Software.               or (2) be e-commerce sellers with at least two years of
+                                                                              experience. We required participants to be above the age of 18.
+leveraged online guides that inform abusive dropshippers
+on successful exploitative methods. Two of these materials                    Participants. We heard back from 10 individuals who expressed
+comprise text-based guides such as articles (Table I-B-1, 2),                 interest and underwent screening. Four individuals did not pass
+while the remaining two guides include video media (Table I-                  our screening test and were not invited for our interview. We
+B-3, 4). Two authors reviewed text-based guides and viewed                    recruited a total of six participants. These participants comprise
+video content. We employed the same technique for analyzing                   four Amazon FBA sellers, one compliant dropshipper, and one
+forum threads, performing independent inductive coding before                 legal consultant with extensive experience with e-commerce
+reconciling differences to generate a codebook. For materials                 sellers. Interviewed sellers and seller clients of legal consultants
+that required payment, we only considered free previews (visible              operated within the United States. All participants were aware
+to anyone without payment). We note that individuals who                      of compliant dropshipping and abusive dropshipping.
+publish free guides do so (1) as previews to encourage the
+purchase of paid products (e.g., software) and (2) for ad-profit              Protocol. We designed our interview protocol to understand
+on content-hosting platforms. Similar to translating threads, we              abusive dropshipping's impact on different e-commerce parties:
+translated non-English text in text-based guides (Dropshipping                customers, sellers, and the platform itself. We first asked partic-
+Business Details) and viewed non-English videos (Amazon VN)                   ipants introductory questions (e.g., profession, involvement in
+with automated English subtitles. We present our codebook for                 e-commerce). We then outlined compliant dropshipping, asked
+our instructional material in Appendix C-B.                                   participants about their awareness of the business model, and
+                                                                              asked how participants perceived its impact on the different
+C. Software Tools. We discovered software from analyzed                       parties. We subsequently outlined abusive dropshipping. We
+forum threads described by users as effective in facilitating abu-            asked participants about their awareness of the model, and
+sive dropshipping (Table II). These tools are used by compliant               whether abusive dropshipping can benefit or harm e-commerce
+dropshippers, but also leveraged by abusive dropshippers. We                  parties. We concluded by asking participants if they had first-
+also discovered tools with malicious capabilities solely used by              hand experience with abusive dropshipping and how they had
+abusive dropshippers. To prevent supporting abusive activities,               been affected by it. We provide full screening and interview
+we do not include such tools in Table II. To analyze tools,                   questions in our interview protocol [54].
+we read their documentation and installed them locally (for
+Chrome extensions) to understand how they operate. We will                        For sellers, we introduced abusive dropshipping as "al-
+discuss the role of these tools in specific scenarios in Sec. IV.             ternative dropshipping" (and avoided words indicating ex-
+                                                                              ploitation/abuse) in both screening questions and during our
+    Our analysis of forum data, instructional material, and
+software tools shed light on how abusive dropshippers operate.
+We discovered abusive dropshipping operation modes involving
+(a) exploitative item selection, (b) volatile item fulfillment, and
+(c) abuse of software tools to support their activities.
+
+    These modes of operation impact customers, sellers, and e-
+commerce platforms, causing apparent harm to these parties. For
+instance, abusive dropshippers either do not provide or forge
+package tracking numbers when selling items to customers
+causing inconvenience to the customer who cannot track their
+shipment (Sec. IV-B). Yet, it is difficult to infer how parties are
+affected by more intricate abusive dropshipping methods. For
+instance, to avoid legal issues from selling trademarked prod-
+ucts, abusive dropshippers source non-trademarked products.
+
+                                                                           6
+interview to minimize bias. We did this to solicit sellers to                                       f (few)            m (most)
+discuss the overall impact of abusive dropshipping, instead
+of priming them to discuss harm. We also did not prompt                  Data Source                1% 25% 50% 75% 100%
+participants to explicitly share their opinions of specific abusive
+dropshipping tactics. However, some participants voluntarily             F- Forum threads
+expressed knowledge of such tactics. We note how they support            I- Interview participants
+forum and instructional material finding in Sec. IV.                     M- Instructional material
+
+    Our study was considered exempt by our IRB (which                                                        s (some)            a (almost all)
+grants exemption to minimal-risk interviews with populations
+excluding pregnant women/prisoners/children). Interviews were            Fig. 3: Terminology for theme source (either F, I, M) and %
+conducted/recorded (with consent) via Zoom - each lasted 45              prevalence (f :1%-25%, s:26%-50%, m:51%-75% , a:76%-100%).
+minutes (average). Participants were not financially compen-
+sated. Recordings were deleted after author transcription.               subsections, similar to prior work [38]. We delineate between
+                                                                         forums (F), interviews (I), and instructional material (M), and
+Interview Analysis and Findings. Two authors independently               note percentage prevalence as one of four categories (f , s,
+analyzed interview transcripts via inductive coding. They                m, a). For instance, F:m denotes a theme prevalent between
+generated initial codes, merging similar codes under the same            51%-75% (most) of threads while M:a denotes themes present
+theme. Authors came together to reconcile disagreements after            in 76%-100% (almost all) of instructional materials.
+analyzing transcripts. They achieved high inter-coder agreement
+(Cohen's Kappa,  > 0.80) before reconciliation. After                    A. Abusive Item Sourcing
+analyzing our six interviews, we had reached thematic saturation
+and thus stopped recruitment. We present our codebook for our                After determining the platforms to buy and sell on, abusive
+interviews in Appendix C-C.                                              dropshippers choose items to list in their marketplaces from
+                                                                         private sellers. They accomplish this by manually browsing
+    All interviewed participants viewed compliant dropshipping           e-commerce websites and/or using dropshipping software to
+as fair and beneficial, specifically attributing this characteristic     find gap items, items either not available or available for a
+to the presence of a formal agreement. This finding ensures              higher price on the target e-commerce platform.
+that the effects of abusive dropshipping raised by interviewed
+participants specifically relate to abusive dropshipping and not             1) Gap Items: In analyzing forum discussion surrounding
+the compliant dropshipping model. We note that all participants          product choice, we uncover that abusive dropshippers have two
+were aware of abusive dropshipping, with all five sellers noting         motivations behind gap item selection: (1) exclusivity-motivated
+having been used as a source of items for abusive dropshippers.          gap items, and (2) competitive profit-motivated.
+We present our collective findings of abusive dropshipping
+impact on sellers, customers, and e-commerce platforms below.            Exclusivity Items [F:a, I:s, M:a] For exclusivity-motivated
+                                                                         gap items, an item is unavailable to customers on the abusive
+  IV. ABUSIVE DROPSHIPPING OPERATION AND IMPACT                          dropshipper's target platform but available on their source
+                                                                         platform. For instance, customers in Canada and Mexico may
+    From analyzing various forums, software tools and inter-             desire popular items sold in the US that are unavailable in their
+views with consultants and sellers, we discovered exploitative           home country. Similarly, an abusive dropshipper uses private
+behavior conducted by abusive dropshippers. Broadly, this                sellers in Japan to sell items to Japanophile communities in
+behavior stems from two operations:                                      the US and Europe. Here, the abusive dropshippers exploit the
+                                                                         target platform item unavailability that exists due to vendors not
+   · Abusive item sourcing Sec. IV-A describes methods                   yet selling an item in a region. Electronics, kitchen appliances,
+      abusive dropshippers use to strategically list items for           and clothing are the most frequently mentioned exclusivity item
+      sale to avoid being flagged by e-commerce platforms.               categories in our analyzed forums.
+
+   · Volatile order fulfillment Sec. IV-B discusses abusive                  These exclusive items are sold for a much higher price than
+      dropshippers' fulfillment of customer orders.                      those listed by the private seller. For instance, one interviewed
+                                                                         participant noted "[abusive] dropshippers list items for 3 times
+    Additionally, these behaviors result in order return intri-          the original price.". An unreasonable increase is unfair to
+cacies and even cause abusive dropshippers to be marked by               customers who have to pay a high markup to obtain an exclusive
+identifiable characteristics:                                            item that is otherwise unavailable to them on the target platform.
+
+   · Handling returns Sec. IV-C describes how abusive                        Abusive dropshipping's price markup occurs at a much
+      dropshippers face complications in processing returns.             larger scale than traditional reselling. This is due to abusive
+                                                                         dropshipping's ability to not hold stock and operate without a
+   · Strategies across marketplaces Sec. IV-D notes how                  physical presence. Interestingly, interviewed participants also
+      operations are designed to apply to most marketplaces.             note how the price markup can introduce long-term harm: a
+                                                                         source merchant's reputation and brand image are damaged.
+   · Abusive dropshipping characteristics Sec. IV-E presents             Although a product's origin may be unknown to buyers,
+      identified characteristics that abusive dropshippers exhibit       markups cause a mismatch in expected quality (more expensive
+      due to their behavior (e.g., targeting lower-priced items          items are assumed to be of higher quality). Thus, unsatisfied
+      to minimize loss when refunds are issued).                         buyers post poor reviews on external forums. Potential buyers
+                                                                         who preview these forums are disincentivized to purchase from
+    In Fig. 3, we define qualitative terminology for attributing         source merchants carrying the same brand. For instance, one
+data source and prevalence to themes presented in the following          participant stated "when a customer buys a 50 dollar item, they
+                                                                         expect the item to be of that quality - however, they get the
+
+                                                                      7
+quality of a 10 dollar item", with another noting an experience      TABLE III: Sample records for items in the uploaded data.
+where a quality-price mismatch caused "the seller's brand to
+receive very bad comments and reviews in online forums. So           Item                    Date Added  Initial Sale    Target
+the seller loses their reputation."                                                                      Price  Price 
+
+Competitive Profit Items [F:a, I:s, M:a] Competitive profit          BMR Bluetooth Adapter   05/11/2018  $26.18  $46.36  Mexico
+motivated gap items are sold by the abusive dropshipper on             for Bose SoundDock    01/22/2019  $11.61  $29.75  Mexico
+the target platform for less than the existing listings of the        Hot Wheels Star Wars   03/30/2019  $25.69  $57.51  Mexico
+same item from other sellers. For instance, consider a baby             Stellar Vehicle Toy
+product, e.g., milk bottle, with the lowest list price on the         Manchester City FC -
+abusive dropshipper's target platform (e.g., Amazon MX) of                EPL Knit Scarf
+$302 MXN (~$15 USD). The abusive dropshipper identifies
+this as a competitive profit-motivated gap item since a private       Translated from Spanish,  Private Seller Item Price on Amazon US,  Item Listing Price
+seller in Amazon US sells the same bottle for $7 USD with free       on Amazon MX (All prices are converted from MXN to USD).
+international shipping. The abusive dropshipper lists this item
+on the target platform for $242 MXN (~$12 USD), netting a            reported by our users." Abusive dropshippers leverage this
+$5 USD profit per Amazon MX customer purchase. Abusive               document for malicious product research.
+dropshippers find successful margins leveraging competitive
+profit items. For instance, one forum user selling such items in         At the time of our viewing, we observed multiple users
+a Mexico-based operation noted that "in a month I was able           contributing to this list and 2,814 rows of unique brands. Using
+to bank 10k... a 40% margin, so pretty good numbers."                this technique, abusive dropshippers ensure the longevity of
+                                                                     their operations, evading reports stemming from many major
+    2) Trademarked and Non-Risky Items: Apart from profit            item listings and continuing to operate in popular marketplaces.
+and exclusive gap items, we discover that abusive dropshippers
+consider the trademark status of items, criteria important to        Synergy to Identify Profitable Gap Items [F:s] We addi-
+ensure the longevity of their operation and continuous profit.       tionally find that abusive dropshippers collaborate to coalesce
+                                                                     profitable gap items. Here, they leverage the knowledge of
+Avoiding Trademarked Items [F:a, I:a, M:a] Our findings              successful abusive dropshipping operations to outline gap items
+show that abusive dropshippers avoid listing items that are          proven to have demand among customers in a target domain
+trademarked. They note that selling trademarked items usually        (which abusive dropshippers often dub "winning products").
+results in these listings being removed by the platform. One         Requests to gain access to such lists are common, e.g., "Does
+interviewed participant stated that "even if the platform [does      anyone have a list of products that are currently selling a lot
+not] remove the listing [of a trademarked item] immediately,         with dropshipping... would be very grateful."
+they usually remove it after the seller's 3rd/4th sale after the
+trademark owner makes a complaint."                                      To understand the selection of profitable items, we present
+                                                                     a widely referenced compilation of gap item records posted in
+    While abusive dropshippers may list items from more              one of our analyzed forums (via a link to PasteFS [74]). This
+prominent larger brands (e.g., General Electric, KitchenAid,         data presents an abusive dropshipping community-collaborated
+Adidas) with registered trademarks, these companies quickly          list of US items to sell on MX; users leveraging this list
+report and take action against sellers, reducing the longevity       claim successful operations. Further validating these records,
+of the abusive dropshipper's store. One interviewed participant      insights from this data complement our forum findings by
+stated, "If the seller is selling Adidas or Nike or you know,        further supporting abusive dropshipping trends, noted below.
+like the big brands, [Amazon] will check. But if the seller is
+selling small brands, they do not really check."                         This popular aggregate of successful gap items comprised
+                                                                     4,411 items listed over 15 months from Amazon MX, where
+    To prevent this from happening, sellers opt for brands that      the purchases can be fulfilled from various Amazon US
+are not trademarked. Abusive dropshippers refer to such items        private sellers. Notably, selling items in Mexico while fulfilling
+as "non-risky items," noting success in listing these items          customer orders from a private seller in the US, without formal
+without any issues, detailed in the following subsection.            agreements with suppliers, corresponds to abusive dropshipping.
+
+    3) Operating via Underground Collaboration: We observed              Table III illustrates three sample gap items in the data dump.
+that abusive dropshippers collaboratively construct aggregated       Each data point contains (a) Listing Name, (b) Timestamp of
+item lists. They leverage prior experience to identify (1) non-      Item Added, (c) Private Seller Item Price on Amazon US, (d)
+risky items and (2) profitable gap items.                            Item Listing Price on Amazon MX, and (e) Target Platform
+                                                                     (Mexico). For example, the item "Hot Wheel Star Wars Stellar
+Non-risky Item Discovery [F:s] We discovered efforts to              Vehicle Toy," added on January 22, 2019 for $29.75 USD on
+aggregate brands that abusive dropshippers may infringe on           Amazon MX, can be fulfilled from an Amazon US private
+with a low risk of account suspension (higher-risk brands are        seller for $11.61 USD, providing the abusive dropshipper a
+known to file reports to e-commerce platforms, which trigger         potential revenue of $18.14 USD (a 156% increase).
+suspension of abusive dropshippers' accounts due to violation
+of terms of service). For instance, one discovered list contains         Overall, the items in the data dump have an average listing
+an extensive, frequently updated allow list of non-risky brands      price of $43.70 ± 19 on Amazon MX. Comparatively, the
+to filter items, compiled in a Google Sheets document. A note        operation supplies items from Amazon US private sellers for
+at the spreadsheet's header described it as "...a list of non-       an average price of $21.40 ± 10.20 USD (including shipping),
+risk brands that have been successfully sold without issue, as       resulting in a 104% average price increase.
+
+                                                                         Fig. 4 shows the item prices and the number of items in the
+                                                                     gap item records. The CDF reveals 90% of items had a price
+
+                                                                  8
+         2500                       1                                                                                                                  250
+
+                                                                                                                                                                                 1. MOSISO     11. Mpow
+
+                                                                                                                                                                                 2. UGREEN     12. Poetic
+
+         2000                       0.8                                                                                                                200                       3. Fintie     13. tomtoc
+
+                                                                                                CDF (# Items)                                                                    4. JETech     14. Lecone
+                                                                                                                                              # Items
+                                                                                                                                                       150                       5. Neewer     15. LTGEM
+
+# Items  1500                       0.6                                                                                                                                          6. Salandens  16. Ringke
+
+                                                                                                                                                                                 7. MoKo       17. iCasso
+
+                                                                                                                                                       100                       8. TUSITA     18. TECHVIDA
+
+         1000                       0.4                                                                                                                                          9. Procase    19. Everie
+
+                                                                                                                                                                                 10. UESWILL   20. Flexzion
+
+         500 0.2                                                                                                                                       50
+
+                       00                                                                                               0
+                         0 25 50 75 100 125 150 175 200 225 250 275                                                             1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+                                                           Item Price ($)                                                                                             Brands
+
+Fig. 4: Item listing prices in Amazon MX vs. the number of                                         Fig. 6: # of items for top 20 brands in gap item records.
+items (with the CDF plot).
+
+                        10 4  Electronics                                                               u Source Platform                                   Abusive Dropshipper             x Target Platform
+                        10 3  Home & Kitchen                                                       v Abusing Benign Software                                                                w Malicious Software
+                              Clothing, Shoes & Access.
+                              Sports & Outdoors
+                              Tools & Home Imp.
+
+         # Items (log)  10 2
+
+                        10 1
+
+                                                                                                                                                                                Feedback       Filtering Trademarked
+                                                                                                                                                                               Recruitment                Items
+                                                                                                   ! " # !Product Research
+                                                                                                                                                            Product Repricing
+
+                        10 0
+                               Feb-Mar Apr-May Jun-Jul Aug-Sep Oct-Nov Dec-Jan Feb-Mar Apr-May
+
+                        2018  2019                                                                 Fig. 7: Item selection facilitated by benign and malicious
+                                                                                                   software. We use MX and US as examples of source and target
+Fig. 5: # of items for the most popular five categories grouped                                    platforms (software used to target other regions is prevalent).
+by item addition date in the gap item records.
+
+ less than $61.09 USD. Although we are not able to infer what                                      [fake] documents although I confirmed with the manufacturer
+ type of gap items (exclusive or profit-motivated) were involved                                   that I am the sole distributor in [region]."
+ in this operation, we note that the average 100% price increase
+ supports the strategy of unfair markup with exclusive items.                                          Complementing this issue, we found a prevalence of re-
+                                                                                                   sources in forums/instructional materials promoting the forgery
+     In Fig. 5, we plot the number of items in the top five                                        of such documents. For instance, an instructional video has a
+ categories in two-month periods based on item addition dates.                                     section titled "How to circumvent License of Authorization on
+ The category with the greatest quantity of items is "Electronics"                                 Amazon (Sample License of Authorization Text)" with a sample
+ followed by "Home & Kitchen" (two popular exclusive gap                                           license document to send to an e-commerce platform.
+ items mentioned in Sec. IV-A). The variety of items (shown
+ in Table III and Fig. 5) and the lower price are consistent with                                      In the event that the private seller of the non-risky item
+ abusive dropshipping behavior, discussed in Sec. IV-E.                                            successfully removes the abusive dropshipper's listing, the
+                                                                                                   abusive dropshipper updates the collaboratively constructed
+     Lastly, in Fig. 6, we present the number of items found                                       allow list document, noting that the non-risky item has
+ in the top 20 brands in the records. All top 20 brands are                                        documented cases of complaints. This process helps other
+ lesser-known, such as Mosiso, Ugreen, and Fintie. These                                           abusive dropshippers not to fulfill customer orders from this
+ brands are considered "non-risky" by abusive dropshippers,                                        seller or list the same item. The abusive dropshipper then
+ complementing forum findings (e.g., "Best to stick to items                                       proceeds to source the same or similar item from different
+ that are unbranded or some weird [country] brand" to prevent                                      private sellers to continue their business.
+"anyone [from] sue[ing] or shut[ting] down [your] website").
+                                                                                                       4) Exploitative Use of Dropshipping Software: We studied
+ Persistence via Forged Documents [F:f , I:s, M:f ] Despite                                        both benign and malicious software that provide abusive
+ noted success with non-risky items, abusive dropshippers may                                      dropshippers with capabilities for exploitative item selection.
+ face scenarios where a brand owner files a complaint against                                      Fig. 7 presents how these software tools facilitate selecting
+ the abusive dropshipper. In response, the target domain prompts                                   items from a source platform ( 1 ). Studied software, in Table II,
+ the abusive dropshipper for proof that they have permission to                                    are not malicious in nature. However, abusive dropshippers
+ sell listed items (i.e., Letter of Authorization letter).                                         exploit these benign software tools ( 2 ) to filter and identify
+                                                                                                   potentially profitable gap items from different private sellers
+     Echoing instructions in online guides and forum findings,                                     via product research software and ensure these gap items stay
+ we found evidence from interviewed participants that abusive                                      profitable via repricing/product feedback software ( A - C ).
+ dropshippers forge "Letter of Authorization" documents to
+ overcome this issue, causing private sellers' complaints to                                           Abusive dropshippers also leverage software tools that
+ be dismissed by e-commerce platforms. For instance, one                                           are advertised with malicious capabilities. Malicious tools
+ interviewed participant stated that when reaching out to e-                                       (e.g., Software-Mal3) complement gap item filtering of
+ commerce platforms to report a suspected abusive dropshipper
+ selling their items, "the platform said [the dropshipper] has                                        3Anonymized as it is marketed for abuse - available for research on request.
+
+                                                                                                9
+                   https://www.amazon.com/s?k=item-name                                                  Tool Extension                         Order Request  Order on Behalf
+                                                                                                                                                                 of Customer
+                                                                                                    yItem Comparison
+u                  vItem Name     w Price       xStocks                                 Aggregated     with other Sellers      Target Platform           Abusive Dropshipper                 Source Platform
+        Item          Item Brand                                                        Data                                      Customers                                                   Private Sellers
+      Category                        Shipping  Import fee                                                 List/export                          No Guarantee of
+ cae4pr0trc4oh/ra                                                                                           item data                                   Item
+                   DeBnraynLdist          user-filters                                  Trademark
+        Error      Yes            --- aqpduridamnoetnit.y. .--- mcfuoallfoxilrlsetdock   Filtering                                                             Missing Stock
+                                                                                         Yes
+                    Reject                                                                                                                                     Shipped by: Private Seller
+                                                                                          Reject                                                                  Return to: Private Seller
+                                                                                                                                                                   Tracking No:
+
+                                                                                                                                                Item Delivery
+
+Fig. 8: Reverse engineered execution flow of malicious drop-                                                                   Fig. 9: Fulfillment process used in abusive dropshipping.
+shipping tool (Software-Mal), a subscription-based product
+research & listing tool designed for abusive dropshippers.
+
+ benign software with additional features and include additional                                                               iteratively explore the chain of execution for parsing of item
+ community-driven functionalities (e.g., filtering trademarked                                                                 pages, and discover any logic (e.g., internal functions, API
+ items, 3 ) to help abusive dropshippers circumvent platform                                                                   calls) performed. Software-Mal crawls the listing page of
+ regulations and persist in target marketplaces ( 4 ).                                                                         each item from a user-submitted item category query, collecting
+                                                                                                                               an item's name and brand while filtering out brands specified
+ Abusing Legitimate Software [F:a, M:a] Product research                                                                       in a user-maintained brand denylist. This denylist comprises
+ software is typically abused to discover gap items, while                                                                     brands that have filed complaints against abusive dropshippers
+ repricing and review software are used to ensure gap items                                                                    and are updated when new complaints are received ( 1 , 2 ).
+ are attractive to customers. For instance, product research
+ software with geographic filtering allows abusive dropshippers                                                                    Software-Mal next collects an item's price, shipping
+ to quickly identify multiple private sellers from which they                                                                  cost, Amazon Prime status ( 3 ), and marketplace/seller-specific
+ can find profitable gap items (supported by all tools in C1-                                                                  information (e.g., count and current stock of other sellers
+ Table II). Abusive dropshippers first specify their source e-                                                                 listing the item). At this point, optional secondary item filtering
+ commerce platform, selling platform domain (e.g., Amazon US                                                                   based on trademark status ( 4 ) can be performed. Here, the
+ and Amazon MX), and a number of broad item keywords                                                                           tool's trademark filtering makes requests to public services
+ (e.g., computer mice, office chairs, cooking utensils). The                                                                   Bulk-SEO-Tools [23] and Trademarkia [99], obtaining
+ software performs automated queries using the keywords to                                                                     a CSV file of crawled item brands' trademark statuses and
+ the target e-commerce platform, outputting gap item products.                                                                 passes items whose brands are trademarked to the "Reject"
+                                                                                                                               function. Abusive dropshippers use this option to extend
+     Similarly, abusive dropshippers use benign repricing tools                                                                operation longevity, avoiding established brands likely to report
+ for strategic pricing (supported by all tools in C2-Table II).                                                                any infringing listings, but taking advantage of sellers that may
+ Such tools compare an abusive dropshipper's product listing                                                                   not be able to trademark their products/brand.
+ price with the lowest price offered in the market. If a different
+ party offers a lower price, it updates the dropshipper's product                                                                  Lastly, Software-Mal performs a final filter on col-
+ listing price. Here, abusive dropshippers use repricing tools                                                                 lected items to minimize listing competition ( 5 ). To do so,
+ to continuously confirm that selected gap items are priced                                                                    Software-Mal uses items' Amazon Standard Identification
+ competitively while ensuring profit.                                                                                          Number (ASIN), a ten-character sequence constant across all
+                                                                                                                               Amazon domains that represents an item, to form URLs for
+     They also use benign product review/feedback software                                                                     items and pings these addresses. If the page exists, another seller
+ (supported by all tools in C3-Table I). Such tools periodically                                                               currently lists the same item in the target domain, indicating
+ prompt customers to submit positive product reviews and                                                                       competition. Software-Mal saves the results of these various
+ feedback (e.g., rating the item and seller). Abusive dropshippers                                                             filters in a CSV file for manual inspection by the user.
+ use such software to request customers to provide 5-star reviews
+ for their gap items. Positive public feedback incentivizes                                                                    B. Volatile Item Fulfillment
+ customers to purchase these gap items from dropshippers.
+                                                                                                                                   After a customer places an order from the abusive dropship-
+ Software Marketed for Malicious Use [F:m, M:m] To il-                                                                         per's e-commerce store, the abusive dropshipper fulfills this
+ lustrate how malicious software can be (ab)used to strategically                                                              purchase. Fig. 9 presents the fulfillment process and the issues
+ find items while avoiding trademarked items, we present the                                                                   that customers face in tracking and receiving their orders.
+ execution flow of Software-Mal on Amazon in Fig. 8,
+ discovered in analyzed threads. This tool is marketed as                                                                          1) Item Shipment: Since the seller is an abusive dropshipper,
+"quickly [to] integrate into your browser, access hundreds of                                                                  no formal agreement is established with the private seller. When
+ product lists within minutes and upload them to ... with a                                                                    a customer orders from their store, the abusive dropshipper
+ single click." Software-Mal is similar to "Product Research                                                                   fulfills the purchase by ordering from the private seller using the
+ and Listing" software in Table II, streamlining the process of                                                                customer's address. The return address on the item packaging
+ optimizing product search but with additional capabilities.                                                                   is that of the private seller, as it is the private seller who ships
+                                                                                                                               the order unaware of the abusive dropshipping operation.
+     To begin the analysis of Software-Mal, we locally
+ installed it and hooked into its execution by adding breakpoints                                                              Withholding Shipment Information [F:s, I:m] Once the or-
+ through Chrome's built-in DevTools. This allowed us to                                                                        der is shipped, the abusive dropshipper gets access to the
+                                                                                                                               tracking number (provided by the private seller). However, we
+
+                                                                                                                           10
+               uv                                                      a suspected abusive dropshipper "...provided a false tracking
+                                                                       number for a myhermes parcel. It was not delivered. Myhermes
+               wx                                                      confirmed the tracking info, is for a different address" sug-
+                                                                       gesting that the abusive dropshipper had provided a random
+Fig. 10: The software accepts the following inputs - 1 ideal           tracking number associated with a parcel in the same region.
+shipped date, 2 ideal delivery deadline, 3 destination zip             Another forum user who purchased from a suspected abusive
+code - to output 4 candidate tracking numbers.                         dropshipper stated, "Bluecare [service is] saying [my] item
+                                                                       [was] delivered to letterbox. It was not delivered. It is a small
+find that abusive dropshippers withhold information about an           value item that has been bought from a UK eBay seller and
+order from customers. Specifically, abusive dropshippers prefer        supposedly shipped by a US company. Highly suspicious !!"
+not to provide tracking numbers to customers for two reasons.
+                                                                           2) Lack of Item Guarantee: As abusive dropshippers run
+    First, we found from studied resources that when an abusive        their operations without formal agreements, they have no control
+dropshipper provides the tracking number from a private seller,        over or guarantee of physical stock for items they list. For
+e-commerce platforms suspend their accounts. This is because           instance, an abusive dropshipper who receives an order of
+the target platform identifies a discrepancy since the items are       20 phone cases from a customer has no guarantee that the
+shipped to customers from a different region than the abusive          private seller will have sufficient stock. This leaves an abusive
+dropshipper's listed address on the target platform.                   dropshipper's customers with no guarantee of item fulfillment.
+
+    Second, abusive dropshippers who operate outside the               Procrastinating or Neglecting Orders - [F:s, I:m] Due to
+country of their target platform note that including tracking          stock uncertainties, customers are also continually harmed by
+numbers may raise suspicion from customers. This is because            abusive dropshippers' method of fulfillment. If an item listed
+the customers do not expect their tracking number to display           by an abusive dropshipper is not in stock at any private seller,
+a foreign country as the source of the package. For instance,          the abusive dropshipper will either stall for stock or ignore
+a user orders from an e-commerce platform in MX, but the               the order. This forces the customer to exert additional effort
+tracking details of their order show the order is coming from          communicating with the e-commerce platform and experience
+another seller in a different country. An abusive dropshipper          delays. We note that abusive dropshipping poses a heightened
+in our forum data justified their decision to avoid tracking           risk of this harm compared to compliant sellers. Contrary to
+numbers, stating "if customers know the products come from             abusive dropshippers, compliant sellers are guaranteed stock
+[outside where I am], I'll lose credibility."                          and have a full overview of existing stock as they either manage
+                                                                       their stock or have contracts with suppliers.
+    We note that this lack of information is intrinsic to
+abusive dropshippers as compliant sellers/dropshippers have                While the e-commerce platform may handle such complaints
+no incentive to withhold tracking numbers. Withholding infor-          through guaranteed delivery policies, the inconvenience and
+mation harms customers who do not receive full transparency            potential fraud introduced by the abusive dropshipper are
+about their orders. One interviewed participant notes abusive          detrimental to the customer. For instance, the following review
+dropshippers "do not provide tracking numbers, and it is very          was left on the account of an abusive dropshipper, as alleged by
+problematic for [customers]. This is because, for international        an Amazon community member: "The product never arrived
+shipping, there are [many] transfer points, and the item can           [and they asked me to] wait for two and a half months. Terrible
+get damaged. [There is no] transparency for the customer to            customer service [and] no effort to refund or communicate
+know when an item will come."                                          with [me]." To combat negative reviews, abusive dropshippers
+                                                                       solicit fake positive reviews (e.g., "Does anybody sell fake
+Generating Fake Tracking Numbers - [F:f , I:f ] When e-                [platform] reviews?"), in an effort to boost store image and
+commerce platforms require sellers to provide tracking numbers,        minimize the impact of organic negative reviews on their store.
+we found abusive dropshippers generate invalid/fake track-
+ing numbers through tracking information services such as                  We note that interviewed sellers raise fulfillment inconve-
+BlueCare Express [21] and packtrack [72]. Here, the abusive            nience as an issue that affects private sellers. This is because
+dropshipper may associate an order status with a "fake tracking        on some platforms (e.g., Amazon), customers are allowed to
+number" which they set with reference to the original Tracking         "rate" the product itself and not the seller. Low ratings due to
+Numbers. The "fake tracking number" could be a number that             an abusive dropshipper cause the same product available via
+the abusive dropshippers have full control over (e.g., manipulate      the original seller's store to have a low rating. One interviewee
+status such as shipped, out for delivery, or delivered). However,      stated, "the customer who does not receive the product may
+it could also be an existing tracking number that is associated        not know how to rate the seller, and instead rates the product",
+with a random order. Fig. 10 provides an example software              causing "my own product to be [perceived] negatively." Other
+that returns candidate tracking numbers that satisfy the input         interviewed participants note similar concerns, especially when
+delivery deadline, shipment date, and destination zip code.            the products they list are manufactured by the seller themselves.
+                                                                       One participant states that "when manufacturing own material,
+    Our forum data exposes how such services have exploited            improper customer service such as inability to receive the order
+customers. For instance, one Amazon customer detailed that             quickly may harm the brand image."
+
+                                                                           Volatile item fulfillment can also affect the original seller's
+                                                                       reputation. One participant noted how customers dissatisfied
+                                                                       with an abusive dropshipper's delay can impart negative reviews
+                                                                       on a brand (on the platform/external forums). "[They] write
+
+                                                                   11
+                    TABLE IV: Discovered characteristics that are associated with abusive dropshippers.
+
+# Seller Attribute  Abusive Dropshipper Preference                 Sample Quote from Forums
+
+a1 Item Categories  Variety in categories (e.g., Electronic, Home) listed (a) "I've [sourced] lots of product [to see] what folks are looking at and niche based on demand. "
+
+a2 Items per Brand  Minimizing dependency on specific brand listings (s) "list [from] ... different brands, ... you can sell to more [people] and keep selling if some items get suspended."
+
+a3 Brands Offered   Sourcing from many non-trademarked brands (a)  " don't dropship trademarked items. only stick to no-brand or lesser-known brands."
+
+a4 Location         Operating from a different location than targeted market (s) "I don't have a US address .... I will only dropship in the USA my products"
+
+a5 Prices of Items  Lower priced items are preferred (s)           "Find a cheap product on [platform]... That's the model."
+
+ We note the prevalence of themes within forum threads in parenthesis (we note, in our codebooks, when interviews and instructional material support these characteristics).
+
+comments [the product] came to me in 30 days, this is a terrible             Although marketplaces may enforce unique countermea-
+business ... the review goes to the product." It can also introduce      sures against abusive dropshipping activities, this information
+long-term harm to the e-commerce platform itself. Negative               is withheld from the public; thus, abusive dropshippers do
+experiences from customers can cause harm to propagate to                not discuss evasion unique to specific marketplaces. Abusive
+the platform, with customers choosing to patronize an affected           dropshippers also allege that smaller platforms loosely enforce
+platform less frequently, impacting its traffic.                         countermeasures (e.g., Craigslist, Flipkart); however, they are
+                                                                         not popular target platforms due to their smaller market share.
+C. Handling Returns
+                                                                         E. Abusive Dropshipping Characteristics
+    When an item is successfully shipped to a customer, an
+abusive dropshipper may face requests to return an item                      We identified five abusive dropshipping characteristics that
+(e.g., due to the customer not being satisfied with the product).        result from behavior to ensure operation longevity (a1 - a3),
+                                                                         convenience and profit (a4) or minimize loss (a5). Table IV
+Inconvenience during Returns [F:f , I:m] Handling returns                presents seller attributes that relate to the characteristics we
+may inconvenience an abusive dropshipper for one of two                  discover. These attributes are public information, and customers
+reasons. First, the return address listed on the item packaging          can observe them by visiting a seller's storefront and brand
+is that of the private seller. If a customer were to return the          listing page. When aggregated, discussion of characteristics
+package based on the address provided on the shipment, the               is prevalent in almost all (a) forum threads, with individual
+dropshipper is inconvenienced as the returned product is sent            characteristics having a minimum prevalence of some (s).
+to the private seller. Second, even if the abusive dropshipper
+could instruct the customer to return the item to the abusive                Item categories (a1), items offered per brand (a2), and
+dropshipper's chosen address, the abusive dropshipper may                brands offered (a3) define preferences for a seller's item
+face inconvenience (e.g., not being physically present in that           categories and brands. We found that abusive dropshippers
+location or not having a location to store the returned items).          prefer listing items from many categories and brands but
+                                                                         have few listings per brand. For operation longevity, abusive
+    One interviewed participant detailed how abusive drop-               dropshippers use software to filter out items from trademarked
+shipping operations face issues with returns. In this scenario,          brands to prevent suspension or account closure resulting from
+the abusive dropshipper was in a country outside the target              infringement complaints. This results in the listing of many non-
+domain's region of service, stating "the dropshipper doesn't             trademarked brands. One forum user reported that "...[at] first
+have a return place [and was in] another country. If the                 I sold trademarked items [but] received an account suspension.
+customer wants to return it, the seller has to pay too much              You can sell a few trademarked items but it's better to sell
+money. Because Amazon doesn't pay for the return. And he                 non-trademarked items (you can use some tools to find)."
+has to send with shipping. And international shipping is super
+expensive." For these reasons, abusive dropshippers prefer to                This strategy increases abusive dropshippers' sales by
+provide a full refund when receiving a return request, allowing          catering to a broader customer base and isolates platform
+the customer to keep the item. This choice is out of necessity           delistings to specific items. Compliant sellers, conversely, select
+and motivated by the abusive dropshipper's need to continue              a niche product, often listing items from a few categories/brands
+their operation without receiving negative reviews and prevent           but having many listings per brand.
+the buyer from reporting the seller to the e-commerce platform.
+                                                                             Location (a4) describes the geographic locality and validity
+D. Strategies Across Marketplaces                                        of a seller's address. From our studied resources, we found that
+                                                                         abusive dropshippers often operate from a different country than
+    Our thematic analysis exposes that abusive dropshippers              the marketplace they sell on to target specific consumers. For
+target popular platforms with large customer bases to increase           instance, instructional materials from non-English communities
+their profit (e.g., Amazon, eBay). They allege that most                 in our studied resources mention, "...you can boost sales and
+platforms enact common countermeasures to curb abusive                   make more money by selling in locations that aren't as saturated
+dropshipping activities. These include (a) tracking number ver-          by other sellers." Conversely, compliant sellers have a local
+ification, (b) requiring a letter of authorization documentation,        (business) address to handle item shipping and returns.
+(c) trademark filtering, and (d) relying on user reporting. To
+overcome them, abusive dropshippers have generic solutions                   Prices of items (a5) describes the item price of sellers'
+to evade these countermeasures - using fake tracking number              listings. The business model of abusive dropshippers involves
+services, forging letters of authorization, avoiding trademarked         listing a high number of items at low prices. The lower-priced
+goods, and soliciting fake positive reviews.                             items pose less risk for trademark complaints and are less likely
+
+                                                                     12
+to be returned by customers. Although, abusive dropshippers              platform operating in Latin America] and fulfilling from private
+may have different thresholds of what a low price is depending           sellers on Amazon US) require platforms to share transaction
+on the product category and how much risk they are willing               records. Additionally, this method would be ineffective in
+to take. If a customer requests a return, abusive dropshippers           identifying abusive dropshippers that sell through their own
+lose less money with lower-priced items (as they do not accept           e-commerce websites. Future work will explore the potential
+returns and allow customers to keep the item).                           of (1) combining our findings on abusive characteristics with
+                                                                         private attributes provided by e-commerce platforms and (2) its
+    Although our qualitative analysis informs us of abusive              corresponding feasibility for identifying abusive dropshippers.
+dropshipping characteristics, further investigation is required to
+determine their eligibility in automated efforts to detect abusive           We also propose that e-commerce platforms should design
+dropshippers, discussed in detail in Sec. V.                             countermeasures that consider input from original sellers who
+                                                                         are victims of abusive dropshipping. First, marketplaces should
+               V. DISCUSSION AND LIMITATIONS                             provide sellers with an interface to specifically report customers
+                                                                         suspected of abusive dropshipping (e.g., customers who place
+A. Key Takeaways                                                         orders to multiple different addresses, suggesting an abusive
+                                                                         dropshipping operation). Similarly, platforms could flag orders
+    We discover abusive dropshippers (1) list gap items and              (via warning labels) from such customers, while still providing
+provide fake tracking numbers for customer satisfaction, (2)             original sellers autonomy over fulfillment decisions. This
+identify multiple private sellers to fulfill customer orders             would preemptively prevent abusive dropshippers from abusing
+timely, and (3) list cheap products so customers can keep                the original seller. Marketplaces should also streamline post-
+items when they desire a refund. They also collaborate to                report procedures. For example, interfaces should accommodate
+find items for listing that minimize reports of intellectual             updates of an original seller's report (e.g., status of verifying
+property infringement and leverage legitimate tools to get               alleged abusive dropshipper's letter of authorization).
+positive reviews. Such strategies allow abusive dropshippers to
+persist in marketplaces and continue their abusive operation.            B. Limitations
+
+Automated Detection of Abusive Dropshippers. We present                      A limitation of our study is that we are unable to measure
+in Sec. IV-E five abusive dropshipping characteristics obtainable        the ground-truth prevalence of abusive dropshipping on popular
+from a seller's marketplace profile. Using these characteristics,        marketplaces. Such an effort would require internal e-commerce
+a supervised or unsupervised ML model could be trained to                information, which is outside our scope. For ethical reasons, we
+detect abusive dropshippers. Yet, our qualitative data cannot            also do not pay for abusive dropshipping materials. Additionally,
+inform concrete quantitative trends (e.g., median price of an            given that dark and deep web content is hidden from search
+item) or statistically significant differences between abusive           engines and that we would need to impersonate abusive
+dropshippers and compliant sellers in these features; both of            dropshippers to infiltrate their private communities, we leave
+which are necessary for training and assessing model accuracy.           ethical protocol design to crawl them to future work. These
+                                                                         limitations constrain our initial findings to discussion from
+    Further investigation is required to determine if these              abusive dropshippers and scenarios alleged by victim sellers of
+characteristics are suitable features for a detection model.             abusive dropshipping, expressed on public forums. However,
+Such an investigation poses two main challenges. First, it               we enrich our findings by conducting interviews with relevant
+requires a ground truth labeled dataset of sellers marked as             participants (sellers and consultants).
+abusive dropshippers or compliant, access of which can only be
+disclosed by e-commerce platforms. Second, if an automated                   Second, to analyze non-English content, we leverage transla-
+detection model is feasible, an adaptive abusive dropshipper             tion via an API [47]. The automated translation may not be able
+who knows the model attributes can operate their store such              to accurately translate intricacies within forums, such as forum
+that they are erroneously labeled as a compliant seller, evading         jargon. However, we conducted our best effort to minimize
+detection. Future work will investigate the feasibility of platform      this concern - we only generate codes for sentences that are
+collaboration and an automated detection model.                          fully comprehensible. Additionally, findings from non-English
+                                                                         forums/material align with those of English forums/material,
+Role of E-commerce Platforms in Mitigation. E-commerce                   suggesting reliability of our automated translations.
+platforms have access to the public attributes of abusive
+dropshippers, and additional private attributes (e.g., payment               We also note that our interview participants skew US-
+methods, and supply chain data). This information would allow            centric operations. Although we translated queries into non-
+connections to be drawn between abusive dropshippers' source             English languages, our search mainly focuses on English-
+vendors and consumers for detection. For instance, sellers'              centric content. Thus, forum/interview data may miss intricacies
+customer purchase addresses in one domain (e.g., Amazon MX)              relating to operations outside the US/non-English-speaking
+could be cross-referenced with the shipping addresses of orders          regions. Further work is required to understand intricacies that
+fulfilled by sellers on other platform domains (e.g., Amazon             may arise from abusive dropshipping operations conducted in
+US) to confirm if the MX seller is an abusive dropshipper                different target and source domains, in different regions, and
+fulfilling items through US private sellers.                             how these intricacies may influence abusive dropshipper tactics.
+
+    This method works when the target and source platforms                                       VI. RELATED WORK
+are from the same e-commerce platform (e.g., Amazon MX
+and US), as the platform has access to both shipping addresses.              Dropshipping has been studied as an e-commerce supply
+Yet, abusive dropshippers implementing unconventional selling            chain management strategy [1], [59]. However, such assess-
+methods (e.g., listing on Mercado Libre [a popular e-commerce            ments focus on compliant dropshippers, who maintain formal
+
+                                                                     13
+agreements with manufacturers to act as authorized entities.                         [3] "Aliexpress guideline," https://sell.aliexpress.com/zh/__pc/
+Several existing works compare the performance of various                                  wndWNPOpMi.htm, 2023, [Online; accessed 15-February-2023].
+inventory and distribution channel strategies, including dropship-
+ping [108], [30], [112], [24], [52], [44]. Other works examine                       [4] "Our seller-guaranteed services," https://sale.aliexpress.com/__pc/
+the application of dropshipping strategies over traditional mech-                           buyerprotection-seller_guaranteed.htm, 2020, [Online; accessed 11-
+anisms [61], [75]. In contrast, we focus on how dropshipping                                March-2023].
+can be exploited to execute abusive selling operations.
+                                                                                     [5] "About fulfilled by amazon," https://www.amazon.com/gp/help/
+    The security community has long analyzed underground                                    customer/display.html?nodeId=201910460, 2020, [Online; accessed
+marketplaces and forums to examine the connected economies                                 13-January-2023].
+of these entities. One line of research has examined public
+IRC channels, social networking sites, and underground forums                        [6] "Drop shipping policy," https://sellercentral.amazon.com/help/hub/
+for illicit or abusive activities (e.g., credit card fraud [77],                            reference/external/201808410, 2020, [Online; accessed 11-March-
+[91], exploiting platform monetization [26], identity theft [18],                           2023].
+[20], [76], denial of service tools [17], [65], spamming [97],
+[43], [62], SIM farms [105] and phishing [96], [70], [58],                           [7] "Amazon is hung up on the problem of drop shipping,"
+[97]). Anonymous marketplaces have also been examined for                                   https://www.ecommercebytes.com/2021/05/16/amazon-is-hung-
+commodities (e.g., banned substances), revenues [25], [101],                                up-on-the-problem-of-drop-shipping/, 2021, [Online; accessed
+forum users' interactions [93], and language/culture [111].                                17-January-2023].
+
+    Recent work describes concession abuse, a method in which                        [8] "Report a violation of selling policies," https://
+customers abuse e-commerce merchants' return policies to                                    sellercentral.amazon.com/gp/help/external/200444420, 2021, [Online;
+obtain a refund or duplicate item while keeping the original [92].                          accessed 17-February-2023].
+This exploit varies from abusive dropshipping, as it only in-
+volves the victim seller and the malicious customer. Reshipping                      [9] "Amazon is fighting against laws that could force it to verify
+scams [49] also differ from abusive dropshipping, as scam actors                            third-party sellers' identities and give out their contact informa-
+exploit misinformed `drops' who sign up to unknowingly aid                                  tion," https://www.businessinsider.com/amazon-lobbying-third-party-
+the malicious reshipper in selling received items on the black                              seller-transparency-laws-inform-acts-2021-6, 2021, [Online; accessed
+market. In contrast, abusive dropshipping victims are other                                17-January-2023].
+e-commerce sellers, the platform, and customers. To the best
+of our knowledge, this work is the first study that explores                        [10] "Amazon canada guideline," https://sellercentral.amazon.ca/help/hub/
+fraudulent dropshipping on e-commerce platforms.                                            reference/external/G201808410, 2023, [Online; accessed 15-February-
+                                                                                            2023].
+                        VII. CONCLUSIONS
+                                                                                    [11] "Amazon international free shipping," https://www.amazon.com/gp/
+    We present the first study on the characterization of                                   help/customer/display.html?nodeId=GY48Z9B62JLTAQV2, 2022, [On-
+abusive dropshipping on e-commerce platforms, and detail how                                line; accessed 13-January-2023].
+abusive dropshippers affect consumers and compliant sellers.
+We accomplish this by examining diverse online e-commerce                           [12] "Amazon usa guideline," https://sellercentral.amazon.com/help/hub/
+communities, and software used by abusive dropshippers and                                  reference/external/201808410, 2023, [Online; accessed 15-February-
+also through interviews with consultants and sellers. Our                                   2023].
+findings uncover that dropshipping can be abused, resulting
+in harm affecting other sellers and customers. We use this                          [13] "Amz blast," https://www.amzblast.com, 2020, [Online; accessed 11-
+knowledge to identify five abusive dropshipping characteristics                             March-2023].
+that are associated with online seller attributes. Our work
+highlights the significant harm abusive dropshippers pose to all                    [14] "Amzscout," https://amzscout.net/, 2020, [Online; accessed 11-March-
+parties in e-commerce marketplaces while motivating future                                  2023].
+work to develop safeguards to protect users from these risks.
+                                                                                    [15] "Aura," https://goaura.com/, 2020, [Online; accessed 11-March-2023].
+                         ACKNOWLEDGMENT
+                                                                                    [16] "The hustlers making millions from goods they never handle published,"
+    We thank our anonymous reviewers and shepherd for                                       https://www.bbc.com/news/technology-53759932, 2022, [Online; ac-
+providing us with valuable feedback that helped improve our                                 cessed 15-February-2023].
+paper. We would also like to thank the interview participants
+for their generous time and contribution to our research. This                      [17] R. Bhalerao, M. Aliapoulios, I. Shumailov, S. Afroz, and D. McCoy,
+work is supported by startup funding from Purdue University.                               "Mapping the underground: Supervised discovery of cybercrime supply
+                                                                                            chains," in APWG Symposium on Electronic Crime Research (eCrime),
+                             REFERENCES                                                     2019.
+
+   [1] N. A. Agatz, M. Fleischmann, and J. A. Van Nunen, "E-fulfillment and         [18] L. Bilge, T. Strufe, D. Balzarotti, and E. Kirda, "All your contacts are
+         multi-channel distribution­a review," European journal of operational              belong to us: automated identity theft attacks on social networks," in
+         research, 2008.                                                                    International Conference on World Wide Web, 2009.
+
+   [2] "Dropshipping success stories," https://alidropship.com/blog/success-        [19] "Blackhatworld," https://www.blackhatworld.com/, 2023, [Online; ac-
+         stories/, 2023, [Online; accessed 13-January-2023].                                cessed 13-January-2023].
+
+                                                                                    [20] J. Blocki, B. Harsha, and S. Zhou, "On the economics of offline
+                                                                                            password cracking," in IEEE Symposium on Security and Privacy
+                                                                                           (S&P), 2018.
+
+                                                                                    [21] "Bluecare public tracking facility." https://www.bluecare.express, 2020,
+                                                                                            [Online; accessed 11-January-2023].
+
+                                                                                    [22] "Bqool," https://www.bqool.com/, 2020, [Online; accessed 11-March-
+                                                                                            2023].
+
+                                                                                    [23] "Trademark search. bulk check trademark of 500 names," https:
+                                                                                           //www.bulkseotools.com/bulk-trademark-search.php, 2020, [Online;
+                                                                                            accessed 13-January-2023].
+
+                                                                                    [24] W. Chiang and Y. Feng, "Retailer or e-tailer? strategic pricing and
+                                                                                            economic-lot-size decisions in a competitive supply chain with drop-
+                                                                                            shipping," Journal of the Operational Research Society, 2010.
+
+                                                                                    [25] N. Christin, "Traveling the silk road: A measurement analysis of a
+                                                                                            large anonymous online marketplace," in International Conference on
+                                                                                           World Wide Web, 2013.
+
+                                                                                    [26] A. Chu, A. Arunasalam, M. O. Ozmen, and Z. B. Celik, "Behind the
+                                                                                            tube: Exploitative monetization of content on {YouTube}," in USENIX
+                                                                                            Security, 2022.
+
+                                                                                14
+[27] "Coppel guideline," https://coppelmx.my.site.com/sellers/s/terminos-y-           [51] "Hepsiburada guideline," https://akademi.hepsiburada.com/portal, 2023,
+        condiciones-vendedor, 2023, [Online; accessed 15-February-2023].                      [Online; accessed 15-February-2023].
+
+[28] "How covid-19 changed e-commerce: sales growth and irreversible de-              [52] V. Hovelaque, L. G. Soler, and S. Hafsa, "Supply chain organization
+        pendence," https://www.thedrum.com/opinion/2021/01/13/how-covid-                      and e-commerce: a model to analyze store-picking, warehouse-picking
+       19-changed-e-commerce-sales-growth-and-irreversible-dependence,                        and drop-shipping," 4OR, 2007.
+        2021, [Online; accessed 17-February-2023].
+                                                                                      [53] "informed.co," https://www.informed.co/, 2020, [Online; accessed 11-
+[29] "Daraz guideline," https://university.daraz.pk/course/learn?id=                          March-2023].
+        937&type=policies&login=skip#drop, 2023, [Online; accessed
+       15-February-2023].                                                             [54] "Interview protocol (submission-39)," https://osf.io/sqy7z/, 2022, [On-
+                                                                                              line; accessed 15-February-2023].
+[30] Z. Y. Dennis, T. Cheong, and D. Sun, "Impact of supply chain power
+        and drop-shipping on a manufacturer's optimal distribution channel            [55] "Jumia         guideline,"  https://sellercenter.jumia.com.ng/
+        strategy," European Journal of Operational Research, 2017.
+                                                                                      delivery_guidelines, 2023, [Online; accessed 15-February-2023].
+[31] "Drop-shipping: What you need to know before you buy or sell
+        online," https://www.michigan.gov/ag/consumer-protection/consumer-            [56] "Jungle scout," https://www.junglescout.com/, 2020, [Online; accessed
+        alerts/consumer-alerts/shopping/before-you-buy-or-sell-online, 2022,                 11-March-2023].
+        [Online; accessed 15-February-2023].
+                                                                                      [57] "kaskus.co.id," https://kaskus.co.id, 2023, [Online; accessed 13-January-
+[32] "Coronavirus pandemic adds $219 billion to us ecommerce sales in                         2023].
+        2020-2021," https://www.digitalcommerce360.com/article/coronavirus-
+        impact-online-retail/, 2021, [Online; accessed 17-February-2023].             [58] A. Kharraz, W. Robertson, and E. Kirda, "Surveylance: automatically
+                                                                                              detecting online survey scams," in IEEE Symposium on Security and
+[33] "E-commerce jumped 55% during covid to hit $1.7 tril-                                   Privacy (S&P), 2018.
+        lion," https://www.forbes.com/sites/johnkoetsier/2022/03/15/pandemic-
+        digital-spend-17-trillion/?sh=c74ad2350352, 2021, [Online; accessed           [59] M. Khouja, "The evaluation of drop shipping option for e-commerce
+       17-February-2023].                                                                     retailers," Computers & Industrial Engineering, 2001.
+
+[34] "ebay guideline," https://www.ebay.com/help/selling/posting-items/               [60] "Lazada guideline," https://sellercenter.lazada.com.ph/seller/helpcenter/
+        setting-postage-options/drop-shipping?id=4176, 2023, [Online; ac-                     drop-shipping-policy-13852.html, 2023, [Online; accessed 15-February-
+        cessed 15-February-2023].                                                             2023].
+
+[35] "ebay frowns on orders wrapped in amazon smiles,"                                [61] S. Ma, Z. Jemai, E. Sahin, and Y. Dallery, "The news-vendor problem
+        https://www.ecommercebytes.com/2019/01/21/ebay-frowns-on-                            with drop-shipping and resalable returns," International Journal of
+        orders-wrapped-in-amazon-smiles/, 2021, [Online; accessed 17-                        Production Research, 2017.
+        January-2023].
+                                                                                      [62] D. McCoy, H. Dharmdasani, C. Kreibich, G. M. Voelker, and S. Savage,
+[36] "Drop shipping and product sourcing," https://www.ebay.com/help/                        "Priceless: The role of payments in abuse-advertised goods," in ACM
+        selling/posting-items/setting-postage-options/drop-shipping?id=4176,                  SIGSAC Conference on Computer and Communications Security (CCS),
+        2020, [Online; accessed 11-March-2023].                                               2012.
+
+[37] "Report an issue with a seller," https://www.ebay.com/help/buying/               [63] "Mercari guideline," https://www.mercari.com/us/help_center/topics/
+       working-sellers/report-seller-listing?id=4022, 2021, [Online; accessed                 account/policies/prohibited-conduct/, 2023, [Online; accessed 15-
+       17-March-2023].                                                                        February-2023].
+
+[38] P. Emami-Naeini, H. Dixon, Y. Agarwal, and L. F. Cranor, "Exploring              [64] S. Mirza, L. Begum, L. Niu, S. Pardo, A. Abouzied, P. Papotti, and
+        how privacy and security factor into iot device purchase behavior," in                C. Pöpper, "Tactics, threats & targets: Modeling disinformation and its
+       Conference on Human Factors in Computing Systems, 2019.                                mitigation," in NDSS, 2023.
+
+[39] "Feedbackexpress," https://www.feedbackexpress.com/, 2020, [Online;              [65] M. Motoyama, D. McCoy, K. Levchenko, S. Savage, and G. M. Voelker,
+        accessed 11-March-2023].                                                             "An analysis of underground forums," in ACM SIGCOMM conference
+                                                                                              on Internet measurement conference, 2011.
+[40] "Flipkart guideline," https://seller.flipkart.com/sell-online/terms-of-use,
+        2023, [Online; accessed 15-February-2023].                                    [66] "Myantra guideline," https://partners.myntrainfo.com/termsofuse, 2023,
+                                                                                              [Online; accessed 15-February-2023].
+[41] "forum.alidropship," https://forum.alidropship.com/, 2023, [Online;
+        accessed 13-January-2023].                                                    [67] S. Netessine and N. Rudi, "Supply chain structures on the internet: and
+                                                                                              the role of marketing-operations interaction," Handbook of quantitative
+[42] "forum.donanimhaber," https://forum.donanimhaber.com/, 2023, [On-                        supply chain analysis: Modeling in the e-business era, 2004.
+        line; accessed 13-January-2023].
+                                                                                      [68] "Noon guideline," https://help.noon.partners/hc/en-us/articles/
+[43] J. Franklin, A. Perrig, V. Paxson, and S. Savage, "An inquiry into                      13411717180695-Product-Listing-Policy, 2023, [Online; accessed
+        the nature and causes of the wealth of internet miscreants." in ACM                  15-February-2023].
+        SIGSAC Conference on Computer and Communications Security (CCS),
+        2007.                                                                         [69] "Noon terms," https://help.noon.partners/hc/en-us/articles/
+                                                                                              8546655990935-International-Seller-Terms-and-Conditions-in-UAE,
+[44] X. Gan, S. P. Sethi, and J. Zhou, "Commitment-penalty contracts in                       2023, [Online; accessed 15-February-2023].
+        drop-shipping supply chains with asymmetric demand information,"
+       European Journal of Operational Research, 2010.                                [70] A. Oest, P. Zhang, B. Wardman, E. Nunes, J. Burgis, A. Zand,
+                                                                                              K. Thomas, A. Doupé, and G.-J. Ahn, "Sunrise to sunset: Analyzing
+[45] "Inside the weird, get-rich-quick world of dropshipping," https://                       the end-to-end life cycle and effectiveness of phishing attacks at scale,"
+       www.wired.co.uk/article/dropshipping-instagram-ads, 2022, [Online;                     in USENIX Security, 2020.
+        accessed 15-February-2023].
+                                                                                      [71] "Ozon guideline," https://docs.ozon.ru/global/en/fulfillment/rfbs/
+[46] "google-search-api," https://pypi.org/project/Google-Search-API/, 2021,                  logistic-settings/order-packaging-requirements/?country=OTHER,
+        [Online; accessed 15-February-2023].                                                  2023, [Online; accessed 15-February-2023].
+
+[47] "googletrans 3.0.0," https://pypi.org/project/googletrans/, 2021, [Online;       [72] "packtrack," http://www.packtrack.com/, 2021, [Online; accessed 15-
+        accessed 13-January-2023].                                                            February-2023].
+
+[48] "Grey market," https://www.investopedia.com/terms/g/graymarket.asp,              [73] "Dropshipping  business     training,"  https://
+        2020, [Online; accessed 11-February-2023].
+                                                                                      panel.eticaretegitimkursu.com/, 2022, [Online; accessed 13-January-
+[49] S. Hao, K. Borgolte, N. Nikiforakis, G. Stringhini, n. Egele, M. Eu-
+        banks, B. Krebs, and G. Vigna, "Drops for stuff: An analysis of               2023].
+        reshipping mule scams," in ACM SIGSAC Conference on Computer
+        and Communications Security (CCS), 2015.                                      [74] "Public document sharing tool," https://www.pastefs.com/, 2020, [On-
+                                                                                              line; accessed 13-January-2023].
+[50] "Helium 10," https://www.helium10.com/, 2020, [Online; accessed
+       11-March-2023].                                                                [75] S. T. Peinkofer, T. L. Esper, R. J. Smith, and B. D. Williams, "Assessing
+                                                                                              the impact of drop-shipping fulfilment operations on the upstream
+                                                                                              supply chain," International Journal of Production Research, 2019.
+
+                                                                                  15
+[76] R. S. Portnoff, S. Afroz, G. Durrett, J. K. Kummerfeld, T. Berg-                   [98]  "Tiktok influencer bidding to attract investors to his latest get-rich-
+        Kirkpatrick, D. McCoy, K. Levchenko, and V. Paxson, "Tools for                        scheme," https://www.dailymail.co.uk/news/article-11446625/TikTok-
+        automated analysis of cybercriminal markets," in International Confer-          [99]  star-bidding-attract-investors-latest-rich-scheme-failed-attempt.html,
+        ence on World Wide Web, 2017.                                                  [100]  2022, [Online; accessed 15-February-2023].
+                                                                                       [101]
+[77] U. Porwal and S. Mukund, "Credit card fraud detection in e-commerce,"                    "Free trademark search tool," https://www.trademarkia.com/, 2020,
+        in IEEE International Conference On Trust, Security And Privacy In             [102]  [Online; accessed 13-January-2023].
+       Computing And Communications (TrustCom), 2019.                                  [103]
+                                                                                       [104]  "Trendyol guideline," https://akademi.trendyol.com/satici-bilgi-
+[78] M. Rahman, N. Hernandez, R. Recabarren, S. I. Ahmed, and B. Car-                  [105]  merkezi/detay/355, 2023, [Online; accessed 15-February-2023].
+        bunar, "The art and craft of fraudulent app promotion in google play," in      [106]
+       ACM SIGSAC Conference on Computer and Communications Security                   [107]  R. Van Wegberg, S. Tajalizadehkhoob, K. Soska, U. Akyazi, C. H.
+       (CCS), 2019.                                                                    [108]  Ganan, B. Klievink, N. Christin, and M. Van Eeten, "Plug and prey?
+                                                                                       [109]  measuring the commoditization of cybercrime via online anonymous
+[79] "ecommerce fulfillment services | rakuten super logistics," https://              [110]  markets," in USENIX Security, 2018.
+       www.shipnetwork.com/, 2021, [Online; accessed 13-January-2023].                 [111]
+                                                                                       [112]  "Viral launch," https://viral-launch.com/, 2020, [Online; accessed 11-
+[80] "Reddit dropshipping," https://www.reddit.com/r/dropship/, 2023, [On-             [113]  March-2023].
+        line; accessed 13-January-2023].
+                                                                                              "voz.vn," https://voz.vn, 2023, [Online; accessed 13-January-2023].
+[81] "Repricerexpress," https://www.repricerexpress.com/, 2020, [Online;
+        accessed 11-March-2023].                                                              "Walmart guideline," https://sellerhelp.walmart.com/s/guide?article=
+                                                                                              000007893, 2023, [Online; accessed 15-February-2023].
+[82] B. Saunders, J. Sim, T. Kingstone, S. Baker, J. Waterfield, B. Bartlam,
+        H. Burroughs, and C. Jinks, "Saturation in qualitative research:                      P. Wang, X. Liao, Y. Qin, and X. Wang, "Into the deep web: Under-
+        exploring its conceptualization and operationalization," Quality &                    standing e-commerce fraud from autonomous chat with cybercriminals,"
+        quantity, 2018.                                                                       in NDSS, 2020.
+
+[83] "Sellerengine," https://sellerengine.com/, 2020, [Online; accessed 11-                   "dropshipping - warrior forum - the #1 digital marketing forum &
+        March-2023].                                                                          marketplace," https://www.warriorforum.com/, 2023, [Online; accessed
+                                                                                              13-January-2023].
+[84] "Feedback genius," https://www.sellerlabs.com/feedback-genius, 2020,
+        [Online; accessed 11-March-2023].                                                     "Wayfair guideline," https://rise.articulate.com/share/DiNQ8Er1YHH-
+                                                                                              bcFmo_jo5FmJqP7RKOio#/lessons/FY0p2S_UllofFsd3S8TJOkMF-
+[85] "Shopeee guideline," https://help.shopee.com.my/portal/article/77215,                    hrZbGbr, 2023, [Online; accessed 15-February-2023].
+        2023, [Online; accessed 15-February-2023].
+                                                                                              D.-Q. Yao, X. Yue, S. K. Mukhopadhyay, and Z. Wang, "Strategic
+[86] "Shopify guideline," https://help.shopify.com/en/manual/your-                            inventory deployment for retail and e-tail stores," Omega, 2009.
+        account/legal/dropshipping, 2023, [Online; accessed 15-February-
+        2023].                                                                                "Amazon vn," https://www.youtube.com/c/AMAZONVN1525, 2023,
+                                                                                              [Online; accessed 13-January-2023].
+[87] "Dropshipping,"  https://help.shopify.com/en/manual/products/
+                                                                                              "Dropshipping case studies," https://www.youtube.com/channel/
+dropshipping, 2020, [Online; accessed 11-March-2023].                                         UCqw27ZfS4aWdNhP1MDOldPA, 2023, [Online; accessed 13-January-
+                                                                                              2023].
+[88] "Thousands of fraudsters are selling via shopify, analysis finds," https:
+       //www.ft.com/content/0280592d-0adf-4dcb-a831-4f8a85f414bc, 2021,                       K. Yuan, H. Lu, X. Liao, and X. Wang, "Reading thieves' cant: auto-
+        [Online; accessed 17-January-2023].                                                   matically identifying and understanding dark jargons from cybercrime
+                                                                                              marketplaces," in USENIX Security, 2018.
+[89] "Report an issue with a merchant," https://www.shopify.com/legal/
+        report-aup-violation, 2021, [Online; accessed 17-January-2023].                       F. Zhao, D. Wu, L. Liang, and A. Dolgui, "Lateral inventory transship-
+                                                                                              ment problem in online-to-offline supply chain," International Journal
+[90] "This shopify side hustle could make you 50k before the holi-                            of Production Research, 2016.
+        days," https://nypost.com/2022/11/03/shopify-side-hustle-could-make-
+        you-50k-before-the-holidays/, 2022, [Online; accessed 15-February-                    Y. Zhu, D. Xi, B. Song, F. Zhuang, S. Chen, X. Gu, and Q. He,
+        2023].                                                                                "Modeling users' behavior sequences with hierarchical explainable
+                                                                                              network for cross-domain fraud detection," in The Web Conference,
+[91] B. Stone-Gross, R. Abman, R. A. Kemmerer, C. Kruegel, D. G.                              2020.
+        Steigerwald, and G. Vigna, "The underground economy of fake antivirus
+        software," in Economics of information security and privacy III.                                             APPENDIX A
+        Springer, 2013.                                                                             E-COMMERCE PLATFORM GUIDELINES
+
+[92] Z. Sun, A. Oest, P. Zhang, C. Rubio-Medrano, T. Bao, R. Wang,                         We analyzed guidelines for 20 popular e-commerce plat-
+        Z. Zhao, Y. Shoshitaishvili, A. Doupé, G.-J. Ahn et al., "Having your          forms. These popular marketplaces provide services to cus-
+        cake and eating it: An analysis of concession-abuse-as-a-service," in          tomers in different regions of the world (Europe, Africa, North
+       USENIX Security, 2021.                                                          and South America, and Asia).
+
+[93] Z. Sun, C. E. Rubio-Medrano, Z. Zhao, T. Bao, A. Doupé, and G.-J.                     Table V presents relevant excerpts from e-commerce guide-
+       Ahn, "Understanding and predicting private interactions in underground          lines, which sellers are required to follow per the Terms of
+        forums," in Proceedings of the Ninth ACM Conference on Data and                Use. Broadly, abusive dropshippers violate platform-stipulated
+       Application Security and Privacy, 2019.                                         guidelines on (1) agreements/communications with suppliers,
+                                                                                       (2) shipping and packaging, and (3) stock control requirement
+[94] "Target guideline," https://corporate.target.com/_media/TargetCorp/               (necessity to always verify sufficient stock or to remove their
+        about/pdf/Target-Drop-Ship-Eligibility.pdf, 2023, [Online; accessed            listing otherwise). We note that violations of these guidelines
+       15-February-2023].                                                              are rooted in the lack of a contract/agreement between abusive
+                                                                                       dropshippers and their "suppliers" (private sellers).
+[95] K. Thomas, D. Akhawe, M. Bailey, D. Boneh, E. Bursztein, S. Consolvo,
+        N. Dell, Z. Durumeric, P. G. Kelley, D. Kumar et al., "Sok: Hate,
+        harassment, and the changing landscape of online abuse," in IEEE
+        Symposium on Security and Privacy (S&P), 2021.
+
+[96] K. Thomas, F. Li, A. Zand, J. Barrett, J. Ranieri, L. Invernizzi,                                               APPENDIX B
+       Y. Markov, O. Comanescu, V. Eranti, A. Moscicki et al., "Data breaches,                                CRAWLER KEYWORDS
+        phishing, or malware? understanding the risks of stolen credentials," in
+       ACM SIGSAC Conference on Computer and Communications Security                       Table VI shows the queries used in our Google Search API
+       (CCS), 2017.                                                                    crawler for the initial discovery of abusive dropshipping-related
+                                                                                       forums and resources, described in Sec. III.
+[97] K. Thomas, D. McCoy, C. Grier, A. Kolcz, and V. Paxson, "Trafficking
+        fraudulent accounts: The role of the underground market in twitter
+        spam and abuse," in USENIX Security, 2013.
+
+                                                                                   16
+             TABLE V: Studied marketplaces and corresponding guidelines that ban abusive dropshipping.
+
+Marketplace Excerpt of Guideline that prohibits Abusive Dropshipping
+
+eBay         Listing an item on eBay and then purchasing the item from another retailer or marketplace that ships directly to
+             your customer is not allowed on eBay [34]
+
+Amazon       Have an agreement with your supplier that they will identify you (and no one else) as a seller of your products on
+Canada       all packing slips, invoices, external packaging [10]
+
+Amazon US    Purchasing products from a third party, including Amazon or another seller in Amazon's stores, and having that
+             third party ship directly to customers ... is strictly prohibited without exception [12]
+
+Shopeee      Seller shall properly manage and ensure that relevant information such as the price and the details of items,
+             inventory amount and terms and conditions for sales is updated on Seller's listing and shall not post inaccurate or
+             misleading information [85]
+
+Lazada       A seller shall not perform [import] and [list] large volume of existing products listed for sale by another seller [60].
+
+Flipkart     You must have all the necessary licenses and permits required for such sale. All listed items must be kept in stock
+             for successful fulfillment of sales [40]
+
+Target       Accommodation of all carriers and shipping services... [and] ability to produce a Target.com branded pack slip for
+             every shipment [94]
+
+Trendyol     Packaging materials bearing the brands and logos of other e-commerce platforms should not be used, the seller
+             should check the stock, price, and suitability for shipping to the customer, both physically and systematically [100]
+
+Mercari      Prohibited conduct: Listing items not in your possession, Listing an item that is not actually for sale [63]
+
+Walmart      Marketplace sellers may not purchase products from another retailer and have the order shipped directly to a
+             Walmart customer [104]
+
+Daraz        The Seller is obliged to maintain inventory of all Products featured on the Platform and update its true inventory
+             through the Seller Center on a daily basis [29]
+
+Myantra      You must be legally able to sell the item(s) you list for sale on our Platform and must have all the necessary licences
+             and permits required for such sale [66]
+
+Wayfair      Fulfillment of any product using non-Wayfair or non-supplier packaging... branded packaging from other retailers.
+             is strictly prohibited [107]
+
+Shopify      Before using the dropshipping fulfillment method, make sure that you choose a reputable supplier - Read the
+             supplier's policies and Talk with the supplier about their business [86]
+
+Coppel       The Parties agree that the delivery of the Products to the Client will be carried out using the shipping packages
+Hepsiburada  that Coppel provides through the platform [27]
+
+             The seller shall not use any packaging/package belonging to another platform during the packaging processes [51]
+
+AliExpress   The Seller represents that it is and undertakes to be, during the term of the Agreement, the holder of all the rights
+             over the published products [3]
+
+Ozon         When shipping your parcels, print the label from your Ozon personal account and stick it on the package [71]
+
+Jumia        Use the buyer payment receipt and put it inside the package, only Jumia shipping labels may be used [55]
+
+Noon         Obtain all necessary documentation, permits and consents to deliver the product, only QR codes provided by noon,
+             or which you can print from Seller Lab should be properly applied on each package [68], [69]
+
+ Translated to English via Google Translate.
+
+             TABLE VI: Queries used in data collection crawling process.
+
+                                              Queries Used For Crawling
+
+          dropshipping fraud                      dropshipping evasion
+
+          dropshipping easy setup                 dropshipping from amazon
+
+          dropshipping copyright                  dropshipping avoid flag
+
+          dropshipping configuration              dropshipping easy business
+
+          dropshipping fulfillment                dropshipping suppliers
+
+          dropshipping markup                     dropshipping from aliexpress
+
+          dropshipping taxes                      dropshipping products
+
+          dropshipping guide                      dropshipping no agreement
+
+          dropshipping avoid fees                 dropshipping ebay shopify
+
+          dropshipping without permission         dropshipping shipping label
+
+          dropshipping find suppliers             dropshipping suppliers report
+
+          dropshipping seller finding out         dropshipping legal issues
+
+ Crawling was repeated by replacing instances of the word "dropshipping" with the alternate spelling "drop shipping."
+
+                                              17
+                              APPENDIX C                                 Use of malicious software
+           CODEBOOKS FROM THEMATIC ANALYSIS                          trademark filtering (m)
+
+    We present three codebooks generated from our analysis. We           Dropshipping characteristics
+note prevalence through our predefined qualitative terminology       avoiding expensive items (s)
+(f , s, m, a), for low-level themes.                                 preferring non-trademarked items (s)
+                                                                     targeting different countries (s)
+    Key:  High-level code,  Low-level code
+
+A. Forum Threads                                                    C. Interviews
+
+    We present our codebook generated during our analysis of            We present our codebook generated after we analyzed
+forum threads (F).                                                  interview transcripts (I).
+
+     Abusive item sourcing                                               Pricing intricacies affecting sellers
+ opting for items exclusive to target domain (a)                     price hike (a)
+ offering lower priced alternatives (competitive profit) (a)         quality-price mismatch (m)
+ avoiding trademarked items (a)
+                                                                         Impact on seller reputation
+     Underground collaboration to source items                       negative reviews (m)
+ identifying "non-risky" brands (s)                                  reputation loss (m)
+ identifying gap items proven to be successful (s)                   low ratings (m)
+ forging documents (f )                                             .
+
+     Leveraging software                                                 Abusive dropshipper preferences/characteristics
+ abusive use of benign software (a)                                  exclusive items (s)
+ using software marketed for malicious use (m)                       competitive profit items (s)
+                                                                     avoiding trademarked items (a)
+     Volatile item fulfillment
+ not providing shipping information (s)                                  Abusive dropshipper malicious actions
+ generating fake tracking numbers (f )                               forged documents (s)
+ delayed or neglected orders (s)                                     generating fake tracking numbers (f )
+
+     Complications in return process                                     Abusive dropshipping impact on customers
+ refund due to inconvenience in shipping returns (f )                return complications (m)
+                                                                     withholding shipment information (m)
+                                                                     neglected/delayed orders (m)
+
+     Abusive dropshipping characteristics
+
+ diversity of item categories (a)
+ avoiding reliance on one brand (s)
+ preferring non-trademarked items (a)
+ geographic location that is different from target market (s)
+ preference of lower priced items (s)
+
+B. Instructional Material
+
+    We present our codebook generated during our analysis of
+instructional material (M).
+
+     Abusive item sourcing
+ opting for exclusive items (a)
+ pricing items competitively (a)
+ avoiding trademarks/known brands (a)
+ forged documents (f )
+
+     Leveraging software
+ abusive use of benign software (a)
+
+                                                                18
+

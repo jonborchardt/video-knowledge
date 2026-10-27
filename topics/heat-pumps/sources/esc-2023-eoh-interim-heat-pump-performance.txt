@@ -1,0 +1,3188 @@
+Source: Energy Systems Catapult (for DESNZ), Electrification of Heat Demonstration Project: Interim Heat Pump Performance Data Analysis Report (March 2023), https://es.catapult.org.uk/wp-content/uploads/2023/03/EoH-Interim-Heat-Pump-Performance-Data-Analysis-Report-1.pdf (retrieved 2026-10-26)
+Excerpt: full report as extracted
+
+Electrification of
+Heat Demonstration
+Project
+
+Interim Heat Pump
+Performance Data
+Analysis Report
+
+Written by Energy Systems Catapult
+
+  This report has been funded by DESNZ
+  and is issued on their behalf
+Electrification of Heat Demonstration Project
+
+   Contents
+
+Contents..................................................................................................................................... 0
+
+Glossary..................................................................................................................................... 2
+
+1. Executive summary ........................................................................................................... 4
+       1.1 Project background .................................................................................................. 4
+       1.2 About this report....................................................................................................... 5
+       1.3 Data Cleansing, Quality Checks, and Analysis ......................................................... 5
+       1.4 Key findings ............................................................................................................. 6
+
+2. Introduction ....................................................................................................................... 9
+       2.1 Aims......................................................................................................................... 9
+       2.2 Sources of data used for this report........................................................................ 10
+       2.3 Project Stakeholder Overview ................................................................................ 10
+       2.4 Project stages ........................................................................................................ 11
+       2.5 Caveats and Known Biases.................................................................................... 12
+
+3. Heat Pump Installations .................................................................................................. 13
+       3.1 In-Scope Heat Pump Types ................................................................................... 13
+       3.2 Installation Statistics............................................................................................... 13
+       3.3 Installation Quality.................................................................................................. 15
+       3.4 System Optimisation .............................................................................................. 15
+
+4. Monitoring Data Collection .............................................................................................. 16
+       4.1 Monitoring System Design Configurations.............................................................. 16
+       4.2 Meters Installed and Data Recorded ...................................................................... 21
+       4.3 Monitoring Issues ................................................................................................... 23
+
+5. Supplementary Data........................................................................................................ 25
+       5.1 Supplementary Data Description ............................................................................ 25
+       5.2 Data Collection Methods and Timing...................................................................... 26
+
+6. Data Quality Checks and Cleansing ................................................................................ 28
+       6.1 Process.................................................................................................................. 28
+       6.2 Data Cleansing....................................................................................................... 28
+       6.3 Assessing Data Quality .......................................................................................... 38
+       6.4 Analysis Window Selection .................................................................................... 45
+       6.5 Analysis Process Bias Check ................................................................................. 46
+       6.6 Known Quality Issues............................................................................................. 46
+
+                                                                                                                                              Page |0
+Electrification of Heat Demonstration Project
+
+7. Analysis Calculations ...................................................................................................... 49
+       7.1 Assumptions .......................................................................................................... 49
+       7.2 Calculation Variables.............................................................................................. 49
+       7.3 Seasonal Performance Factor Calculations............................................................ 50
+       7.4 Coefficient of Performance Calculations................................................................. 51
+       7.5 Statistical Significance and Confidence Intervals.................................................... 52
+
+8. Seasonal Performance Factor......................................................................................... 53
+       8.1 SPF by Heat Pump Type........................................................................................ 53
+       8.2 SPF by Refrigerant................................................................................................. 56
+       8.3 SPF by Operating Flow Temperature ..................................................................... 58
+       8.4 SPF by Property Type ............................................................................................ 61
+
+9. Hybrid Heat Pump System Operation.............................................................................. 66
+       9.1 Heat Pump to Boiler Operating Ratio ..................................................................... 66
+       9.2 Whole System Efficiency........................................................................................ 67
+       9.3 SPF by Operating Ratio ......................................................................................... 68
+
+10. Cold Snap Analysis ......................................................................................................... 69
+       10.1 Window Selection................................................................................................... 69
+       10.2 Coldest Day Efficiency ........................................................................................... 70
+
+11. Conclusions..................................................................................................................... 71
+12. References...................................................................................................................... 72
+
+DISCLAIMER
+
+This document has been prepared by Energy Systems Catapult Limited. For full copyright, legal information and defined terms,
+please refer to the ‚ÄúLicence / Disclaimer‚Äù section at the back of this document.
+All information is given in good faith based upon the latest information available to Energy Systems Catapult Limited. No warranty or
+representation is given concerning such information, which must not be taken as establishing any contractual or other commitment
+binding upon the Energy Systems Catapult Limited or any of its subsidiary or associated companies.
+
+                                                                                                                                              Page |1
+Electrification of Heat Demonstration Project
+
+Glossary
+
+ASHP      Air Source Heat Pump
+BEIS      Department for Business, Energy and Industrial Strategy
+CI        Confidence Interval (typically 95%)
+COP       Coefficient of Performance
+COP(HX)   COP using the specific SPF calculation boundaries (X = 2, 3 or 4)
+COPSH     COP in space heating mode only (used for Hybrid system calculations)
+DB        Database
+DC        Delivery Contractor
+DESNZ     Department for Energy Security and Net Zero
+EoH       Electrification of Heat
+EPC       Energy Performance Certificate
+ESC       Energy Systems Catapult Ltd.
+FNC       Frazer Nash Consultancy
+GSHP      Ground Source Heat Pump
+GWP       Global Warming Potential (where CO2 has a GWP of 1)
+HP        Heat Pump
+HPR       Heat Pump Return (temperature)
+HPHF      Heat Pump Heating Flow (temperature)
+HT        High Temperature
+HWF       Hot Water Flow (temperature)
+Hybrid    Hybrid system containing a gas boiler and an electric heat pump.
+ID        Identification (number)
+IQR       Interquartile Range
+ITT       Invitation to Tender
+LT        Low Temperature
+MC        Management Contractor
+MCS       Microgeneration Certification Scheme
+n         Number / Sample size
+NUTS      Nomenclature of Territorial Units for Statistics
+
+                                               Page |2
+Electrification of Heat Demonstration Project
+
+Q1, Q3            Quartile 1, Quartile 3
+QA                Quality Assurance
+R290, R32, R410a  Refrigerant fluids / gases used within heat pumps
+RHI               Renewable Heat Incentive
+RHPP              Renewable Heat Premium Payment scheme
+SAP               Standard Assessment Procedure (UK building energy assessment)
+SCOP              Seasonal Coefficient of Performance
+SEPEMO            SEasonal PErformance factor and MOnitoring for heat pump systems in
+                  the building sector project.
+SGL               Shared Ground Loop (GSHP)
+SPF               Seasonal Performance Factor
+SPFHX             SPF Calculated using the specific boundaries in Section 7
+TTPS              Technical Third Party Support
+
+                                               Page |3
+Electrification of Heat Demonstration Project
+
+1. Executive summary
+
+1.1 Project background
+
+The Electrification of Heat (EoH) demonstration project is funded by the Department for Energy
+Security and Net Zero (DESNZ)1 and seeks to better understand the feasibility of a large-scale
+rollout of heat pumps across the UK. It aims to demonstrate that heat pumps can be installed in
+a wide variety of homes and deliver high customer satisfaction across a range of customer
+groups.
+
+The project team consists of a Management Contractor (MC) consortium (including LCP Delta2
+and Oxford Computer Consultants) led by Energy Systems Catapult Ltd. and three Delivery
+Contractors (DCs). The DCs were responsible for the participant recruitment, home survey,
+design, and installation of the heat pumps. They also maintain the heat pump monitoring
+systems to ensure continuous performance data is collected. The MC is responsible for
+management of the project and collation of the data as well as associated analysis and
+dissemination of project findings.
+
+The three DCs are: E.ON (operating in North-East England); OVO Energy (operating in South-
+East England, excluding London); and Warmworks (operating in South-East Scotland).
+
+In total the EoH project has installed 742 heat pump systems in a range of different housing
+types and ages. Installation statistics are provided in Table 1.1.
+
+Table 1.1: Heat pump installation statistics.
+
+Criteria   Group                               Installations (%)  Installations (No.)
+                                                      41.2%
+Heat Pump  LT ASHP                                    32.7%                 306
+                                                       5.1%                 243
+Type       HT ASHP                                    20.9%                  38
+                                                      40.6%                 155
+           GSHP                                       42.8%
+                                                                            301
+           Hybrid                                     11.1%                 261
+                                                       5.5%                  57
+Property Form Detached                                 7.8%                  82
+                                                      14.2%                  41
+           Semi-detached                              24.0%
+                                                      22.2%                  58
+           End-terrace                                 9.2%                 105
+                                                       9.6%                 178
+           Mid-terrace                                13.1%                 165
+                                                                             68
+           Flats                                                             71
+                                                                             97
+Property Age Pre-1919
+
+           1919 to 1944
+
+           1945 to 1964
+
+           1965 to 1980
+
+           1981 to 1990
+
+           1991 to 2000
+
+           2001+
+
+Each of the heat pump installations includes equipment which monitors the heat pump
+performance over time. This equipment monitors the energy used and output by each
+component of the system and various system temperatures. The data collected by this
+
+1 Prior to the formation of the Department for Energy Security and Net Zero (DESNZ) on 7th February 2023; the
+project was funded by the Department for Business, Energy and Industrial Strategy (BEIS).
+2 Formerly Delta-EE.
+
+                                                                                                                                              Page |4
+Electrification of Heat Demonstration Project
+
+equipment is used to analyse the heat pump performance throughout this report. Most of the
+heat pumps will continue to be monitored until September 2023.
+
+1.2 About this report
+
+This report provides interim analysis of the heat pump performance data collected by the
+monitoring systems. The analysis will be refreshed, and additional analysis will be undertaken
+after the completion of the projects monitoring period in September 2023.
+
+As well as the analysis, the report provides all details relating to how the heat pumps were
+monitored, data was collected and interpreted. This includes:
+
+          ‚ñ† Detail on the physical monitoring system,
+          ‚ñ† Detail on the performance data cleansing,
+          ‚ñ† Detail on the data quality checks conducted, and how the results were interpreted,
+          ‚ñ† Detail on calculation assumptions made,
+          ‚ñ† Detail on known data quality issues and known data biases.
+
+1.3 Data Cleansing, Quality Checks, and Analysis
+
+To ensure the data was of sufficient standard to form analysis conclusions, an iterative process
+of cleansing and quality checking was conducted. The cleansing activity is the process of taking
+‚Äúraw‚Äù data and making slight adjustments to prepare the data for analysis. These adjustments
+included:
+
+         ‚Ä¢ Timestamp realignment to exact 2-minute periods.
+         ‚Ä¢ Adjustments if meter was reversed (negative daily difference between readings).
+         ‚Ä¢ Anomalous single point removal from cumulative meter data.
+         ‚Ä¢ Removal of anomalous data from start of monitoring period (data indicating faulty
+
+              monitoring equipment installation).
+         ‚Ä¢ Relevelling data following a meter reset.
+         ‚Ä¢ Removal of out-of-range temperatures.
+         ‚Ä¢ Reassigning non-cumulative (temperature) data to the correct columns.
+         ‚Ä¢ Supplementary data cleansing ‚Äì amending spelling or grammar variations.
+         ‚Ä¢ Supplementary data cleansing ‚Äì aligning property age ranges.
+
+Following the data cleansing, quality checks were performed to ensure the best analysis
+windows were selected and the data was of sufficient standard to be included within the
+analysis. These quality checks scored each quality issue and a threshold score was applied
+over which, data was insufficient to be included in the analysis.
+
+In addition to the quality scoring, data was rejected from the analysis for erroneous Seasonal
+Performance Factor (outside of the range of 1.5 to 4.5) and, if less than 50% of the expected
+heat pump data was available.
+
+Seasonal Performance Factors and Coefficients of Performance were calculated using the
+performance data. These calculations used the system boundaries defined in the SEPEMO
+project [1] and the results of all calculations were used to form the analysis findings.
+
+                                                                                                                                              Page |5
+Electrification of Heat Demonstration Project
+
+1.4 Key findings
+
+1.4.1 Seasonal Performance Factor values
+
+The median Seasonal Performance Factors (SPFs) observed in Air Source Heat Pumps
+(ASHPs) have increased significantly since RHPP (Renewable Heat Premium Payment
+scheme) [2]. A comparison of the EoH and RHPP SPFs can been seen in Table 1.2.
+
+Table 1.2: EoH and RHPP observed Air Source Heat Pump SPFs.
+
+SPF Interim EoH Median ASHP SPF RHPP                         RHPP Median ASHP
+                                                             SPF [IQR]
+Value EoH          [IQR]                       ASHP
+                                                             2.65 [2.33, 2.95]
+       ASHP                                    Sample        2.44 [2.15, 2.67]
+
+       Sample
+
+SPFH2  291         2.94 [2.66, 3.20]           292
+SPFH4  291         2.80 [2.53, 3.09]           292
+
+As seen above, ASHP SPFs have improved by around 0.3 to 0.4 compared with installations
+completed under RHPP. Note that when reviewing the EoH figures against the RHPP figures,
+no adjustment has been made for weather variations within the analysis windows.
+
+The improvement in performance is likely due to industry innovation and the heat pump units
+themselves becoming more efficient over the period between the two projects. As noted above,
+relative weather conditions may also account for some of the performance improvement. This
+performance improvement may also be partially a result of improvements in the design (and
+installation) of heat pump systems. However, the EoH project has also found that variation in
+performance between heat pumps remains high (see Section 1.4.2).
+
+The median SPF values observed for heat pumps within hybrid systems (i.e. excluding boiler
+efficiency) are provided within Table 1.3.
+
+Table 1.3: EoH observed SPF for heat pumps within hybrid systems (excluding boiler efficiency).
+
+SPF Value      Interim EoH            EoH Median Hybrid SPF [IQR]
+
+               Hybrid Sample
+
+SPFH2          58                     2.54 [2.25, 2.93]
+SPFH4          58                     2.37 [2.01, 2.81]
+
+It should be noted that these SPF values do not account for the heat generated by the boiler
+and the efficiency of the boilers within the hybrid systems was not monitored as part of this
+project. Section 9.2 provides an indication of the whole hybrid system efficiency with assumed
+average boiler efficiencies.
+
+Figure 1.1 shows the observed SPF values for ASHPs and heat pumps in hybrid systems in a
+box plot.
+
+                                                                                                 Page |6
+Electrification of Heat Demonstration Project
+
+Figure 1.1: Box plot of SPF values for ASHPs and heat pumps within hybrid systems.
+
+1.4.2 Seasonal Performance Factor variations
+
+When comparing the EoH and RHPP ASHP SPFs, the variation in SPF between installations
+remains high with similar Interquartile Range (IQR). The variation in system efficiencies
+suggests that progress is still required on improving the quality and consistency of heat pump
+designs and installations to support a large-scale rollout of heat pumps in existing homes and
+deliver positive energy, carbon, and consumer outcomes. These findings should be factored
+into modelling and policy decisions.
+
+One of the reasons for this variation is the efficiency of the heat pump models. This is partially
+demonstrated by comparing the heat pump performance by the refrigerant used. This
+comparison is shown in Table 1.4 below. Despite this comparison inidicating one reason for the
+variation, the overall performance variation is not explained by the data analysis completed to
+date.
+
+Table 1.4: Median SPFH4 values observed in ASHPs, broken down by refrigerant type.
+
+Refrigerant Sample                             Median SPFH4 [IQR]
+
+R32 82 (76 LT, 6 HT)                           2.94 [2.57, 3.25]
+
+R290   98 (all HT)                             2.89 [2.68, 3.08]
+
+R410a  111 (all LT)                            2.66 [2.40, 2.84]
+
+The above table indicates that the heat pumps using the R410a refrigerant have been observed
+to operate with lower efficiency than those using R290 and R32. It should be noted that this is
+unlikely to be exclusively a result of the efficiency of the refrigerant. The R410a refrigerant is
+being phased out and therefore models of heat pump using R410a are likely to be older than
+those using R290 and R32. These older units may have less efficient mechanical components
+and control strategies.
+
+Another reason for the performance variation is control strategy and flow temperature of the
+heat pumps. The observed SPF is higher for installations that have a lower mean operating flow
+temperature.
+
+                                                                                    Page |7
+Electrification of Heat Demonstration Project
+
+Despite this, ASHPs capable of operating at high temperatures (>65¬∞C flow) are observed to
+operate at a similar SPF to low temperature ASHPs. This is likely due to a combination of higher
+performing refrigerants and weather compensation controls meaning that they operate at lower
+temperatures most of the time.
+Heat pumps installed in detached houses have been observed to have a statistically
+significantly higher SPF compared to semi-detached houses The cause of this result may be
+because detached houses have the lowest proportion of heat pumps using the refrigerant
+R410a installed.
+From the installations in the EoH project, home age did not have a statistically significant impact
+on the observed SPF. It should however be noted that all houses which received installations
+through the project were deemed suitable for a heat pump installation by trained designers and
+installers, so this result may not be representative of the UK housing stock.
+1.4.3 Hybrid System Operation
+A hybrid heat pump system is a system which utilises a gas boiler alongside a heat pump. In
+this project, the hybrid system control was cost-optimised and, as a result the system
+performance results are varied across the range of properties. The median heat pump energy
+output as a proportion of total space heating energy output observed in hybrid systems was
+39%. As the heat pump energy output decreased as proportion of total space heating energy
+output, the observed SPF also decreased.
+1.4.4 Coldest Day Performance
+The observed heat pump efficiency (COP(H4)) decreased as the external temperature
+decreased. The median COP(H4) on the coldest day (mean temperature -0.4¬∞C) was:
+
+         ‚Ä¢ Median coldest day COP(H4) = 2.44; IQR = [2.20, 2.70]; n=484
+
+                                                                                                                                              Page |8
+Electrification of Heat Demonstration Project
+
+2. Introduction
+
+This report provides interim analysis of the data from the monitoring of domestic heat pump
+systems installed as part of the Electrification of Heat (EoH) demonstration project.
+
+EoH is funded by the Department for Energy Security and Net Zero (DESNZ). The project seeks
+to better understand the feasibility of a large-scale rollout of heat pumps into existing homes
+across the UK. To support this, the project aims to:
+
+         ‚Ä¢ Develop, test and evaluate products and services that increase the appeal of heat
+              pumps and identify optimal solutions for a wide range of homes.
+
+         ‚Ä¢ Demonstrate that heat pumps, including gas-electric hybrids, can deliver high
+              consumer satisfaction across a wide range of consumers in Great Britain.
+
+         ‚Ä¢ Demonstrate the practical and technical feasibility of heat pumps, including gas-
+              electric hybrids, across Great Britain‚Äôs diverse housing stock, as well as identifying
+              the costs.
+
+         ‚Ä¢ Capture learning from the project to help improve awareness across the renewable
+              heating supply chain, raise acceptance and support wider deployment of heat pumps
+              in Great Britain.
+
+2.1 Aims
+
+The aim of this report is to provide:
+
+         ‚Ä¢ Detailed heat pump performance and monitoring insights from the EoH project to
+              date.
+                   o Noting that the heat pump monitoring is ongoing until September 2023, so all
+                        insights and analysis will be updated after this point.
+
+         ‚Ä¢ Technical details of the system used to monitor the operation of the heat pumps
+              installed as part of the EoH project.
+                   o Including an overview of the data recorded by the system and any issues
+                        faced during the monitoring window.
+
+         ‚Ä¢ A detailed description of the quality checks and data cleansing conducted to ensure
+              the heat pump monitoring data was of sufficient standard for analysis.
+
+         ‚Ä¢ A detailed description of all analysis conducted on the heat pump monitoring data,
+              including all calculation methodologies and assumptions.
+
+         ‚Ä¢ Basic statistics on the heat pump systems installed.
+                   o For detailed statistics see the Heat Pump Installation Statistics Report [3].
+
+         ‚Ä¢ Basic overview of the supplementary house and participant information used as part
+              of the analysis.
+                   o For a more detailed overview of this information, see the Home Surveys and
+                        Install Report [4].
+
+The main insights from the heat pump monitoring to date, as detailed in this report, are
+summarised in a separate Insights Paper [5].
+
+                                                                                                                                              Page |9
+Electrification of Heat Demonstration Project
+
+2.2 Sources of data used for this report
+
+The data and information provided in this report is derived from the following sources:
+
+         ‚Ä¢ Heat Pump Performance Monitoring Systems as described in Section 4 of this
+              report. These collect the operational heat pump data and store it in its raw form.
+                   o This data has then been downloaded, cleansed and analysed to form all
+                        insights.
+                   o The raw and cleansed monitoring datasets are accessible to the public
+                        through the UK Data Archive. [6]
+                   o Summary datasets showing the analysis outcomes are accessible to the
+                        public via the UK Data Archive or USmart. [7] [8]
+
+         ‚Ä¢ The Electrification of Heat project Database (currently USmart): this is the central
+              database used for the project where all participant, survey, design and installation
+              data are held. [9]
+
+         ‚Ä¢ Qualitative Insights from the Project Team from meetings with the Delivery
+              Contractors and quality assurance visits for items such as known ongoing monitoring
+              issues and known data biases.
+
+2.3 Project Stakeholder Overview
+
+The EoH project was funded by BEIS (now DESNZ) and made up of a number of key contracts
+as illustrated below:
+
+Figure 2.1: EoH project structure.
+
+Following an open tender process, the following lead organisations were appointed to each role:
+
+Table 2.1: Lead organisations appointed to the EoH project.
+
+Role                   Organisation Name
+
+Management Contractor Energy Systems Catapult (ESC) with LCP Delta and Oxford
+
+                       Computer Consultants
+
+Delivery Contractor 1  E.ON
+
+Delivery Contractor 2  Warmworks Scotland
+
+Delivery Contractor 3  OVO Energy
+
+                                                             P a g e | 10
+Electrification of Heat Demonstration Project
+
+Evaluation Contractor     ICF
+
+As shown in Figure 2.1, the Delivery Contractors (DCs) were responsible for the installing and
+monitoring of the heat pumps, all three DCs employed sub-contractors to assist with the
+installation and maintenance of equipment. The Management Contractor was responsible for the
+collection of data and associated analysis and dissemination of project findings.
+
+2.4 Project stages
+
+Figure 2.2 below shows the key stages of the EoH demonstration project and Figure 2.3
+presents a high level project timeline. Participants were initially recruited by the DCs, then
+technical surveys were undertaken and designs were produced for eligible properties. Following
+successful design, the heat pump system was installed along with monitoring equipment so that
+the system performance may be monitored.
+
+See [4] and [10] for more details on the recruitment, survey, design and installation phases.
+
+Mass         Eligibility    Home               Technical    System      Monitoring
+                          Suitability          Survey &   Installation
+Recruitment Triage                              Design
+                           Survey
+
+Figure 2.2: Flow chart of key project stages.
+
+The monitoring period for each property began immediately after successful installation of the
+heat pump and monitoring equipment. Therefore, the monitoring of some properties began in
+Autumn 2020, whilst for others monitoring did not begin until late 2021. The initial monitoring
+period was due to run through until March 2022 however, to increase the quality of the
+monitoring dataset, all participants were offered the opportunity to sign up to a monitoring
+extension until September 2023. Some of the participants opted out of this monitoring extension
+and therefore, monitoring of some of the heat pump systems have ceased prior to the writing of
+this report.
+
+   Spring    June 2020           October                  September     September
+    2020                           2020                       2021          2023
+             Participant
+  Delivery   recruitment       Heat Pump                  Installation     End of
+Contractors                      System                      Phase      monitoring
+                begins
+  join the                     Installations               complete1       period
+   project                     commence
+
+Figure 2.3: Project timeline.3
+
+As the heat pump monitoring is ongoing, the analysis and insights discussed throughout
+this report are only interim findings from the project and will be revised after September
+2023. The data analysed to form this report is the monitoring data from the beginning of the
+project up to and including August 24th 2022.
+
+For some of the analysis, such as finding the Seasonal Performance Factor (SPF), 12 months
+of data is required. As a result, several properties have been excluded from these aspects of
+the analysis because their monitoring period began less than 12 months ago. Notably, at this
+
+3 Contractors had the opportunity to complete installations beyond this deadline on a case-by-case basis,
+if they could guarantee completion within a short timeframe of the deadline.
+
+                                                                                                                                            P a g e | 11
+Electrification of Heat Demonstration Project
+
+interim stage, there is an insufficient sample of Ground Source Heat Pumps (GSHP) with 12
+months of data to draw conclusions on the average SPF, as such, the GSHP SPF results are
+provided for individual homes only.
+
+2.5 Caveats and Known Biases
+
+          ‚ñ† All homes with heat pumps installed through this project were deemed suitable for an
+                installation by trained designers and installers. The decisions were made based on project
+                targets, timescales and budgets, and many properties were triaged out of the project at the
+                early stage for a variety of reasons. More details on this can be found in the Home Surveys
+                and Installation report [4]. Therefore, when reviewing the heat pump performance across
+                different property types and ages, the results may not be representative of the whole UK
+                housing stock.
+
+          ‚ñ† The sample of heat pumps installed through this project is not representative of all heat
+                pumps available in the UK. The full sample is provided in the Property, Design and
+                Installation dataset [11]. As a result of this, the average results may not be representative of
+                all heat pumps available in the UK.
+
+          ‚ñ† All of the heat pumps installed through this project were in three different Nomenclature of
+                Territorial Units for Statistics level 1 (NUTS1) regions. Therefore, a geographical bias may
+                exist in the results.
+
+          ‚ñ† For most properties, the analysis presented in this report utilises only one year worth of
+                collected data. The heat pump monitoring is ongoing and the analysis presented at the end of
+                the project will utilise all data across the whole monitoring period and therefore may present
+                better rounded results.
+
+          ‚ñ† Some of the circulation pumps electricity meters did not provide readings, as a result of this
+                and due to the metering strategy (see Section 4.1), the impact of this is that the SPFH2 and
+                SPFH3 results are skewed lower than their true value. More details on the impact are provided
+                in Section 6.6.3.
+
+          ‚ñ† The hybrid heat pump SPFs calculated do not include for the boiler efficiency and all hybrid
+                system results only account for space heating (i.e. they exclude hot water production).
+
+                                                                                                                                            P a g e | 12
+Electrification of Heat Demonstration Project
+
+3. Heat Pump Installations
+
+3.1 In-Scope Heat Pump Types
+
+As part of the project it was required that a range of heat pump systems were installed. This
+range covered system type, heat pump size and necessary system components such as
+controls and thermal storage. The heat pump system types included within the scope of the
+project are given below, alongside some comments regarding the specific systems which were
+installed.
+
+Table 3.1: In-scope heat pump types.
+
+System Type                    Definition and comments
+
+Low Temperature Air to         An Air Source Heat Pump (ASHP) capable of providing water
+Water (LT ASHP)                at an outlet temperature of no more than 65¬∞C.
+
+High Temperature Air to        An ASHP capable of providing water at an outlet temperature
+Water (HT ASHP)                of >65¬∞C.
+Ground to Water (GSHP)
+                               Both boreholes and ground loops for the circulation of the
+Gas-Electric Hybrids (Hybrid)  heat transfer fluid (brine) were in scope for the project
+                               however, only borehole installations were installed.
+
+                               Both individual property and shared systems were in scope
+                               and installed as part of the project.
+
+                               Both hybrid systems with a heat pump and boiler in separate
+                               units and integrated systems (which contain the heat pump
+                               and boiler in the same unit). The systems can be further
+                               broken down by those properties which installed heat pumps
+                               alongside existing boilers and those which had new boilers
+                               and heat pumps installed.
+
+3.2 Installation Statistics
+
+In total the EoH project has installed 742 heat pump systems. The project was limited to heat
+pump installations in domestic buildings within Great Britain and it was required that each of the
+three DCs installed their heat pumps within different Nomenclature of Territorial Units for Statistics
+level 1 (NUTS1) region. The regions covered by each DC are shown in Table 3.2. In addition,
+the number of heat pumps installed for each heat pump type and the number of successful
+installations in each property type and age are shown in Table 3.3:
+
+                                               P a g e | 13
+Electrification of Heat Demonstration Project
+
+Table 3.2: Delivery Contractor regions.
+
+Delivery       Region                          Additional Information
+Contractor
+               North-East                      Focused on Newcastle and the surrounding area.
+E.ON           England                         Initially this was a largely urban area, but throughout
+                                               the project recruitment expanded in to semi-urban and
+OVO Energy     South-East                      semi-rural areas within surrounding Northumberland,
+Warmworks      England                         Gateshead and North Tyneside.
+
+               Scotland                        Worked across the region covering both rural and urban
+                                               areas but excluding London.
+
+                                               Focussed on the south-east of Scotland in the area
+                                               spanning five local authority areas (Fife, Edinburgh
+                                               City, Midlothian, East Lothian, and the Scottish
+                                               Borders). Encompasses a broad range of urban and
+                                               rural areas.
+
+Table 3.3: Heat pump installation statistics.
+
+Criteria       Group                           Installations (%)  Installations
+                                                                       (No.)
+Heat Pump      LT ASHP                                41.2%
+Type           HT ASHP                                32.7%             306
+Property Form  GSHP                                    5.1%             243
+               Hybrid                                 20.9%              38
+Property Age                                          40.6%             155
+               Detached                               42.8%
+               Semi-detached                                            301
+               End-terrace                            11.1%             261
+               Mid-terrace                             5.5%              57
+               Flats                                   7.8%              82
+                                                      14.2%              41
+               Pre-1919                               24.0%
+               1919 to 1944                           22.2%              58
+               1945 to 1964                            9.2%             105
+               1965 to 1980                            9.6%             178
+               1981 to 1990                           13.1%             165
+               1991 to 2000                                              68
+               2001+                                                     71
+                                                                         97
+
+The majority of the 38 GSHPs were not installed early enough to provide 12 months of
+monitoring data. As a result, the GSHP sample size has not been deemed large enough provide
+a reliable average GSHP SPF at this stage in the project.
+
+The GSHP installations can be further broken down as follows:
+
+          ‚ñ† 16 GSHP units in a block of 16 flats served by a shared system comprising four boreholes.
+          ‚ñ† 12 GSHP units in a block of 12 flats served by a shared system comprising three boreholes.
+          ‚ñ† 10 individual property installations.
+
+                                                                  P a g e | 14
+Electrification of Heat Demonstration Project
+
+The heat pump installation statistics, including number of types of heat pump installed by
+property type and age are covered in more detail in the Installation Statistics Report [3] and the
+installation data can be found on the EoH Project Database [12] [13].
+
+3.3 Installation Quality
+
+As described in Table 2.1, ESC were appointed as the lead of the MC consortium and were
+contracted to provide Quality Assurance (QA) on 20% of the heat pump installations. The QA
+site visits were conducted by GTEC Ltd after the installers had commissioned and handed over
+the systems to the householder.
+
+The purpose of the installation reviews was to assess the heat pump system installations
+against criteria based on the The Microgeneration Certification Scheme (MCS) requirements.
+Whilst it did not form part of the core scope, in many cases, the QA assessor also conducted a
+high level review of the installation of the monitoring system. Whilst not all installations were
+reviewed, those installations which were reviewed covered a range of heat pump makes and
+models installed by different companies to give a representative view of all installations across
+the project.
+
+The QA assessors provided photographs of all systems reviewed. These were submitted to the
+ESC for future reference and reviewed to form assumptions regarding the installation standard
+and location of the monitoring equipment described in Section 4.
+
+Aside from issues highlighted in Section 4.3.2, the heat pump monitoring systems are judged to
+be installed to a good enough standard to analyse the data and form conclusions. The majority
+of the issues highlighted in Section 4.3.2 would cause erroneous data which will have been
+removed from the analysis during the data quality checks (discussed in Section 6), or will have
+had minimal impact on the results of the analysis when drawing conclusions from a large
+quantity of installations.
+
+3.4 System Optimisation
+
+The inclusion of heat pump monitoring within the installed heat pump systems has enabled the
+project delivery team to track heat pump performance and where necessary to optimise the heat
+pump systems. Some of this optimisation activity has been contractor led, where the delivery
+team has noticed low performance and contractors have visited the property to try to improve
+system efficiency. Other activity may have been participant led, where participants have
+followed guidance provided by the contractors to improve efficiency.
+
+One example of system optimisation which has been performed is that in spring 2022, a large
+proportion of the Hybrid systems installed through the EoH project had their controls optimised
+during a heat pump service visit. This is because they were not performing as expected.
+
+The optimisation performed throughout the project is envisaged to alter system performance but
+is no extraordinary changes have been made to system operation so, the analysis results still
+provide a valid representation of heat pump performance. An overview of the heat pump
+optimisation will be reported on by the project team prior to the end of the project.
+
+                                                                                                                                            P a g e | 15
+Electrification of Heat Demonstration Project
+
+4. Monitoring Data Collection
+
+4.1 Monitoring System Design Configurations
+
+Following review of several monitoring system proposals, all three DCs selected a
+PassivSystems system which is described herein.
+
+As required by the DC Invitation to Tender (ITT) [14] PassivSystems metering equipment
+collects all data points in 2 minute intervals; enabling the calculation of the Coefficient of
+Performance (COP), Seasonal Performance Factor (SPFH2 and SPFH4, as defined by the
+SEPEMO Build Project [1] and clarified for Energy Saving Trust‚Äôs heat pump field trial [15] [16])
+and heating demand for any period.
+
+The equipment is equivalent to the Metering and Monitoring Service Package (MMSP) available
+under the Domestic Renewable Incentive (RHI) [17] [18] and complies with the technical
+specification set out in the MCS Domestic RHI Metering Guidance Document [19].
+
+The exact monitoring solution and configuration varies slightly with each heat pump type
+however, the measurement principles are the same in each case. The below subsections give
+the general configuration which may be present in an ASHP, GSHP and Hybrid Heat Pump
+system installation.
+
+Each home has a data collection hub (Passiv Hub) which collects all of the monitoring readings
+from the sensors described in the below subsections. The internal temperature sensor provides
+measurements to the hub via a Z-Wave link, all other sensors are physically connected (wired)
+to the hub. Once collected, the hub uploads all readings to an online data collection database
+(DB) where they can be forwarded onto the project stakeholders for storage and analysis
+purposes. In most cases the data is uploaded from the hub via a home broadband connection
+however, where home broadband is not available, a 3G/4G sim card may be used to transmit
+the data.
+
+The key components of this process are shown in Figure 4.1
+
+Sensor  Wired or Z-  Collection  Internet  Collection Internet  Storage  Cleansing
+           Wave                                DB Transmission     DB        and
+                     Hub Transmission
+                                                                          analysis
+
+Figure 4.1: Key components of the monitoring data collection system and how they transmit data.
+
+Note that for all installations, the external temperature data is collected from the local Met Office
+weather station, rather than the property itself. All installations include an internal temperature
+sensor which is located centrally within the property.
+
+The specific meters used and which datapoints they record is discussed further in Section 4.2.
+
+                                                                P a g e | 16
+Electrification of Heat Demonstration Project
+
+4.1.1 ASHP Configuration
+Whilst the configuration of each heat pump model varies slightly, Figure 4.2 shows the typical
+monitoring system configuration for an (LT or HT) ASHP installation.
+
+Figure 4.2: Typical arrangement of sensors in ASHP monitoring solution.
+
+The ASHP monitoring system includes a maximum of five electricity meters, all of which are
+shown in Figure 4.2. Working from left to right, the electricity meters record the following:
+
+         ‚Ä¢ The whole heat pump system energy consumed.
+         ‚Ä¢ Back-up heater energy consumed.
+         ‚Ä¢ Circulation pump energy consumed.
+         ‚Ä¢ Position of the control (diverter) valve, to inform whether the heat pump is in space
+
+              heating or hot water mode.
+         ‚Ä¢ Immersion heater energy consumed.
+In many of the installations, the back-up heaters were not metered independently. In these
+situations, it is assumed that the back-up heater energy consumed is recorded alongside the
+immersion heater energy consumed by a single electricity meter.
+It should be noted that the heat pump unit energy consumed is not metered independently.
+Therefore, to obtain the heat pump energy input, it is necessary to take the whole heat pump
+system energy consumed value and subtract all energy consumed by the non-heat pump
+components.
+As well as the electricity meters, the other metering equipment installed for ASHP units is a
+single heat meter. The heat meter records the flowrate, flow temperature and, return
+temperature to derive heat pump energy output. The heat meter is installed inside the home, as
+close to the external heat pump unit as possible, prior to any additional heating equipment. As
+such, the heat meter will generally only record the heat produced by the heat pump unit and not
+that which is be produced by a back-up or immersion heater.
+Where monobloc ASHPs are installed (i.e. an ASHP without an internal unit), the heat meter is
+still installed in a similar position in relation to the outdoor unit and the rest of the system
+
+                                                                                                                                            P a g e | 17
+Electrification of Heat Demonstration Project
+
+however, the back-up heater may be inside the external heat pump unit. In this case, the heat
+meter may record heat generated by the back up heater, this is discussed further within Section
+6.6.
+The electricity meter connected to the diverter valve does not send an energy use reading to the
+dataset. It only monitors the position of the valve to assign whether the flow temperature
+measurement is for heating or hot water.
+4.1.2 GSHP Configuration
+The EoH project has deployed GSHP in two main configurations:
+
+         ‚Ä¢ Shared ground loop (SGL) systems using one or more boreholes to feed multiple
+              properties.
+
+         ‚Ä¢ Individual property systems.
+In each case the monitoring system configuration is mostly the same as the ASHP system
+discussed in Section 4.1.1, but with the addition of flow and return temperature sensors on the
+brine side of the heat pump. For SGL systems, there are brine temperature sensors for each
+individual property.
+This system arrangement is illustrated by Figure 4.3 below.
+
+Figure 4.3: Typical arrangement of sensors in GSHP monitoring solution.
+
+None of the GSHP systems installed through this project include a back-up heater so only a
+maximum of four electricity meters are present. These record the following:
+
+         ‚Ä¢ The whole heat pump system energy consumed.
+         ‚Ä¢ Circulation pump energy consumed.
+         ‚Ä¢ Position of the control (diverter) valve, to inform whether the heat pump is in space
+
+              heating or hot water mode.
+         ‚Ä¢ Immersion heater energy consumed.
+As well as the electricity meters and brine temperature sensors, the monitoring system also
+includes a heat meter which should be situated as close to the heat pump as possible, prior to
+any additional heating elements, to record only the heat pump energy output.
+
+                                                                                                                                            P a g e | 18
+Electrification of Heat Demonstration Project
+
+4.1.3 Hybrid Heat Pump Configuration
+As noted in Section 3.1, the EoH project deployed hybrid heat pumps in both separate and
+integrated configurations using either standard or combi boilers. Where a standard boiler is
+used, the system also includes a thermal store for the provision of hot water.
+In all hybrid heat pump system configurations, the monitoring system is configured similarly to
+the ASHP configuration discussed in Section 4.1.1, but with the inclusion of a second heat
+meter to monitor the space heating provision from the gas boiler.
+Note that for all of the hybrid systems installed through this project, the hot water is generated
+by the gas boiler alone, and hot water provision from the boiler has not been metered. As such,
+only the space heating provision from the hybrid systems is monitored.
+Figure 4.4 illustrates the typical monitoring system configuration for a hybrid system (combi
+boiler version shown). Note that whilst this system shows the typical configuration, both the
+heating and monitoring system configurations may differ for different heat pump models.
+
+Figure 4.4: Typical arrangement of sensors in hybrid heat pump system monitoring solution.
+
+None of the hybrid systems installed through this project include a backup heater or an
+immersion heater and, as previously discussed, all hot water provision is by the gas boiler
+alone. As such, there are only two electricity meters in the hybrid heat pump monitoring system.
+These record the following:
+
+    1. The whole heat pump system energy consumed.
+    2. Circulation pump energy consumed.
+As noted above, the hybrid monitoring system also includes two heat meters, these record the
+heat output from the heat pump and boiler for space heating provision. As with the ASHP and
+GSHP configurations, the heat meters should be located near to the components which they are
+monitoring in the system such that, they do not monitor heating output from any other
+components.
+4.1.4 Alternative Configurations
+As noted in all sections, the configurations shown in Figure 4.2, Figure 4.3 and, Figure 4.4 are
+that of a typical installation and they vary dependent upon the heat pump models. One case
+where the configuration varies significantly is that of the SIME hybrid heat pumps.
+
+                                                                                                                                            P a g e | 19
+Electrification of Heat Demonstration Project
+
+Five SIME hybrid heat pumps were deployed by E.ON as an innovation measure aimed at
+overcoming specific project barriers. These units comprise a heat pump and gas boiler
+connected in series within a single internal unit. Compared to the other hybrid heat pumps, the
+SIME heat pumps operate slightly differently as the heat pump and gas boiler run
+simultaneously. The SIME system configuration is also different to that of a standard hybrid
+installation.
+Because of the above factors, the heat metering strategy for the SIME unit differs somewhat. A
+single heat meter is installed downstream of the unit to measure overall heat output, however
+this measurement must be split and allocated to the heat pump and boiler. The heat pump
+contains three temperature probes ‚Äì one each side of the heat pump heat exchanger and a
+third after the boiler.
+As the heating components are in series, the flowrate through the heat pump heat exchanger
+and boiler will be identical. In the event of simultaneous heat pump and boiler operation, the
+water in the heating system flows through the heat pump heat exchanger where it is heated to
+an intermediate temperature. The water then flows through the boiler where it is heated to the
+desired flow temperature. The monitoring system accesses the three temperature probes via
+the SIME OpenTherm module and then splits the total heat recorded by the heat meter in
+proportion to the differences between these sensors. The system configuration is demonstrated
+in Figure 4.5.
+
+Figure 4.5: A simplistic representation of the internal components of a SIME hybrid heat pump solution. Indicating
+how the heat meter components are distributed to split the heat output between the boiler and heat pump.
+
+In the event of the heat pump or boiler operating on their own, the entire heat is allocated to one
+or the other as required.
+
+                                                                                                                                            P a g e | 20
+Electrification of Heat Demonstration Project
+
+4.2 Meters Installed and Data Recorded
+
+Table 4.1 provides a list of the data recorded by the heat pump monitoring systems as well as
+the sensors and meters used as part of the monitoring system.
+
+Table 4.1: The heat pump monitoring system data recorded and sensors used.
+
+Data Label     Data source        Sensor or Meter   Description
+                                  Installed
+Heat Pump      Heat pump heat     Sontex            Cumulative meter (measuring
+Energy Output  meter              SuperStatic 440   kWh).
+                                  calibrated for    Contains temperature sensors
+Boiler Energy  Gas boiler heat    DTX glycol where  and a flow meter and
+Output         meter              required          automatically calculates kWh
+                                                    output using these. Located as
+Whole System   Whole system       Sontex            close as possible to the heat
+Energy         electricity meter  SuperStatic 440   pump on the primary flow and
+Consumed                          adjusted for 1Wh  return pipework such that it
+                                  energy reporting  measures only the heat pump
+Back-Up Heater Back-up heater                       energy output.
+                                  Eastron           Hybrid only.
+                                  SDM630Modbus      Cumulative meter (measuring
+                                                    kWh).
+                                  Eastron SDM120    Similar to heat pump energy
+                                                    output but for the gas boiler.
+Energy         electricity meter                    Should measure only the gas
+                                                    boiler output.
+Consumed                                            Cumulative meter (measuring
+                                                    kWh).
+                                                    Located on the primary wiring
+                                                    for the whole heat pump
+                                                    system. Measures all of the
+                                                    electrical energy consumed by
+                                                    the system.
+                                                    Heat Pump Energy Consumed
+                                                    derived by taking this and
+                                                    subtracting all other electricity
+                                                    meter readings.
+                                                    Cumulative meter (measuring
+                                                    kWh).
+                                                    Where it forms part of the
+                                                    system, the back-up heater
+                                                    should be located within the
+                                                    internal heat pump unit or be
+                                                    directly plumbed into the
+                                                    primary heating system flow
+                                                    pipework.
+
+                                                    P a g e | 21
+Electrification of Heat Demonstration Project
+
+Data Label      Data source            Sensor or Meter  Description
+Immersion                              Installed
+Heater Energy   Immersion electricity  Eastron SDM120   Cumulative meter (measuring
+Consumed        meter                                   kWh).
+                                                        Where it forms part of the
+Circulation     Circulation pump       Eastron          system, the immersion heater
+Pump Energy     electricity meter      SDM630Modbus     should be located in the
+Consumed                                                primary thermal storage.
+                Heat pump heat         Sontex           Cumulative meter (measuring
+Heat Pump       meter                  SuperStatic 440  kWh).
+Heating Flow                                            Where systems have multiple
+Temperature     Heat pump heat         Sontex           circulation pumps the meter
+                meter                  SuperStatic 440  should capture the energy
+Hot Water Flow                                          used by all of them.
+Temperature     Zone air               DH-SES-302       Non-cumulative sensor.
+                                                        Reading is measured by a
+Internal air    temperature sensor                      temperature sensor which
+temperature                                             forms part of the heat meter
+                Local weather          -                only when in heating mode
+External air    station                                 (mode is detected by
+temperature     Heat pump brine        Sontex SuperCal  monitoring the diverter valve).
+Brine flow      side temperature       531              Non-cumulative sensor.
+temperature     measurement                             Reading is measured by a
+                                                        temperature sensor which
+Brine Return    Heat pump brine        Sontex SuperCal  forms part of the heat meter
+Temperature     side temperature       531              only when in hot water mode
+                measurement                             (mode is detected by
+                                                        monitoring the diverter valve).
+                                                        Non-cumulative sensor.
+                                                        Sensor installed somewhere
+                                                        within the home. Only one per
+                                                        home, should be centrally
+                                                        located and away from direct
+                                                        sunlight.
+                                                        Record sent from local
+                                                        weather station readings.
+                                                        GSHP only.
+                                                        Non-cumulative sensor.
+                                                        Sensor located on the flow
+                                                        pipework of the brine loop
+                                                        before it enters the heat pump
+                                                        system. Brine is pumped
+                                                        around the ground loop and is
+                                                        pumped through the borehole
+                                                        to extract geothermal heat.
+                                                        GSHP only.
+                                                        Non-cumulative sensor.
+                                                        Sensor located on the return
+                                                        pipework of the brine loop after
+                                                        it leaves the heat pump
+                                                        system.
+
+                                                        P a g e | 22
+Electrification of Heat Demonstration Project
+
+Data Label   Data source     Sensor or Meter   Description
+                             Installed
+Heat Pump    Heat pump heat  Sontex            Non-cumulative sensor.
+Return       meter           SuperStatic 440   Reading is measured by a
+Temperature                                    temperature sensor which
+                                               forms part of the heat meter in
+                                               both heating and hot water
+                                               mode.
+
+Both the heat and electricity meters are cumulative (i.e. the measurements provided are the
+total consumption or generation since the equipment started recording). The consumption over
+a 2 minute period can therefore be deduced by subtracting one measurement from the one
+preceding it.
+
+The temperature measurements are instantaneous, reflecting the measured value at the point
+of transmission.
+
+4.3 Monitoring Issues
+
+Whilst there have not been issues with the majority of the data collected through this project,
+there are situations where issues have occurred in the monitoring systems of some of the
+properties. Generally, these are minor however, in some cases they render the monitored heat
+pump data unusable for all or some of the analysis.
+
+4.3.1 Transmission Issues
+
+One common issue experienced when monitoring the heat pumps was the loss of transmission
+of the monitored heat pump data to the database. This issue is evidenced by gaps in one or
+more of the data readings.
+
+A gap in a single data reading where the data prior to and after the gap is as expected may
+indicate an issue with the transmission lines between the specific sensor taking that reading and
+the data collection hub. An example of the cause of this type of issue may be a disconnected
+wire or an issue with the Z-Wave link. In this situation, the data from the specific sensor or meter
+is unrecoverable as the data is not stored locally.
+
+A gap in all of the data recordings for one property (aside from external temperature) may
+indicate an issue transmitting data from the hub to the collection database. Some examples of
+the cause of this issue are disconnection of the hub from the internet or the powering down of
+the hub entirely. In the situation when there is an internet connection error, up to 10 days worth
+of data from all sensors may be stored on the local hub. When the internet connection resumes,
+the most recent 10 days of data is then sent to the collection database and is forwarded onto
+storage database so not all data is lost.
+
+A gap in all data recordings for all properties including external temperature indicates an issue
+sending data from the collection database to the storage database. An example of a cause of
+this issue could be a breakdown in software of either the data collection database or the storage
+database. When this issue occurs, all data is stored within the data collection database and is
+forwarded onto the storage database upon resolution.
+
+As will be discussed further in Section 6, the gaps in the data caused by transmission issues do
+not mean that the data cannot be used. For example, if there is a gap in cumulative metered
+data but the data prior to and after the gap is as expected, the data either side of the gap may
+
+                                               P a g e | 23
+Electrification of Heat Demonstration Project
+
+still be used for periods of longer term analysis. When analysing short periods of data or non-
+cumulative data, if a gap exists then the property in question may not be useful for that specific
+analysis.
+
+4.3.2 Monitoring Equipment Issues
+Another issue with monitoring equipment experienced throughout this project has been with
+faults to individual components. Generally, these issues can fall into two categories:
+
+    1. Equipment installation issues.
+    2. In-situ failures or partial failures.
+
+For equipment installation issues, the equipment either sends no reading, or sends an obviously
+false reading from the point that it begins recording data. Where these occur, generally
+installers go back to the property to rectify the monitoring equipment installation. Depending on
+the equipment which was incorrectly installed, and nature of the installation issue, these issues
+may cause the data to be unusable or partially unusable for the period of time prior to the issues
+being rectified. In the case that the data is unusable, it will be removed from the dataset through
+the data cleansing process described in Section 6.2.
+An example of an installation issue is the miscalibration of a heat meter. In this example, the
+issue would be picked up by the SPF data checks.
+In some cases, the installation issue is easily resolved within the data and then the data may be
+used. If this is possible, then it is completed during the data cleansing process discussed further
+in Section 6.2. One example of where cleansing may take place is if the flow and return
+temperature readings are reversed.
+When in-situ failures occur, it is generally down to equipment failure rather than an installation
+problem. In this case, often periods of good data quality exist, followed by periods of poor data
+quality. As with installation issues, if in-situ failures occur, engineers will visit the property to
+check and (where necessary) replace the equipment to ensure any periods of poor data are as
+short as possible. If in-situ failures occur, the data before and after the failures may be useable
+but, during the failure period data becomes erroneous and depending on the length of the
+failure period, it may render the overall dataset unusable. If it is the case that a failure occurs
+and is unresolved for a prolonged period, it will be sifted out by the quality checks discussed in
+Section 6.3.
+An example of an equipment failure in-situ which may cause the data to be unusable is if a heat
+meter stops cumulating or falls out of calibration and this is not resolved within a short
+timeframe. An example of an equipment failure which has a smaller effect on the data quality
+overall is if the internal temperature sensor stops recording.
+
+                                                                                                                                            P a g e | 24
+Electrification of Heat Demonstration Project
+
+5. Supplementary Data
+
+5.1 Supplementary Data Description
+
+Throughout the recruitment, home survey, heat pump system design and installation phases of
+the EoH project, a variety of participant, home and heat pump data was collected. For the
+purposes of monitoring data analysis, this data will be referred to herein as ‚Äúsupplementary
+data‚Äù. The supplementary data is documented in the Property, Design and Installation Data
+Documentation Report [11] and the dataset is accessible via the Electrification of Heat Project
+Database [13]. The supplementary data and monitoring data can be cross-referenced using the
+Property ID number as this is consistent across all datasets.
+
+All supplementary data elements are defined in a data dictionary which is available in the
+Additional Information section at the bottom of the USmart dataset (accessed via the project
+database [13].) The data dictionary is laid out as shown in Table 5.1.
+
+Table 5.1: Data Dictionary columns.
+
+Data       Field        Type  Description               Units       Acceptable      Attributes/
+Item       Name                                                     values          Notes
+                        Numerical, Plain English        Units if
+Name of    Name of      text, etc description of        applicable  If applicable,  Any
+the        the                                                      a list of       information
+parameter  parameter                     the parameter              standard        about how the
+in plain   as it                                                    values /        data should
+English    appears in                                               ranges          appear or
+           the dataset                                              acceptable      notes/ caveats
+                                                                    for the         relating to the
+                                                                    parameter       data
+
+Examples of supplementary data which was collected are provided within Table 5.2. The data
+can be separated into 3 key data types:
+
+          ‚ñ† Numerical ‚Äì numerical data will reflect counts (e.g. no. storeys), measurements or sizes (e.g.
+                floor areas), calculation outputs (e.g. MCS heat loss values) or scales (awareness of heat
+                pumps).
+
+          ‚ñ† Fixed Text ‚Äì used for text inputs where the data dictionary defines a fixed number of
+                allowable answers, for example defined categories (e.g. house type) or codes assigned to
+                define reasons or categories.
+
+          ‚ñ† Free Text ‚Äì used for text inputs which provide additional information to support assessments
+                or decisions. Within the project, all free text fields were optional at the point of data collection.
+
+For qualitative analysis, the numerical and fixed text data is the most useful as this can be
+categorised more easily. To collate the supplementary dataset, a rigorous quality checking and
+issue resolution process was followed. This is outlined within the Property, Design and
+Installation Data Documentation Report [11] and the Quality Assurance Log which is available in
+the Additional Information section at the bottom of the USmart dataset (accessed via the project
+database [13].)
+
+The specific data which has been used to assist with the interim data analysis is discussed
+further within the following sections of this report but includes installed heat pump data, home
+data (such as house type or age) and participant data. To utilise some of the data, it may have
+
+                                                                                    P a g e | 25
+Electrification of Heat Demonstration Project
+
+been cleansed (e.g. aligning house ages). Where any cleansing has been done, it is discussed
+within Section 6.2.
+
+For full analysis and findings from the recruitment, survey, design and installation stages of the
+project please see the Participant Recruitment Report [10] and Home Surveys and Installation
+Report [4].
+
+5.2 Data Collection Methods and Timing
+
+The data contained within the supplementary dataset was recorded at different stages of the
+participant journey throughout the project. The exact journey differed slightly between each DC,
+however the key stages and the data gathered from each is illustrated in Figure 5.1 below:
+
+   Mass      Eligibility  Home Survey  Technical Survey    System      Monitoring
+Recruitment   Triage                        & Design     Installation
+
+             (1)          (3) Home     (4.1) System      (4.2)
+             Participant  Survey info  Design            Installation
+             Info                                        Record
+
+             (2)
+             Recruitment
+
+Figure 5.1: Supplementary data collected at each project stage.
+
+The method to collect supplementary data was mostly manual and undertaken by different
+parties for each DC. The method of data collection at each stage (post-triage) is summarised in
+Table 5.2.
+
+                                                                       P a g e | 26
+Electrification of Heat Demonstration Project
+
+Table 5.2: Methods of collecting supplementary data at each project stage.
+
+Stage Description Example Data               Method of Collection
+
+1 Participant Name, Address,                 Online registration form, questionnaire, or phone
+                                             call
+Information Age, Occupation.                 Online registration form, questionnaire, or phone
+                                             call
+2 Recruitment Reasons for interest
+                                             Varies by DC but in all cases data may have been
+Information in the project, social           supplemented by information from sources other
+                                             than those listed below.
+                         group.
+
+3 Home                   House type, age,
+
+Survey                   size, SAP rating,
+
+                         fabric.
+
+                                             E.ON ‚Äì Combined survey for both project
+                                             suitability and heat pump system design
+                                             conducted during home visit by a heat pump
+                                             design/install surveyor.
+
+                                             OVO ‚Äì Initial ‚ÄúRemote Survey‚Äù using EPC data
+                                             combined with analytical software. If home
+                                             passed project suitability checks, a home visit
+                                             was conducted by a surveyor.
+
+                                             Warmworks ‚Äì Home survey only conducted
+                                             during home visit by a trained retrofit surveyor
+                                             (including a full EPC assessment.)
+
+4.1 System               MCS calculation     Assessment of which heat pumps may be suited
+           Design        outputs, design     for installation in the home, as assessed by the
+                         decisions.          surveyor and/or system designer.
+
+                                             Design information and recommendations are the
+                                             output from the design process from the system
+                                             designer
+
+                                             Recorded decisions and reasons/rationale are
+
+                                             from either the designer and/or from discussions
+
+                                             with the participant depending on outcome.
+
+4.2 Installation Heat pump                   Populated by installer following installation
+
+Record                   manufacturer,       completion
+
+                         model, size, home
+
+                         upgrades
+
+                         undertaken, costs.
+
+All properties which have monitoring data will also have an installation record within the
+
+supplementary dataset however, as is discussed further in Section 6, not all installations have
+
+usable monitoring data.
+
+                                                                            P a g e | 27
+Electrification of Heat Demonstration Project
+
+6. Data Quality Checks and Cleansing
+
+6.1 Process
+
+To analyse the monitoring data, an iterative process of quality checking, cleansing, and
+analysing was followed. This process has been automated and it is repeatable for future
+analysis.
+
+Initially a high-level quality check on the monitoring data was conducted to look for any gaps in
+the data and find any erroneous property ID numbers. If available, data was backfilled into the
+gaps, and ID errors were rectified. The data was then sorted by timestamp and sensor type to
+form the final ‚Äúraw‚Äù dataset for this interim analysis.
+
+Once finalised, the ‚Äúraw‚Äù data was cleansed. This cleansing makes minor adjustments to the
+data to prepare it for analysis. These adjustments include aligning timestamps, removing
+anomalies and (where necessary) correcting known data issues. All adjustments made to the
+data are discussed in Section 6.2. In some cases where the cleansing activity is performed to
+resolve quality issues, this is flagged by adjusting the data quality score described in Section
+6.3.
+
+Once the ‚Äúcleansed‚Äù dataset was produced, a second set of quality checks were performed.
+These checks, described in Section 6.3, were more rigorous than the first and resulted in a data
+quality score for each property, based on various quality metrics. The best scoring data window
+for each property was then selected for the analysis. Each property was either included in or
+excluded from the analysis based on a variety of thresholds including the quality of data within
+the selected window, (i.e. any property where the best scoring window is still of insufficient
+quality was excluded) and the feasibility of the SPF over the selected window.
+
+Once the data quality was confirmed, the analysis calculations were conducted as described in
+Section 7. Discussion of the analysis results is provided in Sections 8, 9 and 10.
+
+6.1.1 Quality Assurance
+
+As part of their Technical Third Party Support (TTPS) framework contract, Frazer Nash
+Consultancy (FNC) was commissioned by DESNZ to perform QA checks on the data cleansing
+and data quality checking process. They were also asked to assess the validity of the analysis
+findings, activity which was subcontracted to T√úV Nord.
+
+The findings of this QA activity are that the cleansing and quality checking process was
+sufficient and the majority of issues identified by FNC were sufficiently addressed and resolved
+prior to the end of the QA activity. A few minor outstanding matters were identified during the
+output review however, these have since been resolved.
+
+6.2 Data Cleansing
+
+As described above, data cleansing is the process of taking a ‚Äúraw‚Äù dataset and making slight
+adjustments to ensure it is ready for analysis. Below is a list of the cleansing activity which was
+undertaken to prepare the data for analysis, additional detail and reasoning is provided in the
+following subsections.
+
+         ‚Ä¢ Timestamp alignment to exact 2-minute periods.
+         ‚Ä¢ Cumulative meter data reversals.
+         ‚Ä¢ Anomalous cumulative data removal ‚Äì single point.
+         ‚Ä¢ Anomalous cumulative data removal ‚Äì from start of monitoring.
+
+                                                                                                                                            P a g e | 28
+Electrification of Heat Demonstration Project
+
+         ‚Ä¢ Relevelling data following a meter reset.
+         ‚Ä¢ Incorrect column assignment for non-cumulative (temperature) data
+         ‚Ä¢ Removal of out-of-range temperatures.
+         ‚Ä¢ Supplementary data cleansing ‚Äì amending spelling or grammar variations.
+         ‚Ä¢ Supplementary data cleansing ‚Äì aligning property age ranges.
+
+6.2.1 Timestamp Alignment
+
+Each sensor and meter in the monitoring system sends readings at an average frequency of
+around 2-minutes. There is however, some variation in the period between each reading and
+two readings from the same sensor can be up to a maximum of 4-minutes apart. In addition, the
+timestamps are not synchronised between sensors, meaning that each sensor takes its
+readings at different times, independent of the other sensors.
+
+As a result of the above, to compare the readings from different sensors and perform analysis
+on the heat pump data, it is necessary to align the timestamps. The following process was
+followed to realign the timestamps for the cleansed dataset::
+
+Timestamps  ‚Ä¢ Rounded to the nearest 2 minutes.
+  rounded   ‚Ä¢ e.g. 12:00:00, 12:02:00 etc.
+
+            Duplicates                         ‚Ä¢ Check for duplicates.
+            realigned                          ‚Ä¢ If duplicates are next to an empty timestamp.
+                                               ‚Ä¢ Move the relevant reading to the empty
+                                                timestamp.
+
+                                               Remaining   ‚Ä¢ Any remaining
+                                               duplicates   duplicates are dropped.
+                                                removed
+
+Figure 6.1: Timestamp alignment process.
+
+As a result of the timestamp alignment, it is important to note that the cleansed dataset may
+not always give the correct instantaneous readings.
+
+6.2.2 Cumulative Meter Reversals
+
+Some monitoring equipment installation issues which can be seen within the raw dataset are
+the occasional installation of meters or sensors in the wrong orientation. The result of installing
+a cumulative meter in the wrong orientation is that the readings decrease over time. To check
+for this issue, daily differences in the cumulative meter readings are assessed. For situations
+where the daily differences are mostly decreasing, the readings are reversed within the
+cleansed dataset (for example, a reading of -1kWh is changed to 1kWh). This is demonstrated
+within Figure 6.2 and Figure 6.3.
+
+                                                           P a g e | 29
+Electrification of Heat Demonstration Project
+
+Figure 6.2: A graph showing a reversed boiler heat meter resulting in consistent negative readings within the raw
+data.
+
+Figure 6.3: A graph showing the reversed values within the cleaned dataset.
+
+6.2.3 Anomalous Cumulative Data Removal
+6.2.3.1 Anomalous Points within Cumulative Dataset
+Another issue sometimes witnessed within the raw dataset is anomalous data points. These
+occur when a single datapoint is randomly much higher or lower than the surrounding
+datapoints. These are identified by having a value outside the range of:
+
+          ‚ñ† 95% of the minimum of the 3 values prior to the point, and
+          ‚ñ† 95% of the maximum of the 3 values after the point.
+
+                                                                                                                                            P a g e | 30
+Electrification of Heat Demonstration Project
+
+This differs from a meter reset (discussed in Section 6.2.4) as when a meter is reset or
+replaced, generally the meter reading will reduce significantly and then continue from the new
+start point along a similar trend to before.
+
+To ensure ease of analysis, and eradicate the chance of false results, the single anomalous
+points are removed from the cleansed dataset. The method described above removes all single
+anomalous points from the cleansed dataset however, it does not account for and will not
+remove multi-point anomalies.
+
+Multi-point anomalies occur when a series of datapoints is randomly much higher or lower than
+the surrounding data. Within the raw dataset, the multi-point anomalies which exist occur when
+the data readings reduce significantly for a short period of time before returning to the expected
+level. In this scenario, the reduction in data readings is read by the automated cleansing
+process as a meter reset, so initially the data is re-levelled as described in Section 6.2.4.
+
+For multi-point anomalies, the data already returns to the expected level, so the re-levelling
+process may cause a sharp upward tick in the data. As a result of this, it is necessary to check
+the gradient of the cumulative data immediately after re-levelling. If the gradient is much greater
+than expected then a multi-point anomaly is assumed and the data is brought back in line with
+the previous point.
+
+This single and multi-point anomaly removal process is demonstrated by Figure 6.4, Figure 6.5
+and Figure 6.6. In Figure 6.4, four anomalies can be seen.
+
+Figure 6.5 shows that, as anomalies 1, 2 and 4 are single point anomalies, they are removed
+however, anomaly 3 is a multi-point anomaly so is not removed. Instead, the figure shows that
+to resolve anomaly 3, the first anomalous point is re-levelled as described in Section 6.2.4. This
+then risks the data following the anomalous period to be erroneous (shown by the sharp
+increase in data readings). As there is a large gradient between two readings at the end of the
+anomalous period, the multi-point anomaly is identified and the last anomalous point is re-
+levelled to ensure it is aligned as expected.
+
+Figure 6.6 shows the cleansed data with all anomalies resolved.
+
+Figure 6.4: Four anomalies in a set of cumulative raw data.
+
+                                                             P a g e | 31
+Electrification of Heat Demonstration Project
+
+Figure 6.5: Shows the single point anomaly removal for anomalies 1, 2 and 4 as well as an automated ‚Äúmeter reset‚Äù
+re-levelling for anomaly 3. (intermediate data cleansing stage)
+
+Figure 6.6: Shows the re-levelling at the end of anomaly 3 due to a high gradient, thus resolving the multi-point
+anomaly in the cleansed data.
+
+6.2.3.2 Anomalous Cumulative Data from Start of Monitoring
+As noted in Section 4.3.2, for some of the properties there were issues with the initial installation
+of the monitoring equipment resulting in either no reading being recorded or erroneous readings
+being recorded by the equipment. When these issues result in erroneous readings, they are
+generally represented by continuous anomalous data from the beginning of the monitoring
+period until the physical equipment issue is resolved.
+The result of this anomalous data is that, for a given duration at the beginning of the monitoring
+period, the Heat Pump Energy Output readings appear to track higher or lower than expected
+given the Whole System Energy Consumed. To find these periods, the Coefficient of
+Performance (COP) for each day was calculated (same calculation as SPFH2 but over the
+duration of a day rather than a year) and compared to the expected result.
+The data was rejected and removed if the daily COP was outside of the range 0.75-7.5. The
+data was only removed from the beginning of the monitoring period until the point where the
+daily COP falls within the range 0.75-7.5.
+
+                                                                                                                                            P a g e | 32
+Electrification of Heat Demonstration Project
+
+This range is wider than the accepted range for annual SPF calculations or the COP values
+used for gap scoring. This is because a larger variation in heat pump efficiency is expected over
+a shorter timeframe.
+This issue is demonstrated by the graph shown in Figure 6.7. In the figure, the data is
+anomalous within the time period indicated by the gray box. To form the cleansed dataset, this
+data was removed and the meters relevelled to 0kWh, leaving only the non-anomalous data.
+
+Figure 6.7: Cumulative energy data from a given property whereby the data is anomalous from the start of the
+monitoring period, but then becomes aligned with expectation following this initial period.
+
+6.2.4 Relevelling Data Following Meter Reset
+A significant decrease in cumulative meter readings which does not return to the expected level
+is a likely result from a meter fault or meter replacement (where the readings immediately return
+to the expected level, this is an anomalous point, see Section 6.2.3.1). Small decreases in heat
+meter readings may be explained by the heat pumps running a defrost cycle, where the system
+draws energy from the home to defrost ice from the heat pump unit. A defrost cycle is part of the
+normal operation of a heat pump and it may be interesting to analyse the heat pump behaviour
+during these cycles. As such, it is necessary to differentiate between meter faults or
+replacements and defrost cycles when amending the data.
+Meter faults and replacements often result in the meter being reset to (or near to) 0kWh. This
+reset usually occurs after a long gap in the data. A defrost cycle however will often result in a
+short, gradual decrease in the meter reading before the reading continues to increase along its
+previous trend. Meter resets have therefore been identified as decrease in the data where the
+reading drops by more than 95% of the previous reading and does not immediately return to the
+expected level.
+If a meter reset is identified, the data is amended by relevelling all data following the meter reset
+such that the readings before and after the reset align. This means that the reading across the
+
+                                                                                                                                            P a g e | 33
+Electrification of Heat Demonstration Project
+
+reset is flat, rather than increasing. If a gap exists prior to the reset, then energy usage across
+the gap is not considered. Instead, the gap is scored through the quality checks described in
+Section 6.3 and only a reset after a gap of less than 21 days of lost data may be included in the
+SPF analysis.
+
+6.2.5 Non-cumulative Data ‚Äì Incorrect Column Assignment
+
+For technical reasons relating to the monitoring system configurations (Section 4.14), the most
+likely data to be in the wrong columns are heat pump heating flow (HPHF), heat pump return
+(HPR) and hot water flow (HWF) temperatures.
+
+This is because the HPHF and HWF temperatures are recorded using the same sensor, and the
+position of the control valve determines the direction of water flow and therefore which column
+the data should be recorded in.
+
+HPHF and HPR temperatures are recorded by different sensors however, these sensors can be
+attributed to the wrong column due to equipment installation issues or an issue with the
+transmission of the data. The flow and return temperatures tend to be very similar and the
+return temperature can regularly exceed the flow temperature when the heat pump is not
+operational. This makes the issue difficult to identify. In addition, this issue is very rare within the
+data. As a result of this, there have been no column reassignements made between HPHF and
+HPR temperatures.
+
+6.2.5.1 Heating Flow and Hot Water Flow Assignment
+
+As the same sensor was used to measure HPHF and HWF temperature, it is sometimes the
+case that they are recorded in the same column. Alternatively, the data in these columns may
+be erroneously swapped (i.e. HPHF recorded in HWF column and vice versa). For some
+homes, these issues were fixed whilst monitoring was ongoing. The result of this is that, part
+way through the monitoring period, the data is correctly separated into the two columns or it is
+swapped so that the data are in the correct columns from the point of the fix onwards.
+
+To evaluate whether the data was in the correct columns, data in each column was
+characterised using the following metrics:
+
+         ‚Ä¢ mean: value, (mean of the values for one sensor)
+         ‚Ä¢ mean: difference, (mean of the differences between chronologically consecutive
+
+              values for one sensor)
+         ‚Ä¢ standard deviation (std): value, (standard deviation of values for one sensor)
+         ‚Ä¢ standard deviation (std): difference, (standard deviation of the differences between
+
+              chronologically consecutive values for one sensor)
+         ‚Ä¢ spikiness, (Root mean square difference of differences of the values of one sensor.
+
+              A full definition of the function used can be found on Github [20])
+         ‚Ä¢ spikiness of the differences, (Root mean square difference of differences of the
+
+              difference between values of one sensor.)
+         ‚Ä¢ mean: daily max, (mean of the daily maximum values for one sensor)
+         ‚Ä¢ mean: daily min, (mean of the daily minimum values for one sensor)
+         ‚Ä¢ mean: count per day. (mean of the daily number of readings for one sensor)
+
+As there is generally a distinct difference between the nature of the recorded ‚ÄúHot Water‚Äù
+temperatures and ‚ÄúHeating‚Äù temperatures, the data and associated metrics were labelled ‚ÄúHot
+Water‚Äù (for HWF) and ‚ÄúNot Hot Water‚Äù for HPHF and HPR.
+
+                                                                                                                                            P a g e | 34
+Electrification of Heat Demonstration Project
+The metrics were then used to train two decision trees (one using all of the metrics except
+‚Äúmean: count per day‚Äù and the other using all of the metrics). These decision trees can be seen
+in Figure 6.8 and Figure 6.9. These trees were used to identify data which had different
+characteristics to the data with the same sensor label. For example, some sensors labelled as
+‚ÄúHot Water‚Äù were grouped by the tree as ‚ÄúNot Hot Water‚Äù). Where sensors were mis-grouped,
+this suggests that the sensor data are more similar to those of the other type and therefore the
+data may have been mislabelled. As a result of this, these sensors were flagged for review.
+
+Figure 6.8: Non-cumulative data grouping decision tree (excluding ‚Äúmean: count per day‚Äù). Red rings have been used
+to highlight number of sensors which have been classified by the tree as different from how it is labelled.
+
+Figure 6.9: Non-cumulative data grouping decision tree (including ‚Äúmean: count per day‚Äù). Red rings have been used
+to highlight number of sensors which have been classified by the tree as different from how it is labelled.
+
+                                                                                                                                            P a g e | 35
+Electrification of Heat Demonstration Project
+
+Most of the homes had 0 flagged sensors, indicating that the data was allocated to the correct
+column however, some properties were found to have a single flagged sensor and others had
+two. The homes were treated differently based on the number of flagged sensors.
+The homes with two flagged columns were simpler to deal with as it was assumed that the data
+from these columns wholly assigned to the incorrect columns and so the data should be
+swapped. The swap was performed and sensors re-run through the decision tree to check that
+they had been correctly re-attributed. If these checks were passed, then the data was relabelled
+within the cleansed dataset.
+Single flagged homes were assumed to be a case where one sensor was recording both HWF
+and HPHF and was then corrected by physically changing the monitoring setup within the
+property. For these instances, change point analysis was run on the ‚Äúmean: count per day‚Äù of
+the data to detect the point where the physical change happened. If a change point was
+detected, then the data was split at that point, and allocated to the correct columns before and
+after the change. The sensors were then re-run through the decision trees to check that they
+had been correctly re-attributed.
+For these data, it was assumed that the data before the change was from both the HPHF and
+HWF. It is difficult to confidently differentiate which data was from each use case and this issue
+affects very few homes so all data before the change is retained in the HPHF temperature
+column.
+A graph of the change point detection is shown in Figure 6.10 whereby the vertical line marks
+the detected change point plotted alongside the ‚Äúmean: count per day‚Äù in blue. Note that whilst it
+is physically less likely, the swapped sensors at the change point could be HWF and HPR
+temperatures.
+
+Figure 6.10: A graph of the change point detection used to identify when physical changes to the monitoring system
+were made.
+
+6.2.6 Removal of Out-of-Range Temperatures
+The range of expected temperatures recorded by each sensor within the heat pump monitoring
+system is relatively predictable and therefore it is possible to spot anomalous values. To search
+for anomalous values, it is necessary to set acceptable ranges. Within the cleansing process,
+these temperature ranges were wide, to maximise the temperature data which can be used and
+avoid removing any correct values. The acceptable temperature ranges are presented in Table
+6.1.
+There are a small number of anomalous temperature values which are vastly different to the
+usual expected ranges. These anomalous values are removed from the cleansed dataset and
+therefore not included within the analysis.
+
+                                                                                                                                            P a g e | 36
+Electrification of Heat Demonstration Project
+
+Table 6.1: Accepted temperature ranges for each data column.
+
+Data Column                         Min                       Max     Notes
+Internal_Air_Temperature            Value                     Value
+External_Air_Temperature            ( C‚∑™ )                    ( ‚∑™C )  Based on Temperature Variations in
+Hot_Water_Flow_Temperature          0                         40      UK Heated Homes Study [21] with a
+                                                                      5 C‚∑™ variation on either side.
+Heat_Pump_Return_Temperature        -27.2                     40.3    Based on record UK temperatures
+Heat_Pump_Heating_Flow_Temperature  5                         80      [22].
+Brine_Flow_Temperature                                                Min value based on freezing
+                                    5                         80      temperature of water. Maximum
+Brine_Return_Temperature            5                         80      value based on the highest
+                                    -10                       30      temperature possible by the units
+                                                                      installed as part of this study [23].
+                                    -10                       30      Both have an extra +5 C‚∑™ variation.
+                                                                      See Hot_Water_Flow_Temperature
+                                                                      See Hot_Water_Flow_Temperature
+                                                                      In the UK, GSHPs ground loop
+                                                                      generally operate around 10 C‚∑™ all
+                                                                      year around [24]. A 20 ‚∑™C variation
+                                                                      has been allowed either side of this.
+                                                                      See Brine_Flow_Temperature
+
+6.2.7 Supplementary Data Cleansing
+
+The supplementary data which is used to assist with the monitoring data analysis has
+undergone a rigorous quality checking and cleansing process. This is described within the Data
+Documentation Report [11] which is published alongside the dataset [13].
+
+To ensure it is possible to use this data for analysis, the supplementary data should contain a
+consistent set of unique values. Table 6.2 provides the allowed variables for each column of
+supplementary data used at this stage of the monitoring data analysis.
+
+Table 6.2: Each supplementary data field used and the accepted unique values after data cleaning.
+
+Field Name    Description   Unique Values (Post Cleaning)
+
+House_Income House income   'Prefer not to say', '¬£0 - 12,500', '¬£12,501 - 16,200',
+                            '¬£16,201 - 20,000', '¬£20,001 - 25,000', '¬£25,001 - 30,000',
+Social_Group  Social group  '¬£30,001 - 40,000', '¬£40,001 - 50,000', '¬£50,001 +'
+House_Form    House type    'AB', 'C1', 'C2', 'DE''
+
+House_Age     House age     'Detached', 'End-Terrace', 'Flat', 'Mid-Terrace', 'Semi-
+                            Detached'
+                            'Pre-1919', ‚Äò1919-1944‚Äô, ‚Äò1945-1964‚Äô, ‚Äò1965-1980‚Äô, ‚Äò1981-
+                            1990‚Äô, ‚Äò1991-2000‚Äô, ‚Äò2001+‚Äô
+
+In addition to ensuring the data used from the supplementary dataset is consistent with
+expectations, to perform the monitoring data analysis, it was also necessary to collate additional
+refrigerant data which was collected by analysing the datasheets from the installed heat pumps.
+This data is provided in the analysis summary datasets.
+
+                                                                      P a g e | 37
+Electrification of Heat Demonstration Project
+
+The majority of the data cleansing conducted was relating to spelling and grammar variations
+between properties however, due to variations in the data collected the house ages required a
+more considered cleansing approach, this is discussed further in the sub-section below.
+
+6.2.7.1 House_Age Cleansing
+
+During the home survey stage of the project, the home ages were gathered slightly differently
+by all of the DCs. The ITT stipulated that the ages should be presented within the ranges:
+
+Pre-1919; 1919-1944; 1945-1964; 1965-1980; 1981-1990; 1991-2000; 2001+.
+
+OVO and Warmworks collected and presented the home ages within these ranges however,
+E.On collected the home ages within the EPC ranges which are:
+
+Pre-1900; 1900-1929; 1930-1949; 1950-1966; 1967-1975; 1976-1982; 1983-1990; 1991-1995;
+1996-2002; 2003-2006; 2007-2011; 2012+.
+
+As these bands overlap and are inconsistent, the house ages required cleansing to enable data
+analysis. As with other supplementary data cleansing, this cleansing was performed prior to
+publication of the published Heat Pump Installation Data [13]. This cleansing is highlighted
+again as it may have some baring on the monitoring data analysis results. To attain consistent
+data, the EPC House_Age ranges used by E.On were adjusted to align with the ITT ranges as
+shown in Table 6.3 below.
+
+Table 6.3: The EPC House_Age ranges used by E.On listed alongside the ITT House_Age Ranges which they were
+converted to for publication and analysis.
+
+EPC House_Age Range  ITT House_Age Range
+                     (new range for analysis conclusions)
+Pre-1900
+1900-1929            Pre-1919
+1930-1949            Pre-1919
+1950-1966            1919-1944
+1967-1975            1945-1964
+1976-1982            1965-1980
+1983-1990            1965-1980
+1991-1995            1981-1990
+1996-2002            1991-2000
+2003-2006            1991-2000
+2007-2011            2001+
+2012+                2001+
+                     2001+
+
+6.3 Assessing Data Quality
+
+Quality issues in the data arise where the monitoring equipment has not operated as intended.
+These can be categorised into transmission issues (where no data was received for a period) or
+equipment issues (where one sensor or meter sent anomalous readings or no readings). Some
+of the data quality issues are easily identifiable and amendable, these are discussed within the
+data cleansing section above. However, some of the quality issues may still exist within the data
+after cleansing, and some cleansing activity may reduce confidence in the data. As a result, it is
+necessary to assess and quantify the quality of the data to ensure that the best windows for
+data analysis are selected (see Section 6.4) and that the data are of sufficient quality to be
+analysed.
+
+                                                                         P a g e | 38
+Electrification of Heat Demonstration Project
+
+The quality checks undertaken for this data analysis are as follows:
+         ‚Ä¢ Assigning quality scores to all gaps in the cumulative data.
+         ‚Ä¢ Assigning quality scores to each calendar month of cumulative data.
+         ‚Ä¢ Reviewing the calculated efficiency over a selected analysis window.
+         ‚Ä¢ Assessing the percentage of data available in a selected analysis window.
+         ‚Ä¢ Assessing energy output over a given period (for coldest day only).
+
+The below sub-sections give more details on each of the quality assessments.
+
+Section 0 provides the outcome of the quality checks including quantifying why properties were
+excluded from the data analysis.
+
+6.3.1 Data Gap Quality Scoring
+
+The majority of data quality issues identified are related to gaps in the data. A gap in the data is
+defined as data being missing for longer than 30 minutes. As the energy meter data are
+cumulative, a gap in the data does not necessarily compromise the quality of the data around it.
+It is generally assumed that, where gaps in the data exist, they are as a result of transmission
+faults and that the meter has continued collecting data on it‚Äôs cumulative trend through the gap
+period. Therefore, as long as the data before and after the gap are as expected, the data should
+be of sufficient quality to analyse.
+
+Where data gaps exist, they are therefore assigned a quality score between 1 and 5 based on
+the length of the gap period and what happened to the data over the gap period. Higher scoring
+data gaps indicate worse data quality. The quality scores for both gaps and monthly data (See
+Section 6.3.2) are the main metric used to both select the best quality window (see Section 6.4)
+and to ensure the data is of sufficient quality to analyse.
+
+All selected windows with a maximum quality score of greater than or equal to 4 are rejected
+from analysis. Quality scores between 3 and 4 were flagged for manual review; however, upon
+review of each of these cases, they have been included within this set of data analysis as the
+data appears as expected.
+
+The expected data trend over a gap varies based upon which data the gap exists within and
+what trends occurred in the other data over the gap period. The scores given to each gap are
+provided in in the following tables.
+
+Table 6.4 applies to any gaps within all cumulative data readings. Decreases in the data over a
+prolonged gap are re-levelled as discussed in Section 6.2.4 however, the data over the gap
+period is lost so where a long gap exists, the data is scored harshly and rejected from the
+analysis.
+
+Table 6.4: The data quality score if a data gap of a given time period exists within any of the cumulative data and the
+reading reduces over the gap. (Higher scores = worse quality data)
+
+Time Period / Value Change Decrease
+
+30 minutes ‚Äì 7 days  3.1
+7 days ‚Äì 21 days     3.7
+                     5
+> 21 days
+
+Table 6.5 applies to any gaps within the Boiler Energy Output, Immersion Heater Consumed,
+Back Up Heater Consumed or, Circulation Pump Consumed data readings. These are less
+harshly scored as the data is less predictable for the system ancillary components and it causes
+
+                                                                                      P a g e | 39
+Electrification of Heat Demonstration Project
+
+less of an impact on the overall results. Note that ‚Äúflat‚Äù denotes no change between the
+readings before and after the gap.
+
+Table 6.5: The data quality score if a data gap of a given time period exists within the non-heat pump data and the
+reading remains flat or increases over the gap. (Higher scores = worse quality data)
+
+Time Period / Value Change Increase            Flat
+
+30 minutes ‚Äì 7 days     1                      1
+7 days ‚Äì 21 days        2                      2
+                        3                      3
+> 21 days
+
+Table 6.6 applies to any gaps within the Heat Pump Energy Output and Whole System Energy
+Consumed readings. These are COP dependent as it is expected that the heat pumps will
+operate within given efficiencies however, the allowable COP is wider than the allowable annual
+SPF as greater performance variation is expected over a shorter timeframe.
+
+Table 6.6: The data quality score if a data gap of a given time period exists within the heat pump data and the
+reading increases with a given COP(H2) over the gap. (Higher scores = worse quality data)
+
+Time Period / Value Change Increase                              Increase
+                                          0.9 <= COP(H2) <= 6.5
+                                                                 COP(H2) < 0.9 or,
+30 minutes ‚Äì 7 days     1                                        COP(H2) > 6.5
+7 days ‚Äì 21 days        2                                        2
+                        3                                        3.6
+> 21 days                                                        5
+
+Table 6.7 applies to any gaps within the Heat Pump Energy Output (HP Output) and Whole
+System Energy Consumed (WS Consumed) readings. These are varied based on the trends
+within all of the other data readings if the heat pump data remains flat over the given period. If
+all data is flat, it is assumed the system is either inactive or not working correctly. Where both
+heat pump readings are flat but other readings are increasing, this suggests the heat pump is
+inactive but other equipment within the system is operating instead. Where one of the readings
+is not flat and the other is flat over a prolonged period of time, this suggests there may be an
+equipment issue. The gaps are scored accordingly.
+
+Table 6.7: The data quality score if a data gap of a given time period exists within the heat pump data and the other
+data trends as per the additional rules outlined. (Higher scores = worse quality data)
+
+Time Period / Value  WS Consumed     HP Output Flat              WS Consumed        HP Output Flat
+Change               Flat                                        Flat
+                                     WS Consumed                                    WS Consumed
+                     All other       flat                        One or more        not flat
+                     readings flat                               other readings
+                                     1                           not flat           2
+30 minutes ‚Äì 7 days 1                2                           2                  3.5 / 3.4
+                                     3                           3.5 / 3.4          5
+7 days ‚Äì 21 days     2                                           5
+
+> 21 days            4
+
+Gap periods, and particularly longer gaps are scored more harshly than continuous data as,
+because the data gap exists, there is less certainty over what occurs within the system during
+the gap period. An upper limit of 21 days is selected as this is the period during which a trial
+participant might reasonably take a holiday and power down their heat pump system.
+
+                                                                                    P a g e | 40
+Electrification of Heat Demonstration Project
+An example of the data gap scoring is shown in the graphs in Figure 6.11.
+
+Figure 6.11: Two graphs showing unacceptable data (left) and acceptable data (right). The data shown on the left is
+rejected as it contains a max gap score of 5 due to meter reset following a large data gap.
+
+6.3.2 Monthly Data Quality Scoring
+
+As well as assigning quality scores to all gaps within the data, it is necessary to assess the
+quality of the data where gaps do not exist. There are significant variations in the monitoring
+data over shorter timescales, therefore the assessment of data quality was made over each
+calendar month. To assess the data, the energy used and COP(H2) over each calendar month
+was analysed.
+
+If the monthly COP(H2) falls within the range of 0.9-6.5 and the energy used over the month is
+greater than 1kWh, a quality score of 0 is assigned to this month of data (indicating there are no
+quality issues). If the monthly COP(H2) is outside of the range of 0.9-6.5, a quality score of 3.3 is
+assigned to this month of data. If the monthly energy recorded across all cumulative sensors is
+less than 1kWh, a quality score of 3.2 is assigned to this month of data. These scores are
+shown in Table 6.8.
+
+Table 6.8: Monthly data quality scores based on the value changes in cumulative data listed. (Score of 0 indicates no
+quality issues and higher scores = worse quality data).
+
+Monthly Value Change                                      Monthly Data Quality Score
+                                                          0
+COP(H2) between 0.9-6.5 and energy recorded across any
+cumulative sensors greater than 1kWh.                     3.3
+COP(H2) outside of range of 0.9-6.5.                      3.2
+Energy recorded across all cumulative sensors lower than
+1kWh
+
+The COP range assessed is wider than the 12-month SPF range (see Section 6.3.3) as more
+performance variations are expected through the months. For example, in the autumn or spring,
+when the heat pump is operating consistently but the external temperatures are moderate,
+higher COPs may be seen. Equally, in the summer the heat pump may be operating less
+frequently and therefore less efficiently to produce hot water.
+
+In addition to the above, there may be data quality issues if all cumulative readings are flat as
+this may signify error in measurement or lack of human presence. A lack of human presence
+over shorter periods is acceptable however, if the period becomes too long it may invalidate the
+
+                                                                           P a g e | 41
+Electrification of Heat Demonstration Project
+
+SPF result. For this analysis, periods of flat data are defined as periods where less than 1kWh
+is consumed or output.
+
+As both of these issues may be subjective, they are scored between 3 and for to allow for
+manual checks. The manual checks undertaken for the properties where this is the highest
+scoring issue have ensured confidence that these properties can be included for analysis. In all
+instances where data was flagged as having these issues and manual checks highlighted it as
+erroneous, the SPF was also out-of-range so data was excluded for other reasons.
+
+6.3.3 Calculated Efficiency ‚Äì Acceptable Ranges
+
+Once a given window is selected based on the data scoring (see Section 6.4), the system
+efficiency across that window is calculated using the analysis calculations in Section 7. The data
+is excluded from the analysis if these calculated efficiencies are outside of the accepted ranges.
+The accepted efficiency ranges for each efficiency calculation are provided in Table 6.9.
+
+Table 6.9: Accepted efficiency ranges for each calculation window, outside of which properties are excluded from the
+analysis.
+
+Calculated Value  Timeframe                    Accepted Range
+
+SPFH2 or SPFH4    12 months                    1.5 ‚Äì 4.5
+COP(H4)           24 hours                     0.75 ‚Äì 7.5
+COP(H4)           30 minutes                   0.75 ‚Äì 7.5
+
+The reason for filtering the data in this way is due to it‚Äôs simplicity for the removal of outliers as,
+despite the rigorous checking and quality scoring process it is still possible for outliers to exist
+within the data. This filtering method was primarily the method used within the RHPP trial [25].
+
+The SPF range used was selected based upon the RHPP trial range. To assess these ranges
+are still fit for purpose for the EoH project, a manual check was undertaken on all of the
+properties which have SPF values between 1 and 1.5 and between 4.5 and 5. The majority of
+these properties had clear issues within the cumulative data and so the range of 1.5 to 4.5 was
+maintained. This range will be revisited and may be amended when undertaking further data
+analysis later in the project.
+
+Due to wider performance variations over shorter timeframes, the accepted daily COP(H4)
+ranges are wider than that used for the SPFH4. The reason for performance variations in
+monthly data is discussed in Section 6.3.2 and variations are more prominent over a shorter
+timeframe as the performance becomes more of a function of the operational profile as well as
+the pre-conditioning of the property leading up to the selected period. Thus, the expected
+efficiency ranges are much wider for these periods.
+
+6.3.4 Percentage Data Available ‚Äì Acceptable Ranges
+
+The final quality criteria used to ensure a chosen analysis window is sufficient to be included in
+the analysis is the percentage of expected data available in that window. This check is only
+performed on the annual data as, for the coldest day, a pre-requisite to window selection is that
+the heat pump is operational and the data exists to prove this.
+
+This check is necessary as a selected window may have multiple short gaps which means a
+significant portion of the data is missing. In this scenario, each of the short gaps may have
+minimal impact on the data quality (low scoring gaps) however, the overall effect of the missing
+data is that confidence in the data is reduced.
+
+                                                               P a g e | 42
+Electrification of Heat Demonstration Project
+
+As a result of this, properties are filtered out of the SPF analysis if less than 50% of the
+expected Whole System Energy Consumed or Heat Pump Energy Output data readings are
+available. Upon review, there are no properties where less than 50% of the expected Whole
+System Energy Consumed or Heat Pump Energy Output data readings are available which are
+not excluded by the other metrics; so, whilst this check is performed, no properties are excluded
+as a result of it.
+
+Where sufficient heat pump data is available but less than 50% of the temperature data is
+available, the properties are not included within the temperature related analysis but are
+included in the wider SPF analysis.
+
+6.3.5 Energy Output ‚Äì Acceptable Ranges
+
+For the coldest day analysis, it is important that only periods where the heat pump is operational
+are selected. Initially, the window selection process checks heat pump operation prior to
+selecting the analysis window however, there may be selected windows where the home is pre-
+conditioned prior to the selected period and therefore the heat pump is operational only for a
+very short period. There may also be selected periods where the monitoring equipment is not
+operating as intended and recording erroneously high or low values.
+
+As a result, the data are filtered based on the heat pump energy output within the coldest day
+window. The energy use over the coldest periods is highly variable. As previously stated, it may
+be a function of the pre-conditioning of the property. None extensively, it may also be a function
+of the internal temperature setpoint chosen by the occupants, and the external temperature
+within the coldest period. As a result of these variations a statistical approach has been taken to
+the inclusion criteria of energy output during the cold periods.
+
+The properties are excluded from the analysis if the Heat_Pump_Energy_Output over the
+selected window is outside of 2 interquartile ranges (IQR) of the first and third quartiles (Q1 and
+Q3) with an ultimate lower boundary of 0kWh.
+
+This correlates to Heat_Pump_Energy_Output outside of the range of 0kWh and 195kWh for
+the coldest day.
+
+6.3.6 Data Quality Assessment Outcomes
+
+Using the data quality assessment results, the best window of data can be selected and certain
+properties can be included in or excluded from different parts of the data analysis. Window
+selection is discussed further in Section 6.4. This section outlines the number of properties
+included in the analysis or excluded based on the various quality metrics.
+
+For the annual SPF analysis, properties are excluded for the following reasons (in order):
+         ‚Ä¢ If they have less than one year of data,
+         ‚Ä¢ If they have less than one year of usable data (due to data being removed as a result
+              of early monitoring issues),
+         ‚Ä¢ If they have no valid one year windows due to gaps at the start or end of all possible
+              windows,
+         ‚Ä¢ If the SPF is outside of the range 1.5 to 4.5,
+         ‚Ä¢ If the maximum data quality score in the SPF window is greater than 4, and
+         ‚Ä¢ If there is less than 50% of the expected Whole System Energy Consumed or Heat
+              Pump Energy Output readings available.
+
+                                                                                                                                            P a g e | 43
+Electrification of Heat Demonstration Project
+Figure 6.12 indicates the number of properties which were excluded from the SPF analysis for
+each of these reasons and the number of properties remaining in the SPF analysis.
+
+Figure 6.12: A graph showing the number of properties excluded from the SPF analysis for each reason as well as
+the number of properties remaining.
+
+Figure 6.13 provides SPF and Energy Output performance metrics for all properties, those
+shown by solid dots are included in the analysis and those shown by hollow symbols are
+excluded from the analysis.
+
+Figure 6.13: A scatter graph of SPFH2 against Total Energy Output for all properties with a 12 month data window,
+indicating where the SPF boundaries are and which properties were included in or excluded from the analysis.
+
+                                                                                                                                            P a g e | 44
+Electrification of Heat Demonstration Project
+
+For the coldest day analysis, the coldest period in which the heat pump was operational was
+found. The quality checks listed in the previous subsections were applied as well as a check on
+the time and date of the coldest day. Properties were then included in the analysis only if
+sufficient data was available and they passed all of the checks listed within Table 6.10.
+
+Table 6.10: Criteria for including properties in the coldest day analysis as well as the number of properties included
+after each check.
+
+Inclusion criteria                                       No. properties remaining
+                                                         547
+ASHP sample size                                         535
+Sufficient data available                                518
+COP(H4) value inside of the range 0.75 to 7.5            487
+Timestamps within winter months (Nov and Mar inc.)       484
+Total heat pump energy output inside of 2 interquartile
+ranges (IQR) of Q1 and Q3.                               484
+
+Final Analysis Sample Size
+
+6.4 Analysis Window Selection
+
+6.4.1 12-month Window Selection
+
+A unique 12-month analysis window of data was selected for each property which was included
+within the SPF analysis. Initially, to choose the best 12-month window all potential data windows
+are found by finding all potential start and end dates. For the window to be considered, the start
+and end dates must be separated by 1 year and both must contain data (i.e. not be situated
+within a data gap).
+
+The best 12-month window is then selected for each home based on the quality of data within
+the window.
+
+          ‚ñ† Initially, windows with the lowest maximum data quality score are selected;
+          ‚ñ† From these, if more than one window for any properties exist, windows with the lowest mean
+
+                data quality score are selected;
+          ‚ñ† From these, if more than one window for any properties still exist, the most recent window is
+
+                selected.
+
+The first two stages in the window selection are based on the data quality, the maximum score
+is criteria for whether the data is useable, so this is prioritised above the mean quality score.
+The final check is selected based on confidence in the data. Some monitoring equipment
+exhibited hardware, calibration or setup issues early in the project which have been rectified
+during the project, as a result it is assumed that the most recent data is most likely to be of good
+quality.
+
+6.4.2 Coldest Day Window Selection
+
+To assess heat pump performance during the coldest day, it is necessary to find the coldest
+periods where the heat pump is operational. In order to do this, the mean external temperature
+was calculated for each day (beginning and ending at 00:00:00).The change in the heat pump
+energy output reading was also calculated over these windows..
+
+With these calculations complete, initially, all periods where the heat pump was operational
+were identified (where the change in heat pump energy output was greater than 0kWh). Then,
+
+                                                         P a g e | 45
+Electrification of Heat Demonstration Project
+
+the coldest of these periods was selected (lowest mean external temperature) as the one to
+take forward for analysis.
+
+During the analysis, to avoid skewing the overall result, the period is rejected if it is not in the
+winter period (between November and March). A list of the most common 10 selected periods is
+given in Section 10.
+
+6.5 Analysis Process Bias Check
+
+It is noted that when more than 12-months of data exist, the method chosen to select a 12-
+month analysis window may cause bias in the results. An example of an obviously bias method
+would be to select the 12-month period with the highest SPF for each home. When choosing the
+window selection method, the potential to cause bias results was noted and the method was
+selected based on providing an unbiased result. It is however still necessary to check whether
+the method selected did create any bias within the results.
+
+To make this assessment, the SPF values for each possible window for each property were
+calculated. The median of all SPF values was then taken for each property. The number of
+possible windows and median of the SPF values calculated across each possible window is
+provided (for each property) in the summary dataset [8].
+
+The median of the SPF values was then compared to the SPF value calculated for the selected
+analysis window to provide a metric by which to assess bias.
+
+The average (mean) result across all homes is provided in Table 6.11.
+
+Table 6.11: The average variation between the median of all windows SPF values and the SPF calculated within the
+analysis window, across all homes.
+
+SPF Value  Mean variation
+
+SPFH2      -0.0015
+SPFH3      -0.0026
+SPFH4      -0.0032
+
+These results are sufficiently low that, after rounding the maximum impact they could have on
+the SPF figures presented within this report is a variation of 0.01. This provides a clear
+indication that the method chosen to select the analysis window does not instil significant bias
+within the results presented.
+
+6.6 Known Quality Issues
+
+Despite the extensive cleaning and quality checking process, there are still some minor quality
+issues within the data which are not resolved. These are discussed in the following subsections.
+
+6.6.1 Data Gaps
+
+As already noted in Section 4.3, data gaps may exist due to transmission errors or monitoring
+equipment errors. These result in either a lack of all data for a period or a lack of one type of
+data for a period.
+
+Within the cleaning process, the decision was taken not to rectify data gaps with assumed or
+interpolated data. This is because, whilst gaps may cause issues with certain analysis during
+certain periods, backfilling the gap with assumed or calculated data would reduce confidence in
+the data. As such, data gaps still exist in the cleansed dataset. This is not an unsurmountable
+
+                                                                       P a g e | 46
+Electrification of Heat Demonstration Project
+
+issue for most of the analysis performed on the data, which is outlined in this report, however, it
+should be noted as it may cause issues with other future analysis.
+
+6.6.2 Timestamp Alignment Issues
+
+As noted in Section 6.2.1, due to the alignment of the timestamps to every 2-minute period,
+analysis of instantaneous readings or readings over short periods may return false results. For
+example, a heat pump energy output of 1kWh over a 2-minute period in the cleansed dataset
+may appear to indicate an average thermal output of 30kW however; the period in the raw
+dataset may actually be up to 4-minutes, giving an average thermal output of 15kW (-50%
+impact).
+
+As the maximum variation for any window is 2-minutes either side of the first and last
+datapoints, this issue is minimised when analysis is undertaken over a wider timescale. As
+such, the impact is negligible on the SPF analysis. The shortest analysis window used for the
+analysis in this report is 24 hours and the impact over a 24 hour period is also negligible.
+
+To assess the potential impact of aligning the timestamps in the cleansed dataset, should it be
+used to derive ‚Äúinstantaneous‚Äù readings; the timestamp difference between one data point and
+the next was calculated for each sensor in each home. 99.1% of all the data points had
+timestamp differences in the 1.8 - 2.2-minute range (1 min 48 secs to 2 min 12 secs). So, given
+the 1kWh 2-minute period example above, the average thermal output for 99.1% cases would
+fall between 33.33 - 27.27kW.
+
+This impact is still a 9-11% variation on the instantaneous result which is not insignificant. As
+such, if the heat pump monitoring data is used to perform instantaneous analysis, it may be
+necessary to use the raw dataset.
+
+6.6.3 Circulation Pump Reading Issue
+
+Some of the circulation pumps electricity meters did not provide readings. As a result of the
+metering strategy, the energy used by the circulation pump is still recorded by the Whole
+System Energy Consumed electricity meter. Therefore, the impact of this is that the SPFH2 and
+SPFH3 results are skewed lower than their true value. This is because, to calculate the Heat
+Pump Unit Energy Consumed, the Circulation Pump Energy Consumed is subtracted from the
+Whole System Energy Consumed reading. This subtraction reduces the denominator in the
+SPFH2 and SPFH3 calculations.
+
+To decide whether to address this issue within the data cleansing, analysis was done on the
+potential impact of this issue. In total, of the 353 ASHP and Hybrid systems included in the
+analysis, 60 of them returned an erroneous circulation pump energy consumed value of 0kWh.
+The average Circulation Pump Energy Consumed across all other systems was 146.5kWh.
+Taking this average and applying it to the properties which returned a reading of 0kWh, the
+average SPFH2 across the trial increases by 0.021 and the average SPFH3 across the trial
+increases by 0.011.
+
+Since this impact is relatively small, the decision was made not to add estimated circulation
+pump readings into the data to replace zeros.
+
+6.6.4 Negative Cumulative Data Readings
+
+On some occasions, the data values recorded by the cumulative meter reduce. The most
+significant reductions are clear errors and are dealt with by the processes outlined within
+Section 6.2.2 and 6.2.4.
+
+                                                                                                                                            P a g e | 47
+Electrification of Heat Demonstration Project
+
+Not all of the reduced readings are erroneous, however, as some of the minor reductions in may
+be a result of the heat pump defrost cycle4. As a result, the cleansing process does not remove
+all reductions in cumulative meter readings and small reductions are maintained within the
+cleansed dataset. For the heat pumps, during colder periods all these variations can be
+assumed to be normal operation, however, some of the variations occur in the boiler heat meter
+readings in hybrid systems.
+There is no technical reason for the boiler to absorb heat from the home, so these readings are
+assumed to be erroneous. The likely cause for this error is minimal backflow through the boiler
+circuit when the heat pump is operational. The impact of these minor erroneous readings is
+minimal, so they have not been rectified but should be noted.
+
+6.6.5 Mislabeled temperature readings
+From examination of the data, it appears that some temperature sensors for some durations
+have been mislabelled. This is due to the physical installation of the sensors, and in some cases
+these have been corrected part way thought the monitoring period. Where it was possible to be
+confident in identifying the mislabelled data, the sensors have been relabelled temperature
+sensors as described in Section 6.2.5.1. There are however some cases where temperature
+sensors may have been mislabelled but it is not possible to confidently relabel them. This could
+be the case for Heat_Pump_Heating_Flow_Temperature and Heat_Pump_Return_Temperature
+for a small number of homes.
+
+6.6.6 Back-up heater energy consumed recording
+There may be instances where the back-up heaters have not been metered independently or
+where the heat meter records the back-up heater energy generated as well as heat pump
+energy generated. An example where this may occur is if a monobloc heat pump includes the
+back-up heater within the external heat pump unit.
+In these instances, the total energy generated and energy consumed by the system is still
+recorded however, the efficiency breakdown across the SPF boundaries may not be accurate.
+These instances do not occur in the majority of the heat pumps installed and the impact on an
+individual home basis is likely to be the reporting of a slightly lower SPFH2. As the SPF results
+are averaged across a large sample, this impact is dampended and the overall effect is likely
+minimal.
+
+4 The defrost cycle occurs when condensed water on the heat pump turns to ice. The heat pump operates
+in reverse, pumping warm water through the heat exchangers in order to defrost this ice. This process
+abosorbs a small amount of heat from the home heating system, so negative heat meter readings are
+expected.
+
+                                                                                                                                            P a g e | 48
+Electrification of Heat Demonstration Project
+
+7. Analysis Calculations
+
+7.1 Assumptions
+
+To perform SPF and COP calculations, certain assumptions must be made. These assumptions
+broadly relate to the heat gains from different components in the heat pump system and the
+physical configuration of each monitoring system. Where assumptions are made on the physical
+configuration of the monitoring system, these are backed up by the installation Quality
+Assurance checks (refer to Section 3.3). Whilst the QA checks give some assurance of the
+physical configuration, they were only carried out on 20% of the properties, so listed
+assumptions are still necessary.
+When performing the analysis calculations, it is assumed that:
+
+          ‚ñ† The circulation pump causes negligible heat gain on the system.
+          ‚ñ† The back-up heater energy consumed is equal to the back-up heater energy output.
+          ‚ñ† The immersion heater energy consumed is equal to the immersion heater energy output.
+          ‚ñ† Where no back-up heater energy consumed value is recorded independently, it is combined
+
+                with the immersion heater energy consumed.
+          ‚ñ† The back-up and immersion heaters are located downstream (on the flow side) of the Heat
+
+                Pump heat meter;
+                     o As such, the Heat Pump heat meter records only the Heat Pump Energy output.
+
+          ‚ñ† Any boiler heat meters are located in parallel to the heat pump heating circuit;
+                     o As such, they do not record the boiler heat output.
+
+          ‚ñ† Boiler heat meters do not account for the heat energy output for hot water provision.
+          ‚ñ† The electricity meters are located as indicated within Section 4.1 of this report;
+
+                     o I.e. There is one whole system electricity meter which records all energy consumed
+                           and all other components are sub-metered aside from the heat pump.
+
+          ‚ñ† The circulation pump electricity sensor accounts for all (primary and secondary) circulation
+                pumps.
+
+          ‚ñ† The heat pump unit electricity consumed is equal to the Whole_System_Energy_Consumed
+                minus all other energy consumed values.
+
+7.2 Calculation Variables
+
+The majority of the variables required for the analysis calculations are directly recorded by the
+meters and sensors in the heat pump monitoring system described in Section 4.1. There are,
+however, a few variables which need to be pre-calculated prior to performing the main analysis
+calculations. Table 7.1 lists the calculation variables required for the SPF and COP calculations
+described in Sections 7.3 and 7.4.
+
+                                                                                                                                            P a g e | 49
+Electrification of Heat Demonstration Project
+
+Table 7.1: A full list of the variables used to perform the SPF and COP calculations.
+
+Data Item                         Symbol       Source
+
+Heat_Pump_Energy_Output           QHP          Meter reading
+Whole_System_Energy_Consumed      EHPS         Meter reading
+Back-Up_Heater_Energy_Consumed    EBU          Meter reading
+Immersion_Heater_Energy_Consumed  EIH          Meter reading
+Circulation_Pump_Energy_Consumed  ECP          Meter reading
+Heat_Pump_Energy_Consumed         EHPU         EHPU = (EHPS - EBU - EIH - ECP)
+Back-Up_Heater_Energy_Output      QBU          QBU = EBU
+Immersion_Heater_Energy_Output    QIH          QIH = EIH
+
+The Back-Up_Heater_Energy_Output and Immersion_Heater_Energy_Output are derived
+based on the assumption listed in Section 7.1. The Heat_Pump_Energy_Consumed is derived
+by subtracting the sub-metered component energy consumed values from the
+Whole_System_Energy_Consumed value.
+
+To derive the specific value for each of the cumulative data variables, the first and last recorded
+values within the selected analysis window were attained. The first value was then subtracted
+from the last value and resultant used within the SPF and COP calculations.
+
+7.3 Seasonal Performance Factor Calculations
+
+The seasonal performance factor (SPF) of a heat pump is the ratio of the total heat supplied to
+a building (by the heating system) to the electricity used by the heat pump and other
+components of the heating system over the year. This ratio is usually expressed as a numerical
+value which correlates directly to an efficiency percentage (i.e. an SPF of 2.90 means the heat
+pump operation over the year was 290% efficient.)
+
+SPF values are calculated over four different boundaries, depending on which components of
+the heat pump system are assessed. These boundaries, were originally defined by the
+SEPEMO project (SEasonal PErformance factor and MOnitoring for heat pump systems in the
+building sector) [1]. Further clarification of the SPF boundaries was made during the Energy
+Saving‚Äôs Trust Heat Pump Trial [15] [16] for systems which may include an immersion heater for
+hot water provision.
+
+The SPF system boundaries used for the calculations herein are derived directly from those
+derived by the studies listed above. Figure 7.1 applies these system boundaries to the EoH
+project monitoring system.
+
+                                                                                       P a g e | 50
+Electrification of Heat Demonstration Project
+
+Figure 7.1: SPF system boundaries applied to the EoH monitoring system.
+
+Note that within the EoH monitoring system, the pumps located within the heat pumps (denoted
+in Figure 7.1 as ‚ÄúAuxiliary Equipment in Heat Pump‚Äù) are not separately monitored. As such, an
+SPFH1 values cannot be calculated using the data collected by this project.
+
+The SPFH2, SPFH3 and SPFH4 calculations used for this project are provided below.
+
+Ì†µÌ±ÜÌ†µÌ±ÉÌ†µÌ∞πÌ†µÌ∞ª2    =  (Ì†µÌ±ÑÌ†µÌ∞ªÌ†µÌ±É )       ;  Ì†µÌ±ÜÌ†µÌ±ÉÌ†µÌ∞πÌ†µÌ∞ª3  =  (Ì†µÌ±ÑÌ†µÌ∞ªÌ†µÌ±É + Ì†µÌ±ÑÌ†µÌ∞µÌ†µÌ±à + Ì†µÌ±ÑÌ†µÌ∞ºÌ†µÌ∞ª)    ;     Ì†µÌ±ÜÌ†µÌ±ÉÌ†µÌ∞πÌ†µÌ∞ª4  =      (Ì†µÌ±ÑÌ†µÌ∞ªÌ†µÌ±É  + Ì†µÌ±ÑÌ†µÌ∞µÌ†µÌ±à  + Ì†µÌ±ÑÌ†µÌ∞ºÌ†µÌ∞ª)
+                (Ì†µÌ∞∏Ì†µÌ∞ªÌ†µÌ±ÉÌ†µÌ±à )                      (Ì†µÌ∞∏Ì†µÌ∞ªÌ†µÌ±ÉÌ†µÌ±à + Ì†µÌ∞∏Ì†µÌ∞µÌ†µÌ±à + Ì†µÌ∞∏Ì†µÌ∞ºÌ†µÌ∞ª)                      (Ì†µÌ∞∏Ì†µÌ∞ªÌ†µÌ±ÉÌ†µÌ±à +  Ì†µÌ∞∏Ì†µÌ∞µÌ†µÌ±à +  Ì†µÌ∞∏Ì†µÌ∞ºÌ†µÌ∞ª + Ì†µÌ∞∏Ì†µÌ∞∂Ì†µÌ±É)
+
+All SPF calculations were carried out over the 12-month data window selected for the analysis.
+For each property, this window is provided within the analysis summary datasets.
+
+7.4 Coefficient of Performance Calculations
+
+The Coefficient of Performance (COP) of a heat pump is similar to the SPF in that it indicates
+the heat pump efficiency over a period of time. However, whilst the required conditions and
+calculation boundaries for SPF are clearly defined, the term COP can be used to describe the
+heat pump efficiency over a variety of conditions or timeframes.
+
+For this analysis, the term COP is used for any efficiency calculation which is performed over a
+timeframe that is not exactly 12-months. Other than the variation in the analysis window
+timeframe, the COP calculations performed in this analysis are identical to the SPF calculations
+quoted above. Where the COP calculations are performed over a certain system boundary, they
+are denoted with (H2), (H3) or (H4) in a similar fashion to the SPF. The COP calculations are
+listed below.
+
+Ì†µÌ∞∂Ì†µÌ±ÇÌ†µÌ±É(Ì†µÌ∞ª2)  =  (Ì†µÌ±ÑÌ†µÌ∞ªÌ†µÌ±É )    ;     Ì†µÌ∞∂Ì†µÌ±ÇÌ†µÌ±É(Ì†µÌ∞ª3)  =  (Ì†µÌ±ÑÌ†µÌ∞ªÌ†µÌ±É + Ì†µÌ±ÑÌ†µÌ∞µÌ†µÌ±à + Ì†µÌ±ÑÌ†µÌ∞ºÌ†µÌ∞ª)     ;  Ì†µÌ∞∂Ì†µÌ±ÇÌ†µÌ±É(Ì†µÌ∞ª4)   =      (Ì†µÌ±ÑÌ†µÌ∞ªÌ†µÌ±É  + Ì†µÌ±ÑÌ†µÌ∞µÌ†µÌ±à + Ì†µÌ±ÑÌ†µÌ∞ºÌ†µÌ∞ª)
+                (Ì†µÌ∞∏Ì†µÌ∞ªÌ†µÌ±ÉÌ†µÌ±à )                        (Ì†µÌ∞∏Ì†µÌ∞ªÌ†µÌ±ÉÌ†µÌ±à + Ì†µÌ∞∏Ì†µÌ∞µÌ†µÌ±à + Ì†µÌ∞∏Ì†µÌ∞ºÌ†µÌ∞ª)                       (Ì†µÌ∞∏Ì†µÌ∞ªÌ†µÌ±ÉÌ†µÌ±à +  Ì†µÌ∞∏Ì†µÌ∞µÌ†µÌ±à + Ì†µÌ∞∏Ì†µÌ∞ºÌ†µÌ∞ª + Ì†µÌ∞∏Ì†µÌ∞∂Ì†µÌ±É)
+
+                                                                                                                          P a g e | 51
+Electrification of Heat Demonstration Project
+7.5 Statistical Significance and Confidence Intervals
+Where this report indicates statistical significance, it refers to whether a result can be attributed
+to a change in the population rather than being attributable to random variation. The threshold
+used in this report when testing for statistical significance is 5%.
+When this report refers to a mean 95% confidence interval, it refers to the confidence intervals
+(range) in which, when calculated from 95% of random samples, the true mean value would be
+contained.
+
+                                                                                                                                            P a g e | 52
+Electrification of Heat Demonstration Project
+
+8. Seasonal Performance Factor
+
+This section provides the SPF analysis. This analysis takes the average SPF across the various
+heat pump types, operational patterns, home types and participant groups to conclude the
+average performance, the performance variation and potential reasons for this variation.
+
+8.1 SPF by Heat Pump Type
+
+Table 8.1 provides a breakdown of the median and mean SPF values for all ASHPs and heat
+pumps within hybrid systems separately. It is necessary to separate these systems out as
+Hybrid systems have different operating patterns compared with ASHP systems. This is due to
+the inclusion of a gas boiler in the former. These results are also presented in graphical format
+within Figure 8.1.
+
+Table 8.1: Median and mean SPF values for all ASHPs and all heat pumps in Hybrid systems. (Note Hybrid SPFH3
+excluded as it is equal to SPFH2)
+
+Heat Pump Type       SPF Type  Sample Size     Median [IQR]       Mean [95% CI]
+ASHP
+                     SPFH2     291             2.94 [2.66, 3.20]  2.95 [2.90, 3.00]
+(Heat Pumps within)  SPFH3     291             2.89 [2.62, 3.17]  2.90 [2.85, 2.95]
+Hybrid systems       SPFH4     291             2.80 [2.53, 3.09]  2.82 [2.77, 2.87]
+                     SPFH2     58              2.54 [2.25, 2.93]  2.60 [2.47, 2.73]
+                     SPFH4     58              2.37 [2.01, 2.81]  2.42 [2.28, 2.55]
+
+Note that when calculating SPF values for the Hybrid systems, only the electrical components
+are considered (i.e. the boiler is excluded). The inclusion of the boiler in the calculation would
+reduce the overall system efficiency significantly, this is discussed further in Section 9.2.
+
+Figure 8.1: Q1, Q3 and median SPF values for ASHPs and heat pumps within hybrid systems.
+
+Figure 8.2 shows the empirical distribution of the ASHP and heat pumps within hybrid systems.
+This figure shows the distribution to be significantly different between the two heat pump
+systems. Both SPFH2 and SPFH4 perform worse in Hybrids than ASHPs and the variance
+amongst Hybrids is also visibly higher.
+
+                                                                                                                                            P a g e | 53
+Electrification of Heat Demonstration Project
+
+Figure 8.2: Empirical distribution of SPF for ASHPs and Hybrids, split by SPF type.
+
+8.1.1 GSHP SPF analysis has not been undertaken at this stage as the current
+         sample size of GSHPs containing 12-months of usable data has been
+         deemed too small to make any conclusions. Comparison with Past Studies
+
+The most recent taxpayer funded heat pump monitoring trial prior to the EoH project was the
+monitoring of 700 heat pumps installed as part of the Renewable Heat Premium Payment
+(RHPP) Scheme [25]. This monitoring programme included both ASHPs and GSHPs but did not
+include any Hybrid systems. As the EoH project does not have a sufficient data sample to draw
+any interim conclusions on GSHP operation, a comparison of results can only be made for
+ASHPs.
+
+A comparison between the interim EoH SPF results and the RHPP SPF results is provided in
+Table 8.2. Note that no adjustment has been made for weather variations within the analysis
+windows when comparing the EoH and RHPP heat pump performance figures.
+
+Table 8.2: A comparison of the interim EoH ASHP performance against the RHPP scheme results.
+
+SPF    Interim EoH  EoH SPF                    RHPP RHPP RHPP SPF [Q1,
+
+Value EoH   Median [Q1, Q3], IQR               Sample Median Q3], IQR
+
+       Sample SPF                              SPF
+
+SPFH2  291  2.94    [2.66, 3.20], 0.54 292     2.65                                  [2.33, 2.95], 0.62
+SPFH4  291
+            2.80    [2.53, 3.09], 0.56 292     2.44                                  [2.15, 2.67], 0.52
+
+It is clear reviewing the table that the median SPF for heat pump installations has improved
+significantly since the RHPP findings were released in 2017. The median SPFH2 from EoH is
+0.29 higher than that calculated through the RHPP trial and the median SPFH4 is 0.36 higher.
+
+Despite the higher heat pump efficiency, the variance in SPF across installations remains
+
+similar to that observed through the RHPP scheme. The IQR for the both EoH and RHPP
+
+(SPFH2 and SPFH4) lie between 0.52 and 0.62. This represents a large variation in performance
+‚Äì more than half of installations were at least 10% higher or lower than the median.
+
+This high degree of variation in performance may be due to a number of factors. Some of these
+may include variation in heat pump unit efficiencies, variation in system design efficiencies,
+variation in quality of installation and variation in consumer control or usage patterns.
+
+                                                                                              P a g e | 54
+Electrification of Heat Demonstration Project
+8.1.2 Comparison of Low and High Temperature ASHP
+It is necessary to consider the difference between performance of the HT and LT ASHPs based
+on the pre-project definitions. The pre-project definition of a HT ASHP is an ASHP which can
+achieve flow temperatures greater than 65¬∞C.
+It should be noted that just because the heat pump can achieve these temperatures, it does not
+mean that temperatures greater than 65¬∞C are required to keep the property warm. In addition,
+even where temperatures greater than 65¬∞C may be required to keep the property warm, the
+ASHPs inherent weather compensation controls may mean that the heat pump rarely operates
+at these higher flow temperatures.
+As such, there may be HT ASHPs installed through the project which are operating in a similar
+manner and with similar flow temperatures to LT ASHPs. Despite this observation, the
+breakdown of SPF by LT ASHP and HT ASHP is provided in Table 8.3 below. These results are
+also presented as an empirical distribution within Figure 8.3.
+
+                                                                                                                                            P a g e | 55
+Electrification of Heat Demonstration Project
+
+Table 8.3: Median and mean SPF values broken down for LT ASHPs and HT ASHPs based on pre-project
+definitions.
+
+Heat     SPF Type  Sample  Median [IQR]        Mean [95% CI]
+Pump               Size
+Type     SPFH2             2.94 [2.63, 3.26]   2.94 [2.88, 3.01]
+LT ASHP  SPFH3     187     2.86 [2.56, 3.19]   2.87 [2.81, 2.94]
+         SPFH4     187     2.74 [2.47, 3.09]   2.77 [2.71, 2.84]
+HT ASHP  SPFH2     187     2.94 [2.71, 3.15]   2.96 [2.88, 3.04]
+         SPFH3     104     2.94 [2.67, 3.15]   2.95 [2.87, 3.03]
+         SPFH4     104     2.89 [2.66, 3.07]   2.89 [2.82, 2.97]
+                   104
+
+Figure 8.3: Empirical distribution of SPF for all HT and LT ASHPs, split by SPF type.
+
+Reviewing these results, the HT ASHP units are observed to be performing with a similar SPFH2
+to the LT ASHP units. As the calculation boundary increases for the SPFH3 and SPFH4
+calculations, the HT ASHP systems are observed to be operating slightly more efficiently than
+the LT ASHP systems.
+
+It should be noted that the sample of heat pumps installed as part of this trial may not be
+indicative of all heat pumps on the market, and therefore it should not be concluded that HT
+ASHP systems have a greater or equal efficiency compared with LT ASHP systems. Rather,
+other factors such as actual heat pump operational temperatures, mechanical design and the
+refrigerant used can have a bigger impact on real world heat pump performance than the
+maximum temperature that a heat pump is capable of.
+
+8.2 SPF by Refrigerant
+
+Heat pumps contain a fluid, known as a refrigerant, that facilitates the transfer of heat from the
+heat source to the heat sink as it circulates through the heat pump. In selecting a refrigerant,
+manufacturers need to make trade-offs between a range of factors, including performance at
+different temperatures, global warming potential (GWP), cost and safety.
+
+Due to the Fluorinated Greenhouse Gas (F-Gas) Regulations 2015 [26], manufacturers are
+moving away from traditional refrigerants to those with a lower GWP. Meanwhile, manufacturers
+are also striving to ensure the performance of the heat pumps is improving, so there is often a
+correlation between the use of newer refrigerants and higher heat pump performance.
+
+                                                                                                                                            P a g e | 56
+Electrification of Heat Demonstration Project
+
+The ASHPs installed through this project utilised three refrigerants, these are listed in Table 8.4
+alongside their GWP and the sample of ASHPs used in the analysis.
+
+Table 8.4: The refrigerants used in heat pumps installed through this study.
+
+Refrigerant  GWP    Analysis Sample Size
+
+R410a        2,088  111
+R290         3      98
+R32          675    82
+
+Figure 8.4 provides an indication of the median SPFH4 for all ASHPs broken down by refrigerant
+type as well as an indication of the results variance and IQR. Table 8.5 provides the median and
+mean SPFH4 values for each refrigerant type.
+
+Figure 8.4: Q1, Q3 and median SPFH4 for all ASHPs broken down by refrigerant type.
+
+Table 8.5: Mean and median SPFH4 broken down by refrigerant type.
+
+Refrigerant         Median [IQR] SPFH4         Mean [95% CI] SPFH4
+R290                2.89 [2.68, 3.08]          2.92 [2.84, 2.99]
+R32                 2.94 [2.57, 3.25]          2.93 [2.83, 3.03]
+R410a               2.66 [2.40, 2.84]          2.64 [2.56, 2.72]
+
+Considering no other factors, these results suggest that differing refrigerants by heat pump type
+contributes to the differences in heat pump efficiency. However, other factors such as the
+efficiency of mechanical equipment and control strategy may also impact the SPF observed. As
+noted above, as the manufacturers move towards newer refrigerants, they also strive to improve
+unit efficiency; it is difficult in a field trial to assess one of the potential factors affecting system
+efficiency independently of the others.
+
+Reviewing Figure 8.4, it is also clear that the variance in the results for R290 is significantly
+lower than those for R32 and R410a. Table 8.6 below provides the number of each ASHP type
+which utilises each refrigerant type. It is evident that the HT ASHPs installed through this project
+mainly utilise R290 whilst the LT ASHPs mainly utilise R410a and R32.
+
+                                                                                    P a g e | 57
+Electrification of Heat Demonstration Project
+
+Table 8.6: Mean and median SPFH4 broken down by heat pump type and refrigerant type.
+
+Heat Pump Type Refrigerant  Sample             Median [IQR]                           Mean [95% CI]
+                            Size               SPFH4                                  SPFH4
+HT ASHP  R290
+LT ASHP  R32                98                 2.89 [2.68, 3.08]                      2.92 [2.84, 2.99]
+         R32                6                  2.50 [2.25, 2.58]                      2.53 [2.08, 2.98]
+         R410a              76                 3.00 [2.66, 3.27]                      2.96 [2.86, 3.06]
+                            111                2.66 [2.40, 2.84]                      2.64 [2.56, 2.72]
+
+As so many of the HT ASHPs utilise what is observed as a more efficient refrigerant, the
+superior performance of the HT ASHPs compared with the LT ASHPs may be partially
+attributable to the choice of refrigerant (as well as other performance factors noted within this
+section).
+
+It is notable that the difference between the R32 HT and LT ASHP SPF results is significant.
+However, the R32 HT ASHP sample is very small, so no conclusions should be drawn from this
+insight at this stage in the project.
+
+Figure 8.6 in Section 8.3 shows the relationship between heat pump flow temperature and
+SPFH4 broken down by the different refrigerants. This shows that the efficiency of those heat
+pumps utilising the R410a refrigerant is significantly worse than the others.
+
+8.3 SPF by Operating Flow Temperature
+
+The operating flow temperature of a heat pump has a direct impact on the heat pump efficiency.
+For this reason, heat pumps have in-built weather compensation controls which adjust the flow
+temperature based on the external temperature5 to maintain the appropriate thermal output from
+the emitters for the comfort of the occupants whilst ensuring optimal efficiencies. To assess the
+scale of the impact the operating flow temperature has on the heat pump efficiency, it is first
+necessary to quantify the average operating flow temperature.
+
+The EoH heat pump monitoring systems (see Section 4.1) records a flow temperature reading
+every 2-minutes on average, regardless of whether the heat pump is operational. As such, there
+is a lot of noise within the flow temperature data which should be ignored if trying to calculate an
+average.
+
+To calculate the average flow temperature for each property, only the flow temperature readings
+when the heat pump was operational were considered (i.e. when the Heat Pump Energy Output
+was increasing). Heat pumps take time to heat the water from its ambient condition to the
+desired flow temperature, as such, the flow temperatures calculated will be skewed slightly
+downward as the method chosen to calculate the average includes the heating up period. The
+mean flow temperature across all ASHPs and heat pumps in hybrid systems was 38.3¬∞C.
+
+Through this study, it has been observed that, as expected when considered in isolation, the
+heat pumps which operate with a higher mean flow temperature generally have a lower SPF.
+Figure 8.5 shows this relationship for all ASHPs. This graph indicates a lot of variation (or
+scatter) in the results however, the relationship is statistically significant.
+
+5 When external temperature is higher, a lower flow temperature is required to overcome the building heat
+loss given the size of the heat emitters present within the property.
+
+                                                                                                                                            P a g e | 58
+Electrification of Heat Demonstration Project
+Figure 8.6 further breaks down the scatter graph to show each refrigerant and heat pump type.
+The scatter is much broader for the heat pumps utilising the R410a refrigerant, with many of the
+lower performing heat pumps being within this category.
+
+Figure 8.5: SPFH4 by mean heat pump flow temperature for all ASHPs. Note that flow temperatures when the heat
+pump was not outputting heat have been excluded from the mean.
+
+Figure 8.6: Scatter chart of mean heat pump flow temperature ( ‚∑™C) and SPFH4 by refrigerant and heat pump type. A
+line was not included for HT ASHPs with the R32 refrigerant as there are presently only 6 heat pumps in this
+category.
+
+The relationship between flow temperature and SPFH4 is more simply shown within Figure 8.7.
+This histogram shows the number of heat pumps which fall within each temperature range (25
+
+                                                                                                                                            P a g e | 59
+Electrification of Heat Demonstration Project
+to 35¬∞C; 35 to 45¬∞C and 45 to 55¬∞C) and the average SPFH4 across all of the heat pumps in
+these ranges.
+
+Figure 8.7: Histogram showing the mean SPFH4 by binned mean flow temperature ( ‚∑™C).
+
+It was noted in Section 8.1.2 that, based on pre-project definitions, HT ASHPs have been
+observed to operate at a similar efficiency to LT ASHPs through this study. To assess reasons
+why this may be the case, more analysis has been undertaken. Section 8.2 indicates that the
+most of the HT ASHPs are more efficient units and that this may be a result of the refrigerant
+used within those units. This section assesses how the HT ASHPs operating temperatures
+compare to the LT ASHPs.
+Figure 8.8 shows that whilst HT ASHPs are less likely to have a very low mean flow
+temperature, there is a significant overlap in typical operating temperatures for HT ASHPs and
+LT ASHPs.
+
+Figure 8.8: Frequency distribution of mean flow temperature by heat pump type.
+
+Where HT operation is defined as a heat pump which operates above 65¬∞C at any point over
+the 12-month period; Table 8.7 indicates that only 96 of the 106 HT heat pumps actually
+operates at a high temperature.
+
+                                                                                                                                            P a g e | 60
+Electrification of Heat Demonstration Project
+
+Table 8.7: ASHP SPF values broken down by HT operation and LT operation. 6
+
+Heat Pump     SPF    Count  Median [IQR]                                    Mean [95% CI]
+Type          Type
+                     197    2.94 [2.64, 3.25]                               2.95 [2.88, 3.01]
+LT Operation  SPFH2  197    2.74 [2.48, 3.07]                               2.77 [2.71, 2.84]
+(ASHP)        SPFH4  94     2.92 [2.69, 3.15]                               2.96 [2.88, 3.05]
+HT Operation  SPFH2  94     2.89 [2.66, 3.09]                               2.90 [2.82, 2.98]
+(ASHP)        SPFH4
+
+The table does however still indicate the trend that the LT and HT ASHPs (by operation) have
+similar SPF, and that the SPFH4 of the HT ASHPs is higher than LT ASHPs. As such, it is
+necessary to assess how common the HT Operation ASHPs actually reach high temperatures.
+
+Figure 8.9 shows that operating above 65¬∞C is not a common occurrence, with 81 of the 94 heat
+pumps operating above 65¬∞C flow temperature less than 1% of the time.
+
+Figure 8.9: Percentage of heat pump operation above 65¬∞C in the heat pumps observed to operate at high flow
+temperatures.
+
+This indicates that the weather compensation controls are only demanding higher flow
+temperatures a very small amount of the time to maintain good heat pump efficiencies. It may
+therefore be concluded that, most of the time, the HT ASHPs are operating at similar flow
+temperatures to the LT ASHPs. This provides an additional explanation for their similar
+performance.
+
+8.4 SPF by Property Type
+
+As noted in Section 3, the EoH project successfully installed heat pumps in a variety of different
+home types and ages. All of these homes were deemed suitable for a heat pump installation by
+trained designers and installers, so the results of the following analysis may not be
+representative of the whole UK housing stock. Nonetheless, this analysis provides valuable
+insight into the performance of heat pumps in homes which are recommended for an installation
+by trained designers and installers.
+
+6 Note that 14 ASHPs have been excluded from the flow temperature related analysis compared with the
+SPF only analysis as they had insufficient temperature data quality.
+
+                                                                                                                                            P a g e | 61
+Electrification of Heat Demonstration Project
+
+A breakdown of SPF by home type is provided in Table 8.8 below.
+
+Table 8.8: Median and mean SPF values broken down for house form.
+
+Home Type      Sample Size  Median [IQR] SPFH4                     Mean [95% CI] SPFH4
+
+Detached       137          2.88 [2.58, 3.18]                      2.90 [2.83, 2.98]
+Semi-Detached  89           2.73 [2.48, 2.93]                      2.72 [2.63, 2.81]
+End-Terrace    28           2.76 [2.50, 3.03]                      2.74 [2.58, 2.90]
+Mid-Terrace    31           2.69 [2.48, 3.02]                      2.77 [2.62, 2.92]
+Flat           6            2.63 [2.49, 3.29]                      2.84 [2.08, 3.61]
+
+In both the tabulated results and those shown in Figure 8.10 detached homes are observed to
+have a higher SPF compared to semi-detached homes. The reasons for this are assessed at
+the end of this section.
+
+Figure 8.10: Mean SPFH4 of all ASHPs by house type with 95% CI. (Excluding Hybrids).
+
+Figure 8.11 indicates the mean heat energy output per day for all ASHPs and Hybrids split by
+home type. This shows that detached homes demand the most energy as expected however, it
+also shows that flats have demanded more energy than mid-terrace properties. As shown in the
+above figure, the sample size for flats is 6. This small sample size is likely the reason for the
+unexpected result.
+
+                                                                                                                                            P a g e | 62
+Electrification of Heat Demonstration Project
+
+Figure 8.11: Mean heat energy output per day for each property form (including all ASHPs and Hybrids).
+
+Figure 8.12 shows the distribution of LT and HT ASHPs by house type. This figure indicates that
+detached homes had the greatest proportion of HT ASHPs installed however, the proportional
+variation is within minimal across all other house types.
+
+Figure 8.12: Split of ASHP type by house type.
+
+To further assess the potential reason for the detached homes exhibiting a higher SPF than the
+others, the breakdown of heat pump refrigerant type per house type can be analysed. Figure
+8.13 shows the distribution of refrigerant by house type. The figure shows that detached homes
+have the lowest proportion of heat pumps which use R410a. This, combined with the results
+presented in Section 8.2, provides a good reason for why the detached homes are observed to
+have a higher SPF than other home types.
+
+                                                                                                                                            P a g e | 63
+Electrification of Heat Demonstration Project
+
+Figure 8.13: Breakdown of refrigerant type by house type.
+
+Table 8.9 and Figure 8.14 show the breakdown of SPFH4 by house age. These results indicate
+that, where a trained heat pump designer or installer has deemed a home to be suitable for a
+heat pump installation there is no significant variation in performance based on house age. This
+result should not be assumed to be indicative of the whole UK housing stock.
+
+Table 8.9: Median and mean SPF values broken down by house age.
+
+House Age  Sample Size  Median [IQR] SPFH4                 Mean [95% CI] SPFH4
+
+Pre-1919   22           2.94 [2.66, 3.26]                  2.90 [2.65, 3.14]
+1919-1944  38           2.77 [2.50, 3.11]                  2.81 [2.68, 2.94]
+1945-1964  74           2.76 [2.47, 3.08]                  2.77 [2.66, 2.88]
+1965-1980  64           2.75 [2.55, 3.03]                  2.79 [2.70, 2.89]
+1981-1990  31           2.77 [2.61, 2.95]                  2.81 [2.68, 2.94]
+1991-2000  24           2.83 [2.50, 3.05]                  2.80 [2.63, 2.97]
+2001+      38           2.89 [2.56, 3.16]                  2.91 [2.78, 3.05]
+
+                                                           P a g e | 64
+Electrification of Heat Demonstration Project
+
+Figure 8.14: Mean ASHP SPFH4 by house age with 95% CI. (Excluding Hybrids)
+
+                                                                                                                                            P a g e | 65
+Electrification of Heat Demonstration Project
+
+9. Hybrid Heat Pump System Operation
+
+9.1 Heat Pump to Boiler Operating Ratio
+
+When assessing hybrid heat pump operation using the data from this project, it is necessary to
+reiterate that the domestic hot water provision is not metered and that any proportions of heat
+pump to gas boiler operation are those for space heating only. In addition, there were two types
+of hybrid systems installed through this project:
+
+          ‚ñ† ‚ÄùIntegrated‚Äù systems, which consist of a single unit containing a heat pump and a boiler.
+
+          ‚ñ† ‚ÄùSeparate‚Äù systems, which consist of a separate heat pump and boiler. The split system heat
+                pumps installed through this project were all external ASHPs and the boilers were all sized to
+                be capable of the full heating load.
+
+The majority of the Hybrids installed include a separate heat pump and boilerhowever, some
+have an integrated heat pump and boiler in one unit. For this analysis, they have all been
+included under the banner of Hybrid. However, when the sample size becomes larger towards
+the end of the project, more granular analysis may be conducted.
+
+The Hybrid systems installed through this project were installed to operate cost-optimally, with
+the heat pump undertaking the base space heating load and the boiler operating to cover the
+peaks. The point at which the boiler takes over the space heating is different for each home and
+generally correlates with a certain external temperature.
+
+Noting the above, the heat pump energy output as a percentage of total space heating output
+(from the heat pump and gas boiler combined) in Hybrid systems (over the course of the 12-
+month SPF calculation window) is presented in Table 9.1 and Figure 9.1.
+
+Table 9.1: The median and mean heat pump energy output as a percentage total space heating output in hybrid
+systems.
+
+Sample Size  Mean   Median (50%)               Q1 (25%)  Q3 (75%)
+53           41.7%  38.6%                      31.4%     49.6%
+
+Figure 9.1: Frequency distribution of heat pump energy output as a percentage of total energy output in Hybrid
+systems.
+
+                                                                                                                                            P a g e | 66
+Electrification of Heat Demonstration Project
+
+When analysing these results, it should be noted that in spring 2022, a large proportion of the
+Hybrid systems installed through the EoH project had their controls optimised during a heat
+pump service visit. This optimisation may affect the energy output proportions and a
+reassessment of these proportions will be reported following the completion of the monitoring
+period.
+
+9.2 Whole System Efficiency
+
+Section 8.1 indicates the average SPF observed through this project for heat pumps within a
+hybrid systems. For ease, this result is shown in Table 9.2 below. This result does not present a
+full picture of system efficiency as it does not account for boiler performance.
+
+Table 9.2: The average SPF for heat pumps within hybrid systems.
+
+SPF         Sample  Median [IQR]                                  Mean [95% CI]
+SPFH2       58      2.54 [2.25, 2.93]                             2.60 [2.47, 2.73]
+SPFH4       58      2.37 [2.01, 2.81]                             2.42 [2.28, 2.55]
+
+The hybrid system efficiency may be calculated as shown within the below equation:
+
+                                                           Ì†µÌ±áÌ†µÌ±úÌ†µÌ±°Ì†µÌ±éÌ†µÌ±ô Ì†µÌ±üÌ†µÌ±éÌ†µÌ±§ Ì†µÌ±íÌ†µÌ±õÌ†µÌ±íÌ†µÌ±üÌ†µÌ±îÌ†µÌ±¶ Ì†µÌ±ñÌ†µÌ±õ
+            Ì†µÌ±ÜÌ†µÌ±¶Ì†µÌ±†Ì†µÌ±°Ì†µÌ±íÌ†µÌ±ö Ì†µÌ∞∏Ì†µÌ±ìÌ†µÌ±ìÌ†µÌ±ñÌ†µÌ±êÌ†µÌ±ñÌ†µÌ±íÌ†µÌ±õÌ†µÌ±êÌ†µÌ±¶ (Ì†µÌ∞∂Ì†µÌ±ÇÌ†µÌ±ÉÌ†µÌ∞ªÌ†µÌ±¶Ì†µÌ±èÌ†µÌ±üÌ†µÌ±ñÌ†µÌ±ë) = Ì†µÌ±áÌ†µÌ±úÌ†µÌ±°Ì†µÌ±éÌ†µÌ±ô ‚ÑéÌ†µÌ±íÌ†µÌ±éÌ†µÌ±° Ì†µÌ±íÌ†µÌ±õÌ†µÌ±íÌ†µÌ±üÌ†µÌ±îÌ†µÌ±¶ Ì†µÌ±úÌ†µÌ±¢Ì†µÌ±°
+
+Where the total raw energy in includes both electricity and gas and total heat energy is that from
+the boiler and heat pump. Using the project data alone, the System Efficiency cannot be
+calculated, this is because the hybrid monitoring system does not monitor hot water production,
+nor does it monitor the gas consumed by the boiler. As a result of these two features, to
+calculate System Efficiency, the amount of hot water produced and the boiler efficiency would
+need to be assumed.
+
+Using the space heating proportion and SPFH4 results from this project, Table 9.3 provides a
+matrix of estimated whole system efficiencies (COPHybrid) for hybrid systems based on assumed
+proportion of hot water production (compared to space heating) and gas boiler efficiencies.
+
+Where:      ‚àùHP = The proportion of heat pump operation for space heating only;
+         ‚Ä¢  SPFH4 = The annual system efficiency including all electrical components;
+         ‚Ä¢  ‚àùGB = The proportion of gas boiler operation for space heating only;
+         ‚Ä¢  ∆ûGB = Boiler efficiency;
+         ‚Ä¢  COPSH = System Effiency for space heating only;
+         ‚Ä¢  ‚àùHW = The proportion of heat produced for hot water provision;
+         ‚Ä¢  COPHybrid = Whole hybrid system performance.
+         ‚Ä¢
+
+                           Ì†µÌ∞∂Ì†µÌ±ÇÌ†µÌ±ÉÌ†µÌ±ÜÌ†µÌ∞ª = (‚àùÌ†µÌ∞ªÌ†µÌ±É√ó Ì†µÌ±ÜÌ†µÌ±ÉÌ†µÌ∞πÌ†µÌ∞ª4) + (‚àùÌ†µÌ∞∫Ì†µÌ∞µ√ó Ì†µÌºÇÌ†µÌ∞∫Ì†µÌ∞µ)
+                    Ì†µÌ∞∂Ì†µÌ±ÇÌ†µÌ±ÉÌ†µÌ∞ªÌ†µÌ±¶Ì†µÌ±èÌ†µÌ±üÌ†µÌ±ñÌ†µÌ±ë = ((1‚àí‚àùÌ†µÌ∞ªÌ†µÌ±ä) √ó Ì†µÌ∞∂Ì†µÌ±ÇÌ†µÌ±ÉÌ†µÌ±ÜÌ†µÌ∞ª) + (‚àùÌ†µÌ∞ªÌ†µÌ±ä√ó Ì†µÌºÇÌ†µÌ∞∫Ì†µÌ∞µ)
+
+                                                                                                             P a g e | 67
+Electrification of Heat Demonstration Project
+
+Table 9.3: Hybrid system efficiency matrix with assumed boiler efficiency across the top, hot water production
+
+percentage down the left and therefore estimated hybrid system efficiency (COPHybrid) in the middle (blue cells).
+
+COPHybrid                         Boiler Efficiency (%)
+
+                   76%  78%  80%  82%          84%  86%  88%  90%                                               92%
+
+Hot Water        10% 138% 139% 140% 142% 143% 144% 146% 147% 148%
+   Production (%)
+                 12% 136% 138% 139% 140% 142% 143% 144% 146% 147%
+
+                 14% 135% 136% 138% 139% 140% 142% 143% 144% 146%
+
+                 16% 134% 135% 136% 138% 139% 140% 142% 143% 145%
+
+                 18% 132% 134% 135% 136% 138% 139% 141% 142% 143%
+
+                 20% 131% 132% 134% 135% 136% 138% 139% 141% 142%
+
+9.3 SPF by Operating Ratio
+
+The data indicates a statistically significant relationship between proportion of heat pump use
+(for space heating provision) in Hybrid systems and SPFH4, with systems that have a higher
+heat pump usage tending towards higher SPFs. This relationship is shown in Figure 9.2.
+
+This result indicates that operating a heat pump intermittently is less efficient. It should be noted
+that whilst a linear relationship has been assumed in Figure 9.2, the actual relationship is likely
+non-linear, particularly for higher heat pump output proportions where the SPFH4 is likely to
+converge with that of a typical ASHP at 100% output proportion.
+
+Figure 9.2: SPFH4 by heat pump output percentage in hybrid systems.
+
+It should also be noted that as a result of the hybrid systems cost-optimal control strategy, the
+less efficient homes will likely experience a higher boiler percentage operation. This is because,
+the setpoint at which the boiler takes over the space heating load is likely lower for these
+homes. The SPF result therefore may be slightly skewed as the hybrid systems shown to use
+the heat pump less may be installed in less efficient homes with greater heat losses.
+
+                                                                                                                                            P a g e | 68
+Electrification of Heat Demonstration Project
+
+10. Cold Snap Analysis
+
+10.1 Window Selection
+
+To analyse heat pump performance during colder periods, it is first necessary to isolate the
+coldest periods of the year. The method of highlighting these periods is discussed within
+Section 6.4.2. The 10 most common coldest days across the range of homes is presented in
+Table 10.1 (selected based on mean external temperature).
+
+Table 10.1: The 10 most common coldest days, including the mean external temperature across the analysis window.
+
+Coldest day   Coldest day  Mean external temp.
+(YYYY-MM-DD)  count        (day)
+2021-11-28    190          0.4¬∞C
+2022-01-04    113          -1.0¬∞C
+2021-12-22    44           0.5¬∞C
+2021-02-11    41           -5.8¬∞C
+2021-11-29    26           1.0¬∞C
+2022-01-18    11           0.2¬∞C
+2022-03-31    10           2.0¬∞C
+2021-12-18    8            -0.7¬∞C
+2022-01-07    6            0.9¬∞C
+2022-01-14    5            0.3¬∞C
+
+The distribution of mean external temperature on the coldest days is provided in Figure 10.1.
+
+Figure 10.1: Distribution of mean external temperature in the coldest day analysis window.
+                                                                                                                                            P a g e | 69
+Electrification of Heat Demonstration Project
+
+10.2 Coldest Day Efficiency
+
+The COP(H4) was calculated for each of the coldest day analysis windows to assess the heat
+pump performance over these cold periods. The median and mean COP across all of the
+ASHPs is given in Table 10.2. Figure 10.2 indicates the COP(H4) variation against the mean
+difference between internal and external temperatures on the coldest day.
+
+Table 10.2: Median and mean COPs for the coldest day across all ASHPs.
+
+Sample Size  Median [IQR]                      Mean [95% CI]            Mean external
+484          COP(H4)                           COP(H4)                  temp.
+
+             2.44 [2.20, 2.70]                 2.44 [2.40, 2.48]        -0.4
+
+Figure 10.2: Scatter graph indicating the COP(H4) against the variation in internal and external temperature.
+
+Reviewing this figure, there is a significant variation in the COP(H4) values, especially where
+there is a mean temperature difference of 15 to 20¬∞C. Some of the reasons for this variation are
+likely similar to the reasons for variation in SPF however, when analysing a shorter time period,
+additional reasons for results variation become apparent.
+These may include the pre-conditioning of the homes going into the analysis window and any
+factors affecting the properties heat gains and losses during the day. Despite these variations, it
+is evident that the trend in the results is expectedly such that as the difference in temperatures
+increases, the COP(H4) decreases.
+
+                                                                                                                                            P a g e | 70
+Electrification of Heat Demonstration Project
+
+11. Conclusions
+
+The Electrification of Heat Demonstration Project has found that Air Source Heat Pump (ASHP)
+Seasonal Performance Factors (SPFs) have improved by ~0.3 to 0.4 compared with
+installations completed under the Renewable Heat Premium Payment Scheme. The median
+SPFs for ASHPs installed through the EoH scheme are provided in Table 11.1. The analysis
+clearly indicates that some of this improvement is related to efficiency improvements in the heat
+pump units as, the heat pumps using the R290 and R32 refrigerants generally have performed
+better than those using the older R410a refrigerant.
+
+Table 11.1: Median ASHP SPFs.
+
+SPF Type         Sample Size                   Median [IQR]
+
+SPFH2            291                           2.94 [2.66, 3.20]
+SPFH3            291                           2.89 [2.62, 3.17]
+SPFH4            291                           2.80 [2.53, 3.09]
+
+This result may also suggest that the design (and installation) of heat pump systems has
+improved over the last seven years. However, the EoH project has also found that variation in
+performance between heat pump installations remains high. Some of the reasons for this
+variation are relating to the efficiency of heat pump units as noted above but, generally this
+variation is difficult to explain. This suggests that progress is still required on improving the
+quality and consistency of heat pump designs and installations to support a large-scale rollout of
+heat pumps in existing homes and deliver positive energy, carbon, and consumer outcomes.
+These findings should be factored into modelling and policy decisions.
+
+High temperature ASHPs did not perform worse than low temperature ASHPs. This is likely in
+part due to the fact that they spend much of their time actually operating at similar
+temperatures, but may also be due to the use of a higher performing refrigerant in the models
+installed in this trial. Irrespective of the underlying cause, HT ASHPs should not be assumed to
+perform worse by default in modelling and purchasing decisions.
+
+Heat pumps in hybrid systems were typically used to meet 32-50% of the space heating
+demand (median 39%). They had a median SPFH2 of 2.54 which is lower than ASHPs. Heat
+pumps in hybrid systems were also found to be less efficient the smaller the proportion of
+heating demand they met. These units were commissioned to run cost-optimally, so part of the
+reason for the lower performance with lower operating proportion may be because these units
+were installed in less efficient homes.
+
+The median ASHP Coefficient of Performance (COP(H4)) fell to 2.44 (mean) on the coldest day (-
+0.4¬∞C) which quantifies the expected degradation in performance due to low temperature and
+could help to inform modelling of peak winter demand. These results may be impacted by pre-
+conditioning of the home or exceptional heat gains during the period tested.
+
+This analysis will be refreshed, and additional analysis (including that on Ground Source Heat
+Pump performance) will be undertaken after the completion of the projects monitoring period in
+September 2023.
+
+                                                                  P a g e | 71
+Electrification of Heat Demonstration Project
+
+12. References
+
+[1] R. N. Andreas Zottl, ‚ÄúD4.2. /D 2.4. Concept for evaluation of SPF, Version 2.2, defined
+        methodology for calculation of the seasonal performance factor and a definition which
+        devices of the system have to be included in this calculation,‚Äù SEPEMO, 31st May 2012.
+
+[2] J. Love, A. Summerfield, P. Biddulph, J. Wingfield, C. Martin, C. Gleeson and R. Lowe,
+        ‚ÄúInvestigating Variations in Performance of Heat Pumps Installed Via the Renewable
+        Heat Premium Payment (RHPP) Scheme,‚Äù UCL Energy Institute, London, 2017.
+
+[3] Energy Systems Catapult Ltd., ‚ÄúElectrification of Heat Demonstration Project - Heat
+        Pump Installation Statistics Report,‚Äù 2022.
+
+[4] LCP Delta, ‚ÄúBEIS Electrification of Heat Demonstration Project - Home Surveys and
+        Installation Report,‚Äù 2022.
+
+[5] Energy Systems Catapult Ltd., ‚ÄúBEIS Electrifiation of Heat Demonstration Project -
+        Interim Insights from Heat Pump Performance Data,‚Äù 2022.
+
+[6] Energy Systems Catapult Ltd., ‚ÄúElectrification of Heat Demonstration Project: Heat Pump
+        Performance Raw and Cleansed Data, 2020-2022,‚Äù UK Data Archive, 2020-2022.
+        [Online]. Available:
+        https://beta.ukdataservice.ac.uk/datacatalogue/studies/study?id=9049#.
+
+[7] Energy Systems Catapult Ltd., ‚ÄúElectrification of Heat Demonstration Project: Interim
+        Heat Pump Performance Summary Data, 2020-2022,‚Äù UK Data Archive, 2020-2022.
+        [Online]. Available:
+        https://beta.ukdataservice.ac.uk/datacatalogue/studies/study?id=9050#.
+
+[8] Energy Systems Catapult Ltd., ‚ÄúInterim Heat Pump Performance Data Summary dataset,‚Äù
+        [Online]. Available: https://usmart.io/org/esc/discovery/discovery-view-detail/6a5e5753-
+        aaff-455e-8b3b-8ee282010261.
+
+[9] Electrification of Heat Project Database, ‚ÄúEnergy Systems Catapult - USmart,‚Äù 2019 -
+        2023. [Online]. Available:
+        https://usmart.io/org/esc/discovery?order=statistic.viewCount&tags=BEIS%20EoH%20Pr
+        oject&limit=20&offset=0.
+
+[10] LCP Delta, ‚ÄúBEIS Electrification of Heat Demonstration Project - Participant Recruitment
+        Report,‚Äù 2022.
+
+[11] Energy Systems Catapult Ltd., ‚ÄúElectrification of Heat Demonstration Project Data
+        Documentation Report: Recruitment, Survey, Design, and Installation Data,‚Äù 2022.
+
+[12] BEIS Electrification of Heat Project - Heat Pump Installation Statistics, ‚ÄúEnergy Systems
+        Catapult - USmart,‚Äù 2021. [Online]. Available:
+        https://usmart.io/org/esc/discovery/discovery-view-detail/d506e975-cb39-47d7-99e0-
+        e99939a2c4bf.
+
+[13] BEIS Electrification of Heat Project - Property, Design and Installation Information
+        Database, ‚ÄúEnergy Systems Catapult - USmart,‚Äù 2022. [Online]. Available:
+
+                                                                                                                                            P a g e | 72
+Electrification of Heat Demonstration Project
+
+        https://usmart.io/org/esc/dataset/view-edit?datasetGUID=5325ef18-9cd1-493c-beae-
+        e278d8998400.
+[14] BEIS, ‚ÄúElectrification of Heat Demonstration Project Delivery Contractor - Invitation to
+        Tender: 2174/12/2019,‚Äù 19th December 2019.
+[15] D. P. Dunbabin and C. Wickins, ‚ÄúDetailed analysis from the first phase of the Energy
+        Saving Trust's heat pump field trial,‚Äù Dept of Energy & Climate Change, March 2012.
+[16] D. P. Dunbabin and et al, ‚ÄúDetailed analysis from the second phase of the Energy Saving
+        Trust's heat pump field trial,‚Äù Dept of Energy & Climate Change, May 2013.
+[17] Ofgem, ‚ÄúDomestic Renewable Heat Incentive - Essential Guide to Metering and
+        Monitoring Service Packages (MMSP) v5.0,‚Äù ofgem, January 2018.
+[18] Dept of Energy and Climate Change, ‚ÄúMetering and Monitoring Service Packages
+        Technical Supplement - Outline of Metering and Monitoring Service Package
+        requirements for the domestic Renewable Heat Incentive,‚Äù 12th July 2013.
+[19] MCS, ‚ÄúMCS Domestic RHI Metering Guidance v1.1,‚Äù Dept of Energy and Climate
+        Change, 2013.
+[20] Energy Systems Catapult Ltd, ‚ÄúESC Data Science Github - Spikiness,‚Äù [Online].
+        Available: https://github.com/esc-data-science/spikiness .
+[21] A. Morton, ‚ÄúTemperature Variations in UK Heated Homes,‚Äù Loughborough University,
+        2012.
+[22] Met Office, ‚ÄúUK Climate Extremes,‚Äù [Online]. Available:
+        https://www.metoffice.gov.uk/research/climate/maps-and-data/uk-climate-extremes.
+[23] Vaillant, aroTherm plus Operating Installation and Maintenance Instructions.
+[24] Ground Source Heat Pump Association, ‚ÄúWhat is Ground Source Energy?,‚Äù [Online].
+        Available: https://gshp.org.uk/gshps/what-are-gshps/.
+[25] Robert Lowe et al, ‚ÄúFinal report on analysis of Heat Pump Data from the Renewable Heat
+        Premium Payment (RHPP) scheme,‚Äù March 2017.
+[26] UK Government, The Fluorinated Greenhouse Gases Regulations, 2015.
+[27] Daikin, Daikin Altherma Hybrid Heat Pump Specification Details.
+
+.
+
+                                                                                                                                            P a g e | 73
+Electrification of Heat Demonstration Project
+
+LICENCE/DISCLAIMER
+All data is contained in this report is owned by DESNZ. For the purposes of the delivery of the contracted scope of works, DESNZ
+hereby grants ESC a non-exclusive, royalty free licence to use and publish approved EoH Programme data for the duration of the
+contract, subject to agreed data management protocols.
+
+Energy Systems Catapult (ESC) Limited Licence for EoH Project Interim Heat Pump Performance Data Analysis Report
+ESC is making this report available under the following conditions. This is intended to make the Information contained in this report
+available on a similar basis as under the Open Government Licence, but it is not Crown Copyright: it is owned by ESC. Under such
+licence, ESC is able to make the Information available under the terms of this licence. You are encouraged to Use and re-Use the
+Information that is available under this ESC licence freely and flexibly, with only a few conditions.
+
+Using information under this ESC licence
+Use by You of the Information indicates your acceptance of the terms and conditions below. ESC grants You a licence to Use the
+Information subject to the conditions below. You are free to:
+
+      ‚Ä¢ copy, publish, distribute and transmit the Information;
+      ‚Ä¢ adapt the Information;
+      ‚Ä¢ exploit the Information commercially and non-commercially, for example, by combining it with other information, or by
+
+             including it in your own product or application.
+You must, where You do any of the above:
+
+      ‚Ä¢ acknowledge the source of the Information by including the following acknowledgement:
+      ‚Ä¢ ‚ÄúInformation taken from Electrification of Heat Demonstration Project: Interim Heat Pump Performance Data Analysis
+
+             Report, by Energy Systems Catapult‚Äù;
+      ‚Ä¢ provide a copy of or a link to this licence;
+      ‚Ä¢ state that the Information contains copyright information licensed under this ESC Licence.
+      ‚Ä¢ acquire and maintain all necessary licences from any third party needed to Use the Information.
+These are important conditions of this licence and if You fail to comply with them the rights granted to You under this licence, or any
+similar licence granted by ESC, will end automatically.
+
+Exemptions
+This licence only covers the Information and does not cover:
+
+      ‚Ä¢ personal data in the Information;
+      ‚Ä¢ trademarks of ESC; and
+      ‚Ä¢ any other intellectual property rights, including patents, trademarks, and design rights.
+
+Non-endorsement
+This licence does not grant You any right to Use the Information in a way that suggests any official status or that ESC endorses You
+or your Use of the Information.
+
+Non-warranty and liability
+The Information is made available for Use without charge. In downloading the Information, You accept the basis on which ESC
+makes it available. The Information is licensed ‚Äòas is‚Äô and ESC excludes all representations, warranties, obligations and liabilities in
+relation to the Information to the maximum extent permitted by law.
+ESC is not liable for any errors or omissions in the Information and shall not be liable for any loss, injury or damage of any kind
+caused by its Use. This exclusion of liability includes, but is not limited to, any direct, indirect, special, incidental, consequential,
+punitive, or exemplary damages in each case such as loss of revenue, data, anticipated profits, and lost business. ESC does not
+guarantee the continued supply of the Information.
+
+Governing law
+This licence and any dispute or claim arising out of or in connection with it (including any noncontractual claims or disputes) shall be
+governed by and construed in accordance with the laws of England and Wales and the parties irrevocably submit to the non-
+exclusive jurisdiction of the English courts.
+
+Definitions
+In this licence, the terms below have the following meanings: ‚ÄòInformation‚Äô means information protected by copyright or by
+database right (for example, literary and artistic works, content, data and source code) offered for Use under the terms of this
+licence. ‚ÄòESC‚Äô means Energy Systems Catapult Limited, a company incorporated and registered in England and Wales with company
+number 8705784 whose registered office is at Cannon House, 7th Floor, The Priory Queensway, Birmingham, B4 6BS. ‚ÄòUse‚Äô means
+doing any act which is restricted by copyright or database right, whether in the original medium or in any other medium, and
+includes without limitation distributing, copying, adapting, modifying as may be technically necessary to use it in a different mode or
+format. ‚ÄòYou‚Äô means the natural or legal person, or body of persons corporate or incorporate, acquiring rights under this licence.
+
+  This report has been funded by DESNZ
+  and is issued on their behalf
+Electrification of Heat Demonstration Project
+
+Report produced in 2023
+  This report has been funded by DESNZ
+  and is issued on their behalf

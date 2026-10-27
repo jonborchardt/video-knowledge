@@ -1,0 +1,767 @@
+arXiv:1605.03559v1 [q-fin.ST] 11 May 2016    Survey on log-normally distributed market-technical trend
+                                                                                     data
+
+                                                                                                  Rene´ Kempen
+
+                                                                                        Institut fu¨r Mathematik, RWTH Aachen,
+                                                                                    Templergraben 55, D-52052 Aachen, Germany
+
+                                                                                            kempen@instmath.rwth-aachen.de
+
+                                                                                          Stanislaus Maier-Paape
+
+                                                                                        Institut fu¨r Mathematik, RWTH Aachen,
+                                                                                    Templergraben 55, D-52052 Aachen, Germany
+
+                                                                                              maier@instmath.rwth-aachen.de
+
+                                                                                                   May 12, 2016
+                                                  Abstract In this survey, a short introduction in the recent discovery of log-normally dis-
+                                                   tributed market-technical trend data will be given. The results of the statistical evaluation of
+                                                   typical market-technical trend variables will be presented. It will be shown that the log-normal
+                                                   assumption ﬁts better to empirical trend data than to daily returns of stock prices. This enables
+                                                   to mathematically evaluate trading systems depending on such variables. In this manner, a
+                                                  basic approach to an anti cyclic trading system will be given as an example. Keywords log-
+                                                   normal, market-technical trend, MinMax-process, trend statistics, market analysis, empirical
+                                                   distribution, quantitative ﬁnance
+
+                                           1 Introduction
+
+                                           The concept of a trend has been fundamental in the ﬁeld of technical analysis since Charles H.
+                                           Dow introduced it in the late 19th century. Following Rhea [13], Dow said e.g. concerning the
+                                           characterization of up-trends:
+
+                                              Successive rallies penetrating preceding high points, with ensuing declines terminating above pre-
+                                           ceding low points, oﬀer a bullish indication.
+
+                                              In Figure 1.(a) an example of the inverse situation is given, i.e. a down-trend in a historical setup
+                                           like Dow used it. Although this is so far “just” a geometrical idea and clearly not precise at all, it
+                                           is widely accepted among many market participants. Therefore, this geometric idea is ﬁxed by the
+                                           following market-technical deﬁnition of a Dow-trend as which it is also used in this article:
+
+                                           Deﬁnition 1 (market-technical trend or Dow-trend). A market is in up/down-trend if and only if
+                                           (at least) the two last relevant lows (denoted by P1 and P3 in an up-trend) and highs (denoted by P2
+                                           in an up-trend) are monotonically increasing/decreasing (see Figure 1.(b)). Otherwise, the market
+                                           is temporarily trendless. In case of an up-trend the phase between a low and the next high is called
+                                           the movement. In the same manner, the phase between a high and the following low is called the
+                                           correction. In case of a down-trend, movement and correction are deﬁned in the exact opposite way.
+
+                                              It is the authors desire to analyze these Dow-trends as they occur in real world markets within a
+                                           statistical framework. In order to do so, however, a mathematical exact method on how to determine
+                                           relevant lows and highs of price data is needed.
+
+                                              While the task to detect the extreme points in Figure 1.(b)) is trivial, it is not as easy when a real
+                                           price chart is considered (see Figure 3). This can be explained by the continuous price ﬂuctuations
+                                           which make the extreme points P 1 − P 3 not obvious to detect. The issue of detection is rooted in
+                                           the subjectivity of the distinction between usual ﬂuctuations and new extreme points. So to say:
+                                           the signiﬁcance of an extreme point has to be evaluated in an algorithmic way to make automatic
+                                           detection possible. Therefore, we review in section 2 the framework which is necessary for automatic
+                                           trend-detection going back to Maier-Paape [1]. The trend-detection in turn is rooted in automatic
+2 R. KEMPEN AND S. MAIER-PAAPE
+
+(a) Example of a down-trend in a historical setup like      (b) Sketch of an up-trend in the sense of Dow
+Dow used it (freely adapted from Russel,[14]).
+
+                                                  Figure 1
+
+recognition of relevant minima and maxima in charts. With that at hand empirical studies of trend
+
+data can be made as seen in [2] and [3]. On the one hand, in [2] Haﬁzogullari, Maier-Paape and
+
+Platen have collected several statistics on the performance of Dow-trends. On the other hand, in [3]
+
+Maier-Paape and Platen constructed a geometrical method on how to detect lead and lag when two
+
+markets are directly compared – also based on the automatic detection of relevant highs and lows.
+
+In this article, however, we want to pursue a diﬀerent path. We are interested in several speciﬁc
+
+trend data such as the retracement and the relative movement and correction. Since these trend
+
+data are central for the whole paper, we here give a precise deﬁnition.
+
+The ﬁrst random variable describing trend data which will be important in the following is the
+
+retracement denoted by X. The retracement is deﬁned as the size-ratio of the correction and the
+
+previous movement, i.e.                           C orrection
+                                                  M ovement
+                                           X  :=                    .                                        (1)
+
+Hence, in case of an up-trend this is given by:
+
+                                           X  =   P  2  −P  3new    .
+                                                     P  2−  P3
+
+Another common random variable is the relative movement which for an up-trend is deﬁned by the
+ratio of the movement and the last low, i.e.
+
+                                    M  :=  M ovement       =  P2 − P3                                        (2)
+                                            last Low             P3
+
+and the relative correction which for an up-trend is deﬁned as the ratio of the correction and the
+
+last high, i.e.                         C orrection         P2   −P    3new
+                                         last High                P2
+                                 C  :=                  =                     .                              (3)
+
+In case of a down-trend all situations are mirrored, such that:
+
+X  =  P  3new −  P  2  ,  M  :=  M ovement       =   P  3−P   2  ,     C  :=  C orrection  =  P 3new −  P2.
+         P3 − P  2                last High              P3                    last Low            P2
+
+The main scope of this survey is to collect and extend results on how the above deﬁned trend vari-
+ables (plus several other related ones) can be statistically modeled. By doing this the log-normal
+SURVEY ON LOG-NORMALLY DISTRIBUTED TREND DATA  3
+
+distribution occurs frequently. Evidently, the log-normal distribution is very well known in the ﬁeld
+of ﬁnance. We start oﬀ, in section 3, by giving a mathematical model of the retracement during
+Dow-trends and the delay of their recognition. Furthermore, the duration of the retracements and
+their joint distribution with the retracement will be evaluated. The results on relative movements
+and relative corrections during trends will be presented in section 4. In section 5 it will be demon-
+strated how the so far gained distributions of trend variables may be used to model trading systems
+mathematically.
+
+   It will be evident, that the described trend data mostly ﬁt very well to the log-normal distribution
+model, although there are signiﬁcant aberrations for the duration of retracements (see subsection
+3.2). In the past there have been several attempts to match the log-normal distribution model to
+the evolution of stock prices. It already started in 1900 with the PhD Thesis of Louis Bachelier
+([8]) and the approach to use the geometric Brownian motion to describe the evolution of stock
+prices. This yields log-normally distributed daily returns of stock prices. Nowadays, the geometric
+Brownian motion is widely used to model stock prices (see [15]) especially as part of the Black-
+Scholes model ([10]). Nevertheless, it has to be noted that empirical studies have shown that the
+log-normal distribution model does not ﬁt perfectly to daily returns (e.g. see Fama [4], [5] who refers
+to Mandelbrot [6]).
+
+   Overall, we got the impression that most of the trend data we describe here ﬁt better to the log-
+normal distribution model than daily returns of stock prices, although it would be beyond the scope
+of this paper to do a formal comparison. In any case, the here observed empirical facts of trend data
+contribute to a complete new understanding of ﬁnancial markets. Furthermore, with the relatively
+easy calculations based on the link of the log-normal distribution model to the normal distribution,
+actually complex market processes can now be discussed mathematically (e.g. with the truncated
+bivariate moments, see Lemma 1.21 in [9]).
+
+2 Detection of Dow-trends
+
+The issue of automatic trend-detection has been addressed by Maier-Paape [1]. Clearly, the detection
+of relevant extreme points is a necessary step to detect Dow-trends. Fortunately, the algorithm
+introduced by Maier-Paape allows automatic detection of relevant extreme points in any market
+since it constructs so called MinMax-processes.
+
+Deﬁnition 2 (MinMax-process, Deﬁnition 2.6 in [1]). An alternating series of (relevant) highs and
+lows in a given chart is called a MinMax-process.
+
+   In Figure 3 two automatically constructed MinMax-processes are visualized by the corresponding
+indicator line. The construction is based on SAR-processes (stop and reverse).
+
+Deﬁnition 3 (SAR-Process). An indicator is called a SAR-process if it can only take two values
+(e.g. −1 and 1 which are considered to indicate a down and an up move of the market respectively).
+
+   Generally speaking, Maier-Paape’s algorithm looks for relevant highs when the SAR-process in-
+dicates an up move and searches for relevant lows when the SAR-process indicates a down move.
+Thus, the relevant extrema are ”ﬁxed” when the SAR-process changes sign. By choosing a speciﬁc
+SAR-process one can aﬀect the sensitivity of the detection while the actual detection algorithm works
+objectively without the need of any further parameter. For more information see [1]. Maier-Paape
+also explains how to handle speciﬁc exceptional situations, e.g. when a new signiﬁcant low suddenly
+appears although the SAR-process is still indicating an up move.
+
+   It is shown by Theorem 2.13 in [1] that for any combination of SAR-process and market there
+exists such a MinMax-process which can be calculated “in real time” by the algorithm of Maier-
+Paape. Based on any MinMax-process in turn it is easy to detect market-technical trends as deﬁned
+in Deﬁnition 1 and then use this information for automatic trading systems as outlined in Figure 2.
+
+   Calculating the MinMax-process “in real time” means that as time passes and the chart gets more
+and more candles, the extrema of the MinMax-process are constructed one by another. Besides
+4 R. KEMPEN AND S. MAIER-PAAPE
+
+Figure 2: General concept of the automatic detection of Dow-trends.
+
+the most recent extremum which is being searched for, all extrema found earlier are ﬁxed from the
+moment of their detection, i.e. when the SAR-process changed sign.
+
+   Thus, applying the algorithm in real time also reveals some time delay in detection. Obviously, the
+algorithm can not predict the future progress of the chart it is applied to. Consequently, some delay
+is needed indeed to evaluate the signiﬁcance of a possible new extreme value. This circumstance is
+crucial when considering automatic trading systems based on market-technical trends. Therefore,
+it also has to aﬀect any mathematical model of such a trading system. An approach to this issue
+can be made by considering the delay as an inevitable slippage. This means, not the time aspect of
+the delay but more likely the eﬀect it has to the entry or exit price in any market-technical trading
+system will be evaluated. In particular, the absolute value of the delay dabs is given by
+
+dabs = |P [0] − C[0]|                                                (4)
+
+with P [0] indicating the last detected extreme value and C[0] the close value of the current bar when
+this extreme value got detected.
+
+   For this article the MinMax-process together with the integral MACD SAR-process (moving
+average convergence divergence, see p. 166 in [16]) was used. The integral MACD SAR (Deﬁ-
+nition 2.2 in [1]) basically is a normal MACD SAR which in turn indicates an up move if the so
+called MACD line is above the so called signal line. Otherwise, it indicates a down move. The
+MACD line is given by the diﬀerence of a fast and a slow (exponential) moving average. The signal
+line then is an (exponential) moving average of the MACD line.
+
+   Consequently, the MACD usually takes three parameters for the fast, slow and signal line (standard
+values are: fast=12, slow=26, signal=9). To reduce the number of needed parameters from three to
+one scaling parameter only, the ratios of the standard parameters are ﬁxed and consequently scaled
+by the scaling parameter. In particular, a MACD with scaling parameter 2 denotes a usual MACD
+with the parameters (24/52/18). This way, the sensitivity of the MinMax-process solely corresponds
+to one scaling parameter (see Figure 3).
+
+   For a given MinMax-process it is easy to decide the start and end of a market-technical trend
+for the candle the trend is initialized and ends in, respectively. The computation of several trend
+variables such as the retracement is then obvious.
+
+   The automatic detection of Dow-trends and in particular the possibility to deduce a MinMax-
+process out of any market given by candle data enables to create a large dataset of empirical trend
+variables. The model will be based on empirical data acquired by the MinMax-process based on
+the integral MACD with scaling variables 1, 1.2, 1.5, 2 and 3 applied on all stocks of the current
+S&P 100 and Eurostoxx50 in the period from January 1989 until January 2016.
+                SURVEY ON LOG-NORMALLY DISTRIBUTED TREND DATA                                                                                 5
+
+                (a) Scaling=1                                                                                                  (b) Scaling=3
+
+Figure 3: Daily Chart of the Adidas stock between September 2012 and August 2013 with MinMax-process by Maier-Paape
+                (top) based on the integral MACD SAR-process (bottom) with two diﬀerent scalings 1 and 3. The lines in the
+                charts indicate the last detected extremum.
+
+3 Retracements
+
+3.1 Distribution of the Retracement
+
+For all combinations of the regarded scalings and markets, the measured retracement data shows the
+same characteristic distribution as seen in Figures 4 and 5. Indeed, they show the typical asymmetric
+characteristic of a log-normal distribution which density is given by:
+
+                f (x; µ, σ) = √ 1 exp                                         −                            (ln  (x) −  µ)2  ,  x>0
+                                   2πσx                                                                          2σ2
+
+for the retracement X and with the (true) parameters µ and σ. It is well known how to calculate
+
+moments of log-normally distributed random variables. In this particular context, the median of the
+distribution X equals eµ and the mean is given by
+
+                                       E(X )                             =    eµ+                             σ2  .
+                                                                                                               2
+
+0.8 Histogram (6824 values)                                                                                  0.8 Histogram (3496 values)
+                Log-Normal Density:
+                                                                                                                                                                           Log-Normal density:
+0.6             µ = −0.21±0.01, σ = 0.71±0.01,
+                p − V alue = 0.71%                                                                           0.6 µ = −0.06±0.01, σ = 0.65±0.01,
+Density
+                                                                                                  Density                                                                  p − value = 0.02%
+0.4
+                                                              Scaling=1                                      0.4
+                                                                                                             0.2 Scaling=1
+0.2
+                                                                                                                0
+     0                                                                                                                          12345
+                     12345
+                                                                                                         Correction relative to previous movement (retracement) in down-trend
+Correction relative to previous movement (retracement) in up-trend
+
+Figure 4: Measured and log-normal-ﬁt density of the retracement X in an up-trend and down-trend with scaling 1 for
+                S&P 100 stocks. Each data set is visualized with a histogram from 0 to 5 with a bin size of 0.11.
+
+   To evaluate this distribution assumption the maximum-likelihood-estimators (MLE) denoted by
+(µˆ, σˆ) for the log-normal distribution are computed:
+
+                               1  n                                                                        1    n
+                               n                                                                           n
+                µˆ  :=                 ln xi,                            σˆ2  :=                                     (ln (xi) − µ)2
+
+                                  i=1                                                                           i=1
+6 R. KEMPEN AND S. MAIER-PAAPE
+
+1 Histogram (4971 values)                                                                                     1 Histogram (2764 values)
+
+0.8  Log-Normal density:                                                                                                                                                Log-Normal density:
+     µ = −0.24±0.01, σ = 0.69±0.01,                                                                                                                                     µ = −0.26±0.01, σ = 0.68±0.01,
+                                                                                                                                                                        p − value = 0.03%
+                                                           p − value = 0.87%
+                                                                                                            0.5
+0.6                                                                                                                                                                       Scaling=3
+Density
+                                                                                                Density       0
+0.4                                                                                                                           12345
+                                                             Scaling=1.5
+                                                                                                         Correction relative to previous movement (retracement) in up-trend
+0.2
+
+     0
+                     12345
+
+Correction relative to previous movement (retracement) in up-trend
+
+Figure 5: Measured and log-normal-ﬁt density of the retracement X in an up-trend with scaling 1.5 and 3 for S&P 100
+                stocks. Each data set is visualized with a histogram from 0 to 5 with a bin size of 0.11.
+
+with xi denoting the n measured retracements. Furthermore, the p-value calculated with the
+Anderson-Darling test (recommended EDF test by Stephens in [11], chapter “Test based on EDF
+statistics”) being applied to the logarithmic transformed data is checked. The such obtained values
+are summarized in Table 1.
+
+     (a) S&P 100 data                                                                                    (b) Eurostoxx50 data
+
+                          Table 1: Parameters of the log-normal ﬁt for the retracement X in up- and down-trends.
+
+   The inconsistent p-values reveal that the log-normal model does not ﬁt perfectly to the measured
+retracement data. In fact, all histograms show a slightly sharper density for the measured data
+with diﬀerent intensities. Consequently, for higher retracement values the log-normal model predicts
+slightly less values than actually observed. Besides this small systematical aberrations the log-normal
+model maps the measurement very well – especially for the Eurostoxx50. On top of that, the log-
+normal model obviously ﬁts much better to the retracement distribution than to for instance daily
+returns of stock prices (see Fama [4]).
+
+   To conclude the evaluation of the retracement alone, a fundamental observation about the re-
+tracement can be made (based on the log-normal assumption and the ﬁt values derived from the
+data).
+
+Observation 1 (Log-Normal model for the retracement). The parameters µ and σ of the log-
+normal distribution are more or less scale invariant for the retracement. In case of an up-trend, the
+parameters are also market invariant.
+
+   Furthermore, the parameter µ is aﬀected by the trend direction. It is larger for down-trends, i.e.
+the retracements in down-trends are overall more likely to be larger as in up-trends. In spite of that,
+the parameter σ is more or less invariant of the trend direction.
+               SURVEY ON LOG-NORMALLY DISTRIBUTED TREND DATA                                       7
+
+3.2 Delay after a Retracement
+
+As already mentioned, the delay of the MinMax-process is inevitable. Therefore, it will be evaluated
+
+in the same way as the retracement. In order to be able to compare the delay dabs after a retracement
+is recognized (as deﬁned in (4)) with the retracement X itself, both must have the same unit. So,
+
+the delay will also be considered in units of the last movement. It will be denoted as random variable
+
+DX :
+
+                                 D  =  DX  =  M   dabs    .
+                                                 ovement
+
+It should be noted that (at this point) there is no statement made on whether or not DX may
+somehow depend on the preceding retracement X. The notation with subscript X is only used to
+denote the delay after a retracement and to distinguish it from other delays to come.
+
+   Again, the measured delay data shows the characteristic of a log-normal distribution for each
+combination of scaling and market as exemplarily shown in Figure 6. However – as expressed by the
+
+               1.5
+
+                                                                          Histogram (6824 values)
+
+                                              Log-Normal density:
+
+      Density  1                              µ = −0.63±0.01, σ = 0.62±0.01,
+                                              p − value = 0.00%
+
+               0.5 Scaling=1
+
+                             0
+                                      0.5 1 1.5 2 2.5 3 3.5 4
+
+                           Delay DX after a retracement (in movement units) in up-trend
+
+Figure 6: Measured and log-normal-ﬁt density of the delay in an up-trend with scaling 1 for S&P 100 stocks. The data is
+                visualized with a histogram from 0 to 5 with a bin size of 0.11.
+
+signiﬁcant p-values in Table 2 – the log-normal assumption is deﬁnitively wrong. The histograms
+
+               (a) S&P 100 data                              (b) Eurostoxx50 data
+
+                             Table 2: Parameters of the log-normal ﬁt for the delay DX in up- and down-trends.
+
+show a systematical deviation in regard to skewness. The measured delays have a less positive
+skewness than predicted by the model.
+
+   Besides this systematical aberration the log-normal model maps the characteristic of the measured
+delay well enough such that it will be used for the following analysis.
+8 R. KEMPEN AND S. MAIER-PAAPE
+
+   The retracement and the delay can be considered as one sequence. We therefore look for a combined
+log-normal distribution of retracement and delay. In this context it is important to evaluate the
+estimator of the correlation ρ between the logarithm of the two variables, i.e.
+
+                                                1  n    (ln(xi  )  −  µˆX  )(ln  (di)  −  µˆD  )
+                                                   i=1
+                         ρˆln X,ln D = n
+                                                                σˆX · σˆD
+
+for measured values (xi, di). The estimated values of ρˆ are given in Table 3. It shows, that the
+
+                    (a) S&P 100 data                                       (b) Eurostoxx50 data
+
+Table 3: Correlation between the logarithms of the retracement and delay (after retr.) in up- and down-trends.
+
+retracement and the following delay are indeed positively correlated (regarded in the same units).
+This way it is possible to give a joint bivariate log-normal distribution for the retracement X and
+the delay D (both in units of the preceding movement) by virtue of its density function.
+
+   fX,D  (x, d; µX , µD, σX , σD, ρ)  =                        1               ∗                                         (5)
+                                                   2πxdσX σD          1 − ρ2                                           .
+
+∗  exp   −       1       (ln(x) −    µX )2         +    (ln(d) −      µD )2  −   2ρ (ln(x)     −  µX )(ln(d)  −  µD )
+                 −              σX2                            σD2                                 σX σD
+            2(1     ρ2)
+
+For calculations based on this distribution, the (true) parameters µX , µD, σX , σD and ρ must be
+replaced by their estimators.
+
+   Finally, the concluding observation regarding the retracement can be expanded by the delay part.
+
+Observation 2 (Log-Normal model for the retracement and delay). The parameters µ and σ of the
+log-normal distribution are more or less scale invariant for the retracement and the delay. In case
+of an up-trend, the parameters are also market invariant.
+
+   Furthermore, the parameter µ is aﬀected by the trend direction. In case of the retracement it is
+larger for down-trends whereas it is smaller for down-trends in case of the delay. In spite of that,
+the parameter σ is more or less invariant of the trend direction.
+
+   Finally, the correlation between the logarithms of the retracement and the delay are close to scale
+and market invariant while the correlation in up-trends is signiﬁcantly larger than in down-trends.
+
+3.3 Fibonacci Retracements
+
+A propagated idea in the ﬁeld of technical analysis for dealing with retracements is the concept of so
+called Fibonacci Retracements. Based on speciﬁc retracement levels derived from several powers of
+the inverse of the golden ratio one wants to make a priori predictions for future retracement values.
+Obviously, this assumes that there are such signiﬁcant retracement values. However, the evaluation
+of the retracement above reveals that there are no levels with a great statistical signiﬁcance but the
+                SURVEY ON LOG-NORMALLY DISTRIBUTED TREND DATA                                                                                9
+
+retracements follow a continuous distribution overall. Even a ﬁner histogram as shown in Figure 7
+does not reveal any signiﬁcant retracements.
+
+   On the assumption that there are speciﬁc values with statistical signiﬁcance in some regard, then
+the 100%-level would be most signiﬁcant. For a closer look on signiﬁcant retracement levels see [7].
+
+       Density    1
+                0.5 Scaling=1
+
+                          0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8
+             Correction relative to previous movement (retracement) in up-trend
+
+Figure 7: More detailed (ﬁner) histogram of Figure 4 with scaling 1 from 0 to 2 with a bin size of 0.01.
+
+3.4 Duration of the Retracement
+
+Beside the retracement, the duration of a trend correction denoted by Y is also of interest. It is
+given by the diﬀerence in trading days between the last P 2 and the new P 3 (see Figure 1.(b)). The
+distributions of the retracement duration overall show the asymmetric log-normally-like behavior as
+exemplarily shown in Figure 8. However, the goodness of the log-normal assumption is obviously
+worse as in the case of the retracement itself. In particular, the measured densities of the retracement
+duration in a down-trend all show signiﬁcant aberrations from the log-normal model.
+
+0.06            Histogram (6824 values)                                                          0.04  Histogram (3496 values)
+0.04            Log-Normal Density:                                                              0.02  Log-Normal Density:
+0.02            µ = 2.23 ± 0.01, σ = 0.89 ± 0.01,                                                      µ = 2.55 ± 0.02, σ = 0.89 ± 0.01,
+                p − V alue = 0.00%                                                                     p − V alue = 0.00%
+
+                                     Scaling=1                                                                              Scaling=1
+Density
+                                                                                        Density
+
+       0                                                                                         0
+                  10 20 30 40 50 60 70                                                                      10 20 30 40 50 60 70
+                                     Trading days                                                                              Trading days
+
+(a) Retracement duration Y in up-trend (M ean = (b) Retracement duration Y in down-trend (M ean =
+
+13.0)                                              17.6)
+
+Figure 8: Measured and log-normal-ﬁt density of the retracement duration in up- and down-trends (left and right resp.)
+                with scaling 1 for S&P 100 stocks. The data is visualized with a histogram with a bin size of 1.
+
+   Since every retracement value is associated with a duration, the joint distribution of the retrace-
+ment and its duration can be examined (see Tables 4 and 5). Figure 9 exemplarily shows that the
+retracement in down-trends tends to have higher values as in up-trends. This was already seen
+in Table 1 and Observation 1. However, Figure 9 exemplarily also shows that the retracement in
+down-trends has larger durations compared to the retracement in up-trends.
+10 R. KEMPEN AND S. MAIER-PAAPE
+
+(a) S&P 100 data                                           (b) Eurostoxx50 data
+
+Table 4: Parameters of the log-normal ﬁt for the retracement duration in up- and down-trends.
+
+4 Movement and Correction
+
+4.1 Distribution of Relative Movements and Corrections
+
+As before, all of the measurements show the same characteristic distribution – whether relative move-
+ment (2) or relative correction (3). As before, the histograms conclude the log-normal assumption
+(see Figure 10). Again, the log-normal model does not match the measured data perfectly, but often
+fails to map the sharp peaks and fat tails. This observation is conﬁrmed by the ﬂuctuating p-values
+(see Table 6 and 7).
+
+   Consequently, based on the results of Table 6 and 7 a fundamental observation can be made which
+diﬀers from the retracement’s one.
+
+Observation 3 (Log-Normal model for the rel. movement/correction). The parameters of the
+log-normal distribution µ and σ are market invariant for the relative movement and correction.
+Furthermore, the σ parameter is more or less scale invariant while µ increases for increasing scaling
+for the relative movement and correction, i.e. the relative movement and correction are more likely
+to be larger for higher scaling parameter.
+
+   The parameters µ and σ are also more or less trend direction invariant for the relative movement.
+In case of a relative correction, however, the direction of a trend aﬀects these parameters: Both are
+larger in case of a down-trend.
+
+   The dependency between the µ parameter and the scaling has already been expected as outlined
+above. Obviously, higher scalings yield more signiﬁcant movements and corrections. Therefore,
+to reﬂect this, the x-position of the density peak has to increase when the scaling increases. The
+dependency of the µ parameter on the trend direction has already been observed for the retracement
+(see Observation 1).
+
+4.2 Delay after relative Movements and Corrections
+As before, the delay d also has to be taken into account. Its absolute value is given by
+
+dabs = |(new extremum) − (Close when new extremum is subsequently detected)|
+
+as deﬁned in (4). Here, the unit for the delay is the last extreme value. This means for up-trends,
+the delay after the relative movement is given by
+
+                  DM  :=    dabs
+                          lastLow
+
+while the delay after the relative correction is given by
+
+                  DC  :=     dabs                          .
+                          lastH igh
+SURVEY ON LOG-NORMALLY DISTRIBUTED TREND DATA                                                                                                                                            11
+
+(a) S&P 100 data                                                                                  (b) Eurostoxx50 data
+
+Table 5: Correlation between the logarithms of the retracement and its duration in up- and down-trends.
+
+Figure 9: Contour plot of the joint density of the retracement value and its duration in up- and down-trends (left and right
+                resp.) with scaling 1 for S&P 100 stocks.
+
+                                                       Histogram (6475 values)                    8 Histogram (6824 values)
+
+6 Log-Normal density:                                                                                                                                    Log-Normal density:
+                                                                                                                                                         µ = −2.47±0.01, σ = 0.66±0.01,
+                                                       µ = −2.22±0.01, σ = 0.65±0.01,
+                                                       p − value = 0.00%                          6 p − value = 0.37%
+
+4                                                                                                 4
+                                                                                                                                                              Scaling=1
+2 Scaling=1
+                                                                                                  2
+0
+         0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8                                                          0
+                Relative movement M in up-trend                                                            0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8
+                                                                                                                   Relative correction C in up-trend
+             (a) relative Movement
+Density                                                                                                        (b) relative Correction
+                                                                                         Density
+
+Figure 10: Measured and log-normal-ﬁt density of the relative movement (left) and relative correction (right) in an up-trend
+                  with scaling 1 for S&P 100 stocks. The data is visualized via histogram from 0 to 1 with a bin size of 0.01.
+12 R. KEMPEN AND S. MAIER-PAAPE
+
+    (a) S&P 100 data                                                                                 (b) Eurostoxx50 data
+
+    Table 6: Parameters of the log-normal ﬁt for the relative movement in up- and down-trends.
+
+    (a) S&P 100 data                                                                                 (b) Eurostoxx50 data
+
+    Table 7: Parameters of the log-normal ﬁt for the relative correction in up- and down-trends.
+
+In both cases, it is sometimes abbreviated as the relative delay and has the same unit as the relative
+movement (2) and relative correction (3), respectively.
+
+   Eventually, as shown in Figure 11 the relative delay inherits the same characteristics as known from
+the delay for the retracement. As before, the model’s skewness is slightly too positive. Consequently,
+
+15  Histogram (6475 values)                                                                      15  Histogram (6824 values)
+
+    Log-Normal density:                                                                              Log-Normal density:
+
+    µ = −3.03±0.01, σ = 0.71±0.01,                                                                   µ = −2.89±0.01, σ = 0.58±0.01,
+
+    p − value = 0.00%                                                                                p − value = 0.00%
+10Density                                                                                        10
+                                                                                        Density
+5                      Scaling=1                                                                 5                         Scaling=1
+
+0                                                                                                0
+        0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4                                                              0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4
+        Delay DM after relative movement in up-trend                                                     Delay DC after relative correction in up-trend
+
+ (a) Delay DM after relative movement                                                              (b) Delay DC after relative correction
+
+Figure 11: Measured and log-normal-ﬁt density of the relative delay after a relative movement M (left) and after a relative
+                  correction C (right) in an up-trend with scaling 1 for S&P 100 stocks. The data is visualized with a histogram
+                  from 0 to 1 with a bin size of 0.01.
+
+the conclusion is also the same. The model matches the measurements well enough to be the base
+for further analysis.
+
+   The evaluation results for the relative delay are shown in Tables 8 to 11. It reveals the same
+behavior of the model parameters as already seen for the relative movement and correction. Fur-
+thermore, the knowledge of the correlations (Tables 10 and 11) enables joint considerations of the
+SURVEY ON LOG-NORMALLY DISTRIBUTED TREND DATA                                                                  13
+
+(a) S&P 100 data  (b) Eurostoxx50 data
+
+Table 8: Parameters of the log-normal ﬁt for the relative delay DM after a movement in up- and down-trends.
+
+(a) S&P 100 data  (b) Eurostoxx50 data
+
+Table 9: Parameters of the log-normal ﬁt for the relative delay DC after a correction in up- and down-trends.
+
+(a) S&P 100 data  (b) Eurostoxx50 data
+
+Table 10: Correlation between the logarithms of the relative movement M and relative delay DM in up- and down-trends.
+
+(a) S&P 100 data  (b) Eurostoxx50 data
+
+Table 11: Correlation between the logarithms of the relative correction C and relative delay DC in up- and down-trends.
+14 R. KEMPEN AND S. MAIER-PAAPE
+
+relative movement/correction and the relative delay with the joint distribution (5). In sum, this
+leads to the following expansion of Observation 3.
+
+Observation 4 (Log-Normal model for the rel. movement/correction with delay). The parameters
+of the log-normal distribution µ and σ are market invariant for the relative movement and correction
+as well as their corresponding relative delays. Additionally, for these trend variables the σ parameter
+is more or less scale invariant while µ increases for increasing scaling.
+
+   The parameters µ and σ are also more or less trend direction invariant for the relative movement
+(Table 6). In case of the relative correction, however, the direction of a trend aﬀects these parameters:
+Both are larger in case of a down-trend (Table 7). This is also true for the relative delay after a
+correction (Table 9). For the relative delay after a movement µ is also larger whereas σ is smaller
+for down-trends (Table 8).
+
+   Finally, the correlation between the logarithms of the relative movement/correction and the corre-
+sponding relative delay is close to scale invariant.
+
+4.3 Period of Movements and Corrections
+
+The dependency between µ and the scaling parameter has already been explained with their con-
+nection to the level of trend signiﬁcance (Observation 3). One attribute of trend signiﬁcance is the
+duration of a single trend period, hence the time diﬀerence between two lows and two highs within
+the up- and down-trend, respectively. It is called the period T of a trend. Figure 12.(a) shows
+the evolution of T regarding diﬀerent scaling parameters. Here, for any scaling the T value is the
+arithmetical mean of all time diﬀerences between two consecutive lows and highs within up- and
+down-trends, respectively. The period T shows a linear behavior which has already been observed
+
+(a) Period T for up-trends  (b) Fit parameters of T
+
+Figure 12: Evolution of the period T for scalings between 0.5 and 5 with a step size of 0.1 for S&P 100 stocks.
+
+in [2] for EUR-USD Charts. The ﬁt parameters are similar for both evaluated markets but diﬀer in
+regard to the type of trend (see Figure 12.(b)). Due to the linear model it is evident how to set the
+scaling parameter to emphasize a speciﬁc period. Consequently, it is also easy to map any of the
+three diﬀerent trend classes introduced by Dow – namely the primary, secondary and tertiary trend
+(see Murphy, chap. “Dow Theory” in [12]).
+SURVEY ON LOG-NORMALLY DISTRIBUTED TREND DATA                                                    15
+
+5 Mathematical Model of Trading Systems
+
+Based on the log-normal distribution model of the retracement an anti cyclic trading system can be
+modeled for instance. With the joint density of the retracement and delay the return of a basic anti
+cyclic trading system as shown in Figure 13 can be calculated:
+
+Lemma 1 (Expected return). Let an anti cyclic trading system as shown in Figure 13.(a) with entry
+in the correction at retracement level a, target t be given. As soon as the end of the correction is
+recognized the position is closed with delay d. Furthermore, the return (in units of the last movement)
+for a trade with retracement x and delay d denoted by R(x, d) is given by
+
+R(x, d) = x − a − d, if a ≤ x < t (retracement does not reach target) .
+               t − a, if x ≥ t (retracement reaches target)
+
+Moreover, the distribution of the random variable for the retracement X and for the delay after the
+
+the retracement D = DX are known from section 3. That is the reason why, the expected value of
+this return, considering only retracements where the trade is opened (condition X ≥ a), is given by
+
+E(R(X, D)|X ≥ a) =              E(X|X ≥ a) − (a + E(D|X ≥ a))                                    (6)
+
+                             +  1 − FX (t)  [t  +  E(D|X  ≥  t)  −  E(X |X  ≥  t)]
+                                1 − FX (a)
+
+with FX (x) = P(X ≤ x) denoting the distribution function of the retracement X (see section 3).
+
+   It should be noted, that a and t are parameters which have to be given in the same units as the
+retracement, i. e. units of the last movement.
+
+Proof. For a proof see [9].
+
+(a) Parameters a and t with exemplary realizations of the (b) Entry at trend begin and following stop at last low.
+retracement X and delay d.
+
+             Figure 13: Setup of a basic anti and pro cyclic trading system for up-trends (left and right respectively).
+
+   In the same manner, several other key ﬁgures such as variance of the return can be calculated
+analytically assuming the empirically observed distributions as real. In this way, a bad chance to risk
+ratio for the anti cyclic trading model has been revealed (see [9]). This is, however, in accordance
+with empirical observations of backtests of that strategy.
+16 R. KEMPEN AND S. MAIER-PAAPE
+
+6 Conclusion and Outlook
+
+In this survey the applications of the log-normal distribution model on market-technical trend data
+is introduced. On the one hand, it is remarkable that the log-normal model obviously ﬁts better to
+the trend data presented here than to daily returns of stock prices. In contrast to the approach to
+daily returns of stock prices, however, there has not been found an explanation for this observation
+yet. In particular, it has not yet been clariﬁed whether the log-normal distribution is a result of a
+limit process or can be explained with the log-normal model for the daily returns of stock prices. As
+far as applications in the direction of modeling of trading systems are concerned, we introduced a
+simple model for an anti cyclic trading setup based on log-normally distributed data.
+
+   On the other hand, trend following, i.e. pro cyclic trading systems are more widely used than
+anti cyclic ones. In fact, empirical backtests have already shown the proﬁtability of such trading
+systems. Consequently, there is a need for a mathematical model. Unfortunately, pro cyclic trading
+usually implies holding a position over several iterations of movement and correction as outlined in
+Figure 13.(b). This makes the problem far more complicated in mathematical terms since the joint
+distribution of a random number of relative movements and corrections – with possible correlations
+– has to be considered. Nevertheless, the log-normal model for the trend data represents a promising
+approach to this issue as well.
+SURVEY ON LOG-NORMALLY DISTRIBUTED TREND DATA  17
+
+References
+
+ [1] Maier-Paape, S. Automatic one two three. Quantitative Finance 2015, 15, 247–260. DOI:
+      10.1080/14697688.2013.814922.
+
+ [2] Haﬁzogullari, Y. ; Maier-Paape, S. ; Platen, A. Empirical study of the 1-2-3 trend indicator;
+      Institute for Mathematics, RWTH Aachen, Report No. 61, 21 pp., 2013
+
+ [3] Maier-Paape, S. ; Platen, A. Lead-lag relationship using a stop-and-reverse-MinMax process;
+      Institute for Mathematics, RWTH Aachen, Report No. 79, 22 pp., 2015
+
+ [4] Fama, E. F. Mandelbrot and the stable paretian hypothesis The Journal of Business 1963, 36,
+      420–429.
+
+ [5] Fama, E. F. The behavior of stock-market prices The Journal of Business 1965, 38, 34–105.
+
+ [6] Mandelbrot, B. The variation of certain speculative prices The Journal of Business 1963, 36,
+      394–419.
+
+ [7] Kempen, R. Fibonaccis are human (made) IFTA Journal 2016, 4–9.
+
+ [8] Bachelier, L. Theorie de la speculation; University of Paris, Doctoral Dissertation, 1900 (English
+      translation in: P.H. Cootner (Ed.), The Random Character of Stock Market Prices, MIT Press,
+      Cambridge, MA, 1964, pp. 17–75).
+
+ [9] Kempen, R. Mathematical Modeling of Movement and Correction Trading with Log-Normal
+      Distribution Ansatz; RWTH Aachen University, Master’s Thesis, 2015
+
+[10] Black, F. ; Scholes, M. The pricing of options and corporate liabilities Journal of Political
+      Economy 1973, 81, 637–654.
+
+[11] D’Agostino, R.B. ; Stephens, M.A. Goodness-of-Fit Techniques; Marcel Dekker, 1986.
+
+[12] Murphy, J.J. Technical Analysis of the Financial Markets; New York Institute of Finance, 1999.
+
+[13] Rhea, R. The Dow Theory; Fraser Publishing Company, 1993.
+
+[14] Russel, R. Dow Theory Today; Snowball Publishing, 1961.
+
+[15] Hull, J. Options, Futures, and other Derivatives 7th ed.; Prentice Hall, 2009.
+
+[16] Appel, G. Technical Analysis: Power Tools for Active Investors; Financial Times Prentice Hall,
+      2005.
+

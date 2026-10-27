@@ -84,6 +84,22 @@
           "note": "At Google the median wait for first reviewer feedback is under an hour for small changes versus about 5 hours for very large ones; overall median review latency is under 4 hours with a median change of 24 lines.",
           "source": "software-practices/sources/sadowski2018-code-review-google.txt#L358-L362",
           "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.5,
+          "note": "In 8,329 reviews from one 201-person industrial project, larger patches took significantly longer to reach final approval (601-800 LOC about twice as long as 61-80 LOC), though the relationship is nonlinear and size explains little of the variance; it measures time to last approval, not pickup or merge, in a single company.",
+          "source": "software-practices/sources/santos2018-review-distributed.txt#L697-L708",
+          "date": "2026-10-26"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.55,
+          "note": "Regression on about 40,000 merged, CI-tested pull requests from 40 GitHub projects finds that pull requests adding more lines and more commits take significantly longer from creation to close, with size and discussion length the dominant predictors; an observational preliminary study of open-source projects.",
+          "source": "software-practices/sources/yu2015-pull-request-latency.txt#L164-L172",
+          "date": "2026-10-26"
         }
       ]
     },
@@ -106,6 +122,14 @@
           "note": "DORA tested whether extra approvals lead to larger, less frequent batches with higher impact and higher change failure rates and reports the hypothesis was supported, linking batch size to incident rate; rework and restoration time are not tied to change size directly.",
           "source": "software-practices/sources/dora2019-state-of-devops.txt#L1272-L1283",
           "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "In a logistic model of 5ESS telephone-switch software updates, a change's failure probability rose with lines of code added, number of deltas and subsystems touched; this is a per-change association in one system that supports the incident part only, and says nothing about rework or restoration time.",
+          "source": "software-practices/sources/mockus2000-change-risk.txt#L375-L391",
+          "date": "2026-10-26"
         }
       ]
     },

@@ -50,6 +50,30 @@
           "note": "733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
           "source": "ai-coding/sources/2310.02059.txt#L930-L936",
           "date": "2026-10-21"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.25,
+          "note": "CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+          "source": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L32-L33",
+          "date": "2026-10-26"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+          "source": "ai-coding/sources/2607.09902.txt#L469-L477",
+          "date": "2026-10-26"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "Of 200 randomly sampled publicly deployed apps that were at least 90% AI-authored, 91% contained at least one manually validated vulnerability, 65.8% of them Critical or High, concentrated in broken access control, injection and authentication; open-source GitHub apps from two agents only, with no human-written baseline.",
+          "source": "ai-coding/sources/2606.23130.txt#L457-L464",
+          "date": "2026-10-26"
         }
       ]
     },

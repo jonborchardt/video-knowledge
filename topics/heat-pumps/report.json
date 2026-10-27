@@ -67,6 +67,7 @@
             "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt",
             "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt",
             "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt",
+            "heat-pumps/sources/esc-2023-eoh-interim-heat-pump-performance.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt",
             "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt"
           ]
@@ -299,6 +300,7 @@
           "note": "Heat pumps need about 400 cfm/ton versus about 156 for non-condensing furnaces because of cooler supply air, and one expert estimates most duct systems handle only 2-3 tons of airflow.",
           "source": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L821-L829",
           "documents": [
+            "heat-pumps/sources/martin-2026-aceee-finding-fault-hvac-installation.txt",
             "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt",
             "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -317,19 +319,23 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
-          "confidence": 0.5,
+          "confidence": 0.55,
           "videos": [
             "43XKfuptnik",
             "CVLLNjSLJTQ",
             "DTsQjiPlksA"
           ],
-          "note": "Field studies of US residential HVAC commonly find furnaces and ACs sized well above calculated design loads.",
-          "source": null,
+          "note": "Manual J calculations on 83 newly installed air conditioners and heat pumps in AZ, CA and FL found most systems oversized: on average 135% of the calculated cooling load (0.79 tons over), 70 systems oversized, three quarters of them by more than the half-ton rounding allowance; cooling-dominated climates, partly utility-program installs.",
+          "source": "heat-pumps/sources/martin-2026-aceee-finding-fault-hvac-installation.txt#L206-L226",
           "documents": [
+            "heat-pumps/sources/bpa-2019-ashp-sizing-baseline-field-study.txt",
             "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
+            "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt",
+            "heat-pumps/sources/james-1997-fsec-residential-equipment-capacity.txt",
             "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt",
+            "heat-pumps/sources/martin-2026-aceee-finding-fault-hvac-installation.txt",
             "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt",
             "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -397,6 +403,8 @@
             "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt",
             "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt",
             "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt",
+            "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
+            "heat-pumps/sources/esc-2023-eoh-interim-heat-pump-performance.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt",
             "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt",
             "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -544,6 +552,7 @@
           "documents": [
             "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt",
             "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt",
+            "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
             "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt",
             "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -595,6 +604,7 @@
             "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt",
             "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt",
             "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt",
+            "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt",
             "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt",
             "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt",
             "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -1375,15 +1385,15 @@
           "asserted": 15,
           "denied": 0,
           "tally": {
-            "right": 1,
+            "right": 2,
             "wrong": 0,
-            "partly": 1,
+            "partly": 0,
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
-          "confidence": 0.5,
+          "confidence": 0.55,
           "videos": [
             "06HSQOhL1hk",
             "58syFyq7H1A",
@@ -1401,10 +1411,12 @@
             "tZlB_O54D48",
             "wnnwGVBwwvQ"
           ],
-          "note": "Field studies link poor sizing, charge, airflow and commissioning to substantially lower measured efficiency.",
-          "source": null,
+          "note": "Side-by-side lab homes with a two-stage heat pump: imposed duct leakage raised cooling energy 17-25% and lost indoor temperature and humidity control at peak, and combined faults (undercharge, duct leak, non-condensables) raised cooling energy 38-40%; cooling only, one Florida test facility.",
+          "source": "heat-pumps/sources/martin-2026-aceee-finding-fault-hvac-installation.txt#L609-L629",
           "documents": [
             "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
+            "heat-pumps/sources/james-1997-fsec-residential-equipment-capacity.txt",
+            "heat-pumps/sources/martin-2026-aceee-finding-fault-hvac-installation.txt",
             "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt"
           ]
         },
@@ -1558,6 +1570,8 @@
           "documents": [
             "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt",
             "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt",
+            "heat-pumps/sources/esc-2023-eoh-interim-heat-pump-performance.txt",
+            "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt",
             "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt",
             "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt",
             "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -1791,6 +1805,7 @@
             "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
             "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt",
             "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt",
+            "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt",
             "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt",
             "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -2104,15 +2119,15 @@
           "asserted": 3,
           "denied": 9,
           "tally": {
-            "right": 0,
-            "wrong": 1,
+            "right": 1,
+            "wrong": 0,
             "partly": 0,
             "untestable": 0,
             "unknown": 1
           },
           "strongest": "source",
-          "effective": "wrong",
-          "confidence": 0.2,
+          "effective": "right",
+          "confidence": 0.4,
           "videos": [
             "DTb7TKJzr5g",
             "H3jIRRzF6d0",
@@ -2127,9 +2142,10 @@
             "uN_jLk9LtZQ",
             "ut0CZhi_6lE"
           ],
-          "note": "Seven homeowners needed contractor visits, mostly minor control, sensor or condensate issues fixed in one visit, and the team judged this not atypical compared with their previous systems; the units were prototypes and the sample was small.",
-          "source": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1837-L1849",
+          "note": "Consumer Reports' survey of members who installed 13,753 heat pumps (2009-2025) found 29 percent broke or stopped working by the end of the eighth year, which CR says makes heat pumps one of the least reliable product categories it rates; a self-selected owner survey with the furnace comparison implied rather than shown, and the units both heat and cool.",
+          "source": "heat-pumps/sources/consumerreports-2026-heat-pump-reliability.txt#L10-L11",
           "documents": [
+            "heat-pumps/sources/consumerreports-2026-heat-pump-reliability.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt"
           ]
         },
@@ -2342,10 +2358,13 @@
           "videos": [
             "9ecd16-eva8"
           ],
-          "note": "Across 12 monitored central heat pumps in cold northwest US climates, seasonal compressor-based heating COP averaged 2.5 (1.7-3.5) and system COP 1.5-2.9; none approached four.",
-          "source": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L1823-L1825",
+          "note": "Across 166 metered indoor units of whole-home systems in Maine, the combined field-metered heating COP over the season was 3.15 including defrost, about 2 at -10F, not around four (a cold climate; milder climates would score higher).",
+          "source": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1911-L1918",
           "documents": [
             "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt",
+            "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
+            "heat-pumps/sources/esc-2023-eoh-interim-heat-pump-performance.txt",
+            "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt",
             "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt"
           ]
         },
@@ -2745,13 +2764,14 @@
             "NfLby3cw6RQ",
             "carbonbrief-factcheck-18-misleading-myths-about-heat-pumps"
           ],
-          "note": "In the 2016 winter field data, mini-splits averaged COP 1.5 at -10 to 0 F, giving about 50% more heat per kWh than resistance heat; some non-cold-climate units got close to COP 1.0 in very cold hours, but those hours were few.",
-          "source": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L2926-L2935",
+          "note": "Metered COP averaged 2 at -10F across 166 units in Maine homes, so even in very cold weather the heat pumps used about half the electricity resistance heat would.",
+          "source": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1913-L1916",
           "documents": [
             "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
             "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt",
             "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt",
             "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt",
+            "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt",
             "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt"
           ]
@@ -2780,6 +2800,7 @@
           "source": null,
           "documents": [
             "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt",
+            "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
             "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt"
           ]
@@ -3995,6 +4016,7 @@
           "note": "Auxiliary resistance energy exceeded 40% of compressor heating energy at 5 of 11 all-electric sites and exceeded it at 2; every heat pump ran its auxiliary heater during or after defrost.",
           "source": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L260-L274",
           "documents": [
+            "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt",
             "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt"
           ]
@@ -4353,6 +4375,7 @@
           "documents": [
             "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
             "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt",
+            "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
             "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt"
           ]
         },
@@ -4588,7 +4611,9 @@
           ],
           "note": "Surveys rely on assumed U-values and ventilation rates, and comparisons of assessors show a wide spread for the same house.",
           "source": null,
-          "documents": []
+          "documents": [
+            "heat-pumps/sources/bpa-2019-ashp-sizing-baseline-field-study.txt"
+          ]
         },
         {
           "id": "heat-pumps/heat-pump-hot-water-cylinder-gives",
@@ -4989,6 +5014,7 @@
           "documents": [
             "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
             "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt",
+            "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
             "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt"
           ]
         },
@@ -5080,15 +5106,17 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
           "confidence": 0.5,
           "videos": [
             "5aY26YoUXc8"
           ],
-          "note": "Lab and field studies show refrigerant charge errors and mismatched coils cut heat pump capacity and efficiency, more so in heating.",
-          "source": null,
-          "documents": []
+          "note": "Lab tests on a two-stage heat pump found individual over- and undercharge faults raised cooling energy 4-9%, with a 30% undercharge limiting capacity so the set point could not be held at peak.",
+          "source": "heat-pumps/sources/martin-2026-aceee-finding-fault-hvac-installation.txt#L585-L602",
+          "documents": [
+            "heat-pumps/sources/martin-2026-aceee-finding-fault-hvac-installation.txt"
+          ]
         },
         {
           "id": "heat-pumps/outdoor-heat-pump-units-cold-climates",
@@ -5201,22 +5229,24 @@
           "asserted": 1,
           "denied": 0,
           "tally": {
-            "right": 0,
+            "right": 1,
             "wrong": 0,
-            "partly": 1,
+            "partly": 0,
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
-          "effective": "partly",
+          "strongest": "source",
+          "effective": "right",
           "confidence": 0.5,
           "videos": [
             "At2-Ub04Rpk"
           ],
-          "note": "DOE and NIST field studies find most residential HVAC systems have at least one installation fault, though not all faults materially hurt performance.",
-          "source": null,
+          "note": "In 95 Pacific Northwest heat pump installs, 58% were under- or oversized by half a ton or more against the calculated heating load, and program participation did not improve sizing.",
+          "source": "heat-pumps/sources/bpa-2019-ashp-sizing-baseline-field-study.txt#L1259-L1264",
           "documents": [
+            "heat-pumps/sources/bpa-2019-ashp-sizing-baseline-field-study.txt",
             "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
+            "heat-pumps/sources/martin-2026-aceee-finding-fault-hvac-installation.txt",
             "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt"
           ]
         },
@@ -5551,14 +5581,15 @@
           "videos": [
             "manhattan-out-of-gas-new-yorks-blocked-pipelines-will-hurt-northeast-consumers"
           ],
-          "note": "In Minnesota, where winter is mostly below freezing, cold-climate heat pumps kept system efficiencies high and cut heating costs 30-56% against propane and resistance baselines.",
-          "source": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L495-L518",
+          "note": "In Maine, where winter temperatures are often well below freezing, 166 metered units averaged a seasonal heating COP of 3.15 including defrost, and 2 even at -10F.",
+          "source": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1911-L1918",
           "documents": [
             "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
             "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt",
             "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt",
             "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt",
             "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt",
+            "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt",
             "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt",
             "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -5958,45 +5989,11 @@
           "documents": [
             "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt",
             "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt",
+            "heat-pumps/sources/esc-2023-eoh-interim-heat-pump-performance.txt",
+            "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt",
             "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt",
             "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt",
             "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
-          ]
-        },
-        {
-          "id": "heat-pumps/heat-pumps-need-more-maintenance-repairs",
-          "text": "Heat pumps need more maintenance or repairs than gas furnaces",
-          "topic": "heat-pumps",
-          "asserted": 3,
-          "denied": 9,
-          "tally": {
-            "right": 0,
-            "wrong": 1,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 1
-          },
-          "strongest": "source",
-          "effective": "wrong",
-          "confidence": 0.2,
-          "videos": [
-            "DTb7TKJzr5g",
-            "H3jIRRzF6d0",
-            "_sFwuopVr14",
-            "bm1koXDcFCc",
-            "homes-rewiringamerica-heat-pump-savings",
-            "homes-rewiringamerica-heat-pumps-save-money",
-            "kyQ5Xf8WnMA",
-            "masssave-heat-pumps",
-            "rcI-xVNGdCQ",
-            "tZlB_O54D48",
-            "uN_jLk9LtZQ",
-            "ut0CZhi_6lE"
-          ],
-          "note": "Seven homeowners needed contractor visits, mostly minor control, sensor or condensate issues fixed in one visit, and the team judged this not atypical compared with their previous systems; the units were prototypes and the sample was small.",
-          "source": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1837-L1849",
-          "documents": [
-            "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt"
           ]
         },
         {
@@ -6043,6 +6040,7 @@
             "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
             "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt",
             "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt",
+            "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt",
             "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt",
             "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -6131,6 +6129,7 @@
           "note": "Auxiliary resistance energy exceeded 40% of compressor heating energy at 5 of 11 all-electric sites and exceeded it at 2; every heat pump ran its auxiliary heater during or after defrost.",
           "source": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L260-L274",
           "documents": [
+            "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt",
             "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt"
           ]
@@ -6216,14 +6215,15 @@
           "videos": [
             "manhattan-out-of-gas-new-yorks-blocked-pipelines-will-hurt-northeast-consumers"
           ],
-          "note": "In Minnesota, where winter is mostly below freezing, cold-climate heat pumps kept system efficiencies high and cut heating costs 30-56% against propane and resistance baselines.",
-          "source": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L495-L518",
+          "note": "In Maine, where winter temperatures are often well below freezing, 166 metered units averaged a seasonal heating COP of 3.15 including defrost, and 2 even at -10F.",
+          "source": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1911-L1918",
           "documents": [
             "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
             "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt",
             "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt",
             "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt",
             "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt",
+            "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt",
             "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt",
             "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -6407,10 +6407,13 @@
           "videos": [
             "9ecd16-eva8"
           ],
-          "note": "Across 12 monitored central heat pumps in cold northwest US climates, seasonal compressor-based heating COP averaged 2.5 (1.7-3.5) and system COP 1.5-2.9; none approached four.",
-          "source": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L1823-L1825",
+          "note": "Across 166 metered indoor units of whole-home systems in Maine, the combined field-metered heating COP over the season was 3.15 including defrost, about 2 at -10F, not around four (a cold climate; milder climates would score higher).",
+          "source": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1911-L1918",
           "documents": [
             "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt",
+            "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
+            "heat-pumps/sources/esc-2023-eoh-interim-heat-pump-performance.txt",
+            "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt",
             "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt"
           ]
         }
@@ -6520,6 +6523,7 @@
             "documents": [
               "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt",
               "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt",
+              "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
               "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt",
               "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt",
               "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -6751,67 +6755,6 @@
         },
         {
           "claim": {
-            "id": "heat-pumps/oversized-poorly-installed-heat-pumps-cost",
-            "text": "Oversized or poorly installed heat pumps cost more to run and deliver less comfort",
-            "topic": "heat-pumps",
-            "asserted": 15,
-            "denied": 0,
-            "tally": {
-              "right": 1,
-              "wrong": 0,
-              "partly": 1,
-              "untestable": 0,
-              "unknown": 0
-            },
-            "strongest": "prior",
-            "effective": "right",
-            "confidence": 0.5,
-            "videos": [
-              "06HSQOhL1hk",
-              "58syFyq7H1A",
-              "6ffHk08yqaQ",
-              "9ecd16-eva8",
-              "DMjkzlNZKPM",
-              "KIpxlqqZQxM",
-              "P2WT80noINQ",
-              "XL4ROp_Jh7g",
-              "bostonglobe-heat-pumps-electricity-rates-in-winter",
-              "consumerreports-buying-guide",
-              "e1ud10npF_w",
-              "greenbuildingadvisor-heat-pumps-are-not-delivering-expected-cost-savings",
-              "jbWQV2DTb3Q",
-              "tZlB_O54D48",
-              "wnnwGVBwwvQ"
-            ],
-            "note": "Field studies link poor sizing, charge, airflow and commissioning to substantially lower measured efficiency.",
-            "source": null,
-            "documents": [
-              "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
-              "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt"
-            ]
-          },
-          "prior": "right",
-          "evidence": "partly",
-          "method": "source",
-          "overrides": false,
-          "priorRecord": {
-            "method": "prior",
-            "verdict": "right",
-            "confidence": 0.8,
-            "note": "Field studies link poor sizing, charge, airflow and commissioning to substantially lower measured efficiency.",
-            "date": "2026-10-18"
-          },
-          "evidenceRecord": {
-            "method": "source",
-            "verdict": "partly",
-            "confidence": 0.4,
-            "note": "Units from one contractor with sloppy installs (up to 30 ft of excess coiled line set) ran 0.5-1.0 lower in COP at all temperatures, which rated efficiency cannot explain; the report adds that cooling oversizing of variable-speed units should not appreciably hurt efficiency.",
-            "source": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3049-L3066",
-            "date": "2026-10-18"
-          }
-        },
-        {
-          "claim": {
             "id": "heat-pumps/cold-climates-heat-pump-sized-cooling",
             "text": "In cold climates a heat pump sized for the cooling load cannot carry the full heating load",
             "topic": "heat-pumps",
@@ -6890,6 +6833,8 @@
             "documents": [
               "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt",
               "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt",
+              "heat-pumps/sources/esc-2023-eoh-interim-heat-pump-performance.txt",
+              "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt",
               "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt",
               "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt",
               "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -7083,10 +7028,13 @@
             "videos": [
               "9ecd16-eva8"
             ],
-            "note": "Across 12 monitored central heat pumps in cold northwest US climates, seasonal compressor-based heating COP averaged 2.5 (1.7-3.5) and system COP 1.5-2.9; none approached four.",
-            "source": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L1823-L1825",
+            "note": "Across 166 metered indoor units of whole-home systems in Maine, the combined field-metered heating COP over the season was 3.15 including defrost, about 2 at -10F, not around four (a cold climate; milder climates would score higher).",
+            "source": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1911-L1918",
             "documents": [
               "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt",
+              "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
+              "heat-pumps/sources/esc-2023-eoh-interim-heat-pump-performance.txt",
+              "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt",
               "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt"
             ]
           },
@@ -7105,9 +7053,9 @@
             "method": "source",
             "verdict": "wrong",
             "confidence": 0.5,
-            "note": "Across 12 monitored central heat pumps in cold northwest US climates, seasonal compressor-based heating COP averaged 2.5 (1.7-3.5) and system COP 1.5-2.9; none approached four.",
-            "source": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L1823-L1825",
-            "date": "2026-10-18"
+            "note": "Across 166 metered indoor units of whole-home systems in Maine, the combined field-metered heating COP over the season was 3.15 including defrost, about 2 at -10F, not around four (a cold climate; milder climates would score higher).",
+            "source": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1911-L1918",
+            "date": "2026-10-26"
           }
         },
         {
@@ -7286,13 +7234,14 @@
               "NfLby3cw6RQ",
               "carbonbrief-factcheck-18-misleading-myths-about-heat-pumps"
             ],
-            "note": "In the 2016 winter field data, mini-splits averaged COP 1.5 at -10 to 0 F, giving about 50% more heat per kWh than resistance heat; some non-cold-climate units got close to COP 1.0 in very cold hours, but those hours were few.",
-            "source": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L2926-L2935",
+            "note": "Metered COP averaged 2 at -10F across 166 units in Maine homes, so even in very cold weather the heat pumps used about half the electricity resistance heat would.",
+            "source": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1913-L1916",
             "documents": [
               "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
               "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt",
               "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt",
               "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt",
+              "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
               "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt",
               "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt"
             ]
@@ -7312,9 +7261,9 @@
             "method": "source",
             "verdict": "right",
             "confidence": 0.6,
-            "note": "In the 2016 winter field data, mini-splits averaged COP 1.5 at -10 to 0 F, giving about 50% more heat per kWh than resistance heat; some non-cold-climate units got close to COP 1.0 in very cold hours, but those hours were few.",
-            "source": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L2926-L2935",
-            "date": "2026-10-18"
+            "note": "Metered COP averaged 2 at -10F across 166 units in Maine homes, so even in very cold weather the heat pumps used about half the electricity resistance heat would.",
+            "source": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1913-L1916",
+            "date": "2026-10-26"
           }
         },
         {
@@ -7483,6 +7432,7 @@
             "note": "Auxiliary resistance energy exceeded 40% of compressor heating energy at 5 of 11 all-electric sites and exceeded it at 2; every heat pump ran its auxiliary heater during or after defrost.",
             "source": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L260-L274",
             "documents": [
+              "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt",
               "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt",
               "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt"
             ]
@@ -7838,6 +7788,52 @@
         },
         {
           "claim": {
+            "id": "heat-pumps/heat-loss-calculations-same-home-can",
+            "text": "Heat loss calculations for the same home can differ widely between surveyors",
+            "topic": "heat-pumps",
+            "asserted": 1,
+            "denied": 0,
+            "tally": {
+              "right": 1,
+              "wrong": 0,
+              "partly": 0,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "right",
+            "confidence": 0.5,
+            "videos": [
+              "JojCZhqd9So"
+            ],
+            "note": "Surveys rely on assumed U-values and ventilation rates, and comparisons of assessors show a wide spread for the same house.",
+            "source": null,
+            "documents": [
+              "heat-pumps/sources/bpa-2019-ashp-sizing-baseline-field-study.txt"
+            ]
+          },
+          "prior": "right",
+          "evidence": "partly",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "right",
+            "confidence": 0.7,
+            "note": "Surveys rely on assumed U-values and ventilation rates, and comparisons of assessors show a wide spread for the same house.",
+            "date": "2026-10-18"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "partly",
+            "confidence": 0.25,
+            "note": "Two load calculators applied to the same 95 homes classed different shares as undersized (32% versus 43%) and oversized (26% versus 17%), showing method-dependent loads, though this compares calculators, not surveyors.",
+            "source": "heat-pumps/sources/bpa-2019-ashp-sizing-baseline-field-study.txt#L1252-L1257",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
             "id": "heat-pumps/inverter-driven-heat-pumps-run-long",
             "text": "Inverter-driven heat pumps run long low-output cycles, which is easier on the compressor than short cycling",
             "topic": "heat-pumps",
@@ -8128,6 +8124,55 @@
         },
         {
           "claim": {
+            "id": "heat-pumps/most-heat-pumps-installed-sized-improperly",
+            "text": "Most heat pumps are installed or sized improperly",
+            "topic": "heat-pumps",
+            "asserted": 1,
+            "denied": 0,
+            "tally": {
+              "right": 1,
+              "wrong": 0,
+              "partly": 0,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "source",
+            "effective": "right",
+            "confidence": 0.5,
+            "videos": [
+              "At2-Ub04Rpk"
+            ],
+            "note": "In 95 Pacific Northwest heat pump installs, 58% were under- or oversized by half a ton or more against the calculated heating load, and program participation did not improve sizing.",
+            "source": "heat-pumps/sources/bpa-2019-ashp-sizing-baseline-field-study.txt#L1259-L1264",
+            "documents": [
+              "heat-pumps/sources/bpa-2019-ashp-sizing-baseline-field-study.txt",
+              "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
+              "heat-pumps/sources/martin-2026-aceee-finding-fault-hvac-installation.txt",
+              "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt"
+            ]
+          },
+          "prior": "partly",
+          "evidence": "right",
+          "method": "source",
+          "overrides": true,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "partly",
+            "confidence": 0.55,
+            "note": "DOE and NIST field studies find most residential HVAC systems have at least one installation fault, though not all faults materially hurt performance.",
+            "date": "2026-10-18"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "right",
+            "confidence": 0.5,
+            "note": "In 95 Pacific Northwest heat pump installs, 58% were under- or oversized by half a ton or more against the calculated heating load, and program participation did not improve sizing.",
+            "source": "heat-pumps/sources/bpa-2019-ashp-sizing-baseline-field-study.txt#L1259-L1264",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
             "id": "heat-pumps/heat-pump-costs-about-same-less",
             "text": "A heat pump costs about the same as or less than a new furnace plus central air conditioner",
             "topic": "heat-pumps",
@@ -8384,6 +8429,8 @@
             "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt",
             "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt",
             "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt",
+            "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
+            "heat-pumps/sources/esc-2023-eoh-interim-heat-pump-performance.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt",
             "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt",
             "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -8542,6 +8589,7 @@
             "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt",
             "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt",
             "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt",
+            "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt",
             "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt",
             "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt",
             "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -8727,6 +8775,7 @@
           "documents": [
             "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt",
             "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt",
+            "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
             "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt",
             "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -8901,13 +8950,14 @@
             "NfLby3cw6RQ",
             "carbonbrief-factcheck-18-misleading-myths-about-heat-pumps"
           ],
-          "note": "In the 2016 winter field data, mini-splits averaged COP 1.5 at -10 to 0 F, giving about 50% more heat per kWh than resistance heat; some non-cold-climate units got close to COP 1.0 in very cold hours, but those hours were few.",
-          "source": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L2926-L2935",
+          "note": "Metered COP averaged 2 at -10F across 166 units in Maine homes, so even in very cold weather the heat pumps used about half the electricity resistance heat would.",
+          "source": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1913-L1916",
           "documents": [
             "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
             "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt",
             "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt",
             "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt",
+            "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt",
             "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt"
           ]
@@ -9038,6 +9088,8 @@
           "documents": [
             "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt",
             "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt",
+            "heat-pumps/sources/esc-2023-eoh-interim-heat-pump-performance.txt",
+            "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt",
             "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt",
             "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt",
             "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -9050,15 +9102,15 @@
           "asserted": 3,
           "denied": 9,
           "tally": {
-            "right": 0,
-            "wrong": 1,
+            "right": 1,
+            "wrong": 0,
             "partly": 0,
             "untestable": 0,
             "unknown": 1
           },
           "strongest": "source",
-          "effective": "wrong",
-          "confidence": 0.2,
+          "effective": "right",
+          "confidence": 0.4,
           "videos": [
             "DTb7TKJzr5g",
             "H3jIRRzF6d0",
@@ -9073,9 +9125,10 @@
             "uN_jLk9LtZQ",
             "ut0CZhi_6lE"
           ],
-          "note": "Seven homeowners needed contractor visits, mostly minor control, sensor or condensate issues fixed in one visit, and the team judged this not atypical compared with their previous systems; the units were prototypes and the sample was small.",
-          "source": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1837-L1849",
+          "note": "Consumer Reports' survey of members who installed 13,753 heat pumps (2009-2025) found 29 percent broke or stopped working by the end of the eighth year, which CR says makes heat pumps one of the least reliable product categories it rates; a self-selected owner survey with the furnace comparison implied rather than shown, and the units both heat and cool.",
+          "source": "heat-pumps/sources/consumerreports-2026-heat-pump-reliability.txt#L10-L11",
           "documents": [
+            "heat-pumps/sources/consumerreports-2026-heat-pump-reliability.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt"
           ]
         },
@@ -9123,6 +9176,7 @@
             "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
             "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt",
             "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt",
+            "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt",
             "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt",
             "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -9835,29 +9889,6 @@
           "documents": []
         },
         {
-          "id": "heat-pumps/heat-loss-calculations-same-home-can",
-          "text": "Heat loss calculations for the same home can differ widely between surveyors",
-          "topic": "heat-pumps",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 1,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "JojCZhqd9So"
-          ],
-          "note": "Surveys rely on assumed U-values and ventilation rates, and comparisons of assessors show a wide spread for the same house.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "heat-pumps/heat-pump-can-often-reuse-home",
           "text": "A heat pump can often reuse a home's existing radiators and pipework with few changes",
           "topic": "heat-pumps",
@@ -10039,29 +10070,6 @@
             "bW9DlKn-ba0"
           ],
           "note": "Some cold-climate units are installed without strips in moderate climates, but most cold-region installs still include backup heat.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "heat-pumps/heat-pumps-need-correct-refrigerant-charge",
-          "text": "Heat pumps need a correct refrigerant charge and a matched indoor coil to run efficiently",
-          "topic": "heat-pumps",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 1,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "5aY26YoUXc8"
-          ],
-          "note": "Lab and field studies show refrigerant charge errors and mismatched coils cut heat pump capacity and efficiency, more so in heating.",
           "source": null,
           "documents": []
         },
@@ -10655,7 +10663,7 @@
       "rating": null,
       "assertions": 6,
       "testable": 6,
-      "novelty": 1.4500000000000002,
+      "novelty": 1.4533333333333334,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "new and sound",
@@ -10668,7 +10676,7 @@
         "heat-pumps/oversized-poorly-installed-heat-pumps-cost"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10694,7 +10702,7 @@
         "heat-pumps/outdoor-heat-pump-units-cold-climates"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10778,7 +10786,7 @@
         "heat-pumps/setting-auxiliary-heat-lockout-temperature-keeps"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10792,7 +10800,7 @@
       "rating": null,
       "assertions": 10,
       "testable": 10,
-      "novelty": 0.9574151380982501,
+      "novelty": 0.9740818047649169,
       "redundancy": 0,
       "thinEvidence": 0.1,
       "worthWatching": "mixed",
@@ -10809,7 +10817,7 @@
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10838,7 +10846,7 @@
       "wrong": [
         "heat-pumps/heat-pumps-not-work-cold-climates"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10852,7 +10860,7 @@
       "rating": null,
       "assertions": 10,
       "testable": 10,
-      "novelty": 0.43511559696342306,
+      "novelty": 0.4384489302967564,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -10869,7 +10877,7 @@
         "heat-pumps/time-use-heat-pump-electricity-tariffs"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10885,7 +10893,7 @@
       "testable": 8,
       "novelty": 1.044573476702509,
       "redundancy": 0,
-      "thinEvidence": 0.125,
+      "thinEvidence": 0,
       "worthWatching": "new and sound",
       "right": [
         "heat-pumps/electric-resistance-heat-costs-far-more",
@@ -10899,7 +10907,7 @@
       "wrong": [
         "heat-pumps/heating-heat-pump-costs-less-natural"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10926,7 +10934,7 @@
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10940,7 +10948,7 @@
       "rating": null,
       "assertions": 10,
       "testable": 10,
-      "novelty": 0.3656353102250718,
+      "novelty": 0.36896864355840514,
       "redundancy": 0,
       "thinEvidence": 0.1,
       "worthWatching": "mixed",
@@ -10958,7 +10966,7 @@
         "heat-pumps/home-batteries-charged-off-peak-pay",
         "heat-pumps/switching-heat-pump-cuts-heating-bills"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10989,7 +10997,7 @@
         "heat-pumps/payback-heat-pump-varies-widely-climate"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11020,7 +11028,7 @@
         "heat-pumps/widespread-backup-resistance-heat-extreme-cold"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11052,7 +11060,7 @@
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11081,7 +11089,7 @@
       "wrong": [
         "heat-pumps/heat-pumps-need-home-well-insulated"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11095,7 +11103,7 @@
       "rating": null,
       "assertions": 4,
       "testable": 4,
-      "novelty": 0.04420289855072464,
+      "novelty": 0.04753623188405797,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -11107,7 +11115,7 @@
         "heat-pumps/heating-heat-pump-costs-less-natural",
         "heat-pumps/well-installed-air-source-heat-pumps"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11143,12 +11151,12 @@
       "channel": "Handy Bros. Home Comfort",
       "topic": "heat-pumps",
       "watched": false,
-      "score": 0.7,
-      "scaled": 1,
+      "score": 0.8,
+      "scaled": 2,
       "rating": null,
       "assertions": 5,
       "testable": 5,
-      "novelty": 0.7102941176470587,
+      "novelty": 0.9602941176470589,
       "redundancy": 0,
       "thinEvidence": 0.2,
       "worthWatching": "mixed",
@@ -11160,7 +11168,7 @@
         "heat-pumps/most-heat-pumps-installed-sized-improperly"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11189,7 +11197,7 @@
         "heat-pumps/backup-resistance-heat-strips-use-less",
         "heat-pumps/heat-pumps-need-home-well-insulated"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11261,7 +11269,7 @@
       "rating": null,
       "assertions": 10,
       "testable": 10,
-      "novelty": 1.0107757296466975,
+      "novelty": 1.027442396313364,
       "redundancy": 0,
       "thinEvidence": 0.1,
       "worthWatching": "new and sound",
@@ -11279,7 +11287,7 @@
         "heat-pumps/backup-resistance-heat-strips-rarely-run",
         "heat-pumps/installing-heat-pump-can-require-costly"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11293,7 +11301,7 @@
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 1.4578571428571432,
+      "novelty": 1.4611904761904762,
       "redundancy": 0,
       "thinEvidence": 0.125,
       "worthWatching": "new and sound",
@@ -11308,7 +11316,7 @@
         "heat-pumps/switching-heat-pump-cuts-heating-bills"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11317,12 +11325,12 @@
       "channel": "Undecided with Matt Ferrell",
       "topic": "heat-pumps",
       "watched": false,
-      "score": 0.8888888888888888,
-      "scaled": 2,
+      "score": 0.6666666666666666,
+      "scaled": 1,
       "rating": null,
       "assertions": 9,
       "testable": 9,
-      "novelty": 1.2154417577307601,
+      "novelty": 1.193219535508538,
       "redundancy": 0,
       "thinEvidence": 0.3333333333333333,
       "worthWatching": "new and sound",
@@ -11332,13 +11340,14 @@
         "heat-pumps/ground-source-geothermal-heat-pumps-run",
         "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
         "heat-pumps/heat-pump-moves-rather-making-delivers",
-        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/pairing-heat-pump-rooftop-solar-makes",
         "heat-pumps/state-utility-rebates-can-cover-large",
         "heat-pumps/through-2025-federal-tax-credit-covered"
       ],
-      "wrong": [],
-      "lastJudged": "2026-10-18",
+      "wrong": [
+        "heat-pumps/heat-pumps-need-more-maintenance-repairs"
+      ],
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11352,7 +11361,7 @@
       "rating": null,
       "assertions": 12,
       "testable": 12,
-      "novelty": 1.116926523297491,
+      "novelty": 1.1335931899641576,
       "redundancy": 0,
       "thinEvidence": 0.08333333333333333,
       "worthWatching": "new and sound",
@@ -11372,7 +11381,7 @@
         "heat-pumps/cold-climate-heat-pumps-often-rely",
         "heat-pumps/installing-heat-pump-can-require-costly"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11404,7 +11413,7 @@
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11431,7 +11440,7 @@
       "wrong": [
         "heat-pumps/premium-inverter-heat-pump-energy-savings"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11460,7 +11469,7 @@
         "heat-pumps/heat-pumps-need-home-well-insulated",
         "heat-pumps/many-heat-pump-owners-end-high"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11469,12 +11478,12 @@
       "channel": "Undecided with Matt Ferrell",
       "topic": "heat-pumps",
       "watched": false,
-      "score": 0.7727272727272727,
-      "scaled": 2,
+      "score": 0.5909090909090909,
+      "scaled": 1,
       "rating": null,
       "assertions": 11,
       "testable": 11,
-      "novelty": 0.4511766937469025,
+      "novelty": 0.4289544715246803,
       "redundancy": 0,
       "thinEvidence": 0.09090909090909091,
       "worthWatching": "mixed",
@@ -11487,13 +11496,13 @@
         "heat-pumps/heat-pump-replaces-both-furnace-air",
         "heat-pumps/heat-pump-still-uses-less-energy",
         "heat-pumps/heat-pumps-last-about-long-furnaces",
-        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/modern-cold-climate-heat-pumps-keep"
       ],
       "wrong": [
+        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/heating-heat-pump-costs-less-natural"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11533,7 +11542,7 @@
       "testable": 11,
       "novelty": 1.5799393988924881,
       "redundancy": 0,
-      "thinEvidence": 0.18181818181818182,
+      "thinEvidence": 0.09090909090909091,
       "worthWatching": "new and sound",
       "right": [
         "heat-pumps/boiler-upgrade-scheme-grant-pays-500",
@@ -11550,7 +11559,7 @@
       "wrong": [
         "heat-pumps/heating-heat-pump-costs-less-natural"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11586,7 +11595,7 @@
       "wrong": [
         "heat-pumps/cold-climate-heat-pumps-often-rely"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11627,7 +11636,7 @@
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 0.7524641577060931,
+      "novelty": 0.7557974910394265,
       "redundancy": 0,
       "thinEvidence": 0.14285714285714285,
       "worthWatching": "mixed",
@@ -11640,7 +11649,7 @@
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11671,7 +11680,7 @@
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11699,7 +11708,7 @@
       "wrong": [
         "heat-pumps/heat-pump-still-uses-less-energy"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11732,7 +11741,7 @@
         "heat-pumps/heat-pumps-last-about-long-furnaces",
         "heat-pumps/heating-heat-pump-costs-less-natural"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11746,7 +11755,7 @@
       "rating": null,
       "assertions": 5,
       "testable": 5,
-      "novelty": 0.2269607843137255,
+      "novelty": 0.23029411764705882,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -11758,7 +11767,7 @@
         "heat-pumps/oversized-poorly-installed-heat-pumps-cost"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11786,7 +11795,7 @@
         "heat-pumps/time-use-heat-pump-electricity-tariffs"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11842,7 +11851,7 @@
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11871,7 +11880,7 @@
       "wrong": [
         "heat-pumps/time-use-heat-pump-electricity-tariffs"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11898,7 +11907,7 @@
       "wrong": [
         "heat-pumps/heat-pumps-not-work-cold-climates"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11929,7 +11938,7 @@
         "heat-pumps/heat-pump-costs-about-same-central",
         "heat-pumps/heat-pump-costs-more-buy-install"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11996,7 +12005,7 @@
       "rating": null,
       "assertions": 6,
       "testable": 6,
-      "novelty": 0.876450980392157,
+      "novelty": 0.8797843137254903,
       "redundancy": 0,
       "thinEvidence": 0.16666666666666666,
       "worthWatching": "mixed",
@@ -12010,7 +12019,7 @@
       "wrong": [
         "heat-pumps/heat-pump-pays-itself-through-lower"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12043,7 +12052,7 @@
         "heat-pumps/two-stage-variable-capacity-heat-pumps"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12081,27 +12090,27 @@
       "channel": "Monkey Wrench Plumbing, Heating, Air & Electric",
       "topic": "heat-pumps",
       "watched": false,
-      "score": 0.42857142857142855,
+      "score": 0.7142857142857143,
       "scaled": 1,
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 0.6967743271221533,
+      "novelty": 0.8301076604554866,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "heat-pumps/heat-pump-cools-efficiently-comparable-central",
         "heat-pumps/heat-pump-replaces-both-furnace-air",
+        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/installing-heat-pump-can-require-costly",
         "heat-pumps/pairing-heat-pump-rooftop-solar-makes",
         "heat-pumps/you-keeping-working-furnace-new-air"
       ],
       "wrong": [
-        "heat-pumps/heat-pump-costs-about-same-central",
-        "heat-pumps/heat-pumps-need-more-maintenance-repairs"
+        "heat-pumps/heat-pump-costs-about-same-central"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12129,7 +12138,7 @@
       "wrong": [
         "heat-pumps/heat-pumps-cut-home-carbon-emissions"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12156,7 +12165,7 @@
       "wrong": [
         "heat-pumps/heat-pumps-cut-home-carbon-emissions"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12185,7 +12194,7 @@
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12211,7 +12220,7 @@
         "heat-pumps/heat-pumps-not-work-cold-climates"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12220,28 +12229,28 @@
       "channel": "Octopus Energy",
       "topic": "heat-pumps",
       "watched": false,
-      "score": 0.625,
+      "score": 0.375,
       "scaled": 1,
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 0.3606349206349206,
+      "novelty": 0.3384126984126984,
       "redundancy": 0,
       "thinEvidence": 0.125,
       "worthWatching": "mixed",
       "right": [
         "heat-pumps/heat-pump-moves-rather-making-delivers",
         "heat-pumps/heat-pumps-last-about-long-furnaces",
-        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/high-electricity-prices-relative-gas-make",
         "heat-pumps/home-battery-charged-cheap-off-peak",
         "heat-pumps/removing-gas-connection-saves-fixed-monthly",
         "heat-pumps/time-use-heat-pump-electricity-tariffs"
       ],
       "wrong": [
+        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/heating-heat-pump-costs-less-natural"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12266,7 +12275,7 @@
         "heat-pumps/modern-cold-climate-heat-pumps-keep"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12280,7 +12289,7 @@
       "rating": null,
       "assertions": 9,
       "testable": 9,
-      "novelty": 0.21450308529208784,
+      "novelty": 0.21783641862542116,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -12297,7 +12306,7 @@
       "wrong": [
         "heat-pumps/heat-pump-costs-less-run-heating"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12322,7 +12331,7 @@
       "wrong": [
         "heat-pumps/heat-pumps-cut-home-carbon-emissions"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12410,7 +12419,7 @@
         "heat-pumps/heating-heat-pump-costs-less-natural",
         "heat-pumps/most-homes-would-save-money-over"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12471,7 +12480,7 @@
       "wrong": [
         "heat-pumps/switching-gas-heat-pump-raises-household"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12485,7 +12494,7 @@
       "rating": null,
       "assertions": 12,
       "testable": 12,
-      "novelty": 0.5062026322490718,
+      "novelty": 0.5095359655824052,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -12504,7 +12513,7 @@
         "heat-pumps/oversized-poorly-installed-heat-pumps-cost"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12544,7 +12553,7 @@
       "rating": null,
       "assertions": 11,
       "testable": 11,
-      "novelty": 1.3684325294145028,
+      "novelty": 1.3717658627478362,
       "redundancy": 0,
       "thinEvidence": 0.2727272727272727,
       "worthWatching": "new and sound",
@@ -12562,7 +12571,7 @@
         "heat-pumps/through-2025-federal-tax-credit-covered"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12589,7 +12598,7 @@
         "heat-pumps/state-utility-rebates-can-cover-large"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12644,7 +12653,7 @@
         "heat-pumps/modern-cold-climate-heat-pumps-keep"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12696,7 +12705,7 @@
         "heat-pumps/modern-cold-climate-heat-pumps-keep"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12831,7 +12840,7 @@
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12860,7 +12869,7 @@
       "wrong": [
         "heat-pumps/heat-pump-pays-itself-through-lower"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12893,7 +12902,7 @@
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12921,7 +12930,7 @@
       "wrong": [
         "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12935,7 +12944,7 @@
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 0.10114529682840878,
+      "novelty": 0.10447863016174212,
       "redundancy": 0,
       "thinEvidence": 0.14285714285714285,
       "worthWatching": "mixed",
@@ -12950,7 +12959,7 @@
         "heat-pumps/heat-pump-costs-less-run-heating",
         "heat-pumps/heat-pumps-last-about-long-furnaces"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12980,7 +12989,7 @@
       "wrong": [
         "heat-pumps/dual-fuel-system-heat-pump-gas"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13012,7 +13021,7 @@
         "heat-pumps/through-2025-federal-tax-credit-covered"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13045,26 +13054,27 @@
       "channel": "homes.rewiringamerica.org",
       "topic": "heat-pumps",
       "watched": false,
-      "score": 1,
-      "scaled": 2,
+      "score": 0.7142857142857143,
+      "scaled": 1,
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 0.3246630372579139,
+      "novelty": 0.3024408150356917,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "heat-pumps/heat-pump-moves-rather-making-delivers",
         "heat-pumps/heat-pumps-need-home-well-insulated",
-        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/heat-pumps-not-work-cold-climates",
         "heat-pumps/heat-pumps-save-most-money-homes",
         "heat-pumps/most-households-would-see-lower-energy",
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
-      "wrong": [],
-      "lastJudged": "2026-10-18",
+      "wrong": [
+        "heat-pumps/heat-pumps-need-more-maintenance-repairs"
+      ],
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13073,12 +13083,12 @@
       "channel": "homes.rewiringamerica.org",
       "topic": "heat-pumps",
       "watched": false,
-      "score": 0.9285714285714286,
-      "scaled": 2,
+      "score": 0.6428571428571429,
+      "scaled": 1,
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 0.6666919191919193,
+      "novelty": 0.644469696969697,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -13087,12 +13097,13 @@
         "heat-pumps/federal-ira-rebates-can-cover-most",
         "heat-pumps/heat-pump-costs-more-buy-install",
         "heat-pumps/heat-pump-pays-itself-through-lower",
-        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/heat-pumps-save-most-money-homes",
         "heat-pumps/most-households-would-see-lower-energy"
       ],
-      "wrong": [],
-      "lastJudged": "2026-10-18",
+      "wrong": [
+        "heat-pumps/heat-pumps-need-more-maintenance-repairs"
+      ],
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13129,7 +13140,7 @@
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 0.6788572237044224,
+      "novelty": 0.6821905570377558,
       "redundancy": 0,
       "thinEvidence": 0.14285714285714285,
       "worthWatching": "mixed",
@@ -13144,7 +13155,7 @@
       "wrong": [
         "heat-pumps/heat-pump-outdoor-units-noisy-enough"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13174,7 +13185,7 @@
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13206,7 +13217,7 @@
       "wrong": [
         "heat-pumps/heating-heat-pump-costs-less-natural"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13215,12 +13226,12 @@
       "channel": "Monkey Wrench Plumbing, Heating, Air & Electric",
       "topic": "heat-pumps",
       "watched": false,
-      "score": 1,
-      "scaled": 2,
+      "score": 0.7142857142857143,
+      "scaled": 1,
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 0.2797923310807062,
+      "novelty": 0.25757010885848397,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -13230,11 +13241,12 @@
         "heat-pumps/heat-pump-replaces-both-furnace-air",
         "heat-pumps/heat-pumps-better-fit-gas-furnaces",
         "heat-pumps/heat-pumps-cut-home-carbon-emissions",
-        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
-      "wrong": [],
-      "lastJudged": "2026-10-20",
+      "wrong": [
+        "heat-pumps/heat-pumps-need-more-maintenance-repairs"
+      ],
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13259,7 +13271,7 @@
         "heat-pumps/running-heat-pump-steadily-low-flow"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13285,7 +13297,7 @@
         "heat-pumps/burning-gas-power-plant-run-heat",
         "heat-pumps/heat-pumps-inefficient-where-winter-temperatures"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13294,12 +13306,12 @@
       "channel": "Mass Save",
       "topic": "heat-pumps",
       "watched": false,
-      "score": 0.9375,
-      "scaled": 2,
+      "score": 0.6875,
+      "scaled": 1,
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 0.2015220982563937,
+      "novelty": 0.17929987603417147,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -13309,12 +13321,13 @@
         "heat-pumps/heat-pump-moves-rather-making-delivers",
         "heat-pumps/heat-pump-replaces-both-furnace-air",
         "heat-pumps/heat-pumps-cut-home-carbon-emissions",
-        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/modern-cold-climate-heat-pumps-keep",
         "heat-pumps/time-use-heat-pump-electricity-tariffs"
       ],
-      "wrong": [],
-      "lastJudged": "2026-10-20",
+      "wrong": [
+        "heat-pumps/heat-pumps-need-more-maintenance-repairs"
+      ],
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13472,7 +13485,7 @@
       "wrong": [
         "heat-pumps/heat-pumps-not-work-cold-climates"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13506,7 +13519,7 @@
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13515,27 +13528,26 @@
       "channel": "Monkey Wrench Plumbing, Heating, Air & Electric",
       "topic": "heat-pumps",
       "watched": false,
-      "score": 0.6428571428571429,
-      "scaled": 1,
+      "score": 0.9285714285714286,
+      "scaled": 2,
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 0.9125620915032681,
+      "novelty": 1.0458954248366013,
       "redundancy": 0,
       "thinEvidence": 0.14285714285714285,
-      "worthWatching": "mixed",
+      "worthWatching": "new and sound",
       "right": [
         "heat-pumps/ductless-heat-pumps-allow-room-temperature",
         "heat-pumps/electric-resistance-heat-costs-far-more",
         "heat-pumps/heat-pump-costs-about-same-central",
         "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
         "heat-pumps/heat-pump-removes-carbon-monoxide-risk",
-        "heat-pumps/heat-pump-replaces-both-furnace-air"
-      ],
-      "wrong": [
+        "heat-pumps/heat-pump-replaces-both-furnace-air",
         "heat-pumps/heat-pumps-need-more-maintenance-repairs"
       ],
-      "lastJudged": "2026-10-18",
+      "wrong": [],
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13569,7 +13581,7 @@
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13604,12 +13616,12 @@
       "channel": "Heat Geek",
       "topic": "heat-pumps",
       "watched": false,
-      "score": 0.5384615384615384,
+      "score": 0.6923076923076923,
       "scaled": 1,
       "rating": null,
       "assertions": 13,
       "testable": 13,
-      "novelty": 1.4358695652173914,
+      "novelty": 1.5725362318840581,
       "redundancy": 0,
       "thinEvidence": 0.07692307692307693,
       "worthWatching": "new and sound",
@@ -13618,6 +13630,7 @@
         "heat-pumps/heat-pump-costs-more-buy-install",
         "heat-pumps/heat-pump-raises-home-resale-value",
         "heat-pumps/heat-pumps-last-about-long-furnaces",
+        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/most-retrofit-heat-pump-cost-installation",
         "heat-pumps/new-build-heat-pump-costs-little",
         "heat-pumps/oversized-poorly-installed-heat-pumps-cost",
@@ -13627,10 +13640,9 @@
         "heat-pumps/time-use-heat-pump-electricity-tariffs"
       ],
       "wrong": [
-        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/heating-heat-pump-costs-less-natural"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13685,7 +13697,7 @@
         "heat-pumps/modern-cold-climate-heat-pumps-keep"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13694,27 +13706,27 @@
       "channel": "Jonathan Tracey",
       "topic": "heat-pumps",
       "watched": false,
-      "score": 0.6428571428571429,
+      "score": 0.35714285714285715,
       "scaled": 1,
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 0.2267332440222466,
+      "novelty": 0.20451102180002437,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
         "heat-pumps/heat-pump-moves-rather-making-delivers",
-        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/high-electricity-prices-relative-gas-make",
         "heat-pumps/pairing-heat-pump-rooftop-solar-makes",
         "heat-pumps/running-heat-pump-steadily-low-flow"
       ],
       "wrong": [
+        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/time-use-heat-pump-electricity-tariffs"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13723,24 +13735,24 @@
       "channel": "J-Mart",
       "topic": "heat-pumps",
       "watched": false,
-      "score": 0.5,
-      "scaled": 1,
+      "score": 0,
+      "scaled": 0,
       "rating": null,
       "assertions": 4,
       "testable": 4,
-      "novelty": 0.24133986928104573,
+      "novelty": 0.21911764705882353,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
-        "heat-pumps/heat-pump-shifts-heating-cost-onto",
-        "heat-pumps/heat-pumps-need-more-maintenance-repairs"
+        "heat-pumps/heat-pump-shifts-heating-cost-onto"
       ],
       "wrong": [
-        "heat-pumps/ductless-mini-splits-may-not-distribute"
+        "heat-pumps/ductless-mini-splits-may-not-distribute",
+        "heat-pumps/heat-pumps-need-more-maintenance-repairs"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13770,7 +13782,7 @@
       "wrong": [
         "heat-pumps/heating-heat-pump-costs-less-natural"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13796,7 +13808,7 @@
         "heat-pumps/heating-heat-pump-costs-less-natural"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13830,7 +13842,7 @@
       "wrong": [
         "heat-pumps/heating-heat-pump-costs-less-natural"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13917,7 +13929,7 @@
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13945,7 +13957,7 @@
       "wrong": [
         "heat-pumps/most-homes-would-save-money-over"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13959,7 +13971,7 @@
       "rating": null,
       "assertions": 12,
       "testable": 12,
-      "novelty": 0.6438241106719368,
+      "novelty": 0.6471574440052702,
       "redundancy": 0,
       "thinEvidence": 0.08333333333333333,
       "worthWatching": "mixed",
@@ -13978,7 +13990,7 @@
       "wrong": [
         "heat-pumps/heating-heat-pump-costs-less-natural"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -14006,7 +14018,7 @@
         "heat-pumps/modern-cold-climate-heat-pumps-keep"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -14057,53 +14069,11 @@
         "heat-pumps/snow-ice-buildup-outdoor-unit-can"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     }
   ],
   "channels": [
-    {
-      "channel": "Undecided with Matt Ferrell",
-      "videos": 5,
-      "mean": 2,
-      "harmful": 0,
-      "right": [
-        "heat-pumps/2023-through-2025-federal-tax-credit",
-        "heat-pumps/defrost-cycles-reduce-heat-pump-output",
-        "heat-pumps/ducted-heat-pumps-can-often-use",
-        "heat-pumps/even-cold-weather-heat-pump-delivers",
-        "heat-pumps/federal-tax-credit-heat-pumps-available",
-        "heat-pumps/geothermal-desuperheater-preheats-domestic-hot-water",
-        "heat-pumps/geothermal-ground-loops-last-decades-far",
-        "heat-pumps/geothermal-heat-pumps-run-best-little",
-        "heat-pumps/ground-source-geothermal-heat-pumps-run",
-        "heat-pumps/ground-source-heat-pump-pays-back",
-        "heat-pumps/ground-source-heat-pumps-work-efficiently",
-        "heat-pumps/heat-pump-costs-more-buy-install",
-        "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
-        "heat-pumps/heat-pump-moves-rather-making-delivers",
-        "heat-pumps/heat-pump-reliability-problems-mostly-come",
-        "heat-pumps/heat-pump-replaces-both-furnace-air",
-        "heat-pumps/heat-pump-still-uses-less-energy",
-        "heat-pumps/heat-pumps-last-about-long-furnaces",
-        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
-        "heat-pumps/heat-pumps-not-work-cold-climates",
-        "heat-pumps/heat-pumps-radiator-systems-often-need",
-        "heat-pumps/heat-pumps-save-most-money-homes",
-        "heat-pumps/high-electricity-prices-relative-gas-make",
-        "heat-pumps/installed-cost-heat-pump-varies-widely",
-        "heat-pumps/modern-cold-climate-heat-pumps-keep",
-        "heat-pumps/pairing-heat-pump-rooftop-solar-makes",
-        "heat-pumps/payback-heat-pump-varies-widely-climate",
-        "heat-pumps/state-utility-rebates-can-cover-large",
-        "heat-pumps/through-2025-federal-tax-credit-covered",
-        "heat-pumps/time-use-heat-pump-electricity-tariffs"
-      ],
-      "wrong": [
-        "heat-pumps/cold-climate-heat-pumps-often-rely",
-        "heat-pumps/heating-heat-pump-costs-less-natural"
-      ]
-    },
     {
       "channel": "HVAC Guide for Homeowners",
       "videos": 4,
@@ -14152,28 +14122,6 @@
       "wrong": [
         "heat-pumps/heating-heat-pump-costs-less-natural"
       ]
-    },
-    {
-      "channel": "homes.rewiringamerica.org",
-      "videos": 3,
-      "mean": 2,
-      "harmful": 0,
-      "right": [
-        "heat-pumps/2023-through-2025-federal-tax-credit",
-        "heat-pumps/federal-heat-pump-tax-credit-nonrefundable",
-        "heat-pumps/federal-ira-rebates-can-cover-most",
-        "heat-pumps/federal-tax-credit-heat-pumps-available",
-        "heat-pumps/heat-pump-costs-more-buy-install",
-        "heat-pumps/heat-pump-moves-rather-making-delivers",
-        "heat-pumps/heat-pump-pays-itself-through-lower",
-        "heat-pumps/heat-pumps-need-home-well-insulated",
-        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
-        "heat-pumps/heat-pumps-not-work-cold-climates",
-        "heat-pumps/heat-pumps-save-most-money-homes",
-        "heat-pumps/most-households-would-see-lower-energy",
-        "heat-pumps/whether-heat-pump-cheaper-run-gas"
-      ],
-      "wrong": []
     },
     {
       "channel": "Technology Connextras",
@@ -14531,6 +14479,20 @@
       "wrong": []
     },
     {
+      "channel": "Handy Bros. Home Comfort",
+      "videos": 1,
+      "mean": 2,
+      "harmful": 0,
+      "right": [
+        "heat-pumps/heat-pump-incentives-have-drawn-inexperienced",
+        "heat-pumps/heat-pump-reliability-problems-mostly-come",
+        "heat-pumps/heat-pumps-not-work-cold-climates",
+        "heat-pumps/heat-pumps-used-successfully-cold-countries",
+        "heat-pumps/most-heat-pumps-installed-sized-improperly"
+      ],
+      "wrong": []
+    },
+    {
       "channel": "Heatable",
       "videos": 1,
       "mean": 2,
@@ -14620,23 +14582,6 @@
         "heat-pumps/state-run-hear-heat-pump-rebate",
         "heat-pumps/state-utility-rebates-can-cover-large",
         "heat-pumps/zero-percent-hvac-dealer-financing-builds"
-      ],
-      "wrong": []
-    },
-    {
-      "channel": "Mass Save",
-      "videos": 1,
-      "mean": 2,
-      "harmful": 0,
-      "right": [
-        "heat-pumps/air-sealing-insulation-should-come-before",
-        "heat-pumps/heat-pump-costs-less-run-heating",
-        "heat-pumps/heat-pump-moves-rather-making-delivers",
-        "heat-pumps/heat-pump-replaces-both-furnace-air",
-        "heat-pumps/heat-pumps-cut-home-carbon-emissions",
-        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
-        "heat-pumps/modern-cold-climate-heat-pumps-keep",
-        "heat-pumps/time-use-heat-pump-electricity-tariffs"
       ],
       "wrong": []
     },
@@ -14900,6 +14845,48 @@
       ]
     },
     {
+      "channel": "Undecided with Matt Ferrell",
+      "videos": 5,
+      "mean": 1.6,
+      "harmful": 0,
+      "right": [
+        "heat-pumps/2023-through-2025-federal-tax-credit",
+        "heat-pumps/defrost-cycles-reduce-heat-pump-output",
+        "heat-pumps/ducted-heat-pumps-can-often-use",
+        "heat-pumps/even-cold-weather-heat-pump-delivers",
+        "heat-pumps/federal-tax-credit-heat-pumps-available",
+        "heat-pumps/geothermal-desuperheater-preheats-domestic-hot-water",
+        "heat-pumps/geothermal-ground-loops-last-decades-far",
+        "heat-pumps/geothermal-heat-pumps-run-best-little",
+        "heat-pumps/ground-source-geothermal-heat-pumps-run",
+        "heat-pumps/ground-source-heat-pump-pays-back",
+        "heat-pumps/ground-source-heat-pumps-work-efficiently",
+        "heat-pumps/heat-pump-costs-more-buy-install",
+        "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+        "heat-pumps/heat-pump-moves-rather-making-delivers",
+        "heat-pumps/heat-pump-reliability-problems-mostly-come",
+        "heat-pumps/heat-pump-replaces-both-furnace-air",
+        "heat-pumps/heat-pump-still-uses-less-energy",
+        "heat-pumps/heat-pumps-last-about-long-furnaces",
+        "heat-pumps/heat-pumps-not-work-cold-climates",
+        "heat-pumps/heat-pumps-radiator-systems-often-need",
+        "heat-pumps/heat-pumps-save-most-money-homes",
+        "heat-pumps/high-electricity-prices-relative-gas-make",
+        "heat-pumps/installed-cost-heat-pump-varies-widely",
+        "heat-pumps/modern-cold-climate-heat-pumps-keep",
+        "heat-pumps/pairing-heat-pump-rooftop-solar-makes",
+        "heat-pumps/payback-heat-pump-varies-widely-climate",
+        "heat-pumps/state-utility-rebates-can-cover-large",
+        "heat-pumps/through-2025-federal-tax-credit-covered",
+        "heat-pumps/time-use-heat-pump-electricity-tariffs"
+      ],
+      "wrong": [
+        "heat-pumps/cold-climate-heat-pumps-often-rely",
+        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
+        "heat-pumps/heating-heat-pump-costs-less-natural"
+      ]
+    },
+    {
       "channel": "Technology Connections",
       "videos": 6,
       "mean": 1.5,
@@ -15066,6 +15053,29 @@
       ]
     },
     {
+      "channel": "homes.rewiringamerica.org",
+      "videos": 3,
+      "mean": 1.3333333333333333,
+      "harmful": 0,
+      "right": [
+        "heat-pumps/2023-through-2025-federal-tax-credit",
+        "heat-pumps/federal-heat-pump-tax-credit-nonrefundable",
+        "heat-pumps/federal-ira-rebates-can-cover-most",
+        "heat-pumps/federal-tax-credit-heat-pumps-available",
+        "heat-pumps/heat-pump-costs-more-buy-install",
+        "heat-pumps/heat-pump-moves-rather-making-delivers",
+        "heat-pumps/heat-pump-pays-itself-through-lower",
+        "heat-pumps/heat-pumps-need-home-well-insulated",
+        "heat-pumps/heat-pumps-not-work-cold-climates",
+        "heat-pumps/heat-pumps-save-most-money-homes",
+        "heat-pumps/most-households-would-see-lower-energy",
+        "heat-pumps/whether-heat-pump-cheaper-run-gas"
+      ],
+      "wrong": [
+        "heat-pumps/heat-pumps-need-more-maintenance-repairs"
+      ]
+    },
+    {
       "channel": "American Gas Association",
       "videos": 2,
       "mean": 1,
@@ -15112,7 +15122,6 @@
         "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
         "heat-pumps/heat-pump-moves-rather-making-delivers",
         "heat-pumps/heat-pumps-cut-home-carbon-emissions",
-        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/heating-heat-pump-costs-less-natural",
         "heat-pumps/high-electricity-prices-relative-gas-make",
         "heat-pumps/pairing-heat-pump-rooftop-solar-makes",
@@ -15121,6 +15130,7 @@
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
       "wrong": [
+        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/time-use-heat-pump-electricity-tariffs"
       ]
     },
@@ -15271,20 +15281,6 @@
       ]
     },
     {
-      "channel": "Handy Bros. Home Comfort",
-      "videos": 1,
-      "mean": 1,
-      "harmful": 0,
-      "right": [
-        "heat-pumps/heat-pump-incentives-have-drawn-inexperienced",
-        "heat-pumps/heat-pump-reliability-problems-mostly-come",
-        "heat-pumps/heat-pumps-not-work-cold-climates",
-        "heat-pumps/heat-pumps-used-successfully-cold-countries",
-        "heat-pumps/most-heat-pumps-installed-sized-improperly"
-      ],
-      "wrong": []
-    },
-    {
       "channel": "Heat Geek",
       "videos": 1,
       "mean": 1,
@@ -15294,6 +15290,7 @@
         "heat-pumps/heat-pump-costs-more-buy-install",
         "heat-pumps/heat-pump-raises-home-resale-value",
         "heat-pumps/heat-pumps-last-about-long-furnaces",
+        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/most-retrofit-heat-pump-cost-installation",
         "heat-pumps/new-build-heat-pump-costs-little",
         "heat-pumps/oversized-poorly-installed-heat-pumps-cost",
@@ -15303,7 +15300,6 @@
         "heat-pumps/time-use-heat-pump-electricity-tariffs"
       ],
       "wrong": [
-        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/heating-heat-pump-costs-less-natural"
       ]
     },
@@ -15324,20 +15320,6 @@
       ]
     },
     {
-      "channel": "J-Mart",
-      "videos": 1,
-      "mean": 1,
-      "harmful": 0,
-      "right": [
-        "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
-        "heat-pumps/heat-pump-shifts-heating-cost-onto",
-        "heat-pumps/heat-pumps-need-more-maintenance-repairs"
-      ],
-      "wrong": [
-        "heat-pumps/ductless-mini-splits-may-not-distribute"
-      ]
-    },
-    {
       "channel": "Jacob Shields",
       "videos": 1,
       "mean": 1,
@@ -15350,6 +15332,24 @@
       ],
       "wrong": [
         "heat-pumps/heat-pumps-not-work-cold-climates"
+      ]
+    },
+    {
+      "channel": "Mass Save",
+      "videos": 1,
+      "mean": 1,
+      "harmful": 0,
+      "right": [
+        "heat-pumps/air-sealing-insulation-should-come-before",
+        "heat-pumps/heat-pump-costs-less-run-heating",
+        "heat-pumps/heat-pump-moves-rather-making-delivers",
+        "heat-pumps/heat-pump-replaces-both-furnace-air",
+        "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+        "heat-pumps/modern-cold-climate-heat-pumps-keep",
+        "heat-pumps/time-use-heat-pump-electricity-tariffs"
+      ],
+      "wrong": [
+        "heat-pumps/heat-pumps-need-more-maintenance-repairs"
       ]
     },
     {
@@ -15393,13 +15393,13 @@
       "right": [
         "heat-pumps/heat-pump-moves-rather-making-delivers",
         "heat-pumps/heat-pumps-last-about-long-furnaces",
-        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/high-electricity-prices-relative-gas-make",
         "heat-pumps/home-battery-charged-cheap-off-peak",
         "heat-pumps/removing-gas-connection-saves-fixed-monthly",
         "heat-pumps/time-use-heat-pump-electricity-tariffs"
       ],
       "wrong": [
+        "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/heating-heat-pump-costs-less-natural"
       ]
     },
@@ -15539,6 +15539,20 @@
         "heat-pumps/heat-pump-can-added-alongside-existing",
         "heat-pumps/heat-pump-costs-less-run-heating",
         "heat-pumps/heat-pumps-last-about-long-furnaces"
+      ]
+    },
+    {
+      "channel": "J-Mart",
+      "videos": 1,
+      "mean": 0,
+      "harmful": 0,
+      "right": [
+        "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+        "heat-pumps/heat-pump-shifts-heating-cost-onto"
+      ],
+      "wrong": [
+        "heat-pumps/ductless-mini-splits-may-not-distribute",
+        "heat-pumps/heat-pumps-need-more-maintenance-repairs"
       ]
     },
     {

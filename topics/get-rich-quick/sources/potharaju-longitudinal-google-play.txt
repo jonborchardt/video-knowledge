@@ -1,0 +1,1292 @@
+                                                                                                                    1
+
+                                       A Longitudinal Study of Google Play
+
+                                                       Rahul Potharaju∗, Mizanur Rahman†, Bogdan Carbunar†
+                                                            ∗Cloud and Information Services Lab, Microsoft
+                                                                     †Florida International University
+
+arXiv:1802.02996v1 [cs.SI] 8 Feb 2018     Abstract—The difﬁculty of large scale monitoring of app                   to use app markets as a launch pad for their malware [26],
+                                       markets affects our understanding of their dynamics. This is                 [28], [33], [20].
+                                       particularly true for dimensions such as app update frequency,               Contributions. In this article we seek to shed light on the
+                                       control and pricing, the impact of developer actions on app                  dynamics of Google Play, the most popular Android app
+                                       popularity, as well as coveted membership in top app lists. In this          market. We report results from one of the ﬁrst characteristic
+                                       paper we perform a detailed temporal analysis on two datasets                studies on Google Play, using real-world time series data. To
+                                       we have collected from the Google Play Store, one consisting                 this end, we have developed iMarket, a prototype app market
+                                       of 160,000 apps and the other of 87,223 newly released apps.                 crawling system. We have used iMarket to collect data from
+                                       We have monitored and collected data about these apps over                   more than 470,000 Google Play apps, and daily monitor more
+                                       more than 6 months. Our results show that a high number of                   than 160,000 apps, over more than 6 months.
+                                       these apps have not been updated over the monitoring interval.
+                                       Moreover, these apps are controlled by a few developers that                    We use this data to study two key aspects of Google Play.
+                                       dominate the total number of app downloads. We observe that                  First, we seek to understand the dynamics of the market in
+                                       infrequently updated apps signiﬁcantly impact the median app                 general, from an application and developer perspective. For
+                                       price. However, a changing app price does not correlate with                 this, we evaluate the frequency and characteristics of app
+                                       the download count. Furthermore, we show that apps that attain               updates (e.g., their effects on bandwidth consumption), and
+                                       higher ranks have better stability in top app lists. We show that            use the results to determine if developers price their apps
+                                       app market analytics can help detect emerging threat vectors, and            appropriately. We show that only 24% of the 160,000 app
+                                       identify search rank fraud and even malware. Further, we discuss             that we monitored have received an update within 6 months,
+                                       the research implications of app market analytics on improving               and at most 50% of the apps in any category have received
+                                       developer and user experiences.                                              an update within a year from our observation period. We
+                                                                                                                    conclude that market inactivity has a signiﬁcant impact on
+                                                                 I. INTRODUCTION                                    the price distribution. Therefore, while pricing is an important
+                                                                                                                    and complex task, relying on statistics computed on the entire
+                                          The revolution in mobile device technology and the emer-                  population (as opposed to only active apps) may mislead de-
+                                       gence of “app markets”, have empowered regular users to                      velopers, e.g., to undersell their apps (§VI-A). Also, we show
+                                       evolve from technology consumers to enablers of novel mobile                 that typical app update cycles are bi-weekly or monthly. More
+                                       experiences. App markets such as Google Play provide new                     frequently updated apps (under beta-testing or unstable) can
+                                       mechanisms for software distribution, collecting software writ-              impose substantial bandwidth overhead and expose themselves
+                                       ten by developers and making it available to smartphone users.               to negative reviews (§VI-C).
+                                       This centralized approach to software distribution contrasts the
+                                       desktop paradigm, where users obtain their software directly                    To evaluate the developer impact, we ﬁrst seek to verify our
+                                       from developers.                                                             hypothesis that a few developers control the app market supply.
+                                                                                                                    Our analysis reveals however that developers that create many
+                                          Developers and users play key roles in determining the                    applications are not creating many popular applications. In-
+                                       impact that market interactions have on future technology.                   stead, we discovered that a few elite developers are responsible
+                                       However, the lack of a clear understanding of the inner                      for applications that dominate the total number of downloads
+                                       workings and dynamics of popular app markets, impacts both                   (§VII). Second, we evaluate the impact of developer actions on
+                                       developers and users. For instance, app markets provide no                   the popularity of their apps. We show that few apps frequently
+                                       information on the impact that developer actions will likely                 change prices, and with every subsequent software update,
+                                       have on the success of their apps, or guidance to users when                 a developer is more likely to decrease the price. However,
+                                       choosing apps, e.g., among apps claiming similar functionality.              changing the price does not show an observable association
+                                                                                                                    with the app’s download count(§VII).
+                                          This situation is exploited however by fraudulent and mali-
+                                       cious developers. The success of Google Play and the incentive                  A second key aspect of Google Play that we study is the
+                                       model it offers to popular apps 1, make it an appealing target               temporal evolution of top-k ranked lists maintained by the
+                                       for fraudulent and malicious behaviors. Fraudulent developers                market. Top-k lists reveal the most popular applications in
+                                       have been shown to attempt to engineer the search rank of                    various categories. We show that a majority of apps in top-k
+                                       their apps [34], while malicious developers have been shown                  app lists follow a “birth-growth-decline-death” process: they
+                                                                                                                    enter and exit from the bottom part of a list. Apps that attain
+                                          A preliminary version of this paper appears in ASONAM 2015.               higher ranks have better stability in top-k lists than apps that
+                                          This research was supported in part by NSF grants 1527153, 1526494 and    are at lower ranks (§VIII).
+                                       1450619, and by DoD grant W911NF-13-1-0142.
+                                          1 Google offers ﬁnancial incentives for contribution to app development,
+                                       by making revenue sharing transparent for developers (70-to-30 cut, where
+                                       developers get 70% of the revenue).
+                                                                  2
+
+Impact of the study. A longitudinal study of Google Play app      actual installations. They show that 7 days after a security
+metadata can provide unique information that is not available     update is published, almost half of the app’s users still use
+through the standard approach of capturing a single app           an older, vulnerable version. Liu et al. [25] use a dataset of
+snapshot. Features extracted from a longitudinal app analysis     1,597 ranked mobile apps to conclude that the “freemium”
+(e.g., permission, price, update, download count changes) can     strategy is positively associated with increased sales volume
+provide insights into fraudulent app promotion and malware        and revenue of the paid apps. Moreover, they show that free
+indicator behaviors. For instance, spikes in the number of        apps that rate higher contribute to higher revenue for the
+positive or negative reviews and the number of downloads          paid version. We note that our work studies a multitude of
+received by an app can indicate app search optimization cam-      previously unanswered questions about Google Play, regarding
+paigns launched by fraudsters recruited through crowdsourcing     app update frequency and pricing appropriateness, and the
+sites. Frequent, substantial app updates may indicate Denial of   evolution of top-k lists.
+Service (DoS) attacks, while permission changes can indicate
+benign apps turning malicious see § IX-A. Features extracted         Petsas et al. [30] explored mobile app markets in the context
+from a longitudinal app monitoring can be used to train           of 4 providers, that do not include Google Play. They show
+supervised learning algorithms to detect such behaviors.          that the distribution of app popularity deviates from Zipf, due
+                                                                  in part to a strong temporal afﬁnity of user downloads to app
+   In addition, a detailed longitudinal study of Google Play      categories. They show that on the markets they studied, paid
+apps can improve developer and user experiences. For in-          apps follow a different popularity distribution than free apps.
+stance, app development tools can help developers optimize        In contrast, our work exclusively analyzes Google Play, the
+the success of their apps. Such tools can integrate predictions   most popular Android app market. In addition, we focus on
+of the impact that price, permissions and code changes will       different dimensions: (i) app update frequency and its effect on
+have on the app’s popularity, as well as insights extracted from  app pricing and resource consumption, (ii) the control of the
+user reviews. In addition, visualizations of conclusions, and     market and the effect of developer actions on the popularity
+analytics similar to the ones we perform in this paper, can help  of their apps and (iii) the evolution in time of top apps and
+users choose among apps with similar claimed functionality.       top-k app lists.
+
+   We include a detailed discussion of the applicability and         Xu et al. [39] use IP-level traces from a tier-1 cellular
+future research directions in app market analytics in §IX.        network provider to understand the behavior of mobile apps.
+                                                                  They provide an orthogonal analysis of spatial and temporal
+                         II. RELATED WORK                         locality, geographic coverage, and daily usage patterns.
+
+   This article extends our preliminary work [10] with iMarket,      Security has been a theme in the large scale collection of
+the market crawler we developed and used to collect the data,     mobile apps. Previous work includes malware detection [42],
+new scores to evaluate the evolution and variability of top-k     malware analysis [41], malicious ad libraries [19], vulner-
+lists and new experiments and evaluations.                        ability assessment [15], overprivilege identication [16] and
+                                                                  detection of privacy leaks [14]. While in this paper we focus
+   Viennot et al. [35] developed PlayDrone, a crawler to          on the different problem of understanding the dynamics of
+collect Google Play data. Their main ﬁnding is that Google        Google Play, we also introduce novel mobile app attacks.
+Play developers often include secret key information in the
+released apps, making them vulnerable to attacks. They further                      III. GOOGLE PLAY OVERVIEW
+analyze the data and show that Google Play content evolves
+quickly in time, that 25% of apps are clones, and that native     App Distribution Channel: Google Play is the app distri-
+experience correlates strongly to popularity. The analysis is     bution channel hosted by Google. Each app submitted by
+performed over data collected for 3 non-contiguous months         a developer gets an entry on the market in the form of a
+(May/June 2013 and November 2013). In contrast, our analysis      webpage, accessible to users through either the Google Play
+is performed over apps monitored daily over more than 6           homepage or the search interface. This webpage contains
+months. Furthermore, our analysis includes orthogonal app         meta-information that keeps track of information pertaining
+market dynamics dimensions, that include the frequency and        to the application (e.g., name, category, version, size, prices).
+cycles of app updates, the developer impact and control on the    In addition, Google Play lists apps according to several cate-
+app market, and the dynamics of top-k lists.                      gories, ranging from “Arcarde & Action” to “Weather”. Users
+                                                                  download and install apps of interest, which they can then
+   Zhong and Michahelles [40] analyze a dataset of Google         review. A review has a rating ranging from 1 to 5. Each
+Play transactions, and suggest that Google Play is more of        app has an aggregate rating, an average over all the user
+a “Superstar” market (i.e., dominated by popular hit prod-        ratings received. The app’s webpage also includes its usage
+ucts) than a “Long-tail” market (i.e., where unpopular niche      statistics (e.g., rating, number of installs, user reviews). This
+products contribute to a substantial portion of popularity).      information is used by users when they are deciding to install
+In addition, Zhong and Michahelles [40] show that certain         a new application.
+expensive professional apps attract disproportionately large      App Development: In order to submit apps to Google Play, an
+sales. This is consistent with our ﬁnding that a few developers   Android developer ﬁrst needs to obtain a publisher account for
+are responsible for the most popular apps.                        a one-time fee of $25. The fee encourages higher quality prod-
+                                                                  ucts and reduces spam [18]. Google does not limit the number
+   Mo¨ller et al. [29] use an app they posted on Google Play
+to study the correlation between published updates and their
+                                                                                                   3
+
+                       SMARTPHONE MARKET                                                           “Similar Apps” portion of the raw HTML page is parsed to
+                                                                                                   obtain a new list of packages. These packages are queued for
+                 http request                raw app html page                                     crawling and simultaneously appended to the previous day’s
+                                                                                                   package list. We have also detected a ban detection engine
+DISTRIBUTED CRAWLER                                                                                in place that deactivates servers once it observes a threshold
+                                                                                                   number of “404 Not Found” messages (Challenge 2) from the
+         Scheduler     +                     Server                   RESOURCE POOL                market provider.
+     Request Queue                           Rotator
+Ban Detection Engine                                            Server Pool                           The second component, the “Processing Engine” contains
+Loop Detection Engine                         Proxy          (700 machines)                        a Map-Reduce Parser component that uses the map-reduce
+                                             Rotator                                               paradigm [13] to handle parsing of hundreds of thousands of
+                                                                 Proxy Pool                        raw HTML app pages. In the “map” stage, a chunk of ﬁles
+                                                              (230 proxies)                        (≈10K) are mapped onto each of the 700 machines and a
+                                                                                                   parser (written in Python) parses these HTML and extracts
+                      hundreds of thousands  newly discovered                                      the meta information. In the “reduce” stage, these individual
+                         of raw html pages        packages                                         ﬁles are combined into a single ﬁle and de-duplicated to
+                                                                                                   maintain data integrity. This stage takes ≈1-1.5 hours. After
+PROCESSING ENGINE                                                    Assertion Checker/            constructing the aggregate ﬁle, we address Challenge 3 using
+                                                                     Format Invalidator            the assertion checker that takes a best-effort approach to ensure
+         Map-Reduce Parser                                                                         that all the information has been correctly parsed from the raw
+                                                                                                   ﬁles. Note that despite our best-effort approach, our dataset
+                       Raw HTML                 Formatted                                          still contained some missing information due to temporary
+                       App Pages             Daily Snapshot                                        unavailability/maintenance of servers.
+
+DATA MANAGEMENT                                                                                       The third, “Data Management” component, archives the raw
+                                                                                                   HTML pages (≈14 GB compressed/day) in a cloud storage to
+Archived  raw html     Backup Manager Database Engine                                    SQL       support any ad hoc processing for other tasks (e.g., analyzing
+ Storage    pages                                                                        Database  HTML source code complexity) and subsequently removed
+                                                                                                   from the main servers. To address Challenge 4, the formatted
+Fig. 1. Architecture of iMarket, the developed GooglePlay crawler. It consists                     daily snapshot (≈200 MB/day) is then inserted into a database
+of a distributed crawler, processing engine and data management components.                        to support data analytics. We setup the relevant SQL Jobs
+                                                                                                   to ensure that indexes are re-built every two days — this
+of apps that can be submitted by developers. As a measure to                                       step signiﬁcantly speeds up SQL queries. Our six months of
+reduce spam, Google recently started the Bouncer [3] service,                                      archived raw ﬁles consume ≈7 TB of storage and the database
+which provides automated scanning of applications on Google                                        consumes ≈400 GB including index ﬁles.
+Play for potential malware. Developers can sell their apps for
+a price of their choice, or distribute them for free.
+Permission Model: Android follows the Capability-based [24]
+security model. Each app must declare the list of capabilities
+(permissions) it requires in a manifest ﬁle called Android-
+Manifest.xml. When a user downloads an app through the
+Google Play website, the user is shown a screen that displays
+the permissions requested by the application. Installing the
+application means granting the application all the requested
+permissions i.e. an all-or-none approach.
+
+                      IV. DATA COLLECTION                                                                                          V. DATA
+
+   We use snapshot to refer to the entire state of the market                                         We used iMarket to collect two Google Play datasets, which
+i.e., it contains meta information of all apps. We ﬁrst describe                                   we call dataset.2012 and dataset.14-15.
+iMarket, our app market crawler, then describe the datasets
+that we collected from Google Play.                                                                A. Dataset.2012
+
+A. The iMarket Crawler                                                                                We have used a total of 700 machines 2 for a period of
+                                                                                                   7.5 months (February 2012 - November 2012) to collect data
+   iMarket, our prototype market crawling system (see Figure 1                                     from 470,000 apps. The ﬁrst 1.5 months are the “warm up”
+for an overview) consists of three main components. First,                                         interval. We do not consider data collected during this period
+the Distributed Crawler component, which is responsible                                            for subsequent analysis. Instead, we focus on a subset of 160K
+for crawling the target market and collecting information on                                       apps for which we have collected the following data:
+various apps that are accessible from the current geographical                                     GOOGPLAY-FULL: We used iMarket to take daily snapshots
+location. We initially leveraged hundreds of foreign proxies to                                    of Google Play store from April - November, 2012. For each
+address challenge 3 above. However, we later decided to rely                                       app, we have daily snapshots of application meta-information
+only on local US-based proxies for stability reasons. While                                        consisting of the developer name, category, downloads (as
+this trades-off completeness for consistency, having continu-                                      a range i.e., 10-100, 1K-5K etc.), ratings (on a 0-5 scale),
+ous information about a few apps improves the accuracy of                                          ratings count (absolute number of user ratings), last updated
+most statistical inference tasks compared to having discrete                                       timestamp, software version, OS supported, ﬁle size, price, url
+information about hundreds of thousands of apps.                                                   and the set of permissions that the app requests. Figure 2(a)
+                                                                                                   shows the distribution of apps by category. While overall, the
+   To seed our distributed crawler, we initially ran it using a
+list consisting of about 200 randomly hand-picked apps from                                           2We have used 700 machines, each with a different IP address and from a
+different categories. To address Challenge 1, our app discovery                                    different subnet, in order to avoid getting banned during the crawling process.
+process is designed as follows: After retrieving each page, the
+                                                                                                                                                                                                    4
+
+                         Weather                                                                                                        Weather                                               Free
+                 Travel & Local                                                                                                             Trivia                                            Paid
+                Transportation
+Category                                                                                   Type                 Category         Travel&Local
+                             Tools                                                              Free                          Transportation
+                 Sports Games                                                                   Paid
+                                                                                                                                            Tools
+                            Sports                                                                                                        Sports
+                            Social                                                                                                         Social
+                       Shopping                                                                                                     Simulation
+                           Racing                                                                                                     Shopping
+                    Productivity                                                                                                         Racing
+                   Photography                                                                                                    Productivity
+               Personalization                                                                                                   Photography
+          News & Magazines                                                                                                   Personalization
+                Music & Audio                                                                                             News&Magazines
+                          Medical                                                                                               Music&Audio
+                 Media & Video                                                                                                          Medical
+                         Lifestyle                                                                                               Media&Video
+            Libraries & Demo                                                                                                           Lifestyle
+              Health & Fitness                                                                                              Libraries&Demo
+                          Finance                                                                                             Health&Fitness
+                 Entertainment                                                                                                          Finance
+                       Education                                                                                               Entertainment
+              Communication                                                                                                          Education
+                          Comics                                                                                             Communication
+                           Casual                                                                                                        Comics
+               Cards & Casino                                                                                                             Casual
+                        Business                                                                                                Card&Casino
+                Brain & Puzzle                                                                                                        Business
+          Books & Reference                                                                                                     Brain&Puzzle
+              Arcade & Action                                                                                             Books&Reference
+                                                                                                                              Arcade&Action
+                                    0  10000 20000 30000 40000         50000
+                                                                                                                                                    0       2000                        4000
+                                                  # Applications
+                                                                                                                                                            # Applications
+                                                  (a)
+                                                                                                                                                       (b)
+
+Fig. 2. Distribution of free vs. paid apps, by category, for (a) dataset.2012 and dataset.14-15. The number of free apps exceeds the number of paid ones
+especially in dataset.14-15. We conjecture that this occurs due to user tendency to install more free apps than paid apps. Since 2012, developers may have
+switched from a direct payment model for paid apps, to an ad based revenue model for free apps.
+
+          Category                  Weather                                                           Category                  Weather
+                           Travel & Local                                                                              Travel & Local
+                          Transportation                  365 730 1095                     1465                       Transportation
+                                                                                           4 yrs
+                                        Tools             1 yr  2 yrs  3 yrs                                                        Tools
+                           Sports Games                                                                                            Sports
+                                                                                                                                   Social
+                                       Sports                                                                                 Shopping
+                                       Social                                                                                     Racing
+                                  Shopping                                                                             Brain & Puzzle
+                                      Racing                                                                              Productivity
+                              Productivity                                                                               Photography
+                             Photography                                                                             Personalization
+                         Personalization                                                                        News & Magazines
+                    News & Magazines                                                                                   Music & Audio
+                           Music & Audio                                                                                         Medical
+                                     Medical                                                                           Media & Video
+                           Media & Video                                                                                        Lifestyle
+                                    Lifestyle                                                                     Libraries & Demo
+                      Libraries & Demo                                                                              Health & Fitness
+                        Health & Fitness                                                                                         Finance
+                                     Finance                                                                                       Family
+                           Entertainment                                                                               Entertainment
+                                 Education                                                                                   Education
+                         Communication                                                                               Communication
+                                     Comics                                                                                      Comics
+                                      Casual                                                                                      Casual
+                         Cards & Casino                                                                              Cards & Casino
+                                   Business                                                                                    Business
+                           Brain & Puzzle                                                                       Books & Reference
+                    Books & Reference                                                                               Arcade & Action
+                        Arcade & Action
+                                                                                                                                           0              100 200 300 400
+                                                     0                                                                                                 Age Since Last Update (in days)
+                                              11/24/2012
+                                                                                                                                                           (b)
+                                                          Age Since Last Update (in days)
+
+                                                          (a)
+
+Fig. 3. Box and whiskers plot of the time distribution from the last update, by app category, for (a) dataset.2012: at most 50% of the apps in each category
+have received an update within a year and (b) dataset.14-15: at most 50% of the apps in each category have received an update within 35 days. This may
+occur since new apps are likely to have more bugs and receive more attention from developers.
+
+number of free apps exceed the number of paid apps, several                                       on the date of the app’s ﬁrst review: we have discarded apps
+popular categories such as “Personalization” and “Books &                                         whose ﬁrst review was more than 40 days ago. We have
+References” are dominated by paid apps.                                                           collected 87,223 new releases between July and October 2014,
+GOOGPLAY-TOPK: Google publishes several lists, e.g., Free                                         all having less than 100 reviews.
+(most popular apps), Paid (most popular paid), New (Free)
+(newly released free apps), New (Paid) (newly released paid)                                         We have then monitored and collected data from these
+and Gross (highly grossing apps). Each list is divided into                                       87,223 apps between October 24, 2014 and May 5, 2015.
+≈20 pages, each page consisting of 24 apps. These lists are                                       Speciﬁcally, for each app we captured “snapshots” of its
+typically updated based on application arrival and the schedule                                   Google Play metadata, twice a week. An app snapshot consists
+of Google’s ranking algorithms. Since we cannot be notiﬁed                                        of values for all its time varying variables, e.g., the reviews, the
+when the list changes, we took hourly snapshots of the lists.                                     rating and install counts, and the set of requested permissions.
+Our GOOGPLAY-TOPK consists of hourly snapshots of ﬁve                                             For each of the 2, 850, 705 reviews we have collected from the
+top-k lists (≈ 3000 apps) from Jul-Nov, 2012 (≈2880 hours                                         87, 223 apps, we recorded the reviewer’s name and id, date of
+worth of data).                                                                                   review, review title, text, and rating.
+
+B. Dataset.14-15                                                                                     Figure 2(b) shows the distribution of apps by category. With
+                                                                                                  the exception of the “Personalization” category, the number of
+   Further, we have used a dataset of more than 87,000 newly                                      free apps signiﬁcantly exceeds the number of paid apps. We
+released apps that we have monitored over more than 6                                             have observed that consistently through our collection effort,
+months [32]. Speciﬁcally, we have collected newly released                                        we identiﬁed fewer top paid than free new releases. One reason
+apps once a week, from Google Play’s “New Release” links,                                         for this may be that users tend to install more free apps than
+to both free and paid apps. We have validated each app based                                      paid apps. Thus, not only developers may develop fewer paid
+                                                                                                  apps, but paid apps may ﬁnd it hard to compete against free
+                                                                                                                       5
+
+versions. We note that free apps bring revenue through ads.         Class         # download     % Dataset.2012        % Dataset.14-15
+
+               VI. POPULARITY AND STALENESS                         Unpopular           0 – 103                74.14                  77.55
+                                                                    Popular          103 – 105                   24.1                 18.43
+   We ﬁrst evaluate the fraction of apps that are active, and       Most-Popular                                  0.7
+discuss the implications this can have on app pricing. We                                 > 105                                         4.00
+then classify apps based on their popularity, and study the
+distribution of per-app rating counts. Finally, we study the                                                 TABLE I
+frequency of app updates for apps from various classes and the      Popularity classes of apps, along with their distribution. Dataset.14-15 has a
+implications they can have on end-users. All the analysis pre-
+sented in this section is performed using GOOGPLAY-FULL.                                  higher percentage of most-popular apps.
+
+A. Market Staleness                                                    Table I shows the criteria for the 3 classes and the distri-
+                                                                    bution of the apps in dataset.2012 and dataset.14-15 in these
+   An important property of a market is its “activity”, or how      classes. The newly released apps have a higher percentage of
+frequently are apps being maintained. We say that an app is         unpopular apps, however, surprisingly, they also have a higher
+stale if it has not been updated within the last year from the      percentage of “most-popular” apps. This may be due to the
+observation period, and active otherwise.                           fact that the newly released apps are more recent, coming at a
+                                                                    time of higher popularity of mobile app markets, and maturity
+   The task of setting the app price is complex. However, rely-     of search rank fraud markets (see § IX-A).
+ing on statistics computed on the entire population, as opposed
+to only active apps, may mislead developers. For instance,             Figure 4 (top) depicts the distribution of rating counts of
+given that the listing price of apps forms a key component          apps from dataset.2012, split by categories. We observe that
+of its valuation and sale, this becomes an important factor         the Business and Comics categories do not have any apps in the
+for fresh developers trying to enter the market. Speciﬁcally,       Most-Popular class, likely because of narrow audiences. From
+the median price in our dataset is $0.99 when all apps are          our data, we observed that the median price of apps ($1.99)
+considered and $1.31 when considering only active apps. This        in these categories is signiﬁcantly higher than the population
+conﬁrm our intuition that developers that set their price based     ($1.31) indicating lower competition. The population in other
+on the former value are likely to sell their apps at lower proﬁts.  categories is quite diverse with a number of outliers. For
+                                                                    instance, as expected, “Angry Birds” and “Facebook” are most
+   Figure 3(a) shows the box and whiskers plot [8] of the           popular among the Most-Popular class for Arcade & Action
+per-app time since the last update, by app category, for            and Social categories, respectively. On the other hand, the
+dataset.2012. At most 50% of the apps in each category have         distribution is almost symmetric in case of Unpopular except
+received an update within a year from our observation period.       Business and Medical categories where there are a number
+For instance, most apps in Libraries & Demo have not been           of outliers that are signiﬁcantly different from the rest of the
+updated within the last 1.5 years. Some categories such as          population. We found that these are trending apps — apps that
+Arcade & Action, Casual, Entertainment, Books & Reference,          are gaining popularity. For instance, the free app “Lync 2010”
+Tools contain apps that are older than three years.                 from “Microsoft Corporation” in Business has 997 ratings. In
+                                                                    case of Popular, the distributions for most of the categories
+   Figure 3(b) plots this data for dataset.14-15. Many freshly      are symmetric and span roughly from 1, 000 to 100K ratings
+uploaded apps were uploaded more recently: 50% apps in each         where 75% of apps have less than 10, 000 rating counts except
+category receive an update within 35 days, while apps in the        Arcade & Action category.
+“Social” and “Tools” categories received updates even within
+15 days. This is natural, as new apps may have more bugs and           Figure 4 (bottom) shows the same distribution for the apps
+receive more developer attention.                                   in dataset.14-15. We emphasize that the distribution is plotted
+                                                                    over the ratings counts at the end of the observation interval.
+   Several reasons may explain the lack of updates received by      Since these are newer apps than those in dataset.2012, it is
+many of the apps we monitored. First, some apps are either          natural that they receive fewer ratings. We also observe that
+stable or classic (time-insensitive apps, not expected to change)   several categories do not have apps that are in the “most
+and do not require an update. Other apps, e.g., e-books,            popular” category, including the “Business”, “Libraries &
+wallpapers, libraries, do not require an update. Finally, many      Demo” and “Medical” categories.
+of the apps we monitored seemed to have been abandoned.
+                                                                    C. App Updates
+B. App Popularity
+                                                                       Updates form a critical and often the last part of the software
+   We propose to use the download count to determine app            lifecycle [17]. We are interested in determining if mobile
+popularity. Higher rating counts mean higher popularity but         app developers prefer seamless updating i.e., if they push out
+not necessarily higher quality (e.g., an app could attract many     releases within short time periods.
+negative ratings). Including unpopular apps will likely affect
+statistics such as update frequencies: including unpopular apps        Fig. 5(a) shows the distribution of the number of updates
+will lead to a seemingly counter-intuitive ﬁnding, indicating       received by the apps in dataset.2012. Only 24% apps have
+that most apps do not receive any updates. Therefore, we            received at least one update within our observation period —
+classify apps according to their popularity into three classes,     nearly 76% have never been updated. In contrast, Fig. 5(b)
+“unpopular”, “popular” and “most-popular”.                          shows that 35% of the “fresh” apps in dataset.14-15 have
+                                                                    received at least one update within our observation period.
+                                                                                                                                                                                                                                                                      6
+
+Category                 Weather
+                 Travel & Local
+                Transportation
+
+                             Tools
+                 Sports Games
+
+                            Sports
+                            Social
+                       Shopping
+                           Racing
+                    Productivity
+                   Photography
+               Personalization
+          News & Magazines
+                Music & Audio
+                          Medical
+                 Media & Video
+                         Lifestyle
+            Libraries & Demo
+              Health & Fitness
+                          Finance
+                 Entertainment
+                       Education
+              Communication
+                          Comics
+                           Casual
+               Cards & Casino
+                        Business
+                Brain & Puzzle
+          Books & Reference
+              Arcade & Action
+
+                                      10                1000 1e+03                           1e+04     1e+05 1e+05                                                                                                        1e+06
+                                         Ratings Count                                  Ratings Count     5e+03 5e+03                                                                                          Ratings Count
+                                                                                                                                                                                                                Most Popular
+                                            Unpopular                                        Popular
+                                                                                                                                                                                                                  5e+04
+Category                Weather                                                       Ratings Count                                                                                                          Ratings Count
+                 Travel&Local                                                             Popular                                                                                                            Most Popular
+              Transportation
+
+                            Tools
+                          Sports
+                           Social
+                      Shopping
+                         Racing
+                  Productivity
+                 Photography
+             Personalization
+          News&Magazines
+                Music&Audio
+                        Medical
+                 Media&Video
+                       Lifestyle
+            Libraries&Demo
+              Health&Fitness
+                        Finance
+                          Family
+               Entertainment
+                  Educational
+                     Education
+             Communication
+                         Comics
+                          Casual
+               Cards&Casino
+                      Business
+                Brain&Puzzle
+          Books&Reference
+              Arcade&Action
+
+                                   0                    1e+03 1e+03                                                                                                                                                                                                   1e+05
+
+                                      Ratings Count
+                                        Unpopular
+
+Fig. 4. Per app category distribution of rating counts. (Top) Dataset.2012. The distribution is almost symmetric in the case of “unpopular” apps. The
+distributions for most of the categories are symmetric in the “popular” class and span roughly from 1, 000 to 100K ratings. The Business and Comics categories
+do not have any apps in the “most-popular” class. (Bottom) Dataset.14-15. We observe smaller rating counts compared with the apps in dataset.2012. This is
+natural, as these are new apps, thus likely to receive fewer ratings. We also note that while a few “Business”, “Libraries & Demo” and “Medical” categories
+are unpopular and popular, none are most popular.
+
+                        1.00                                                                                                                                                                           1500
+
+Applications (density)  0.75                                                     Applications (density)0.6                                                                                             1000
+                        0.50                                                                                                                                                           #Applications0.4
+
+                                                                                 0.2                                                                                                                   500
+
+                        0.25
+
+                                                                                 0.0
+
+                        0.00                                                          0                                                                                                                0
+                                                                                          1
+                                      0 1 2 3 4 5 6 7 8 9 10                                   2                                                                                                                                 123456
+                                               Total Updates in last six months                     3                                                                                                                                          # of category changes
+                                                                                                         4
+                                                                                                              5
+                                                                                                                   6
+                                                                                                                        7
+                                                                                                                             8
+                                                                                                                                  9
+                                                                                                                                       10
+                                                                                                                                            11
+                                                                                                                                                 12
+                                                                                                                                                     13 − 14
+                                                                                                                                                          15 − 16
+                                                                                                                                                               17 − 18
+                                                                                                                                                                    19 − 20
+                                                                                                                                                                         21 − 25
+                                                                                                                                                                              26 − 30
+                                                                                                                                                                                   31 − 40
+                                                                                                                                                                                        41 − 60
+                                                                                                                                                                                             61 − 146
+
+                                                                                      Total Updates
+
+                              (a) (b) (c)
+Fig. 5. (a) Histogram of app updates for dataset.2012. Only 24% apps have received at least one update between April-November 2012. (b) Histogram of
+
+fresh app updates for dataset.14-15. Unlike the dataset.2012, 35% of the fresh apps have received at least one update, while 1 app received 146 updates! (c)
+
+Histogram of app category changes. 1.9% apps have received at least one category change between October 24, 2014 and May 5, 2015, while several have
+received 6 category changes.
+
+Several apps received more than 100 updates, with one app                             not been updated since May 27, 2012 even though it received
+receiving 146 updates in a 6 months interval. We conjecture                           negative reviews.
+that this occurs because these are newly released apps, thus
+more likely to have bugs, and to receive attention from their                            Outliers (e.g., “Ctalk” in the Social category) push out
+developers.                                                                           large number of updates (111). Popular apps are updated
+                                                                                      more frequently: 75% in each category receive 10 or fewer
+   Figure 6 (top) plots the distribution of the update frequency                      updates, while some apps average around 10-60 updates during
+of the apps from dataset.2012, across categories based on their                       our observation period. User comments associated with these
+popularity. As expected, Unpopular apps receive few or no                             apps indicate that the developer pushes out an update when
+updates. We observed that this is due to the app being new                            the app attracts a negative review (e.g., “not working on my
+or abandoned by its developer. For instance, “RoboShock”                              device!”). In the Most-Popular category, the population differs
+from “DevWilliams” in Arcade & Action with good reviews                               signiﬁcantly. While some apps seldom push any updates, apps
+from 4 users has received only one update on September 28,                            like “Facebook” (Social) have been updated 17 times. The
+2012 since its release in August 2011 (inferred from its ﬁrst                         lower number of updates of most popular apps may be due
+comment). Another app “Shanju” from “sunjian” in Social has                           to testing: Companies that create very popular apps are more
+                                                                                                                                             7
+
+Category                 Weather
+                 Travel & Local
+                Transportation
+
+                             Tools
+                 Sports Games
+
+                            Sports
+                            Social
+                       Shopping
+                           Racing
+                    Productivity
+                   Photography
+               Personalization
+          News & Magazines
+                Music & Audio
+                          Medical
+                 Media & Video
+                         Lifestyle
+            Libraries & Demo
+              Health & Fitness
+                          Finance
+                 Entertainment
+                       Education
+              Communication
+                          Comics
+                           Casual
+               Cards & Casino
+                        Business
+                Brain & Puzzle
+          Books & Reference
+              Arcade & Action
+
+                                      0  30 60                 90        0  20 40                  60 0   10 20                          30
+                                             Update Frequency                    Update Frequency                  Update Frequency
+
+                                                   Unpopular                             Popular                       Most Popular
+
+Category                Weather
+                 Travel&Local
+              Transportation
+
+                            Tools
+                          Sports
+                           Social
+                      Shopping
+                         Racing
+                  Productivity
+                 Photography
+             Personalization
+          News&Magazines
+                Music&Audio
+                        Medical
+                 Media&Video
+                       Lifestyle
+            Libraries&Demo
+              Health&Fitness
+                        Finance
+                          Family
+               Entertainment
+                  Educational
+                     Education
+             Communication
+                         Comics
+                          Casual
+               Cards&Casino
+                      Business
+                Brain&Puzzle
+          Books&Reference
+              Arcade&Action
+
+                                   0     20 40                     60 0     50 100                 150 0  20                         40
+
+                                         Update Frequency                     Update Frequency            Update Frequency
+                                              Unpopular                              Popular                  Most Popular
+
+Fig. 6. The distribution of update frequency, i.e., the update count for each app per category. (Top) Dataset.2012. Unpopular apps receive few or no
+updates. Popular apps however received more updates than most-popular apps. This may be due to most-popular apps being more stable, created by developers
+with well established development and testing processes. (Bottom) Dataset.14-15. We observe a similar update count distribution among unpopular apps to
+dataset.2012. Further, in the popular and most popular classes, most app categories tend to receive fewer updates than the dataset.2012 apps. However, a few
+apps receive signiﬁcantly more updates, with several popular apps receiving over 100 updates.
+
+likely to enforce strict testing and hence may not need as many             size being around 1.8 MB, this app has pushed out ≈164
+updates as other apps.                                                      MB to each of its users. Given its download count of 500K-
+                                                                            1M, each update utilizes ≈0.87-1.71 TB of bandwidth. We
+   To identify how frequently developers push these updates,                have observed that frequent updates, especially when the app
+we computed the average update interval (AUI) per app mea-                  is unstable, may attract negative reviews. For instance, “Ter-
+sured in days (ﬁgure not shown). In Popular and Unpopular                   remoti Italia” that pushed out 34 updates in the observation
+classes, 50% of apps receive at least one update within 100                 interval, often received negative reviews of updates disrupting
+days. The most interesting set is a class of Unpopular apps                 the workﬂow.
+that receive an update in less than a week. For instance, the
+developer of “Ctalk” pushed, on average, one update per day                    Furthermore, app market providers can use these indicators
+totaling 111 updates in six months indicating development                   to inform users about seemingly unstable applications and also
+stage (it had only 50-100 downloads) or instability of the app.             as part of the decision to garbage collect abandoned apps.
+On the other hand, Most-Popular apps receive an update within
+20 to 60 days.                                                              D. App Category Changes
+
+   Figure 6 (bottom) shows the update frequency for the                        In the fresh app dataset.14-15 we found app category change
+newly released apps of dataset.14-15. Compared to the apps in               events, e.g., “Social” to “Communication”, “Photography” to
+dataset.2012, new releases exhibit a similar update frequency               “Entertainment”, between different game subcategories. Such
+distribution, with slightly lower third quartiles. However, a               category changes may enable developers to better position
+few newly released popular apps receive signiﬁcantly more                   their apps and improve on their install and download count,
+updates, some more than 100 updates.                                        as categories may overlap, and apps may stretch over multiple
+                                                                            categories. Fig. 5(c) shows the distribution of the number
+Updates, bandwidth and reputation. A high update fre-                       of app category changes recorded over the 6 months in
+quency is a likely indicator of an on-going beta test of a feature          dataset.14-15. Only 1.9% of apps have received at least one
+or an unstable application. Such apps have the potential to                 category change.
+consume large amounts of bandwidth. For instance, a music
+player “Player Dreams”, with 500K-1M downloads, pushed                                           VII. DEVELOPER IMPACT
+out 91 updates in the last six months as part of its beta testing
+phase (inferred from app description). With the application                    In this section, we are interested in understanding what
+                                                                            fraction of popular apps are being controlled by an elite set of
+                                                                                                                                     8
+
+developers and if there is a power-law effect in-place. Next,        D↑           D↑      P↓     P↑     RC ↑   SV ↑    TP ↓   TP ↑
+we analyze the impact that developer actions (e.g., changing         P↓                   0.18   -0.02  0.13   0.34    0.09
+the price, permissions etc.) can have on the app popularity.         P↑           0.18           -1.00  0.09   0.89    0.89   0.21
+We use dataset.2012 for this analysis.                               RC ↑         -0.02   -1.00         -0.23  0.72    0.51   0.93
+                                                                     SV ↑         0.13    0.09   -0.23         0.73    0.65   0.76
+A. Market Control                                                    TP ↓         0.34    0.89   0.72   0.73           0.99   0.70
+                                                                     TP ↑         0.09    0.89   0.51   0.65   0.99           1.00
+   To understand the impact that developers have on the mar-                      0.21    0.94   0.76   0.70   1.00    -1.00  -1.00
+ket, we observe their number of apps, downloads, and review
+count. Figure 7 plots these distributions, all showing behavior                                               TABLE II
+consistent with a power-law distribution [27]. We display the        Yule association measure for pairs of attributes for dataset.2012. The sample
+maximum likelihood ﬁt of a power-law distribution for each
+scatter plot as well [22], [11]. Figure 7(a) shows that a few            size is the entire dataset for the observation interval. D is number of
+developers have a large number of apps while many developers          downloads, P is price, RC is review count, SV is software version number
+have few apps. However, the developers that post the most
+apps do not have the most popular apps in terms of reviews               and TP is the total number of permissions. (↑) denotes an increasing
+and download counts. Instead, Figure 7(b) shows that a few                                attribute and (↓) denotes a decreasing one.
+developers control apps that attract most of the reviews. Since
+Figure 7(c) shows an almost linear relation between review           one month. The gray-bar on the “monthly panel” (see Figure 9)
+and download counts (1 review for each 300 downloads), we            is only slightly larger than that on the “data” panel indicating
+conclude that the apps developed by the controlling developers       that the monthly signal is large relative to the variation in the
+are popular.                                                         data. In the “trend” panel, the gray box is much larger than
+                                                                     either of the ones on the “data”/“monthly” panels, indicating
+B. Price Dispersion                                                  the variation attributed to the trend is much smaller than the
+                                                                     monthly component and consequently only a small part of
+   Menu costs (incurred by sellers when making price changes)        the variation in the data series. The variation attributed to the
+are lower in electronic markets as physical markets incur            trend is considerably smaller than the stochastic component
+product re-labeling costs [23]. In app markets menu costs are        (the remainders). We deduce that in our six month observation
+zero. We now investigate if developers leverage this advantage       period this data does not exhibit a trend.
+i.e., if they adjust their prices more ﬁnely or frequently.
+                                                                     C. Impact of Developer Actions
+   Figure 8 shows a variation of the complementary cumulative
+distribution frequency (CCDF) of the number of price changes         Developers have control over several attributes they can
+an app developer made during our observation period. Instead
+of probabilities, the y axis shows the square root of the number     leverage to increase the popularity of their apps, e.g., pricing,
+of apps with a number of price changes exceeding the value
+shown on the x axis. We observe that 5.14% of the apps               the number of permissions requested from users and the
+(≈4000) have changed their price at least once. The tail (>
+70 changes) is interesting — about 23 apps are frequently            frequency of updates. In this section we investigate the relation
+changing their prices. From our data, we observed that they
+are distributed as follows: Travel & Local (11), Sports (5),         between such levers and their impact on app popularity. For
+Business (2), Brain & Puzzle (2) and one in each of Education,
+Finance, and Medical. In this sample, “LogMeIn Ignition”,            instance, common-sense dictates that a price reduction should
+developed by LogMeIn, has 10K-50K downloads and under-
+went 83 price changes (Min:$18.44, Max:$27.80, Avg:$26.01,           increase the number of downloads an app receives.
+Stdev:$2.01). The rest were either recently removed or are
+unpopular.                                                           We study the association between app attribute changes.
+
+   Price dispersion is the spread between the highest and            We deﬁne a random variable for increase or decrease of each
+lowest prices in the market. In our dataset, we used the
+coefﬁcient of variation (COV) [38], the ratio of standard            attribute, and measure the association among pairs of variables.
+deviation to the mean, to measure price dispersion. COV= 1
+indicates a dispersal consistent with a Poisson process i.e.,        For example, let X be a variable for price increase. For each
+uniformly at random; COV> 1 indicates greater variability
+than would be expected with a Poisson process; and COV< 1            day, app tuple, we let X be a set of all of the app and day
+indicates less variation. In our dataset, we observed an average
+COV (computed for all apps) to be 2.45 indicating a non-             tuples where the app increased its price that day (relative to
+negligible price dispersion, in agreement with results in the
+context of other electronic markets [9].                             the previous day’s value). For this analysis we consider 160K
+
+   Figure 9 shows the STL decomposition [12] of the average          apps that have changed throughout our observation period,
+price time series in the observation interval, for a periodicity of
+                                                                     and we discard the remaining apps. We use the Yule measure
+
+                                                                     of association[37] to quantify the association between two
+
+                                                                     attributes,  A  and  B:  |A∩B|∗|A∩B|−|A∩B|∗|A∩B|  .
+                                                                                              |A∩B|∗|A∩B|+|A∩B|∗|A∩B|
+
+                                                                     A is the complement of A, i.e., each day, app tuple where
+
+                                                                     the attribute does not occur, and |A| denote the cardinality
+
+                                                                     of a set (in this case A). This association measure captures
+
+                                                                     the association between the two attributes: zero indicates
+
+                                                                     independence, +1 indicates perfectly positive association, and
+
+                                                                     -1 perfectly negative association. Table II shows the measure
+
+                                                                     values for all pairs of download count (D), price (P), review
+
+                                                                     count (RC) and total number of permission (TP) attributes.
+
+                                                                     Table II shows that a price decrease has a high association
+
+                                                                     with changes in software version and permissions. However,
+
+                                                                     similarly high associations are not observed with a price
+
+                                                                     increase. Thus, when a developer is updating software or
+                                                                                                                                                                                                               9
+
+Number of Developers         10000                                                      Number of Developers  10000                                     Ratings  1e+05
+                              1000                                                                             1000                                              1e+03
+                                100                                                                              100                                             1e+01
+                                  10                                                                               10
+                                   1                                                                                1
+
+                                        1    10 100                 1000                                               1  10 100 1000                                   1e+02  1e+05      1e+08
+                                           Number of Applications                                                                    Number of Ratings
+                                                                                                                                                                               Downloads
+
+                              (a) (b) (c)
+Fig. 7. (a) Distribution of apps per developer. (b) Distribution of total reviews per developer. (c) Scatter plot of downloads vs. ratings in Google Play. Both
+
+axes are log-scaled. A linear curve was ﬁtted with a slope of 0.00341 indicating that an application is rated once for about every 300 downloads.
+
+# Applications (sqrt scale)  8000  5.14% > 1 Change                                                                               Metric                Description
+                                                0.64% > 10 Changes
+                             6000                                                                                                 DEBUT                 Debut rank (rank when it ﬁrst gets onto the list)
+                                                                                                                                  HRS2PEAK              Hours elapsed from debut until peak rank
+                             4000                                                                                                 PEAK                  Highest rank attained during its lifetime on the list
+                                                                                                                                  TOTHRS                Total number of hours spent on the list
+                             2000                                                                                                 EXIT                  Exit rank (rank during the last hour on the list)
+                             1500                                                                                                 RANKDYN               Total ranks occupied during its lifetime on the list
+                             1000
+                                                                    0.13% > 40 Changes                                                                            TABLE III
+                              500                                                                                                 Scores proposed to study the evolution of apps on Top-K lists.
+                              300                                                                             0.09% > 70 Changes
+                              100
+
+                    0 5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95                                                     in turn increases the app popularity. To analyze the dynamics
+                                                                     Price Changes                                                of app in top-k lists, we have used the GOOGPLAY-TOPK
+                                                                                                                                  dataset (see §V). Google keeps the ranking algorithms for the
+Fig. 8. The (square root) of the number of apps whose number of price                                                             top-k lists secret. In this section we seek answers to several
+changes exceeds the value on the x axis. Only 5.14% of the apps had a price                                                       fundamental questions: How long will an app remain on a top-
+change, and 0.09% of the apps had more than 70 changes.                                                                           k list? Will an app’s rank increase any further than its current
+                                                                                                                                  rank? How long will it take for an app’s rank to stabilize?
+
+Fig. 9. Monthly trend for the average app price. Over the 6 month observation                                                     A. Top-K App Evolution
+interval, the average app price does not exhibit a monthly trend.
+                                                                                                                                     We investigate ﬁrst whether apps follow the “birth-growth-
+permissions they are more likely to decrease the price than                                                                       decline-death” process (inverted bathtub curve [21]). Although
+increase the price of an app.                                                                                                     every app’s path may be unique, we can summarize its life on
+                                                                                                                                  a top-k list using the metrics deﬁned in Table III.
+   We observed that changing the price does not show sig-
+niﬁcant association with the download or review counts. We                                                                           This six-tuple captures a suite of interesting information
+randomly sampled 50 apps where this is happening and                                                                              contained in each app’s list trajectory. To make these sum-
+observe the following to be the main reasons. First, apps are                                                                     maries comparable, we remove all applications for which we
+initially promoted as free and a paid version is released if                                                                      are unable to compute the DEBUT information. For instance,
+they ever become popular. However, in some cases, the feature                                                                     the set of applications obtained during the ﬁrst hour of the
+additions are not signiﬁcant (e.g., ads vs. no ads) and hence                                                                     crawl process are removed.
+do not cause enough motivation for users to switch to the
+paid version. Second, with app markets offering paid apps for                                                                        Figures 10(a) and 10(b) show the histograms for the DEBUT
+free as part of special offers (e.g., Thanksgiving deals), users                                                                  and EXIT ranks, both indicating list positions, for the 3000
+may expect the app to be given out for free rather than take                                                                      apps we monitored. Smaller numbers indicate better perfor-
+a discount of a few cents.                                                                                                        mance. The plots show that most apps entered and exited from
+                                                                                                                                  the bottom part of the list (indicated by the high debut and exit
+                      VIII. TOP-K DYNAMICS                                                                                        ranks). This is consistent with the lifetime metaphor discussed
+                                                                                                                                  earlier. However, a small number of apps entered the list highly
+   A higher position in Google’s top-k lists (see §V) is desir-                                                                   ranked. For instance, in the Paid category, the best DEBUT
+able and often attracts signiﬁcant media attention [1] which                                                                      was attained by “ROM Manager”, by “Koushik Datta” that
+                                                                                                                                  entered at #1 on August 14, 2012, and exited at rank #20 on
+                                                                                                                                  October 6, 2012, occupying seven different ranks during its
+                                                                                                                                  lifetime on the list. Another noteworthy DEBUT was attained
+                                                                                                                                  by “Draw Something”, by “OMGPOP” that entered at #2 on
+                                                                                                                                  October 1, 2012, peaked to #1 on Oct 25, 2012 and exited
+                                                                                                                                  at Nov 6, 2012 at #4. During its lifetime, the worst rank it
+                                                                                                                                  achieved was #38.
+
+                                                                                                                                     Figure 10(c) shows the distribution of the peak rank
+                                                                                                                                  achieved in top-k lists (PEAK) and Figure 11(a) shows the
+                                                                                                                                                                                                                                                                           10
+
+12.5                                                    30                                                                                                                                                   75
+
+10.0                                                    20 Free                                                                                                                                              50 Free
+                                                        10                                                                                                                                                   25
+7.5                                              Free
+5.0                                                       0                                                                                                                                                  800
+                                                        15                                                                                                                                                   60
+2.5                                                                                                                                                                                                          40 Gross
+                                                        10 Gross                                                                                                                                             20
+0.0                                                       5
+                                                                                                                                                                                                              0
+7.5                                                       0
+                                                       100
+5.0 Gross
+2.5                                                     75
+                                                        50 New (Free)
+0.0                                                     25
+30
+                                                          0
+                                                        80
+                                                        60
+                                                        40 New (Paid)
+                                                        20
+
+                                                          0
+                                                        15
+
+                                                        10 Paid
+                                                          5
+
+                                                          0
+                                                               0 100 200 300 400
+                                                                   EXIT: App’s exit rank (Binwidth = 5)
+
+                                                                                (b)
+Frequency                                                                                                                                                                                                    200
+                                                                                                 Frequency                                                                                                   100 New (Free)
+                                                                                                                                                                                                  Frequency
+20 New (Free)
+10
+
+0                                                                                                                                                                                                               0
+                                                                                                                                                                                                             200
+30                                                                                                                                                                                                           150
+                                                                                                                                                                                                             100 New (Paid)
+20 New (Paid)
+10                                                                                                                                                                                                            50
+                                                                                                                                                                                                                0
+    0
+10.0                                             Paid                                                                                                                                                        90                                                  Paid
+
+ 7.5                                                                                                                                                                                                         60
+
+ 5.0                                                                                                                                                                                                         30
+
+ 2.5                                                                                                                                                                                                          0
+                                                                                                                                                                                                                    0 100 200 300 400
+ 0.0
+         0 100 200 300 400                                                                                                                                                                                     PEAK: Peak rank during lifetime (Binwidth = 10)
+         DEBUT: App’s debut rank (Binwidth = 1)
+
+      (a)                                                                                                                                                                                                                          (c)
+
+Fig. 10. Distributions of (a) DEBUT, (b) EXIT and (c) achieved PEAK rank. The y axis is the number of apps whose ranks correspond to the values on
+the x axis. Most apps entered and exited from the bottom of the list. The New (Free) and New (Paid) lists choose apps updated within the last 20 days.
+
+distribution of the number of hours required for apps to reach        Pages      List-Type                  #items                                                                                                  Omean       Omin     Mmean                   Msd   Of ∩l
+the peak (HRS2PEAK).                                                  Top 24
+                                                                                 Gross                           57                                                                                                23.8953          18    0.9893              0.0617      12
+   Figure 11(b) shows the total number of hours spent by apps         Last       Free                            44                                                                                                23.9539          21    0.9970              0.0238      16
+in the top-k lists (TOTHRS). Figure 11(c) shows the number            25         Paid                            74                                                                                                23.8840          11    0.9932              0.0537
+of ranks achieved in a top-k list (RANKDYN): very few New                        New (Free)                    128                                                                                                 23.7974          15    0.9867              0.0742        4
+(Free) and New (Paid) apps achieve more than 100 different                       New (Paid)                    125                                                                                                 23.8226          13    0.9889              0.0641        0
+ranks, with most apps achieving 50 or fewer. This differs                        Gross                         205                                                                                                 25.3765                0.9692              0.1299        0
+signiﬁcantly in the other top-k lists.                                           Free                          186                                                                                                 25.6145            1   0.9785              0.1030        0
+                                                                                 Paid                          150                                                                                                 24.9245          10    0.9780              0.1029        4
+   Among the many apps with poor DEBUT and EXIT po-                              New (Free)                    449                                                                                                 25.1159          12    0.9571              0.1502        4
+sitions, most had a short, uneventful life (i.e., low TOTHRS,                    New (Paid)                    485                                                                                                 24.9245                0.9780              0.1687        0
+poor PEAK, low HRS2PEAK), but several were able to reach                                                                                                                                                                              5                                     0
+a high peak position and/or remain for a long time. One entry,                                                                                                                                                                        2
+“PS Touch”, by “Adobe”, entered at #413 and has been on the
+“Gross” list for 2,403 hours (≈ 3 months, although it peaked                                              TABLE IV
+only at #206. This app also took a remarkably slow journey
+(more than two months) to reach that peak and has occupied        Variability in top-k Lists. Omean, Omin and Of∩l are the mean and min.
+137 distinct ranks. Also note that 67 apps attained their top                      overlap, and that between the ﬁrst and last lists.
+rankings in their debut hour (i.e., HRS2PEAK = 1). Many of
+these apps stayed on the list for a very short time, but there    to identical or near identical rankings among the top ranking
+are 6 apps that stayed for 100 - 1000 hours, 31 stayed for
+more than 1000 hours.                                             items. This measure tries to capture the intuition that identical
+
+   Figure 11(b) shows that New (Free) and New (Paid) apps         or near identical rankings among the top items indicate greater
+do not stay on the list for more than 500 hours (≈ 20 days)
+indicating that these lists may be taking into account all those  similarity between the rankings. Let us assume the following:
+applications which were last updated in the last 20 days. We
+have conﬁrmed this hypothesis also by verifying that indeed       kn is the list of top-k apps at time tn, σn(i) is the rank of
+the “last updated” ﬁeld of these apps is within the last 20
+days. From the same ﬁgure, for other lists, we also emphasize     app i in kn, Z is the set of items common to kn−1 and kn,
+the presence of a long tail of apps that have been present
+for thousands of hours. We conclude that: (1) a majority of       S is the set of items in kn−1 but not in kn, T is the set of
+apps follows a “birth-growth-decline-death” process, as they
+enter/exit from the bottom part of a list, (2) most of the apps   items in kn but not in kn−1. Then, the inverse rank measure
+with modest DEBUT and EXIT values have a short, eventful                                                                                                                                                                                   ,N (kn−1 ,kn)
+life occupying many ranks quickly, and (3) the New (Free) and     is  [7]     deﬁned      as             M (kn−1,kn)                                                                                               =            1−                                    where
+New (Paid) lists choose among apps that were updated within                                                                                                                                                                              N max(kn−1,kn)
+the last 20 days.                                                 N (kn−1,kn)                                                                                                                                   −σn−(1|1k(ni)−11−|+1σ)n|1,(ia)n|+d                    1
+                                                                                       =                    i∈Z |                                                                                                                                      i∈S    |  σn−1 (i)  −
+B. Top-K List Variation                                                                                                                                                                                                                                                    =
+                                                                       1      |  +      i∈T              |     1                                                                                                                                    N  max(kn−1 ,kn )
+   We now characterize the changes in the rankings of the top-    (|kn|+1)
+k items from the ﬁve lists over time.                                 |kn−1 |                               σn (i)
+                                                                      i=1
+   We use the Inverse Rank Measure to assess the changes over                    |  1  −       1                                                                                                             |  +  |kn |  |  1  −         1         |+1)  |.
+time in each of the rankings. This measure gives more weight                        i     (|kn|+1)                                                                                                                 i=1       i     (|kn−1
+
+                                                                      Figure 12(a) shows the variation of M kt1 ,kt2 for consecutive
+
+                                                                  days in the month of September. Note that values above 0.7
+
+                                                                  indicate high similarity [7]. We observe that the lists are
+
+                                                                  similar from day to day for Free list but this is not the case
+
+                                                                  for Paid and Gross. Intuitively, this indicates that the effort to
+
+                                                                  displace a free app seems to be higher than that of a paid app
+
+                                                                  or the frequency with which the ranking algorithm is run on
+
+                                                                  Free list is less than that of the Paid list.
+
+                                                                      This intuition is difﬁcult to verify without access to Google’s
+
+                                                                  ranking function. To compare the dynamics between the top-24
+                                                                  positions and bottom 25, we computed M kt1 ,kt2 , the amount
+
+                                                                  of overlap between two subsequent lists for the two cases (see
+
+                                                                  Table IV). In addition, we also computed the overlap between
+
+                                                                  the ﬁrst and the last lists obtained over the observation period.
+
+                                                                  The overlap between the ﬁrst and the last observed lists is zero
+
+                                                                  in the case of the New(Free) and New(Paid) lists, due to the
+
+                                                                  higher in-ﬂow of apps in these lists.
+
+                                                                      In all other cases (except Paid top-24 and last-25 cases),
+                                                                                                                                                                                                                                                                      11
+
+            10                                                                                                 100                                                                                           200
+                                                                                       Free                     50 Free                                                                                      100 Free
+
+              1                                                                                                0                                                                                             0
+
+            10 Gross                                                                                           150                                                                                           100
+              1                                                                                                100 Gross                                                                                      50 Gross
+
+            10 New (Free)                                                                                       50                                                                                              0
+              1                                                                                                   0                                                                                          600
+           100
+            10 New (Paid)                                                                                      150
+              1
+            10                                                                                                 100 New (Free)
+                                                                                                                50
+                                                                                       Paid
+              1                                                                                                   0
+
+                    0 250 500 750 1000                                                                         150
+           HRS2PEAK: Hours to reach peak rank (Binwidth = 1)
+                                                                                                               100 New (Paid)
+                                    (a)                                                                         50
+
+                                                                                                                  0
+Frequency                                                                                        Frequency                                                                                                   400 New (Free)
+                                                                                                                                                                                                  Frequency  200
+
+                                                                                                                                                                                                             0
+
+                                                                                                                                                                                                             600
+
+                                                                                                                                                                                                             400 New (Paid)
+                                                                                                                                                                                                             200
+
+                                                                                                                                                                                                             0
+
+                                                                                                               150                                                  Paid                                     150                                                Paid
+
+                                                                                                               100                                                                                           100
+
+                                                                                                                50                                                                                            50
+
+                                                                                                                  0                                                                                             0
+                                                                                                                        0 500 1000 1500 2000 2500                                                                        0 50 100 150
+
+                                                                                                                  TOTHRS: Total hours spent on list (Binwidth = 1)                                                RANKDYN: Distinct ranks held (Binwidth = 10)
+
+                                                                                                                          (b)                                                                                           (c)
+
+Fig. 11. Distributions of (a) required HRS2PEAK, (b) spent TOTHRS and (c) RANKDYN over lifetime. The y axis displays the number of apps whose
+hours correspond to the values displayed on the x axis. New (Free) and New (Paid) apps do not stay on the list for more than 500 hours. While few New
+(Free) and New (Paid) apps achieve more than 100 different ranks, Gross list apps achieve an almost uniform distribution up to 125 different ranks.
+
+                                                                                                                                                                                                                   1 50 100 200 400
+
+                                     1.0                                                  Free                 450                                              Free               0.06                                                        Free
+                                     0.8                                                 Gross                 300                                             Gross
+           Inverse Rank Measure (M)  0.6                                             New (Free)                150                                         New (Free)              0.04                                                        Gross
+                                     0.4                                             New (Paid)                                                            New (Paid)
+                                     0.2                                                  Paid   Applications  450                                              Paid      Density  0.02                                                        New (Free)
+                                                                              Oct 01                           300                                    400
+                                     1.0                                                                       150                                                                 0.00                                                        New (Paid)
+                                     0.8                                                                                                                                           0.03
+                                     0.6             Sep 10 Sep 17 Sep 24                                      450        100 200 300                                              0.02                            25 50 75                              Paid
+                                     0.4                     Timestamp                                         300                     Rank                                        0.01                                Lifetime (hours)        100
+                                     0.2                                                                       150                                                                 0.00
+                                                                                                                                                                                   0.15
+                                     1.0                                                                       450                                                                 0.10
+                                     0.8                                                                       300                                                                 0.05
+                                     0.6                                                                       150                                                                 00..1005
+                                     0.4
+                                     0.2                                                                       450                                                                 0.10
+                                                                                                               300
+                                     1.0                                                                       150                                                                 0.05
+                                     0.8
+                                     0.6                                                                               0                                                           0.00
+                                     0.4                                                                                                                                           0.05
+                                     0.2                                                                                                                                           0.04
+                                                                                                                                                                                   0.03
+                                     1.0                                                                                                                                           0.02
+                                     0.8                                                                                                                                           0.01
+                                     0.6                                                                                                                                           0.00
+                                     0.4
+                                     0.2                                                                                                                                                    0
+
+                                             Sep 03
+
+                                                     (a) (b)                                                                                                                                                       (c)
+
+Fig. 12. (a) The Inverse Rank Measure vs. Timestamp. The Free list varies little from day to day, which is not the case for Paid and Gross. (b) Number of
+apps vs. ranks. (c) Lifetime of apps at various ranks. The average top-k list lifetime is longer for higher ranking than for lower ranking apps.
+
+# Reviews  250                                                                                    0# Reviews                                                                                     75# Reviews
+           200                                                                                 −10                                                                                               50
+           150                                       100 200                                   −20                        20 40                                                                  25                100 200                                      300
+           100                                                   Time (Days)  300 0                                                      Time (Days)                                                                              Time (Days)
+                                                                                                                                                                                                  0
+            50                                            (a)                                                                    (b)                                60 0                                                  (c)
+              0
+                     0
+
+Fig. 13. Review timeline of “fraud” apps: x axis shows time with a day granularity, y axis the number of daily positive reviews (red, positive direction)
+and negative reviews (blue, negative direction). Apps can be targets of both positive and negative search rank fraud campaigns: (a) The app “Daily
+Yoga- Yoga Fitness Plans” had days with above 200 positive review spikes. (b) “Real Caller” received suspicious negative review spikes from ground truth
+fraudster-controlled accounts. (c) “Crownit - Cashback & Prizes” received both positive and negative reviews from fraudster-controlled accounts.
+
+there is an overlap of at least 50%: apps continue to be popular                                                               increased churn – it is easier for apps to occupy as well as
+for longer periods. In each list-type of last-25 cases, the low                                                                get displaced on high ranks. For Paid, Gross, and Free, the
+overlap values indicate that the list is highly dynamic and                                                                    number of apps varies from 34 to 142, 30 to 173, and 43 to
+variable. Also, notice that Mmean for the top-24 is higher than                                                                163, respectively, from the 1st to the 400th rank.
+that of the last-25 indicating that the top-24 is less dynamic
+in all cases expect New(Free) and New(Paid).                                                                                      However, in the case of New (Free) and New(Paid) lists,
+                                                                                                                               the number of apps being swapped for a position is almost
+   Figure 12(b) shows the number of apps that occupy a                                                                         linearly increasing with the increase in rank. This is because
+rank position in 5 different list-types over our observation                                                                   all the applications in these two categories are new and the
+period. Note that a lower rank is preferred. For example, the                                                                  competition is higher compared to other list-types.
+300th rank position in the New (Free) list is occupied by 441
+applications. With the increase in rank, the rate of applications                                                                 Figure 12(c) shows the distribution of the lifetime of ap-
+being swapped is increasing for each category indicating an                                                                    plications that occupy a speciﬁc rank position. To evaluate
+                                                                                                                               the variation in the distributions we choose the 1st, 50th,
+                                                                      12
+
+100th, 200th, and 400th rank positions. For each category,            the app has received more positive reviews with higher spikes,
+the average lifetime is longer for higher ranking apps then for       its negative reviews and spikes thereof are also signiﬁcant.
+lower ranking apps. We can clearly observe this phenomenon
+in the case of New (Free) and New (Paid). In both the cases,             App markets can monitor timelines and notify developers
+the lifetime of the apps at the lowest rank (i.e., 400th) is the      and their users when such suspicious spikes occur.
+lowest, i.e., ≈6 hours and it starts increasing with the increase
+in the ranks. We can attribute this effect to the frequently             In addition, our analysis has shown that several developers
+changing list of new apps and the relatively easier competitions      upload many unpopular apps (see §V II), while others tend to
+to be on the top-400 lists. However, in case of Free apps, the        push frequent updates (§VI). We describe here vulnerabilities
+average lifetime of apps on the 1st rank is 94.2 hours and            related to such behaviors.
+decreases to 16.7 hours for the 400th rank. For Paid and Gross        Scam Apps. We have identiﬁed several “productive” devel-
+categories, the lifetime changes from 81.6 to 20.6 hours and          opers, that upload many similar apps. Among them, we have
+65.7 to 17.9 hours, respectively, for the rank 1 → 400. We            observed several thousands of premium applications (priced
+attribute these effects to the stability of the apps in these lists.  around $1.99) that are slight variations of each other and have
+                                                                      almost no observable functionality. Such apps rely on their
+                  IX. RESEARCH IMPLICATIONS                           names and description to scam users into paying for them, then
+                                                                      fail to deliver. Each such app receives ≈500-1000 downloads,
+We now discuss the implications of longitudinal monitoring            bringing its developer a proﬁt of $1000-2000.
+on security and systems research in Android app markets.              Malware. While updates enable developers to ﬁx bugs and
+                                                                      push new functionality in a seamless manner, attack vectors
+A. Fraud and Malware Detection                                        can also leverage them. Such attack vectors can be exploited
+                                                                      both by malicious developers and by attackers that inﬁltrate
+   App markets play an essential role in the proﬁtability of          developer accounts. We posit that a motivated attacker can
+apps. Apps ranked higher in the app market become more pop-           develop and upload a benign app, and once it gains popularity,
+ular, thus make more money, either through direct payments            push malware as an update. For instance, Table II shows that
+for paid apps, or through ads for free apps. This pressure to         as expected, software version and total permissions are highly
+succeed leads some app developers to tinker with app market           correlated. However, we found that in 5% of cases where
+statistics known to inﬂuence the app ranking, e.g., reviews,          permissions change, the software version does not change.
+average rating, installs [5]. Further, malicious developers also
+attempt to use app markets as tools to widely distribute their           On the iOS platform, Wang et al. [36] proposed to make
+malware apps. We conjecture that a longitudinal analysis of           the app remotely exploitable, then introduce malicious control
+apps can reveal both fraudulent and malicious apps. In the            ﬂows by rearranging already signed code. We propose an
+following we provide supporting evidence.                             Android variant where the attacker ramps up the permissions
+Search rank fraud. We have contacted Freelancer workers               required by the app, exploiting the observation that a user is
+specializing in Google Play fraud, and have obtained the ids of       more likely to accept them, then to uninstall the app.
+2,600 Google Play accounts that were used to write fraudulent
+reviews for 201 unique apps. We have analyzed these apps and             To provide an intuition behind our conjecture, we introduce
+found that fraudulent app search optimization attempts often          the concept of app permission timeline, the evolution in time of
+produce suspicious review patterns. A longitudinal analysis           an app’s requests for new permissions, or decisions to remove
+of an app’s reviews, which we call timeline, can reveal such          permissions. We have used VirusTotal [6] to test the apks of
+patterns. For instance, Figure 13(a) shows the review timeline        7,756 randomly selected apps from the dataset.14-15. We have
+of “Daily Yoga- Yoga Fitness Plans”, one of the 201 apps              selected apps for which VirusTotal raised at least 3 ﬂags and
+targeted by the 15 fraudster-controlled accounts. We observe          that have at least 10 reviews. Figure 14 shows the permission
+several suspicious positive reviews spikes, some at over 200          timeline of 3 of these apps, for both dangerous (red bars) and
+reviews per day, in contrast with long intervals of under 50          regular permissions (blue bars).
+daily positive reviews.
+                                                                         For instance, the “Hidden Object Blackstone” app (Fig-
+   We have observed that Google Play apps can also be                 ure 14(a)) has a quick succession of permission requests and
+the target of negative review campaigns, receiving nega-              releases at only a few days apart. While the app releases
+tive reviews from multiple fraudster-controlled accounts. Fig-        2 dangerous permissions on November 14, 2014, it requests
+ure 13(b) shows the timeline of such an app, “Real Caller”,           them again 1 day later, and requests 2 more a month and a half
+where we observe days with up to 25 negative reviews, but few         later. Similarly, the “Top Race Manager” app (Figure 14(b))
+positive reviews. While negative reviews are often associated         has very frequent permission changes, daily for the last 3.
+with poor quality apps, these particular spikes are generated         The “Cash Yourself” app (Figure 14(c)) requests 3 dangerous
+from the fraudster-controlled accounts mentioned above. We            permissions on November 10 2014, followed by 1 dangerous
+conjecture that negative review campaigns are sponsored by            permission in both December and January, then releases 1
+competitors. Further, we identiﬁed apps that are the target of        dangerous permission 4 days later.
+both positive and negative reviews. Figure 13(c) shows the
+timeline of such an app, “Crownit - Cashback & Prizes”. While            Permission changes imply signiﬁcant app changes. Frequent
+                                                                      and signiﬁcant permission changes, especially the dangerous
+                                                                      ones may signal malware, or unstable apps. Market owners can
+                                                                      decide to carefully scan the updates of such apps for malware,
+                                                                      and notify developers that something went wrong with their
+                                                                      updates, indicating potential account inﬁltration.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             13
+
+666
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                             Type
+
+                                                                                                                                                                                                                                                                         Dangerous
+                                                                                                                                                                                                                                                                         Normal
+
+333
+# Permissions
+                                                                                                               # Permissions
+                                                                                                                                                                                                                              # Permissions
+000
+
+−3 −3 −3
+
+−6                                                               −6                                                                                                                                                                          −6                                                                                                                                                                                                    2014−12−15        2015−01−30  2015−02−03
+         2014−11−09 2014−11−12 2014−11−14 2014−11−15 2015−01−29          2014−11−09 2014−11−14 2014−11−25 2014−12−02 2014−12−11 2014−12−12 2014−12−13                                                                                                    2014−11−10
+                                                  Date                                                             Date
+                                                                                                                                                                                                                                                                                                                                                                                                                                                               Date
+                          (a)                                                              (b)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                   (c)
+
+Fig. 14. Permission timeline of 3 VirusTotal ﬂagged apps, (a) “Hidden Object Blackstone”, (b) “Top Race Manager”, and (c) “Cash Yourself”. The x axis
+shows the date when the permission changes occurred; the y axis shows the number of permissions that were newly requested (positive direction) or removed
+(negative direction). The red bars show dangerous permissions, blue bars regular permissions. We observe signiﬁcant permission changes, even within days.
+
+B. App Market Ecosystem                                             In addition, while we believe that the Google Play market,
+                                                                 the applications it hosts and developers we examined represent
+Analytics-driven Application Development. We envision a          a large body of other third-party markets and their environ-
+development model where insights derived from raw market-        ments, we do not intend to generalize our results to all the
+level data is integrated into the application development. Such  smartphone markets. The characteristics and ﬁndings obtained
+a model is already adopted by websites such as Priceline [4]     in this study are associated with the Google Play market and
+through their “Name Your Own Price” scheme where the             its developers. Therefore, the results should be taken with the
+interface provides users with hints on setting an optimal        market and our data collection methodology in mind.
+price towards a successful bid. We propose the extension
+of development tools like Google’s Android Studio [2] with          The goal of our discussion of permission and review time-
+market-level analytics, including:                               lines was to provide early evidence that a longitudinal monitor-
+• Median price: In §VI-A, we showed that developers may          ing and analysis of apps in app markets can be used to identify
+                                                                 suspicious apps. We leave for future work a detailed study of
+  be settling down for lower proﬁts. The development tools       permission changes to conﬁrm their statistical signiﬁcance in
+  could provide developers them with hints on the optimal        detecting search rank fraud and malware.
+  price for their app based on, e.g., the number of features,
+  the price of active apps in the same category etc.                                       XI. CONCLUSION
+• Application risk: Provide predictions on the impact of
+  permissions and updates on reviews and download count.            This article studies temporal patterns in Google Play, an in-
+• App insights: Present actionable insights extracted from       ﬂuential app market. We use data we collected from more than
+  user reviews (e.g., using solutions like NetSieve [31]),       160,000 apps daily over a six month period, to examine market
+  including most requested feature, list of buggy features,      trends, application characteristics and developer behavior in
+  features that crash the app.                                   real-world market settings. Our work provides insights into the
+Enriching User Experience. We believe data-driven insights       impact of developer levers (e.g., price, permissions requested,
+will be indispensable to enhance the end user experience:        update frequency) on app popularity. We proposed future
+• Analytics based app choice: Visualize app price, update        directions for integrating analytics insights into developer and
+  overhead, required permissions, reviewer sentiment to en-      user experiences. We introduced novel attack vectors on app
+  hance the user experience when choosing among apps with        markets and discussed future detection directions.
+  similar claimed functionality. For instance, develop scores
+  for individual features, and even an overall “sorting” score                       XII. ACKNOWLEDGMENTS
+  based on user preferences. Scam apps (see §IX-A) should
+  appear at the bottom of the score based sorted app list.          This research was supported in part by NSF grants CNS-
+• Analytics based app quarantine: We envision a quarantine       1527153, CNS-1526494 and CNS-1450619.
+  based approach to defend against “update” attacks. An
+  update installation is postponed until analytics of variation                               REFERENCES
+  in app features indicates the update is stable and benign.
+  To avoid a situation where all users defer installation, we     [1] Angry Birds Star Wars tops App Store Chart in 2.5 hours.
+  propose a probabilistic quarantine. Each user can update the         http://goo.gl/ioJWq.
+  app after a personalized random interval after its release.
+                                                                  [2] Getting started with Android Studio. http://goo.gl/wgeUok.
+                           X. LIMITATIONS                         [3] Google Bouncer. http://goo.gl/QnC6G.
+                                                                  [4] Priceline. http://priceline.com.
+   This paper seeks to shed light on the dynamics of the Google   [5] Google I/O 2013 - Getting Discovered on Google Play.
+app market and also provide evidence that a longitudinal
+monitoring of apps is beneﬁcial for users, app developers and          www.youtube.com/watch?v=5Od2SuL2igA, 2013.
+the market owners. However, our datasets were collected in        [6] VirusTotal - Free Online Virus, Malware and URL Scanner.
+2012 and 2014-2015, and may not reﬂect the current trends
+of Google Play.                                                        https://www.virustotal.com/, Last accessed on May 2015.
+                                                                  [7] J. Bar-Ilan, M. Levene, and A. Lin. Some measures for comparing
+
+                                                                       citation databases. Journal of Informetrics, 1(1):26–34, 2007.
+                                                                  [8] Y. Benjamini. Opening the box of a boxplot. The American Statistician,
+
+                                                                       42(4):257–262, 1988.
+                                                                  [9] E. Brynjolfsson and M. Smith. Frictionless commerce? a comparison
+
+                                                                       of internet and conventional retailers. Management Science, 2000.
+                                                                 [10] B. Carbunar and R. Potharaju. A longitudinal study of the google app
+
+                                                                       market. In Proceedings of the IEEE/ACM ASONAM, 2015.
+                                                                               14
+
+[11] A. Clauset, C. Shalizi, and M. Newman. Power-law distributions in               Internet Measurement Conference, IMC ’13, pages 277–290, New York,
+      empirical data. Arxiv preprint arxiv:0706.1062, 2007.                          NY, USA, 2013. ACM.
+                                                                               [31] R. Potharaju, N. Jain, and C. Nita-Rotaru. Juggling the jigsaw:
+[12] R. Cleveland, W. Cleveland, J. McRae, and I. Terpenning. Stl: A                 Towards automated problem inference from network trouble tickets. In
+      seasonal-trend decomposition procedure based on loess. Journal of              Proceedings of USENIX NSDI, 2013.
+      Ofﬁcial Statistics, 6(1):3–73, 1990.                                     [32] M. Rahman, M. Rahman, B. Carbunar, and D. H. Chau. FairPlay: Fraud
+                                                                                     and Malware Detection in Google Play. In Proceedings of the SIAM
+[13] J. Dean and S. Ghemawat. Mapreduce: simpliﬁed data processing on                International Conference on Data Mining (SDM), 2016.
+      large clusters. Communications of the ACM, 51(1):107–113, 2008.          [33] D. Roberts. How to spot fake apps on the Google Play store. Fortune,
+                                                                                     2015.
+[14] W. Enck, P. Gilbert, B.-G. Chun, L. P. Cox, J. Jung, P. McDaniel,         [34] E. Siegel. Fake Reviews in Google Play and Apple App Store.
+      and A. N. Sheth. Taintdroid: An information-ﬂow tracking system for            Appentive, 2014.
+      realtime privacy monitoring on smartphones. In Proceedings of OSDI,      [35] N. Viennot, E. Garcia, and J. Nieh. A measurement study of google play.
+      2010.                                                                          In ACM SIGMETRICS Performance Evaluation Review, volume 42,
+                                                                                     pages 221–233. ACM, 2014.
+[15] W. Enck, D. Octeau, P. McDaniel, and S. Chaudhuri. A study of android     [36] T. Wang, K. Lu, L. Lu, S. Chung, and W. Lee. Jekyll on ios: When
+      application security. In Proceedings of the 20th USENIX Conference on          benign apps become evil. In Proceedings of USENIX Security, 2013.
+      Security, 2011.                                                          [37] M. J. Warrens. On association coefﬁcients for 2x2 tables and properties
+                                                                                     that do not depend on the marginal distributions. volume 73, 2008.
+[16] A. P. Felt, E. Chin, S. Hanna, D. Song, and D. Wagner. Android            [38] E. Weber, S. Shaﬁr, and A. Blais. Predicting risk sensitivity in
+      permissions demystiﬁed. In Proceedings of the ACM CCS, 2011.                   humans and lower animals: risk as variance or coefﬁcient of variation.
+                                                                                     Psychological Review; Psychological Review, 111(2):430, 2004.
+[17] C. Ghezzi, M. Jazayeri, and D. Mandrioli. Fundamentals of software        [39] Q. Xu, J. Erman, A. Gerber, Z. Mao, J. Pang, and S. Venkataraman.
+      engineering. Prentice Hall PTR, 2002.                                          Identifying diverse usage behaviors of smartphone apps. In Proceedings
+                                                                                     of ACM IMC, 2011.
+[18] Google. Developer Registration. http://goo.gl/wIwpa, 2012.                [40] N. Zhong and F. Michahelles. Google play is not a long tail market:
+[19] M. C. Grace, W. Zhou, X. Jiang, and A.-R. Sadeghi. Unsafe exposure              An empirical analysis of app adoption on the google play app market.
+                                                                                     In Proceedings of the ACM SAC, 2013.
+      analysis of mobile in-app advertisements. In Proceedings of the ACM
+      WiSec, 2012.                                                             [41] Y. Zhou and X. Jiang. Dissecting android malware: Characterization
+[20] A. Greenberg. Malware Apps Spoof Android Market To Infect Phones.               and evolution. In Proceedings of the IEEE S&P, 2012.
+      Forbes Security, 2014.
+[21] R. Jiang, P. Ji, and X. Xiao. Aging property of unimodal failure rate     [42] Y. Zhou, Z. Wang, W. Zhou, and X. Jiang. Hey, you, get off of my
+      models. Reliability Engineering & System Safety, 79(1):113–116, 2003.          market: Detecting malicious apps in ofﬁcial and alternative android
+[22] R. Johnson and D. Wichern. Applied multivariate statistical analysis.           markets. In Proceedings of NDSS, 2012.
+      Prentice hall, 2002.
+[23] D. Levy, M. Bergen, S. Dutta, and R. Venable. The magnitude of menu       Rahul Potharaju is a researcher at Microsoft. He focuses on building
+      costs: direct evidence from large us supermarket chains. The Quarterly   interactive query engines for big data. He earned his CS Ph.D. degree from
+      Journal of Economics, 112(3):791–824, 1997.                              Purdue University and CS Masters degree from Northwestern University. He
+[24] H. M. Levy. Capability-Based Computer Systems. Butterworth-               is a recipient of the Motorola Engineering Excellence award in 2009, the
+      Heinemann, Newton, MA, USA, 1984.                                        Purdue Diamond Award in 2014, and the Microsoft Trustworthy Reliability
+[25] C. Z. Liu, Y. A. Au, and H. S. Choi. An Empirical Study of the            Computing Award in 2013.
+      Freemium Strategy for Mobile Apps: Evidence from the Google Play
+      Market. In Proceedings of ICICS, 2012.                                   Mizanur Rahman is a Ph.D. candidate at FIU. He has previously held various
+[26] Z. Miners. Report: Malware-infected Android apps spike in the Google      positions in KAZ Software, iAppDragon and Prolog Inc. His research interests
+      Play store. PCWorld, 2014.                                               include fraud detection in social networks and user experience.
+[27] M. Mitzenmacher. A brief history of generative models for power law
+      and lognormal distributions. Internet mathematics, 2004.                 Bogdan Carbunar is an assistant professor in SCIS at FIU. He has held
+[28] S. Mlot. Top Android App a Scam, Pulled From Google Play. PCMag,          research positions within Motorola Labs. His interests include security and
+      2014.                                                                    privacy for mobile and social networks. He holds a Ph.D. in CS from Purdue.
+[29] A. Mo¨ller, F. Michahelles, S. Diewald, L. Roalter, and M. Kranz. Update
+      behavior in app markets and security implications: A case study in
+      google play. In Proceedings of the Intl. Workshop on Research in the
+      Large, 2012.
+[30] T. Petsas, A. Papadogiannakis, M. Polychronakis, E. P. Markatos, and
+      T. Karagiannis. Rise of the planet of the apps: A systematic study of
+      the mobile app ecosystem. In Proceedings of the 2013 Conference on
+

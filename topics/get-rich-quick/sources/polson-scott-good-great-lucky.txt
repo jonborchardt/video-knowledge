@@ -1,0 +1,1190 @@
+arXiv:1010.5223v3 [stat.ME] 22 Mar 2012  The Annals of Applied Statistics
+                                         2012, Vol. 6, No. 1, 161­185
+                                         DOI: 10.1214/11-AOAS512
+                                          c Institute of Mathematical Statistics, 2012
+
+                                            GOOD, GREAT, OR LUCKY? SCREENING FOR FIRMS WITH
+                                                      SUSTAINED SUPERIOR PERFORMANCE USING
+                                                                        HEAVY-TAILED PRIORS
+
+                                                        By Nicholas G. Polson and James G. Scott
+
+                                                     University of Chicago and University of Texas at Austin
+
+                                                            This paper examines historical patterns of ROA (return on as-
+                                                       sets) for a cohort of 53,038 publicly traded firms across 93 countries,
+                                                       measured over the past 45 years. Our goal is to screen for firms whose
+                                                       ROA trajectories suggest that they have systematically outperformed
+                                                       their peer groups over time. Such a project faces at least three statisti-
+                                                       cal difficulties: adjustment for relevant covariates, massive multiplic-
+                                                       ity, and longitudinal dependence. We conclude that, once these dif-
+                                                       ficulties are taken into account, demonstrably superior performance
+                                                       appears to be quite rare. We compare our findings with other re-
+                                                       cent management studies on the same subject, and with the popular
+                                                       literature on corporate success.
+
+                                                           Our methodological contribution is to propose a new class of priors
+                                                       for use in large-scale simultaneous testing. These priors are based on
+                                                       the hypergeometric inverted-beta family, and have two main attrac-
+                                                       tive features: heavy tails and computational tractability. The family
+                                                       is a four-parameter generalization of the normal/inverted-beta prior,
+                                                       and is the natural conjugate prior for shrinkage coefficients in a hier-
+                                                       archical normal model. Our results emphasize the usefulness of these
+                                                       heavy-tailed priors in large multiple-testing problems, as they have
+                                                       a mild rate of tail decay in the marginal likelihood m(y)--a property
+                                                       long recognized to be important in testing.
+
+                                            1. Introduction.
+
+                                            1.1. Large-scale screening of historical ROA data. Understanding the
+                                         reasons why some firms thrive and others fail is one of the primary goals of
+                                         research in strategic management. Studies that examine successful compa-
+                                         nies to uncover the putative secrets of successful companies are very popular,
+                                         both in the academic and popular literature.
+
+                                             Received October 2010; revised September 2011.
+                                             Key words and phrases. Corporate benchmarking, type-II beta distribution, multiple
+                                         testing, normal scale mixtures, sparsity.
+
+                                          This is an electronic reprint of the original article published by the
+                                          Institute of Mathematical Statistics in The Annals of Applied Statistics,
+                                          2012, Vol. 6, No. 1, 161­185. This reprint differs from the original in pagination
+                                          and typographic detail.
+
+                                                                                              1
+2 N. G. POLSON AND J. G. SCOTT
+
+   Before the search for special causes can begin, however, success must be
+quantified and benchmarked. This is what our paper tries to do. In keeping
+with prior studies [McGahan and Porter (1999), Wiggins and Ruefli (2005),
+Henderson, Raynor and Ahmed (2009)], we use a common metric called
+ROA, or return on assets, to measure a company's success. This quantity
+gives investors some notion of how effectively a firm uses its available funds
+to produce income. It is fundamentally different from a market-based mea-
+sure like stock returns, which may fail to reflect underlying fundamentals
+over long periods of time (e.g., during bubbles), and which exhibit wild fluc-
+tuations that make the identification of trends problematic. Figure 1 shows
+three examples of firm-level ROA trajectories over time; these have been
+standardized using a procedure which we will soon describe.
+
+   In this paper we apply Bayesian methods to historical ROA data, with
+the goal of comparing publicly traded companies against their peers. To be
+sure, ROA is an imperfect measure of corporate success, and our study will
+have the same shortcomings in this regard as any other that uses ROA as
+an outcome variable. One important practical reason for our use of ROA,
+aside from a desire to use the same metric as other researchers studying
+similar questions, is the sheer availability of data on companies from across
+the world (rather than just in the United States). This enables us to screen
+as large a database as possible: 645,456 records from 53,038 companies in 93
+different countries, spanning 1966­2008. In principle, however, our Bayesian
+statistical methodology could be applied to any outcome variable in any
+subpopulation of the corporate universe.
+
+   We conclude that evidence of sustained superior performance is quite rare.
+To reach this conclusion, we use Bayesian models to compute the posterior
+probability that a firm falls into each of two classes: a null class, wherein
+deviations from the peer-group average are attributable to chance; and an
+alternative class, wherein these deviations, both positive and negative, are
+systematic. These posterior probabilities depend upon the particular as-
+sumptions made about the longitudinal persistence of "lucky" performances,
+in a manner soon to be explained. But even under the generous (and unre-
+alistic) assumption of longitudinal independence, we find that there are at
+most 1076 firms over the last 45 years for which there is moderately strong
+evidence of sustained superior performance over 5 years or more. We argue
+that this is a conservative upper bound on the number of such firms, and
+that the actual number is much smaller--our best estimate is 262, or 0.5%
+of all firms, once longitudinal dependence is taken into account.
+
+   1.2. Statistical issues in identifying sustained superior performance. Any
+attempt to benchmark performance, and to identify sustained superior per-
+formers, must deal with at least three statistical challenges.
+SCREENING FOR FIRMS WITH SUPERIOR PERFORMANCE  3
+
+Fig. 1. Left: the actual performance of three firms (dots), superimposed on the benchmark
+distribution estimated from the Bayesian regression-tree model (black line and grey area,
+showing the posterior mean and 95% predictive interval of expected performance by all firms
+in the corresponding peer group). Right: these same firms placed on a common (normal
+CDF) scale of benchmarked performance, with the integers 0­9 representing the decile.
+
+   First, one must adjust observed performance for relevant covariates. One
+important covariate is a firm's country of operation. Another one is a firm's
+industry; as Henderson, Raynor and Ahmed (2009) observe, some indus-
+tries exhibit structures that are intrinsically more favorable to monopolies,
+which would seem to be a source of advantage unrelated to managerial tal-
+ent or firm-level characteristics. Other potentially important characteristics
+4 N. G. POLSON AND J. G. SCOTT
+
+that have been explored in the literature include a firm's size and capital
+structure.
+
+   Our method adjusts for the effect of all of these covariates, both on
+the conditional mean and conditional variance of performance. Importantly,
+there is no reason to assume that ROA depends upon them linearly. This is
+quite different from the situation in finance, for example, where the capital-
+asset pricing model (CAPM) and its variants predict a linear dependence
+between firm-level and market-level measures of performance. No such the-
+ory exists that would predict a parallel result for ROA. This means that
+nonlinear relationships must, at least in principle, be allowed. We do this
+using Bayesian treed-regression models, as described in Section 4.
+
+   Second, even "lucky" performance trajectories may exhibit significant lon-
+gitudinal dependencies that lead to spurious declarations of impressiveness.
+Following Denrell (2005), imagine a very simple state-space model, wherein
+
+                                       yt = axt + et,
+
+                                       xt = bxt-1 + ut,
+
+where yt is an observed performance metric, and xt is some underlying AR(1)
+firm-level characteristic (e.g., resources). Even if there is no systematic com-
+ponent of variation in xt, the observed yt's can still exhibit pronounced
+longitudinal autocorrelation, which can look very much like a sustained run
+of excellence. Formally correcting for such autocorrelation would require
+specific parametric models incorporating a wide variety of firm-level effects.
+Instead of taking this route, we try to correct for longitudinal dependence
+in a crude-but-simple fashion by estimating an effective sample size for each
+firm, and adjusting our Bayesian model accordingly.
+
+   Finally, there is the issue of massive multiplicity. Given the large num-
+ber of hypothesis tests being conducted, and the frequentist leanings of the
+management-theory community, maintaining control over false positives is
+crucial. Yet having access to the posterior distribution of effect sizes can
+greatly inform follow-up case studies of individual firms, and is only possi-
+ble under a fully Bayesian model. This applied context makes a combined
+Bayes/frequentist approach especially appealing.
+
+   Our paper's methodological innovation is to introduce a new class of
+heavy-tailed priors for the multiple-testing problem. We first give a brief
+overview of this problem from a Bayesian perspective (Section 2), deferring
+much of the details to Appendices. We then describe some simulation stud-
+ies in Section 3, which are designed to benchmark our proposed method
+against reasonable alternatives. In these studies, our methods show excel-
+lent performance in terms of limiting false positives, lending credence to the
+results for the actual data. Finally, we analyze the corporate ROA data in
+Section 4, where we also describe in further detail how we approach the
+other statistical issues we have raised.
+SCREENING FOR FIRMS WITH SUPERIOR PERFORMANCE  5
+
+2. Large-scale simultaneous testing.
+
+   2.1. Methodological overview. In large-scale simultaneous testing, the
+goal is to uncover lower-dimensional signals from high-dimensional data.
+For example, researchers who use microarrays have long been interested
+in the problem of multiplicity adjustment, where "adjustment" can be un-
+derstood in the sense of adjusting one's tolerance for surprise as the set of
+potentially surprising events grows large. The same issue arises in all modern
+high-throughput experiments; other examples include functional magnetic-
+resonance imaging, environmental sensor networks, combinatorial chemistry,
+and proteomics. Too many type-I errors will mean too many expensive wild-
+goose chases. Hence, the case for a testing procedure that displays good
+frequentist properties is very compelling.
+
+   But so too is the case for a model-based Bayesian procedure. These ex-
+periments may involve thousands of separate tests, and such a large volume
+of data often allows the distributional properties of "signals" and "noise" to
+be characterized quite precisely.
+
+   This paper considers a new version of the two-groups multiple-testing
+model, where we observe data yi for i = (1, . . . , p) according to a hierarchical
+model:
+
+                        (yi | i, 2)  N(i, 2),
+
+                          (i | w, )  w · g(i | ) + (1 - w) · 0,
+
+                                   w  p(w),
+
+a mixture of a Dirac measure at zero, and an alternative model g that is ab-
+solutely continuous with respect to the Lebesgue measure. (The alternative
+model g has hyperparameter , presumably also given a prior.) The most
+attractive feature of this model is that it automatically adjusts for multiplic-
+ity, without the need for ad-hoc regularization. This is because inference for
+the i's will involve the posterior for common mixing fraction, p(w | y). If
+one tests many noise observations in the presence of a few signals, then our
+estimate of w will be small, making it more difficult for all the observations
+to overcome the prior belief in their irrelevance. This exerts a powerful form
+of control over false positives.
+
+   To handle the multiple-testing problem, we introduce a family of distri-
+butions g based on normal variance mixtures, where the mixing distribution
+is a hypergeometric inverted-beta (HIB) prior:
+
+                             (i | 2i , i = 1)  N(0, 2i2),
+
+                                             i2  HIB(a, b, , s),
+
+where the indicator i = 1 if i is nonzero, and zero otherwise. We approach
+these priors from a hybrid Bayesian/frequentist perspective, using them to
+6 N. G. POLSON AND J. G. SCOTT
+
+compute not only posterior distributions, but also false-discovery rates, or
+FDR [Benjamini and Hochberg (1995)]. We also study the behavior of the
+posterior mean, which is competitive with existing gold-standard methods
+[e.g., Johnstone and Silverman (2004)] under squared-error loss.
+
+   In both our data analysis and simulation studies, we focus on three key
+features of our approach:
+
+   (1) The hypergeometric inverted-beta scale mixtures form an especially
+flexible class of symmetric, unimodal densities and can accommodate a wide
+range of tail behavior and behavior near the centering parameter. This class
+simultaneously generalizes the robust priors of Strawderman (1971) and
+Berger (1980), the normal-exponential-gamma prior of Griffin and Brown
+(2005), and the horseshoe prior of Carvalho, Polson and Scott (2010). The
+ability of our class to model heavy-tailed distributions with minimal com-
+putational fuss is of particular relevance in testing problems [see, e.g., Sec-
+tion 5.2 of Jeffreys (1961)].
+
+   (2) Our class of priors allows very easy computation of a wide array of im-
+portant Bayesian and frequentist quantities. This includes posterior means,
+variances, and higher-order moments; posterior null probabilities for indi-
+vidual observations; the score function; false-discovery rates; and local false-
+discovery rates [Efron (2008)]. The ease with which these quantities can be
+computed all relates to the analytical tractability of the marginal likelihood
+function m(y), whose importance we describe in Section 2.2. Appendix A
+provides all the details.
+
+   (3) Our approach yields testing error rates that are competitive with ex-
+isting cutting-edge methods. At the same time, it also retains the advantages
+of a fully Bayesian procedure, in that in principle one has access to the joint
+posterior distribution of all parameters.
+
+   Many of the technical details characterizing the behavior of the basic mix-
+ture model can be found in Scott and Berger (2006) and Bogdan, Chakrabarti
+and Ghosh (2008). These authors assume that the nonzero means follow
+a normal distribution, an assumption we generalize in this paper. Do, Mu¨ller
+and Tang (2005) also provide an interesting variation wherein the nonzero
+means are modeled nonparametrically using Dirichlet processes.
+
+   The same issues arise in empirical-Bayes analysis. See, for example, John-
+stone and Silverman (2004), Abramovich et al. (2006) and Dahl and Newton
+(2007). Additionally, Mu¨ller, Parmigiani and Rice (2007), Bogdan, Ghosh
+and Tokdar (2008) and Park and Ghosh (2010). All describe the relationship
+between Bayesian multiple testing and classical approaches that control the
+false-discovery rate.
+
+   2.2. The importance of the marginal likelihood function. Many common
+Bayesian and frequentist treatments of the multiple-testing problem can be
+SCREENING FOR FIRMS WITH SUPERIOR PERFORMANCE                                      7
+
+understood through the marginal likelihood functions
+                       m0(y | 2) = N(y | 0, 2),
+
+   m1(y | ) = N(yi | i, 2)g(i | ) di,
+
+                           R
+
+m(y | , 2) = w · m1(y) + (1 - w) · m0(y).
+
+   First, following Efron (2008), the local FDR and the posterior probability
+of yi being noise are given by the same expression:
+
+f dr(y)  =  P  (i  =  0         |  y,  2,  )  =  (1  -  w) · m0(y)  .
+                                                        m(y)
+
+Furthermore, if we let F0(y) =  y      m0  (u)  du,  F1(y)   =  y      m1(u)  du,  and
+                                -                               -
+F (y) = w · F1(y) + (1 - w) · F0(y), then the FDR is the tail area
+
+            FDR(y)              =   (1  -  w) · F0   (y)  .
+                                           F (y)
+
+   Second, the marginal likelihood function also arises in Masreliez's classic
+representation of the posterior mean. This gives an explicit expression for
+the Bayes estimator for i under squared-error loss (assuming that i = 1):
+
+E(i         |  y, i  =          1)  =  yi  +   d   ln  m1(yi),
+                                              dyi
+
+versions of which appear in Masreliez (1975), Polson (1991), Pericchi and
+Smith (1992) and Carvalho, Polson and Scott (2010). The choice of alterna-
+tive model g(i | ) is crucial, insofar as it helps to determine m1(y).
+
+   At the same time, the prior should have desirable statistical properties,
+with flat tails being a particularly important feature. The use of heavy-tailed
+priors for constructing robust shrinkage estimators has a long history, with
+prominent examples to be found in Strawderman (1971) and Berger (1980).
+Jeffreys, meanwhile, observed as early as 1939 that heavy-tailed priors play
+an important role in Bayesian hypothesis testing [see Jeffreys (1961), a later
+edition]. His arguments have been recapitulated in the context of linear
+models by Zellner and Siow (1980) and, more recently, Liang et al. (2008).
+
+   The difficulty is that, while heavy-tailed priors lead to a desirably mild
+rate of tail decay in the marginal likelihood m(y), there are few such priors
+that are also analytically tractable. Any prior that possesses both proper-
+ties, as our proposed family does under certain hyperparameter choices, is
+therefore of great potential interest to Bayesians and non-Bayesians alike.
+
+   We describe the hypergeometric-beta family of priors more fully in a leng-
+thy technical Appendix. But first we present simulation studies that demon-
+strate the usefulness of our approach for limiting false positives, before turn-
+ing to an analysis of the data set at hand.
+8 N. G. POLSON AND J. G. SCOTT
+
+   3. Simulation studies. As our methodological Appendix shows, hyperge-
+ometric inverted-beta scale mixtures of normals are an especially useful class
+of priors for building discrete mixture models for i, due to the existence of
+simple expressions for moments and marginals under the hypothesis that i
+is nonzero:
+
+(3.1)  (i | i)  w · N(0, -1 - 1) + (1 - w) · 0,
+(3.2)         i  HB(a, b, , s),
+
+where 0 indicates a degenerate distribution at 0. The posterior mean under
+this model is a natural estimator for  = (1, . . . , p), since it averages over
+uncertainty about whether each component is zero or nonzero.
+
+   We conducted two simulation studies comparing the mean-squared error
+performance of our estimators with the procedure from Johnstone and Silver-
+man (2004), where i is estimated by the posterior median under a mixture
+of a point mass zero and a double-exponential (Laplace) prior. We also keep
+track of the number of false positives generated by each procedure.
+
+   Each of the two studies involved estimating signals from a different signal
+class. In all cases the dimension of the location vector was p = 1,000.
+
+   Experiment 1: Fixed coefficients. Table 1 summarizes an experiment in-
+volving 12 configurations of different sparsity patterns (5, 50, and 100 nonzero
+means) and different scales (all nonzero means equal to 3, 4, 5, or 7).
+
+   Experiment 2: Random t3-distributed coefficients. Table 2 summarizes an
+experiment in which the nonzero means were randomly drawn from a heavy-
+tailed t distribution with 5 degrees of freedom and scale parameter c. We
+investigated 12 configurations of different sparsity patterns (20, 50, 200, and
+500 nonzero means) and different scales (c = 0.5, 1, 2).
+
+   Tables 1 and 2 show the average sum of squared errors in estimating 
+over 100 independent data sets. Also shown are the average number of false
+positives declared by the two procedures in each case, and the average false-
+discovery rate. For the Johnstone/Silverman procedure, a false positive oc-
+curs when the posterior median of i is nonzero, but the actual value is
+zero. For the Bayesian procedure using the hypergeometric inverted-beta
+prior, a false positive occurs when the posterior inclusion probability for i
+is greater than 50% and i is actually zero. This threshold reflects a 0­1 loss
+function that penalizes false positives and false negatives equally, regardless
+of size. A full decision-theoretic analysis incorporating more realistic loss
+functions would yield a different, data-adaptive threshold, but would only
+complicate the analysis slightly.
+
+   For the hypergeometric inverted-beta prior, we set s = 0, while w and 
+were estimated by importance sampling. For priors, we assumed that  
+C+(0, ), and that w  Unif(0, 1).
+SCREENING FOR FIRMS WITH SUPERIOR PERFORMANCE              9
+
+                                                     Table 1
+ Experiment 1, fixed coefficients. SSE: sum of squared errors in the estimate of the 
+ sequence. FP: false positive declarations in the estimate of  sequence. FDR: realized
+   false-discovery rate. Laplace: posterior median estimator from the empirical Bayes
+procedure of Johnstone and Silverman (2004). The numbers in parentheses indicate, in
+
+                             order, the choices of a and b the HIB model
+
+Number nonzero out of 1,000 means
+
+5 50                               100
+
+Value: 3 4 5 7 3 4 5 7 3 4 5 7
+
+SSE Laplace 35.1 32.8 17.9 8.5 210.5 150.8 99.7 71.9 331.1 248.3 177.5 142.9
+            (1, 2) 35.4 31.9 17.9 10.3 205.4 157.7 116.7 90.6 334.6 268.2 213.2 180.4
+            (1, 1) 35.0 31.3 18.5 11.1 200.5 161.9 124.7 95.3 329.1 280.8 229.3 188.5
+          (1, 0.5) 34.7 31.0 19.6 12.2 199.6 170.7 135.3 100.6 335.2 302.2 248.1 196.3
+          (0.5, 2) 37.9 36.8 18.3 7.3 242.6 167.3 104.0 70.8 395.3 272.8 182.8 145.7
+          (0.5, 1) 37.6 36.3 18.1 7.6 234.9 164.1 105.0 72.6 379.5 268.8 186.4 148.9
+
+         (0.5, 0.5) 37.4 35.7 17.9 7.9 227.5 161.1 106.2 74.2 363.6 266.2 190.9 151.9
+
+FP Laplace 0.8 1.0 0.8 0.4 16.1 11.3 7.6 4.2 53.3 28.7 17  8.9
+
+(1, 2) 0.2 0.3 0.6 0.5 4.0 6.9 6.6 5.5 12.2 18.2 17.2 13.2
+
+(1, 1) 0.2 0.4 0.7 0.5 6.4 10.2 9.4 6.9 23.7 34.0 29.2 18.7
+
+(1, 0.5) 0.3 0.6 0.8 0.7 13.5 21.1 16.9 9.8 153.5 199.8 90.0 33.4
+
+(0.5, 2) 0.1 0.1 0.1 0.2 1.1 2.5 2.2 2.2 2.9 5.5 5.4 5.1
+
+(0.5, 1) 0.1 0.1 0.2 0.2 1.4 3.0 2.7 2.5 3.7 7.1 6.7 5.9
+
+(0.5, 0.5) 0.1 0.1 0.2 0.2 1.7 3.7 3.1 2.8 5.5 9.5 8.6 6.8
+
+FDR Laplace 0.2 0.2 0.1 0.1 0.3 0.2 0.1 0.1 0.4 0.2 0.1 0.1
+            (1, 2) 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.2 0.1 0.1
+            (1, 1) 0.1 0.1 0.1 0.1 0.2 0.2 0.2 0.1 0.2 0.3 0.2 0.2
+           (1, .5) 0.2 0.1 0.1 0.1 0.3 0.3 0.2 0.2 0.6 0.6 0.5 0.2
+          (0.5, 2) 0.1 0.0 0.0 0.0 0.0 0.1 0.0 0.0 0.1 0.1 0.1 0.0
+          (0.5, 1) 0.1 0.0 0.0 0.0 0.1 0.1 0.1 0.0 0.1 0.1 0.1 0.1
+
+         (0.5, 0.5) 0.1 0.0 0.0 0.0 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1
+
+   In experiment 1, we used a range of values for a and b. The best overall
+choice seemed to be a = 1/2, b = 1, and so we focused solely on this choice
+in experiment 2. Indeed, although certain alternative choices produced im-
+provements in specific situations, we found a = 1/2, b = 1 to be a good all-
+purpose option because of its blend of good performance in estimation and
+testing.
+
+   Overall, when squared error in estimation is used to decide between pro-
+cedures, our preferred Bayes procedure with a = 1/2, b = 1 wins slightly on
+experiment 2, while the empirical-Bayes thresholding procedure wins slightly
+on experiment 1. We attribute these differences to the relative tail weight of
+the two priors. The double-exponential prior has tails that are heavier than
+the Gaussian likelihood, but not as heavy as those of the hypergeometric
+10 N. G. POLSON AND J. G. SCOTT
+
+                                                      Table 2
+              Experiment 2, random coefficients. The HIB prior set a = 1/2, b = 1
+
+                                      Number nonzero
+
+50 100                                200             500
+
+Scale c: 0.5 1 2 0.5 1                2 0.5 1         2 0.5 1                      2
+
+SSE HIB 8.3 16.0 55.4 28.8 53.2 125 90.2 235 336 181 391 604
+         Laplace 8.6 16.1 60.4 29.5 57.3 136 93.1 250 370 180 394 646
+
+FP HIB 0.0 0.0 0.2 0.0 0.2            0.5 0.1 0.8 3.3 0.1 0.9 10.8
+         Laplace 0.4 3.7 1.1 2.3 1.6  3.2 23.5 34 19.1 138 134 71.5
+
+inverted-beta priors we studied. This difference in tail weight becomes much
+more significant in the experiment with random coefficients, since draws
+from a t3 density produce some very large signals--much larger than sig-
+nals of size 7 in the "fixed coefficients" study. In experiment 2, however,
+the heavier-tailed priors are wasting some of their mass in areas of the pa-
+rameter space far from the origin. Since these areas are predestined to be
+unimportant by the particular choices of fixed signals, it is no surprise that
+a lighter-tailed prior such as the double-exponential will yield superior re-
+sults. Similarly, when the coefficients are slightly larger, as in the t3 signals
+from experiment 2, the heavier-tailed prior will outperform.
+
+   But when the measuring stick is the false-positive rate, the fully Bayes
+procedure with smaller values of a and b wins. It produces far fewer false
+positives across the board, along with lower false-discovery rates (suggest-
+ing that it is not merely more conservative across the board in declaring an
+observation to be a signal). It therefore seems like the more robust choice.
+For situations when estimation is the goal, its performance is roughly com-
+parable to the existing Johnstone/Silverman procedure. Yet for situations
+when testing is the goal, the Bayes procedure appears more trustworthy.
+
+   4. Testing for superior historical performance.
+
+   4.1. Data preprocessing. Before applying our multiple-testing method,
+we preprocessed the data as follows. Let yit be the raw data point for com-
+pany i in year t. We first standardized the data to have zero mean and unit
+variance across all countries and years. Using Bayesian treed-regression soft-
+ware [Gramacy and Lee (2008)], we then estimated a conditional mean mit
+and a conditional standard deviation sit, representing the expected distribu-
+tion of performance for other firms in company i's peer group in year t. As
+covariates, we used a company's industry, size, leverage, country of opera-
+tion, and market share. For an extensive discussion of how this issue relates
+SCREENING FOR FIRMS WITH SUPERIOR PERFORMANCE  11
+
+to the disambiguation of so-called "Schumpeterian" rents from "monopolis-
+tic" rents, see Henderson, Raynor and Ahmed (2009).
+
+   The regression-tree approach allows us to account for the highly non-
+linear, conditionally heteroskedastic relationships present in the data. An
+instructive comparison can be found in Figure 1, which shows three firms:
+JPMorgan Chase, IBM, and Gap Instrument Corporation. It is clear that
+the three firms have noticeably different peer-group means, and drastically
+different peer-group standard deviations. The left-hand plots show the actual
+performance, along with the "benchmark distribution"--that is, the mean
+and standard deviation of that year's expected performance, given firm-level
+covariates. The right-hand plots show the performance with respect to the
+benchmark distribution, all on a common normal-CDF scale. Supplemental
+files available upon request from the authors show the results of an extensive
+exploratory analysis of ROA versus important covariates, and substantiates
+our claim that nonlinear, conditionally heteroskedastic regression is essential
+here.
+
+   We then computed a z-score zit = (yit - mit)/sit for each company-year
+data point. We emphasize that the term mit accounts only for the effects
+of covariates, and does not include a random effect specific to the firm in
+question. Therefore, if firm i systematically performs µi standard deviations
+above (or below) its peer-group mean, and each year's performance is con-
+ditionally independent given µi, then
+
+                        (zit | µi)  N(µi, 1) for i = 1, . . . , ni.
+
+If µi = 0, then the sample mean of the zit's for firm i is normally distributed
+with mean 0 and variance 1/ni, where ni is the number of observations
+we have for that firm (ranging from 5 to 43). This is our preliminary null
+hypothesis. Stated in an equivalent form,
+
+                                    zi = z¯ini  N(0, 1).
+
+These z-scores are the raw inputs to our multiple-testing approach. Based
+on the simulation results above, we are reporting results for a = 1/2, b = 1,
+which seemed to provide the best overall results in terms of testing.
+
+   4.2. Summary of results. We ran the proposed multiple-testing method
+on the cohort of firms for which at least 5 years of past data were available.
+This initial sieve left us with a cohort of 37,014 firms, each with somewhere
+between 5 and 43 annual observations.
+
+   Of the tested cohort, 1,076 firms (or about 3%) had posterior probabilities
+of outperformance larger than 90%, indicating moderate to high confidence
+that they have systematically outperformed their peer groups. For this co-
+hort, the expected group-wise false discovery rate (FDR) is 2%; this can be
+12 N. G. POLSON AND J. G. SCOTT
+
+                                            Table 3
+Ten firms with the highest posterior probabilities of having a nonzero mean
+
+Company               Description                                              Books
+
+Alfacell Corporation  A biotech firm specializing in RNA-based technologies.        --
+Wyeth                 Large drug company; recently bought out by Pfizer.            --
+American List Corp    Bulk mailing firm. Bought out in 1997.                        --
+Deluxe Corp           Financial and logistical services for small businesses.       --
+Tambrands             Personal hygiene products. Bought out in 1997.                --
+Toth Aluminum         Developed aluminum technology. Defunct.                       --
+UST                   A tobacco holding company. Bought out in 2009.                --
+WD-40                 Manufactures the anticorrosive and lubricating agent.         --
+Landauer              Specializes in services relating to radiation safety.         --
+Merck                 Large drug company.                                      BTL, ISE
+
+computed by simply averaging the posterior probabilities that each firm in
+the cohort comes from the null model. An additional 705 firms had posterior
+probabilities of outperformance between 50% and 90%. For this intermediate
+group, the expected FDR is 28%.
+
+   The top 10 overall firms ranked by posterior probability are described in
+Table 3, along with the reason that firm dropped out of the database (if
+applicable). Of these 10 firms, 8 seemed to outperform their peer group,
+while 2 seemed to underperform. The first non-American firm on the list is
+British­American Tobacco, incorporated in (of all places) Malaysia, which
+ranks 11th by estimated posterior inclusion probability.
+
+   The historical trajectories for these 10 firms can be seen in Figure 2. Two
+are large drug companies; the rest come from a variety of different industries.
+All but four--Wyeth, Merck, Tambrands, and WD-40--are likely unknown
+to the average consumer.
+
+   These results are best thought of as a reasonable upper bound to the
+actual number of sustained superior performers. This is true for at least two
+reasons. First, although we used all data for 53,038 firms to fit the regression
+tree models and compute mit and sit, we did not conduct hypothesis tests
+for the 16,024 firms with less than 5 years of data. It is difficult to know what
+"long-term superiority" even means for this vast group of firms with so short
+a history. Moreover, their presence in the testing stage of the analysis would
+likely bias the estimate of w (the prior inclusion probability) downward,
+because the Bayes factor so strongly favors the null hypothesis for such
+a short trajectory. (This results from the well-known Bayesian "Occam's
+razor" effect that arises when comparing models of different dimensionality.)
+This introduces a possible survivorship bias into our procedure. But given
+the assumption of exchangeability in our model, we believe that the effects of
+survivorship bias are less severe than the likely effects of watering down the
+cohort with so many firms for which the null hypothesis is so likely a priori.
+SCREENING FOR FIRMS WITH SUPERIOR PERFORMANCE  13
+
+Fig. 2. The performance trajectories for the ten firms with the highest posterior proba-
+bilities of having a nonzero mean.
+14 N. G. POLSON AND J. G. SCOTT
+
+   Second, and more importantly, our analysis assumes that a company's
+ROA result in year t is independent of results from previous years, given
+the peer group mean and standard deviation. This is unlikely to be exactly
+true, and therefore introduces an upward bias in our estimate of the number
+of superior performers (due to the fact that autocorrelation reduces the
+effective sample size available for testing H0).
+
+   One way of accounting for this bias is to introduce specific parametric
+assumptions about the nature of a "true null" trajectory. Indeed, this is an
+active and promising area of research in both this and in parallel fields (e.g.,
+time-course microarray data). Our focus on this paper, however, is on large-
+scale screening with relatively few assumptions. We therefore eschew explicit
+parametric longitudinal models and adopt the following alternative strategy
+in an attempt to get a fast, crude assessment of how the independence
+assumption may affect our results:
+
+   (1) For each firm in the testing cohort, we estimate a one-lag autocor-
+relation coefficient, ^i. For the handful of firms for which this estimate is
+negative, we threshold at zero, since we do not wish to introduce negative
+
+correlation into the sampling distribution for the data.
+
+   (2) We compute an effective sample size for each trajectory as
+
+n^i = ni ·  1 - ^i
+            1 + ^i
+
+using the well-known correction for autocorrelation. While this is motivated
+
+by simple AR(1)-type null models, one may interpret the multiplicative term
+involving ^ purely as a deflator, corresponding to the reduction in informa-
+
+tion in each longitudinal sample comparedto the i.i.d. case.
+   (3) We recompute the z-score as z^i = z¯i n^i.
+
+We then repeat the testing procedure using the z^i's as data, which has the
+effect of inflating the variance under the null hypothesis. This correction
+led to 262 firms with a posterior probability greater than 90% (expected
+FDR for the group: 2%), and an additional 222 with a posterior probability
+between 50% and 90% (expected FDR for the group: 26%). The top 10 firms
+remained unchanged, except for Toth Aluminum and Alfacell.
+
+   Our results appear to be qualitatively similar to those of Henderson,
+Raynor and Ahmed (2009), who use essentially the same data. But we will
+point to two important methodological differences that likely account for
+any major divergence in testing outcomes. First, we use model-averaged
+estimates from Bayesian treed regression to estimate a conditional mean
+and standard deviation for every company in every year. In contrast, Hen-
+derson, Raynor and Ahmed (2009) use linear quantile regression, which is
+a fundamentally different--and arguably less flexible--way of accounting for
+       SCREENING FOR FIRMS WITH SUPERIOR PERFORMANCE                       15
+
+                                               Table 4
+                         The popular books selected for comparison
+
+Title                    Published  Selection method                Basis
+
+Good to Great            2001       Companies from 1965­1981 selected Quantitative
+Built to Last            1994       on the basis of shareholder return
+In Search of Excellence  1982       Companies founded before 1950 that Qualitative
+Competitive Strategy     1980       met certain success criteria
+Hidden Values            2000       Surveys of executives at author- Qualitative
+Blueprint to a Billion   2006       selected firms
+What Really Works        2003       Author selected examples to support Qualitative
+Stall Points             2008       theory; method unclear
+Blue Ocean Strategy      2005       Author selected examples to support Qualitative
+                                    theory; method unclear
+                                    Time to achieve $1 billion in revenue Quantitative
+                                    after initial public offering
+                                    Correspondence with prespecified "top Qualitative
+                                    management practices"
+                                    Patterns of stalls and recovery in rev- Quantitative
+                                    enue growth
+                                    Author selected examples to support Qualitative
+                                    theory; method unclear
+
+conditional heteroskedasticity (which appears to be the dominant effect of
+covariates). Second, we adjust each company's longitudinal results individu-
+ally to account for firm-level heterogeneity with respect to autocorrelation.
+In contrast, Henderson, Raynor and Ahmed (2009) account for longitudi-
+nal dependence by assuming that the same semi-parametric Markov model
+holds across the entire population of "lucky" firms.
+
+   4.3. Comparison with the popular literature on corporate success. As
+a small aside, it is interesting to compare these results to the conclusions
+of a handful of well-known books that purport to explain corporate suc-
+cess. We took a small, nonscientific sample of these books, in an attempt
+to gauge whether the results from the multiple-testing model correspond to
+widely held notions about successful firms. Table 4 briefly describes these
+books, and indicates whether the basis for selecting the study cohort was
+qualitative or quantitative in nature. The books were chosen in conjunction
+with a group of senior management consultants at Deloitte Consulting, who
+judged the list to be fairly representative of the popular literature.
+
+   These books follow a common recipe: start with a group of companies;
+identify the "successful" ones; look for patterns in their behavior; and ab-
+stract those behaviors into a small set of principles that can tell others how
+to run their businesses better. One important difference between these books
+and the approach considered here is the choice of outcome variable. In some
+16 N. G. POLSON AND J. G. SCOTT
+
+books the outcome variable is multidimensional, and therefore richer than
+our choice of ROA. Thus, while comparisons are instructive, they do not
+support the conclusion that our study is objectively right and the others
+wrong. Moreover, as a referee observed, the authors of these books may
+have different things in mind when they define success.
+
+   Yet, collectively, these studies exhibit many unacknowledged sources of
+bias, which our study attempts to address. None, for example, make a se-
+rious attempt to verify statistically that the selected companies have done
+anything special when compared with a suitable reference population. This
+opens up the possibility that they have been studying companies that were
+lucky, rather than great--the precise null hypothesis considered in this pa-
+per. There are also serious issues with selection bias--both in terms of metric
+selection and of company selection--and of survivorship bias (although our
+study is also imperfect in this regard).
+
+   Perhaps for these reasons, serious discrepancies emerged between the pop-
+ular literature and the conclusions of the multiple-testing procedure consid-
+ered here. Across the nine books considered, there were 209 distinct firms
+that were used as case studies--some positive, some negative--and that also
+appeared in our cohort of firms with 5 or more years of data. Of the top
+ten firms flagged in the previous section, only one was mentioned in any of
+the 9 books: Merck, a case study in Built to Last (BTL) and In Search of
+Excellence (ISE). Of the 209 firms collectively mentioned in these books,
+only 9 appear on our list of firms with ROA trajectories significantly better
+than those of their peer groups, once longitudinal dependence is accounted
+for.
+
+   5. Final remarks. We have developed a Bayesian multiple-testing pro-
+cedure based upon a heavy-tailed prior for the nonzero means. These priors
+form an interesting, novel class of normal variance mixtures, the hyperge-
+ometric inverted-beta class. Overall, the procedure has the nice theoretical
+property of a redescending score function under the alternative model, and
+seems to perform as well as, or better than, existing gold-standard meth-
+ods. Moreover, it allows relevant Bayesian and frequentist summaries to be
+computed with minimal computational fuss. This property arises from the
+simple, known form of the marginal distribution m(y).
+
+   We have applied the method to a large data set on historical corporate
+performance, and compared the results of our analysis to some popular books
+that deal with the same subject. These books appear to be studying a sample
+where the large majority of firms have ROA performance profiles that are
+statistically indistinguishable from luck. Meanwhile, there on the order of
+hundreds of firms (out of a group of over 37,000) whose performance is at
+least suggestive of a sustained advantage, and yet were not considered in
+these high-profile case studies.
+       SCREENING FOR FIRMS WITH SUPERIOR PERFORMANCE                          17
+
+       APPENDIX A: THE PROPOSED FAMILY OF PRIORS
+
+   A.1. Connection with classical shrinkage rules. Our new class of priors
+has its genesis in the large body of work on classical shrinkage rules, where
+a multivariate normal prior   N(0, 2I) is assumed, where  = (1, . . . , p).
+Many common estimators for this problem, both Bayesian and non-Bayesian,
+are of the form ^(y) = {1 - g(Z)}y for Z = y 2 [e.g., James and Stein
+(1961), Strawderman (1971), Stein (1981), Fourdrinier, Strawderman and
+Wells (1998)]. The central issue is how to identify "nice" functions g(Z),
+and how to understand priors for global variance components in terms of
+the behavior of the estimators they yield.
+
+   The constraint to rationality--that is, the requirement that there exists
+a prior p() such that, for all Z, g(Z) = E( | Z) under the posterior p( |
+Z)--rules out a wide class of potential estimators. The function g(Z) cannot,
+for example, be a polynomial of order two or greater. Indeed, the functional
+form of a g(Z) that respects admissibility will typically be quite complicated.
+
+   It is natural to look in the class of estimators where g(Z) = p(Z)/q(Z),
+a ratio of power-series expansions. One can construct such a g(Z) by assum-
+ing that ( | 2)  N(0, 2I), and then defining ^(2) = E( | 2, y). After
+removing the dependence upon 2 by marginalizing, this leads to
+
+                         ^ = E2|y{^ (2)} = {1 - E( | Z)}y,
+
+recalling that  = 1/(1 + 2). We can therefore identify g(Z) with E( | Z),
+the posterior expectation of , given Z.
+
+   One can define a class of priors for  indexed by (a, b, , s), which we call
+the hypergeometric inverted-beta class, such that
+
+(A.1)  g(Z) = E( | Z)
+
+       =     a + p/2    1(b, 1; a  + b + p/2 +   1; s + Z/2, 1  - 1/ 2  )  ,
+             + b + p/2    1(b, 1;  a + b + p/2;  s + Z/2, 1 -   1/ 2)
+          a
+
+where a, b, and  are positive real numbers; s is any real number; and 1
+is the degenerate hypergeometric function of two variables [Gradshteyn and
+
+Ryzhik (1965), Equations 9.261.1­9.261.3].
+
+This g is a ratio of power series, and can be computed quite rapidly for
+
+a given tuple (a, b, , s) and a given Z. It leads to a large class of admissible
+
+estimators with a wide range of possible behavior. In particular, it includes
+
+many estimators that exhibit robustness to large values of Z; many estima-
+
+tors that offer significant risk reduction near Z = 0; and many that do both.
+
+This class generalizes the form noted by Maruyama (1999), which contains
+
+the positive-part James­Stein estimator as a limiting (improper) case.
+
+   A.2. Hypergeometric inverted-beta priors. The connection with mul-
+tiple testing is as follows. Recall that under the alternative model, i is
+conditionally normal with variance 2i . Our approach is to work with the
+18 N. G. POLSON AND J. G. SCOTT
+
+transformed variable i = 1/(1 + 2i ), and to define the following prior for i.
+Suppressing subscripts for the moment,
+
+(A.2)  p() = C-1a-1(1 - )b-1   1  +  1     -  1         -1
+                               2              2
+                                                           exp(-s),
+
+where a, b,  > 0 and s  R, and where C1 is a constant of proportionality.
+We denote the hypergeometric-beta prior on the  scale by   HB(a, b, , s).
+
+   The normalizing constant
+
+(A.3)  C=   1               1  +  1  -     1         -1
+                            2              2
+              a-1(1 - )b-1                              exp(-s) d
+
+           0
+
+can be computed using hypergeometric series. Using the theory laid out in
+
+Gordy (1998) and Polson and Scott (2011), we get
+
+(A.4)      C = e-s Be(a, b)1(b, 1, a + b, s, 1 - 1/ 2),
+
+where 1 is the degenerate hypergeometric function of two variables [Grad-
+
+shteyn and Ryzhik (1965), 9.261]. This function can be calculated accurately
+
+and rapidly by transforming it into a convergent series of 2F1 functions [Sec-
+tion 9.2 of Gradshteyn and Ryzhik (1965), Gordy (1998)], making evaluation
+
+of (A.4) quite fast for most allowable choices of the parameters.
+The implied density for 2i takes the form
+
+(A.5) p(2) = C-1(2)b-1(2 + 1)-(a+b) exp    -      s       2  +  1  -  2  -1
+                                                 +              1  +  2
+                                              1      2                      .
+
+This is a generalization of the inverted-beta distribution, also known as
+Pearson's type VI distribution. Indeed, it reduces to an inverted beta in the
+special case where s = 0,  = 1, in which case a2/b will follow an F (2b, 2a)
+density.
+
+   The hypergeometric inverted-beta family contains many well-known sub-
+families of priors for . These include the beta distribution, the generalized
+beta distribution [McDonald and Xu (1995)], and the Gauss hypergeomet-
+ric distribution [Armero and Bayarri (1994)]. The family is itself contained
+in the class of compound confluent hypergeometric distributions [Gordy
+(1998)], which has two extra parameters that are not relevant in this con-
+text. These various related families are why we call (A.5) the hypergeometric
+inverted-beta prior. The transformed density on the  scale resembles a beta
+distribution, and we call this family the hypergeometric-beta (HB) prior.
+
+   The family in (A.2) has one major advantage over other similar priors:
+there exist easily computable expressions for the posterior mean E(i | yi)
+and the marginal density m1(yi) = N(yi | i, 2)p(i) di under the hy-
+pothesis that i = 0. We derive these expressions in Appendix B.
+
+   A.3. Shrinkage profiles. We now turn to the specification of the four
+hyperparameters, and to the different "local shrinkage profiles" that are
+accessible through different choices of these parameters.
+SCREENING FOR FIRMS WITH SUPERIOR PERFORMANCE  19
+
+       Fig. 3. Implied shrinkage profiles for double-exponential and Cauchy priors.
+
+   All normal scale-mixtures have an implied shrinkage profile p(i), which
+describes the amount of shrinkage toward the origin that is expected a priori.
+The prior's behavior near i = 0 controls the tail weight of the marginal prior
+for i, while the behavior near i = 1 controls the strength of shrinkage near
+zero.
+
+   Figure 3 plots the implied shrinkage profiles for two common priors: the
+double-exponential and Cauchy priors. Contrast these shrinkage profiles with
+the wide range of shapes that are accessible through the hypergeometric
+inverted-beta density, some of which are shown in Figure 4.
+
+   One important special case of the hypergeometric inverted-beta family is
+the Strawderman prior [Strawderman (1971)], which corresponds to a = 1/2,
+b = 1, s = 0, and  = 1. Another special case is the half-Cauchy prior on the
+scale factor , studied by Gelman (2006) and Carvalho, Polson and Scott
+(2010). This corresponds to a = b = 1/2, s = 0, and  = 1. Yet a third special
+case is the uniform-shrinkage prior, where a = b = 1, s = 0, and  = 1. All of
+these can be seen in the upper-left pane of Figure 4.
+
+   Clearly, (A.2) can lead to many standard-looking shapes that are similar
+to other normal scale mixtures. Yet it can also produce a wide variety of
+other densities that are inaccessible through other standard families. We now
+describe the role of each hyperparameter, recalling that more probability
+near  = 1 means more aggressive shrinkage.
+
+   First,  is a global scaling factor, with larger values leading to larger
+marginal variance in . To see this, suppose that all components of  have
+a common variance component in addition to their idiosyncratic ones: (yi |
+i)  N(i, 2) and i  N(0, 2 22i ). The form involving  in (A.2) arises
+from the special case of assuming a half-Cauchy prior for each i, as in the
+horseshoe prior of Carvalho, Polson and Scott (2010). The generalization
+of the scaled half-Cauchy prior to arbitrary a, b, and s then arises quite
+naturally on the  scale. Shifting  up and down causes the shrinkage profile
+to be shifted left and right, respectively, controlling the overall aggressiveness
+of shrinkage.
+20 N. G. POLSON AND J. G. SCOTT
+
+Fig. 4. Effect of changing the four parameters (a, b, s,  ) on the density for the shrinkage
+coefficient .
+
+   The parameters a and b are analogous to those of beta distribution, to
+which (A.2) reduces when  = 1 and s = 0. Smaller values of a encourage
+heavier tails in (), with a = 1/2, for example, yielding Cauchy-like tails.
+Smaller values of b encourage p() to have more mass near the origin, and
+eventually to become unbounded; b = 1/2 yields, for example, p()  log(1 +
+1/2) near 0.
+
+   Finally, s is a second global scaling factor, though with a different effect
+than  on the shape of the density. This parameter has an interpretation as
+a "prior sum of squares," with the caveat that it can also be negative.
+
+   The scale parameters  and s do not control the behavior of () at 0
+and . Specifically, () behaves like i2b-1 near the origin, and like i-(2a+1)
+in the upper tail. Since () has the same polynomial rate of decay as (), a
+can be chosen to reflect the desired tail weight of ().
+       SCREENING FOR FIRMS WITH SUPERIOR PERFORMANCE  21
+
+   A.4. The score function and overshrinkage of exceptional observations.
+We recall the following theorem from Carvalho, Polson and Scott (2010).
+
+   Theorem A.1. Let p(|y - |) be the likelihood, and suppose that p()
+is a mean-zero scale mixture of normals: ( | )  N(0, 2), with  having
+
+proper prior p(). Assume further that the likelihood and p() are such that
+
+the marginal density m(y) <  for all y. Define the following three pseudo-
+
+densities, which may be improper:
+
+       m(y) = p(|y - |)p() d,
+
+                         R
+
+       p() = p( | )p() d,
+
+                         R+
+
+       p() = 2p().
+
+Then   E(  |  y)  =  m(y)  d   log  m(y)
+(A.6)                m(y)  dy
+
+                  =    1   d   m(y).
+                     m(y)  dy
+
+   Versions of this representation theorem appear in Masreliez (1975), Pol-
+son (1991) and Pericchi and Smith (1992). Theorem A.1 relaxes a specific
+regularity condition having to do with the boundedness of p(), and extends
+the usual result to situations where p() is a scale mixture of normals with
+proper mixing density and finite marginal m(y).
+
+   The theorem characterizes the behavior of an estimator in the presence
+of large signals. Specifically, it says that we can achieve "inherent Bayesian
+robustness" by choosing a prior for  such that the derivative of the log
+predictive density is bounded as a function of y. Ideally, of course, this bound
+should converge to 0 for large |y|, and will lead to E( | y)  y for large |y|.
+This will avoid the overshrinkage of exceptional observations--clearly an
+important goal in large-scale simultaneous testing problems.
+
+   It is easy to verify, using the results of the previous subsection, that nor-
+mal scale mixtures with hypergeometric inverted-beta mixing distributions
+satisfy the property of tail robustness. This helps to explain their good per-
+formance in high-dimensional settings.
+
+   A.5. The effect of shared shrinkage parameters. The hypergeometric
+inverted-beta prior allows a combination of global and local shrinkage that
+can be both flexible and robust. Figure 5 shows how a very small value of  ,
+encouraging strong global shrinkage, can be reinforced by a small observa-
+tion (y = 1.0), and yet be almost completely overruled by a large observation
+(y = 4.0). Meanwhile, the marked bimodality for an intermediate observa-
+22 N. G. POLSON AND J. G. SCOTT
+
+Fig. 5. The left pane shows the prior for  when  = 1/15, s = 0, and a = b = 1/2, re-
+flecting a prior bias for strong shrinkage. The next three panes show the different posteriors
+for  upon observing a single data point: y = 1.0, y = 2.5, or y = 4.0, respectively.
+
+tion such as y = 2.5 reflects uncertainty about whether such an observation
+corresponds to signal or noise, with the posterior mean for  averaging over
+both possibilities.
+
+   This example demonstrates that global shrinkage through  can be very
+effective at squelching noise in high-dimensional problems. It is crucial, how-
+ever, that  be estimated from the data, and that the prior for i grow
+sufficiently fast near 0 in order to allow i to escape the strong "gravita-
+tional pull" of a small  when yi is large (as in this example when yi/ = 4).
+We recommend setting a = 1/2 in sparse problems involving a normal likeli-
+hood; see Carvalho, Polson and Scott (2010) for further discussion. In situa-
+tions with heavier-tailed sampling models, it may be appropriate to choose
+a smaller value of a.
+
+   When 1-1/ 2 is very close to 1 (or when 1- 2 is very close to 1 for  < 1),
+the 1 functions may become slow to evaluate due to the slow convergence
+of the series representations given in the Appendix. In our experience, the
+issue becomes practically significant in a serial computing environment only
+when  2 is larger than 1,000 or smaller than 1/1,000. Additionally, global
+shrinkage can take place through s rather than  (with  being set equal
+to 1). Then i  HB(a, b,  = 1, s), and so
+
+                     (i | yi)  HB(a + 1/2, b,  = 1, s + yi2/22).
+
+Figure 6 shows that global shrinkage through s can produce results quite
+similar to global shrinkage through  .
+
+APPENDIX B: EXPRESSIONS FOR MOMENTS AND MARGINALS
+
+Throughout this section, we suppress conditioning on i's nonzero status.
+
+Under our hypergeometric inverted-beta model, the joint distribution for yi
+
+and i takes the form
+
+p(yi, i)  ai -1(1 - i)b-1  1  +  1           -  1  i  -1
+                           2                    2
+                                                         e-is ,
+
+where now s = s + yi2/(22) and a = a + 1/2.
+       SCREENING FOR FIRMS WITH SUPERIOR PERFORMANCE                                              23
+
+Fig. 6. The left pane shows the prior for  when  = 1, a = b = 1/2, and s = -4. The
+next three panes show the different posteriors for  upon observing a single data point:
+y = 1.0, y = 2.5, or y = 4.0, respectively.
+
+The moment-generating function of (A.2) is easily shown to be
+
+                 M   (t)    =  et  1(b, 1, a  + b, s -   t,  1 - 1/ 2  )  .
+                                     1(b, 1,  a + b, s,  1   - 1/ 2)
+
+See, for example, Gordy (1998). Expanding 1 as a sum of 1F1 functions
+and using the differentiation rules given in Chapter 15 of Abramowitz and
+
+Stegun (1964) yields
+
+(B.1)  E(n    |  y,  2)  =    (a)n       1(b, 1, a  + b + n, s, 1 - 1/ 2)        .
+                            (a + b)n       1(b, 1,  a + b, s, 1 - 1/ 2)
+
+Using (B.1), we get
+
+(B.2)  E(i | yi) =       1  -    a    b  1(b, 1, a + b + 1, s, 1 - 1/ 2)         y.
+                               a +         1(b, 1, a + b, s, 1 - 1/ 2)
+
+And by the law of total variance,
+
+(B.3)  Var(i | yi) = E{Var(i | yi, i)} + Var{E(i | yi, i)}
+                     = 2{1 - E(i | yi)} + y2 Var(i | yi)
+
+with all other posterior moments for i following in turn.
+   There is also a tractable expression for the marginal likelihood of the data:
+
+(B.4)                             1           1          +   1  -  1         i   -1
+                                              2                    2
+       m(yi) = C1-1 ia-1(1 - i)b-1                                                  e-is di,
+
+                                0
+
+where again s = s + yi2/(22) and a = a + 1/2. This integral is in the same
+family as (A.3), and so by the same series of arguments we obtain
+
+(B.5)  m(yi)  =  1          exp    -  yi2  Be(a, b)      1(b, 1, a  +        b,  s, 1 - 1/ 2)  .
+                   22                 22   Be(a, b)      1(b, 1, a  +        b,  s, 1 - 1/ 2)
+
+   Acknowledgments. The authors would like to thank Mumtaz Ahmed and
+Michael Raynor of Deloitte Consulting for their insight into the problem de-
+24 N. G. POLSON AND J. G. SCOTT
+
+scribed here. They also acknowledge the helpful advice of two anonymous ref-
+erees. Finally, they thank Jake Benson of the University of Texas for his help
+in collecting data on companies mentioned in popular management books.
+
+                                       REFERENCES
+
+Abramovich, F., Benjamini, Y., Donoho, D. L. and Johnstone, I. M. (2006). Adapt-
+   ing to unknown sparsity by controlling the false discovery rate. Ann. Statist. 34 584­653.
+   MR2281879
+
+Abramowitz, M. and Stegun, I. A., eds. (1964). Handbook of Mathematical Functions
+   with Formulas, Graphs, and Mathematical Tables. Applied Mathematics Series 55. Na-
+   tional Bureau of Standards, Washington, DC. Reprinted in paperback by Dover (1974).
+
+Armero, C. and Bayarri, M. (1994). Prior assessments for predictions in queues. J. Roy.
+   Statist. Soc. Ser. D 43 139­153.
+
+Benjamini, Y. and Hochberg, Y. (1995). Controlling the false discovery rate: A practical
+   and powerful approach to multiple testing. J. Roy. Statist. Soc. Ser. B 57 289­300.
+   MR1325392
+
+Berger, J. (1980). A robust generalized Bayes estimator and confidence region for a mul-
+   tivariate normal mean. Ann. Statist. 8 716­761. MR0572619
+
+Bogdan, M., Chakrabarti, A. and Ghosh, J. K. (2008). Optimal rules for multiple
+   testing and sparse multiple regression. Technical Report I-18/08/P-003, Wroclaw Univ.
+   Technology.
+
+Bogdan, M., Ghosh, J. K. and Tokdar, S. T. (2008). A comparison of the Benjamini­
+   Hochberg procedure with some Bayesian rules for multiple testing. In Beyond Paramet-
+   rics in Interdisciplinary Research: Festschrift in Honor of Professor Pranab K. Sen.
+   Inst. Math. Stat. Collect. 1 211­230. IMS, Beachwood, OH. MR2462208
+
+Carvalho, C. M., Polson, N. G. and Scott, J. G. (2010). The horseshoe estimator
+   for sparse signals. Biometrika 97 465­480. MR2650751
+
+Dahl, D. B. and Newton, M. A. (2007). Multiple hypothesis testing by clustering
+   treatment effects. J. Amer. Statist. Assoc. 102 517­526. MR2325114
+
+Denrell, J. (2005). Selection bias and the perils of benchmarking. Harvard Business
+   Review 83 114­119.
+
+Do, K.-A., Mu¨ller, P. and Tang, F. (2005). A Bayesian mixture model for differential
+   gene expression. J. Roy. Statist. Soc. Ser. C 54 627­644. MR2137258
+
+Efron, B. (2008). Microarrays, empirical Bayes and the two-groups model. Statist. Sci.
+   23 1­22. MR2431866
+
+Fourdrinier, D., Strawderman, W. E. and Wells, M. T. (1998). On the construction
+   of Bayes minimax estimators. Ann. Statist. 26 660­671. MR1626063
+
+Gelman, A. (2006). Prior distributions for variance parameters in hierarchical models
+   (comment on article by Browne and Draper). Bayesian Anal. 1 515­533 (electronic).
+   MR2221284
+
+Gordy, M. B. (1998). A generalization of generalized beta distributions. Finance and
+   Economics Discussion Series 1998-18, Board of Governors of the Federal Reserve System
+   (U.S.).
+
+Gradshteyn, I. and Ryzhik, I. (1965). Table of Integrals, Series, and Products. Academic
+   Press, New York.
+
+Gramacy, R. B. and Lee, H. K. H. (2008). Bayesian treed Gaussian process models
+   with an application to computer modeling. J. Amer. Statist. Assoc. 103 1119­1130.
+   MR2528830
+
+Griffin, J. and Brown, P. (2005). Alternative prior distributions for variable selection
+   with very many more variables than observations. Technical report, Univ. Warwick.
+SCREENING FOR FIRMS WITH SUPERIOR PERFORMANCE  25
+
+Henderson, A. D., Raynor, M. E. and Ahmed, M. (2009). How long must a firm be
+   great to rule out luck? Benchmarking sustained superior performance without being
+   fooled by randomness. Strategic Manag. J. To appear. DOI:10.1002/smj.1943.
+
+James, W. and Stein, C. (1961). Estimation with quadratic loss. In Proc. 4th Berkeley
+   Sympos. Math. Statist. and Prob., Vol. I 361­379. Univ. California Press, Berkeley, CA.
+   MR0133191
+
+Jeffreys, H. (1961). Theory of Probability, 3rd ed. Clarendon Press, Oxford. MR0187257
+Johnstone, I. M. and Silverman, B. W. (2004). Needles and straw in haystacks:
+
+   Empirical Bayes estimates of possibly sparse sequences. Ann. Statist. 32 1594­1649.
+   MR2089135
+Liang, F., Paulo, R., Molina, G., Clyde, M. A. and Berger, J. O. (2008). Mix-
+   tures of g priors for Bayesian variable selection. J. Amer. Statist. Assoc. 103 410­423.
+   MR2420243
+Maruyama, Y. (1999). Improving on the James­Stein estimator. Statist. Decisions 17
+   137­140. MR1714127
+Masreliez, C. (1975). Approximate non-Gaussian filtering with linear state and obser-
+   vation relations. IEEE Trans. Automat. Control 20 107­110.
+McDonald, J. B. and Xu, Y. J. (1995). A generalization of the beta distribution with
+   applications. J. Econometrics 66 133­152.
+McGahan, A. M. and Porter, M. E. (1999). The persistence of shocks to profitability.
+   Rev. Econom. Statist. 81 143­153.
+Mu¨ller, P., Parmigiani, G. and Rice, K. (2007). FDR and Bayesian multiple compar-
+   isons rules. In Bayesian Statistics 8 349­370. Oxford Univ. Press, Oxford. MR2433200
+Park, J. and Ghosh, J. K. (2010). A guided random walk through some high dimensional
+   problems. Sankhya¯ 72 81­100. MR2658165
+Pericchi, L. R. and Smith, A. F. M. (1992). Exact and approximate posterior moments
+   for a normal location parameter. J. Roy. Statist. Soc. Ser. B 54 793­804. MR1185223
+Polson, N. G. (1991). A representation of the posterior mean for a location model.
+   Biometrika 78 426­430. MR1131177
+Polson, N. K. and Scott, J. G. (2011). On the half-Cauchy prior for a global scale
+   parameter. Technical report, Univ. Texas at Austin. Available at arXiv:1104.4937v2.
+Scott, J. G. and Berger, J. O. (2006). An exploration of aspects of Bayesian multiple
+   testing. J. Statist. Plann. Inference 136 2144­2162. MR2235051
+Stein, C. M. (1981). Estimation of the mean of a multivariate normal distribution. Ann.
+   Statist. 9 1135­1151. MR0630098
+Strawderman, W. E. (1971). Proper Bayes minimax estimators of the multivariate nor-
+   mal mean. Ann. Math. Statist. 42 385­388. MR0397939
+Wiggins, R. R. and Ruefli, T. W. (2005). Schumpeter's ghost: Is hypercompetition
+   making the best of times shorter? Strategic Management Journal 26 887­911.
+Zellner, A. and Siow, A. (1980). Posterior odds ratios for selected regression hypotheses.
+   In Bayesian Statistics: Proceedings of the First International Meeting Held in Valencia
+   (J. M. Bernardo, M. H. DeGroot, D. V. Lindley and A. F. M. Smith, eds.)
+   585­603. Valencia Univ. Press, Valencia.
+
+Booth School of Business      Division of Statistics
+University of Chicago            and Scientific Computing
+5807 South Woodlawn Avenue
+Chicago, Illinois 60637-1610  University of Texas at Austin
+USA                           1 University Station, B6500
+E-mail: ngp@chicagobooth.edu  Austin, Texas 78712
+                              USA
+                              E-mail: james.scott@mccombs.utexas.edu
+

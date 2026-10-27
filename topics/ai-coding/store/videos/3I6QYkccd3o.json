@@ -19,13 +19,47 @@
       "claim": "ai-coding/benchmarks-overstate-real-world-usefulness-because",
       "stance": "asserts",
       "quote": "most people in the world are never ever ever going to care about an ELO rating",
-      "verdicts": []
+      "verdicts": [
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "Real-world merge rates of 35% to 64% for autonomous agents' PRs contrast with SWE-bench Verified success rates above 70%, which the authors read as a gap in the benchmark's ecological validity; the gap supports overstatement but the study does not test the stated cause (cleaner tasks, lenient scoring).",
+          "source": "ai-coding/sources/2507.15003.txt#L464-L469",
+          "date": "2026-10-26"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "Controlling for task length, models did worse on tasks scoring higher on 16 'messiness' factors (resource limits, novelty, dynamic environments), and the authors say the suite's automatic scoring and other differences from real work cast doubt on generalization; they do not measure scoring leniency or real-world usefulness directly.",
+          "source": "ai-coding/sources/2503.14499.txt#L343-L349",
+          "date": "2026-10-26"
+        }
+      ]
     },
     {
       "claim": "ai-coding/frontier-model-improvements-have-become-incremental",
       "stance": "asserts",
       "quote": "in practice it's not that much different than the previous model that also everyone thought was the best model ever",
-      "verdicts": []
+      "verdicts": [
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "confidence": 0.4,
+          "note": "Through early 2025 METR's measured time horizon kept rising exponentially, from 2 seconds for GPT-2 to 110 minutes for o3, with o3 above the long-run trend; it covers models only up to early 2025 and one benchmark suite.",
+          "source": "ai-coding/sources/2503.14499.txt#L284-L288",
+          "date": "2026-10-26"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "confidence": 0.55,
+          "note": "Epoch AI fitted eight growth curves to frontier models' scores from 2023 to early 2026 and checked them by out-of-sample prediction: on three of four metrics (the Epoch Capabilities Index, log METR 50% time horizon and a math index) progress sped up rather than slowed, with reasoning models on a 2-3x faster trend; the fourth (WeirdML V2) kept a steady linear trend, and the authors warn the speed-up is concentrated in easy-to-verify programming and math tasks.",
+          "source": "ai-coding/sources/epoch-have-ai-capabilities-accelerated.txt#L17-L23",
+          "date": "2026-10-26"
+        }
+      ]
     },
     {
       "claim": "ai-coding/shrinking-engineering-team-sizes",

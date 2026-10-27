@@ -59,12 +59,13 @@
             "u5l4cdUjau4",
             "vosIJZh2BbM"
           ],
-          "note": "Meta-analysis found detectable pesticide residues in 46% of conventional vs 11% of organic crop samples (75% for conventional fruit), though only 11 studies compared frequency and none allowed robust comparison of concentrations.",
-          "source": "organic-food/sources/baranski-2014-crops.txt#L654-L663",
+          "note": "Twenty years of state monitoring: about 76% of fresh organic samples had no detectable residue in 2021, and average residues were 0.002 mg/kg for organic fruit and vegetables against 0.40-0.48 mg/kg for conventional, a gap repeated every year since 2014.",
+          "source": "organic-food/sources/cvuas-2021-organic-monitoring.txt#L51-L77",
           "documents": [
             "organic-food/sources/baker-2002-residues.txt",
             "organic-food/sources/baranski-2014-crops.txt",
             "organic-food/sources/clark-tilman-2017-lca.txt",
+            "organic-food/sources/cvuas-2021-organic-monitoring.txt",
             "organic-food/sources/mie-2017-health.txt",
             "organic-food/sources/smith-spangler-2012.txt",
             "organic-food/sources/winter-katz-2011.txt"
@@ -161,7 +162,8 @@
           "documents": [
             "organic-food/sources/baranski-2014-crops.txt",
             "organic-food/sources/ecfr-7cfr205.txt",
-            "organic-food/sources/mie-2017-health.txt"
+            "organic-food/sources/mie-2017-health.txt",
+            "organic-food/sources/usda-ams-2012-organic-residue.txt"
           ]
         },
         {
@@ -195,6 +197,7 @@
           "note": "All four whole-diet crossover trials (children and adults) that measured urinary pesticide metabolites found significant drops, up to 90%, within a few days of switching to organic.",
           "source": "organic-food/sources/vigar-2019-review.txt#L58-L59",
           "documents": [
+            "organic-food/sources/fagan-2020-glyphosate.txt",
             "organic-food/sources/hyland-2019-intervention.txt",
             "organic-food/sources/mie-2017-health.txt",
             "organic-food/sources/smith-spangler-2012.txt",
@@ -214,9 +217,9 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "wrong",
-          "confidence": 0.5,
+          "confidence": 0.55,
           "videos": [
             "-dwWQZkJ5r8",
             "CcEg84X3IzM",
@@ -228,10 +231,12 @@
             "nC27EnNwEcw",
             "oxOanCd5WK0"
           ],
-          "note": "IARC's probable-carcinogen rating rests mainly on high occupational exposure; EPA and EFSA find dietary residue levels pose no meaningful risk, though evidence is contested.",
-          "source": null,
+          "note": "EFSA's 2023 peer review put the maximum chronic dietary intake of glyphosate at 3% of the ADI (Dutch toddlers) and acute intake at 2% of the ARfD; provisional, limited to the EU's representative uses, but an independent regulator finding dietary residues far below levels of concern.",
+          "source": "organic-food/sources/efsa-2023-glyphosate.txt#L241-L241",
           "documents": [
-            "organic-food/sources/glyphosate-epa-iarc.txt"
+            "organic-food/sources/efsa-2023-glyphosate.txt",
+            "organic-food/sources/glyphosate-epa-iarc.txt",
+            "organic-food/sources/ospina-2024-nhanes-glyphosate.txt"
           ]
         },
         {
@@ -312,15 +317,15 @@
           "asserted": 7,
           "denied": 0,
           "tally": {
-            "right": 1,
-            "wrong": 0,
+            "right": 0,
+            "wrong": 1,
             "partly": 1,
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
+          "strongest": "source",
+          "effective": "wrong",
+          "confidence": 0.55,
           "videos": [
             "1vg1D35uPSI",
             "8HUnW8IChv0",
@@ -330,10 +335,11 @@
             "f7Uor6S7fRM",
             "rpziBGbWg-4"
           ],
-          "note": "Approvals are mostly per active substance; EFSA and EPA run cumulative assessments for some chemical groups, but mixture effects remain little studied.",
-          "source": null,
+          "note": "EFSA ran a cumulative risk assessment of dietary residues, adding doses across pesticides with a common effect and computing a combined margin of exposure at each percentile, so EU regulators do assess combined effects within effect groups.",
+          "source": "organic-food/sources/efsa-2020-cumulative-nervous.txt#L142-L146",
           "documents": [
             "organic-food/sources/baranski-2014-crops.txt",
+            "organic-food/sources/efsa-2020-cumulative-nervous.txt",
             "organic-food/sources/mie-2017-health.txt",
             "organic-food/sources/usda-pdp-2024.txt",
             "organic-food/sources/vigar-2019-review.txt"
@@ -363,7 +369,8 @@
           "note": "High occupational exposure to some pesticides is linked to cancers such as non-Hodgkin lymphoma, but evidence at dietary exposure levels is weak.",
           "source": null,
           "documents": [
-            "organic-food/sources/mie-2017-health.txt"
+            "organic-food/sources/mie-2017-health.txt",
+            "organic-food/sources/sandoval-insausti-2021-cancer.txt"
           ]
         },
         {
@@ -402,8 +409,8 @@
           "denied": 3,
           "tally": {
             "right": 0,
-            "wrong": 2,
-            "partly": 0,
+            "wrong": 1,
+            "partly": 1,
             "untestable": 0,
             "unknown": 0
           },
@@ -428,7 +435,10 @@
           "note": "The organic label is a legally enforced production standard with inspections and real input restrictions, even though it is heavily marketed.",
           "source": null,
           "documents": [
-            "organic-food/sources/ers-organic-price-premiums.txt"
+            "organic-food/sources/crowder-reganold-2015-profitability.txt",
+            "organic-food/sources/ers-2005-organic-produce-premiums.txt",
+            "organic-food/sources/ers-organic-price-premiums.txt",
+            "organic-food/sources/ufc-2017-organic-margins.txt"
           ]
         },
         {
@@ -438,22 +448,24 @@
           "asserted": 2,
           "denied": 0,
           "tally": {
-            "right": 1,
+            "right": 2,
             "wrong": 0,
             "partly": 0,
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
-          "confidence": 0.5,
+          "confidence": 0.75,
           "videos": [
             "CcEg84X3IzM",
             "_kfZr9HT2H8"
           ],
-          "note": "CDC biomonitoring detected glyphosate in roughly four in five US urine samples; detection says nothing about harm by itself.",
-          "source": null,
-          "documents": []
+          "note": "In nationally representative NHANES samples, glyphosate was detected in the urine of 81.2% (2013-2014), 70.0% (2015-2016) and 81.7% (2017-2018) of the U.S. population aged 3 and up, though concentrations fell 38% over the period.",
+          "source": "organic-food/sources/ospina-2024-nhanes-glyphosate.txt#L22-L22",
+          "documents": [
+            "organic-food/sources/ospina-2024-nhanes-glyphosate.txt"
+          ]
         },
         {
           "id": "organic-food/organic-food-more-nutritious-conventional",
@@ -628,6 +640,7 @@
           "documents": [
             "organic-food/sources/baudry-2018-nutrinet.txt",
             "organic-food/sources/bradbury-2014-million-women.txt",
+            "organic-food/sources/sandoval-insausti-2021-cancer.txt",
             "organic-food/sources/vigar-2019-review.txt"
           ]
         },
@@ -682,6 +695,7 @@
           "documents": [
             "organic-food/sources/ewg-dirty-dozen-2026.txt",
             "organic-food/sources/mie-2017-health.txt",
+            "organic-food/sources/sandoval-insausti-2022-mortality.txt",
             "organic-food/sources/winter-katz-2011.txt"
           ]
         },
@@ -713,6 +727,7 @@
           "note": "Children's higher intake per body weight and developmental sensitivity are real, but no trial shows a health benefit from organic diets at residue levels.",
           "source": null,
           "documents": [
+            "organic-food/sources/chiu-2018-earth-ivf.txt",
             "organic-food/sources/mie-2017-health.txt",
             "organic-food/sources/srednicka-tober-2016-milk.txt",
             "organic-food/sources/vigar-2019-review.txt"
@@ -897,7 +912,9 @@
           "documents": [
             "organic-food/sources/aap-2012-organic.txt",
             "organic-food/sources/baudry-2018-nutrinet.txt",
-            "organic-food/sources/ers-organic-price-premiums.txt"
+            "organic-food/sources/ers-2005-organic-produce-premiums.txt",
+            "organic-food/sources/ers-organic-price-premiums.txt",
+            "organic-food/sources/ufc-2017-organic-margins.txt"
           ]
         },
         {
@@ -956,7 +973,12 @@
           "source": "organic-food/sources/winter-katz-2011.txt#L23-L26",
           "documents": [
             "organic-food/sources/baranski-2014-crops.txt",
+            "organic-food/sources/chiu-2018-earth-ivf.txt",
+            "organic-food/sources/efsa-2020-cumulative-nervous.txt",
+            "organic-food/sources/efsa-2023-glyphosate.txt",
             "organic-food/sources/mie-2017-health.txt",
+            "organic-food/sources/sandoval-insausti-2021-cancer.txt",
+            "organic-food/sources/sandoval-insausti-2022-mortality.txt",
             "organic-food/sources/usda-pdp-2024.txt",
             "organic-food/sources/winter-katz-2011.txt"
           ]
@@ -1075,6 +1097,7 @@
           "source": "organic-food/sources/ponisio-2015-yield-gap.txt#L65-L65",
           "documents": [
             "organic-food/sources/aap-2012-organic.txt",
+            "organic-food/sources/crowder-reganold-2015-profitability.txt",
             "organic-food/sources/mie-2017-health.txt",
             "organic-food/sources/ponisio-2015-yield-gap.txt"
           ]
@@ -1508,7 +1531,8 @@
             "organic-food/sources/baranski-2014-crops.txt",
             "organic-food/sources/ecfr-7cfr205.txt",
             "organic-food/sources/eu-2021-1165.txt",
-            "organic-food/sources/mie-2017-health.txt"
+            "organic-food/sources/mie-2017-health.txt",
+            "organic-food/sources/usda-ams-2012-organic-residue.txt"
           ]
         },
         {
@@ -1716,7 +1740,9 @@
           "source": null,
           "documents": [
             "organic-food/sources/aap-2012-organic.txt",
-            "organic-food/sources/ers-organic-price-premiums.txt"
+            "organic-food/sources/crowder-reganold-2015-profitability.txt",
+            "organic-food/sources/ers-organic-price-premiums.txt",
+            "organic-food/sources/ufc-2017-organic-margins.txt"
           ]
         },
         {
@@ -2559,7 +2585,7 @@
             "untestable": 0,
             "unknown": 1
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "unknown",
           "confidence": 0,
           "videos": [
@@ -2568,9 +2594,11 @@
             "ip6bBtEx0dc",
             "oxOanCd5WK0"
           ],
-          "note": "Glyphosate inhibits a pathway some gut bacteria use and shifts microbiota in some animal studies, but effects at human dietary doses are not established.",
-          "source": null,
-          "documents": []
+          "note": "EFSA reviewed the published gut-microbiome studies and found no definitive conclusions can be drawn from them, while judging the mammalian toxicity dataset protective for any microbiome-mediated effect.",
+          "source": "organic-food/sources/efsa-2023-glyphosate.txt#L150-L150",
+          "documents": [
+            "organic-food/sources/efsa-2023-glyphosate.txt"
+          ]
         },
         {
           "id": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
@@ -2587,16 +2615,21 @@
           },
           "strongest": "source",
           "effective": "wrong",
-          "confidence": 0.35,
+          "confidence": 0.55,
           "videos": [
             "-dwWQZkJ5r8",
             "nC27EnNwEcw",
             "oxOanCd5WK0"
           ],
-          "note": "EPA concluded glyphosate is not likely to be carcinogenic under real-world exposures, in line with EFSA, ECHA, Canada, Australia, Japan and JMPR, while noting IARC's hazard-based 2A rating answers a different question.",
-          "source": "organic-food/sources/glyphosate-epa-iarc.txt#L30-L30",
+          "note": "In the prospective Agricultural Health Study of 54,251 licensed applicators (44,932 glyphosate users), the top quartile of intensity-weighted lifetime use had no raised NHL risk (RR 0.87, 95% CI 0.64-1.20, 440 exposed cases), with no association for any subtype; exposure was self-reported, so some misclassification is expected.",
+          "source": "organic-food/sources/andreotti-2018-ahs-glyphosate.txt#L610-L616",
           "documents": [
-            "organic-food/sources/glyphosate-epa-iarc.txt"
+            "organic-food/sources/andreotti-2018-ahs-glyphosate.txt",
+            "organic-food/sources/efsa-2023-glyphosate.txt",
+            "organic-food/sources/gagnier-2026-glyphosate-nhl.txt",
+            "organic-food/sources/glyphosate-epa-iarc.txt",
+            "organic-food/sources/leon-2019-agricoh-nhl.txt",
+            "organic-food/sources/zhang-2019-glyphosate-nhl-meta.txt"
           ]
         },
         {
@@ -2912,14 +2945,14 @@
           "denied": 2,
           "tally": {
             "right": 0,
-            "wrong": 0,
+            "wrong": 1,
             "partly": 0,
             "untestable": 0,
             "unknown": 1
           },
-          "strongest": "prior",
-          "effective": "unknown",
-          "confidence": 0,
+          "strongest": "source",
+          "effective": "wrong",
+          "confidence": 0.45,
           "videos": [
             "2P0Fh6wc-kI",
             "Q9wvL24CpCg",
@@ -2931,9 +2964,12 @@
             "u5l4cdUjau4",
             "vnews-millions-of-pounds-of-apparently-fake-organic-grains-convince-the-food-ind"
           ],
-          "note": "Large fraud cases are documented, especially in imported grain, but there is no reliable measure of what share of organic food is mislabelled.",
-          "source": null,
-          "documents": []
+          "note": "Baden-Wuerttemberg's state lab judged 0% of fresh organic produce falsely labelled in 2021 (always well under 5% in 2011-2020, up to 8.5% before 2010) and 3.1% of processed organic foods (2.2-7.0% in recent years, over 8% before 2011); a German market and residue-based detection only, with targeted projects limiting year-to-year comparison.",
+          "source": "organic-food/sources/cvuas-2021-organic-monitoring.txt#L57-L83",
+          "documents": [
+            "organic-food/sources/cvuas-2021-organic-monitoring.txt",
+            "organic-food/sources/usda-ams-2012-organic-residue.txt"
+          ]
         },
         {
           "id": "organic-food/group-certification-lets-most-farms-foreign",
@@ -3155,6 +3191,7 @@
           "note": "Organic foods rarely carry glyphosate residues and diet switches lower urinary levels, though drift can leave traces and residue-tested labels also exist.",
           "source": null,
           "documents": [
+            "organic-food/sources/fagan-2020-glyphosate.txt",
             "organic-food/sources/vigar-2019-review.txt"
           ]
         },
@@ -3204,7 +3241,8 @@
           "note": "Some pesticides show endocrine activity in lab studies, but dietary residue levels have not been shown to cause breast or other hormonal cancers.",
           "source": null,
           "documents": [
-            "organic-food/sources/bradbury-2014-million-women.txt"
+            "organic-food/sources/bradbury-2014-million-women.txt",
+            "organic-food/sources/sandoval-insausti-2021-cancer.txt"
           ]
         },
         {
@@ -3280,6 +3318,7 @@
           "note": "Risk-weighted analyses of USDA residue data find a small set of crops, mostly with organophosphate or carbamate residues, account for most dietary pesticide risk.",
           "source": null,
           "documents": [
+            "organic-food/sources/efsa-2020-cumulative-nervous.txt",
             "organic-food/sources/ewg-dirty-dozen-2026.txt",
             "organic-food/sources/winter-katz-2011.txt"
           ]
@@ -3391,21 +3430,22 @@
           "asserted": 1,
           "denied": 0,
           "tally": {
-            "right": 0,
+            "right": 1,
             "wrong": 0,
-            "partly": 1,
+            "partly": 0,
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.4,
+          "strongest": "source",
+          "effective": "right",
+          "confidence": 0.55,
           "videos": [
             "drhyman-podcast-ep146"
           ],
-          "note": "A global meta-analysis found organic farms 22 to 35 percent more profitable when price premiums are paid, far below several-fold claims, and not without premiums.",
-          "source": null,
+          "note": "A meta-analysis of 44 studies (55 crops, 14 countries, 40 years) found organic agriculture 22-35% more profitable (net present value) than conventional once actual price premiums were applied, but 23-27% less profitable without them, so the advantage rests on the premium; the studies are largely field trials without subsidies or externalities.",
+          "source": "organic-food/sources/crowder-reganold-2015-profitability.txt#L76-L86",
           "documents": [
+            "organic-food/sources/crowder-reganold-2015-profitability.txt",
             "organic-food/sources/ers-organic-price-premiums.txt"
           ]
         },
@@ -3461,6 +3501,7 @@
             "organic-food/sources/baudry-2018-nutrinet.txt",
             "organic-food/sources/bradbury-2014-million-women.txt",
             "organic-food/sources/ers-organic-price-premiums.txt",
+            "organic-food/sources/sandoval-insausti-2021-cancer.txt",
             "organic-food/sources/vigar-2019-review.txt"
           ]
         },
@@ -3856,9 +3897,11 @@
             "PKyspq3mSv8",
             "rpziBGbWg-4"
           ],
-          "note": "USDA's SOE fact sheet gives 'documented cases of organic fraud' in increasingly complex supply chains as the reason for the rule.",
-          "source": "organic-food/sources/usda-soe-2023.txt#L21-L26",
+          "note": "The state lab judged 3.1% of processed organic foods falsely labelled as organic in 2021 (2.2-7.0% in recent years, over 8% before 2011), naming each case: chives, US almonds, Chinese goji berries, Turkish figs and Ghanaian pineapple carrying prohibited herbicides or insecticides.",
+          "source": "organic-food/sources/cvuas-2021-organic-monitoring.txt#L81-L85",
           "documents": [
+            "organic-food/sources/cvuas-2021-organic-monitoring.txt",
+            "organic-food/sources/usda-ams-2012-organic-residue.txt",
             "organic-food/sources/usda-soe-2023.txt"
           ]
         },
@@ -4304,7 +4347,8 @@
           "source": null,
           "documents": [
             "organic-food/sources/bradbury-2014-million-women.txt",
-            "organic-food/sources/glyphosate-epa-iarc.txt"
+            "organic-food/sources/glyphosate-epa-iarc.txt",
+            "organic-food/sources/leon-2019-agricoh-nhl.txt"
           ]
         },
         {
@@ -4882,7 +4926,7 @@
           "asserted": 2,
           "denied": 0,
           "tally": {
-            "right": 1,
+            "right": 2,
             "wrong": 0,
             "partly": 0,
             "untestable": 0,
@@ -4897,7 +4941,9 @@
           ],
           "note": "Weeding and pest control without herbicides raise labour per hectare on most organic farms.",
           "source": null,
-          "documents": []
+          "documents": [
+            "organic-food/sources/crowder-reganold-2015-profitability.txt"
+          ]
         },
         {
           "id": "organic-food/pesticide-residues-food-cause-large-numbers",
@@ -4920,7 +4966,9 @@
           ],
           "note": "The UN figure refers to acute pesticide poisonings, mostly occupational exposure and self-harm, not residues in food.",
           "source": null,
-          "documents": []
+          "documents": [
+            "organic-food/sources/sandoval-insausti-2022-mortality.txt"
+          ]
         },
         {
           "id": "organic-food/most-conventional-grain-crops-sprayed-glyphosate",
@@ -5234,8 +5282,8 @@
           "denied": 3,
           "tally": {
             "right": 0,
-            "wrong": 2,
-            "partly": 0,
+            "wrong": 1,
+            "partly": 1,
             "untestable": 0,
             "unknown": 0
           },
@@ -5260,7 +5308,10 @@
           "note": "The organic label is a legally enforced production standard with inspections and real input restrictions, even though it is heavily marketed.",
           "source": null,
           "documents": [
-            "organic-food/sources/ers-organic-price-premiums.txt"
+            "organic-food/sources/crowder-reganold-2015-profitability.txt",
+            "organic-food/sources/ers-2005-organic-produce-premiums.txt",
+            "organic-food/sources/ers-organic-price-premiums.txt",
+            "organic-food/sources/ufc-2017-organic-margins.txt"
           ]
         },
         {
@@ -5276,9 +5327,9 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "wrong",
-          "confidence": 0.5,
+          "confidence": 0.55,
           "videos": [
             "-dwWQZkJ5r8",
             "CcEg84X3IzM",
@@ -5290,10 +5341,12 @@
             "nC27EnNwEcw",
             "oxOanCd5WK0"
           ],
-          "note": "IARC's probable-carcinogen rating rests mainly on high occupational exposure; EPA and EFSA find dietary residue levels pose no meaningful risk, though evidence is contested.",
-          "source": null,
+          "note": "EFSA's 2023 peer review put the maximum chronic dietary intake of glyphosate at 3% of the ADI (Dutch toddlers) and acute intake at 2% of the ARfD; provisional, limited to the EU's representative uses, but an independent regulator finding dietary residues far below levels of concern.",
+          "source": "organic-food/sources/efsa-2023-glyphosate.txt#L241-L241",
           "documents": [
-            "organic-food/sources/glyphosate-epa-iarc.txt"
+            "organic-food/sources/efsa-2023-glyphosate.txt",
+            "organic-food/sources/glyphosate-epa-iarc.txt",
+            "organic-food/sources/ospina-2024-nhanes-glyphosate.txt"
           ]
         },
         {
@@ -5357,6 +5410,75 @@
           ]
         },
         {
+          "id": "organic-food/regulators-assess-pesticides-one-time-ignore",
+          "text": "Regulators assess pesticides one at a time and ignore combined effects of residue mixtures",
+          "topic": "organic-food",
+          "asserted": 7,
+          "denied": 0,
+          "tally": {
+            "right": 0,
+            "wrong": 1,
+            "partly": 1,
+            "untestable": 0,
+            "unknown": 0
+          },
+          "strongest": "source",
+          "effective": "wrong",
+          "confidence": 0.55,
+          "videos": [
+            "1vg1D35uPSI",
+            "8HUnW8IChv0",
+            "CcEg84X3IzM",
+            "_kfZr9HT2H8",
+            "ewg-summary-post",
+            "f7Uor6S7fRM",
+            "rpziBGbWg-4"
+          ],
+          "note": "EFSA ran a cumulative risk assessment of dietary residues, adding doses across pesticides with a common effect and computing a combined margin of exposure at each percentile, so EU regulators do assess combined effects within effect groups.",
+          "source": "organic-food/sources/efsa-2020-cumulative-nervous.txt#L142-L146",
+          "documents": [
+            "organic-food/sources/baranski-2014-crops.txt",
+            "organic-food/sources/efsa-2020-cumulative-nervous.txt",
+            "organic-food/sources/mie-2017-health.txt",
+            "organic-food/sources/usda-pdp-2024.txt",
+            "organic-food/sources/vigar-2019-review.txt"
+          ]
+        },
+        {
+          "id": "organic-food/significant-share-food-sold-organic-not",
+          "text": "A significant share of food sold as organic is not genuinely organic",
+          "topic": "organic-food",
+          "asserted": 7,
+          "denied": 2,
+          "tally": {
+            "right": 0,
+            "wrong": 1,
+            "partly": 0,
+            "untestable": 0,
+            "unknown": 1
+          },
+          "strongest": "source",
+          "effective": "wrong",
+          "confidence": 0.45,
+          "videos": [
+            "2P0Fh6wc-kI",
+            "Q9wvL24CpCg",
+            "RNsf5PxxsPI",
+            "WWXKe5DgNMU",
+            "ams-usda-organic-basics",
+            "cfXQzAIaBnk",
+            "lRPqZUegKyk",
+            "u5l4cdUjau4",
+            "vnews-millions-of-pounds-of-apparently-fake-organic-grains-convince-the-food-ind"
+          ],
+          "note": "Baden-Wuerttemberg's state lab judged 0% of fresh organic produce falsely labelled in 2021 (always well under 5% in 2011-2020, up to 8.5% before 2010) and 3.1% of processed organic foods (2.2-7.0% in recent years, over 8% before 2011); a German market and residue-based detection only, with targeted projects limiting year-to-year comparison.",
+          "source": "organic-food/sources/cvuas-2021-organic-monitoring.txt#L57-L83",
+          "documents": [
+            "organic-food/sources/cvuas-2021-organic-monitoring.txt",
+            "organic-food/sources/usda-ams-2012-organic-residue.txt"
+          ]
+        },
+        {
           "id": "organic-food/eating-organic-food-lowers-cancer-risk",
           "text": "Eating organic food lowers cancer risk",
           "topic": "organic-food",
@@ -5389,6 +5511,7 @@
           "documents": [
             "organic-food/sources/baudry-2018-nutrinet.txt",
             "organic-food/sources/bradbury-2014-million-women.txt",
+            "organic-food/sources/sandoval-insausti-2021-cancer.txt",
             "organic-food/sources/vigar-2019-review.txt"
           ]
         },
@@ -5447,7 +5570,8 @@
           "documents": [
             "organic-food/sources/baranski-2014-crops.txt",
             "organic-food/sources/ecfr-7cfr205.txt",
-            "organic-food/sources/mie-2017-health.txt"
+            "organic-food/sources/mie-2017-health.txt",
+            "organic-food/sources/usda-ams-2012-organic-residue.txt"
           ]
         },
         {
@@ -5480,7 +5604,8 @@
             "organic-food/sources/baranski-2014-crops.txt",
             "organic-food/sources/ecfr-7cfr205.txt",
             "organic-food/sources/eu-2021-1165.txt",
-            "organic-food/sources/mie-2017-health.txt"
+            "organic-food/sources/mie-2017-health.txt",
+            "organic-food/sources/usda-ams-2012-organic-residue.txt"
           ]
         },
         {
@@ -5498,16 +5623,21 @@
           },
           "strongest": "source",
           "effective": "wrong",
-          "confidence": 0.35,
+          "confidence": 0.55,
           "videos": [
             "-dwWQZkJ5r8",
             "nC27EnNwEcw",
             "oxOanCd5WK0"
           ],
-          "note": "EPA concluded glyphosate is not likely to be carcinogenic under real-world exposures, in line with EFSA, ECHA, Canada, Australia, Japan and JMPR, while noting IARC's hazard-based 2A rating answers a different question.",
-          "source": "organic-food/sources/glyphosate-epa-iarc.txt#L30-L30",
+          "note": "In the prospective Agricultural Health Study of 54,251 licensed applicators (44,932 glyphosate users), the top quartile of intensity-weighted lifetime use had no raised NHL risk (RR 0.87, 95% CI 0.64-1.20, 440 exposed cases), with no association for any subtype; exposure was self-reported, so some misclassification is expected.",
+          "source": "organic-food/sources/andreotti-2018-ahs-glyphosate.txt#L610-L616",
           "documents": [
-            "organic-food/sources/glyphosate-epa-iarc.txt"
+            "organic-food/sources/andreotti-2018-ahs-glyphosate.txt",
+            "organic-food/sources/efsa-2023-glyphosate.txt",
+            "organic-food/sources/gagnier-2026-glyphosate-nhl.txt",
+            "organic-food/sources/glyphosate-epa-iarc.txt",
+            "organic-food/sources/leon-2019-agricoh-nhl.txt",
+            "organic-food/sources/zhang-2019-glyphosate-nhl-meta.txt"
           ]
         },
         {
@@ -5952,7 +6082,8 @@
           "note": "Some pesticides show endocrine activity in lab studies, but dietary residue levels have not been shown to cause breast or other hormonal cancers.",
           "source": null,
           "documents": [
-            "organic-food/sources/bradbury-2014-million-women.txt"
+            "organic-food/sources/bradbury-2014-million-women.txt",
+            "organic-food/sources/sandoval-insausti-2021-cancer.txt"
           ]
         },
         {
@@ -5976,7 +6107,9 @@
           ],
           "note": "The UN figure refers to acute pesticide poisonings, mostly occupational exposure and self-harm, not residues in food.",
           "source": null,
-          "documents": []
+          "documents": [
+            "organic-food/sources/sandoval-insausti-2022-mortality.txt"
+          ]
         },
         {
           "id": "organic-food/pesticide-safety-limits-not-account-long",
@@ -6110,15 +6243,15 @@
             "asserted": 7,
             "denied": 0,
             "tally": {
-              "right": 1,
-              "wrong": 0,
+              "right": 0,
+              "wrong": 1,
               "partly": 1,
               "untestable": 0,
               "unknown": 0
             },
-            "strongest": "prior",
-            "effective": "partly",
-            "confidence": 0.5,
+            "strongest": "source",
+            "effective": "wrong",
+            "confidence": 0.55,
             "videos": [
               "1vg1D35uPSI",
               "8HUnW8IChv0",
@@ -6128,19 +6261,20 @@
               "f7Uor6S7fRM",
               "rpziBGbWg-4"
             ],
-            "note": "Approvals are mostly per active substance; EFSA and EPA run cumulative assessments for some chemical groups, but mixture effects remain little studied.",
-            "source": null,
+            "note": "EFSA ran a cumulative risk assessment of dietary residues, adding doses across pesticides with a common effect and computing a combined margin of exposure at each percentile, so EU regulators do assess combined effects within effect groups.",
+            "source": "organic-food/sources/efsa-2020-cumulative-nervous.txt#L142-L146",
             "documents": [
               "organic-food/sources/baranski-2014-crops.txt",
+              "organic-food/sources/efsa-2020-cumulative-nervous.txt",
               "organic-food/sources/mie-2017-health.txt",
               "organic-food/sources/usda-pdp-2024.txt",
               "organic-food/sources/vigar-2019-review.txt"
             ]
           },
           "prior": "partly",
-          "evidence": "right",
+          "evidence": "wrong",
           "method": "source",
-          "overrides": false,
+          "overrides": true,
           "priorRecord": {
             "method": "prior",
             "verdict": "partly",
@@ -6150,11 +6284,11 @@
           },
           "evidenceRecord": {
             "method": "source",
-            "verdict": "right",
-            "confidence": 0.4,
-            "note": "About 25% of EU samples carry residues of more than one pesticide but EFSA reports include no cumulative risk calculation, and the review notes concern that risk assessment is inadequate for mixed exposures.",
-            "source": "organic-food/sources/mie-2017-health.txt#L137-L143",
-            "date": "2026-10-17"
+            "verdict": "wrong",
+            "confidence": 0.55,
+            "note": "EFSA ran a cumulative risk assessment of dietary residues, adding doses across pesticides with a common effect and computing a combined margin of exposure at each percentile, so EU regulators do assess combined effects within effect groups.",
+            "source": "organic-food/sources/efsa-2020-cumulative-nervous.txt#L142-L146",
+            "date": "2026-10-26"
           }
         },
         {
@@ -6208,6 +6342,67 @@
         },
         {
           "claim": {
+            "id": "organic-food/organic-labelling-mainly-marketing-tool-charge",
+            "text": "Organic labelling is mainly a marketing tool to charge higher prices",
+            "topic": "organic-food",
+            "asserted": 10,
+            "denied": 3,
+            "tally": {
+              "right": 0,
+              "wrong": 1,
+              "partly": 1,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "wrong",
+            "confidence": 0.5,
+            "videos": [
+              "06sX6prv-7Y",
+              "1U9NB2ZFbPA",
+              "2P0Fh6wc-kI",
+              "GLKF5TvPNVw",
+              "H3CoIqpyPYY",
+              "J_7BMavLHV8",
+              "Q9wvL24CpCg",
+              "SFmQVfoXVD8",
+              "_kfZr9HT2H8",
+              "d_6OXvEe8V8",
+              "kze81rzOEjo",
+              "rodaleinstitute-no-the-organic-label-is-not-a-marketing-scam",
+              "xibFzXD8xkQ"
+            ],
+            "note": "The organic label is a legally enforced production standard with inspections and real input restrictions, even though it is heavily marketed.",
+            "source": null,
+            "documents": [
+              "organic-food/sources/crowder-reganold-2015-profitability.txt",
+              "organic-food/sources/ers-2005-organic-produce-premiums.txt",
+              "organic-food/sources/ers-organic-price-premiums.txt",
+              "organic-food/sources/ufc-2017-organic-margins.txt"
+            ]
+          },
+          "prior": "wrong",
+          "evidence": "partly",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "wrong",
+            "confidence": 0.55,
+            "note": "The organic label is a legally enforced production standard with inspections and real input restrictions, even though it is heavily marketed.",
+            "date": "2026-10-17"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "partly",
+            "confidence": 0.35,
+            "note": "Using France's official market-price network (RNM, 2016-17), UFC-Que Choisir found the extra farm-level (shipping-point) cost of organic explains just under half (141 of 292 EUR) of a year's organic fruit-and-vegetable basket premium in supermarkets, while retail gross margins about twice as high on organic explain 46%; so roughly half the premium pays for real production costs and half is retail margin, though gross margin also covers store costs, 8 of 24 organic shelf prices were estimated, and retailers contest the study.",
+            "source": "organic-food/sources/ufc-2017-organic-margins.txt#L751-L757",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
             "id": "organic-food/eating-organic-food-lowers-cancer-risk",
             "text": "Eating organic food lowers cancer risk",
             "topic": "organic-food",
@@ -6240,6 +6435,7 @@
             "documents": [
               "organic-food/sources/baudry-2018-nutrinet.txt",
               "organic-food/sources/bradbury-2014-million-women.txt",
+              "organic-food/sources/sandoval-insausti-2021-cancer.txt",
               "organic-food/sources/vigar-2019-review.txt"
             ]
           },
@@ -6320,7 +6516,12 @@
             "source": "organic-food/sources/winter-katz-2011.txt#L23-L26",
             "documents": [
               "organic-food/sources/baranski-2014-crops.txt",
+              "organic-food/sources/chiu-2018-earth-ivf.txt",
+              "organic-food/sources/efsa-2020-cumulative-nervous.txt",
+              "organic-food/sources/efsa-2023-glyphosate.txt",
               "organic-food/sources/mie-2017-health.txt",
+              "organic-food/sources/sandoval-insausti-2021-cancer.txt",
+              "organic-food/sources/sandoval-insausti-2022-mortality.txt",
               "organic-food/sources/usda-pdp-2024.txt",
               "organic-food/sources/winter-katz-2011.txt"
             ]
@@ -6693,16 +6894,21 @@
             },
             "strongest": "source",
             "effective": "wrong",
-            "confidence": 0.35,
+            "confidence": 0.55,
             "videos": [
               "-dwWQZkJ5r8",
               "nC27EnNwEcw",
               "oxOanCd5WK0"
             ],
-            "note": "EPA concluded glyphosate is not likely to be carcinogenic under real-world exposures, in line with EFSA, ECHA, Canada, Australia, Japan and JMPR, while noting IARC's hazard-based 2A rating answers a different question.",
-            "source": "organic-food/sources/glyphosate-epa-iarc.txt#L30-L30",
+            "note": "In the prospective Agricultural Health Study of 54,251 licensed applicators (44,932 glyphosate users), the top quartile of intensity-weighted lifetime use had no raised NHL risk (RR 0.87, 95% CI 0.64-1.20, 440 exposed cases), with no association for any subtype; exposure was self-reported, so some misclassification is expected.",
+            "source": "organic-food/sources/andreotti-2018-ahs-glyphosate.txt#L610-L616",
             "documents": [
-              "organic-food/sources/glyphosate-epa-iarc.txt"
+              "organic-food/sources/andreotti-2018-ahs-glyphosate.txt",
+              "organic-food/sources/efsa-2023-glyphosate.txt",
+              "organic-food/sources/gagnier-2026-glyphosate-nhl.txt",
+              "organic-food/sources/glyphosate-epa-iarc.txt",
+              "organic-food/sources/leon-2019-agricoh-nhl.txt",
+              "organic-food/sources/zhang-2019-glyphosate-nhl-meta.txt"
             ]
           },
           "prior": "partly",
@@ -6719,10 +6925,10 @@
           "evidenceRecord": {
             "method": "source",
             "verdict": "wrong",
-            "confidence": 0.35,
-            "note": "EPA concluded glyphosate is not likely to be carcinogenic under real-world exposures, in line with EFSA, ECHA, Canada, Australia, Japan and JMPR, while noting IARC's hazard-based 2A rating answers a different question.",
-            "source": "organic-food/sources/glyphosate-epa-iarc.txt#L30-L30",
-            "date": "2026-10-17"
+            "confidence": 0.55,
+            "note": "In the prospective Agricultural Health Study of 54,251 licensed applicators (44,932 glyphosate users), the top quartile of intensity-weighted lifetime use had no raised NHL risk (RR 0.87, 95% CI 0.64-1.20, 440 exposed cases), with no association for any subtype; exposure was self-reported, so some misclassification is expected.",
+            "source": "organic-food/sources/andreotti-2018-ahs-glyphosate.txt#L610-L616",
+            "date": "2026-10-26"
           }
         },
         {
@@ -6892,6 +7098,7 @@
             "note": "Risk-weighted analyses of USDA residue data find a small set of crops, mostly with organophosphate or carbamate residues, account for most dietary pesticide risk.",
             "source": null,
             "documents": [
+              "organic-food/sources/efsa-2020-cumulative-nervous.txt",
               "organic-food/sources/ewg-dirty-dozen-2026.txt",
               "organic-food/sources/winter-katz-2011.txt"
             ]
@@ -6914,6 +7121,53 @@
             "note": "EWG's claim that avoiding the Dirty Dozen cuts pesticide intake by four-fifths had no exposure quantification behind it, and modelled exposure from those crops was already orders of magnitude below effect levels, so buying them organic gives no appreciable risk reduction.",
             "source": "organic-food/sources/winter-katz-2011.txt#L27-L29",
             "date": "2026-10-17"
+          }
+        },
+        {
+          "claim": {
+            "id": "organic-food/organic-farming-more-profitable-farmers-conventional",
+            "text": "Organic farming is more profitable for farmers than conventional farming",
+            "topic": "organic-food",
+            "asserted": 1,
+            "denied": 0,
+            "tally": {
+              "right": 1,
+              "wrong": 0,
+              "partly": 0,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "source",
+            "effective": "right",
+            "confidence": 0.55,
+            "videos": [
+              "drhyman-podcast-ep146"
+            ],
+            "note": "A meta-analysis of 44 studies (55 crops, 14 countries, 40 years) found organic agriculture 22-35% more profitable (net present value) than conventional once actual price premiums were applied, but 23-27% less profitable without them, so the advantage rests on the premium; the studies are largely field trials without subsidies or externalities.",
+            "source": "organic-food/sources/crowder-reganold-2015-profitability.txt#L76-L86",
+            "documents": [
+              "organic-food/sources/crowder-reganold-2015-profitability.txt",
+              "organic-food/sources/ers-organic-price-premiums.txt"
+            ]
+          },
+          "prior": "partly",
+          "evidence": "right",
+          "method": "source",
+          "overrides": true,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "partly",
+            "confidence": 0.4,
+            "note": "A global meta-analysis found organic farms 22 to 35 percent more profitable when price premiums are paid, far below several-fold claims, and not without premiums.",
+            "date": "2026-10-17"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "right",
+            "confidence": 0.55,
+            "note": "A meta-analysis of 44 studies (55 crops, 14 countries, 40 years) found organic agriculture 22-35% more profitable (net present value) than conventional once actual price premiums were applied, but 23-27% less profitable without them, so the advantage rests on the premium; the studies are largely field trials without subsidies or externalities.",
+            "source": "organic-food/sources/crowder-reganold-2015-profitability.txt#L76-L86",
+            "date": "2026-10-26"
           }
         },
         {
@@ -7079,7 +7333,8 @@
             "source": null,
             "documents": [
               "organic-food/sources/bradbury-2014-million-women.txt",
-              "organic-food/sources/glyphosate-epa-iarc.txt"
+              "organic-food/sources/glyphosate-epa-iarc.txt",
+              "organic-food/sources/leon-2019-agricoh-nhl.txt"
             ]
           },
           "prior": "right",
@@ -7097,9 +7352,9 @@
             "method": "source",
             "verdict": "partly",
             "confidence": 0.35,
-            "note": "For one pesticide, glyphosate, occupational studies across regions and formulations reported similar increases in non-Hodgkin lymphoma, backed by animal and genotoxicity data; IARC still rates the human evidence 'limited'.",
-            "source": "organic-food/sources/glyphosate-epa-iarc.txt#L167-L177",
-            "date": "2026-10-17"
+            "note": "Across 316,270 farmers in three cohorts, most of 14 pesticide groups and 33 active ingredients showed no association with lymphoid cancers; a few chemical-specific links appeared (terbufos with NHL, deltamethrin with CLL/SLL, glyphosate with DLBCL), so any risk is subtype- and chemical-specific rather than general.",
+            "source": "organic-food/sources/leon-2019-agricoh-nhl.txt#L86-L98",
+            "date": "2026-10-26"
           }
         },
         {
@@ -7297,7 +7552,9 @@
           "documents": [
             "organic-food/sources/aap-2012-organic.txt",
             "organic-food/sources/baudry-2018-nutrinet.txt",
-            "organic-food/sources/ers-organic-price-premiums.txt"
+            "organic-food/sources/ers-2005-organic-produce-premiums.txt",
+            "organic-food/sources/ers-organic-price-premiums.txt",
+            "organic-food/sources/ufc-2017-organic-margins.txt"
           ]
         },
         {
@@ -7356,7 +7613,12 @@
           "source": "organic-food/sources/winter-katz-2011.txt#L23-L26",
           "documents": [
             "organic-food/sources/baranski-2014-crops.txt",
+            "organic-food/sources/chiu-2018-earth-ivf.txt",
+            "organic-food/sources/efsa-2020-cumulative-nervous.txt",
+            "organic-food/sources/efsa-2023-glyphosate.txt",
             "organic-food/sources/mie-2017-health.txt",
+            "organic-food/sources/sandoval-insausti-2021-cancer.txt",
+            "organic-food/sources/sandoval-insausti-2022-mortality.txt",
             "organic-food/sources/usda-pdp-2024.txt",
             "organic-food/sources/winter-katz-2011.txt"
           ]
@@ -7538,6 +7800,7 @@
           "source": "organic-food/sources/ponisio-2015-yield-gap.txt#L65-L65",
           "documents": [
             "organic-food/sources/aap-2012-organic.txt",
+            "organic-food/sources/crowder-reganold-2015-profitability.txt",
             "organic-food/sources/mie-2017-health.txt",
             "organic-food/sources/ponisio-2015-yield-gap.txt"
           ]
@@ -7700,8 +7963,8 @@
           "denied": 3,
           "tally": {
             "right": 0,
-            "wrong": 2,
-            "partly": 0,
+            "wrong": 1,
+            "partly": 1,
             "untestable": 0,
             "unknown": 0
           },
@@ -7726,7 +7989,10 @@
           "note": "The organic label is a legally enforced production standard with inspections and real input restrictions, even though it is heavily marketed.",
           "source": null,
           "documents": [
-            "organic-food/sources/ers-organic-price-premiums.txt"
+            "organic-food/sources/crowder-reganold-2015-profitability.txt",
+            "organic-food/sources/ers-2005-organic-produce-premiums.txt",
+            "organic-food/sources/ers-organic-price-premiums.txt",
+            "organic-food/sources/ufc-2017-organic-margins.txt"
           ]
         },
         {
@@ -7900,14 +8166,14 @@
           "denied": 2,
           "tally": {
             "right": 0,
-            "wrong": 0,
+            "wrong": 1,
             "partly": 0,
             "untestable": 0,
             "unknown": 1
           },
-          "strongest": "prior",
-          "effective": "unknown",
-          "confidence": 0,
+          "strongest": "source",
+          "effective": "wrong",
+          "confidence": 0.45,
           "videos": [
             "2P0Fh6wc-kI",
             "Q9wvL24CpCg",
@@ -7919,9 +8185,12 @@
             "u5l4cdUjau4",
             "vnews-millions-of-pounds-of-apparently-fake-organic-grains-convince-the-food-ind"
           ],
-          "note": "Large fraud cases are documented, especially in imported grain, but there is no reliable measure of what share of organic food is mislabelled.",
-          "source": null,
-          "documents": []
+          "note": "Baden-Wuerttemberg's state lab judged 0% of fresh organic produce falsely labelled in 2021 (always well under 5% in 2011-2020, up to 8.5% before 2010) and 3.1% of processed organic foods (2.2-7.0% in recent years, over 8% before 2011); a German market and residue-based detection only, with targeted projects limiting year-to-year comparison.",
+          "source": "organic-food/sources/cvuas-2021-organic-monitoring.txt#L57-L83",
+          "documents": [
+            "organic-food/sources/cvuas-2021-organic-monitoring.txt",
+            "organic-food/sources/usda-ams-2012-organic-residue.txt"
+          ]
         },
         {
           "id": "organic-food/organic-food-worth-price-premium-health",
@@ -7987,6 +8256,7 @@
           "documents": [
             "organic-food/sources/baudry-2018-nutrinet.txt",
             "organic-food/sources/bradbury-2014-million-women.txt",
+            "organic-food/sources/sandoval-insausti-2021-cancer.txt",
             "organic-food/sources/vigar-2019-review.txt"
           ]
         },
@@ -8045,7 +8315,8 @@
           "documents": [
             "organic-food/sources/baranski-2014-crops.txt",
             "organic-food/sources/ecfr-7cfr205.txt",
-            "organic-food/sources/mie-2017-health.txt"
+            "organic-food/sources/mie-2017-health.txt",
+            "organic-food/sources/usda-ams-2012-organic-residue.txt"
           ]
         },
         {
@@ -8108,7 +8379,8 @@
             "organic-food/sources/baranski-2014-crops.txt",
             "organic-food/sources/ecfr-7cfr205.txt",
             "organic-food/sources/eu-2021-1165.txt",
-            "organic-food/sources/mie-2017-health.txt"
+            "organic-food/sources/mie-2017-health.txt",
+            "organic-food/sources/usda-ams-2012-organic-residue.txt"
           ]
         },
         {
@@ -8382,37 +8654,6 @@
           "documents": []
         },
         {
-          "id": "organic-food/significant-share-food-sold-organic-not",
-          "text": "A significant share of food sold as organic is not genuinely organic",
-          "topic": "organic-food",
-          "asserted": 7,
-          "denied": 2,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 1
-          },
-          "strongest": "prior",
-          "effective": "unknown",
-          "confidence": 0,
-          "videos": [
-            "2P0Fh6wc-kI",
-            "Q9wvL24CpCg",
-            "RNsf5PxxsPI",
-            "WWXKe5DgNMU",
-            "ams-usda-organic-basics",
-            "cfXQzAIaBnk",
-            "lRPqZUegKyk",
-            "u5l4cdUjau4",
-            "vnews-millions-of-pounds-of-apparently-fake-organic-grains-convince-the-food-ind"
-          ],
-          "note": "Large fraud cases are documented, especially in imported grain, but there is no reliable measure of what share of organic food is mislabelled.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "organic-food/much-organic-meat-dairy-comes-large",
           "text": "Much organic meat and dairy comes from large industrial-scale operations",
           "topic": "organic-food",
@@ -8489,32 +8730,6 @@
             "i1jwxHefX7Q"
           ],
           "note": "One survey experiment found low-income shoppers less willing to buy produce after residue messaging; real-world effects are unmeasured.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "organic-food/glyphosate-damages-human-gut-microbiome",
-          "text": "Glyphosate damages the human gut microbiome",
-          "topic": "organic-food",
-          "asserted": 4,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 1
-          },
-          "strongest": "prior",
-          "effective": "unknown",
-          "confidence": 0,
-          "videos": [
-            "-dwWQZkJ5r8",
-            "4vGhDXmeyII",
-            "ip6bBtEx0dc",
-            "oxOanCd5WK0"
-          ],
-          "note": "Glyphosate inhibits a pathway some gut bacteria use and shifts microbiota in some animal studies, but effects at human dietary doses are not established.",
           "source": null,
           "documents": []
         },
@@ -8918,30 +9133,6 @@
           "documents": []
         },
         {
-          "id": "organic-food/most-people-carry-detectable-glyphosate-their",
-          "text": "Most people carry detectable glyphosate in their urine",
-          "topic": "organic-food",
-          "asserted": 2,
-          "denied": 0,
-          "tally": {
-            "right": 1,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "CcEg84X3IzM",
-            "_kfZr9HT2H8"
-          ],
-          "note": "CDC biomonitoring detected glyphosate in roughly four in five US urine samples; detection says nothing about harm by itself.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "organic-food/non-gmo-labels-often-appear-foods",
           "text": "Non-GMO labels often appear on foods that have no genetically engineered version",
           "topic": "organic-food",
@@ -8986,30 +9177,6 @@
             "u5l4cdUjau4"
           ],
           "note": "Operations do choose and pay accredited certifiers, a structural conflict, though USDA accredits and audits the certifiers.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "organic-food/organic-farming-requires-more-labour-conventional",
-          "text": "Organic farming requires more labour than conventional farming",
-          "topic": "organic-food",
-          "asserted": 2,
-          "denied": 0,
-          "tally": {
-            "right": 1,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "QL-_4tSb6GY",
-            "WWXKe5DgNMU"
-          ],
-          "note": "Weeding and pest control without herbicides raise labour per hectare on most organic farms.",
           "source": null,
           "documents": []
         },
@@ -9824,29 +9991,6 @@
           "documents": []
         },
         {
-          "id": "organic-food/pesticide-residues-food-cause-large-numbers",
-          "text": "Pesticide residues in food cause large numbers of deaths worldwide",
-          "topic": "organic-food",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 1,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "wrong",
-          "confidence": 0.5,
-          "videos": [
-            "ota-why-organic"
-          ],
-          "note": "The UN figure refers to acute pesticide poisonings, mostly occupational exposure and self-harm, not residues in food.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "organic-food/plants-cannot-tell-synthetic-nitrogen-organic",
           "text": "Plants cannot tell synthetic nitrogen from organic nitrogen",
           "topic": "organic-food",
@@ -10116,7 +10260,7 @@
       "testable": 9,
       "novelty": 0.3375,
       "redundancy": 0,
-      "thinEvidence": 0.3333333333333333,
+      "thinEvidence": 0.2222222222222222,
       "worthWatching": "mostly wrong",
       "right": [
         "organic-food/glyphosate-residues-present-much-conventional-food",
@@ -10130,7 +10274,7 @@
         "organic-food/organic-farming-yields-less-food-per",
         "organic-food/regulators-approved-glyphosate-safe-because-agencies"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10163,7 +10307,7 @@
         "organic-food/pesticides-allowed-organic-farming-not-necessarily"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10195,7 +10339,7 @@
       "wrong": [
         "organic-food/organic-labelling-mainly-marketing-tool-charge"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10272,7 +10416,7 @@
         "organic-food/organic-certification-permits-synthetic-fertilizers",
         "organic-food/organic-labelling-mainly-marketing-tool-charge"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10296,7 +10440,7 @@
         "organic-food/organic-produce-carries-lower-pesticide-residues"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10325,7 +10469,7 @@
         "organic-food/dirty-dozen-list-reliable-guide-which",
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10334,12 +10478,12 @@
       "channel": "NutritionFacts.org",
       "topic": "organic-food",
       "watched": false,
-      "score": 0.9285714285714286,
-      "scaled": 2,
+      "score": 0.7142857142857143,
+      "scaled": 1,
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 0.7539484126984127,
+      "novelty": 0.718234126984127,
       "redundancy": 0,
       "thinEvidence": 0.14285714285714285,
       "worthWatching": "mixed",
@@ -10349,11 +10493,12 @@
         "organic-food/organic-crops-contain-more-antioxidants-polyphenols",
         "organic-food/organic-label-leads-people-underestimate-food",
         "organic-food/organic-produce-carries-lower-pesticide-residues",
-        "organic-food/pesticide-residues-conventional-produce-too-low",
+        "organic-food/pesticide-residues-conventional-produce-too-low"
+      ],
+      "wrong": [
         "organic-food/regulators-assess-pesticides-one-time-ignore"
       ],
-      "wrong": [],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10362,14 +10507,14 @@
       "channel": "Honest Ads",
       "topic": "organic-food",
       "watched": false,
-      "score": 0.25,
-      "scaled": 1,
+      "score": 0.07142857142857142,
+      "scaled": 0,
       "rating": null,
       "assertions": 7,
       "testable": 7,
       "novelty": 0.0994949494949495,
       "redundancy": 0,
-      "thinEvidence": 0.14285714285714285,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "organic-food/eating-organic-food-has-proven-health",
@@ -10379,9 +10524,10 @@
       ],
       "wrong": [
         "organic-food/organic-labelling-mainly-marketing-tool-charge",
-        "organic-food/organic-produce-carries-higher-risk-bacterial"
+        "organic-food/organic-produce-carries-higher-risk-bacterial",
+        "organic-food/significant-share-food-sold-organic-not"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10397,7 +10543,7 @@
       "testable": 7,
       "novelty": 0.03333333333333333,
       "redundancy": 0,
-      "thinEvidence": 0.14285714285714285,
+      "thinEvidence": 0,
       "worthWatching": "mostly wrong",
       "right": [
         "organic-food/organic-food-worth-price-premium-health"
@@ -10409,7 +10555,7 @@
         "organic-food/pesticide-residues-conventional-produce-too-low",
         "organic-food/pesticide-residues-food-act-estrogen-mimics"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10435,7 +10581,7 @@
         "organic-food/eating-organic-food-lowers-cancer-risk",
         "organic-food/washing-produce-removes-most-pesticide-residue"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10463,7 +10609,7 @@
         "organic-food/conventional-livestock-fed-sewage-sludge",
         "organic-food/organic-farming-uses-pesticides"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10575,7 +10721,7 @@
         "organic-food/pesticide-residues-conventional-produce-too-low",
         "organic-food/washing-produce-removes-most-pesticide-residue"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10604,26 +10750,26 @@
       "channel": "College of Naturopathic Medicine",
       "topic": "organic-food",
       "watched": false,
-      "score": 0.08333333333333333,
+      "score": -0.16666666666666666,
       "scaled": 0,
       "rating": null,
       "assertions": 6,
       "testable": 6,
-      "novelty": 0.13690476190476192,
+      "novelty": 0.10119047619047619,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "organic-food/organic-farming-better-environment-conventional",
         "organic-food/organic-farming-improves-soil-health",
-        "organic-food/organic-food-worth-price-premium-health",
-        "organic-food/regulators-assess-pesticides-one-time-ignore"
+        "organic-food/organic-food-worth-price-premium-health"
       ],
       "wrong": [
         "organic-food/organic-farming-uses-pesticides",
-        "organic-food/pesticide-residues-conventional-produce-too-low"
+        "organic-food/pesticide-residues-conventional-produce-too-low",
+        "organic-food/regulators-assess-pesticides-one-time-ignore"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10657,7 +10803,7 @@
       "wrong": [
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10691,7 +10837,7 @@
         "organic-food/organic-food-more-nutritious-conventional",
         "organic-food/organic-produce-carries-higher-risk-bacterial"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10725,7 +10871,7 @@
         "organic-food/organic-farming-better-environment-conventional",
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10784,7 +10930,7 @@
         "organic-food/organic-farming-better-environment-conventional",
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10793,21 +10939,20 @@
       "channel": "Simnett Nutrition",
       "topic": "organic-food",
       "watched": false,
-      "score": 0,
+      "score": -0.13636363636363635,
       "scaled": 0,
       "rating": null,
       "assertions": 11,
       "testable": 11,
-      "novelty": 0.6630291005291005,
+      "novelty": 0.7523148148148149,
       "redundancy": 0,
-      "thinEvidence": 0.18181818181818182,
+      "thinEvidence": 0.09090909090909091,
       "worthWatching": "mixed",
       "right": [
         "organic-food/most-people-carry-detectable-glyphosate-their",
         "organic-food/organic-farming-uses-pesticides",
         "organic-food/organic-food-worth-price-premium-health",
         "organic-food/pre-harvest-glyphosate-spraying-leaves-higher",
-        "organic-food/regulators-assess-pesticides-one-time-ignore",
         "organic-food/washing-produce-removes-most-pesticide-residue"
       ],
       "wrong": [
@@ -10815,9 +10960,10 @@
         "organic-food/glyphosate-residues-food-harm-human-health",
         "organic-food/organic-farming-bans-all-synthetic-pesticides",
         "organic-food/organic-food-costs-substantially-more-conventional",
-        "organic-food/pesticides-allowed-organic-farming-not-necessarily"
+        "organic-food/pesticides-allowed-organic-farming-not-necessarily",
+        "organic-food/regulators-assess-pesticides-one-time-ignore"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10893,7 +11039,7 @@
         "organic-food/eating-organic-food-lowers-cancer-risk",
         "organic-food/washing-produce-removes-most-pesticide-residue"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10936,7 +11082,7 @@
         "organic-food/organic-labelling-mainly-marketing-tool-charge"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10965,7 +11111,7 @@
         "organic-food/organic-farming-better-environment-conventional",
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10993,7 +11139,7 @@
         "organic-food/organic-farming-improves-soil-health",
         "organic-food/organic-labelling-mainly-marketing-tool-charge"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11020,7 +11166,7 @@
         "organic-food/glyphosate-residues-food-harm-human-health",
         "organic-food/pesticide-residues-conventional-produce-too-low"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11096,7 +11242,7 @@
         "organic-food/eating-organic-food-has-proven-health",
         "organic-food/organic-farming-uses-pesticides"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11126,7 +11272,7 @@
         "organic-food/organic-labelling-mainly-marketing-tool-charge",
         "organic-food/washing-produce-removes-most-pesticide-residue"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11154,7 +11300,7 @@
       "wrong": [
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11252,7 +11398,7 @@
         "organic-food/routine-residue-testing-does-not-check"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11348,7 +11494,7 @@
         "organic-food/pesticide-safety-limits-not-account-long",
         "organic-food/ultra-pasteurization-strips-milk-much-nutritional"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11408,7 +11554,7 @@
         "organic-food/organic-conventional-foods-equally-likely-carry",
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11437,14 +11583,14 @@
       "channel": "Nourish Food Club",
       "topic": "organic-food",
       "watched": false,
-      "score": 0.2916666666666667,
-      "scaled": 1,
+      "score": 0.19230769230769232,
+      "scaled": 0,
       "rating": null,
       "assertions": 13,
       "testable": 13,
       "novelty": 0.8150641025641026,
       "redundancy": 0,
-      "thinEvidence": 0.5384615384615384,
+      "thinEvidence": 0.46153846153846156,
       "worthWatching": "mixed",
       "right": [
         "organic-food/group-certification-lets-most-farms-foreign",
@@ -11460,9 +11606,10 @@
       "wrong": [
         "organic-food/eating-organic-food-lowers-cancer-risk",
         "organic-food/organic-certification-requires-grazing-animals-have",
-        "organic-food/organic-labelling-mainly-marketing-tool-charge"
+        "organic-food/organic-labelling-mainly-marketing-tool-charge",
+        "organic-food/significant-share-food-sold-organic-not"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11478,7 +11625,7 @@
       "testable": 4,
       "novelty": 0.2740740740740741,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0.25,
       "worthWatching": "mixed",
       "right": [
         "organic-food/organic-farming-requires-more-labour-conventional",
@@ -11488,7 +11635,7 @@
         "organic-food/imported-organic-food-less-trustworthy-domestic",
         "organic-food/organic-food-tastes-better-conventional"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11518,7 +11665,7 @@
       "wrong": [
         "organic-food/organic-farming-better-environment-conventional"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11544,7 +11691,7 @@
       "wrong": [
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11558,9 +11705,9 @@
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 0.41159775896618,
+      "novelty": 0.63659775896618,
       "redundancy": 0,
-      "thinEvidence": 0.25,
+      "thinEvidence": 0.125,
       "worthWatching": "mixed",
       "right": [
         "organic-food/cage-free-range-labels-say-little",
@@ -11568,11 +11715,12 @@
         "organic-food/organic-farms-inspected-accredited-certifier-least",
         "organic-food/organic-livestock-cannot-given-antibiotics-added",
         "organic-food/products-labelled-made-organic-ingredients-need",
+        "organic-food/significant-share-food-sold-organic-not",
         "organic-food/usda-organic-prohibits-genetically-engineered-ingredients",
         "organic-food/usda-organic-seal-requires-least-percent"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11606,7 +11754,7 @@
       "wrong": [
         "organic-food/organic-labelling-mainly-marketing-tool-charge"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11665,7 +11813,7 @@
       "wrong": [
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11691,7 +11839,7 @@
         "organic-food/dirty-dozen-list-reliable-guide-which",
         "organic-food/pesticide-residues-conventional-produce-too-low"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11720,14 +11868,14 @@
       "channel": "TopTenz",
       "topic": "organic-food",
       "watched": false,
-      "score": 0.7,
+      "score": 0.5454545454545454,
       "scaled": 1,
       "rating": null,
       "assertions": 11,
       "testable": 11,
       "novelty": 0.5792836792836793,
       "redundancy": 0,
-      "thinEvidence": 0.2727272727272727,
+      "thinEvidence": 0.09090909090909091,
       "worthWatching": "mixed",
       "right": [
         "organic-food/imported-organic-food-less-trustworthy-domestic",
@@ -11741,9 +11889,10 @@
         "organic-food/usda-organic-seal-requires-least-percent"
       ],
       "wrong": [
-        "organic-food/organic-food-more-nutritious-conventional"
+        "organic-food/organic-food-more-nutritious-conventional",
+        "organic-food/significant-share-food-sold-organic-not"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11768,7 +11917,7 @@
       "wrong": [
         "organic-food/eating-organic-food-lowers-cancer-risk"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11824,7 +11973,7 @@
         "organic-food/usda-organic-seal-requires-least-percent"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11877,14 +12026,14 @@
       "channel": "The Doctor's Kitchen",
       "topic": "organic-food",
       "watched": false,
-      "score": 0.4583333333333333,
+      "score": 0.3333333333333333,
       "scaled": 1,
       "rating": null,
       "assertions": 12,
       "testable": 12,
-      "novelty": 0.8607671957671957,
+      "novelty": 0.95005291005291,
       "redundancy": 0,
-      "thinEvidence": 0.08333333333333333,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "organic-food/most-people-carry-detectable-glyphosate-their",
@@ -11894,15 +12043,15 @@
         "organic-food/organic-produce-carries-lower-pesticide-residues",
         "organic-food/organic-standards-require-higher-animal-welfare",
         "organic-food/pesticide-exposure-causes-cancer-people",
-        "organic-food/regulators-assess-pesticides-one-time-ignore",
         "organic-food/switching-organic-diet-quickly-lowers-pesticide"
       ],
       "wrong": [
         "organic-food/glyphosate-residues-food-harm-human-health",
         "organic-food/imported-organic-food-less-trustworthy-domestic",
+        "organic-food/regulators-assess-pesticides-one-time-ignore",
         "organic-food/washing-produce-removes-most-pesticide-residue"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11927,7 +12076,7 @@
         "organic-food/organic-food-costs-substantially-more-conventional"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11953,7 +12102,7 @@
         "organic-food/strengthening-organic-enforcement-rule-closes-supply"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11988,22 +12137,23 @@
       "channel": "ams.usda.gov",
       "topic": "organic-food",
       "watched": false,
-      "score": 0.8333333333333334,
+      "score": 0.875,
       "scaled": 2,
       "rating": null,
       "assertions": 4,
       "testable": 4,
-      "novelty": 1.0961538461538463,
+      "novelty": 1.3211538461538463,
       "redundancy": 0,
-      "thinEvidence": 0.25,
+      "thinEvidence": 0,
       "worthWatching": "new and sound",
       "right": [
         "organic-food/organic-farms-inspected-accredited-certifier-least",
         "organic-food/organic-operations-subject-unannounced-inspections-residue",
+        "organic-food/significant-share-food-sold-organic-not",
         "organic-food/usda-traceability-rules-make-organic-fraud"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12057,7 +12207,7 @@
       "wrong": [
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12088,7 +12238,7 @@
         "organic-food/genetically-engineered-foods-carry-long-term",
         "organic-food/pesticide-residues-conventional-produce-too-low"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12097,14 +12247,14 @@
       "channel": "Dr. Bobby Price",
       "topic": "organic-food",
       "watched": false,
-      "score": 0.4444444444444444,
+      "score": 0.3,
       "scaled": 1,
       "rating": null,
       "assertions": 10,
       "testable": 10,
       "novelty": 0.34973942723942725,
       "redundancy": 0,
-      "thinEvidence": 0.2,
+      "thinEvidence": 0.1,
       "worthWatching": "mixed",
       "right": [
         "organic-food/imported-organic-food-less-trustworthy-domestic",
@@ -12117,9 +12267,10 @@
       ],
       "wrong": [
         "organic-food/glyphosate-residues-food-harm-human-health",
+        "organic-food/significant-share-food-sold-organic-not",
         "organic-food/washing-produce-removes-most-pesticide-residue"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12145,7 +12296,7 @@
       "wrong": [
         "organic-food/pesticide-residues-conventional-produce-too-low"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12174,7 +12325,7 @@
         "organic-food/organic-produce-carries-lower-pesticide-residues"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12205,7 +12356,7 @@
       "wrong": [
         "organic-food/organic-labelling-mainly-marketing-tool-charge"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12237,7 +12388,7 @@
         "organic-food/organic-food-costs-substantially-more-conventional",
         "organic-food/organic-food-tastes-better-conventional"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12246,12 +12397,12 @@
       "channel": "Mark Hyman, MD",
       "topic": "organic-food",
       "watched": false,
-      "score": 0.1,
+      "score": 0.2,
       "scaled": 0,
       "rating": null,
       "assertions": 6,
       "testable": 6,
-      "novelty": 0.30138888888888893,
+      "novelty": 0.6513888888888889,
       "redundancy": 0,
       "thinEvidence": 0.5,
       "worthWatching": "mixed",
@@ -12264,7 +12415,7 @@
         "organic-food/global-shift-organic-farming-could-not",
         "organic-food/organic-farming-yields-less-food-per"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12273,12 +12424,12 @@
       "channel": "Environmental Working Group",
       "topic": "organic-food",
       "watched": false,
-      "score": 0.2857142857142857,
-      "scaled": 1,
+      "score": 0.07142857142857142,
+      "scaled": 0,
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 0.6007142857142858,
+      "novelty": 0.5650000000000001,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -12286,14 +12437,14 @@
         "organic-food/eating-more-fruit-vegetables-matters-whether",
         "organic-food/organic-food-especially-important-children-pregnant",
         "organic-food/organic-produce-carries-lower-pesticide-residues",
-        "organic-food/regulators-assess-pesticides-one-time-ignore",
         "organic-food/several-most-commonly-detected-pesticide-residues"
       ],
       "wrong": [
         "organic-food/dirty-dozen-list-reliable-guide-which",
-        "organic-food/pesticide-residues-conventional-produce-too-low"
+        "organic-food/pesticide-residues-conventional-produce-too-low",
+        "organic-food/regulators-assess-pesticides-one-time-ignore"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12319,7 +12470,7 @@
         "organic-food/switching-organic-diet-quickly-lowers-pesticide"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12328,12 +12479,12 @@
       "channel": "Organic Matters",
       "topic": "organic-food",
       "watched": false,
-      "score": 0.1111111111111111,
+      "score": -0.05555555555555555,
       "scaled": 0,
       "rating": null,
       "assertions": 9,
       "testable": 9,
-      "novelty": 0.1321957671957672,
+      "novelty": 0.09648148148148147,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -12341,16 +12492,16 @@
         "organic-food/eating-more-fruit-vegetables-matters-whether",
         "organic-food/organic-farming-uses-pesticides",
         "organic-food/organic-food-especially-important-children-pregnant",
-        "organic-food/organic-produce-carries-lower-pesticide-residues",
-        "organic-food/regulators-assess-pesticides-one-time-ignore"
+        "organic-food/organic-produce-carries-lower-pesticide-residues"
       ],
       "wrong": [
         "organic-food/dirty-dozen-list-reliable-guide-which",
         "organic-food/pesticide-residues-conventional-produce-too-low",
         "organic-food/pesticides-allowed-organic-farming-not-necessarily",
+        "organic-food/regulators-assess-pesticides-one-time-ignore",
         "organic-food/washing-produce-removes-most-pesticide-residue"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12396,7 +12547,7 @@
         "organic-food/pesticide-residues-conventional-produce-too-low"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12476,7 +12627,7 @@
         "organic-food/organic-food-more-nutritious-conventional",
         "organic-food/organic-milk-meat-contain-more-omega"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12508,7 +12659,7 @@
         "organic-food/usda-organic-seal-requires-least-percent"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12537,7 +12688,7 @@
       "wrong": [
         "organic-food/dirty-dozen-list-reliable-guide-which"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12566,7 +12717,7 @@
         "organic-food/dirty-dozen-list-reliable-guide-which",
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12597,7 +12748,7 @@
         "organic-food/organic-food-more-nutritious-conventional",
         "organic-food/pesticides-allowed-organic-farming-not-necessarily"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12628,7 +12779,7 @@
       "wrong": [
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12662,7 +12813,7 @@
         "organic-food/organic-farming-bans-all-synthetic-pesticides",
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12714,7 +12865,7 @@
         "organic-food/organic-farming-better-environment-conventional",
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12740,7 +12891,7 @@
       "wrong": [
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12774,7 +12925,7 @@
         "organic-food/organic-farming-better-environment-conventional",
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12828,7 +12979,7 @@
       "wrong": [
         "organic-food/dirty-dozen-list-reliable-guide-which"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12844,7 +12995,7 @@
       "testable": 7,
       "novelty": 0.9,
       "redundancy": 0,
-      "thinEvidence": 0.42857142857142855,
+      "thinEvidence": 0.2857142857142857,
       "worthWatching": "mixed",
       "right": [
         "organic-food/buying-organic-most-reliable-way-avoid",
@@ -12855,7 +13006,7 @@
         "organic-food/pesticide-drift-conventional-farms-contaminates-organic"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12906,7 +13057,7 @@
       "wrong": [
         "organic-food/organic-labelling-mainly-marketing-tool-charge"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -12965,20 +13116,22 @@
       "channel": "TIME",
       "topic": "organic-food",
       "watched": false,
-      "score": 1,
-      "scaled": 2,
+      "score": 0,
+      "scaled": 0,
       "rating": null,
       "assertions": 2,
       "testable": 2,
       "novelty": 0.1125,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.5,
       "worthWatching": "mixed",
       "right": [
         "organic-food/conventional-grain-sold-organic-feed-has"
       ],
-      "wrong": [],
-      "lastJudged": "2026-10-17",
+      "wrong": [
+        "organic-food/significant-share-food-sold-organic-not"
+      ],
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13004,7 +13157,7 @@
         "organic-food/organic-produce-carries-lower-pesticide-residues"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13038,7 +13191,7 @@
         "organic-food/organic-chickens-live-same-indoor-conditions",
         "organic-food/pesticides-allowed-organic-farming-not-necessarily"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13072,7 +13225,7 @@
       "wrong": [
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13105,7 +13258,7 @@
         "organic-food/heavy-glyphosate-exposure-raises-risk-non",
         "organic-food/pesticides-allowed-organic-farming-not-necessarily"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13138,7 +13291,7 @@
         "organic-food/organic-food-more-nutritious-conventional",
         "organic-food/pesticides-allowed-organic-farming-not-necessarily"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13194,7 +13347,7 @@
       "wrong": [
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13224,7 +13377,7 @@
         "organic-food/organic-farming-better-environment-conventional",
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13250,7 +13403,7 @@
       "wrong": [
         "organic-food/eating-organic-food-has-proven-health"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13312,7 +13465,7 @@
       "testable": 12,
       "novelty": 0.3603717627401838,
       "redundancy": 0,
-      "thinEvidence": 0.08333333333333333,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "organic-food/organic-crops-contain-more-antioxidants-polyphenols",
@@ -13330,7 +13483,7 @@
         "organic-food/pesticide-residues-food-cause-large-numbers",
         "organic-food/pesticides-allowed-organic-farming-not-necessarily"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13362,7 +13515,7 @@
       "wrong": [
         "organic-food/organic-farming-better-environment-conventional"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13378,7 +13531,7 @@
       "testable": 8,
       "novelty": 0.3458333333333333,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0.375,
       "worthWatching": "mixed",
       "right": [
         "organic-food/buying-organic-most-reliable-way-avoid",
@@ -13390,7 +13543,7 @@
         "organic-food/heavy-glyphosate-exposure-raises-risk-non",
         "organic-food/most-conventional-grain-crops-sprayed-glyphosate"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13419,7 +13572,7 @@
         "organic-food/organic-food-tastes-better-conventional",
         "organic-food/organic-food-worth-price-premium-health"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13514,7 +13667,7 @@
         "organic-food/usda-organic-prohibits-genetically-engineered-ingredients"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13538,7 +13691,7 @@
         "organic-food/pesticide-residues-conventional-produce-too-low",
         "organic-food/washing-produce-removes-most-pesticide-residue"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13592,7 +13745,7 @@
       "wrong": [
         "organic-food/organic-farming-yields-less-food-per"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13678,12 +13831,12 @@
       "channel": "Renegade Dietitian",
       "topic": "organic-food",
       "watched": false,
-      "score": 0.5416666666666666,
+      "score": 0.4166666666666667,
       "scaled": 1,
       "rating": null,
       "assertions": 12,
       "testable": 12,
-      "novelty": 0.6252513227513228,
+      "novelty": 0.5895370370370371,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -13695,15 +13848,15 @@
         "organic-food/organic-milk-meat-contain-more-omega",
         "organic-food/organic-produce-carries-lower-pesticide-residues",
         "organic-food/pesticides-allowed-organic-farming-not-necessarily",
-        "organic-food/regulators-assess-pesticides-one-time-ignore",
         "organic-food/some-sellers-have-passed-off-conventional",
         "organic-food/switching-organic-diet-quickly-lowers-pesticide"
       ],
       "wrong": [
         "organic-food/eating-organic-food-lowers-cancer-risk",
-        "organic-food/organic-crops-carry-higher-risk-mycotoxin"
+        "organic-food/organic-crops-carry-higher-risk-mycotoxin",
+        "organic-food/regulators-assess-pesticides-one-time-ignore"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13734,7 +13887,7 @@
       "wrong": [
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13784,7 +13937,7 @@
         "organic-food/pesticide-residues-conventional-produce-too-low"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13839,7 +13992,7 @@
       "wrong": [
         "organic-food/eating-organic-food-has-proven-health"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13848,14 +14001,14 @@
       "channel": "Demystifying Medicine McMaster",
       "topic": "organic-food",
       "watched": false,
-      "score": 0.5625,
+      "score": 0.3888888888888889,
       "scaled": 1,
       "rating": null,
       "assertions": 9,
       "testable": 9,
       "novelty": 0.3915452140452141,
       "redundancy": 0,
-      "thinEvidence": 0.3333333333333333,
+      "thinEvidence": 0.2222222222222222,
       "worthWatching": "mixed",
       "right": [
         "organic-food/eating-organic-food-has-proven-health",
@@ -13867,9 +14020,10 @@
         "organic-food/organic-produce-carries-lower-pesticide-residues"
       ],
       "wrong": [
-        "organic-food/organic-food-spoils-faster-conventional"
+        "organic-food/organic-food-spoils-faster-conventional",
+        "organic-food/significant-share-food-sold-organic-not"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13894,7 +14048,7 @@
         "organic-food/pesticides-allowed-organic-farming-not-necessarily"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13903,21 +14057,23 @@
       "channel": "Valley News",
       "topic": "organic-food",
       "watched": false,
-      "score": 0.5,
-      "scaled": 1,
+      "score": 0,
+      "scaled": 0,
       "rating": null,
       "assertions": 3,
       "testable": 3,
       "novelty": 0.06923076923076923,
       "redundancy": 0,
-      "thinEvidence": 0.3333333333333333,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "organic-food/imported-organic-food-less-trustworthy-domestic",
         "organic-food/loosely-checked-organic-imports-undercut-domestic"
       ],
-      "wrong": [],
-      "lastJudged": "2026-10-17",
+      "wrong": [
+        "organic-food/significant-share-food-sold-organic-not"
+      ],
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13949,7 +14105,7 @@
       "wrong": [
         "organic-food/organic-food-more-nutritious-conventional"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -13971,7 +14127,7 @@
       "wrong": [
         "organic-food/organic-labelling-mainly-marketing-tool-charge"
       ],
-      "lastJudged": "2026-10-17",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -14487,16 +14643,6 @@
       ]
     },
     {
-      "channel": "TIME",
-      "videos": 1,
-      "mean": 2,
-      "harmful": 0,
-      "right": [
-        "organic-food/conventional-grain-sold-organic-feed-has"
-      ],
-      "wrong": []
-    },
-    {
       "channel": "Tablas Creek",
       "videos": 1,
       "mean": 2,
@@ -14622,6 +14768,7 @@
         "organic-food/organic-farms-inspected-accredited-certifier-least",
         "organic-food/organic-livestock-cannot-given-antibiotics-added",
         "organic-food/products-labelled-made-organic-ingredients-need",
+        "organic-food/significant-share-food-sold-organic-not",
         "organic-food/usda-organic-prohibits-genetically-engineered-ingredients",
         "organic-food/usda-organic-seal-requires-least-percent"
       ],
@@ -14637,6 +14784,7 @@
         "organic-food/organic-operations-subject-unannounced-inspections-residue",
         "organic-food/organic-product-labels-must-approved-accredited",
         "organic-food/products-labelled-made-organic-ingredients-need",
+        "organic-food/significant-share-food-sold-organic-not",
         "organic-food/small-farms-can-organic-practice-without",
         "organic-food/strengthening-organic-enforcement-rule-closes-supply",
         "organic-food/usda-organic-prohibits-genetically-engineered-ingredients",
@@ -14648,7 +14796,7 @@
     {
       "channel": "NutritionFacts.org",
       "videos": 5,
-      "mean": 1.6,
+      "mean": 1.4,
       "harmful": 0,
       "right": [
         "organic-food/eating-more-fruit-vegetables-matters-whether",
@@ -14665,14 +14813,14 @@
         "organic-food/organic-meat-carries-about-same-load",
         "organic-food/organic-produce-carries-lower-pesticide-residues",
         "organic-food/pesticide-residues-conventional-produce-too-low",
-        "organic-food/regulators-assess-pesticides-one-time-ignore",
         "organic-food/switching-organic-diet-quickly-lowers-pesticide",
         "organic-food/synthetic-nitrogen-fertilizer-leads-crops-make"
       ],
       "wrong": [
         "organic-food/organic-food-more-nutritious-conventional",
         "organic-food/organic-food-tastes-better-conventional",
-        "organic-food/organic-food-worth-price-premium-health"
+        "organic-food/organic-food-worth-price-premium-health",
+        "organic-food/regulators-assess-pesticides-one-time-ignore"
       ]
     },
     {
@@ -14807,13 +14955,13 @@
         "organic-food/organic-farming-uses-pesticides",
         "organic-food/organic-food-especially-important-children-pregnant",
         "organic-food/organic-produce-carries-lower-pesticide-residues",
-        "organic-food/pesticide-drift-conventional-farms-contaminates-organic",
-        "organic-food/regulators-assess-pesticides-one-time-ignore"
+        "organic-food/pesticide-drift-conventional-farms-contaminates-organic"
       ],
       "wrong": [
         "organic-food/dirty-dozen-list-reliable-guide-which",
         "organic-food/pesticide-residues-conventional-produce-too-low",
         "organic-food/pesticides-allowed-organic-farming-not-necessarily",
+        "organic-food/regulators-assess-pesticides-one-time-ignore",
         "organic-food/washing-produce-removes-most-pesticide-residue"
       ]
     },
@@ -14944,7 +15092,8 @@
         "organic-food/organic-produce-carries-lower-pesticide-residues"
       ],
       "wrong": [
-        "organic-food/organic-food-spoils-faster-conventional"
+        "organic-food/organic-food-spoils-faster-conventional",
+        "organic-food/significant-share-food-sold-organic-not"
       ]
     },
     {
@@ -14983,6 +15132,7 @@
       ],
       "wrong": [
         "organic-food/glyphosate-residues-food-harm-human-health",
+        "organic-food/significant-share-food-sold-organic-not",
         "organic-food/washing-produce-removes-most-pesticide-residue"
       ]
     },
@@ -15022,23 +15172,6 @@
         "organic-food/organic-farming-bans-all-synthetic-pesticides",
         "organic-food/organic-farming-better-environment-conventional",
         "organic-food/organic-food-more-nutritious-conventional"
-      ]
-    },
-    {
-      "channel": "Environmental Working Group",
-      "videos": 1,
-      "mean": 1,
-      "harmful": 0,
-      "right": [
-        "organic-food/eating-more-fruit-vegetables-matters-whether",
-        "organic-food/organic-food-especially-important-children-pregnant",
-        "organic-food/organic-produce-carries-lower-pesticide-residues",
-        "organic-food/regulators-assess-pesticides-one-time-ignore",
-        "organic-food/several-most-commonly-detected-pesticide-residues"
-      ],
-      "wrong": [
-        "organic-food/dirty-dozen-list-reliable-guide-which",
-        "organic-food/pesticide-residues-conventional-produce-too-low"
       ]
     },
     {
@@ -15149,22 +15282,6 @@
       ]
     },
     {
-      "channel": "Honest Ads",
-      "videos": 1,
-      "mean": 1,
-      "harmful": 0,
-      "right": [
-        "organic-food/eating-organic-food-has-proven-health",
-        "organic-food/organic-farming-uses-pesticides",
-        "organic-food/organic-food-costs-substantially-more-conventional",
-        "organic-food/pesticides-allowed-organic-farming-not-necessarily"
-      ],
-      "wrong": [
-        "organic-food/organic-labelling-mainly-marketing-tool-charge",
-        "organic-food/organic-produce-carries-higher-risk-bacterial"
-      ]
-    },
-    {
       "channel": "Hormone Specialist",
       "videos": 1,
       "mean": 1,
@@ -15227,28 +15344,6 @@
       "wrong": []
     },
     {
-      "channel": "Nourish Food Club",
-      "videos": 1,
-      "mean": 1,
-      "harmful": 0,
-      "right": [
-        "organic-food/group-certification-lets-most-farms-foreign",
-        "organic-food/hydroponic-produce-can-certified-organic",
-        "organic-food/imported-organic-food-less-trustworthy-domestic",
-        "organic-food/loosely-checked-organic-imports-undercut-domestic",
-        "organic-food/much-organic-meat-dairy-comes-large",
-        "organic-food/organic-certification-has-conflicts-interest-because",
-        "organic-food/organic-farming-relies-more-tillage-which",
-        "organic-food/small-farms-can-organic-practice-without",
-        "organic-food/switching-organic-diet-quickly-lowers-pesticide"
-      ],
-      "wrong": [
-        "organic-food/eating-organic-food-lowers-cancer-risk",
-        "organic-food/organic-certification-requires-grazing-animals-have",
-        "organic-food/organic-labelling-mainly-marketing-tool-charge"
-      ]
-    },
-    {
       "channel": "Patagonia",
       "videos": 1,
       "mean": 1,
@@ -15286,13 +15381,13 @@
         "organic-food/organic-milk-meat-contain-more-omega",
         "organic-food/organic-produce-carries-lower-pesticide-residues",
         "organic-food/pesticides-allowed-organic-farming-not-necessarily",
-        "organic-food/regulators-assess-pesticides-one-time-ignore",
         "organic-food/some-sellers-have-passed-off-conventional",
         "organic-food/switching-organic-diet-quickly-lowers-pesticide"
       ],
       "wrong": [
         "organic-food/eating-organic-food-lowers-cancer-risk",
-        "organic-food/organic-crops-carry-higher-risk-mycotoxin"
+        "organic-food/organic-crops-carry-higher-risk-mycotoxin",
+        "organic-food/regulators-assess-pesticides-one-time-ignore"
       ]
     },
     {
@@ -15380,12 +15475,12 @@
         "organic-food/organic-produce-carries-lower-pesticide-residues",
         "organic-food/organic-standards-require-higher-animal-welfare",
         "organic-food/pesticide-exposure-causes-cancer-people",
-        "organic-food/regulators-assess-pesticides-one-time-ignore",
         "organic-food/switching-organic-diet-quickly-lowers-pesticide"
       ],
       "wrong": [
         "organic-food/glyphosate-residues-food-harm-human-health",
         "organic-food/imported-organic-food-less-trustworthy-domestic",
+        "organic-food/regulators-assess-pesticides-one-time-ignore",
         "organic-food/washing-produce-removes-most-pesticide-residue"
       ]
     },
@@ -15438,19 +15533,9 @@
         "organic-food/usda-organic-seal-requires-least-percent"
       ],
       "wrong": [
-        "organic-food/organic-food-more-nutritious-conventional"
+        "organic-food/organic-food-more-nutritious-conventional",
+        "organic-food/significant-share-food-sold-organic-not"
       ]
-    },
-    {
-      "channel": "Valley News",
-      "videos": 1,
-      "mean": 1,
-      "harmful": 0,
-      "right": [
-        "organic-food/imported-organic-food-less-trustworthy-domestic",
-        "organic-food/loosely-checked-organic-imports-undercut-domestic"
-      ],
-      "wrong": []
     },
     {
       "channel": "Viva Longevity!",
@@ -15696,12 +15781,12 @@
       "right": [
         "organic-food/organic-farming-better-environment-conventional",
         "organic-food/organic-farming-improves-soil-health",
-        "organic-food/organic-food-worth-price-premium-health",
-        "organic-food/regulators-assess-pesticides-one-time-ignore"
+        "organic-food/organic-food-worth-price-premium-health"
       ],
       "wrong": [
         "organic-food/organic-farming-uses-pesticides",
-        "organic-food/pesticide-residues-conventional-produce-too-low"
+        "organic-food/pesticide-residues-conventional-produce-too-low",
+        "organic-food/regulators-assess-pesticides-one-time-ignore"
       ]
     },
     {
@@ -15755,6 +15840,40 @@
       ]
     },
     {
+      "channel": "Environmental Working Group",
+      "videos": 1,
+      "mean": 0,
+      "harmful": 0,
+      "right": [
+        "organic-food/eating-more-fruit-vegetables-matters-whether",
+        "organic-food/organic-food-especially-important-children-pregnant",
+        "organic-food/organic-produce-carries-lower-pesticide-residues",
+        "organic-food/several-most-commonly-detected-pesticide-residues"
+      ],
+      "wrong": [
+        "organic-food/dirty-dozen-list-reliable-guide-which",
+        "organic-food/pesticide-residues-conventional-produce-too-low",
+        "organic-food/regulators-assess-pesticides-one-time-ignore"
+      ]
+    },
+    {
+      "channel": "Honest Ads",
+      "videos": 1,
+      "mean": 0,
+      "harmful": 0,
+      "right": [
+        "organic-food/eating-organic-food-has-proven-health",
+        "organic-food/organic-farming-uses-pesticides",
+        "organic-food/organic-food-costs-substantially-more-conventional",
+        "organic-food/pesticides-allowed-organic-farming-not-necessarily"
+      ],
+      "wrong": [
+        "organic-food/organic-labelling-mainly-marketing-tool-charge",
+        "organic-food/organic-produce-carries-higher-risk-bacterial",
+        "organic-food/significant-share-food-sold-organic-not"
+      ]
+    },
+    {
       "channel": "KARE 11",
       "videos": 1,
       "mean": 0,
@@ -15800,6 +15919,29 @@
       ]
     },
     {
+      "channel": "Nourish Food Club",
+      "videos": 1,
+      "mean": 0,
+      "harmful": 0,
+      "right": [
+        "organic-food/group-certification-lets-most-farms-foreign",
+        "organic-food/hydroponic-produce-can-certified-organic",
+        "organic-food/imported-organic-food-less-trustworthy-domestic",
+        "organic-food/loosely-checked-organic-imports-undercut-domestic",
+        "organic-food/much-organic-meat-dairy-comes-large",
+        "organic-food/organic-certification-has-conflicts-interest-because",
+        "organic-food/organic-farming-relies-more-tillage-which",
+        "organic-food/small-farms-can-organic-practice-without",
+        "organic-food/switching-organic-diet-quickly-lowers-pesticide"
+      ],
+      "wrong": [
+        "organic-food/eating-organic-food-lowers-cancer-risk",
+        "organic-food/organic-certification-requires-grazing-animals-have",
+        "organic-food/organic-labelling-mainly-marketing-tool-charge",
+        "organic-food/significant-share-food-sold-organic-not"
+      ]
+    },
+    {
       "channel": "Simnett Nutrition",
       "videos": 1,
       "mean": 0,
@@ -15809,7 +15951,6 @@
         "organic-food/organic-farming-uses-pesticides",
         "organic-food/organic-food-worth-price-premium-health",
         "organic-food/pre-harvest-glyphosate-spraying-leaves-higher",
-        "organic-food/regulators-assess-pesticides-one-time-ignore",
         "organic-food/washing-produce-removes-most-pesticide-residue"
       ],
       "wrong": [
@@ -15817,7 +15958,20 @@
         "organic-food/glyphosate-residues-food-harm-human-health",
         "organic-food/organic-farming-bans-all-synthetic-pesticides",
         "organic-food/organic-food-costs-substantially-more-conventional",
-        "organic-food/pesticides-allowed-organic-farming-not-necessarily"
+        "organic-food/pesticides-allowed-organic-farming-not-necessarily",
+        "organic-food/regulators-assess-pesticides-one-time-ignore"
+      ]
+    },
+    {
+      "channel": "TIME",
+      "videos": 1,
+      "mean": 0,
+      "harmful": 0,
+      "right": [
+        "organic-food/conventional-grain-sold-organic-feed-has"
+      ],
+      "wrong": [
+        "organic-food/significant-share-food-sold-organic-not"
       ]
     },
     {
@@ -15834,6 +15988,19 @@
         "organic-food/glyphosate-residues-food-harm-human-health",
         "organic-food/heavy-glyphosate-exposure-raises-risk-non",
         "organic-food/most-conventional-grain-crops-sprayed-glyphosate"
+      ]
+    },
+    {
+      "channel": "Valley News",
+      "videos": 1,
+      "mean": 0,
+      "harmful": 0,
+      "right": [
+        "organic-food/imported-organic-food-less-trustworthy-domestic",
+        "organic-food/loosely-checked-organic-imports-undercut-domestic"
+      ],
+      "wrong": [
+        "organic-food/significant-share-food-sold-organic-not"
       ]
     },
     {

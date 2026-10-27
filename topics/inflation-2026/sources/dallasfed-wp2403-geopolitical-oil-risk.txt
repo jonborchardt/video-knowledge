@@ -1,0 +1,2162 @@
+Geopolitical Oil Price Risk and
+     Economic Fluctuations
+
+ Lutz Kilian, Michael D. Plante and Alexander W. Richter
+
+Working Paper 2403  May 2024 (Revised March 2026)
+
+Research Department
+
+https://doi.org/10.24149/wp2403r2
+
+Working papers from the Federal Reserve Bank of Dallas are preliminary drafts circulated for professional comment.
+The views in this paper are those of the authors and do not necessarily reflect the views of the Federal Reserve Bank
+of Dallas or the Federal Reserve System. Any errors or omissions are the responsibility of the authors.
+      Geopolitical Oil Price Risks and Economic Fluctuations*
+
+                    Lutz Kilian, Michael D. Plante and Alexander W. Richter§
+                                                 May 21, 2024
+
+                                         Revised: February 2, 2026
+
+                                                    Abstract
+Market participants and policymakers are concerned about major oil production shortfalls
+driven by geopolitical events. Even when such events never materialize, unanticipated
+increases in the probability of a production shortfall may generate a surge in the price of
+oil and oil price uncertainty. We provide the first systematic account of the quantitative
+importance of time-varying geopolitical risk to oil production for the global economy. We
+show that a 20 percentage point increase in the probability of a 5% shortfall in oil
+production causes a 0.12% reduction in output. When considering a 20% shortfall, the
+drop in output nearly quadruples.
+
+Keywords: Geopolitical risk, macroeconomic risk, time-varying uncertainty, rare
+disasters, oil, endogeneity, probability shocks, economic fluctuations, precautionary
+savings, inventories
+JEL Classifications: E13, E22, E32, Q43
+
+*We thank María Aristizábal-Ramírez, John Elder, Jancy Liu, Casey Petroff, and Michael Siemer for discussing our paper.
+We also thank Mario Crucini, Steven Davis, Paulina Restrepo-Echavarría, Michel Robe, Zheng Liu, and numerous
+conference and seminar participants for helpful comments. This work was supported by computational resources provided
+by the BigTex High Performance Computing Group at the Federal Reserve Bank of Dallas and the CADRE computing group
+at the Federal Reserve Bank of Kansas City. The views expressed in this paper do not necessarily reflect the views of the
+Federal Reserve Bank of Dallas or the Federal Reserve System.
+Lutz Kilian, Federal Reserve Bank of Dallas, 2200 N Pearl Street, Dallas, TX 75201, and CEPR (lkilian2019@gmail.com).
+Michael D. Plante, Federal Reserve Bank of Dallas, 2200 N Pearl Street, Dallas, TX 75201 (michael.plante@dal.frb.org).
+§Alexander W. Richter, Federal Reserve Bank of Dallas, 2200 N Pearl Street, Dallas, TX 75201 (alex.richter@dal.frb.org).
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+1 INTRODUCTION
+
+Time-varying geopolitical risk is widely considered an important determinant of fluctuations in
+economic activity. The financial press, international organizations, rating agencies and the invest-
+ment community all vie to assess these risks and their impact on the economy. Clearly, major
+geopolitical disruptions matter not only when they occur on rare occasions, but also when in-
+vestors and consumers make decisions in anticipation of the possibility of such events. This fact
+is nowhere more apparent than when it comes to geopolitical risk in energy markets. For example,
+in recent years many market analysts have listed risks to oil supplies as one of the top geopolitical
+risks, reflecting concerns about OPEC quota decisions, global access to Russian oil, and a potential
+widening of the conflict between Israel and Iran, among others.
+
+    These concerns were reinforced by the Twelve-Day War between Iran and Israel in June 2025.
+As the probability of a severe disruption of maritime traffic through the Strait of Hormuz surged
+to 53% in mid-June, the WTI price of oil peaked at $75 per barrel and oil price uncertainty, as
+measured by implied volatility, surged (see Figure 1). Even though the Strait of Hormuz never
+closed, the oil market reacted strongly to this shift in the probability of a major geopolitically
+driven shortfall of oil supplies. The market reaction reflected the fact that a closure of the Strait
+would have put about 20% of global oil production at risk. Goldman Sachs warned that such
+an event would push the Brent price of oil to $110 per barrel and reduce global growth by 0.3
+percentage points.1 Other investment banks and the IMF reached similar conclusions.
+
+    Despite the obvious interest among policymakers and market participants in the effects of fluc-
+tuations in the probability of a major geopolitically driven oil supply disruption on the global
+economy, this question has not been addressed in the academic literature to date.2 Existing work
+on the role of oil price uncertainty makes simplifying assumptions that prevent one from analyzing
+
+    1See Goldman Sachs "Assessing the Economic Impacts of the War in the Middle East," June 23, 2025.
+    2The work most closely related to ours is Olovsson (2019). While Olovsson's model also allows for stochastic oil
+production disasters, his model is annual and only allows for a two-point iid distribution over the disaster probability.
+Thus, the model is not designed to understand the implications of continuously evolving disaster probabilities, as
+observed in the data. Additionally, his main focus is on understanding the general equilibrium implications of oil
+storage without addressing the endogeneity of oil price uncertainty and macroeconomic uncertainty.
+
+                                                          1
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+Figure 1: Example of geopolitical risk
+
+0.6
+0.4
+0.2
+
+  0
+                May Jun Jul Aug Sep
+
+ 80
+
+ 70
+
+ 60
+                May Jun Jul Aug Sep
+
+ 80
+ 60
+ 40
+ 20
+
+                May Jun Jul Aug Sep
+Notes: Daily data from April 15 to September 15, 2025. The shaded area marks the Twelve-Day War be-
+tween Israel and Iran (June 13­June 24). The probability is from https://polymarket.com/event/
+will-iran-close-the-strait-of-hormuz-in-2025).
+
+events such as the surge in geopolitical oil production risk in 2025. For example, studies em-
+ploying stochastic volatility shocks to the price of oil not only assume that oil price uncertainty is
+exogenous but that the risk in the model is two-sided. This assumption prevents one from thinking
+about time-varying geopolitical oil production risk.
+
+    We develop a model of the global economy in which geopolitical risk in the oil market arises
+from the possibility of rare oil production disasters driven by geopolitical events. Our model
+includes risk averse agents, an oil production sector, oil storage, and limited substitutability be-
+tween oil and capital. The price of oil is determined endogenously. Oil production disasters are of
+stochastic length and occur with a time-varying probability. The baseline size and duration of these
+disasters--a 5% drop in global oil production that lasts 3 quarters on average--is set to match the
+
+                                                          2
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+behavior of global oil production during major geopolitical events in the oil market over the past
+50 years, such as the Arab-Israeli War in 1973, the Iranian Revolution in 1979, and the invasion
+of Kuwait in 1990. We also explore the possibility that agents might be concerned about larger
+oil production disasters than observed historically. The model allows us to assess the effects of an
+increase in the probability of a major geopolitical oil supply disruption, addressing a key question
+often faced by policymakers and market participants.3
+
+    Our analysis recognizes that, while downside geopolitical risk to oil production raises oil price
+uncertainty, not all surges in oil price uncertainty are driven by geopolitical events. In particular, a
+major downturn in the economy or simply the possibility of such a downturn may also cause a surge
+in oil price uncertainty. Thus, the model allows for the endogenous determination of both macroe-
+conomic and oil price uncertainty, in contrast with previous work. Following Gourio (2012),
+macroeconomic disasters are modeled as sharp declines in economic growth and may be viewed
+as the result of an economic crisis such as the Great Depression or the Financial Crisis of 2008.
+
+    We show that shocks to the probability of an oil production disaster cause a simultaneous surge
+in oil price uncertainty and in the price of oil, much like what occurred in June 2025 during the Iran-
+Israel War. These shocks cause oil inventories to be accumulated before the disaster is realized,
+as storage demand increases. In addition, they lower aggregate investment and aggregate output.
+How large these macroeconomic effects are depends on the magnitude of the probability shock and
+the magnitude of the potential oil production disaster. We show that under the baseline calibration,
+a 20 percentage point increase in the probability of a 5% shortfall in global oil production causes
+a 0.12% reduction in output. When considering a 20% shortfall, which roughly corresponds to the
+cessation of oil supplies from the Persian Gulf, the drop in output nearly quadruples. The fact that
+the model jointly matches moments related to the oil market, real activity, asset prices, and uncer-
+tainty gives us confidence in the model's predictions. We further show that our model can generate
+an increase in the price of oil similar to that in Figure 1, given the observed surge in the probability
+
+    3Since the model is global, we abstract from oil imports and exports and international capital flows. While a multi-
+country model would allow us to assess the differential effects of oil production disasters across countries, our focus
+in this paper is the aggregate effects of oil production disasters on the global economy. This reflects data limitations
+and the need to keep our highly nonlinear model computationally tractable.
+
+                                                          3
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+of a closure of the Strait of Hormuz in June 2025, providing further validation of the model.
+    Our model also allows us to consider how the oil market responds to macroeconomic disaster
+
+risk. We show that the responses of output uncertainty and oil price uncertainty to a shock to the
+probability of a macroeconomic disaster are an order of magnitude larger than the responses to a
+shock to the probability of an oil production disaster of the same magnitude. More than half of the
+observed oil price uncertainty tends to be driven by the macroeconomy, which helps explain why
+higher oil price uncertainty has historically been associated with lower real activity. This result
+highlights that this association should not be interpreted as a causal link.
+
+    Modeling downside risk is crucial. While increases in oil price uncertainty may alternatively
+be explained by stochastic volatility shocks to oil production growth, these shocks have little effect
+on the economy because they do not generate risk tilted to the downside. Likewise, the ability to
+store oil plays a central role. Without storage, the responses of the price of oil and real activity
+to higher oil production risk tend to be muted, suggesting that models without storage will fail to
+capture the full effects of shifts in oil production risk. Oil storage also matters for the responses to
+macroeconomic disaster probability shocks, underscoring the importance of jointly modeling oil
+production disasters and macroeconomic disasters.
+
+    Our analysis not only helps gauge the effects of geopolitical oil price risk, but it also has impor-
+tant implications for empirical work on the effects of oil price uncertainty shocks. We show that
+level and uncertainty shocks are not the same, as implicitly assumed in VAR-GARCH models, and
+that the effects of a level shock are not separable from those of an uncertainty shock, as assumed in
+VAR models with stochastic volatility. Similarly, it does not make sense to employ recursive linear
+VAR models with oil price uncertainty either ordered first or last, since oil price uncertainty is
+simultaneously determined with macroeconomic aggregates. Only if oil price uncertainty evolves
+independently of other shocks in the economy is there a direct causal link from oil price uncertainty
+shocks to macro aggregates. These results call into question a large body of empirical work that has
+produced seemingly robust evidence of large recessionary effects of oil price uncertainty shocks.
+
+                                                          4
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+Related Literature Our work relates to several strands of the literature. First, it complements a
+large literature on the effects of uncertainty shocks on the macroeconomy (e.g., Berger et al., 2020;
+Bernstein et al., 2024; Bianchi et al., 2018; Bloom, 2009; Bloom et al., 2018; Ferna´ndez-Villaverde
+et al., 2015, 2011; Jurado et al., 2015; Leduc and Liu, 2016; Ludvigson et al., 2021) by uncovering
+the underlying sources of time-varying uncertainty, building on Gourio (2012). This allows us to
+study the interaction between macroeconomic and oil price uncertainty and to make more precise
+statements about the role of geopolitical oil production risk in the global economy.
+
+    Second, our analysis contributes to the literature that uses micro-founded models to examine
+the relationship between oil price uncertainty and the economy. Notable contributions include
+Bas¸kaya et al. (2013), Gao et al. (2022), and Olovsson (2019). These studies rely on simplifications
+such as stochastic volatility shocks or iid distributed disaster risk, and all of them abstract from
+macroeconomic risk.4 In contrast, we examine this question within a general equilibrium model
+with endogenous oil price and macroeconomic uncertainty. Our analysis accounts for the fact that
+geopolitical oil price risk is time-varying and inherently one-sided. This allows us to quantify the
+effects of shocks to the probability of an oil production disaster driven by geopolitical events.
+
+    Third, our analysis is relevant for a large empirical literature making the case that oil price
+uncertainty shocks are recessionary (e.g., Bernanke, 1983; Drakos and Konstantinou, 2013; Elder
+and Serletis, 2010; Ferderer, 1996; Gao et al., 2022; Guo and Kliesen, 2005; Jo, 2014) and affect
+oil production and storage (e.g., Cross et al., 2022; Kellogg, 2014). Our finding that oil price
+uncertainty responds to macroeconomic level and uncertainty shocks has important implications
+for empirical work seeking to establish the macroeconomic effects of shocks to oil price uncertainty
+because it calls into question the identification of oil price uncertainty shocks.
+
+Outline The remainder of the paper is organized as follows. In Section 2, we propose an index of
+the uncertainty in the real price of oil building on Jurado et al. (2015), trace its evolution since the
+
+    4Our model also differs from the general equilibrium model in Ready (2018) who examines how discrete shifts in
+the uncertainty about long-run oil supplies affect asset prices and the economy in a model with long-run risk, rather
+than addressing how the economy responds to shifts in the likelihood of a major temporary drop in oil production
+driven by geopolitical events.
+
+                                                          5
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+1970s, and discuss the relationship between downside risk in oil production and oil price uncer-
+tainty. Section 3 reviews why oil price uncertainty matters for the economy. Section 4 introduces
+a calibrated model of the global economy that elucidates the determination of oil price uncertainty
+and macroeconomic uncertainty. In Section 5, we study the effects of shocks to the probability
+of oil production and macroeconomic disasters on the economy and their ability to explain eco-
+nomic fluctuations. Our analysis sheds light on the key economic mechanisms in the model, the
+importance of modeling downside risk, and the sensitivity of our results to the specification of the
+model. Section 6 discusses implications of our analysis for empirical work on the effects of oil
+price uncertainty shocks. The concluding remarks are in Section 7.
+
+2 MEASURING OIL PRICE UNCERTAINTY
+
+There has been growing interest in the impact of shifts in geopolitical risk in the oil market in recent
+years. Historically, increases in oil price risk have been associated, for example, with uncertainty
+about the implications of the Iranian Revolution in 1979 and the outcome of the invasion of Kuwait
+in 1990. More recently, there was a spike in uncertainty in March 2022 driven by concerns that
+Russia might refuse to sell oil to Europe after the invasion of Ukraine. Other recent sources of
+oil price uncertainty have included concerns about a war between Israel and Iran disrupting global
+oil exports, changes in OPEC production quotas, and the ability of U.S. shale oil producers to
+maintain their production increases.
+
+    The focus of our paper is to develop a deeper understanding of how time-variation in geopolit-
+ical risk in oil markets affects oil price uncertainty and global economic fluctuations. Our starting
+point is the downside risk to oil production caused by these events. These downside risks are
+inherently subjective because they relate to events that have not occurred. In contrast, oil price
+uncertainty can be quantified using econometric methods. This does not make oil price uncertainty
+a good indicator of geopolitically driven downside risk in oil production, however, because these
+two variables need not go hand-in-hand. While downside geopolitical risk to oil production can
+raise oil price uncertainty, not all surges in oil price uncertainty are driven by geopolitical events.
+
+                                                          6
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+Figure 2: Empirical measures of oil price uncertainty, 1974Q4-2023Q4
+
+250
+
+                      Oil Price Uncertainty
+                      Oil Price Volatility (OVX)
+
+200 Geopolitical Risk (GPR)
+
+                      Textual Oil Price Uncertainty
+
+150
+
+100
+
+50
+
+0     1980  1985  1990                               1995     2000  2005  2010  2015  2020
+1975
+
+Notes: The solid line shows the uncertainty about the percent change in the real price of oil obtained by
+deflating the U.S. refiners' acquisition cost for oil imports by the U.S. CPI for all urban consumers. The
+method used to quantify this uncertainty is based on Jurado et al. (2015). The dotted line is the option-
+implied crude oil price volatility index (OVX) published by the Chicago Board Options Exchange. The
+dash-dotted line shows the (rescaled) text-based oil price uncertainty index in Abiad and Qureshi (2023).
+The dashed line is the quarterly average of the historical geopolitical risk (GPR) series in Caldara and
+Iacoviello (2022).
+
+    Figure 2 quantifies the uncertainty about the real price of oil in global oil markets since the
+
+modern oil market emerged in the early 1970s. We follow Jurado et al. (2015) in measuring oil
+price uncertainty (Upo) as the one-quarter ahead conditional volatility of the unpredictable com-
+ponent from a predictive model of the real price of oil. This definition highlights the fact that
+
+what matters for economic decision making is not whether the price of oil has become more or
+less variable, but whether it has become more or less predictable.5 As is standard, the real price
+
+of oil is defined as the U.S. refiners' acquisition cost for oil imports deflated by the implicit GDP
+
+deflator (see Appendix E). The predictable component of the growth rate of the real price of oil
+
+    5The definition of uncertainty in Jurado et al. (2015) is closely related to the formal measure of predictability
+in Diebold and Kilian (2001), since lack of predictability implies uncertainty. Details of the construction of the
+uncertainty measure can be found in Appendix A.
+
+                                                           7
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+is approximated using a diffusion index based on largely the same set of variables used by Jurado
+
+et al. (2015), augmented by the real price of oil, updated, and aggregated to quarterly frequency.
+    We estimate the uncertainty about the price of oil from 1974Q4 to 2023Q4.6 There are large
+
+spikes in 1979, 1986, and 1990 at the time of the Iranian Revolution, the collapse of OPEC, and the
+
+invasion of Kuwait. Not all geopolitical events are associated with surges in oil price uncertainty,
+
+however. For example, neither the outbreak of the Iran-Iraq War in late 1980 nor the outbreak of
+
+the Israel-Hamas War in the last quarter of 2023 had a discernible impact on the index.
+
+    The largest spike in oil price uncertainty in 2008 evidently was not driven by geopolitical
+
+risk, but by macroeconomic risk. Similarly, the surge in oil price uncertainty in 2015 appears to
+
+be driven by market forces rather than geopolitics (see Baumeister and Kilian, 2016b), as was a
+
+smaller spike during the Asian Financial Crisis of the late 1990s. Sometimes, geopolitical events
+
+coincide with surges in macroeconomic risk, as was the case in early 2020 when the COVID-19
+
+recession occurred at the same time as the Saudi price war in the oil market or in 1979 when rising
+
+geopolitical uncertainty coincided with increased uncertainty about monetary policy.
+
+    An alternative way to measure oil price uncertainty is to use the implied volatility index (OVX)
+
+published by the Chicago Board Options Exchange. While these data are only available starting
+
+in 2007, we find a correlation of 0.71 between our index and the OVX when both series are avail-
+able.7 Figure 2 also shows that our data-based index of oil price uncertainty and the OVX index
+
+differ systematically from the text-based oil price uncertainty index proposed in Abiad and Qureshi
+
+(2023) based on the methodology in Baker et al. (2016). The correlation of the text-based oil price
+
+    6Our analysis cannot be extended back further because the U.S. refiners' acquisition cost for crude oil imports we
+use as a proxy for the global price of oil is only available starting in early 1974. While the WTI price of oil is available
+much further back, that price only captures the domestic price of oil in the United States. Since the domestic price
+effectively remained regulated until the early 1980s and because arbitrage between the U.S. oil market and the global
+oil market temporarily broke down during the U.S. shale oil boom in the 2010s, the U.S. price is not a good proxy for
+the global price of oil after 1974. These problems are compounded in the pre-1974 era. The nominal price of oil prior
+to 1974 was stable for extended periods except for discrete jumps, reflecting the regulation of the U.S. oil market. As
+stressed in Hamilton (1985, p. 99), the striking stability of the nominal price of crude oil between the 1950s and the
+early 1970s "can be attributed to state regulatory commissions' policy of defending posted prices." As a result, not
+only is there a major structural change in the distribution of the real price of oil in late 1973, but there is a structural
+break in the predictive correlation between U.S. real GDP growth and the real price of oil. Combining the pre- and
+post-1974 oil price data thus would be inappropriate (see Alquist et al., 2013).
+
+    7In related work, Gao et al. (2022) derive an index similar to the OVX series using oil options back to 1990Q1.
+The relationship between these indices is similar over the extended sample.
+
+                                                          8
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+uncertainty index with the OVX index, when that index is available, is only 0.55. This suggests
+that text-based measures fail to capture changes in oil price uncertainty as perceived by financial
+markets. Moreover, the correlation with our index over the full sample is only 0.30. This is not sur-
+prising because nothing in the construction of the text-based index ensures that it captures changes
+in the degree of uncertainty over time, as opposed to merely changes in press coverage. Finally, our
+oil price uncertainty index differs systematically from the geopolitical risk (GPR) index of Caldara
+and Iacoviello (2022), which quantifies the newspaper coverage of geopolitical events not limited
+to oil markets. The direction of the changes in these indices often differs, and the correlation
+between the indices is close to zero.
+
+3 WHY OIL PRICE UNCERTAINTY MATTERS
+
+Interest in fluctuations in oil price uncertainty dates to the mid-1980s. Economists at the time ob-
+served that the economy entered a steep recession after the 1979/80 oil price surge, but a similarly
+large drop in the price of oil in 1986 did not cause a large economic expansion. This fact is consis-
+tent with two mutually exclusive narratives. One is that the relationship between oil prices and the
+U.S. economy is linear, which implies that the effect of oil price shocks on the economy is modest
+at best and that the recession in the early 1980s is explained in substantial part by other shocks
+(e.g., Barsky and Kilian, 2002). This explanation is consistent with micro-founded models of the
+transmission of oil price shocks that predict that rising oil prices will only modestly slow growth in
+oil-importing economies, as consumers' income is reduced and firms face higher production costs,
+and, conversely, falling oil prices will only modestly stimulate growth in oil-importing economies
+(e.g., Backus and Crucini, 2000).8
+
+    The other narrative is that this relationship is nonlinear with positive oil price shocks having
+disproportionately larger effects on the economy. Macroeconomists for many years have favored
+
+    8There have been many attempts to design macroeconomic models that amplify the transmission of oil price shocks
+(e.g., Aguiar-Conraria and Wen, 2007; Atkeson and Kehoe, 1999; Finn, 2000; Rotemberg and Woodford, 1996). These
+theoretical models are not necessarily supported by the data, however. More importantly, being able to generate a larger
+recession after 1979/80 makes it even more difficult to explain the absence of an economic expansion in 1986.
+
+                                                          9
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+the latter interpretation. A leading explanation of the nonlinearity required to explain the large
+
+effect of positive oil price shocks and the negligible effect of negative oil price shocks, is that a
+
+rise in oil price uncertainty associated with the 1979/80 oil price surge caused consumer spending
+
+and business fixed investment to drop, amplifying the effects of rising oil prices, whereas in 1986
+
+an increase in oil price uncertainty associated with the fall in oil prices largely offset the stimulus
+from lower oil prices.9
+
+    The literature has emphasized three mechanisms that explain why fluctuations in oil price un-
+
+certainty matter for the real economy. In this paper, we propose a theoretical model that incorpo-
+
+rates these insights. The key feature of this model is that increases in both the price of oil and oil
+
+price uncertainty arise endogenously in response to increased geopolitical oil production risk.
+
+3.1 REAL OPTIONS THEORY Theories of investment under uncertainty and real options predict
+
+that rising uncertainty about, for example, the price of oil will depress current investment. Theo-
+
+retical foundations for such real options in firm-level investment decisions have been developed by
+Bernanke (1983), among others, in a partial equilibrium setting.10 For example, to the extent that
+
+the cash flow from an irreversible investment project depends on the price of oil or its derivatives,
+
+all else equal, increased uncertainty about the price of oil prompts firms to delay investments. As
+
+a result, investment expenditures drop and output declines. Uncertainty for this purpose may be
+
+measured by the expected conditional volatility of the real price of oil over the relevant investment
+
+horizon. The same reasoning applies to purchases of energy-intensive consumer durables such as
+
+cars (see Edelstein and Kilian, 2009).
+
+    9For example, Bernanke (1983), Lee et al. (1995), Ferderer (1996), Edelstein and Kilian (2009), Elder and Serletis
+(2010), Baumeister and Kilian (2016a), Ready (2018), Gao et al. (2022), and Alfaro et al. (2024) discuss the impact
+of oil price uncertainty on U.S. real activity, while Kilian (2009), Jo (2014), and Cross et al. (2022) discuss its impact
+on global real activity. The perception that oil price volatility matters for the transmission of oil price shocks to the
+economy also helped spawn a large literature on the asymmetric transmission of oil price shocks (see, e.g., Bernanke
+et al., 1997; Davis and Haltiwanger, 2001; Hooker, 1996, 2002; Kilian and Vigfusson, 2011; Leduc and Sill, 2004;
+Lee and Ni, 2002; Mork, 1989; Ramey and Vine, 2010).
+
+   10Bernanke (1983) is concerned with the unanticipated formation of an energy exporter cartel such as OPEC as his
+leading example. It has been understood in the literature that the same framework can be applied to other exogenous
+events including a shock to geopolitically driven oil price uncertainty (e.g., Elder and Serletis, 2010). While Bernanke's
+analysis is presented in a central planning context, he stresses that there is no difficulty in replicating his results in a
+competitive decentralized decision-making environment. For related discussion of the effects of uncertainty shocks
+more generally see Pindyck (1991) and Bloom (2014).
+
+                                                         10
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+    There are several caveats to the application of real options theory to the price of oil. First, the
+quantitative importance of the cash flow channel depends on how important the price of oil is for
+investment and durable consumption decisions and on the share of such expenditures in aggregate
+spending. For example, it seems intuitive that uncertainty about the price of oil would be important
+for decisions about oil drilling in Texas (see Kellogg, 2014). It is less obvious that it would be as
+important for investment in other sectors of the economy such as textile production or information
+technology, the expected profitability of which does not depend as much on oil prices.
+
+    Second, there is reason to believe that for longer-term investment projects, the variation over
+time in the uncertainty about the real price of oil is small. Consider an airline purchasing new
+planes that are expected to fly for 20 years. The cash flow from this investment clearly depends
+on fuel prices and an increase in expected fuel price uncertainty, all else equal, should cause the
+airline to delay the investment. However, the predictable component of the variance of the real
+price of oil quickly reverts to the unconditional variance at longer horizons, so one would not
+expect variation in the conditional variance at a monthly or quarterly frequency to have a large
+effect on the investment decision.
+
+    Third, this framework implicitly takes the price of oil as exogenously given. This simplifying
+assumption does not hold in practice, complicating the analysis. The concern is that we may
+attribute to oil price uncertainty the effects of macroeconomic uncertainty, which is more likely
+to affect the cash flow from the investment. Finally, as discussed in Section 4.4, it is unclear
+whether the importance of the real options channel survives in general equilibrium. Thus, the
+overall importance of this channel for the aggregate economy is open to question.
+
+3.2 PRECAUTIONARY SAVINGS A second reason first articulated in Edelstein and Kilian (2009)
+is that households' increased uncertainty about their future income in the wake of unexpected
+changes in the real price of oil will cause an increase in precautionary savings. In this interpreta-
+tion, oil price uncertainty may affect a wide range of consumer expenditures. This argument has
+subsequently been formalized in Plante and Traum (2012) and Bas¸kaya et al. (2013).
+
+    While a response of precautionary savings to oil price uncertainty shocks may seem persuasive
+
+                                                         11
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+in a partial equilibrium setting, its quantitative importance becomes less obvious when moving to
+general equilibrium models. For example, in many general equilibrium models with stochastic
+volatility shocks, consumption barely declines or even increases in response to higher uncertainty
+(e.g., Born and Pfeifer, 2021; de Groot et al., 2018).
+
+3.3 PRECAUTIONARY INVENTORY DEMAND A third channel by which increased oil price un-
+certainty can reduce economic activity operates through precautionary demand for oil inventories.
+This channel was introduced in Kilian (2009) and expanded on in Kilian and Murphy (2014) and
+Cross et al. (2022). These studies emphasized that higher precautionary demand driven by in-
+creases in oil price uncertainty, all else equal, will raise the real price of oil and reduce global eco-
+nomic activity by discouraging oil consumption. This analysis in turn builds on the theoretical in-
+sights in Alquist and Kilian (2010) of how mean-preserving shifts in the uncertainty about future oil
+supply shortfalls affect the real price of oil through inventory accumulation. General equilibrium
+models incorporating oil storage have been presented in Olovsson (2019) and Gao et al. (2022).
+
+4 A MODEL OF GEOPOLITICAL RISK
+
+In this section, we introduce a model of the global economy designed to elucidate the determinants
+of oil price uncertainty and to examine the implications of geopolitical oil production risk.
+
+4.1 ENVIRONMENT The model is a nonlinear stochastic growth model augmented to include oil
+production. Oil is used as an intermediate input by a representative firm that produces a final good.
+The distinguishing feature of the model is that it includes downside risk to both oil production
+and the macroeconomy. While downside risk to oil production can be thought of as arising from
+geopolitical events, downside risk to the macroeconomy involves rare, sharp economic downturns,
+such as the Great Depression or the Great Recession that are not otherwise captured by the model.
+
+    We follow Gourio (2012) in modeling such events as disasters that arrive with a time-varying
+probability. Time-variation in the probability of oil production and macroeconomic disasters in-
+
+                                                         12
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+duces exogenous variation in oil price and macroeconomic uncertainty.11 One advantage of this
+approach compared to the more traditional approach of subjecting oil production to a stochastic
+volatility shock is that it accounts for the fact that the risk faced by agents is not two-sided. Rather
+it involves a sharp reduction in oil production. Rare oil production disasters matter not only be-
+cause of their impact when they occur, but, more importantly, because agents' behavior reflects the
+anticipation of these disasters even when they are not realized.
+
+Productivity and Macroeconomic Disasters Productivity growth gt = at/at-1 follows
+
+                           ln gt = ln g¯ + gg,t - g(vtg - ¯1g), g,t  N(0, 1),
+
+where g¯ is the steady-state growth rate. The indicator variable vtg equals 1 if a macroeconomic
+disaster occurs and 0 otherwise. The transition matrix for vtg is summarized by
+
+                        Pr(vtg+1 = 1|vtg = 1) = q¯g, Pr(vtg+1 = 1|vtg = 0) = ptg,
+
+where the probability of a macroeconomic disaster follows
+
+                 ln ptg = min{0, (1 - pg) ln p¯g + pg ln ptg-1 + pgpg,t}, pg,t  N(0, 1),
+
+which ensures that ptg is bounded between 0 and 1. The size of the disaster is g, and ¯1g is the
+unconditional probability of the disaster, which is evaluated by simulation. Details about how the
+ergodic probability is computed can be found in Appendix C.
+
+    Following Gourio (2012), capital is destroyed when the disaster occurs. As in that paper, we use
+a broad interpretation of capital destruction that can represent a sharp reduction in capital quality
+due to the loss of intangible capital during economic downturns or the destruction of physical
+capital during wars, natural disasters, or sectoral reallocations. Let kt denote the inherited stock of
+capital and it denote investment. The capital stock evolves according to
+
+                               kt+1 = e-gvg,t+1 ((1 - )kt + it - (it/kt)kt).
+
+   11Applications of disaster risk include Barro and Ursu´a (2012), Gourio (2013), Gourio et al. (2013), Wachter (2013),
+Shen (2015), Farhi and Gabaix (2016), Olovsson (2019), Berger et al. (2020), Kim (2022), and Kilian et al. (2025).
+
+                                                         13
+            KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+The functional form of the adjustment cost follows Jermann (1998) and is given by
+
+                (it/kt)  =            it/kt  -  (µ1  +    µ2   (it/kt  )1-1/  ),
+                                                        1-1/
+
+where µ1 = (g¯ - 1 + )/(1 - ) and µ2 = (g¯ - 1 + )1/.
+
+Final Goods Firm A representative firm maximizes profits by choosing its investment (it), capital
+(kt+1), labor (nt), and oil (ot) inputs. Following the seminal work of Kim and Loungani (1992) and
+Backus and Crucini (2000), the firm produces a final good yt using a Cobb-Douglas technology
+that aggregates labor and capital services, which are produced using a normalized CES production
+function that aggregates capital and oil. The firm's profit maximization problem is given by
+
+            Vt  = max                 yt - it - ptoot - wtnt + Et[xt+1Vt+1]
+                    it ,kt+1 ,nt ,ot
+
+subject to
+
+                        kt+1 = e-gvg,t+1 ((1 - )kt + it - (it/kt)kt),
+            yt = y0(atnt)1- (1 - )(kt/k0)1-1/ + (ot/o0)1-1/ /(1-1/) ,
+
+where  is the elasticity of substitution between capital and oil,  is the depreciation rate of capital,
+1- is the share of labor in gross output, and  controls the share of oil in the capital services aggre-
+gate. The scalars y0, k0, and o0 are set so that  is equal to the cost share of oil in the capital services
+aggregate. These normalizations do not affect the results but simplify the model calibration.12
+
+    The first-order conditions for the firm's problem are given by
+
+                                      wt = (1 - )yt/nt,
+
+                                                (ot /o0 )1-1/          yt
+                p =  ,o
+                t (1-)(kt/k0)1-1/ +(ot/o0)1-1/ ot
+
+                                      Et[xt+1rti+1] = 1,
+
+   12A more detailed discussion of normalized CES production functions can be found in Klump et al. (2012). Some
+more recent studies, such as Bas¸kaya et al. (2013), Hassler et al. (2021), Olovsson (2019), and Ready (2018), favor
+a specification of the production function that treats oil as complementary to a capital-labor bundle. Our substantive
+conclusions are robust to this alternative functional form, as shown in Appendix F.
+
+                                                14
+       KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+where
+
+       rti+1    e (r-gvg,t+1 k           +  (1  -    +  µ1  +   µ2    (it+1/kt+1)1-1/  )ptk+1)/ptk  ,
+                                    t+1                        -1
+
+                                                        (kt /k0 )1-1/             yt
+                r  (1 - ) ,k
+                t (1-)(kt/k0)1-1/ +(ot/o0)1-1/ kt
+
+                ptk                                1        =  1   (  it  )1/  .
+                                            1-(it/kt)          µ2     kt
+
+Oil Production and Oil Production Disasters The production of oil is given by ots = aot et. The
+permanent component, ato, reflects factors that influence the productive potential of the oil sector,
+including the evolution of oil reserves and technological progress that increases the ability of the
+sector to extract oil from current reserves. We include a shock to this permanent component to
+allow for productivity shocks in the oil sector not related to geopolitical oil supply disruptions. We
+also allow aot to depend on the state of the economy since productivity in oil production is assumed
+to be cointegrated with productivity in the rest of the economy. This allows oil production to
+respond to changes in oil demand. The transitory component reflects temporary changes in the
+production of oil driven by exogenous geopolitical events. Oil production disasters are modeled as
+transitory, given evidence that geopolitical supply disruptions historically have not had long-lasting
+effects on global oil production, as discussed in the calibration section.
+
+    The permanent component of oil production is given by
+
+                                      aot = 0gt1 t-2 1ato-1 exp(gogo,t),
+
+where t = at/ato, 1 determines the impact response of a growth shock on ato, and 2 affects
+the speed at which ato converges to at. This setup allows for a slow response of oil production to
+productivity growth shocks in the rest of the economy, which is a key feature of the data.13
+
+    The transitory component of global oil production is given by
+
+                                           ln et = ln e¯ - e(vte - ¯1e).
+
+   13When 1 = 1 and 2 = 0, aot = at, so the production of oil responds immediately to changes in productivity
+elsewhere in the economy. This special case corresponds to the assumption made in Gao et al. (2022). Cointegration
+is rare in general equilibrium models with oil. One exception is Ready (2018), who models cointegration between
+oil production and TFP in a setting with long-run risk. Similarly, cointegrated TFP processes have been used in
+two-country international real business cycle models (e.g., Rabanal et al., 2011).
+
+                                                        15
+            KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+The indicator variable vte equals 1 if an oil production disaster occurs and 0 otherwise. The transi-
+tion matrix for vte is summarized by
+
+                         Pr(vte+1 = 1|vte = 1) = q¯e, Pr(vte+1 = 1|vte = 0) = pet ,
+
+where the probability of an oil disaster follows
+
+                      ln pet = (1 - ep) ln p¯e + ep ln pte-1 + peep,t, pe,t  N(0, 1).
+
+The size of the disaster is e, and ¯1e is the unconditional probability of the disaster, which is
+evaluated by simulation in the same way as the ergodic probability for the macroeconomic disaster.
+
+Oil Storage A representative oil storage firm maximizes profits by choosing inventories, st+1, and
+how much oil to supply to the final goods firm, ot. The firm's maximization problem is given by
+
+            Vto      = max         ptoot + Et[xt+1Vto+1]
+                         ot ,st+1
+
+subject to
+
+            st+1  =  (1  -  )st                   +  ost  -  ot  -     at  2at,
+                                                                    2  st
+
+where  is the cost of storage. Following Gao et al. (2022), the law of motion for st includes a
+penalty function that prevents stockouts, as they are not observed in the global oil market. The
+penalty function ensures st > 0, removing the need for a non-negativity constraint. The advantage
+of this approach is that it captures the fact that inventories rarely get close to zero in the data.
+
+    The first-order condition for the storage firm is given by
+
+where                      1 = Et[xt+1rts+1],
+            rts+1  ((1 -  +  (at+1/st+1)3)pot+1)/pot .
+
+Household A representative household maximizes the present discounted value of utility by
+choosing consumption, ct, hours worked, nt, bond holdings, bt+1, and equity shares, ste+1, which
+
+                                                  16
+                KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+have unit net supply. The household has Epstein-Zin recursive preferences to distinguish between
+
+risk aversion, , and the intertemporal elasticity of substitution,  (see Epstein and Zin, 1989).
+
+     The household's maximization problem is given by
+
+                                                                                            1-1/    1
+                                                                                              1-
+                Jt    =         max              (1   -   )ut1-1/  +    (Et    [Jt1+-1  ])        1-1/
+
+                            ct ,nt ,set+1 ,bt+1
+
+subject to
+
+                                           ut = ct (at(1 - nt))1-,
+                            ct + pet set+1 + bt+1/rt = wtnt + (pet + det )set + bt,
+
+where  is the discount factor, pte is the equity price, rt is the risk-free rate, wt is the wage rate, det
+
+are  dividends  from  firm  ownership,           and  the  Frisch  elasticity  of  labor    supply      =  1-nt  1-(1-1/)  .
+                                                                                                             nt        1/
+
+     The first-order conditions for the household are given by
+
+where                                    wt(1 - nt) = (1 - )ct,
+                                                1 = Et[xt+1rt],
+                                              1 = Et[xt+1rte+1],
+
+                                          rte+1  (pet+1 + det+1)/pte,
+                            xt+1  (ut+1/ut)1-1/(ct/ct+1)(Jt+1/zt)1/-,
+
+                                           zt  (Et[Jt1+-1 ])1/(1-).
+
+The equity risk premium is defined as
+
+                                                 rtex  rte - rt-1.
+
+Market Clearing Following Jermann (1998) and Gourio (2012), the final goods firm issues debt
+to finance its expected asset holdings, where  determines leverage. Since the Modigliani-Miller
+theorem holds in our model, the introduction of firm leverage only affects equity returns. There is
+
+                                                           17
+KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+no effect on household or firm decisions. Aggregate firm dividends are given by
+
+det  =  dtf  +  dst  -  (Et-1kt  -  1   Et  kt+1  ),
+                                    rt
+
+where dft = yt - it - pot ot - wtnt and dts = ptoot. Asset market clearing implies that ste = 1 and total
+bond issuance is given by bt = Et-1kt. Market clearing in the goods market implies ct + it = yt.
+
+    Due to the stochastic trend in productivity, we detrend the model by defining x~t  xt/at. The
+detrending process introduces the growth terms gt = at/at-1 and go,t = ato/ato-1. Appendix D
+provides the detrended equilibrium system of equations.
+
+Uncertainty We follow Plante et al. (2018) and Bernstein et al. (2024) and define output uncer-
+tainty as the conditional volatility of log output growth, which is given by
+
+                               Uty = Et[(ln(yt+1/yt) - Et[ln(yt+1/yt)])2].
+
+Oil price uncertainty, Utpo, is analogously defined as the uncertainty surrounding ln(pot+1/pto). This
+definition is equivalent to the measure we used to compute oil price uncertainty in the data.14
+
+4.2 SOLUTION METHOD Modeling the oil sector considerably increases the computational cost
+of solving the model compared to a model that only includes macroeconomic risk. Our model has
+7 state variables (kt, st, vtg, vte, ln ptg, ln pte, t-1), 4 of which are related to the oil market. There are
+4 continuous shocks and 2 discrete shocks. In total, the state space contains over 300,000 nodes
+and 40,000 shock realizations for each node in the state space. The size of the model is at the limit
+of what is computationally feasible. In particular, versions of this model that allow for different
+blocks of countries would be computationally intractable.
+
+    Disaster risk prevents the use of perturbation methods. We therefore employ a fully nonlinear
+solution method. Specifically, the model is solved using the policy function iteration algorithm
+described in Richter et al. (2014), which is based on the theoretical work in Coleman (1991). The
+algorithm minimizes the Euler equation errors on each node in the state space and computes the
+
+   14The uncertainty surrounding oil price growth is equivalent to the uncertainty surrounding the log oil price because
+pto is known at time t and cancels from the definition of Utpo . An analogous result holds for output uncertainty.
+
+                        18
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+maximum change in the policy functions. It then iterates until the maximum change is below a
+specified tolerance. The algorithm was programmed in Fortran and run on the supercomputers at
+the Federal Reserve. Appendix C describes the solution method in more detail.
+
+4.3 CALIBRATION Each period in the model is one quarter. The parameters shown in Table 1
+are informed by moments in the data and the related literature. For some parameters, we rely on
+U.S. data to inform our calibration given the paucity of global data. The moments are computed
+using data from 1975Q1 to 2019Q4. Excluding the more recent data ensures that the calibration is
+not unduly influenced by the COVID-19 pandemic. Appendix B provides our data sources.15
+
+    The discount factor  is set to 0.997 to match the average real interest rate. The relative risk
+aversion coefficient, , and intertemporal elasticity of substitution are set to 10 and 2, respectively,
+consistent with Gourio (2013), Croce (2014), Gao et al. (2022), and several other recent studies.16
+The Frisch elasticity, which is pinned down by the steady-state labor supply, is set to 2 following
+Peterman (2016), Basu and Bundick (2017), and many others in the business cycle literature.
+
+    The weight on oil in the production function  is set to 0.134 to match the average oil expendi-
+ture share in the data. Similarly, the parameter  controlling the size of the oil inventory stockout
+cost is set to match the average inventory share of oil consumption. The elasticity of substitution
+between capital and oil, , is set to 0.105 to match the volatility of oil price growth. Backus and
+Crucini (2000) adopt the same functional form of the production function and use a similar value
+(0.09). The Cobb-Douglas weight on capital services () is set to match the average labor share of
+income. The investment adjustment cost parameter, , is set to match the volatility of per capita in-
+vestment growth. The capital depreciation rate, , matches the annual average rate of depreciation
+on private fixed assets and durable goods. The oil storage cost, , is set to 0.025 following Casas-
+sus et al. (2018) and Gao et al. (2022). As in Basu and Bundick (2017), the leverage parameter, ,
+is set to 0.9 to help match the volatility of the equity premium.
+
+   15Estimation using Bayesian methods or the simulated method of moments is not possible due to the high dimen-
+sionality of the model. Even when using a supercomputer with thousands of cores, evaluating the model at a given
+parameterization takes many hours to solve.
+
+   16Swanson (2018) shows how to compute risk aversion under recursive preferences with an endogenous labor
+supply. Under our utility kernel,  corresponds to risk aversion over consumption and leisure.
+
+                                                         19
+KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+Table 1: Model calibration at a quarterly frequency
+
+Parameter                                  Value     Target
+
+Discount Factor ()                         0.997     E(r)
+Risk Aversion ()                           10        Gao et al. (2022), Croce (2014)
+Intertemporal Substitution Elasticity ()   2         Gao et al. (2022), Croce (2014)
+Frisch Labor Supply Elasticity ()          2         Peterman (2016), Basu-Bundick (2017)
+Capital-Oil Elasticity of Substitution ()  0.105     SD(po)
+Capital Depreciation Rate ()               0.025     Depreciation on fixed assets, durables
+Capital-Oil Share of Production ()         0.4043    Avg. labor share of income
+Investment Adjustment Cost ()              3.3       SD(i)
+Oil Storage Cost ()                        0.025     Casassus et al. (2018), Gao et al. (2022)
+Oil Production Weight ()                   0.134     E[o/y]
+Oil Inventory Stockout Cost ( )            0.00001   E[s/o]
+Average Growth Rate (g¯)                   1.0039    E(y)
+Firm Leverage ()                           0.9       SD(rex)
+Elasticity of Oil Supply to TFP (1)        0         Newell and Prest (2019)
+Oil Supply Adjustment Speed to TFP (2)     0.05      Half life of 3.5 years
+Growth Shock SD (g)                        0.0095    SD(y)
+Oil Production Growth Shock SD (go)        0.011     SD(os)
+Growth Disaster Size (g)                   0.018     E(rex)
+Prob. of Entering Growth Disaster (p¯g)    0.005     Occurs in expectation every 50 years
+Prob. of Exiting Growth Disaster (q¯g)     0.9       Gourio (2012)
+Growth Disaster Prob. Persistence (pg)     0.8       AC (Uy )
+Growth Disaster Prob. Shock SD (pg)        0.9       S D(Uy )
+Oil Production Disaster Size (e)           0.05      Avg. peak decline in oil prod. disasters
+Prob. of Entering Oil Disaster (p¯e)       0.02      Avg. frequency of oil prod. disasters
+Prob. of Exiting Oil Disaster (q¯e)        0.67      Avg. duration of oil prod. disasters
+Oil Disaster Prob. Persistence (pe)        0.9       AC(Upo )
+Oil Disaster Prob. Shock SD (pe)           1.4       SD(Upo )
+
+    The mean growth rate of productivity, g¯, is set to 1.0039 to match the average growth rate of
+per capita real GDP. The standard deviation for the growth shock, g, is set to 0.0095 to help match
+the volatility of real GDP growth. The calibration of the macroeconomic disaster parameters is
+guided by several moments in the data as well as the parameter choices in Gourio (2012). We set
+the size of the disaster, g, to 0.018 to match the mean equity premium. The mean probability
+of entering the disaster state, p¯g, is set to 0.005, which implies that these disasters happen once
+every 50 years in expectation given that there were two major events over the last 100 years. The
+persistence, pg, and standard deviation, pg, of this probability are set to 0.8 and 0.9, respectively,
+to help match the autocorrelation and volatility of output uncertainty. The fixed probability of
+
+                                                         20
+KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+Figure 3: Shortfall in global oil production during major geopolitical events
+
+22
+
+00
+
+-2 -2
+
+-4 -4
+
+-6 -6
+
+-8 -8
+
+012345678  012345678
+
+22
+
+00
+
+-2 -2
+
+-4 -4
+
+-6 -6
+
+-8 -8
+
+012345678  012345678
+
+Notes: Reproduced from Hamilton (2013) using updated global oil production data. We exclude the 2002/03
+episode because the revised data show no evidence of a material shortfall.
+
+exiting a macroeconomic disaster, q¯g, is set to 0.9, in line with Gourio (2012). This value implies
+that macroeconomic disasters, on average, last 2.5 years. As shown in Appendix F, the responses
+to an average macroeconomic disaster are very similar to those reported in Gourio (2012), who
+documents that his responses resemble the empirical estimates in Barro et al. (2013).
+
+    The value of 1 is set to 0, implying that productivity in the oil sector is unresponsive to
+changes in productivity in the rest of the economy within the first quarter. This is consistent with
+the view that oil production in the short run is determined entirely by geological and technological
+constraints (see, e.g., Newell and Prest, 2019). We set 2 to 0.05, so the half-life of the deviation
+between ato and at is 4 years. The standard deviation of the growth shock to oil production, go, is
+set to 0.011 to match the volatility of global oil production.
+
+    The parameters controlling the oil production disasters are based on historical oil production
+
+                                                         21
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+data. Following Hamilton (2013), Figure 3 plots global oil production during major geopolitical
+events, where production is expressed in percent deviations from the level at the beginning of the
+event. We set the size of the oil production disaster, e, to 0.05 to match the average peak decline
+in the data. The mean probability of entering the oil disaster state, p¯e, is set to 0.02 so that disasters
+occur every 12.5 years in expectation, given that there were four major events over the last 50
+years. The persistence, pe, and standard deviation, pe, of this probability are set to 0.9 and 1.4,
+respectively, to help match the autocorrelation and volatility of oil price uncertainty. The fit of the
+model is not very sensitive to the value of pe. In the baseline calibration, we focus on pe = 0.9,
+rather than a smaller value, to not limit the role of oil disaster risk a priori. However, in Sections
+5.6 and 5.7 we explore alternative values of pe, motivated by specific historical episodes.
+
+    The fixed probability of exiting an oil production disaster, q¯e, is set to 0.67 so that a disaster
+lasts, on average, for 3 quarters, which corresponds to the longest duration observed in the four
+episodes in Figure 3. This assumption may be defended given the disproportionate impact of the
+1973/74 event on public perceptions about oil production disasters. In Section 5.4, we consider
+alternative oil disaster specifications.17
+
+    To compute the model-implied moments, we simulate the model 10,000 times, each with 180
+quarters to match the length of the data used to calibrate the model. We calculate the moments of
+interest in each simulated data set and then compute the average moments across all simulations.
+Table 2 compares the data and model-implied moments. The model closely matches most of the
+targeted moments. This includes moments related to the oil market (e.g., the standard deviations of
+oil price growth and oil production growth, the oil expenditure share, and the oil inventory-to-oil
+consumption share), real activity (e.g., the standard deviations of output and investment growth),
+asset prices (e.g., the average risk-free rate and equity risk premium), and uncertainty (e.g., the
+standard deviations and autocorrelations of output uncertainty and oil price uncertainty). Jointly
+
+   17It may seem that options data could be used to help with the calibration. This is not the case. One challenge is
+that tail probabilities estimated from equity options as in Barro and Liao (2021) do not help quantify macroeconomic
+tail risk, but only equity risk. The distinction between financial risk and macroeconomic risk has been emphasized in
+Gao et al. (2022) and Ludvigson et al. (2021). Likewise, oil disaster probabilities are not recoverable from oil options
+because these prices reflect both oil and macroeconomic disaster risk in unknown combinations.
+
+                                                         22
+              KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+Table 2: Data and simulated moments
+
+Moment        Data                   Model  Moment    Data           Model
+
+E(y)          0.39                    0.39  SD(os)    2.06            2.14
+E(s/o)        0.97                    0.97  SD(po)    14.39          14.29
+E(poo/y)      0.045                  0.046  SD(rex)   8.29            5.51
+E(rex)        2.18                    2.09  S D(Uy )  14.51          15.61
+E(r)          0.22                    0.20  SD(Upo )  29.95          30.49
+SD(y)         0.74                    0.87  AC (Uy )  0.87            0.81
+SD(i)         1.95                    1.92  AC(Upo )  0.93            0.82
+
+SD(s)          2.30                   2.23  AC (y )    0.32           0.28
+               0.91                   0.37  AC (os )  -0.11          -0.20
+SD(r)         -0.15                  -0.48  AC (po )   0.19           0.00
+Corr(y, Uy)   -0.27                  -0.44  AC (po )   0.95           0.94
+Corr(y, Upo)
+
+Notes: Moments above the middle line are targeted while those below it are untargeted. The model is
+calibrated to data from 1975Q1-2019Q4. SD(Uy) and SD(Upo) are normalized by SD(y) and SD(po),
+
+respectively, to be consistent with Jurado et al. (2015). The standard deviations and rates are percents.
+
+matching all four of these key aspects of the economy gives us confidence that the model provides
+a good description of oil market, real activity, and uncertainty dynamics.18
+
+    The model also performs well at matching several untargeted moments shown at the bottom
+of Table 2. These results provide further validation of our model. For example, the volatility of
+oil inventory growth and the autocorrelations of output growth and oil production growth closely
+match the data. Output and oil price uncertainty are somewhat more countercyclical in the model
+than in the data, but this could presumably be addressed by adding exogenous volatility shocks.
+The model also reproduces the near random-walk behavior of the price of oil. Finally, allowing for
+disaster risk raises the volatility in the risk-free rate, which has traditionally been difficult to match
+in real business cycle models.
+
+4.4 DISCUSSION Our model embodies all three main transmission channels of oil price uncer-
+tainty emphasized in the literature, as reviewed in Section 3. It directly incorporates precautionary
+savings by households in response to higher oil price uncertainty as well as oil storage. In addition,
+
+   18One potential concern is the oil share calculated using U.S. data may not be representative of the global econ-
+omy. We also calculated oil shares using supply-use tables from the World Input-Output Database (Timmer et al.,
+2015). These tables are available for 38 countries, including the U.S., China, Japan, Brazil, India, Indonesia and many
+countries in Europe. The average across all countries was 0.05, very close to the average share in our model.
+
+                                                         23
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+our model features limited substitutability between capital and oil. This feature causes the expected
+return on investment to decline when the probability of an oil production disaster increases, gener-
+ating recessionary effects in the model that resemble those hypothesized by Bernanke and others.
+
+    Although Bernanke's theoretical analysis is often cited in support of models of oil price volatil-
+ity shocks, it is not well appreciated that Bernanke's framework does not allow for monthly or quar-
+terly energy price volatility shocks. Rather, he envisioned agents being uncertain about whether
+the price of energy would permanently move to a higher level or not, which is a different thought
+experiment. In his model there are two types of capital that differ by their energy efficiency. The
+irreversibility of the investment decision causes risk averse agents to postpone the acquisition of
+either type of capital. The difficulty in generalizing this model to general equilibrium is that it
+requires aggregating different types of capital across many firms.
+
+    A closely related model that deals with the aggregation of different types of capital in general
+equilibrium was proposed by Atkeson and Kehoe (1999). In their putty-clay model there is a
+continuum of capital goods indexed by their oil efficiency. Existing capital goods use oil in fixed
+proportions, so, in the short run, there is no substitutability between capital and oil. However, firms
+may invest in new capital with different oil efficiency in response to changes in the price of oil.
+Although this point is not the focus of Atkeson and Kehoe (1999), their model implies that higher
+oil price uncertainty would reduce investment, as discussed in Plante and Traum (2012).
+
+    The reason we do not incorporate the putty-clay framework within our model is that two key
+assumptions made by Atkeson and Kehoe (1999) do not hold in our model. One is that the price
+of oil is exogenous; the other is that under their assumptions oil consumption does not respond to
+the price of oil on impact. These assumptions allow Atkeson and Kehoe to not only abstract from
+storage, but also to aggregate across different types of capital without tracking the distribution of
+capital types. The fact that the infinite-dimensional state space of capital stocks in their model can
+be reduced to a one-dimensional space facilitates the solution of their model.
+
+    In contrast, in our model the price of oil is endogenously determined. Suppose, for example,
+that there is an oil supply shock. In that case, we must add storage to the model because otherwise
+
+                                                         24
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+equilibrium in the oil market is unattainable. If oil consumption is predetermined and hence un-
+responsive to the oil price fluctuations caused by the oil supply shock, oil inventories must absorb
+any imbalances in the oil market each period. It can be shown that, as a result, the oil inventory
+moments of the simulated model data differ substantially from the oil inventory moments in the
+actual data. It may seem that this problem could be addressed by dropping the assumption that oil
+consumption is unresponsive to the price of oil, but this would render the capital stock intractable,
+which is why we do not consider the putty-clay framework in our model. However, our model
+with disaster risk generates investment and output responses that are qualitatively consistent with
+those in models of irreversible investment. The reason is that in our model risk averse agents are
+reluctant to invest given the limited substitutability between capital and oil.
+
+    To illustrate this point, Appendix G evaluates the Atkeson-Kehoe (AK) putty-clay model with
+exogenous oil prices, augmented to include a stochastic volatility shock to the price of oil. We
+compare the responses of consumption and investment to an oil price uncertainty shock in this
+model to the corresponding responses in an alternative model that is identical except that the putty-
+clay structure has been replaced by the CES production function from our baseline model. We
+illustrate that the closer  is to zero, the better the responses implied by the CES production func-
+tion approximate the responses implied by the Leontief structure embodied in the AK model. For
+ = 0.1, which corresponds to the value used in our baseline model with endogenous oil prices, the
+approximation is quite good. It is in this sense that our baseline model captures the essence of the
+results in Bernanke (1983) and Atkeson and Kehoe (1999), while remaining tractable in general
+equilibrium even when the oil price is endogenous.
+
+5 THE EFFECTS OF TIME-VARYING DISASTER RISK
+
+The model sheds light on the impact of geopolitical oil price risk on the global economy. It also
+provides a useful benchmark for what we would expect the relationship between oil price uncer-
+tainty and output uncertainty to be in the data. It is capable of generating fluctuations in oil price
+uncertainty that are qualitatively similar to those in the data, and it does not force output uncertainty
+
+                                                         25
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+and oil price uncertainty to be independent. The model helps us understand to what extent their
+relationship is driven by exogenous shifts in macroeconomic risk, exogenous shifts in geopolitical
+risk in oil markets, or by other shocks.
+
+5.1 TRANSMISSION OF DISASTER PROBABILITY SHOCKS Economic agents will witness dis-
+asters only infrequently. Nevertheless, disasters matter for economic behavior because there is a
+probability that they may be realized in the future. For example, the Twelve-Day War between Iran
+and Israel in June 2025 triggered concerns that the Strait of Hormuz might be closed, disrupting
+oil exports. As we highlight in this section, changes in the probability of such disasters will cause
+the oil market and the macroeconomy to move even when no disasters actually occur.19
+
+Oil Disaster Probability Figure 4 shows the responses of key model variables when the exoge-
+nous oil disaster probability is increased by 10, 20, and 40 percentage points (pp), respectively.
+Higher odds of an oil production disaster generate stronger storage demand, reflected in a persis-
+tent build-up of oil inventories. This raises the price of oil, with the initial increase ranging from
+about 4% for a 10pp shock to the disaster probability to about 9% for a 40pp shock. This pattern
+is consistent with evidence in Kilian and Murphy (2014) that the oil price increases in 1979 and
+1990 were driven in substantial part by higher oil inventory demand.
+
+    The probability shock reduces investment, with the effect ranging from a 0.34% drop for a
+10pp shock to 0.75% for a 40 pp shock. The negative effect on investment arises for two distinct
+reasons. First, an oil production disaster, if it were to occur, would reduce the return to capital,
+since oil and capital are complements in production. Thus, the higher probability of such a disaster
+lowers the expected return from investing in capital. Second, the return to capital today declines
+because higher anticipatory demand for oil inventories raises the price of oil. Together, these two
+
+   19A positive shock to the probability of a geopolitically driven oil production shortfall lowers expected oil
+production and raises the uncertainty about the future price of oil. Such shocks differ from news about expected oil
+production or expected oil consumption, as discussed in the previous literature (see Kilian and Murphy, 2014). For
+example, Arezki et al. (2017) estimate the domestic macroeconomic impact of large oil discoveries rather than the
+impact on the global economy of a shift in the probability of such a discovery. Moreover, they are not concerned with
+geopolitical risk nor do they examine the response of the price of oil or of the uncertainty about the price of oil. Like-
+wise, the literature on the impact of OPEC announcements on oil price expectations is not concerned with uncertainty
+nor does it focus on the anticipation of rare geopolitical oil supply disruptions (e.g., Ka¨nzig, 2021; Kilian, 2024).
+
+                                                         26
+       KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+Figure 4: Responses to alternative oil production disaster probability shocks
+
+0.05 3 0.6
+
+    0  2 0.4
+-0.05
+
+ -0.1  1 0.2
+-0.15
+
+-0.2 0 0
+     0 4 8 12 16 20 0 4 8 12 16 20 0 4 8 12 16 20
+
+0.2 10       8
+
+   086
+                                                 6
+
+-0.2
+
+                                                 44
+
+-0.4
+                                                 2
+
+-0.6 0 2
+
+-0.8 -2      0
+
+       0 4 8 12 16 20 0 4 8 12 16 20 0 4 8 12 16 20
+
+Notes: Responses in deviations from the baseline. Simulations assume no disasters are realized.
+
+effects push down output, but the overall magnitude is modest.
+    Higher odds of an oil production disaster raise output uncertainty and oil price uncertainty, but
+
+the effects on oil price uncertainty are much larger, given that the cost share of oil is small. For
+example, a 10pp increase in the probability of an oil disaster raises the output uncertainty index
+only by 0.5, but the oil price uncertainty index by 6.9. Thus, the oil disaster probability shock
+looks in some ways like an exogenous oil price uncertainty shock. However, as discussed later, the
+downside risk inherent in the oil production disaster leads to very different responses compared to
+a stochastic volatility shock to oil production.
+
+    The model shows that the recessionary effects of the probability shock are reflected in output
+immediately, but are short-lived. The responses do not change proportionately with the shock size.
+For example, the responses of output and the price of oil to a 40pp increase in the oil disaster
+
+         27
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+probability are only about 2 times larger than when the probability rises by 10pp. This result
+highlights that exogenous variation in uncertainty transmits to the macroeconomy nonlinearly.
+
+Macroeconomic Disaster Probability A macroeconomic disaster such as the Financial Crisis of
+2008 acts like a negative demand shock in the oil market by reducing real activity and lowering
+oil demand. This plays a key role in understanding how the oil market responds to an increased
+probability of a macroeconomic disaster. Figure 5 shows the responses when the growth disaster
+probability exogenously increases by 10, 20, and 40pp, respectively. All three shocks have substan-
+tial, albeit short-lived, effects on the price of oil. For example, a 10pp increase in the probability
+causes the price of oil to decline by 26% on impact. There are two related but somewhat distinct
+mechanisms at play. First, as in Gourio (2012), the higher probability directly reduces the expected
+return to capital, which lowers oil demand today since capital and oil are complements. Second,
+lower current and expected oil demand also reduce the expected return from holding oil inventories.
+As a result, oil currently held in storage is sold off, pushing down the oil price even further.
+
+    Although the reduction in the price of oil is beneficial for the economy, the net effect of this
+probability shock on output is negative. In fact, the decline in output is much larger than from
+an oil disaster probability shock of the same magnitude. This is because the disaster probability
+shock transmits directly to output rather than through the share of oil in output, which is small. In
+addition, the response is more persistent than the response to an oil disaster probability shock.
+
+    In related work, Gourio (2012) showed that an increase in the probability of a macroeconomic
+disaster causes the uncertainty about equity prices to rise. Our results show that the same shock
+also has a major effect on output uncertainty and oil price uncertainty. If the price of oil and oil
+price uncertainty were exogenous, this interaction between the uncertainty measures would not
+occur. This point is important. It formally shows that oil price uncertainty is endogenous with
+respect to the macroeconomy, consistent with the empirical evidence discussed in Section 2.
+
+    As in Figure 4, the responses do not scale proportionately with the increase in the macroeco-
+nomic disaster probability. For example, a 10pp increase leads to a 26% decline in the price of oil,
+whereas the price of oil declines by 43% when the probability rises by 40pp. This is true for the
+
+                                                         28
+KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+Figure 5: Responses to alternative macroeconomic disaster probability shocks
+
+0 0 100
+
+                                                -2      80
+-0.2                                                    60
+                                                        40
+                                                -4      20
+
+-0.4 -6
+
+                                                -8
+-0.6
+
+                                              -10
+
+-0.8 -12                                                0
+
+0 4 8 12 16 20 0 4 8 12 16 20 0 4 8 12 16 20
+
+0 10 120
+
+                                              0 100
+-2
+
+                                            -10 80
+
+-4 -20                                                  60
+
+                                            -30         40
+                                                        20
+-6
+                                            -40
+
+-8 -50                                                  0
+
+0 4 8 12 16 20 0 4 8 12 16 20 0 4 8 12 16 20
+
+Notes: Responses in deviations from the baseline. Simulations assume no disasters are realized.
+
+other variables as well, once again highlighting the nonlinearity in the transmission of uncertainty.
+
+    The key difference between the two disaster probability shocks is that the macroeconomic dis-
+
+aster probability shock has substantial effects on both uncertainty variables, whereas the oil disaster
+
+probability shock does not. This suggests that the comovement between oil price uncertainty and
+
+output uncertainty tends to reflect shifts in macroeconomic risk rather than geopolitical risk.20
+
+5.2 HOW MUCH VOLATILITY IS DUE TO MACROECONOMIC RISK AND GEOPOLITICAL RISK?
+
+Table 3 shows that the model generally does an excellent job at capturing the volatility in the
+
+   20Studying the evolution of oil inventories and the oil price during geopolitical disasters would not be informative
+about the realism of our model because the anticipation of an oil production disaster causes inventories to move in
+the opposite direction from its realization. Moreover, the behavior of oil inventories and prices during geopolitical
+disasters may also reflect past and current macroeconomic shocks. Thus, the realism of the responses in our model
+can only be evaluated based on the conditional moments in the data, which requires a nonlinear structural econometric
+model consistent with the structure of our model. No such model exists in the literature.
+
+                                                    29
+          KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+Table 3: Decomposition of key volatilities
+
+Moment    Data   Baseline                    No Macro       No Macro Disaster Risk or
+                  Model                     Disaster Risk  Oil Production Disaster Risk
+
+SD(y)     0.74   0.87                           0.65       0.65
+          1.95   1.92                           1.27       1.24
+SD(i)     2.06   2.14                           2.12       1.12
+SD(os)    14.39  14.29                          6.30       5.63
+SD(po)    14.51  15.61                          0.30       0.13
+          29.95  30.49                          4.97       1.26
+S D(Uy )
+SD(Upo )
+
+Notes: The models without disaster risk remove both the probability shock and the disaster state. SD(Uy)
+and SD(Upo) are normalized by SD(y) and SD(po) in the baseline model, respectively, to be consistent
+
+with Jurado et al. (2015).
+
+data. Dropping macroeconomic disaster risk from the model substantially lowers the ability of the
+model to explain the volatility in the data. The resulting model not only substantially understates
+the standard deviation of the two uncertainty series, but it also understates most other volatilities.
+Removing both macroeconomic and oil production disasters from the model further lowers the
+volatilities. In particular, it removes almost all variability in the two uncertainty measures and
+some of the variability in oil price growth and oil production growth but has little additional effect
+on the volatility of macroeconomic aggregates.
+
+    There are two key takeaways from these results. First, macroeconomic disaster risk is a major
+driver of fluctuations in oil price uncertainty, highlighting that oil price uncertainty is not exoge-
+nous as is often assumed in the literature. Second, oil production disaster risk is not a major driver
+of fluctuations in macro aggregates or output uncertainty, suggesting that geopolitical risk does not
+play a major role in driving business cycles. This does not mean, of course, that such risk cannot
+be important during specific historical episodes, as illustrated by our impulse response analysis.
+
+5.3 ALTERNATIVE MODEL SPECIFICATIONS In this section, we highlight key features of our
+model by considering alternative specifications. We first illustrate the central role of oil storage.
+We then contrast our model with earlier models incorporating stochastic volatility shocks. We also
+show that the introduction of nominal rigidities does not affect the substance of our results and
+
+                                            30
+       KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+Figure 6: Responses to oil production disaster probability and stochastic volatility shocks
+
+0.05 2.5
+
+02
+
+-0.05  1.5
+
+-0.1 1
+
+-0.15  0.5
+
+-0.2 0
+     0 4 8 12 16 20 0 4 8 12 16 20
+
+                                                                          8
+    06
+
+                                                                          4
+
+ -0.5 2
+
+                                                                          0
+
+    -1 -2
+       0 4 8 12 16 20 0 4 8 12 16 20
+
+Notes: Responses in deviations from the baseline. Simulations assume no disasters are realized. The
+stochastic volatility shock has been normalized to match the impact response of oil price uncertainty in
+the baseline model. All disaster probability shocks are 20pp.
+
+explore the implications of allowing households to directly consume oil and of a higher average
+oil expenditure share.
+
+Role of storage There are important movements in oil inventories whenever the probability of a
+disaster increases. These movements affect the price of oil and, therefore, the evolution of macroe-
+conomic aggregates. In this section, we investigate how important storage is for those responses
+by comparing the baseline results to those from a model without storage.
+
+    Figure 6 shows the responses for the oil disaster probability shock. The key difference is that
+the price of oil slightly declines on impact in the model without storage, whereas it increases
+substantially in the baseline model. In the absence of storage, the response of the oil price is driven
+entirely by the expectation of lower output, which reduces the demand for oil and modestly lowers
+
+                                                         31
+        KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+Figure 7: Responses to growth disaster probability and stochastic volatility shocks
+
+   0                                                          1            8 16 24 32 40
+-0.1                                                          0
+-0.2                                                         -1
+                                                             -2
+     0                                                       -3
+                                                             -4
+                                                             -5
+        8 16 24 32 40 0
+
+0.5 5
+
+   00
+
+-0.5
+                                                                       -5
+
+  -1
+                                                                     -10
+
+-1.5
+
+  -2 -15
+
+-2.5                                                        -20            8 16 24 32 40
+     0  8 16 24 32 40 0
+
+Notes: Responses in deviations from the baseline. Simulations assume no disasters are realized. The
+stochastic volatility shock has been normalized to match the impact response of output uncertainty in the
+baseline model. All disaster probability shocks are 5pp.
+
+its price. Given the muted response of the price of oil, the impact effect on output is also reduced.
+    Figure 7 shows that storage also plays a key role in the propagation of a macroeconomic disaster
+
+probability shock. In the model with storage, a higher probability of a disaster leads to a reduction
+in oil inventories due to the greater likelihood of a recession. This causes a substantial decline in the
+price of oil, which does not occur in the no-storage model. Since a lower price of oil offsets some of
+the negative effects of this shock on the macroeconomy, the impact effect on output is larger when
+the model does not contain storage. Overall, our results demonstrate that storage is a key ingredient
+for understanding the effects of uncertainty in both the oil market and the macroeconomy.
+
+Role of downside risk Stochastic volatility (SV) is an alternative way of generating time-varying
+oil price uncertainty that has been used in previous studies (e.g., Bas¸kaya et al., 2013; Gao et al.,
+
+                                                         32
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+2022; Plante and Traum, 2012). In this section, we compare the results from the baseline model to
+those from a model where uncertainty is generated by SV. Specifically, we introduce an exogenous
+volatility shock into productivity growth and oil production growth,
+
+                                            ln gt = ln g¯ + g,t-1g,t,
+                            ln go,t = ln 0 + 1 ln gt + 2 ln t-1 + go,t-1go,t,
+                             ln g,t = (1 - gsv) ln ¯g + sgv ln g,t-1 + sgvgsv,t,
+                           ln go,t = (1 - gsvo) ln ¯go + sgvo ln go,t-1 + sgvogsvo,t,
+
+where all shocks are standard normally distributed.21 The parameters of the level processes are
+unchanged. The persistence of both SV processes, sgv and esv, are equal to the persistence of
+the disaster probability processes. The standard deviation of the growth SV shock, sgv, is set to
+0.095 to match the volatility of output uncertainty. Analogously, the standard deviation of the oil
+production SV shock, sgvo, is set to 0.145 to match the volatility of oil price uncertainty.
+
+    Figure 6 compares the responses to an SV shock in oil production, gsvo,t, to the responses to our
+baseline oil disaster probability shock, pe,t. The sgvo,t shock is set so the SV specification generates
+the same impact effect on oil price uncertainty as the oil disaster probability shock. Qualitatively,
+these shocks move the model variables in the same direction, but there are quantitatively significant
+differences. While the SV shock naturally generates sizable fluctuations in oil price uncertainty, it
+has little effect on the macroeconomy and the oil market.
+
+    The key difference between the two modeling choices is that an oil disaster introduces a source
+of downside risk into the economy because it makes a sharp drop in oil production more likely. As a
+result, when the probability of a disaster increases, it not only increases uncertainty but also shifts
+the conditional mean of economic outcomes. This generates a stronger precautionary demand
+motive, which pushes up the price of oil and lowers output. The SV shock, on the other hand, is
+akin to a mean-preserving spread. It generates a sizable increase in uncertainty but has little effect
+
+   21Stochastic volatility has also been used to model exogenous uncertainty shocks in a number of other settings
+including fiscal policy (Ferna´ndez-Villaverde et al., 2015), monetary policy (Mumtaz and Zanetti, 2013), household
+preferences (Basu and Bundick, 2017), and the global interest rate (Ferna´ndez-Villaverde et al., 2011).
+
+                                                         33
+  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+on the conditional mean. Hence, the responses of the price of oil and output are muted. A similar
+result holds when replacing the growth disaster probability shock with a SV shock on productivity
+growth, as shown in Figure 7. We conclude that SV shocks are unable to capture the effects of
+increases in uncertainty associated with major geopolitical events that affect the oil market.22
+
+Nominal Rigidities The literature has emphasized that sticky prices and monopolistic competition
+are potentially important amplifiers of uncertainty shocks (e.g., Basu and Bundick, 2017; Born and
+Pfeifer, 2014; Ferna´ndez-Villaverde et al., 2015; Leduc and Liu, 2016). To explore how these
+features affect our results, we add a New Keynesian block to our baseline model. This extension
+replaces the expressions for the factor prices and the goods market clearing condition with
+
+                       wt = (1 - )mctyt/nt,
+
+                                   (ot /o0 )1-1/          yt
+         p = mc ,o
+            t t (1-)(kt/k0)1-1/ +(ot/o0)1-1/ ot
+
+                                      (kt /k0 )1-1/           yt
+         r = (1 - )mc ,k
+         t t (1-)(kt/k0)1-1/ +(ot/o0)1-1/ kt
+
+                  ct + it =  1  -     t  -1       2  yt,
+                                   2  ¯
+
+where mct is marginal cost, t is the gross inflation rate, and  scales the price adjustment cost. It
+also adds a Phillips curve, an Euler equation for the nominal bond, and a Taylor rule given by
+
+  t - 1  t  =  1  -    + mct    + Et     xt,t+1      t+1 - 1      yt+1 t+1  ,
+  ¯      ¯                                            ¯            yt ¯
+
+                       1 = Et[xt+1rtn/t+1],
+
+                       rtn = r¯n(t/¯) ,
+
+where rtn is the gross nominal interest rate,  is the elasticity of substitution between intermediate
+
+goods, and  is the monetary response to inflation. We set the additional parameters to conven-
+
+   22Similar to our responses for the SV specification, Gao et al. (2022) find small impacts of oil production volatility
+shocks in their baseline model. They show that the responses are amplified when markups are assumed to be time-
+varying such that the markup falls with oil consumption. The responses are even larger when level and volatility
+shocks to oil production are also assumed to be negatively correlated. The empirical support for these assumptions
+is not clear. When modeling time-varying markups using more conventional assumptions, as is standard in New
+Keynesian models, the effects are much smaller. For example, Plante and Traum (2014) examine such a model where
+oil is an intermediate input and find that SV shocks to the price of oil have a negligible effect on the macroeconomy.
+
+                                34
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+tional values in the literature. Specifically, we set  = 6 to achieve a 20% steady-state markup,
+ = 80 so prices adjust about once a year in a (linear) Calvo setting,  = 1.5 in line with a
+standard Taylor rule, and ¯ = 1.005 consistent with a 2% annual inflation target.
+
+    As shown in Figures 6 and 7, the presence of nominal rigidities slightly amplifies the responses
+of investment and output to both types of disaster probability shocks. In particular, a 20pp oil
+disaster shock lowers investment by 0.52% and output by 0.12% in our baseline model, compared
+to 0.81% and 0.16% in the model with nominal rigidities. While these differences confirm the
+insights from the literature, they do not alter our finding that 20pp oil disaster probability shocks
+in the baseline model have modest effects on the macroeconomy.
+
+Oil Share and Household Oil Consumption It may seem that our analysis understates the im-
+portance of oil production risk because oil was presumably more important for the economy in the
+1970s than it is today. However, there is no evidence that the average oil share, as measured in this
+paper, was substantially higher in the 1970s than we assumed. For example, the actual U.S. oil
+share was near 6% in the mid-1970s compared with our average share of 4.5%.
+
+    This is not to say that there have not been fluctuations in this share about its average value. For
+example, the U.S. oil share in the early 1980s briefly reached an all-time maximum of 8%, while
+dropping below 3% in 1998 and 2020. Such fluctuations are largely driven by variation in the price
+of oil. When the price of oil is unusually high or low, so is the oil share. Our calibrated model
+replicates this pattern. Nevertheless, it is of interest to know how sensitive our key findings are to
+a higher average oil share. In Appendix F, we consider an unrealistically high average oil share
+of 8%. We find that in this case the effect of a 20pp shock to the probability of an oil production
+disaster on output is only 0.05 percentage points larger than in the baseline model and there is
+little change in the oil price response. It also remains true that oil production disaster risk is not an
+important determinant of macroeconomic volatility.
+
+    Another potential concern is that our baseline model does not allow oil to be consumed directly
+by households. In the model, households only purchase consumer goods produced with oil as
+an intermediate input. This concern, however, is alleviated by the fact that the primary effect
+
+                                                         35
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+of allowing for oil to be consumed directly involves the transfer of income from oil importing
+countries to oil exporting countries, as households consume imported crude oil in the form of fuels
+(e.g., Baumeister et al., 2018; Edelstein and Kilian, 2009). As consumer spending on other goods
+declines in the oil-importing economy, the economy contracts unless the petrodollars are recycled.
+Since our global model is a closed economy, there is no income transfer by construction, obviating
+this concern. Additional analysis in Appendix F that allows oil to directly enter the utility function
+confirms that this change does not materially affect our findings.
+
+5.4 ALTERNATIVE OIL DISASTER SPECIFICATIONS The surge in oil price uncertainty ob-
+served after the invasion of Kuwait in August 1990 far exceeded the increase in oil price uncer-
+tainty implied by our baseline model, which is calibrated to match the average magnitude and
+duration of past geopolitically driven oil production disasters. This suggests that the oil market in
+1990 was concerned about a much larger or longer lasting disaster than the average realized oil
+production disaster observed in the data. Figure 8 explores this question by considering alternative
+specifications of the oil production disaster, given a 20pp probability shock.
+
+    We first consider a disaster with the same 5% magnitude as in the baseline model, but with an
+expected duration of 10 quarters rather than 3 quarters. We then, alternatively, consider a much
+larger oil production disaster of 20% of global oil production with the same expected duration
+as in the baseline model. A 20% shortfall would have been the approximate share of world oil
+production at risk if Iraq had succeeded in conquering not only Kuwait in 1990, but also Saudi
+Arabia and its smaller neighbors along the Persian Gulf such as Qatar, Bahrain, and the UAE. It
+also corresponds to the share of world oil production at risk from Iranian retaliation in the event of
+an Israeli attack on Iranian oil export facilities.
+
+    While making the oil production disaster longer lasting only modestly raises the effects on
+the global economy and the uncertainty measures compared to the baseline, making the oil pro-
+duction disaster larger increases the effect on oil price uncertainty nearly four-fold. This brings
+the response much more in line with the observed spike in oil price uncertainty in 1990 (see Fig-
+ure 2). At the same time, the responses of the price of oil and macroeconomic aggregates roughly
+
+                                                         36
+KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+Figure 8: Responses to an oil production disaster probability shock under different disasters
+
+                                                 86
+   0
+
+                                                 6
+                                                                                               4
+
+-0.2 4
+
+                                                                                               2
+                                                 2
+-0.4
+
+                                                 00
+     0 4 8 12 16 20 0 4 8 12 16 20 0 4 8 12 16 20
+
+0.5 25 30
+
+0 20
+
+-0.5 15 20
+
+-1 10
+
+-1.5 5 10
+
+-2 0
+
+-2.5 -5      0
+
+0 4 8 12 16 20 0 4 8 12 16 20 0 4 8 12 16 20
+
+Notes: Responses in deviations from the baseline. Simulations assume no disasters are realized. The disaster
+probability shock is 20pp for all three specifications.
+
+quadruple in magnitude. The increase in the price of oil rises from 6% on impact to 24%, and the
+reduction in output rises from 0.12% to 0.43%.
+
+    The specification of the oil disaster also affects the ability of oil production disaster risk to
+explain variation in oil price uncertainty. While oil production disaster risk accounts for only
+16% of this variability in the baseline model, as shown in Table 3, this share rises to 22% when
+the disaster is longer lasting and to 69% when the magnitude of the disaster is increased. We
+conclude that geopolitically driven oil disasters play a more important role when agents expect, at
+least sometimes, a larger oil production disaster than observed on average in the historical data.
+Changing the magnitude of the oil disaster, however, does not alter our finding that a large portion
+of the variability in oil price uncertainty is driven by macroeconomic uncertainty.
+
+         37
+KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+Figure 9: Responses to an oil production disaster realization               8 12 16 20
+                                                                            8 12 16 20
+    00
+
+ -0.2 -5
+
+ -0.4 -10
+
+ -0.6 -15
+
+ -0.8 -20
+      0 4 8 12 16 20 0 4
+
+    0 50
+                                                                        40
+
+    -1 30
+                                                                        20
+
+    -2
+                                                                        10
+
+    -3 0
+      0 4 8 12 16 20 0 4
+
+5.5 OIL DISASTER REALIZATION So far, we reported the responses to oil production and
+macroeconomic disaster probability shocks, conditional on no disasters being realized. It is of
+independent interest to assess the impact of the realization of such disasters. As the probability
+of an oil production disaster increases, the economic effects tend to converge to those that occur
+when a disaster is realized, except for oil inventories. The latter response changes sign when the
+production shortfall is realized, as storage firms respond to the temporarily higher price of oil.
+
+    Figure 9 shows responses under the baseline calibration (5% drop in global oil production that
+is expected to last for 3 quarters) and when allowing for a longer disaster (10 quarters on average)
+or a larger disaster (20% drop in global oil production). In the baseline model, we find that output
+declines by 0.21% on impact, but the effects nearly double when allowing the disaster to last longer
+and reach -0.73% on impact when increasing the magnitude of the shortfall to 20% of global oil
+production. In the latter case, the oil price jumps by nearly 50% on impact compared to only 14% in
+the baseline model. This evidence is consistent with the view that oil production disasters may have
+
+38
+       KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+Figure 10: Responses to an oil production disaster probability shock of different persistence
+
+                                           2.5 0.8
+0
+
+-0.02  2 0.6
+
+-0.04  1.5
+
+-0.06                                             0.4
+       1
+
+-0.08 0.5 0.2
+ -0.1
+
+                                                  00
+       0 4 8 12 16 20 0 4 8 12 16 20 0 4 8 12 16 20
+
+                                                 8 12
+   0
+
+                                                 6 10
+
+-0.2 4 8
+                                                                                               6
+
+                                                 2
+-0.4 4
+
+                                                 02
+
+-0.6 -2         0
+
+       0 4 8 12 16 20 0 4 8 12 16 20 0 4 8 12 16 20
+
+Notes: Responses in deviations from the baseline. Simulations assume no disasters are realized. The disaster
+probability shock is 20pp for all three specifications.
+
+substantial effects on the economy and on the price of oil. Our model helps quantify what these
+effects are based on a formal model, complementing assessments published by investment banks.23
+
+5.6 PERSISTENCE OF OIL DISASTER PROBABILITY As noted earlier, the parameter pe gov-
+erning the persistence of the oil disaster probability is difficult to pin down in the calibration. In the
+baseline calibration, we work with pe = 0.9. This parameter choice is plausible for events such as
+the invasion of Kuwait in August 1990, which persistently raised the probability of an oil disaster.
+That probability only started dropping in November of 1990, as discussed in Kilian (2008). This
+parameter choice may not be representative of all such events, however.
+
+    One example is the June 2025 war between Iran and Israel. This event temporarily raised the
+
+   23The corresponding results for the realization of the macroeconomic disaster are provided in Appendix F.
+
+            39
+          KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+Table 4: Impact effect of alternative oil production disaster shocks (%)
+
+                 5% Oil Disaster             20% Oil Disaster
+
+                 Output           Oil Price  Output                       Oil Price
+
+ Shock    0.5 0.9 0.5 0.9                    0.5 0.9 0.5 0.9
+
+  20pp    -0.06  -0.12   3.6      6.2        -0.22 -0.43 15.1 24.3
+  40pp                                       -0.39 -0.62 25.3 34.2
+  60pp    -0.10  -0.17   6.3      9.1        -0.53 -0.75 33.4 40.7
+
+Realized  -0.14  -0.20   8.6      11.2
+
+          -0.21 -0.21 14.9 14.4              -0.81 -0.73 54.4 48.9
+
+Notes: Impact effects of a 20, 40, and 60 percentage point increase in the probability of an oil production
+disaster and its realization. Results are shown with a probability shock persistence of 0.5 and 0.9.
+
+probability of a closure of the Strait of Hormuz, putting about 20% of global oil production at risk,
+and generated an increase in the price of oil consistent with a much lower persistence parameter
+(see Figure 1). From June 11, when anticipation of the war started driving up the price of oil, to
+June 24 when the war ended, there was a 13 percentage point surge in the probability of a closure
+of the Strait of Hormuz on average and a 9% increase in the price of oil. Our model can match that
+increase in the price of oil when the persistence parameter pe is set to 0.5.24 This episode provides
+motivation for considering alternative values of pe. Figure 10 shows that lowering pe preserves
+the qualitative pattern of the baseline responses, while dampening the magnitudes.
+
+5.7 IMPLICATIONS FOR POLICYMAKERS One practical use of our model is to help policymak-
+ers gauge the likely effect of geopolitical oil disaster risk on the global economy. Table 4 shows
+how increased probabilities of a 5% or, alternatively, a 20% global oil supply disruption driven
+by geopolitical events affect global output and the price of oil. While the model could be used to
+consider oil disasters of any size, events putting 5% or 20% of global oil production at risk are
+particularly common in practice. We focus on the impact effects of such risks under alternative as-
+sumptions about the persistence of the disaster probability, which may vary in practice as discussed
+earlier. We also include the impact effect of a realization of these oil disasters.
+
+    The impact effects of geopolitical risk tend to be modest when only 5% of global oil production
+
+   24A similarly good fit is obtained when converting the data into quarterly averages.
+
+                                                         40
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+is at risk. Even for reasonably large probability shocks, the price of oil only rises by between 4%
+and 11% and global output only falls by between 0.1% and 0.2%. Substantially larger effects arise
+when considering a potential 20% shortfall in global oil production, corresponding to a closure of
+the Strait of Hormuz, for example. In that case, the same probability shocks raise the price of oil
+by between 15% and 41% and lower global output by between 0.2% and 0.8%.
+
+6 IMPLICATIONS FOR EMPIRICAL WORK
+
+Our analysis highlights that oil price uncertainty endogenously responds not only to exogenous
+uncertainty about future oil production driven by geopolitical events, but also to exogenous un-
+certainty about the future path of the economy. Thus, geopolitically driven oil price uncertainty
+shocks differ in general from shocks to observed oil price uncertainty, as measured by the method
+of Jurado et al. (2015) or the OVX oil volatility index. This result is consistent with practition-
+ers' understanding that uncertainty about the oil price reflects not only uncertainty about future oil
+production, but also uncertainty about future oil consumption driven by macroeconomic, financial,
+and policy uncertainty. For example, market commentators have routinely highlighted the role of
+uncertainty about the prospects of the Chinese economy or the U.S. economy for the uncertainty
+about the price of oil. Perhaps less obviously, the model also shows that oil price uncertainty re-
+sponds to level shocks in the macroeconomy. These results invalidate the premise of exogenous
+oil price uncertainty shocks and cast doubt on the ability of standard empirical models to correctly
+identify exogenous oil price uncertainty shocks.
+
+    The endogeneity of oil price uncertainty shocks is not the only concern with these models. For
+example, VAR models with GARCH errors, as in Elder and Serletis (2010), postulate that every
+level shock to the price of oil is also an oil price uncertainty shock. In our model, level and uncer-
+tainty shocks affect oil price uncertainty differently. Elder and Serletis also impose the restriction
+that positive and negative oil price shocks both increase oil price uncertainty, which is inconsistent
+with our model. Figure 11 illustrates this point by comparing the responses to a ±10pp disaster
+probability shock under the baseline calibration. A decrease in the probability of an oil disaster
+
+                                                         41
+       KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+Figure 11: Responses to positive and negative oil production disaster probability shocks
+
+0.1 1
+
+               0.2
+
+0.05 0
+
+               0
+
+0 -1
+
+               -0.2
+
+-0.05  -2
+
+       0 4 8 12 16 20 0 4 8 12 16 20 0 4 8 12 16 20
+
+                                                  26
+  0.4
+
+                                                  04
+  0.2 2
+
+                                                  -2
+                                                                                                 0
+
+    0
+                                                  -4 -2
+
+ -0.2 -6 -4
+       0 4 8 12 16 20 0 4 8 12 16 20 0 4 8 12 16 20
+
+Notes: Responses in deviations from the baseline. Simulations assume no disasters are realized. The sim-
+ulations are initialized at a 15% oil disaster probability to permit a positive and negative shock. The state
+vector equals the average of periods in the ergodic distribution that are within 1pp of the initial disaster
+probability.
+
+reduces the price of oil and oil price uncertainty on impact, while an increase in this probability
+raises the oil price and oil price uncertainty. The same result holds for a macroeconomic disaster
+probability shock, as shown in Appendix F.
+
+    Alternative models that break the link between level and uncertainty shocks such as the VAR
+model with SV in Jo (2014) instead postulate that oil price uncertainty shocks and shocks to the
+level of the price of oil are independent. However, our analysis shows that oil price uncertainty is
+endogenous and may be driven by the same shocks as the price of oil. For example, an increase in
+the probability of a macroeconomic disaster not only raises oil price uncertainty, but also causes
+
+           42
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+storage demand to increase, raising the real price of oil.25
+    The insight that oil price uncertainty is simultaneously determined with macroeconomic ag-
+
+gregates applies not only to GARCH and SV models but also to recursively identified linear VAR
+models that order oil price uncertainty first as in Gao et al. (2022). Exploring alternative recursive
+orderings does not address this concern, as shown in Kilian et al. (2025). Thus, the seemingly
+robust empirical evidence from linear and nonlinear VAR models that oil price uncertainty shocks
+substantially lower real activity must be viewed with caution.
+
+7 CONCLUDING REMARKS
+
+There has been growing interest in the impact of shifts in geopolitical risk, particularly in the oil
+market. In this paper, we introduced a stochastic growth model of the global economy that is
+designed to examine how this risk affects the price of oil, oil price uncertainty, and the macroe-
+conomy. Geopolitical risk is modeled as downside risk to oil production and both oil price and
+macroeconomic uncertainty are determined endogenously.
+
+    Our analysis highlights the importance of jointly modeling macroeconomic and geopolitical
+risk. We showed that oil price uncertainty not only responds to geopolitically driven oil production
+disaster probability shocks but also to level shocks in the macroeconomy and to macroeconomic
+disaster probability shocks. In our baseline model, more than half of the observed oil price un-
+certainty tends to be driven by the macroeconomy, which helps explain why oil price uncertainty
+has historically been associated with reductions in real activity. This fact, along with other impli-
+cations of our model discussed in the paper, calls into question standard empirical models of the
+transmission of oil price uncertainty shocks that provide seemingly robust evidence supporting the
+view that oil price uncertainty plays a major role in driving the business cycle.
+
+    Although geopolitical oil price risk is not an important driver of the business cycle, such risk
+can be important during specific historical episodes. We showed that, as in the data, both the price
+
+   25Moreover, as shown in Section 5, while an increase in oil price uncertainty may be alternatively generated by an
+SV shock to oil production, only a disaster probability shock generates meaningful recessionary effects. Thus, one
+would not expect large recessionary effects of shocks to oil price uncertainty when estimating VAR models with SV.
+
+                                                         43
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+of oil and oil price uncertainty sharply increase in response to higher geopolitical risk to oil produc-
+
+tion, even if that risk is never realized. Under our baseline calibration, we find that a 20 percentage
+
+point increase in the probability of a 5% shortfall in global oil production causes a 0.12% reduction
+
+in output. When considering a 20% shortfall, which roughly corresponds to the cessation of oil
+
+supplies from the Persian Gulf, the drop in output nearly quadruples. These and related results
+
+in the paper provide a benchmark for assessing the quantitative impact of geopolitical risk in oil
+
+markets on the global economy.
+
+REFERENCES
+
+ABIAD, A. AND I. A. QURESHI (2023): "The Macroeconomic Effects of Oil Price Uncertainty,"
+  Energy Economics, 125.
+
+AGUIAR-CONRARIA, L. AND Y. WEN (2007): "Understanding the Large Negative Impact of Oil
+  Shocks," Journal of Money, Credit and Banking, 39, 925­944.
+
+ALFARO, I., N. BLOOM, AND X. LIN (2024): "The Finance Uncertainty Multiplier," Journal of
+  Political Economy, 132, 577­615.
+
+ALQUIST, R. AND L. KILIAN (2010): "What Do We Learn From the Price of Crude Oil
+  Futures?" Journal of Applied Econometrics, 25, 539­573.
+
+ALQUIST, R., L. KILIAN, AND R. J. VIGFUSSON (2013): "Forecasting the Price of Oil," in
+  Handbook of Economic Forecasting, ed. by G. Elliott, C. Granger, and A. Timmermann,
+  North-Holland, vol. 2, 427­507.
+
+AREZKI, R., V. A. RAMEY, AND L. SHENG (2017): "News Shocks in Open Economies:
+  Evidence from Giant Oil Discoveries," Quarterly Journal of Economics, 132, 103­155.
+
+ATKESON, A. AND P. J. KEHOE (1999): "Models of Energy Use: Putty-Putty versus
+  Putty-Clay," American Economic Review, 89, 1028­1043.
+
+BACKUS, D. K. AND M. J. CRUCINI (2000): "Oil Prices and the Terms of Trade," Journal of
+  International Economics, 50, 185­213.
+
+BAS¸ KAYA, Y. S., T. HU¨ LAGU¨ , AND H. KU¨ C¸ U¨ K (2013): "Oil Price Uncertainty in a Small Open
+  Economy," IMF Economic Review, 61, 168­198.
+
+BAKER, S. R., N. BLOOM, AND S. J. DAVIS (2016): "Measuring Economic Policy
+  Uncertainty," Quarterly Journal of Economics, 131, 1593­1636.
+
+BARRO, R., E. NAKAMURA, J. STEINSSON, AND J. URSU´ A (2013): "Crises and Recoveries in
+  an Empirical Model of Consumption Disasters," American Economic Journal:
+  Macroeconomics, 5, 35­74.
+
+BARRO, R. J. AND G. Y. LIAO (2021): "Rare Disaster Probability and Options Pricing," Journal
+  of Financial Economics, 139, 750­769.
+
+BARRO, R. J. AND J. F. URSU´ A (2012): "Rare Macroeconomic Disasters," Annual Review of
+  Economics, 4, 83­109.
+
+BARSKY, R. B. AND L. KILIAN (2002): "Do We Really Know That Oil Caused the Great
+  Stagflation? A Monetary Alternative," in NBER Macroeconomics Annual 2001, Volume 16, ed.
+  by M. Eichenbaum, E. Hurst, and V. Ramey, University of Chicago Press, 137­198.
+
+                                                         44
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+BASU, S. AND B. BUNDICK (2017): "Uncertainty Shocks in a Model of Effective Demand,"
+  Econometrica, 85, 937­958.
+
+BAUMEISTER, C. AND L. KILIAN (2016a): "Lower Oil Prices and the U.S. Economy: Is This
+  Time Different?" Brookings Papers on Economic Activity, 287­357.
+
+------ (2016b): "Understanding the Decline in the Price of Oil since June 2014," Journal of the
+  Association of Environmental and Resource Economists, 3, 131­158.
+
+BAUMEISTER, C., L. KILIAN, AND X. ZHOU (2018): "Is the Discretionary Income Effect of Oil
+  Price Shocks a Hoax?" Energy Journal, 39, 117­137.
+
+BERGER, D., I. DEW-BECKER, AND S. GIGLIO (2020): "Uncertainty Shocks as
+  Second-Moment News Shocks," Review of Economic Studies, 87, 40­76.
+
+BERNANKE, B. S. (1983): "Irreversibility, Uncertainty, and Cyclical Investment," Quarterly
+  Journal of Economics, 98, 85­106.
+
+BERNANKE, B. S., M. GERTLER, AND M. WATSON (1997): "Systematic Monetary Policy and
+  the Effects of Oil Price Shocks," Brookings Papers on Economic Activity, 28, 91­157.
+
+BERNSTEIN, J., M. PLANTE, A. W. RICHTER, AND N. A. THROCKMORTON (2024): "A
+  Simple Explanation of Countercyclical Uncertainty," American Economic Journal:
+  Macroeconomics, 16, 143­171.
+
+BIANCHI, F., C. L. ILUT, AND M. SCHNEIDER (2018): "Uncertainty Shocks, Asset Supply and
+  Pricing over the Business Cycle," Review of Economic Studies, 85, 810­854.
+
+BLOOM, N. (2009): "The Impact of Uncertainty Shocks," Econometrica, 77, 623­685.
+------ (2014): "Fluctuations in Uncertainty," Journal of Economic Perspectives, 28, 153­176.
+BLOOM, N., M. FLOETOTTO, N. JAIMOVICH, I. SAPORTA-EKSTEN, AND S. J. TERRY (2018):
+
+  "Really Uncertain Business Cycles," Econometrica, 86, 1031­1065.
+BORN, B. AND J. PFEIFER (2014): "Policy Risk and the Business Cycle," Journal of Monetary
+
+  Economics, 68, 68­85.
+------ (2021): "Uncertainty Driven Business Cycles: Assessing the Markup Channel,"
+
+  Quantitative Economics, 12, 587­623.
+CALDARA, D. AND M. IACOVIELLO (2022): "Measuring Geopolitical Risk," American
+
+  Economic Review, 112, 1194­1225.
+CASASSUS, J., P. COLLIN-DUFRESNE, AND B. R. ROUTLEDGE (2018): "Equilibrium
+
+  Commodity Prices with Irreversible Investment and Non-linear Technologies," Journal of
+  Banking & Finance, 95, 128­147.
+COLEMAN, II, W. J. (1991): "Equilibrium in a Production Economy with an Income Tax,"
+  Econometrica, 59, 1091­1104.
+CROCE, M. M. (2014): "Long-Run Productivity Risk: A New Hope for Production-Based Asset
+  Pricing?" Journal of Monetary Economics, 66, 13­31.
+CROSS, J. L., B. H. NGUYEN, AND T. D. TRAN (2022): "The Role of Precautionary and
+  Speculative Demand in the Global Market for Crude Oil," Journal of Applied Econometrics,
+  37, 882­895.
+DAVIS, S. J. AND J. HALTIWANGER (2001): "Sectoral Job Creation and Destruction Responses
+  to Oil Price Changes," Journal of Monetary Economics, 48, 465­512.
+DE GROOT, O., A. RICHTER, AND N. THROCKMORTON (2018): "Uncertainty Shocks in a
+  Model of Effective Demand: Comment," Econometrica, 86, 1513­1526.
+DIEBOLD, F. X. AND L. KILIAN (2001): "Measuring Predictability: Theory and
+  Macroeconomic Applications," Journal of Applied Econometrics, 16, 657­669.
+
+                                                         45
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+DRAKOS, K. AND P. T. KONSTANTINOU (2013): "Investment Decisions in Manufacturing:
+  Assessing the Effects of Real Oil Prices and Their Uncertainty," Journal of Applied
+  Econometrics, 28, 151­165.
+
+EDELSTEIN, P. AND L. KILIAN (2009): "How Sensitive are Consumer Expenditures to Retail
+  Energy Prices?" Journal of Monetary Economics, 56, 766­779.
+
+ELDER, J. AND A. SERLETIS (2010): "Oil Price Uncertainty," Journal of Money, Credit and
+  Banking, 42, 1137­1159.
+
+EPSTEIN, L. G. AND S. E. ZIN (1989): "Substitution, Risk Aversion, and the Temporal Behavior
+  of Consumption and Asset Returns: A Theoretical Framework," Econometrica, 57, 937­69.
+
+FARHI, E. AND X. GABAIX (2016): "Rare Disasters and Exchange Rates," Quarterly Journal of
+  Economics, 131, 1­52.
+
+FERDERER, P. J. (1996): "Oil Price Volatility and the Macroeconomy," Journal of
+  Macroeconomics, 18, 1­26.
+
+FERNA´ NDEZ-VILLAVERDE, J., P. GUERRO´ N-QUINTANA, K. KUESTER, AND J. F.
+   RUBIO-RAM´IREZ (2015): "Fiscal Volatility Shocks and Economic Activity," American
+  Economic Review, 105, 3352­84.
+
+FERNA´ NDEZ-VILLAVERDE, J., P. GUERRO´ N-QUINTANA, J. F. RUBIO-RAM´IREZ, AND
+   M. URIBE (2011): "Risk Matters: The Real Effects of Volatility Shocks," American Economic
+  Review, 101, 2530­61.
+
+FINN, M. G. (2000): "Perfect Competition and the Effects of Energy Price Increases on
+  Economic Activity," Journal of Money, Credit and Banking, 32, 400­416.
+
+GAO, L., S. HITZEMANN, I. SHALIASTOVICH, AND L. XU (2022): "Oil Volatility Risk,"
+  Journal of Financial Economics, 144, 456­491.
+
+GOURIO, F. (2012): "Disaster Risk and Business Cycles," American Economic Review, 102,
+  2734­2766.
+
+------ (2013): "Credit Risk and Disaster Risk," American Economic Journal: Macroeconomics,
+  5, 1­34.
+
+GOURIO, F., M. SIEMER, AND A. VERDELHAN (2013): "International Risk Cycles," Journal of
+  International Economics, 89, 471­484.
+
+GUO, H. AND K. L. KLIESEN (2005): "Oil Price Volatility and U.S. Macroeconomic Activity,"
+  Federal Reserve Bank of St. Louis Review, 87, 669­684.
+
+HAMILTON, J. D. (1985): "Historical Causes of Postwar Oil Shocks and Recessions," Energy
+  Journal, 6, 97­116.
+
+------ (2013): "Historical Oil Shocks," in Routledge Handbook of Major Events in Economic
+  History, Routledge, 239­265.
+
+HASSLER, J., P. KRUSELL, AND C. OLOVSSON (2021): "Directed Technical Change as a
+  Response to Natural Resource Scarcity," Journal of Political Economy, 129, 3039­3072.
+
+HOOKER, M. A. (1996): "What Happened to the Oil Price-Macroeconomy Relationship?"
+  Journal of Monetary Economics, 38, 195­213.
+
+------ (2002): "Are Oil Shocks Inflationary? Asymmetric and Nonlinear Specifications versus
+  Changes in Regime," Journal of Money, Credit and Banking, 34, 540­561.
+
+JERMANN, U. J. (1998): "Asset Pricing in Production Economies," Journal of Monetary
+  Economics, 41, 257­275.
+
+JO, S. (2014): "The Effects of Oil Price Uncertainty on Global Real Economic Activity," Journal
+  of Money, Credit and Banking, 46, 1113­1135.
+
+                                                         46
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+JURADO, K., S. C. LUDVIGSON, AND S. NG (2015): "Measuring Uncertainty," American
+  Economic Review, 105, 1177­1216.
+
+KA¨ NZIG, D. R. (2021): "The Macroeconomic Effects of Oil Supply News: Evidence from OPEC
+  Announcements," American Economic Review, 111, 1092­1125.
+
+KELLOGG, R. (2014): "The Effect of Uncertainty on Investment: Evidence from Texas Oil
+  Drilling," American Economic Review, 104, 1698­1734.
+
+KILIAN, L. (2008): "Exogenous Oil Supply Shocks: How Big Are They and How Much Do
+  They Matter for the U.S. Economy?" Review of Economics and Statistics, 90, 216­240.
+
+------ (2009): "Not All Oil Price Shocks Are Alike: Disentangling Demand and Supply Shocks
+  in the Crude Oil Market," American Economic Review, 99, 1053­69.
+
+------ (2024): "How to Construct Monthly VAR Proxies Based on Daily Surprises in Futures
+  Markets," Journal of Economic Dynamics and Control, 168, 104966.
+
+KILIAN, L. AND D. P. MURPHY (2014): "The Role Of Inventories And Speculative Trading In
+  The Global Market For Crude Oil," Journal of Applied Econometrics, 29, 454­478.
+
+KILIAN, L., M. D. PLANTE, AND A. W. RICHTER (2025): "Macroeconomic Responses to
+  Uncertainty Shocks: The Perils of Recursive Orderings," Journal of Applied Econometrics, 40,
+  395­410.
+
+KILIAN, L. AND R. J. VIGFUSSON (2011): "Are the Responses of the U.S. Economy
+  Asymmetric in Energy Price Increases and Decreases?" Quantitative Economics, 2, 419­453.
+
+KIM, H. (2022): "Inequality, Disaster risk, and the Great Recession," Review of Economic
+  Dynamics, 45, 187­216.
+
+KIM, I.-M. AND P. LOUNGANI (1992): "The Role of Energy in Real Business Cycle Models,"
+  Journal of Monetary Economics, 29, 173­189.
+
+KLUMP, R., P. MCADAM, AND A. WILLMAN (2012): "The Normalized CES Production
+  Function: Theory and Empirics," Journal of Economic Surveys, 26, 769­799.
+
+LEDUC, S. AND Z. LIU (2016): "Uncertainty Shocks are Aggregate Demand Shocks," Journal of
+  Monetary Economics, 82, 20­35.
+
+LEDUC, S. AND K. SILL (2004): "A Quantitative Analysis of Oil-Price Shocks, Systematic
+  Monetary Policy, and Economic Downturns," Journal of Monetary Economics, 51, 781­808.
+
+LEE, K. AND S. NI (2002): "On the Dynamic Effects of Oil Price Shocks: A Study Using
+  Industry Level Data," Journal of Monetary Economics, 49, 823­852.
+
+LEE, K., S. NI, AND R. A. RATTI (1995): "Oil Shocks and the Macroeconomy: The Role of
+  Price Variability," Energy Journal, 16, 39­56.
+
+LUDVIGSON, S. C., S. MA, AND S. NG (2021): "Uncertainty and Business Cycles: Exogenous
+  Impulse or Endogenous Response?" American Economic Journal: Marcoeconomics, 13,
+  369­410.
+
+MORK, K. A. (1989): "Oil and Macroeconomy When Prices Go Up and Down: An Extension of
+  Hamilton's Results," Journal of Political Economy, 97, 740­744.
+
+MUMTAZ, H. AND F. ZANETTI (2013): "The Impact of the Volatility of Monetary Policy
+  Shocks," Journal of Money, Credit and Banking, 45, 535­558.
+
+NEWELL, R. G. AND B. C. PREST (2019): "The Unconventional Oil Supply Boom: Aggregate
+  Price Response from Microdata," Energy Journal, 40, 1­30.
+
+OLOVSSON, C. (2019): "Oil Prices in a General Equilibrium Model with Precautionary Demand
+  for Oil," Review of Economic Dynamics, 32, 1­17.
+
+PETERMAN, W. B. (2016): "Reconciling Micro and Macro Estimates of the Frisch Labor Supply
+  Elasticity," Economic Inquiry, 54, 100­120.
+
+                                                         47
+                  KILIAN, PLANTE & RICHTER: GEOPOLITICAL OIL PRICE RISK
+
+PINDYCK, R. S. (1991): "Irreversibility, Uncertainty, and Investment," Journal of Economic
+  Literature, 29, 1110­1148.
+
+PLANTE, M., A. W. RICHTER, AND N. A. THROCKMORTON (2018): "The Zero Lower Bound
+  and Endogenous Uncertainty," Economic Journal, 128, 1730­1757.
+
+PLANTE, M. AND N. TRAUM (2012): "Time-Varying Oil Price Volatility and Macroeconomic
+  Aggregates," Federal Reserve Bank of Dallas Working Paper 1201.
+
+------ (2014): "Time-Varying Oil Price Volatility and Macroeconomic Aggregates," Manuscript,
+  HEC Montre´al.
+
+RABANAL, P., J. F. RUBIO-RAM´I REZ, AND V. TUESTA (2011): "Cointegrated TFP Processes
+  and International Business Cycles," Journal of Monetary Economics, 58, 156­171.
+
+RAMEY, V. A. AND D. J. VINE (2010): "Oil, Automobiles, and the US Economy: How Much
+  Have Things Really Changed?" in NBER Macroeconomics Annual 2010, ed. by D. Acemoglu
+  and M. Woodford, University of Chicago Press, vol. 25, 333­368.
+
+READY, R. C. (2018): "Oil Consumption, Economic Growth, and Oil Futures: The Impact of
+  Long-Run Oil Supply Uncertainty on Asset Prices," Journal of Monetary Economics, 94, 1­26.
+
+RICHTER, A. W., N. A. THROCKMORTON, AND T. B. WALKER (2014): "Accuracy, Speed and
+  Robustness of Policy Function Iteration," Computational Economics, 44, 445­476.
+
+ROTEMBERG, J. J. AND M. WOODFORD (1996): "Imperfect Competition and the Effects of
+  Energy Price Increases on Economic Activity," Journal of Money, Credit and Banking, 28,
+  550­577.
+
+SHEN, W. (2015): "News, Disaster Risk, and Time-Varying Uncertainty," Journal of Economic
+  Dynamics and Control, 51, 459­479.
+
+SWANSON, E. (2018): "Risk Aversion, Risk Premia, and the Labor Margin with Generalized
+  Recursive Preferences," Review of Economic Dynamics, 28, 290­321.
+
+TIMMER, M. P., E. DIETZENBACHER, B. LOS, R. STEHRER, AND G. J. VRIES (2015): "An
+  Illustrated User Guide to the World Input Output Database: The Case of Global Automotive
+  Production," Review of International Economics, 23, 575­605.
+
+WACHTER, J. A. (2013): "Can Time-Varying Risk of Rare Disasters Explain Aggregate Stock
+  Market Volatility?" Journal of Finance, 68, 987­1035.
+
+                                                         48
+

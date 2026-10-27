@@ -1,0 +1,1249 @@
+Accepted Manuscript
+
+The Effectiveness of Pair Programming: A Meta-Analysis
+
+Jo E. Hannay, Tore Dybå, Erik Arisholm, Dag I.K. Sjøberg
+
+PII:            S0950-5849(09)00012-3
+DOI:            10.1016/j.infsof.2009.02.001
+Reference:      INFSOF 4907
+
+To appear in:   Information and Software Technology
+
+Received Date:  20 October 2008
+Revised Date:   9 February 2009
+Accepted Date:  9 February 2009
+
+Please cite this article as: J.E. Hannay, T. Dybå, E. Arisholm, D.I.K. Sjøberg, The Effectiveness of Pair
+Programming: A Meta-Analysis, Information and Software Technology (2009), doi: 10.1016/j.infsof.2009.02.001
+
+This is a PDF file of an unedited manuscript that has been accepted for publication. As a service to our customers
+we are providing this early version of the manuscript. The manuscript will undergo copyediting, typesetting, and
+review of the resulting proof before it is published in its final form. Please note that during the production process
+errors may be discovered which could affect the content, and all legal disclaimers that apply to the journal pertain.
+ACCEPTED MANUSCRIPT
+
+The Effectiveness of Pair Programming: A Meta-Analysis
+
+         Jo E. Hannay a,b,∗ Tore Dyba˚ a,c Erik Arisholm a,b Dag I.K. Sjøberg a,b
+
+               aSimula Research Laboratory, Department of Software Engineering, Pb. 134, NO-1325 Lysaker, Norway
+                         bUniversity of Oslo, Department of Informatics, Pb. 1080 Blindern, 0316 Oslo, Norway
+                           cSINTEF Information and Communication Technology, NO-7465 Trondheim, Norway
+
+Abstract
+
+Several experiments on the effects of pair versus solo programming have been reported in the literature. We present a meta-
+analysis of these studies. The analysis shows a small signiﬁcant positive overall effect of pair programming on quality, a medium
+signiﬁcant positive overall effect on duration, and a medium signiﬁcant negative overall effect on effort. However, between-study
+variance is signiﬁcant, and there are signs of publication bias among published studies on pair programming. A more detailed
+examination of the evidence suggests that pair programming is faster than solo programming when programming task complexity
+is low and yields code solutions of higher quality when task complexity is high. The higher quality for complex tasks comes at a
+price of considerably greater effort, while the reduced completion time for the simpler tasks comes at a price of noticeably lower
+quality. We conclude that greater attention should be given to moderating factors on the effects of pair programming.
+
+Key words: Pair programming, Evidence-based software engineering, Systematic review, Meta-analysis, Fixed effects, Random effects
+
+1. Introduction                                                 With the considerable interest in pair programming by
+                                                             the software industry and academia, it is important to
+   Much of the current interest in pair programming is       determine scientiﬁcally, whether, and if so when, pairing
+likely due to the popularity of extreme programming          two programmers is beneﬁcial in terms of important cost
+(XP), of which pair programming is one of the core prac-     drivers such as duration, effort, and quality. The ﬁnding
+tices [2]. Common-sense, but scientiﬁcally unwarranted       across decades of small group research is that groups usu-
+claims as to both the beneﬁts and the adversities of pair    ally fall short of reasonable expectations to improved per-
+programming abound. Advocates of pair programming            formance [48,35,33]. An important question, therefore, is
+claim that it has many beneﬁts over individual program-      whether the claims regarding pair programming can be
+ming when applied to new code development or when            substantiated by empirical evidence and how pair pro-
+used to maintain and enhance existing code. Stated ben-      gramming relates to such group research. Several em-
+eﬁts include higher-quality code in about half the time      pirical studies have now been conducted that set out to
+as individuals, happier programmers, improved team-          examine the effects of pair programming in a system-
+work, improved knowledge transfer, and enhanced learn-       atic manner. This article provides a systematic review in
+ing [53]. There are also expectations with respect to the    terms of a meta-analysis of all published experiments on
+beneﬁts and drawbacks of various kinds of pairing, e.g.,     the effectiveness of pair programming and subsequently
+that “expert-expert pairings seem to be especially accel-    offers recommendations for evidence-based practice [18].
+erated” (ibid., p. 102) and that “novice-novice is the most  This review extends the intermediate analysis reported
+problematic” (ibid., p. 120). Stephens and Rosenberg [49]    in [15], which brieﬂy summarized pair programming ex-
+claim that pair programming is clearly the least beneﬁ-      periments published up and until 2006. In the present
+cial of XP practices and also that novice-novice pairing is  full-scale analysis, we take into account between-study
+obviously an undesirable combination, because it is akin     variance, subgroup differences and publication bias. We
+to “the blind leading the blind”.                            also take into account studies published in 2007.
+
+∗ Corresponding author. E-mail: johannay@simula.no              Section 2 presents the methods for systematic review
+                                                             and statistical meta-analysis. Section 3 presents the results
+
+Preprint submitted to Information and Software Technology    9 February 2009
+ACCEPTED MANUSCRIPT
+
+from the analysis, and Section 4 discusses implications            2.3. Study identiﬁcation and selection
+for theory and practice. Section 5 concludes.
+                                                                      The identiﬁcation and selection process consisted of
+2. Method                                                          three stages. At Stage 1, the second author applied the
+                                                                   search string to the titles, abstracts, and keywords of the
+   Informed by the general procedures for performing               articles in the included electronic databases and confer-
+systematic reviews [34] and the established methods of             ence proceedings. All retrieved articles were published,
+meta-analysis [39,45], we undertook the meta-analysis in           or accepted for publication, before or in 2007. Excluded
+distinct stages: identiﬁcation of inclusion and exclusion          from the search were editorials, prefaces, article sum-
+criteria, search for relevant studies, identiﬁcation and se-       maries, interviews, news items, correspondence, discus-
+lection of studies, data extraction, and statistical analysis      sions, comments, reader’s letters, and summaries of tuto-
+and synthesis, see details below.                                  rials, workshops, panels, and poster sessions. This search
+                                                                   strategy resulted in a total of 236 unique citations.
+   The meta-analysis focused on combining quantitative
+effects on three central outcome constructs that were in-             At Stage 2, the ﬁrst and second authors went through
+vestigated in the included studies. We did not assess              the titles and abstracts of all the studies resulting from
+the quality of the included studies in terms of, e.g., the         stage 1 for relevance to the review. If it was unclear from
+appropriateness of the chosen effect size measures [30],           the title, abstract, and keywords whether a study con-
+the appropriateness of randomization procedures [31],              formed to our inclusion criteria, it was included for a de-
+subject/task selection and validity issues [46], statistical       tailed review. This screening process resulted in 57 cita-
+power [17], the use of theory [25], the approach to realism        tions that were passed on to the next stage.
+[24], etc. Future meta-analyses might incorporate study
+quality, but at present, it is not clear how to aggregate this        At Stage 3, the full text of all 57 citations from Stage
+multifaceted concept into a single measure to be used in           2 were retrieved and reviewed in detail by the ﬁrst and
+a meta-analysis.                                                   second authors. This resulted in 23 included articles ac-
+                                                                   cording to the inclusion criteria. Five of these did not
+2.1. Inclusion and exclusion criteria                              report enough information to compute standardized ef-
+                                                                   fect sizes and were excluded. Thus, 18 studies (all exper-
+   Studies were eligible for inclusion in the meta-analysis        iments) met the inclusion criteria and were included in
+if they presented quantitative data on the effectiveness of        the review (see Appendix).
+pair programming in which a comparison was made be-
+tween pairs and individuals, possibly in a team context.           2.4. Data extraction and checking
+The subjects could be either students or professional soft-
+ware developers. Included studies had to report one of                We collected data from the 18 articles, including type of
+the primary outcomes Quality, Duration, or Effort. We did          treatment, type of system, type of tasks, duration of the
+not want to put any restrictions on the operationalization         study, number of groups, group assignment, type of sub-
+of these outcome constructs. Furthermore, the studies had          jects and their experience with pair programming, num-
+to be reported in English.                                         ber of pairs, number of individuals, outcome variable,
+                                                                   means, standard deviations, counts, percentages, and p-
+2.2. Data sources and search strategy                              values. Every article included in the review was read in
+                                                                   detail and the data was extracted and cross-checked by
+   The search strategy included electronic databases and           the ﬁrst, second and third authors. Discrepancies were
+hand searches of conference proceedings. We searched in            resolved by discussion among all four authors.
+the following electronic databases: ACM Digital Library,
+Compendex, IEEE Xplore, and ISI Web of Science. We did             2.5. Statistical analysis
+not perform separate searches in the SE-speciﬁc databases
+Kluwer Online, ScienceDirect, SpringerLink, and Wiley                 We used Comprehensive Meta-Analysis v2 to calculate
+Inter Science Journal Finder, because previous experience          effect size estimates for all the tests in the 18 articles. 1 In
+with systematic search strategies has shown that articles          order to be comparable across studies, effect sizes must
+retrieved from these databases are also returned by either         be standardized. In this meta-analysis, we used Hedges’ g
+ISI Web of Science or Compendex [16]. In addition to the           as the standardized measure of effect size. Like Cohen’s d
+electronic databases, we hand-searched all volumes of the          and Glass’ ∆, Hedges’ g is simply the difference between
+following thematic conference proceedings: XP, XP/Agile            the outcome means of the treatment groups, but stan-
+Universe, Agile, and Agile Development Conference. We              dardized with respect to the pooled standard deviation,
+used the basic search string “’pair programming’ OR ’col-          sp, and corrected for small sample bias [37]:
+laborative programming”’ to conduct the searches.
+                                                                   1 Comprehensive Meta-Analysis is a trademark of Biostat Inc.
+
+                                                                2
+                                          ACCEPTED MANUSCRIPT
+
+Hedges’  g  =  x¯1  − x¯2                                         (1)        Both models relate to an unknown population parame-
+                    sp                                                    ter. The approaches are hence referred to as unconditional
+                                                                          [37]. The choice of which model to use is made prior to
+The pooled standard deviation is based on the standard                    the analysis based on theory, past empirical ﬁndings, and
+deviations in both groups, s1, s2:                                        on insights as to what the included studies describe.
+
+sp =  (n1 − 1)s21 + (n2 − 1)s22                                   (2)        However, one may also use the analysis techniques
+        (n1 − 1) + (n2 − 1)                                               associated with the two models merely to characterize
+                                                                          the studies relatively to each other without any reference
+   Hedges’ g, Cohen’s d, and Glass’ ∆ have the same prop-                 to a population effect size. Which model to use in this
+erties in large samples (i.e., they are equivalent in the limit           case, is determined from the observed data based on het-
+(n1 + n2) → ∞), but Hedges’ g has the best properties                     erogeneity measures, which are calculated under the as-
+for small samples when multiplied by a correction factor                  sumption of a ﬁxed-effects model. If heterogeneity is non-
+that adjusts for small sample bias [26]:                                  signiﬁcant, a ﬁxed-effects model is an appropriate char-
+                                                                          acterization of data. Otherwise, a random-effects model
+Correction  factor  for    Hedges’  g  =  1  −  4(N   3    −  1,  (3)     best characterizes the data. The results from such condi-
+                                                     − 2)                 tional approaches should, however, not be confounded
+                                                                          with statements regarding population parameters.
+where N = total sample size.
+   An effect size of 0.5 thus indicates that the mean of the                 We conducted our analysis from both an unconditional
+                                                                          and a conditional perspective. For the unconditional per-
+treatment group is half a standard deviation larger than                  spective, we chose the random-effects model. Hedges and
+the mean of the control group. Effect sizes larger than                   Vevea state that “In the case of random-effects models,
+1.00 can be assumed to be large, effect sizes of 0.38–1.00                for example, some individual effect-size parameters may
+medium, and effect sizes of 0–0.37 small [30].                            be negative even though µ is positive. That corresponds
+                                                                          to the substantive idea that some realizations of the treat-
+2.6. Synthesis                                                            ment may actually be harmful even if the average ef-
+                                                                          fect is beneﬁcial” [27]. Results in [1] suggest that the ef-
+   We conducted separate meta-analyses for the three out-                 fects of pair programming may be positive or negative
+come constructs Quality, Duration, and Effort. Some stud-                 dependent on other factors (e.g., expertise and task com-
+ies applied several tests on the same outcome construct.                  plexity). Also, the outcome constructs Quality, Duration,
+In theses cases, we used the mean of the effect sizes                     and Effort are not yet well-deﬁned in software engineer-
+over these tests to give only one effect size per outcome                 ing. These constructs are operationalized in very diverse
+per study. Comprehensive Meta-Analysis calculates these                   ways (Section 3.1), and for the time being, it is reasonable
+mean effect sizes as an option.                                           to view these diverse operationalizations as different as-
+                                                                          pects of a construct (a so-called formative measurement
+   Because we expected considerable heterogeneity, we                     model [3,6,12,40]). Under these circumstances, and until
+decided to calculate the resulting meta-analytic effect                   the constructs are better understood, it is reasonable to
+sizes both under the assumption of the random-effects                     relate to a random-effects model.
+model and under the assumption of the ﬁxed-effects
+model. These models lead to different signiﬁcance test                       In the conditional approach, we tested whether there
+and conﬁdence intervals for meta-analytic results [29].                   were genuine differences underlying the results of the
+                                                                          studies (heterogeneity), or whether the variation in the
+   The ﬁxed-effects model assumes an unknown and ﬁxed                     ﬁndings was compatible with chance alone.
+population effect size that is estimated by the studies in
+the meta-analysis. All the studies in the meta-analysis are                  In the following, we give an overview of the technical
+seen as drawn from the same population, and variances                     details of the meta-analysis. For further elaborations, see
+in effect sizes between individual studies are viewed as                  e.g., [27,4,39]. Let k be the number of studies in the meta-
+due to subject variability [27].                                          analysis. Let Ti be the standardized effect size estimate
+                                                                          (in our case, Hedges’ g) of study i. In the ﬁxed-effects
+   The random-effects model, on the other hand, assumes                   model, the estimate T¯• of the assumed ﬁxed population
+an unknown and stochastic population effect-size distri-                  effect size, and the estimate’s variance v•, are
+bution. That is, the true effect size of pair programming
+varies around a mean µ. This caters for the view that the                 T¯• =  k    wiTi  v• =  1        (4)
+effect of pair programming depends on situational vari-                          i=1
+ables and other factors (both known and unknown) that
+are not taken into consideration in the analysis. Variance                       k    wi          k    wi
+in effect sizes are then seen as due to subject variabil-                        i=1              i=1
+ity, and also to inter-study variability, since each study is
+seen as approximating a different part of the true effect                 where wi = 1/vi is the weight assigned to study i, i.e.,
+size distribution [27,4].                                                 the reciprocal of the variance vi for study i. Thus, T¯•
+                                                                          is a weighted mean over the effect sizes of the individ-
+                                                                          ual studies, where studies with less variance are given
+                                                                          greater weight. In the random-effects model, the weights
+
+                                                                       3
+                                          ACCEPTED MANUSCRIPT
+
+Table 1
+Characteristics of the Included Studies.
+
+Study                                     Subjects       NTot NPair NInd Study setting
+
+Arisholm et al. (2007)1                   Professionals 295 98           99 10 sessions with individuals over 3 months and 17 sessions with
+*Baheti et al. (2002)2                                                            pairs over 5 months (each of 1 day duration, with different
+                                          Students       134 16                   subjects). Modified 2 systems of about 200-300 Java LOC each.
+
+                                                                         9 Teams had 5 weeks to complete a curricular OO programming
+                                                                                  project. Distinct projects per team.
+
+Canfora et al. (2005)3                    Students       24 12 24 2 applications each with 2 tasks (run1 and run2).
+
+Canfora et al. (2007)4                    Professionals    18     5(4)   8(10)   Study session and 2 runs (totalling 390 minutes) involving 4
+                                                                                 maintenance tasks (grouped in 2 assignments) to modify design
+Domino et al. (2007)                      Professionals    88      28      32    documents (use case and class diagrams).
+*Heiberg et al. (2003)5                   Students       84(66)  23(16)  19(17)  Run as several sessions during a period of two months. Pseudo-
+Madeyski (2006)6                          Students                       31(35)  code on “Create-Design” tasks Test-driven development.
+Madeyski (2007)                           Students        188      28
+                                          Students         98      35      28    4 sessions over 4 weeks involving 2 programming tasks to
+Müller (2005)7                                                                   implement a component for a larger "gamer" system.
+Müller (2006)8                            Students         38      19      23    8 laboratory sessions involving 1 initial programming task in a
+Nawrocki & Wojciechowski (2001)9          Students       18(16)   4(5)      6    finance accounting system (27 user stories).
+Nosek (1998)10                            Students                          5    Java course project of developing a 27 user story accounting system
+                                          Professionals    15       5       5    over 8 laboratory sessions of 90 minutes each. Test-driven
+                                                           15       5            development.
+                                                                                 2 runs of 1 programming session each on 2 initial programming
+                                                                                 tasks (Polynomial and Shuffle-Puzzle) producing about 150 LOC.
+                                                                                 1 session involving initial design + programming tasks on an
+                                                                                 elevator system.
+                                                                                 4 lab sessions over a winter semester, as part of a University course.
+                                                                                 Wrote four C/C++ programs ranging from 150-400 LOC.
+                                                                                 45 minutes to solve 1 programming task (database consistency
+                                                                                 check script).
+
+*Phongpaibul & Boehm (2006)11             Students       95 7            7 12 weeks to complete 4 phases of development + inspection.
+
+*Phongpaibul & Boehm (2007)               Students       36 5            4 Part of a team project to extend a system. 13 weeks to complete 4
+                                                                                 phases of development + inspection.
+
+Rostaher & Hericko (2002)12               Professionals 16       6       4 6 small user stories filling 1 day.
+
+*Vanhanen & Lassenius (2005)13            Students       20 4            8 9-week student project in which each subject spent a total of 100
+Williams et al. (2000)14                  Students                               hours (400 hours per team). A total of 1500-4000 LOC was written.
+Xu & Rajlich (2006)15                     Students
+                                                         41 14 13 6-week course where the students had to deliver 4 programming
+                                                                                           assignments.
+
+                                                         12 4            4 2 sessions with pairs and 1 session with individuals. 1 initial
+                                                                                 programming task producing around 200-300 LOC.
+
+are based on between-study variance in addition to                       In Equation (6), C is simply a scaling factor that ensures
+within-study variance vi. Speciﬁcally, the estimate T¯•∗                 that τ 2 has the same denomination as within-study vari-
+of the mean µ of the assumed population effect size                      ance, i.e., C = wi − wi2/ wi.
+
+distribution, and the estimate’s variance v•∗, are                          In fact, Q is a statistic that indicates heterogeneity, and
+
+T¯•∗ =  k    wi∗  Ti           v•∗ =      1                      (5)     one that we used for this purpose. A signiﬁcant Q rejects
+        i=1
+                                                                         the null hypothesis of homogeneity and indicates that the
+        k    wi∗                          k    wi∗
+        i=1                               i=1                            variability among the effect sizes is greater than what is
+
+where wi∗ = 1/vi∗, for vi∗ = vi + τ 2. Here, τ 2 is the addi-            likely to have resulted from subject-level variability alone
+tional between-study variance:                                           [27]. We also calculated the I2-statistic, which indicates
+
+                                                                         heterogeneity in percentages:
+
+τ2 =    Q − df    if Q > df                                      (6)
+           C
+        0 if Q ≤ df
+                                                                         I2 = 100%(Q − df )/Q                                               (8)
+
+where the degrees of freedom df = k−1, and Q represents
+the total variance:
+
+           k                                                     (7)     A value of 0 indicates no observed heterogeneity, 25%
+                                                                         low, 50% moderate, and 75% high heterogeneity [28].
+Q = wi(Ti − T¯•)2
+
+         i=1
+
+                                                                      4
+ACCEPTED MANUSCRIPT
+
+2.7. Assumption of Parametric Normality                         Boehm (2007) included inspections; and Mu¨ ller (2006) in-
+                                                                cluded design tasks.
+   Hedges’ g is a parametric effect size measure that is
+based, ﬁrstly, on the assumption that one wishes to relate         Quality was typically reported as the number of test
+to a population distribution, and, secondly, that each sub-     cases passed or number of correct solutions of program-
+population (solo, pair) is normally distributed on the re-      ming tasks, but student grades, delivered functionality,
+sponse variable. This assumption also underlies the meta-       and metrics for code complexity were also used as mea-
+analytic procedures and estimates that we used. It is well-     sures of Quality. Duration was reported mainly in two
+known that Duration and Effort measures have Gamma              modes: as the total time taken to complete all tasks con-
+distributions, and the various Quality measures in this         sidered (all solutions), or as the total time taken to com-
+study may or may not have normal distributions. Thus,           plete the tasks that had been assessed as having passed
+one may question whether other standardized effect-size         a certain quality standard (checked solutions). For com-
+measures should have been used for the meta-analysis.           parisons between pairs and solo programmers, pair Effort
+Non-parametric effect-size measures would merely allow          was reported as twice the duration of each individual in
+one to characterize data and not allow one to relate to         the pair. For team-based comparisons, e.g., teams of indi-
+a population. On the other hand, specifying other distri-       viduals versus teams of pairs, Effort was reported as the
+butions (e.g., Gamma) would demand that we had ac-              total effort spent by the respective groups.
+cess to the individual studies’ raw data. Since means are
+meaningful measures for all three outcome constructs, we           Thus, the studies included in the meta-analysis do not
+therefore decided to use Hedges’ g as a best compromise         all apply the same measures or have similar context vari-
+for conducting the meta-analysis. Note also that even if        ables. Rather, they investigate the effectiveness of pair
+the assumed population distribution is not evident in a         programming with respect to different aspects of the con-
+(small) sample, this reason alone should not lead one to        structs Quality, Duration, and Effort. As such, the studies
+abandon the model (unless the sole aim is to characterize       may be seen as differentiated replications [36], and any
+data). Small samples will of course, lead to less conﬁdent      measure from a particular study in the meta-analysis is
+parameter estimates but these conﬁdence estimates will          but one indicator of, perhaps, many indicators regarding
+be calculated correctly according the assumed population        one of these constructs.
+distribution.
+                                                                3.2. Effects of pair programming
+3. Results
+                                                                   Table 2 summarizes the meta-analysis. The g column
+   We ﬁrst present characteristics of the 18 studies that       shows the meta-analytic estimates T¯• and T¯•∗, in terms
+were included in the review and meta-analysis. We then          of Hedges’ g, of the population effect size parameter in
+give the meta-analytic results in terms of overall effects,
+subgroup effects and publication bias.                          the ﬁxed-effects model and random-effects model, respec-
+
+3.1. Description of studies                                     tively, along with 95% conﬁdence intervals and p-values.
+
+   Characteristics of the 18 studies included in the meta-      Also given are heterogeneity measures calculated under
+analysis are summarized in Table 1 in alphabetical order,
+while full citations are provided in the Appendix.              the assumption of a ﬁxed-effects model. The Overall effects
+
+   Of the 18 studies, 11 were from Europe and seven from        analysis will be described in detail in this section, and the
+North America. The number of subjects in the studies var-
+ied from 12 to 295. Thirteen of the studies used students       Subgroup analysis will be given in detail in Section 3.3.
+as subjects, while four used professionals. One used both
+professionals and students. Five studies made the com-          Overall, 14 studies used Quality as an outcome con-
+parison within a team context, that is, teams of pairs ver-
+sus teams of individuals (marked with an asterisk in the        struct, 11 used Duration, and 11 used Effort. Figure 1
+ﬁrst column). The studies often administered several tests
+and the number of data points may have varied across            shows Forest plots 2 of the standardized effects for each
+tests (numbers in parentheses in Table 1).
+                                                                of the three outcome constructs. The studies are sorted
+   All studies used programming tasks as the basis for
+comparison. In addition, Madeyski (2006) and Madeyski           according to the relative weight that a study’s effect size
+(2007) included test-driven development; Mu¨ ller (2005),
+Phongpaibul and Boehm (2006), and Phongpaibul and               receives in the meta-analysis. Relative weights are nor-
+
+                                                                malized versions of the weights   wi   oorrwT¯i∗•∗u. sTehdeinricgahltcmuloastt-
+                                                                ing the meta-analytic estimates   T¯•
+
+                                                                columns in Figure 1 show these weights according to the
+
+                                                                ﬁxed-effects and random-effects models. Estimates from
+
+                                                                larger studies will usually be more precise than the es-
+
+                                                                timates from smaller studies; hence, larger studies will
+
+                                                                generally be given greater weight.
+
+                                                                The squares indicate the effect size estimate for each
+
+                                                                study. The size of each square is proportional to the rela-
+
+                                                                tive weight of the study according to the random-effects
+
+                                                                2 The plots were generated with PSTricks postscript macros in LaTeX
+                                                                within an Excel spreadsheet using data produced by Comprehensive
+                                                                Meta-Analysis.
+
+                                                             5
+                                               ACCEPTED MANUSCRIPT
+
+Table 2                                                                      3.2.1. Effects of pair programming on Quality
+Summary of Meta-analysis.                                                       Fourteen studies compared the effects of pair program-
+
+Analysis k Model            Effect Size               Heterogeneity          ming on Quality in a total of 38 tests. These studies used
+                           g 95% CI p                   Q I2 τ2 p            a total of 1160 subjects, although in some studies, not
+                                                    35.97 63.86 .14 .00      all subjects were used in these particular tests. The sub-
+Overall effects                                .00  33.57 70.21 .28 .00      jects were distributed to study units (pairs, solo, teams
+        Quality 14 ﬁxed .23 .09 .37            .01  66.36 84.93 .87 .00      of pairs, teams of solo) in various ways (Section 3.1). The
+                      random .33 .07 .60       .00                           meta-analytic effect size estimate is .23 in the ﬁxed effects
+                                               .01  32.97 69.66 .18 .00      model and .33 in the random effects model.
+      Duration 11 ﬁxed .40 .21 .59             .00  12.28 51.13 .13 .06
+                      random .54 .13 .94       .12  48.85 85.67 1.17 .00        Both the ﬁxed-effects model and the random-effects
+                                                                             model suggest that there is a small 3 positive overall ef-
+          Effort 11 ﬁxed -.73 -.94 -.51        .01   2.97 32.56 .07 .23      fect of pair programming on Quality compared with solo
+                      random -.52 -1.18 .13    .06  16.87 82.22 .83 .00      programming. Only one study showed a negative effect
+                                               .00  15.48 87.08 1.54 .00     of pair programming on Quality (Domino et al. 2007). All
+Subgroups                                      .00                           the other studies showed mostly small to medium pos-
+Students                                       .00     .23 .00 .00 .89       itive effects. The three studies by Domino et al. (2007),
+                                               .92   1.46 31.55 .06 .23      Arisholm et al. (2007), and Madeyski (2006) contribute
+        Quality 11 ﬁxed .22 .06 .38                 11.25 91.11 4.14 .00     more than 50% of the total weight in the meta-analysis for
+                      random .32 -.01 .65      .10                           Quality. The one-study-removed analysis shows that the
+                                               .12  35.70 71.99 .18 .00      meta-analysis is most sensitive to the inclusion/exclusion
+      Duration 7 ﬁxed .58 .33 .84              .28  32.02 75.02 .37 .00      of Williams et al. (2000). Heterogeneity is signiﬁcant at a
+                      random .63 .24 1.02      .35  43.36 81.55 .61 .00      medium level (Q = 35.97; p < .01; I2 = 63.86%).
+                                               .00
+          Effort 8 ﬁxed -.59 -.88 -.30         .01                           3.2.2. Effects of pair programming on Duration
+                      random .04 -.82 .91                                       Eleven studies reported effects on Duration in a total of
+                                               .36
+Professionals                                  .36                           21 tests. These studies used a total of 669 subjects. Both the
+        Quality 3 ﬁxed .26 -.05 .57            .16                           ﬁxed-effects model and the random-effects model sug-
+                      random .37 -.10 .85      .30                           gest that there is a medium positive overall effect of pair
+                                               .09                           programming on Duration.
+      Duration 4 ﬁxed .16 -.13 .46             .51
+                      random .50 -.55 1.54                                      Compared with Quality, the studies on Duration show
+                                               .00                           a more mixed picture; two of the 11 studies show a neg-
+          Effort 3 ﬁxed -.90 -1.22 -.58        .02                           ative effect, while the remaining nine show a positive
+                      random -1.99 -3.56 -.41  .00                           effect. In addition, the smaller studies show medium to
+                                               .01                           large contradictory effects. The three studies by Arisholm
+Teams                                          .00                           et al. (2007), Canfora et al. (2005), and Nawrocki and Wo-
+        Quality 3 ﬁxed .19 -.22 .60            .01                           jciechowski (2001) contribute more than 60% of the total
+                      random .19 -.22 .60                                    weight in the meta-analysis of Duration. The one-study-
+                                                                             removed analysis shows that the meta-analysis is most
+      Duration 2 ﬁxed .34 -.13 .81                                           sensitive to the inclusion/exclusion of Nosek (1998). Het-
+                      random .31 -.27 .89                                    erogeneity is signiﬁcant at a medium level (Q = 33.57; p <
+                                                                             .01; I2 = 70.21%).
+          Effort 2 ﬁxed .74 -.13 1.61
+                      random .99 -1.96 3.94                                  3.2.3. Effects of pair programming on Effort
+                                                                                Eleven studies reported effects on Effort in a total of 18
+No teams
+        Quality 11 ﬁxed .24 .09 .39                                          tests. These studies used a total of 586 subjects. Both the
+                      random .38 .05 .70                                     ﬁxed-effects model and the random-effects model sug-
+                                                                             gest that there is a medium negative overall effect of
+      Duration 9 ﬁxed .41 .20 .63                                            pair programming on Effort compared with solo program-
+                      random .63 .13 1.13                                    ming. All the included studies show a negative effect on
+                                                                             effort, apart from the two studies by Phongpaibul and
+          Effort 9 ﬁxed -.82 -1.05 -.60                                      Boehm (2006,2007). However, the results of those studies
+                      random -.85 -1.48 -.23                                 are not directly comparable, because the researchers com-
+                                                                             pared pair programming teams with teams of individu-
+model. The relative weights of a random-effects model are
+generally more uniform than those of ﬁxed-effects mod-                       3 The effect size is small compared with the effect sizes reported in
+els, due to the incorporation of between-study variance                      other software engineering experiments [30].
+into all the studies’ weights. The horizontal lines indicate
+the 95% conﬁdence intervals for each study’s effect size
+estimate according to the random-effects model.
+
+   The diamonds at the bottom give the meta-analytic ef-
+fect size estimate according to the ﬁxed-effects and the
+random-effects model, i.e., T¯• and T¯•∗, respectively. The
+diamonds’ centers and widths indicate the estimates and
+their 95% conﬁdence interval, respectively.
+
+   Figure 2 shows one-study-removed analyses for each of
+the three outcome constructs. The plots show the meta-
+analytic effect size estimate when each study is removed
+from the meta-analysis. The resulting deviation from the
+full analysis indicates the sensitivity of the full analysis
+with respect to each study, that is, how much difference
+a given study makes to the meta-analysis.
+
+                                                                          6
+                                        ACCEPTED MANUSCRIPT
+
+Study                               g 95% C.I. p                Hedges’ g and 95% C.I.                         Relative weight
+                                                                                                               ﬁxed random
+Quality                          -.27 -.58 .05 .10
+Domino et al. (2007)              .11 -.24 .46 .52                                                             20.15   11.31
+Arisholm et al. (2007)            .08 -.28 .43 .67                                                             16.31   10.90
+Madeyski (2006)                  1.04 .65 1.43 .00                                                             16.03   10.87
+Williams et al. (2000)            .17 -.32 .67 .49                                                             13.07   10.42
+Madeyski (2007)                   .10 -.44 .64 .71
+Heiberg et al. (2003)             .28 -.32 .88 .36                                                              8.27    9.21
+Mu¨ ller (2005)                   .69 -.09 1.46 .08                                                             6.88    8.66
+Canfora et al. (2007)             .30 -.50 1.09 .46                                                             5.58    8.00
+Baheti et al. (2002)              .32 -.69 1.32 .54                                                             3.32    6.27
+Phongpaibul & Boehm (2006)        .51 -.59 1.62 .36                                                             3.18    6.12
+Mu¨ ller (2006)                   .18 -1.00 1.36 .77                                                            1.97    4.59
+Phongpaibul & Boehm (2007)        .91 -.28 2.10 .13                                                             1.64    4.05
+Nosek (1998)                     2.20 .58 3.82 .01                                                              1.43    3.68
+Xu & Rajlich (2006)               .23 .09 .37 .00                                                               1.42    3.66
+Overall ﬁxed model                .33 .07 .60 .01                                                                       2.26
+Overall random model                                                                                              .77
+
+Duration                          .21    -.13 .54    .22                                                       33.33   13.68
+Arisholm et al. (2007)            .57     .07 1.07   .02                                                       15.24   12.30
+Canfora et al. (2005)             .16    -.40 .73    .57                                                       11.83   11.67
+Nawrocki & Wojciechowski (2001)   .55    -.03 1.14   .06                                                       10.97   11.47
+Heiberg et al. (2003)            1.30     .64 1.95   .00                                                               10.77
+Mu¨ ller (2005)                  -.59   -1.37 .20    .14                                                        8.66
+Canfora et al. (2007)            -.05    -.84 .74    .89                                                        6.09    9.61
+Baheti et al. (2002)              .06   -1.08 1.21   .91                                                        6.01    9.56
+Rostaher & Hericko (2002)         .98    -.24 2.20   .12                                                        2.87    6.82
+Mu¨ ller (2006)                  1.85     .34 3.35   .02                                                        2.51    6.33
+Xu & Rajlich (2006)              4.09    1.98 6.20   .00                                                        1.65    4.85
+Nosek (1998)                      .40     .21 .59    .00                                                                2.93
+Overall ﬁxed model                .53     .13 .94    .01                                                          .84
+Overall random model
+
+Effort
+
+Arisholm et al. (2007)           -.68   -1.03 -.34   .00                                                       39.14   12.34
+                                        -1.61 -.58   .00                                                       17.38   11.84
+Canfora et al. (2005)            -1.09               .42                                                       12.92   11.54
+                                         -.85 .35    .00                                                       11.62   11.42
+Mu¨ ller (2005)                  -.25   -1.88 -.61   .00                                                               10.03
+                                        -2.88 -.97   .39                                                        5.04
+Nawrocki & Wojciechowski (2001) -1.25   -1.62 .63    .29                                                        3.66    9.27
+                                        -1.83 .54    .86                                                        3.32    9.02
+Canfora et al. (2007)            -1.93  -1.31 1.10   .00                                                        3.18    8.91
+                                         1.17 3.88   .00                                                        2.53    8.26
+Vanhanen & Lassenius (2005)      -.49   -6.70 -2.20  .00                                                                5.09
+                                         4.18 12.03  .00                                                          .92   2.28
+Mu¨ ller (2006)                  -.64                .12                                                          .30
+                                         -.94 -.51
+Xu & Rajlich (2006)              -.11   -1.18 .13
+
+Phongpaibul & Boehm (2006)       2.52
+
+Nosek (1998)                     -4.45
+
+Phongpaibul & Boehm (2007)       8.11
+
+Overall ﬁxed model               -.73
+
+Overall random model             -.52
+
+                                                          -6 -3 0 3 6
+
+                                                          Favours solo programming  Favours pair programming
+
+                                 Fig. 1. Forest Plots for Meta-Analysis of Correctness, Duration, and Effort.
+
+als who also performed inspections. The three studies by        pairs vs. teams of individuals). The results of these anal-
+Arisholm et al. (2007), Canfora et al. (2005), and Mu¨ ller     yses are summarized in Table 2.
+(2005) contribute almost 70% of the total weight in the
+meta-analysis of Effort. The one-study-removed analysis            The most dramatic result of the subgroup analysis is
+shows that the meta-analysis is most sensitive to the in-       the reversal of effect on Effort for the Teams subgroup
+clusion/exclusion of either of Phongpaibul and Boehm            (from -.52 in the overall analysis to .99 (non-signiﬁcant)
+(2006,2007). Heterogeneity is signiﬁcant and high (Q =          in the subgroup analysis, for the random-effects model).
+66.36; p < .01; I2 = 84.93%).                                   This is due to the two studies Phongpaibul and Boehm
+                                                                (2006,2007), which we remarked upon above. Without
+3.3. Subgroup analyses                                          these two studies (No teams subgroup), the effect size in-
+                                                                creases to from .-52 to -.85 in the random-effects model.
+   Because of medium to high heterogeneity, we decided
+to conduct subgroup analyses as a step to identify pos-            Apart from this reversal, effect sizes in the subgroups
+sible immediate sources of heterogeneity. Two subgroup          remain in the same order of magnitude as in the overall
+types stand out due to surface dissimilarities: the type        analysis, except for the following cases: For Quality, the
+of developers (students or professionals) and the type of       No teams subgroup reaches a medium level in the ran-
+comparison (isolated pairs vs. individuals, or teams of         dom model’s estimate (.38). For Duration, the Professionals
+                                                                subgroup declines to a small level in the ﬁxed model’s
+                                                                estimate (.16). For Effort, the Students subgroup declines
+
+                                                             7
+                                       ACCEPTED MANUSCRIPT
+
+Study                            One study removed                  One study removed
+                                   g 95% C.I. p                  Hedges’ g and 95% C.I.
+Quality
+Arisholm et al. (2007)           .37 .07 .67 .02
+Baheti et al. (2002)             .34 .06 .62 .02
+Canfora et al. (2007)            .31 .03 .59 .03
+Domino et al. (2007)             .40 .14 .65 .00
+Heiberg et al. (2003)            .36 .07 .65 .01
+Madeyski (2006)                  .37 .07 .67 .02
+Madeyski (2007)                  .36 .06 .65 .02
+Mu¨ ller (2005)                  .34 .06 .63 .02
+Mu¨ ller (2006)                  .33 .05 .60 .02
+Nosek (1998)                     .31 .04 .58 .02
+Phongpaibul & Boehm (2007)       .34 .06 .62 .02
+Phongpaibul & Boehm (2006)       .34 .06 .62 .02
+Williams et al. (2000)           .17 -.03 .37 .09
+Xu & Rajlich (2006)              .28 .03 .54 .03
+Overall                          .33 .07 .60 .01
+
+Duration                         .61   .13 1.10    .01
+Arisholm et al. (2007)           .60   .17 1.04    .01
+Baheti et al. (2002)             .55   .09 1.02    .02
+Canfora et al. (2005)            .64   .24 1.04    .00
+Canfora et al. (2007)            .55   .09 1.01    .02
+Heiberg et al. (2003)            .42   .03 .82     .04
+Mu¨ ller (2005)                  .51   .09 .93     .02
+Mu¨ ller (2006)                  .60   .14 1.05    .01
+Nawrocki & Wojciechowski (2001)  .41   .08 .75     .02
+Nosek (1998)                     .58   .15 1.00    .01
+Rostaher & Hericko (2002)        .46   .06 .86     .02
+Xu & Rajlich (2006)              .53   .13 .94     .01
+Overall
+
+Effort                           -.45  -1.29 .39   .30
+Arisholm et al. (2007)           -.42  -1.19 .34   .28
+Canfora et al. (2005)            -.37  -1.05 .31   .29
+Canfora et al. (2007)            -.54  -1.28 .20   .15
+Mu¨ ller (2005)                  -.50  -1.21 .20   .16
+Mu¨ ller (2006)                  -.42  -1.15 .32   .27
+Nawrocki & Wojciechowski (2001)  -.35              .28
+Nosek (1998)                     -.72   -.97 .28   .01
+Phongpaibul & Boehm (2007)       -.82  -1.29 -.15  .01
+Phongpaibul & Boehm (2006)       -.52  -1.40 -.25  .15
+Vanhanen & Lassenius (2005)      -.56  -1.23 .19   .12
+Xu & Rajlich (2006)              -.52  -1.26 .14   .12
+Overall                                -1.18 .13
+
+                                                        -2 -1 0 1 2
+
+                                                        Favours solo programming  Favours pair programming
+
+Fig. 2. Forest Plots for One-Study-Removed Meta-Analysis of Correctness, Duration, and Effort.
+
+to small (.04) (but non-signiﬁcant, p = .92), and the Pro-       3.4. Publication Bias
+fessionals subgroup increases to a large effect size (-1.99)
+in their respective random-effects models.                          Publication bias captures the idea that studies that re-
+                                                                 port relatively large treatment effects are the ones that
+   Heterogeneity levels remain medium to high. Profes-           were most likely to be initiated in the ﬁrst place, and/or
+sionals and No teams increase to high heterogeneity for          submitted and accepted for publication. The effect size
+Duration (82.22) and Teams decreases to small (0.00) (but        estimated from a biased collection of studies will tend
+non-signiﬁcant, p = .89) for Quality.                            to overestimate the true effect. We used Comprehensive
+                                                                 Meta-Analysis to assess the likely extent of publication
+   Signiﬁcance levels for both effect size estimates and         bias, and its potential impact on the conclusions.
+heterogeneity decrease dramatically in several instances
+in the subgroups, probably due to small k. This is partic-          Figs. 3–5 show funnel plots for Quality, Duration and
+ularly the case in the Professionals and Teams subgroups.        Effort, respectively. These graphs plot each study accord-
+Note however, that the effect on Effort actually turns           ing to a measure of study size called precision (which is
+signiﬁcant in the Professionals subgroup. Note that the          simply 1/StdError) on the vertical axis, and according to
+Professionals subgroup excludes Phongpaibul and Boehm            effect size (Hedges’ g) on the horizontal axis.
+(2006,2007) since they have student subjects.
+                                                                    Hence, large studies tend to appear toward the top of
+                                                                 the graph, and smaller studies tend toward the bottom of
+                                                                 the graph. Since there is more inter-study variance in ef-
+
+                                                              8
+                                                                                                                                                                                                                                                                                                                                                            ACCEPTED MANUSCRIPT
+
+                                                                           8                                                                                                                                                                                                                                                                                                                                                                                 8
+                                                                           7
+                                                                           6                                                                                                                                                                                                                                                                                                                                                                                 7
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                             6
+
+)                                                                          5                                                                                                                                                                                                                                                                                                   )                                                                           5
+                                                                        r  4                                                                                                                                                                                                                                                                                                                                                                           r   4
+                                                                           3                                                                                                                                                                                                                                                                                                                                                                              3
+Er                                                                         2                                                                                                                                                                                                                                                                                                   Er                                                                         2
+
+d                                                                                                                                                                                                                                                                                                                                                                              d
+
+St                                                                                                                                                                                                                                                                                                                                                                             St
+/                                                                                                                                                                                                                                                                                                                                                                              /
+
+(1                                                                                                                                                                                                                                                                                                                                                                             (1
+                                                                        n                                                                                                                                                                                                                                                                                                                                                                              n
+
+io                                                                                                                                                                                                                                                                                                                                                                             io
+is                                                                                                                                                                                                                                                                                                                                                                             is
+
+                                                                        c                                                                                                                                                                                                                                                                                                                                                                              c
+                                                                        e                                                                                                                                                                                                                                                                                                                                                                              e
+Pr                                                                                                                                                                                                                                                                                                                                                                             Pr
+
+                                                                           1                                                                                                                                                                                                                                                                                                                                                                              1
+
+                                                                           0                                                                                                                                                                                                                                                                                                                                                                              0
+
+                                                                                                                                                                                                                                                                                                                       3                                                 3
+                                                                                                                                                                                                                                                                -
+                                                                                                                                                                                                                                                                                                                                 -2              -1      0  1         2                                                                                         -3         -2              -1      0  1   23
+
+                                                                                                                                                                                                                                                                                                                                     Fig. 3. Funnel Plot Quality.              Fig. 6. Funnel Plot Quality Trim and Fill Fixed-Random.
+
+                                                                           6                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                6
+
+                                                                           5                                                                                                                                                                                                                                                                                                                                                                                 5
+
+)                                                                          4                                                                                                                                                                                                                                                                                                   )                                                                           4
+                                                                        r  3                                                                                                                                                                                                                                                                                                                                                                           r  3
+                                                                           2                                                                                                                                                                                                                                                                                                                                                                              2
+Er                                                                                                                                                                                                                                                                                                                                                                             Er
+
+d                                                                                                                                                                                                                                                                                                                                                                              d
+
+St                                                                                                                                                                                                                                                                                                                                                                             St
+/                                                                                                                                                                                                                                                                                                                                                                              /
+
+(1                                                                                                                                                                                                                                                                                                                                                                             (1
+                                                                        n                                                                                                                                                                                                                                                                                                                                                                              n
+
+io                                                                                                                                                                                                                                                                                                                                                                             io
+is                                                                                                                                                                                                                                                                                                                                                                             is
+
+                                                                        c                                                                                                                                                                                                                                                                                                                                                                              c
+                                                                        e                                                                                                                                                                                                                                                                                                                                                                              e
+Pr                                                                                                                                                                                                                                                                                                                                                                             Pr
+
+                                                                           1                                                                                                                                                                                                                                                                                                                                                                              1
+
+                                                                           0                                                                                                                                                                                                                                                                                                                                                                              0
+
+                                                                              -5                                                                                                                                                                                                                                             -4      -3      -2      -1  0  12        345                                                                                       -5     -4      -3      -2      -1  0  12  345
+
+                                                                                          Fig. 4. Funnel Plot Duration.                                                                                                                                                                                                                                                        Fig. 7. Funnel Plot Duration Trim and Fill Fixed-Random.
+
+                                                                           6                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           6
+
+                                                                           55
+
+)                                                                          4                                                                                                                                                                                                                                                                                                   )                                                                           4
+                                                                        r  3                                                                                                                                                                                                                                                                                                                                                                           r  3
+                                                                           2                                                                                                                                                                                                                                                                                                                                                                              2
+Er                                                                                                                                                                                                                                                                                                                                                                             Er
+
+d                                                                                                                                                                                                                                                                                                                                                                              d
+
+St                                                                                                                                                                                                                                                                                                                                                                             St
+/                                                                                                                                                                                                                                                                                                                                                                              /
+
+(1                                                                                                                                                                                                                                                                                                                                                                             (1
+                                                                        n                                                                                                                                                                                                                                                                                                                                                                              n
+
+io                                                                                                                                                                                                                                                                                                                                                                             io
+is                                                                                                                                                                                                                                                                                                                                                                             is
+
+                                                                        c                                                                                                                                                                                                                                                                                                                                                                              c
+                                                                        e                                                                                                                                                                                                                                                                                                                                                                              e
+Pr                                                                                                                                                                                                                                                                                                                                                                             Pr
+
+                                                                           1                                                                                                                                                                                                                                                                                                                                                                              1
+
+                                                                           00
+
+                                                                              -1                                                                                                                                                                                                                                          0              -5              0            5 10                                                                                      -1  0              -5              0      5 10
+
+                                                                                                                                                                                                                                                                                                                                         Fig. 5. Funnel Plot Effort.                                                                                      Fig. 8. Funnel Plot Effort Trim and Fill Fixed-Random.
+
+fect size estimates among the smaller studies, these stud-                                                                                                                                                                                                                                                                                                                     Various statistical measures can be used to complement
+ies will be dispersed wider, while larger studies will tend                                                                                                                                                                                                                                                                                                                    the picture given by the funnel plots.
+to cluster near the meta-analytic estimate of effect size.
+                                                                                                                                                                                                                                                                                                                                                                                  Duval and Tweedie’s trim and ﬁll method [13,14], takes
+   In the absence of publication bias, studies should be                                                                                                                                                                                                                                                                                                                       the basic idea behind the funnel plot one step further and
+distributed symmetrically on either side of the meta-                                                                                                                                                                                                                                                                                                                          imputes (computes and inserts) assumed missing studies
+analytic estimate of effect size. In the presence of bias,                                                                                                                                                                                                                                                                                                                     to obtain symmetry if the funnel plot is asymmetric and
+the bottom part of the plot should show a higher con-                                                                                                                                                                                                                                                                                                                          then recomputes the meta-analytic estimate of effect size.
+centration of studies on one side of the meta-analytic                                                                                                                                                                                                                                                                                                                         The method initially trims the asymmetric studies from
+estimate than the other. This would reﬂect the fact that                                                                                                                                                                                                                                                                                                                       the biased side to locate the unbiased effect (in an iter-
+smaller studies are more likely to be published if they                                                                                                                                                                                                                                                                                                                        ative procedure), and then ﬁlls the plot by re-inserting
+have larger than average effects, which makes them more                                                                                                                                                                                                                                                                                                                        the trimmed studies on the biased side as well as their
+likely to meet the criterion for statistical signiﬁcance.                                                                                                                                                                                                                                                                                                                      imputed counterparts on the opposite side of the meta-
+
+                                                                                                                                                                                                                                                                                                                                                                            9
+ACCEPTED MANUSCRIPT
+
+analytic estimate of effect size. Figs. 6–8 show the plots of      Table 3
+Figs. 3–5 with imputed studies (black dots) and adjusted           Trim and Fill Analysis
+meta-analytic estimates of effect size (black diamonds).
+                                                                                           ﬁxed     random      Q
+   These analyses suggest that there is indeed some pub-
+lication bias in our sample. For example, six studies are                       Imputed g 95% C.I.  g 95% C.I.
+imputed to obtain symmetry for Quality. This might be
+taken as an incentive to publish more high-quality stud-           Correctness
+ies that, perhaps, exhibit low effects or opposite effects
+to those that are expected. This might include promot-             Observed     .23 .09 .37         .33 .07 .60 35.97
+ing gray literature to be readily accessible in journals and                                        .07 -.23 .37 81.42 left
+conferences.                                                               ﬁxed 6 .03 -.09 .16      .33 .07 .60 35.97 left
+
+   However, it is important to note that publication bias          random 0 .23 .09 .37
+may not be the only cause of funnel plot asymmetry. For
+instance, asymmetry may be caused by between-study                 Duration
+heterogeneity, study quality, or other factors [44].
+                                                                   Observed     .40 .21 .59         .53 .13 .94 33.57
+   In the presence of heterogeneity (which we are assum-                                            .35 -.10 .80 49.77 left
+ing), there are three meaningful ways to impute the as-                    ﬁxed 2 .34 .15 .54       .44 -.01 .88 45.01 left
+sumed missing studies. (1) A random-effects model is
+used to trim and ﬁll, and then the adjusted meta-analytic          random 1 .37 .18 .56
+estimate of effect size is calculated from the ﬁlled data
+using a random-effects model (a so-called random-random            Effort
+approach) [13,14]. However, in a random-effects model
+meta-analysis, smaller studies are given added weight in           Observed     -.73 -.94 -.51      -.52 -1.18 .13 66.36
+the synthesis. Thus, if publication bias exists, the meta-                                          -.74 -1.46 -.01 86.01 left
+analytic estimate is likely to be more biased than that                    ﬁxed 1 -.75 -.97 -.54    -.07 -.79 .65 104.46 right
+obtained from a ﬁxed-effects model meta-analysis [44].
+Thus, an alternative is: (2) A ﬁxed-effects model is used          random 2 -.58 -.78 -.37
+to trim and ﬁll, and then the adjusted meta-analytic es-
+timate of effect size is calculated from the ﬁlled data us-        on the right. The missing study on the left is not consis-
+ing a ﬁxed-effects model (ﬁxed-ﬁxed). It is recommended            tent with the assumption of publication bias and is due
+to report both ﬁxed-ﬁxed and random-random analy-                  to the overly large effort estimate of one of the studies in
+ses [51]. The ﬁxed-ﬁxed approach may be unsatisfying               the opposite direction of the estimate.
+if one wishes to view adjustments relative to the origi-
+nal random-effects model meta-analysis. (3) A third ap-               Sterne and Egger [50] note that trim and ﬁll plots
+proach is to use a ﬁxed-effects model to trim and ﬁll the          merely detect a relationship between sample size and
+meta-analysis, but a random-effects model to calculate             effect size, not a causal mechanism between the two. The
+the meta-analytic effect size estimate from the ﬁlled data         effect size may be larger in small studies due to publica-
+(ﬁxed-random). The ﬁxed-effects trim and ﬁll process is            tion bias. However, it is also possible that small studies
+less likely to be inﬂuenced by any publication bias than           estimate a different part of the the population effect size
+the random-effects model approach, but the resulting es-           distribution than do large studies, e.g., because smaller
+timate from the random effects model is likely to be more          studies use different operationalizations of the outcome
+conservative than if a ﬁxed effects model is used [44]. The        constructs, or have different situational variables than
+plots in Figs. 6–8 were generated using the ﬁxed-random            large studies. Because one does not know for certain
+approach.                                                          whether funnel plot asymmetry is really caused by pub-
+                                                                   lication bias, it is recommended to use the trim and ﬁll
+   Table 3 presents the results from all perspectives. For         method mainly as a form of sensitivity analysis [44].
+example, for Correctness a ﬁxed-effects model approach
+to trim and ﬁll yields 6 imputed studies and adjusts the           3.5. Moderating effects of task complexity and expertise
+estimate in the ﬁxed-effects model from .23 to .03 (ﬁxed-
+ﬁxed), while it adjusts the estimate in the random-effects            Due to the interdisciplinary and complex nature of in-
+model from .33 to .07 (ﬁxed-random).                               dustrial software engineering, it is usually not reasonable
+                                                                   to test an hypothesis that considers only one independent
+   The trim and ﬁll procedure searches for missing stud-           (predictor) variable and one dependent (criterion) vari-
+ies on one side at a time. For Correctness and Duration            able. Hypotheses related to software engineering should
+missing studies were found on the left (Table 3), i.e., in         typically include additional variables and test more com-
+the opposite direction of the estimated effect, which is           plex relationships in order to provide a more accurate
+consistent with the assumption of publication bias. For            description of reality. Indeed, the relatively small overall
+Effort, the ﬁxed approach found a missing study on the             effects and large between-study variance (heterogeneity)
+left, while the random approach found missing studies              indicate that one or more moderator variables might play
+                                                                   a signiﬁcant role.
+
+                                                                      Only two of the studies in the review, Vanhanen and
+                                                                   Lassenius (2005) and Arisholm et al. (2007), tested explic-
+                                                                   itly for moderator effects, while only one of the other
+                                                                   studies discussed the potential inﬂuence of such effects;
+                                                                   Williams et al. (2000) suggested that the relative improve-
+                                                                   ment by pairs after the ﬁrst programming task in their
+                                                                   experiment was due to “pair jelling”.
+
+                                                                      The literature on group dynamics (e.g., [5,21]) suggests
+                                                                   that the extent to which group performance exceeds that
+                                                                   of individuals, and the mechanisms by which such gains
+                                                                   in performance may be achieved, depend upon the com-
+
+                                                               10
+ACCEPTED MANUSCRIPT
+
+position of the group and the characteristics of the tasks.        (heterogeneity) due to moderating factors such as exper-
+Vanhanen and Lassenius (2005) found that task complex-             tise and task complexity and to the fact that the outcome
+ity did not affect the differences in effort between solo and      constructs of the meta-analysis are operationalized by in-
+pair programming; the Pearson correlation between task             dicators that are different aspects of the constructs. Such
+complexity and effort difference was as low as r = -0.02.          heterogeneity was taken into account by using a random-
+                                                                   effects model for the unconditional interpretation.
+   On the other hand, Arisholm et al. (2007) found mod-
+erating effects of both task complexity and expertise. The            Nevertheless, contradictory differences still manifested
+results are shown in Fig. 9. Overall, the results showed           themselves. Thus, it seems clear that moderating factors
+that the pairs had an 8% decrease in duration (g = 0.21)           play an important role and should be investigated further.
+with a corresponding 84% increase in effort (g = -0.68) and        The study in [1] corroborates this conclusion for expertise
+a 7% increase in correctness (g = 0.11) (Fig. 9a). However,        and task complexity, but other moderating factors, such
+the main effects of pair programming were masked by                as amount of training in pair programming, motivation,
+the moderating effect of system complexity, in that sim-           team climate, etc., are likely to be relevant as well.
+pler designs had shorter duration, while more complex
+designs had increased correctness (Fig. 9e).                          Consequently, the question of whether pair program-
+                                                                   ming is better than solo programming is not precise
+   Furthermore, when considering the moderating effect             enough to be meaningful, since the answer to that ques-
+of programmer expertise, junior pairs had a small (5%)             tion in the present context is both “yes” and “no”. On the
+increase in duration and thus a large increase in effort           basis of the evidence from this review, the answer is that
+(111%), and a 73% increase in correctness (Fig. 9b). Inter-        “it depends”: It depends on other factors, for example,
+mediate pairs had a 28% decrease in duration (43% in-              the expertise of the programmers and on the complexity
+crease in effort) and a negligible (4%) increase in correct-       of the system and tasks to be solved.
+ness (Fig. 9c). Senior pairs had a 9% decrease in duration
+(83% increase in effort) and an 8% decrease in correctness            In the literature, expertise and task complexity are per-
+(Fig. 9d). Thus, the juniors beneﬁted from pair program-           haps the most central situation-independent predictors of
+ming in terms of increased correctness, the intermediates          performance. (Situation-dependent factors, on the other
+in terms of decreased duration, while there were no over-          hand, include more dynamic factors such as motivation,
+all beneﬁts of pair programming for seniors. When con-             team climate, organizational issues, etc.) Theory predicts
+sidering the combined moderating effect of system com-             that experts perform better on complex tasks than do
+plexity and programmer expertise on pair programming,              novices because experts’ level of understanding corre-
+there appears to be an interaction effect: Among the dif-          sponds to the deep structure [10,8,9,19] of a complex task.
+ferent treatment combinations, junior pairs assigned to            That is, experts perceive (objectively) complex tasks as
+the complex design had a remarkable 149% increase on               subjectively less complex, i.e., less variable and more ana-
+correctness compared with individuals (Fig. 9f). Further-          lyzable [43,38]. Conversely, experts perceive (objectively)
+more, intermediates and seniors experienced an effect of           less complex tasks as more variable and less analyzable
+pair programming on duration on the simpler design,                since such tasks do not match the expert’s deep-level un-
+with a 39% (Fig. 9g) and 23% (Fig. 9h) decrease, respec-           derstanding of the problem. Novices, on the other hand,
+tively. However, the cost of this shorter duration was a           do have an understanding that matches the surface struc-
+corresponding decrease in correct solutions by 29% and             ture of a non-complex task, and are expected to do bet-
+13%, respectively.                                                 ter on non-complex tasks than on complex tasks. More-
+                                                                   over, they may be expected to even outperform experts
+4. Discussion                                                      on non-complex tasks [23].
+
+   The unconditional part of the meta-analysis suggests               These effects are evident in [1], in which the levels of
+that the population effect size mean µ for each of the             correctness for individual juniors, intermediates, and se-
+outcome constructs are small to medium.                            niors on the non-complex system were 63%, 87%, and
+                                                                   86%, respectively, whereas the levels on the complex sys-
+   More interestingly, the conditional part of the meta-           tem were 34%, 41%, and 81%, respectively. Thus, the per-
+analysis showed large and partly contradictory differ-             formance drop was much higher for juniors than for in-
+ences in the reported overall effects of pair programming,         termediates and seniors, when moving from the non-
+speciﬁcally with respect to Duration and Effort. Our sub-          complex to the complex system, although juniors did not
+group analyses do not suggest that these differences are           outperform higher expertise groups on the non-complex
+due to differences in samples (e.g., students or profession-       system, see also [23].
+als). Differences in organization (e.g., teams or no teams)
+were apparent from the subgroup analysis, but these dif-              In our context, one of the most interesting observations
+ferences were due to two particular studies that, when             is that the pairing up of individuals seems to elevate the
+removed, did not decrease overall heterogeneity.                   junior pairs up to near senior pair performance. Thus,
+                                                                   pair collaboration might compensate for juniors’ lack of
+   At the outset, we anticipated between-study variance            deep understanding, for example, by inducing an expert-
+                                                                   like strategy.
+
+                                                                      Change tasks rely heavily on program comprehension.
+
+                                                               11
+                                                  ACCEPTED MANUSCRIPT
+
+a                                                 Total Effect of PP                                  e                                              Moderating Effect of System Com plexity on PP
+
+     160 % Difference from individuals            84 %                                                     160 % Difference from individuals         CC (easy)              112 %
+     140 %                                                                                                 140 %                                     DC (complex)   60 %
+     120 %                                                                                                 120 %                                                                                    48 %
+     100 %                                                                                                 100 %                                                6%
+                                                                                       7%
+       80 %                                -8 %                                 Cor r e ctne s s             80 %                                    -20 %                          -16 %
+       60 %                             Duration                                                             60 %                                      Duration                    Cor r e ctne s s
+       40 %                                                                           73 %                   40 %
+       20 %                                                                                                  20 %
+
+         0%                                                                                                   0%
+      -20 %                                                                                                -20 %
+      -40 %                                                                                                -40 %
+
+b                                                 Effor t                                                                                                           Effort
+
+     160 %                                        Effect of PP for Juniors                            f Moderating Effect of System Com plexity for Juniors
+     140 %
+     120 %                                                                                                                                    160 %                                                 149 %
+     100 %
+           Difference from individuals            111 %                                                          Difference from individuals  140 %  CC (easy)      109 % 112 %
+       80 %                                                                                                                                   120 %  DC (com plex)
+       60 %                                                                                                                                   100 %
+       40 %
+       20 %                                                                                                                                   80 %
+
+        0%                                                                                                                                    60 %                                 32 %
+      -20 %                                                                                                                                   40 %
+      -40 %
+                                        5%                                                                                                    20 %   4% 6%
+c                                                                                                                                              0%
+
+     160 %                                                                                                                                    -20 %
+     140 %
+     120 %                                                                                                                                    -40 %
+     100 %
+                                        Duration  Effor t                       Cor r e ctne s s                                                     Dur ation      Effor t        Cor r e ctne s s
+       80 %
+       60 %                                    Effect of PP for Interm ediates                        g Moderating Effect of System Com plexity for Interm ediates
+       40 %
+       20 %                                                                                                                                   160 %
+
+        0% Difference from individuals                                                                           Difference from individuals  140 %  CC (easy)                                      92 %
+      -20 %                                                                                                                                   120 %  DC (com plex)
+      -40 %                                                                                                                                   100 %
+
+d                                                                                                                                             80 %                        68 %
+
+     160 %                                        43 %                                                                                        60 %
+     140 %
+     120 %                                                                                                                                    40 %                  22 %
+     100 %
+                                                                                      4%                                                      20 %
+       80 %                                                                     Cor r e ctne s s
+       60 %                                                                                                                                   0%
+       40 %
+       20 %                             -28 %                                                                                                 -20 %                                -29 %
+                                                                                                                                              -40 %
+        0%                                                                                                                                           -39 % -16 %
+      -20 %
+      -40 %                             Duration  Effor t                                                                                            Duration       Effor t        Cor r e ctne s s
+
+                                                  Effect of PP for Seniors                            h Moderating Effect of System Com plexity for Seniors
+
+                                                                                                             160 %
+
+           Difference from individuals                                                                           Difference from individuals  140 %  CC (easy)            115 %
+                                                                                                                                              120 %  DC (com plex)
+                                                  83 %                                                                                        100 %
+
+                                                                                                                                              80 %                  55 %
+                                                                                                                                              60 %
+
+                                                                                                                                              40 %          8%
+                                                                                                                                              20 %
+
+                                           -9 %                                       -8 %                                                      0%   -23 %                                   -2 %
+                                        Duration                                Cor r e ctne s s                                              -20 %                                -13 %
+                                                                                                                                              -40 %
+
+                                                  Effor t                                                                                            Dur ation      Effor t        Cor r e ctne s s
+
+Fig. 9. The moderating effects of programmer expertise (a-d) and system complexity (e-h) on the relation of pair programming on duration,
+effort, and correctness (Arisholm et al. 2007).
+
+To comprehend code, experts use a top-down model [47]                                                            cessitates [11,22].
+that short-cuts the available information by only investi-                                                          Group performance not only relies on task complexity
+gating details as dictated by domain knowledge. This ap-
+proach to comprehension is more efﬁcient than bottom-                                                            but also on the collaborative nature of a task. In fact, the
+up comprehension, which builds understanding from de-                                                            appropriateness of each of the familiar adages “two heads
+tails, and which is the approach found to be used by pro-                                                        are better than one”, “many hands make light work”, and
+grammers encountering totally unfamiliar code [41,42].                                                           “a chain is only as strong as its weakest link” depends
+                                                                                                                 on whether a task is additive, compensatory, disjunctive
+   By forcing junior peers to rationalize their ideas to each                                                    or conjunctive [48]. For example, the chain analogy is ap-
+other, junior pairs might adopt a top-down strategy to                                                           propriate for conjunctive tasks, where all group mem-
+comprehension, rather than getting lost in code on their                                                         bers must contribute to the solution, but is inappropriate
+own. The mere act of thinking aloud whilst solving prob-                                                         for disjunctive tasks for which it sufﬁces that one group
+lems has been shown to increase performance, when the                                                            member has the ability to complete the task. It is not obvi-
+verbalization is intended to reason or explain action e.g.,                                                      ous what sort of task pair programming is in this respect.
+[7] (Type 3 verbalization, in Ericsson and Simon’s termi-
+nology) [20]. Several studies have concluded that appar-                                                            The precise collaborative nature of pair programming
+ent successes of pair programming are not due to the par-                                                        also inﬂuences what social mechanisms (social loaﬁng,
+ticularities of pair programming (such as the speciﬁc roles                                                      social labouring, social facilitation, social inhibition, so-
+of driver and navigator), but rather to the shear amount                                                         cial compensation, etc) are applicable. However, these so-
+of verbalization that the pair programming situation ne-                                                         cial mechanisms also depend on a host of other factors.
+                                                                                                                 In a meta-analysis of social loaﬁng (the phenomenon that
+
+                                                                                                  12
+ACCEPTED MANUSCRIPT
+
+individuals tend to expend less effort when working col-           Acknowledgements
+lectively than when working individually), Karau and               The authors are grateful to the anonymous referees for
+Williams [32] identiﬁed several conditions in which such           insightful remarks.
+loaﬁng is eliminated (e.g., by high group cohesion) and
+some in which the opposite phenomenon, social laboring             Appendix
+[5], could be observed (i.e., greater effort on group tasks).
+Social laboring seems to occur when complex or highly                 The following articles were included in the meta-
+involving tasks are performed, or when the group is con-           analysis:
+sidered important for its members, or if the prevailing
+values favor collectivism rather than individualism [5].           Arisholm et al. (2007). E. Arisholm, H. Gallis, T. Dyba˚, and D.I.K.
+                                                                            Sjøberg, “Evaluating pair programming with respect to system
+5. Conclusion                                                               complexity and programmer expertise,” IEEE Trans. Software
+                                                                            Eng., vol. 33, pp. 65–86, Feb. 2007.
+   Our meta-analysis suggests that pair programming is
+not uniformly beneﬁcial or effective, that inter-study vari-       Baheti et al. (2002). P. Baheti, E. Gehringer, and D. Stotts, “Exploring
+ance is high, and that perhaps publication bias is an is-                   the efﬁcacy of distributed pair programming,” in Proc. XP/Agile
+sue. Hence, if further investigations are to be undertaken                  Universe 2002, ser. Lecture Notes in Computer Science, vol. 2418.
+on pair programming, then the focus should be on un-                        Springer Verlag, 2002, pp. 208–220.
+tangling the moderating factors of the effect of pair pro-
+gramming.                                                          Canfora et al. (2007). G. Canfora, A. Cimitlie, F. Garcia, M. Piattini,
+                                                                            and C.A. Visaggio, “Evaluating performances of pair designing
+   However, with respect to the central factors expertise                   in industry,” J. Systems and Software, vol. 80, no. 8, pp. 1317–
+and task complexity, the current state of knowledge sug-                    1327, Aug. 2007.
+gest that pair programming is beneﬁcial for achieving
+correctness on highly complex programming tasks. Pair              Canfora et al. (2005). G. Canfora, A. Cimitlie, and C.A. Visaggio, “Em-
+programming may also have a time gain on simpler tasks.                     pirical study on the productivity of the pair programming,”
+By cooperating, programmers may complete tasks and                          in Proc. XP 2005, ser. Lecture Notes in Computer Science, vol.
+attain goals that would be difﬁcult or impossible if they                   3556. Springer Verlag, 2005, pp. 92–99.
+worked individually. Junior pair programmers, for exam-
+ple, seem able to achieve approximately the same level of          Domino et al. (2007). M.A. Domino, R. Webb Collins, and A.R.
+correctness in about the same amount of time (duration)                     Hevner, “Controlled experimentation on adaptations of pair
+as senior individuals. However, the higher quality for                      programming,” Information Technology and Management, vol. 8,
+complex tasks comes at a price of a considerably higher                     no. 4, pp. 297–312, Dec. 2007.
+effort (cost), while the reduced completion time for the
+simpler tasks comes at a price of a noticeably lower qual-         Heiberg et al. (2003). S. Heiberg, U. Puus, P. Salumaa, and A. Seeba,
+ity. This fact conﬁrms Voas’ [52] contention that you can-                  “Pair-programming effect on developers productivity,” in Proc.
+not expect faster and better and cheaper. These relation-                   XP 2003, ser. Lecture Notes in Computer Science, vol. 2675.
+ships give rise to a few evidence-based guidelines for the                  Springer Verlag, 2003, pp. 215–224.
+use of pair programming for professional software devel-
+opers. If you do not know the seniority or skill levels of         Madeyski (2006). L. Madeyski, “The impact of pair programming and
+your programmers, but do have a feeling for task com-                       test-driven development on package dependencies in object-
+plexity, then employ pair programming either when task                      oriented design—an experiment,” in Proc. PROFES 2006, ser.
+complexity is low and time is of the essence, or when task                  Lecture Notes in Computer Science, vol. 4034. Springer Verlag,
+complexity is high and correctness is important.                            2006, pp. 278–289.
+
+   In the future, we intend to investigate deeper into the         Madeyski (2007). L. Madeyski, “On the effects of pair programming
+theoretical and empirical underpinnings of collaboration                    on thoroughness and fault-ﬁnding effectiveness of unit tests,”
+in pairs, e.g., by studying group dynamics and analyzing                    in Proc. PROFES 2007, ser. Lecture Notes in Computer Science,
+pair dialogues to obtain insights into subjects’ learning                   vol. 4589. Springer Verlag, 2007, pp. 207–221.
+and reasoning processes. Only by understanding what
+makes pairs work, and what makes pairs less efﬁcient,              Mu¨ ller (2005). M. Mu¨ ller, “Two controlled experiments concerning the
+can steps be taken to provide beneﬁcial conditions for                      comparison of pair programming to peer review,” J. Systems
+work and to avoid detrimental conditions; or to avoid                       and Software, vol. 78, no. 2, pp. 169–179, 2005.
+pairing altogether when beneﬁcial conditions cannot be
+provided.                                                          Mu¨ ller (2006). M. Mu¨ ller, “A preliminary study on the impact of a pair
+                                                                            design phase on pair programming and solo programming,”
+                                                                            Information and Software Technology, vol. 48, no. 5, pp. 335–344,
+                                                                            May 2006.
+
+                                                                   Nawrocki and Wojciechowski (2001). J. Nawrocki and A. Woj-
+                                                                            ciechowski, “Experimental evaluation of pair programming,”
+                                                                            in Proc. European Software Control and Metrics Conference (ES-
+                                                                            COM’01), 2001, pp. 269–276.
+
+                                                                   Nosek (1998). J. Nosek, “The case for collaborative programming,”
+                                                                            Comm. ACM, vol. 41, no. 3, pp. 105–108, Mar. 1998.
+
+                                                                   Phongpaibul and Boehm (2006). M. Phongpaibul and B. Boehm, “An
+                                                                            empirical comparison between pair development and software
+                                                                            inspection in Thailand,” in Proc. Int’l Symposium on Empirical
+                                                                            Software Engineering (ISESE’06), 2006, pp. 85–94.
+
+                                                                   Phongpaibul and Boehm (2007). M. Phongpaibul and B. Boehm, “A
+                                                                            replicate empirical comparison between pair development and
+                                                                            software development with inspection,” in Proc. 1st Int’l Symp.
+                                                                            Empirical Software Engineering and Measurement (ESEM’07). IEEE
+                                                                            Computer Society, 2007, pp. 265–274.
+
+                                                                   Rostaher and Herick (2002). M. Rostaher and M. Hericko, “Tracking
+                                                                            test ﬁrst pair programming—an experiment,” in Proc. XP/Agile
+
+                                                               13
+ACCEPTED MANUSCRIPT
+
+         Universe 2002, ser. Lecture Notes in Computer Science, vol. 2418.        [17] T. Dyba˚, V.B. Kampenes, and D.I.K. Sjøberg, “A systematic review
+         Springer Verlag, 2002, pp. 174–184.                                            of statistical power in software engineering experiments,” J.
+Vanhanen and Lassenius (2005). J. Vanhanen and C. Lassenius, “Ef-                       Information & Software Technology, vol. 48, 2006.
+         fects of pair programming at the development team level: An
+         experiment,” in Proc. Int’l Symposium on Empirical Software En-          [18] T. Dyba˚, B.A. Kitchenham, and M. Jørgensen, “Evidence-based
+         gineering (ISESE’05), 2005, pp. 336–345.                                       software engineering for practitioners,” IEEE Software, vol. 22, pp.
+Williams et al. (2000). L. Williams, R.R. Kessler, W. Cunningham, and                   58–65, 2005.
+         R. Jeffries, “Strengthening the case for pair programming,” IEEE
+         Software, vol. 17, no. 4, pp. 19–25, 2000.                               [19] K.A. Ericsson and N. Charness, “Expert performance—its structure
+Xu and Rajlich (2006). S. Xu and V. Rajlich, “Empirical validation of                   and acquisition,” American Psychologist, vol. 49, pp. 725–747, 1994.
+         test-driven pair programming in game development,” in Proc.
+         Int’l Conference on Computer and Information Science and Int’l           [20] K.A. Ericsson and H.A. Simon, Protocol Analysis, revised ed. The
+         Workshop on Component-Based Software Engineering, Software Ar-                 MIT Press, 1993.
+         chitecture and Reuse (ICIS-COMSAR’06), 2006, pp. 500–505.
+                                                                                  [21] D.R. Forsyth, Group Dynamics, 4th ed. Thomson Wadsworth, 2006.
+References                                                                        [22] S. Freudenberg (ne´e Bryant), P. Romero, and B. du Boulay, “‘talking
+
+[1] E. Arisholm, H. Gallis, T. Dyba˚, and D.I.K. Sjøberg, “Evaluating                   the talk’: Is intermediate-level conversation the key to the pair
+      pair programming with respect to system complexity and                            programming success story?” in Proc. AGILE 2007, 2007.
+      programmer expertise,” IEEE Trans. Software Eng., vol. 33, pp. 65–          [23] T. Hærem and D. Rau, “The inﬂuence of degree of expertise
+      86, Feb. 2007.                                                                    and objective task complexity on perceived task complexity and
+                                                                                        performance,” J. Applied Psychology, vol. 92, no. 5, pp. 1320–1331,
+[2] K. Beck and C. Andres, Extreme Programming Explained: Embrace                       2007.
+      Change, 2nd ed. Addison-Wesley, 2003.                                       [24] J.E. Hannay and M. Jørgensen, “The role of deliberate artiﬁcial
+                                                                                        design elements in software engineering experiments,” IEEE Trans.
+[3] K. Bollen and R. Lennox, “Conventional wisdom on measurement:                       Software Eng., vol. 34, pp. 242–259, mar/apr 2008.
+      A structural equation perspective,” Psychological Bull., vol. 110,          [25] J.E. Hannay, D.I.K. Sjøberg, and T. Dyba˚, “A systematic review
+      no. 2, pp. 305–314, 1991.                                                         of theory use in software engineering experiments,” IEEE Trans.
+                                                                                        Software Eng., vol. 33, pp. 87–107, Feb. 2007.
+[4] M. Borenstein, L.V. Hedges, and H. Rothstein, “Meta-analysis—                 [26] L.V. Hedges and I. Olkin, Statistical Methods for Meta-Analysis.
+      ﬁxed effects versus random effects,” Biostat Inc., Tech.                          Academic Press, Inc., 1985.
+      Rep., 2007. [Online]. Available: meta-analysis.com/downloads/               [27] L.V. Hedges and J.L. Vevea, “Fixed- and random-effects models
+      Meta-analysis ﬁxed effect vs random effects.pdf                                   in meta-analysis,” Psychological Methods, vol. 3, no. 4, pp. 486–504,
+                                                                                        1998.
+[5] R. Brown, Group Processes: Dynamics within and between Groups,                [28] J.P. Higgins, S.G. Thompson, J.J. Deeks, and D.G. Altman,
+      2nd ed. Blackwell, 2000.                                                          “Measuring inconsistency in meta-analyses,” British Medical
+                                                                                        Journal, vol. 327, no. 4, pp. 557–560, 2003.
+[6] C. Burke jarvis, S.B. Mackenzie, and P.M. Podsakoff, “A                       [29] J.E. Hunter and F.L. Schmidt, “Fixed effects vs. random
+      critical review of construct indicators and measurement model                     effects meta-analysis models: Implications for cumulative research
+      misspeciﬁcation in marketing and consumer research,” J. Consumer                  knowledge,” International J. Selection and Assessment, vol. 327, no. 8,
+      Research, vol. 30, pp. 199–218, Sept. 2003.                                       pp. 272–292, Dec. 2000.
+                                                                                  [30] V.B. Kampenes, T. Dyba˚, J.E. Hannay, and D.I.K. Sjøberg,
+[7] M.T.H. Chi, N. de Leeuw, M.H. Chiu, and C. LaVancher,                               “A systematic review of effect size in software engineering
+      “Eliciting self-explanations improves understanding,” Cognitive                   experiments,” Information and Software Technology, vol. 49, no. 11–
+      Science, vol. 18, pp. 439–477, 1994.                                              12, pp. 1073–1086, Nov. 2007.
+                                                                                  [31] V.B. Kampenes, T. Dyba˚, J.E. Hannay, and D.I.K. Sjøberg, “A
+[8] M.T.H. Chi, P.J. Feltovich, and R. Glaser, “Categorization and                      systematic review of quasi-experiments in software engineering,”
+      representation of physics problems by experts and novices,”                       Information and Software Technology, vol. 49, no. 11–12, pp. 1073–
+      Cognitive Science, vol. 5, pp. 121–152, 1981.                                     1086, Nov. 2007.
+                                                                                  [32] S.J. Karau and K.D. Williams, “Social loaﬁng: A meta-analytic
+[9] M.T.H. Chi, R. Glaser, and E. Rees, “Expertise in problem solving,”                 review and theoretical integration,” J. Personality and Social
+      in Advances in the Psychology of Human Intelligence, R. Sternberg, Ed.            Psychology, vol. 65, no. 4, pp. 681–706, 1993.
+      Lawrence Erlbaum Associates, Inc., 1982, pp. 17–76.                         [33] N.L. Kerr and R.S. Tindale, “Group performance and decision
+                                                                                        making,” Annual Review of Psychology, vol. 55, pp. 623–655, 2004.
+[10] N. Chomsky, Syntactic Structures, 2nd ed. Mouton, 2002.                      [34] B.A. Kitchenham and S. Charters, “Guidelines for performing
+[11] J. Chong and T. Hurlbutt, “The social dynamics of pair                             systematic literature reviews in software engineering,” Keele
+                                                                                        University, EBSE Technical Report, EBSE-2007-01, Tech. Rep., 2007.
+      programming,” in Proc. 29th Int’l Conf. Software Engineering, 2007.         [35] J.M. Levine and R.L. Moreland, “Progress in small group research,”
+[12] A. Diamantopoulos and J.A. Siguaw, “Formative versus reﬂective                     Annual Review of Psychology, vol. 41, pp. 585–634, 1990.
+                                                                                  [36] R.M. Lindsay and A.S.C. Ehrenberg, “The design of replicated
+      indicators in organizational measure development: A comparison                    studies,” The American Statistician, vol. 47, no. 3, pp. 217–228, Aug.
+      and empirical illustration,” British J. Management, vol. 17, pp. 263–             1993.
+      282, 2006.                                                                  [37] M.W. Lipsey and D.B. Wilson, Practical Meta-Analysis. Sage, 2001.
+[13] S. Duval and R. Tweedie, “A nonparametric “trim and ﬁll” method              [38] J.G. March and H.A. Simon, Organizations, 2nd ed. Wiley-
+      of accounting for publication bias in meta-analysis,” J. American                 Blackwell, 1993.
+      Statistical Association, vol. 95, no. 445, pp. 89–98, 2000.                 [39] J. Miller, “Applying meta-analytical procedures to software
+[14] S. Duval and R. Tweedie, “Trim and ﬁll: A simple funnel-plot-                      engineering experiments,” J. Systems and Software, vol. 54, no. 1–2,
+      based method of testing and adjusting for publication bias in meta-               pp. 29–39, 2000.
+      analysis,” Biometrics, vol. 56, no. 2, pp. 455–463, June 2000.              [40] J.C. Nunnally and I. Bernstein, Psychometric Theory, 3rd ed.
+[15] T. Dyba˚, E. Arisholm, D.I.K. Sjøberg, J.E. Hannay, and F. Shull,                  McGraw-Hill, Inc., 1994.
+      “Are two heads better than one? on the effectiveness of pair                [41] N. Pennington, “Comprehension strategies in programming,” in
+      programming,” IEEE Software, pp. 12–15, November/December                         Proc. Second Workshop Empirical Studies of Programmers, 1987, pp.
+      2007.                                                                             100–113.
+[16] T. Dyba˚, T. Dingsøyr, and G.K.S. Hanssen, “Applying systematic
+      reviews to diverse study types: An experience report,” in Proc.
+      1st Int’l Symp. Empirical Software Engineering and Measurement
+      (ESEM’07). IEEE Computer Society, 2007, pp. 225–234.
+
+                                                                              14
+                                         ACCEPTED MANUSCRIPT
+
+[42] N. Pennington, “Stimulus structures and mental representations
+
+in expert comprehension of computer programs,” Cognitive
+
+Psychology, vol. 19, pp. 295–341, 1987.
+
+[43] C. Perrow, “A framework for the comparative analysis of
+
+organizations,” American Sociological Review, vol. 32, pp. 194–208,
+
+1967.
+
+[44] J.L. Peters, A.J. Sutton, D.R. Jones, K.R. Abrams, and L. Rushton,
+
+“Performance of the trim and ﬁll method in the presence of
+
+publication bias and between-study heterogeneity,” Statistics in
+
+Medicine, vol. 26, pp. 4544–4562, 2007.
+
+[45] R. Rosenthal and M.R. DiMatteo,
+
+“Meta-analysis: Recent developments in quantitative methods for
+
+literature reviews,” Annual Review of Psychology, vol. 52, pp. 59–82,
+
+2001.
+
+[46] D.I.K.                                            Sjøberg,
+
+J.E. Hannay, O. Hansen, V.B. Kampenes, A. Karahasanovic´, N.K.
+
+Liborg, and A.C. Rekdal, “A survey of controlled experiments in
+
+software engineering,” IEEE Trans. Software Eng., vol. 31, no. 9, pp.
+
+733–753, Sept. 2005.
+
+[47] E. Soloway, B. Adelson, and K. Ehrlich, “Knowledge and processes
+
+in the comprehension of computer programs,” in The Nature of
+
+Expertise, M. Chi, R. Glaser, and M. Farr, Eds. Lawrence Erlbaum
+
+Assoc., 1988, pp. 129–152.
+
+[48] I.D. Steiner, Group Process and Productivity. New York and London:
+
+Academic Press, 1972.
+
+[49] M. Stephens and D. Rosenberg, Extreme Programming Refactored: The
+
+Case Against XP. APress, 2003.
+
+[50] J.A.C. Sterne and M. Egger, “Regression methods to detect
+
+publication and other bias in meta-analysis,” in Publication Bias
+
+in Meta-analysis: Prevention, Assessment and Adjustments, H.R.
+
+Rothstein, A.J. Sutton, and M. Borenstein, Eds. Wiley, 2005, ch. 6,
+
+pp. 99–110.
+
+[51] A.J. Sutton, “Evidence concerning the consequences of publication
+
+and related biases,” in Publication Bias in Meta-analysis: Prevention,
+
+Assessment and Adjustments, H.R. Rothstein, A.J. Sutton, and
+
+M. Borenstein, Eds. Wiley, 2005, ch. 10, pp. 175–192.
+
+[52] J. Voas, “Faster, better, and cheaper,” IEEE Software, vol. 18, no. 3,
+
+pp. 96–99, May/June 2001.
+
+[53] L. Williams and R.R. Kessler, Pair Programming Illuminated.
+
+Addison-Wesley, 2002.
+
+                                                                             15
+

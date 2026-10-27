@@ -78,6 +78,14 @@
           "source": "ai-coding/sources/2507.00788.txt#L2003-L2013",
           "confidence": 0.3,
           "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "In 6.6% of cases the project's ground truth calls a function defined in the repository while the models achieve the same with Python built-ins or other libraries (e.g. startswith instead of the repo's match_file_by_prefix), which the authors attribute to missing repository context; a measured but small rate on benchmark tasks with older models.",
+          "source": "ai-coding/sources/2407.00456v2.txt#L753-L763",
+          "date": "2026-10-26"
         }
       ]
     },
@@ -116,6 +124,30 @@
           "source": "ai-coding/sources/2607.21652v1.txt#L1434-L1438",
           "confidence": 0.3,
           "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "On CoderEval's repository-context Python tasks, 66.2% to 90.1% of functionally correct samples from five models (CodeLlama, StarCoder2, two DeepSeekCoder sizes, GPT-4) differ in coding style from the project's own human-written solution; a measured rate against real repository code, but the repositories had no specific style requirements and style difference from one reference solution is not the same as violating an established convention.",
+          "source": "ai-coding/sources/2407.00456v2.txt#L636-L643",
+          "date": "2026-10-26"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Of 214 merged Claude Code PRs (out of 475 merged, 567 total, 157 projects) that were modified before merge, 50 (23.4%) got style revisions such as enforcing naming conventions, fixing formatting and resolving linter warnings the agent missed, which the authors read as agents underperforming on project-specific style rules; a measured rate, but only about one merged PR in ten, and no style breakdown is given for the human PR baseline.",
+          "source": "ai-coding/sources/2509.14745v3.txt#L855-L862",
+          "date": "2026-10-26"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.3,
+          "note": "CodeRabbit's analysis of 470 open-source PRs (320 flagged as AI-co-authored, 150 assumed human-only) with its own issue taxonomy found formatting problems 2.66x and naming inconsistencies nearly 2x as common in AI PRs, even in teams with formatters and linters; a measured rate against a human baseline, but a vendor report on a small sample whose human labels it says it cannot guarantee.",
+          "source": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L14-L40",
+          "date": "2026-10-26"
         }
       ]
     },

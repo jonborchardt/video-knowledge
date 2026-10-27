@@ -110,6 +110,7 @@
           "note": "Ignoring code entirely leads to drift and debt in real codebases; but spec-driven approaches with code review do work.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2607.09902.txt",
             "ai-coding/sources/2607.21652v1.txt",
             "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt"
           ]
@@ -579,7 +580,11 @@
           ],
           "note": "AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/2412.18531.txt",
+            "ai-coding/sources/2509.01494.txt",
+            "ai-coding/sources/playerzero-deja-vu-benchmark.txt"
+          ]
         },
         {
           "id": "ai-coding/running-many-coding-agents-parallel-not",
@@ -711,9 +716,9 @@
           "asserted": 16,
           "denied": 0,
           "tally": {
-            "right": 6,
+            "right": 5,
             "wrong": 0,
-            "partly": 7,
+            "partly": 8,
             "untestable": 0,
             "unknown": 0
           },
@@ -741,6 +746,7 @@
           "note": "The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown.",
           "source": "ai-coding/sources/2607.21652v1.txt#L18-L28",
           "documents": [
+            "ai-coding/sources/2606.23130.txt",
             "ai-coding/sources/2607.21652v1.txt"
           ]
         },
@@ -1691,14 +1697,14 @@
           "denied": 2,
           "tally": {
             "right": 0,
-            "wrong": 6,
+            "wrong": 7,
             "partly": 0,
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "wrong",
-          "confidence": 0.5,
+          "confidence": 0.55,
           "videos": [
             "3I6QYkccd3o",
             "43xzqv9Tw-Q",
@@ -1708,9 +1714,12 @@
             "bpWPEhO7RqE",
             "uRuLgar5XZw"
           ],
-          "note": "METR's task-horizon metric kept doubling roughly every 7 months through 2025-26 and coding benchmarks rose sharply; perceived per-release gains feel smaller but the trend is steep.",
-          "source": null,
-          "documents": []
+          "note": "Epoch AI fitted eight growth curves to frontier models' scores from 2023 to early 2026 and checked them by out-of-sample prediction: on three of four metrics (the Epoch Capabilities Index, log METR 50% time horizon and a math index) progress sped up rather than slowed, with reasoning models on a 2-3x faster trend; the fourth (WeirdML V2) kept a steady linear trend, and the authors warn the speed-up is concentrated in easy-to-verify programming and math tasks.",
+          "source": "ai-coding/sources/epoch-have-ai-capabilities-accelerated.txt#L17-L23",
+          "documents": [
+            "ai-coding/sources/2503.14499.txt",
+            "ai-coding/sources/epoch-have-ai-capabilities-accelerated.txt"
+          ]
         },
         {
           "id": "ai-coding/investing-upfront-comprehensive-written-context-requirements",
@@ -1831,6 +1840,7 @@
           "note": "Instruction-following and task horizon rose sharply from Claude 3.7 to 4.x and later; METR's horizon metric shows the same trend.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2503.14499.txt",
             "ai-coding/sources/anthropic-work-at-anthropic.txt"
           ]
         },
@@ -2064,6 +2074,7 @@
           "note": "GitClear's 2024-25 analyses found rising duplicated code and falling refactoring with AI adoption.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2407.00456v2.txt",
             "ai-coding/sources/2507.00788.txt"
           ]
         },
@@ -2093,9 +2104,12 @@
           "note": "Without enough context, models fall back to common internet patterns; instruction files and indexing reduce but do not remove this.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2407.00456v2.txt",
             "ai-coding/sources/2507.09089v2.txt",
+            "ai-coding/sources/2509.14745v3.txt",
             "ai-coding/sources/2603.28592v3.txt",
-            "ai-coding/sources/2607.21652v1.txt"
+            "ai-coding/sources/2607.21652v1.txt",
+            "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt"
           ]
         },
         {
@@ -2295,6 +2309,7 @@
           "note": "Goal/loop features keep agents going through backlogs, but unattended runs drift or game checks without good verification; works when acceptance tests are strong.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2507.15003.txt",
             "ai-coding/sources/airbnb-test-migration.txt"
           ]
         },
@@ -2406,7 +2421,9 @@
           ],
           "note": "Claude models have often topped SWE-bench and similar leaderboards, but GPT-5.x/Codex and Gemini models trade the lead release to release; also, Cursor and Copilot can run Claude models.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/swe-rebench-leaderboard-2026.txt"
+          ]
         },
         {
           "id": "ai-coding/writing-code-never-main-bottleneck-software",
@@ -2451,7 +2468,9 @@
           "source": null,
           "documents": [
             "ai-coding/sources/2501.06972.txt",
-            "ai-coding/sources/cui-demirer-copilot-field-experiments.txt"
+            "ai-coding/sources/2502.15287v1.txt",
+            "ai-coding/sources/cui-demirer-copilot-field-experiments.txt",
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
           ]
         },
         {
@@ -2490,6 +2509,7 @@
           "documents": [
             "ai-coding/sources/2507.00788.txt",
             "ai-coding/sources/2603.28592v3.txt",
+            "ai-coding/sources/2607.09902.txt",
             "ai-coding/sources/2607.21652v1.txt",
             "ai-coding/sources/4859137.txt"
           ]
@@ -2573,9 +2593,9 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
-          "confidence": 0.5,
+          "confidence": 0.6,
           "videos": [
             "43xzqv9Tw-Q",
             "RhfqQKe22ZA",
@@ -2585,9 +2605,11 @@
             "k1t2xyWMUdY",
             "ujkD4SxPKOI"
           ],
-          "note": "METR's 2025 time-horizon study found ~7-month doubling (faster in 2024-25); later measurements stayed on or above trend, with wide error bars.",
-          "source": null,
-          "documents": []
+          "note": "METR timed human experts on 170 software and research tasks (HCAST, RE-Bench, SWAA) and regressed 11 frontier models' 50%-success time horizons on release date from 2019 to early 2025, finding a doubling every 207 days (95% CI 166-240); the measurement is the claim's own source, a preprint by the lab, on a fixed benchmark suite at 50% reliability, not real-world work.",
+          "source": "ai-coding/sources/2503.14499.txt#L272-L276",
+          "documents": [
+            "ai-coding/sources/2503.14499.txt"
+          ]
         },
         {
           "id": "ai-coding/loading-capabilities-demand-skills-read-only",
@@ -2648,27 +2670,29 @@
           "asserted": 2,
           "denied": 0,
           "tally": {
-            "right": 0,
+            "right": 1,
             "wrong": 0,
-            "partly": 2,
+            "partly": 1,
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
+          "strongest": "source",
+          "effective": "right",
+          "confidence": 0.55,
           "videos": [
             "Zdus-d4ehN0",
             "j-ZEhEiHzjg"
           ],
-          "note": "CodeRabbit's 2025 PR analysis found ~1.7x more issues in AI-authored PRs, and security studies agree; results depend heavily on review and tooling, and some studies find parity.",
-          "source": null,
+          "note": "Tracking lines merged over a year in 182 repositories, agentic lines were changed by bug-fixing commits more often than human lines (4.0% vs 2.7% by 180 days; corrective-maintenance hazard 49% higher), while adaptive, perfective and preventive maintenance did not differ; observational and attribution is heuristic, but a large post-merge comparison against human code in the same projects.",
+          "source": "ai-coding/sources/2607.09902.txt#L372-L384",
           "documents": [
             "ai-coding/sources/2302.06590.txt",
             "ai-coding/sources/2507.09089v2.txt",
             "ai-coding/sources/2603.28592v3.txt",
+            "ai-coding/sources/2607.09902.txt",
             "ai-coding/sources/2607.21652v1.txt",
             "ai-coding/sources/4859137.txt",
+            "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt",
             "ai-coding/sources/cui-demirer-copilot-field-experiments.txt"
           ]
         },
@@ -2812,7 +2836,9 @@
           ],
           "note": "Models are tuned on their vendors' harnesses and often score higher there, but third-party harnesses sometimes match or beat them on benchmarks (e.g. Terminal-Bench).",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/swe-rebench-leaderboard-2026.txt"
+          ]
         },
         {
           "id": "ai-coding/major-coding-subscriptions-subsidized-below-cost",
@@ -2946,27 +2972,30 @@
           "asserted": 4,
           "denied": 0,
           "tally": {
-            "right": 0,
+            "right": 1,
             "wrong": 0,
-            "partly": 1,
+            "partly": 0,
             "untestable": 0,
             "unknown": 0
           },
           "strongest": "source",
-          "effective": "partly",
-          "confidence": 0.55,
+          "effective": "right",
+          "confidence": 0.6,
           "videos": [
             "fsFHu56V5ys",
             "minimaxir-ai-agent-coding",
             "neilmadden-a-look-at-cloudflares-ai-coded-oauth-library",
             "xUj4HQt_leg"
           ],
-          "note": "733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
-          "source": "ai-coding/sources/2310.02059.txt#L930-L936",
+          "note": "Of 200 randomly sampled publicly deployed apps that were at least 90% AI-authored, 91% contained at least one manually validated vulnerability, 65.8% of them Critical or High, concentrated in broken access control, injection and authentication; open-source GitHub apps from two agents only, with no human-written baseline.",
+          "source": "ai-coding/sources/2606.23130.txt#L457-L464",
           "documents": [
             "ai-coding/sources/2310.02059.txt",
             "ai-coding/sources/2603.28592v3.txt",
-            "ai-coding/sources/2607.21652v1.txt"
+            "ai-coding/sources/2606.23130.txt",
+            "ai-coding/sources/2607.09902.txt",
+            "ai-coding/sources/2607.21652v1.txt",
+            "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt"
           ]
         },
         {
@@ -3451,24 +3480,27 @@
           "asserted": 4,
           "denied": 0,
           "tally": {
-            "right": 2,
+            "right": 3,
             "wrong": 0,
             "partly": 0,
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
-          "confidence": 0.5,
+          "confidence": 0.55,
           "videos": [
             "redmonk-dora2025",
             "wEbdRqDV1CA",
             "xHHlhoRC8W4",
             "zqTxwlcWS-Q"
           ],
-          "note": "DORA 2024 estimated a 25% AI-adoption increase associated with ~1.5% lower throughput and ~7.2% lower stability; DORA 2025 found throughput improved but instability persisted.",
-          "source": null,
-          "documents": []
+          "note": "DORA's 2024 survey estimates that each 25% increase in AI adoption is associated with about 1.5% lower delivery throughput and 7.2% lower delivery stability, contrary to the authors' expectations; an association in survey data, not a causal estimate.",
+          "source": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L1295-L1310",
+          "documents": [
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt",
+            "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
+          ]
         },
         {
           "id": "ai-coding/developers-using-assistants-write-less-secure",
@@ -3623,6 +3655,7 @@
           "documents": [
             "ai-coding/sources/2501.06972.txt",
             "ai-coding/sources/2603.28592v3.txt",
+            "ai-coding/sources/2607.09902.txt",
             "ai-coding/sources/2607.21652v1.txt"
           ]
         },
@@ -3758,7 +3791,7 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
           "confidence": 0.5,
           "videos": [
@@ -3777,10 +3810,12 @@
             "s9slFT52Pgw",
             "xu0QI0N0EmU"
           ],
-          "note": "DORA 2024/25 and Faros 2025 found individual output up while organizational delivery metrics stayed flat or worsened; review and integration become the bottleneck.",
-          "source": null,
+          "note": "DORA 2024 found AI adoption improved process measures (code review speed, approval speed, code quality) and individual productivity, yet was associated with lower delivery throughput and stability, concluding that improving the development process does not automatically improve software delivery; survey associations, not causal estimates.",
+          "source": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L1295-L1335",
           "documents": [
-            "ai-coding/sources/anthropic-work-at-anthropic.txt"
+            "ai-coding/sources/anthropic-work-at-anthropic.txt",
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt",
+            "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
           ]
         },
         {
@@ -3988,16 +4023,19 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
-          "confidence": 0.5,
+          "confidence": 0.55,
           "videos": [
             "43xzqv9Tw-Q",
             "Sf9vENm2GnE"
           ],
-          "note": "METR noted a faster ~4-month doubling for 2024-25 models; later data roughly held, though the sample is small and uncertain.",
-          "source": null,
-          "documents": []
+          "note": "Using METR's Time Horizon 1.1 data from 2023 on, Epoch found the log 50% time horizon grew faster than a single linear (constant doubling) trend predicts, best fit by a separate trend for reasoning models that is roughly 2-3x faster; it cannot pin down a precise rate and compares against a 2023-onward fit, not METR's 2019-2025 seven-month doubling.",
+          "source": "ai-coding/sources/epoch-have-ai-capabilities-accelerated.txt#L17-L18",
+          "documents": [
+            "ai-coding/sources/2503.14499.txt",
+            "ai-coding/sources/epoch-have-ai-capabilities-accelerated.txt"
+          ]
         },
         {
           "id": "ai-coding/agents-reliable-success-task-horizon-several",
@@ -4012,16 +4050,18 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
-          "confidence": 0.5,
+          "confidence": 0.65,
           "videos": [
             "43xzqv9Tw-Q",
             "fuRmxFZ-umE"
           ],
-          "note": "METR's own analysis: 80%-success horizons are roughly 4-5x shorter than 50% horizons.",
-          "source": null,
-          "documents": []
+          "note": "On METR's task suite the 80%-success time horizon doubles at a similar rate (204 vs 207 days) but is 4-6x shorter than the 50% horizon, so models that sometimes succeed on hard tasks cannot reliably do tasks of moderate length.",
+          "source": "ai-coding/sources/2503.14499.txt#L312-L317",
+          "documents": [
+            "ai-coding/sources/2503.14499.txt"
+          ]
         },
         {
           "id": "ai-coding/displacing-entry-level-work-raising-unemployment",
@@ -4079,7 +4119,10 @@
           ],
           "note": "Background agents do produce usable PRs for well-scoped chores, but merge rates vary widely and many PRs need iteration; 'most of the time' is optimistic.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/2507.15003.txt",
+            "ai-coding/sources/2509.14745v3.txt"
+          ]
         },
         {
           "id": "ai-coding/coding-agents-working-background-will-eliminate",
@@ -4203,7 +4246,10 @@
           ],
           "note": "DORA 2025 reports AI adoption now positively associated with throughput while still associated with higher delivery instability (change failure and rework).",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt",
+            "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
+          ]
         },
         {
           "id": "ai-coding/clear-policy-access-internal-data-small",
@@ -4232,7 +4278,9 @@
           ],
           "note": "These come from DORA's 2025 AI capabilities model, a survey-based correlational analysis; plausible and consistent with older DORA findings on small batches, but not causal evidence.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
+          ]
         },
         {
           "id": "ai-coding/top-down-usage-mandates-unrealistic-productivity",
@@ -4280,20 +4328,22 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
-          "confidence": 0.5,
+          "confidence": 0.55,
           "videos": [
             "4piZEfozUmA",
             "Sz8NWaTiWfE",
             "redmonk-dora2025",
             "s9slFT52Pgw"
           ],
-          "note": "DORA 2025 found ~59% reporting positive quality impact; it's self-report, which other studies show overstates measured effects.",
-          "source": null,
+          "note": "Asked directly how AI has affected their code quality, 59% of DORA's 2025 survey respondents (nearly 5,000 technology professionals) said it improved, 31% only slightly, 30% saw no impact and 10% said it worsened; a large survey measuring exactly the reported perception the claim describes, from a non-random sample of technology professionals rather than developers alone.",
+          "source": "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt#L1312-L1325",
           "documents": [
             "ai-coding/sources/2607.21652v1.txt",
-            "ai-coding/sources/4859137.txt"
+            "ai-coding/sources/4859137.txt",
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt",
+            "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
           ]
         },
         {
@@ -4463,6 +4513,7 @@
           "note": "Loops without human checkpoints work when tests define success; for ambiguous or high-stakes work, drift, false completion and token burn dominate. Matches vendor guidance on long-running harnesses.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2507.15003.txt",
             "ai-coding/sources/anthropic-work-at-anthropic.txt"
           ]
         },
@@ -5271,7 +5322,10 @@
           ],
           "note": "Independent and vendor benchmarks of PR review bots report recall well below 60% and wide precision variation; the specific ranking here is vendor-reported.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/2509.01494.txt",
+            "ai-coding/sources/playerzero-deja-vu-benchmark.txt"
+          ]
         },
         {
           "id": "ai-coding/reviewing-research-implementation-plans-can-replace",
@@ -5646,7 +5700,9 @@
           ],
           "note": "Several practitioner comparisons report lower token use for Codex, but results vary by task, model and settings; a single run isn't evidence.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/swe-rebench-leaderboard-2026.txt"
+          ]
         },
         {
           "id": "ai-coding/claude-code-produces-higher-quality-safer",
@@ -5883,7 +5939,7 @@
           "tally": {
             "right": 4,
             "wrong": 0,
-            "partly": 0,
+            "partly": 1,
             "untestable": 0,
             "unknown": 0
           },
@@ -5903,7 +5959,9 @@
           "source": "ai-coding/sources/2507.09089v2.txt#L484-L489",
           "documents": [
             "ai-coding/sources/2501.06972.txt",
+            "ai-coding/sources/2503.14499.txt",
             "ai-coding/sources/2507.09089v2.txt",
+            "ai-coding/sources/2507.15003.txt",
             "ai-coding/sources/2607.21652v1.txt"
           ]
         },
@@ -5945,13 +6003,13 @@
           "asserted": 5,
           "denied": 3,
           "tally": {
-            "right": 6,
+            "right": 7,
             "wrong": 0,
             "partly": 0,
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
           "confidence": 0.5,
           "videos": [
@@ -5964,9 +6022,12 @@
             "zanlib-do-you-still-read-the-code",
             "zuJyJP517Uw"
           ],
-          "note": "Qwen3-Coder, Kimi K2 and GLM 4.5/4.6 posted strong SWE-bench and Terminal-Bench results in 2025 while generally trailing frontier closed models.",
-          "source": null,
-          "documents": []
+          "note": "SWE-rebench, which runs every model on fresh, date-tracked GitHub issues under one fixed scaffold, reports open-source models (Kimi K2 Thinking, GLM-5, GLM-4.7) catching up with or ranking alongside closed models such as gpt-5.2-codex, Opus 4.5 and GPT-5.1-codex, while closed models held the top spot; one benchmark of issue-fixing tasks, not all everyday coding.",
+          "source": "ai-coding/sources/swe-rebench-leaderboard-2026.txt#L60-L75",
+          "documents": [
+            "ai-coding/sources/epoch-open-closed-eci-gap.txt",
+            "ai-coding/sources/swe-rebench-leaderboard-2026.txt"
+          ]
         },
         {
           "id": "ai-coding/one-two-person-company-run-mostly",
@@ -6577,8 +6638,10 @@
           "note": "Self-reported surveys consistently show higher satisfaction and flow, but these are vendor-run perception data and other reports show added review burden and fatigue.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2502.15287v1.txt",
             "ai-coding/sources/2507.00788.txt",
-            "ai-coding/sources/2507.09089v2.txt"
+            "ai-coding/sources/2507.09089v2.txt",
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
           ]
         },
         {
@@ -6743,7 +6806,8 @@
           "note": "DORA reported this pattern in one year's data, but other surveys find AI users report higher satisfaction, so the effect is mixed.",
           "source": null,
           "documents": [
-            "ai-coding/sources/anthropic-work-at-anthropic.txt"
+            "ai-coding/sources/anthropic-work-at-anthropic.txt",
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
           ]
         },
         {
@@ -6980,7 +7044,7 @@
           "asserted": 2,
           "denied": 0,
           "tally": {
-            "right": 0,
+            "right": 1,
             "wrong": 0,
             "partly": 1,
             "untestable": 0,
@@ -6995,7 +7059,10 @@
           ],
           "note": "DORA 2025 found no measurable effect of AI on burnout or friction, but this rests on survey data from one research program.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt",
+            "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
+          ]
         },
         {
           "id": "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
@@ -7004,7 +7071,7 @@
           "asserted": 7,
           "denied": 0,
           "tally": {
-            "right": 0,
+            "right": 1,
             "wrong": 0,
             "partly": 2,
             "untestable": 0,
@@ -7024,7 +7091,9 @@
           ],
           "note": "DORA 2025 data shows AI outcomes depend on surrounding capabilities, which supports the framing, though 'amplifier' is an interpretation of correlational survey results.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
+          ]
         },
         {
           "id": "ai-coding/high-quality-internal-developer-platforms-needed",
@@ -7033,7 +7102,7 @@
           "asserted": 3,
           "denied": 0,
           "tally": {
-            "right": 0,
+            "right": 1,
             "wrong": 0,
             "partly": 2,
             "untestable": 0,
@@ -7049,7 +7118,9 @@
           ],
           "note": "DORA 2025 reports this association, but it is correlational survey evidence and platform quality is hard to separate from overall engineering maturity.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
+          ]
         },
         {
           "id": "ai-coding/coding-agents-tend-write-silent-fallbacks",
@@ -8682,7 +8753,9 @@
           ],
           "note": "Model choice is the largest driver of benchmark results, but harness differences also produce sizable gaps on agentic benchmarks.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/swe-rebench-leaderboard-2026.txt"
+          ]
         },
         {
           "id": "ai-coding/getting-good-results-coding-tools-takes",
@@ -9762,7 +9835,9 @@
           ],
           "note": "Telemetry from DX and other vendors shows PR sizes growing alongside AI adoption, though magnitude and causality vary by organization.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/2509.14745v3.txt"
+          ]
         },
         {
           "id": "ai-coding/coding-agents-iterating-against-benchmarks-correctness",
@@ -10507,14 +10582,14 @@
           "denied": 2,
           "tally": {
             "right": 0,
-            "wrong": 6,
+            "wrong": 7,
             "partly": 0,
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "wrong",
-          "confidence": 0.5,
+          "confidence": 0.55,
           "videos": [
             "3I6QYkccd3o",
             "43xzqv9Tw-Q",
@@ -10524,9 +10599,12 @@
             "bpWPEhO7RqE",
             "uRuLgar5XZw"
           ],
-          "note": "METR's task-horizon metric kept doubling roughly every 7 months through 2025-26 and coding benchmarks rose sharply; perceived per-release gains feel smaller but the trend is steep.",
-          "source": null,
-          "documents": []
+          "note": "Epoch AI fitted eight growth curves to frontier models' scores from 2023 to early 2026 and checked them by out-of-sample prediction: on three of four metrics (the Epoch Capabilities Index, log METR 50% time horizon and a math index) progress sped up rather than slowed, with reasoning models on a 2-3x faster trend; the fourth (WeirdML V2) kept a steady linear trend, and the authors warn the speed-up is concentrated in easy-to-verify programming and math tasks.",
+          "source": "ai-coding/sources/epoch-have-ai-capabilities-accelerated.txt#L17-L23",
+          "documents": [
+            "ai-coding/sources/2503.14499.txt",
+            "ai-coding/sources/epoch-have-ai-capabilities-accelerated.txt"
+          ]
         },
         {
           "id": "ai-coding/ide-based-assistants-like-cursor-obsolete",
@@ -11115,6 +11193,65 @@
         },
         {
           "claim": {
+            "id": "ai-coding/code-review-tools-catch-real-bugs",
+            "text": "AI code review tools catch real bugs that human reviewers miss",
+            "topic": "ai-coding",
+            "asserted": 12,
+            "denied": 0,
+            "tally": {
+              "right": 11,
+              "wrong": 0,
+              "partly": 0,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "right",
+            "confidence": 0.5,
+            "videos": [
+              "3KAI__5dUn0",
+              "6wYSwZ20NJU",
+              "86UczUYjVQ0",
+              "KpbMfb_6EGs",
+              "NYFGCESmikA",
+              "T14uF2J89eU",
+              "XyQ4ZTS5dGw",
+              "antirez-news-169",
+              "nolanlawson-using-ai-to-write-better-code-more-slowly",
+              "qcYHD3KruPI",
+              "rCIZflYEpEk",
+              "wcRR5P0S2Us"
+            ],
+            "note": "AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/2412.18531.txt",
+              "ai-coding/sources/2509.01494.txt",
+              "ai-coding/sources/playerzero-deja-vu-benchmark.txt"
+            ]
+          },
+          "prior": "right",
+          "evidence": "partly",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "right",
+            "note": "AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.",
+            "confidence": 0.65,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "partly",
+            "confidence": 0.3,
+            "note": "In an industrial deployment of an LLM review bot (Qodo PR-Agent) at Beko, 73.8% of 1,408 bot comments on merged PRs were labelled Resolved by authors and 21.3% Won't Fix; authors acted on most comments, but the labels do not separate bugs from typos and style, nor compare against what human reviewers would have caught.",
+            "source": "ai-coding/sources/2412.18531.txt#L392-L405",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
             "id": "ai-coding/handles-routine-coding-well-but-struggles",
             "text": "AI handles routine coding well but struggles with complex logic that depends on business or system context",
             "topic": "ai-coding",
@@ -11186,9 +11323,9 @@
             "asserted": 16,
             "denied": 0,
             "tally": {
-              "right": 6,
+              "right": 5,
               "wrong": 0,
-              "partly": 7,
+              "partly": 8,
               "untestable": 0,
               "unknown": 0
             },
@@ -11216,6 +11353,7 @@
             "note": "The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown.",
             "source": "ai-coding/sources/2607.21652v1.txt#L18-L28",
             "documents": [
+              "ai-coding/sources/2606.23130.txt",
               "ai-coding/sources/2607.21652v1.txt"
             ]
           },
@@ -11416,6 +11554,7 @@
             "note": "Instruction-following and task horizon rose sharply from Claude 3.7 to 4.x and later; METR's horizon metric shows the same trend.",
             "source": null,
             "documents": [
+              "ai-coding/sources/2503.14499.txt",
               "ai-coding/sources/anthropic-work-at-anthropic.txt"
             ]
           },
@@ -11433,10 +11572,10 @@
           "evidenceRecord": {
             "method": "source",
             "verdict": "partly",
-            "note": "Anthropic transcripts Feb->Aug 2025: max consecutive tool calls rose from 9.8 to 21.2, human turns fell from 6.2 to 4.1 and task complexity rose from 3.2 to 3.8, but usage shifts could explain part of this and reliability isn't measured.",
-            "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L124-L127",
-            "confidence": 0.35,
-            "date": "2026-10-14"
+            "confidence": 0.4,
+            "note": "Newer models do complete much longer tasks than older ones (time horizons doubling every 204-207 days at both 50% and 80% success), but even their 80% horizons are 4-6x shorter than their 50% ones, so 'reliably' holds only for much shorter tasks; it measures benchmark tasks, not specifications.",
+            "source": "ai-coding/sources/2503.14499.txt#L312-L317",
+            "date": "2026-10-26"
           }
         },
         {
@@ -11572,6 +11711,7 @@
             "note": "GitClear's 2024-25 analyses found rising duplicated code and falling refactoring with AI adoption.",
             "source": null,
             "documents": [
+              "ai-coding/sources/2407.00456v2.txt",
               "ai-coding/sources/2507.00788.txt"
             ]
           },
@@ -11589,10 +11729,10 @@
           "evidenceRecord": {
             "method": "source",
             "verdict": "partly",
-            "note": "New Code Duplication smells were introduced by 23% of AI-devs vs 11% of non-AI devs, but authors call the differences minor (high variance, identical medians).",
-            "source": "ai-coding/sources/2507.00788.txt#L2003-L2013",
-            "confidence": 0.3,
-            "date": "2026-10-14"
+            "confidence": 0.35,
+            "note": "In 6.6% of cases the project's ground truth calls a function defined in the repository while the models achieve the same with Python built-ins or other libraries (e.g. startswith instead of the repo's match_file_by_prefix), which the authors attribute to missing repository context; a measured but small rate on benchmark tasks with older models.",
+            "source": "ai-coding/sources/2407.00456v2.txt#L753-L763",
+            "date": "2026-10-26"
           }
         },
         {
@@ -11801,7 +11941,9 @@
             "source": null,
             "documents": [
               "ai-coding/sources/2501.06972.txt",
-              "ai-coding/sources/cui-demirer-copilot-field-experiments.txt"
+              "ai-coding/sources/2502.15287v1.txt",
+              "ai-coding/sources/cui-demirer-copilot-field-experiments.txt",
+              "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
             ]
           },
           "prior": "right",
@@ -11818,10 +11960,112 @@
           "evidenceRecord": {
             "method": "source",
             "verdict": "partly",
-            "note": "Google: code review and rollout still need humans and quickly become the bottleneck, though AI still cut end-to-end migration time by about 50% or more, so the gains were real even though capped.",
-            "source": "ai-coding/sources/2501.06972.txt#L605-L617",
             "confidence": 0.45,
+            "note": "DORA's 2024 survey (about 3,000 professionals) found that a 25% rise in AI adoption went with faster code review and approval and higher individual productivity, yet an estimated 1.5% lower delivery throughput and 7.2% lower stability, which it attributes to larger changes; this supports limited end-to-end gains from faster coding, but it is cross-sectional and does not measure delivery time by phase or show coding was never the bottleneck.",
+            "source": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L1295-L1335",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
+            "id": "ai-coding/generated-code-contains-more-defects-human",
+            "text": "AI-generated code contains more defects than human-written code",
+            "topic": "ai-coding",
+            "asserted": 2,
+            "denied": 0,
+            "tally": {
+              "right": 1,
+              "wrong": 0,
+              "partly": 1,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "source",
+            "effective": "right",
+            "confidence": 0.55,
+            "videos": [
+              "Zdus-d4ehN0",
+              "j-ZEhEiHzjg"
+            ],
+            "note": "Tracking lines merged over a year in 182 repositories, agentic lines were changed by bug-fixing commits more often than human lines (4.0% vs 2.7% by 180 days; corrective-maintenance hazard 49% higher), while adaptive, perfective and preventive maintenance did not differ; observational and attribution is heuristic, but a large post-merge comparison against human code in the same projects.",
+            "source": "ai-coding/sources/2607.09902.txt#L372-L384",
+            "documents": [
+              "ai-coding/sources/2302.06590.txt",
+              "ai-coding/sources/2507.09089v2.txt",
+              "ai-coding/sources/2603.28592v3.txt",
+              "ai-coding/sources/2607.09902.txt",
+              "ai-coding/sources/2607.21652v1.txt",
+              "ai-coding/sources/4859137.txt",
+              "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt",
+              "ai-coding/sources/cui-demirer-copilot-field-experiments.txt"
+            ]
+          },
+          "prior": "partly",
+          "evidence": "right",
+          "method": "source",
+          "overrides": true,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "partly",
+            "note": "CodeRabbit's 2025 PR analysis found ~1.7x more issues in AI-authored PRs, and security studies agree; results depend heavily on review and tooling, and some studies find parity.",
+            "confidence": 0.55,
             "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "right",
+            "confidence": 0.55,
+            "note": "Tracking lines merged over a year in 182 repositories, agentic lines were changed by bug-fixing commits more often than human lines (4.0% vs 2.7% by 180 days; corrective-maintenance hazard 49% higher), while adaptive, perfective and preventive maintenance did not differ; observational and attribution is heuristic, but a large post-merge comparison against human code in the same projects.",
+            "source": "ai-coding/sources/2607.09902.txt#L372-L384",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
+            "id": "ai-coding/models-perform-best-inside-their-own",
+            "text": "Models perform best inside their own vendor's agent harness",
+            "topic": "ai-coding",
+            "asserted": 3,
+            "denied": 0,
+            "tally": {
+              "right": 0,
+              "wrong": 0,
+              "partly": 3,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "partly",
+            "confidence": 0.5,
+            "videos": [
+              "CUNHS7I3mMA",
+              "F_RyElT_gJk",
+              "dMSZ0WcK1oI"
+            ],
+            "note": "Models are tuned on their vendors' harnesses and often score higher there, but third-party harnesses sometimes match or beat them on benchmarks (e.g. Terminal-Bench).",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/swe-rebench-leaderboard-2026.txt"
+            ]
+          },
+          "prior": "partly",
+          "evidence": "wrong",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "partly",
+            "note": "Models are tuned on their vendors' harnesses and often score higher there, but third-party harnesses sometimes match or beat them on benchmarks (e.g. Terminal-Bench).",
+            "confidence": 0.5,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "wrong",
+            "confidence": 0.4,
+            "note": "On SWE-rebench's May-July 2026 tasks, Claude Code running Fable 5 resolved 60.4% against 64.5% for Fable 5 in the benchmark's generic scaffold, and Codex running GPT-5.6 Sol 58.0% against 62.3%; one benchmark, with headless runs under aligned instructions.",
+            "source": "ai-coding/sources/swe-rebench-leaderboard-2026.txt#L8-L33",
+            "date": "2026-10-26"
           }
         },
         {
@@ -11869,57 +12113,6 @@
             "source": "ai-coding/sources/2607.21652v1.txt#L1716-L1722",
             "confidence": 0.35,
             "date": "2026-10-14"
-          }
-        },
-        {
-          "claim": {
-            "id": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
-            "text": "AI-generated code frequently contains security vulnerabilities",
-            "topic": "ai-coding",
-            "asserted": 4,
-            "denied": 0,
-            "tally": {
-              "right": 0,
-              "wrong": 0,
-              "partly": 1,
-              "untestable": 0,
-              "unknown": 0
-            },
-            "strongest": "source",
-            "effective": "partly",
-            "confidence": 0.55,
-            "videos": [
-              "fsFHu56V5ys",
-              "minimaxir-ai-agent-coding",
-              "neilmadden-a-look-at-cloudflares-ai-coded-oauth-library",
-              "xUj4HQt_leg"
-            ],
-            "note": "733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
-            "source": "ai-coding/sources/2310.02059.txt#L930-L936",
-            "documents": [
-              "ai-coding/sources/2310.02059.txt",
-              "ai-coding/sources/2603.28592v3.txt",
-              "ai-coding/sources/2607.21652v1.txt"
-            ]
-          },
-          "prior": "right",
-          "evidence": "partly",
-          "method": "source",
-          "overrides": true,
-          "priorRecord": {
-            "method": "prior",
-            "verdict": "right",
-            "note": "Veracode 2025 found ~45% of AI-generated samples failed security tests; earlier academic studies of Copilot found similar rates.",
-            "confidence": 0.7,
-            "date": "2026-10-14"
-          },
-          "evidenceRecord": {
-            "method": "source",
-            "verdict": "partly",
-            "confidence": 0.55,
-            "note": "733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
-            "source": "ai-coding/sources/2310.02059.txt#L930-L936",
-            "date": "2026-10-21"
           }
         },
         {
@@ -12260,65 +12453,6 @@
         },
         {
           "claim": {
-            "id": "ai-coding/individual-productivity-gains-have-not-reliably",
-            "text": "Individual AI productivity gains have not reliably translated into team- or organization-level delivery gains",
-            "topic": "ai-coding",
-            "asserted": 14,
-            "denied": 0,
-            "tally": {
-              "right": 8,
-              "wrong": 0,
-              "partly": 0,
-              "untestable": 0,
-              "unknown": 0
-            },
-            "strongest": "prior",
-            "effective": "right",
-            "confidence": 0.5,
-            "videos": [
-              "4piZEfozUmA",
-              "CS5Cmz5FssI",
-              "DfrAaDgFgjc",
-              "EO3_qN_Ynsk",
-              "FoXHScf1mjA",
-              "LOHgRw43fFk",
-              "NstgZHMU2XY",
-              "Sz8NWaTiWfE",
-              "WILFeSGXwio",
-              "i1tZN41VKcE",
-              "jerodsanto-real-artists-still-ship",
-              "redmonk-dora2025",
-              "s9slFT52Pgw",
-              "xu0QI0N0EmU"
-            ],
-            "note": "DORA 2024/25 and Faros 2025 found individual output up while organizational delivery metrics stayed flat or worsened; review and integration become the bottleneck.",
-            "source": null,
-            "documents": [
-              "ai-coding/sources/anthropic-work-at-anthropic.txt"
-            ]
-          },
-          "prior": "right",
-          "evidence": "partly",
-          "method": "source",
-          "overrides": false,
-          "priorRecord": {
-            "method": "prior",
-            "verdict": "right",
-            "note": "DORA 2024/25 and Faros 2025 found individual output up while organizational delivery metrics stayed flat or worsened; review and integration become the bottleneck.",
-            "confidence": 0.65,
-            "date": "2026-10-14"
-          },
-          "evidenceRecord": {
-            "method": "source",
-            "verdict": "partly",
-            "note": "Anthropic reports a 67% rise in merged PRs per engineer per day after adopting Claude Code across the engineering org, but PR counts are a weak proxy for delivery. (Narrow setting, so it limits the claim rather than refuting it.)",
-            "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L35-L35",
-            "confidence": 0.25,
-            "date": "2026-10-14"
-          }
-        },
-        {
-          "claim": {
             "id": "ai-coding/commit-counts-overstate-productivity-because-increases",
             "text": "Commit and PR counts overstate AI productivity because AI increases rework of recent code",
             "topic": "ai-coding",
@@ -12373,52 +12507,54 @@
         },
         {
           "claim": {
-            "id": "ai-coding/most-developers-report-has-improved-quality",
-            "text": "Most developers report that AI has improved the quality of their code",
+            "id": "ai-coding/clear-policy-access-internal-data-small",
+            "text": "A clear AI policy, AI access to internal data and small-batch work amplify the benefits teams get from AI",
             "topic": "ai-coding",
-            "asserted": 4,
+            "asserted": 7,
             "denied": 0,
             "tally": {
-              "right": 3,
+              "right": 0,
               "wrong": 0,
-              "partly": 0,
+              "partly": 5,
               "untestable": 0,
               "unknown": 0
             },
             "strongest": "prior",
-            "effective": "right",
+            "effective": "partly",
             "confidence": 0.5,
             "videos": [
               "4piZEfozUmA",
+              "DfrAaDgFgjc",
               "Sz8NWaTiWfE",
-              "redmonk-dora2025",
-              "s9slFT52Pgw"
+              "s9slFT52Pgw",
+              "wEbdRqDV1CA",
+              "xHHlhoRC8W4",
+              "xyqim74uZtY"
             ],
-            "note": "DORA 2025 found ~59% reporting positive quality impact; it's self-report, which other studies show overstates measured effects.",
+            "note": "These come from DORA's 2025 AI capabilities model, a survey-based correlational analysis; plausible and consistent with older DORA findings on small batches, but not causal evidence.",
             "source": null,
             "documents": [
-              "ai-coding/sources/2607.21652v1.txt",
-              "ai-coding/sources/4859137.txt"
+              "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
             ]
           },
-          "prior": "right",
-          "evidence": "partly",
+          "prior": "partly",
+          "evidence": "right",
           "method": "source",
           "overrides": false,
           "priorRecord": {
             "method": "prior",
-            "verdict": "right",
-            "note": "DORA 2025 found ~59% reporting positive quality impact; it's self-report, which other studies show overstates measured effects.",
-            "confidence": 0.6,
+            "verdict": "partly",
+            "note": "These come from DORA's 2025 AI capabilities model, a survey-based correlational analysis; plausible and consistent with older DORA findings on small batches, but not causal evidence.",
+            "confidence": 0.55,
             "date": "2026-10-14"
           },
           "evidenceRecord": {
             "method": "source",
-            "verdict": "partly",
-            "note": "Developers reporting more workplace AI use rated their code's reusability and testability higher (+0.3 on the scale), but rated reliability and complexity no differently. The follow-up found lower maintainability.",
-            "source": "ai-coding/sources/4859137.txt#L1149-L1155",
-            "confidence": 0.35,
-            "date": "2026-10-14"
+            "verdict": "right",
+            "confidence": 0.45,
+            "note": "Of 15 candidate capabilities tested in DORA's 2025 survey, seven, including a clear and communicated AI stance, AI-accessible internal data and working in small batches, showed an interaction with AI adoption that amplified its effect on key outcomes; survey interactions, not experiments.",
+            "source": "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt#L2185-L2206",
+            "date": "2026-10-26"
           }
         },
         {
@@ -12445,6 +12581,7 @@
             "note": "Loops without human checkpoints work when tests define success; for ambiguous or high-stakes work, drift, false completion and token burn dominate. Matches vendor guidance on long-running harnesses.",
             "source": null,
             "documents": [
+              "ai-coding/sources/2507.15003.txt",
               "ai-coding/sources/anthropic-work-at-anthropic.txt"
             ]
           },
@@ -12719,6 +12856,54 @@
         },
         {
           "claim": {
+            "id": "ai-coding/current-code-review-tools-trade-precision",
+            "text": "Current AI code-review tools trade precision against recall, and none catch most real bugs",
+            "topic": "ai-coding",
+            "asserted": 2,
+            "denied": 0,
+            "tally": {
+              "right": 2,
+              "wrong": 0,
+              "partly": 0,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "right",
+            "confidence": 0.5,
+            "videos": [
+              "TixGCWbrDU4",
+              "qcYHD3KruPI"
+            ],
+            "note": "Independent and vendor benchmarks of PR review bots report recall well below 60% and wide precision variation; the specific ranking here is vendor-reported.",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/2509.01494.txt",
+              "ai-coding/sources/playerzero-deja-vu-benchmark.txt"
+            ]
+          },
+          "prior": "right",
+          "evidence": "partly",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "right",
+            "note": "Independent and vendor benchmarks of PR review bots report recall well below 60% and wide precision variation; the specific ranking here is vendor-reported.",
+            "confidence": 0.6,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "partly",
+            "confidence": 0.4,
+            "note": "Recall of the best AI review setup fell from 38.35% on PRs with one human-raised issue to 8.88% on PRs with five or more, while precision stayed roughly between 30% and 44%; it confirms tools miss most real issues in complex PRs, but this passage shows recall dropping with complexity rather than a precision-recall trade-off.",
+            "source": "ai-coding/sources/2509.01494.txt#L884-L895",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
             "id": "ai-coding/agents-can-complete-only-small-fraction",
             "text": "AI agents can complete only a small fraction of real freelance projects to a professional standard",
             "topic": "ai-coding",
@@ -12971,6 +13156,58 @@
         },
         {
           "claim": {
+            "id": "ai-coding/coding-assistants-improve-developer-satisfaction-help",
+            "text": "AI coding assistants improve developer satisfaction and help them stay in flow",
+            "topic": "ai-coding",
+            "asserted": 3,
+            "denied": 1,
+            "tally": {
+              "right": 0,
+              "wrong": 0,
+              "partly": 1,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "partly",
+            "confidence": 0.5,
+            "videos": [
+              "Rjlzm0psfB4",
+              "SWcDfPVTizQ",
+              "research-ai-in-software-engineering-at-google-progress-and-the-path-ahead",
+              "xu0QI0N0EmU"
+            ],
+            "note": "Self-reported surveys consistently show higher satisfaction and flow, but these are vendor-run perception data and other reports show added review burden and fatigue.",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/2502.15287v1.txt",
+              "ai-coding/sources/2507.00788.txt",
+              "ai-coding/sources/2507.09089v2.txt",
+              "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
+            ]
+          },
+          "prior": "partly",
+          "evidence": "right",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "partly",
+            "note": "Self-reported surveys consistently show higher satisfaction and flow, but these are vendor-run perception data and other reports show added review burden and fatigue.",
+            "confidence": 0.55,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "right",
+            "confidence": 0.45,
+            "note": "DORA 2024 estimates that a 25% rise in an individual's AI adoption is associated with roughly 2 to 2.6% higher flow, job satisfaction and productivity; modest effects from survey associations rather than a trial.",
+            "source": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L996-L1036",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
             "id": "ai-coding/organizational-adoption-needs-active-enablement-training",
             "text": "Organizational AI adoption needs active enablement (training, showcased wins, champions), not just tool licenses",
             "topic": "ai-coding",
@@ -13070,6 +13307,154 @@
         },
         {
           "claim": {
+            "id": "ai-coding/adoption-has-not-reduced-developer-burnout",
+            "text": "AI adoption has not reduced developer burnout or workflow friction",
+            "topic": "ai-coding",
+            "asserted": 2,
+            "denied": 0,
+            "tally": {
+              "right": 1,
+              "wrong": 0,
+              "partly": 1,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "partly",
+            "confidence": 0.5,
+            "videos": [
+              "redmonk-dora2025",
+              "s9slFT52Pgw"
+            ],
+            "note": "DORA 2025 found no measurable effect of AI on burnout or friction, but this rests on survey data from one research program.",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt",
+              "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
+            ]
+          },
+          "prior": "partly",
+          "evidence": "right",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "partly",
+            "note": "DORA 2025 found no measurable effect of AI on burnout or friction, but this rests on survey data from one research program.",
+            "confidence": 0.55,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "right",
+            "confidence": 0.45,
+            "note": "In DORA's 2025 survey, higher AI adoption showed no relationship with friction or burnout (similar levels for higher and lower adopters) while it was associated with more delivery instability; a cross-sectional association.",
+            "source": "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt#L1677-L1690",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
+            "id": "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
+            "text": "AI amplifies an organization's existing strengths and weaknesses rather than fixing them",
+            "topic": "ai-coding",
+            "asserted": 7,
+            "denied": 0,
+            "tally": {
+              "right": 1,
+              "wrong": 0,
+              "partly": 2,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "partly",
+            "confidence": 0.5,
+            "videos": [
+              "LOHgRw43fFk",
+              "PkITOx9lIT8",
+              "Sz8NWaTiWfE",
+              "WILFeSGXwio",
+              "blog-robbowley-dora-2025-ai-assisted-dev-report-some-benefit-most-dont",
+              "s9slFT52Pgw",
+              "wEbdRqDV1CA"
+            ],
+            "note": "DORA 2025 data shows AI outcomes depend on surrounding capabilities, which supports the framing, though 'amplifier' is an interpretation of correlational survey results.",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
+            ]
+          },
+          "prior": "partly",
+          "evidence": "right",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "partly",
+            "note": "DORA 2025 data shows AI outcomes depend on surrounding capabilities, which supports the framing, though 'amplifier' is an interpretation of correlational survey results.",
+            "confidence": 0.6,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "right",
+            "confidence": 0.4,
+            "note": "DORA 2025's headline conclusion, from nearly 5,000 survey responses and interviews, is that AI acts as an amplifier, magnifying the strengths of high-performing organizations and the dysfunctions of struggling ones; an interpretation of cross-sectional interactions.",
+            "source": "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt#L56-L66",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
+            "id": "ai-coding/high-quality-internal-developer-platforms-needed",
+            "text": "High-quality internal developer platforms are needed for AI gains to translate into organizational outcomes",
+            "topic": "ai-coding",
+            "asserted": 3,
+            "denied": 0,
+            "tally": {
+              "right": 1,
+              "wrong": 0,
+              "partly": 2,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "partly",
+            "confidence": 0.5,
+            "videos": [
+              "LOHgRw43fFk",
+              "Sz8NWaTiWfE",
+              "s9slFT52Pgw"
+            ],
+            "note": "DORA 2025 reports this association, but it is correlational survey evidence and platform quality is hard to separate from overall engineering maturity.",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
+            ]
+          },
+          "prior": "partly",
+          "evidence": "right",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "partly",
+            "note": "DORA 2025 reports this association, but it is correlational survey evidence and platform quality is hard to separate from overall engineering maturity.",
+            "confidence": 0.55,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "right",
+            "confidence": 0.4,
+            "note": "DORA 2025 finds with high certainty that AI adoption's effect on organizational performance depends on and is amplified by quality internal platforms, though platforms also make AI users report more friction; a survey interaction, not an experiment.",
+            "source": "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt#L2639-L2668",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
             "id": "ai-coding/agents-work-best-when-tasks-decomposed",
             "text": "Agents work best when tasks are decomposed into writing and running code, because code is verifiable",
             "topic": "ai-coding",
@@ -13112,6 +13497,52 @@
             "source": "ai-coding/sources/2501.06972.txt#L589-L603",
             "confidence": 0.4,
             "date": "2026-10-14"
+          }
+        },
+        {
+          "claim": {
+            "id": "ai-coding/underlying-model-matters-more-agent-harness",
+            "text": "The underlying model matters more than the agent harness for AI coding results",
+            "topic": "ai-coding",
+            "asserted": 1,
+            "denied": 0,
+            "tally": {
+              "right": 0,
+              "wrong": 0,
+              "partly": 1,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "partly",
+            "confidence": 0.5,
+            "videos": [
+              "MrfiUMm2Qxk"
+            ],
+            "note": "Model choice is the largest driver of benchmark results, but harness differences also produce sizable gaps on agentic benchmarks.",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/swe-rebench-leaderboard-2026.txt"
+            ]
+          },
+          "prior": "partly",
+          "evidence": "right",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "partly",
+            "note": "Model choice is the largest driver of benchmark results, but harness differences also produce sizable gaps on agentic benchmarks.",
+            "confidence": 0.5,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "right",
+            "confidence": 0.4,
+            "note": "Under one fixed scaffold SWE-rebench resolve rates span 17.1% to 64.5% across models, while the vendor harnesses (Claude Code, Codex, Junie) land within about 2-4 points of their own model's scaffold score.",
+            "source": "ai-coding/sources/swe-rebench-leaderboard-2026.txt#L8-L33",
+            "date": "2026-10-26"
           }
         },
         {
@@ -13263,6 +13694,52 @@
         },
         {
           "claim": {
+            "id": "ai-coding/adoption-increases-average-pull-request-size",
+            "text": "AI adoption increases average pull request size",
+            "topic": "ai-coding",
+            "asserted": 1,
+            "denied": 0,
+            "tally": {
+              "right": 1,
+              "wrong": 0,
+              "partly": 0,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "right",
+            "confidence": 0.5,
+            "videos": [
+              "WILFeSGXwio"
+            ],
+            "note": "Telemetry from DX and other vendors shows PR sizes growing alongside AI adoption, though magnitude and causality vary by organization.",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/2509.14745v3.txt"
+            ]
+          },
+          "prior": "right",
+          "evidence": "partly",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "right",
+            "note": "Telemetry from DX and other vendors shows PR sizes growing alongside AI adoption, though magnitude and causality vary by organization.",
+            "confidence": 0.6,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "partly",
+            "confidence": 0.3,
+            "note": "Initial Claude Code PRs add a median of 48 lines against 24 for matched human PRs in the same projects (both touching a median of 2 files, similar deletions); agent PRs are larger, but this compares PR types, not a team's average PR size before and after adoption.",
+            "source": "ai-coding/sources/2509.14745v3.txt#L454-L458",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
             "id": "ai-coding/handling-agent-scale-code-volume-requires",
             "text": "Handling agent-scale code volume requires systems that make failures cheap to detect and fix rather than proportionally more human review",
             "topic": "ai-coding",
@@ -13398,6 +13875,7 @@
           "documents": [
             "ai-coding/sources/2501.06972.txt",
             "ai-coding/sources/2603.28592v3.txt",
+            "ai-coding/sources/2607.09902.txt",
             "ai-coding/sources/2607.21652v1.txt"
           ]
         },
@@ -13444,7 +13922,9 @@
           "source": null,
           "documents": [
             "ai-coding/sources/2501.06972.txt",
-            "ai-coding/sources/cui-demirer-copilot-field-experiments.txt"
+            "ai-coding/sources/2502.15287v1.txt",
+            "ai-coding/sources/cui-demirer-copilot-field-experiments.txt",
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
           ]
         },
         {
@@ -13819,6 +14299,7 @@
           "note": "Ignoring code entirely leads to drift and debt in real codebases; but spec-driven approaches with code review do work.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2607.09902.txt",
             "ai-coding/sources/2607.21652v1.txt",
             "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt"
           ]
@@ -13882,6 +14363,7 @@
           "note": "Goal/loop features keep agents going through backlogs, but unattended runs drift or game checks without good verification; works when acceptance tests are strong.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2507.15003.txt",
             "ai-coding/sources/airbnb-test-migration.txt"
           ]
         },
@@ -13924,14 +14406,14 @@
           "denied": 2,
           "tally": {
             "right": 0,
-            "wrong": 6,
+            "wrong": 7,
             "partly": 0,
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "wrong",
-          "confidence": 0.5,
+          "confidence": 0.55,
           "videos": [
             "3I6QYkccd3o",
             "43xzqv9Tw-Q",
@@ -13941,9 +14423,12 @@
             "bpWPEhO7RqE",
             "uRuLgar5XZw"
           ],
-          "note": "METR's task-horizon metric kept doubling roughly every 7 months through 2025-26 and coding benchmarks rose sharply; perceived per-release gains feel smaller but the trend is steep.",
-          "source": null,
-          "documents": []
+          "note": "Epoch AI fitted eight growth curves to frontier models' scores from 2023 to early 2026 and checked them by out-of-sample prediction: on three of four metrics (the Epoch Capabilities Index, log METR 50% time horizon and a math index) progress sped up rather than slowed, with reasoning models on a 2-3x faster trend; the fourth (WeirdML V2) kept a steady linear trend, and the authors warn the speed-up is concentrated in easy-to-verify programming and math tasks.",
+          "source": "ai-coding/sources/epoch-have-ai-capabilities-accelerated.txt#L17-L23",
+          "documents": [
+            "ai-coding/sources/2503.14499.txt",
+            "ai-coding/sources/epoch-have-ai-capabilities-accelerated.txt"
+          ]
         },
         {
           "id": "ai-coding/open-weight-coding-models-now-handle",
@@ -13952,13 +14437,13 @@
           "asserted": 5,
           "denied": 3,
           "tally": {
-            "right": 6,
+            "right": 7,
             "wrong": 0,
             "partly": 0,
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
           "confidence": 0.5,
           "videos": [
@@ -13971,9 +14456,12 @@
             "zanlib-do-you-still-read-the-code",
             "zuJyJP517Uw"
           ],
-          "note": "Qwen3-Coder, Kimi K2 and GLM 4.5/4.6 posted strong SWE-bench and Terminal-Bench results in 2025 while generally trailing frontier closed models.",
-          "source": null,
-          "documents": []
+          "note": "SWE-rebench, which runs every model on fresh, date-tracked GitHub issues under one fixed scaffold, reports open-source models (Kimi K2 Thinking, GLM-5, GLM-4.7) catching up with or ranking alongside closed models such as gpt-5.2-codex, Opus 4.5 and GPT-5.1-codex, while closed models held the top spot; one benchmark of issue-fixing tasks, not all everyday coding.",
+          "source": "ai-coding/sources/swe-rebench-leaderboard-2026.txt#L60-L75",
+          "documents": [
+            "ai-coding/sources/epoch-open-closed-eci-gap.txt",
+            "ai-coding/sources/swe-rebench-leaderboard-2026.txt"
+          ]
         },
         {
           "id": "ai-coding/post-2022-drop-developer-hiring-driven",
@@ -14084,8 +14572,10 @@
           "note": "Self-reported surveys consistently show higher satisfaction and flow, but these are vendor-run perception data and other reports show added review burden and fatigue.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2502.15287v1.txt",
             "ai-coding/sources/2507.00788.txt",
-            "ai-coding/sources/2507.09089v2.txt"
+            "ai-coding/sources/2507.09089v2.txt",
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
           ]
         },
         {
@@ -14114,9 +14604,12 @@
           "note": "Without enough context, models fall back to common internet patterns; instruction files and indexing reduce but do not remove this.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2407.00456v2.txt",
             "ai-coding/sources/2507.09089v2.txt",
+            "ai-coding/sources/2509.14745v3.txt",
             "ai-coding/sources/2603.28592v3.txt",
-            "ai-coding/sources/2607.21652v1.txt"
+            "ai-coding/sources/2607.21652v1.txt",
+            "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt"
           ]
         },
         {
@@ -14681,40 +15174,6 @@
           "documents": []
         },
         {
-          "id": "ai-coding/code-review-tools-catch-real-bugs",
-          "text": "AI code review tools catch real bugs that human reviewers miss",
-          "topic": "ai-coding",
-          "asserted": 12,
-          "denied": 0,
-          "tally": {
-            "right": 11,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "3KAI__5dUn0",
-            "6wYSwZ20NJU",
-            "86UczUYjVQ0",
-            "KpbMfb_6EGs",
-            "NYFGCESmikA",
-            "T14uF2J89eU",
-            "XyQ4ZTS5dGw",
-            "antirez-news-169",
-            "nolanlawson-using-ai-to-write-better-code-more-slowly",
-            "qcYHD3KruPI",
-            "rCIZflYEpEk",
-            "wcRR5P0S2Us"
-          ],
-          "note": "AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "ai-coding/coding-agents-overstate-what-they-accomplished",
           "text": "Coding agents overstate what they accomplished in their own summaries",
           "topic": "ai-coding",
@@ -14912,36 +15371,6 @@
           "documents": []
         },
         {
-          "id": "ai-coding/background-coding-agents-assigned-routine-issues",
-          "text": "Background coding agents assigned routine issues can deliver mostly mergeable pull requests",
-          "topic": "ai-coding",
-          "asserted": 8,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 7,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "1GVBRhDI5No",
-            "VJU0rygO03A",
-            "YXdBAaKC-Co",
-            "fly-youre-all-nuts",
-            "i1tZN41VKcE",
-            "o2ohTTcOOXo",
-            "tidINuXB7PA",
-            "vKT59uoByXc"
-          ],
-          "note": "Background agents do produce usable PRs for well-scoped chores, but merge rates vary widely and many PRs need iteration; 'most of the time' is optimistic.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "ai-coding/cheaper-software-production-will-increase-total",
           "text": "Cheaper software production will increase total demand for developers (Jevons paradox)",
           "topic": "ai-coding",
@@ -15033,36 +15462,6 @@
           "documents": []
         },
         {
-          "id": "ai-coding/higher-adoption-associated-delivery-throughput-but",
-          "text": "Higher AI adoption is associated with higher delivery throughput but also more delivery instability",
-          "topic": "ai-coding",
-          "asserted": 8,
-          "denied": 0,
-          "tally": {
-            "right": 4,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "4piZEfozUmA",
-            "Sz8NWaTiWfE",
-            "WILFeSGXwio",
-            "blog-robbowley-dora-2025-ai-assisted-dev-report-some-benefit-most-dont",
-            "redmonk-dora2025",
-            "s9slFT52Pgw",
-            "tFffUnSq7VA",
-            "wEbdRqDV1CA"
-          ],
-          "note": "DORA 2025 reports AI adoption now positively associated with throughput while still associated with higher delivery instability (change failure and rework).",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "ai-coding/speeds-coding-deciding-what-build-product",
           "text": "As AI speeds up coding, deciding what to build (product management) becomes the bottleneck",
           "topic": "ai-coding",
@@ -15122,35 +15521,6 @@
           "documents": []
         },
         {
-          "id": "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
-          "text": "AI amplifies an organization's existing strengths and weaknesses rather than fixing them",
-          "topic": "ai-coding",
-          "asserted": 7,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 2,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "LOHgRw43fFk",
-            "PkITOx9lIT8",
-            "Sz8NWaTiWfE",
-            "WILFeSGXwio",
-            "blog-robbowley-dora-2025-ai-assisted-dev-report-some-benefit-most-dont",
-            "s9slFT52Pgw",
-            "wEbdRqDV1CA"
-          ],
-          "note": "DORA 2025 data shows AI outcomes depend on surrounding capabilities, which supports the framing, though 'amplifier' is an interpretation of correlational survey results.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "ai-coding/best-practices-coding-tools-stale-within",
           "text": "Best practices for AI coding tools go stale within months because model capabilities shift quickly",
           "topic": "ai-coding",
@@ -15176,35 +15546,6 @@
             "i1tZN41VKcE"
           ],
           "note": "Tool-use and long-horizon capability jumps in 2025 changed effective workflows (chat-with-RAG to agentic loops); consistent with practitioner reports.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/clear-policy-access-internal-data-small",
-          "text": "A clear AI policy, AI access to internal data and small-batch work amplify the benefits teams get from AI",
-          "topic": "ai-coding",
-          "asserted": 7,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 5,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "4piZEfozUmA",
-            "DfrAaDgFgjc",
-            "Sz8NWaTiWfE",
-            "s9slFT52Pgw",
-            "wEbdRqDV1CA",
-            "xHHlhoRC8W4",
-            "xyqim74uZtY"
-          ],
-          "note": "These come from DORA's 2025 AI capabilities model, a survey-based correlational analysis; plausible and consistent with older DORA findings on small batches, but not causal evidence.",
           "source": null,
           "documents": []
         },
@@ -15321,35 +15662,6 @@
             "tU0leMxkqzE"
           ],
           "note": "Hiring data (e.g. Stanford 'canaries' 2025) shows junior roles hit harder than senior, but evidence that senior demand rose is weaker.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/length-tasks-agents-can-complete-autonomously",
-          "text": "The length of tasks AI agents can complete autonomously has been doubling roughly every seven months",
-          "topic": "ai-coding",
-          "asserted": 7,
-          "denied": 0,
-          "tally": {
-            "right": 5,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "43xzqv9Tw-Q",
-            "RhfqQKe22ZA",
-            "Sf9vENm2GnE",
-            "XFCkrYHHfpQ",
-            "fuRmxFZ-umE",
-            "k1t2xyWMUdY",
-            "ujkD4SxPKOI"
-          ],
-          "note": "METR's 2025 time-horizon study found ~7-month doubling (faster in 2024-25); later measurements stayed on or above trend, with wide error bars.",
           "source": null,
           "documents": []
         },
@@ -15800,35 +16112,6 @@
           "documents": []
         },
         {
-          "id": "ai-coding/frontier-model-improvements-have-become-incremental",
-          "text": "Frontier model improvements have become incremental rather than exponential",
-          "topic": "ai-coding",
-          "asserted": 5,
-          "denied": 2,
-          "tally": {
-            "right": 0,
-            "wrong": 6,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "wrong",
-          "confidence": 0.5,
-          "videos": [
-            "3I6QYkccd3o",
-            "43xzqv9Tw-Q",
-            "EO3_qN_Ynsk",
-            "LUaPqGpmwBw",
-            "WJS2YDZO-vc",
-            "bpWPEhO7RqE",
-            "uRuLgar5XZw"
-          ],
-          "note": "METR's task-horizon metric kept doubling roughly every 7 months through 2025-26 and coding benchmarks rose sharply; perceived per-release gains feel smaller but the trend is steep.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "ai-coding/frontier-models-now-highly-effective-finding",
           "text": "Frontier AI models are now highly effective at finding real, exploitable security vulnerabilities in code",
           "topic": "ai-coding",
@@ -15879,36 +16162,6 @@
             "V2qjnBDZZ7A"
           ],
           "note": "Each MCP server injects tool schemas into context; large servers can use tens of thousands of tokens, and agents use CLIs well. Deferred tool loading has since reduced this.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/open-weight-coding-models-now-handle",
-          "text": "Open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models",
-          "topic": "ai-coding",
-          "asserted": 5,
-          "denied": 3,
-          "tally": {
-            "right": 6,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "0givsV3pA9w",
-            "86UczUYjVQ0",
-            "bpWPEhO7RqE",
-            "hFzapS8rhEs",
-            "tFffUnSq7VA",
-            "ulfZwEa1x_o",
-            "zanlib-do-you-still-read-the-code",
-            "zuJyJP517Uw"
-          ],
-          "note": "Qwen3-Coder, Kimi K2 and GLM 4.5/4.6 posted strong SWE-bench and Terminal-Bench results in 2025 while generally trailing frontier closed models.",
           "source": null,
           "documents": []
         },
@@ -16278,32 +16531,6 @@
             "martinfowler-tdd-in-the-agent-loop"
           ],
           "note": "Vendors advise removing over-prescriptive instructions as models improve; but guardrails still prevent real failures. Plausible, weakly evidenced.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/higher-adoption-has-associated-lower-team",
-          "text": "Higher AI adoption has been associated with lower team delivery throughput and stability",
-          "topic": "ai-coding",
-          "asserted": 4,
-          "denied": 0,
-          "tally": {
-            "right": 2,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "redmonk-dora2025",
-            "wEbdRqDV1CA",
-            "xHHlhoRC8W4",
-            "zqTxwlcWS-Q"
-          ],
-          "note": "DORA 2024 estimated a 25% AI-adoption increase associated with ~1.5% lower throughput and ~7.2% lower stability; DORA 2025 found throughput improved but instability persisted.",
           "source": null,
           "documents": []
         },
@@ -16767,31 +16994,6 @@
           "documents": []
         },
         {
-          "id": "ai-coding/high-quality-internal-developer-platforms-needed",
-          "text": "High-quality internal developer platforms are needed for AI gains to translate into organizational outcomes",
-          "topic": "ai-coding",
-          "asserted": 3,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 2,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "LOHgRw43fFk",
-            "Sz8NWaTiWfE",
-            "s9slFT52Pgw"
-          ],
-          "note": "DORA 2025 reports this association, but it is correlational survey evidence and platform quality is hard to separate from overall engineering maturity.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "ai-coding/ide-based-assistants-like-cursor-obsolete",
           "text": "IDE-based AI assistants like Cursor are obsolete compared with command-line coding agents",
           "topic": "ai-coding",
@@ -16964,31 +17166,6 @@
             "PkITOx9lIT8"
           ],
           "note": "A framing about what matters most; it's a useful lens, but you can't test it as a fact.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/models-perform-best-inside-their-own",
-          "text": "Models perform best inside their own vendor's agent harness",
-          "topic": "ai-coding",
-          "asserted": 3,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 3,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "CUNHS7I3mMA",
-            "F_RyElT_gJk",
-            "dMSZ0WcK1oI"
-          ],
-          "note": "Models are tuned on their vendors' harnesses and often score higher there, but third-party harnesses sometimes match or beat them on benchmarks (e.g. Terminal-Bench).",
           "source": null,
           "documents": []
         },
@@ -17198,30 +17375,6 @@
           "documents": []
         },
         {
-          "id": "ai-coding/adoption-has-not-reduced-developer-burnout",
-          "text": "AI adoption has not reduced developer burnout or workflow friction",
-          "topic": "ai-coding",
-          "asserted": 2,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "redmonk-dora2025",
-            "s9slFT52Pgw"
-          ],
-          "note": "DORA 2025 found no measurable effect of AI on burnout or friction, but this rests on survey data from one research program.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "ai-coding/agent-configuration-formats-instruction-files-skill",
           "text": "Agent configuration formats (instruction files, skill folders) remain fragmented across tools",
           "topic": "ai-coding",
@@ -17266,30 +17419,6 @@
             "martinfowler-pushing-ai-autonomy"
           ],
           "note": "Audits of SWE-bench-style patches find many plausible but incorrect or overfitted fixes, though the rate varies by task and model.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/agents-reliable-success-task-horizon-several",
-          "text": "Agents' reliable (80%-success) task horizon is several times shorter than their 50%-success horizon",
-          "topic": "ai-coding",
-          "asserted": 2,
-          "denied": 0,
-          "tally": {
-            "right": 2,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "43xzqv9Tw-Q",
-            "fuRmxFZ-umE"
-          ],
-          "note": "METR's own analysis: 80%-success horizons are roughly 4-5x shorter than 50% horizons.",
           "source": null,
           "documents": []
         },
@@ -17486,30 +17615,6 @@
             "rUYP4C29yCw"
           ],
           "note": "Model weights are fixed at deployment; persistence relies on external memory or instruction files, which only partly substitute.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/current-code-review-tools-trade-precision",
-          "text": "Current AI code-review tools trade precision against recall, and none catch most real bugs",
-          "topic": "ai-coding",
-          "asserted": 2,
-          "denied": 0,
-          "tally": {
-            "right": 2,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "TixGCWbrDU4",
-            "qcYHD3KruPI"
-          ],
-          "note": "Independent and vendor benchmarks of PR review bots report recall well below 60% and wide precision variation; the specific ranking here is vendor-reported.",
           "source": null,
           "documents": []
         },
@@ -17727,30 +17832,6 @@
             "WTLrlkp5Y3c"
           ],
           "note": "Copilot Pro's $10 tier is the cheapest headline price and GitHub integration is real; 'best fit' depends on team needs.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/growth-agents-task-horizons-accelerated-recently",
-          "text": "Growth in agents' task horizons accelerated recently, faster than the long-run seven-month doubling",
-          "topic": "ai-coding",
-          "asserted": 2,
-          "denied": 0,
-          "tally": {
-            "right": 2,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "43xzqv9Tw-Q",
-            "Sf9vENm2GnE"
-          ],
-          "note": "METR noted a faster ~4-month doubling for 2024-25 models; later data roughly held, though the sample is small and uncertain.",
           "source": null,
           "documents": []
         },
@@ -18210,29 +18291,6 @@
           "documents": []
         },
         {
-          "id": "ai-coding/adoption-increases-average-pull-request-size",
-          "text": "AI adoption increases average pull request size",
-          "topic": "ai-coding",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 1,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "WILFeSGXwio"
-          ],
-          "note": "Telemetry from DX and other vendors shows PR sizes growing alongside AI adoption, though magnitude and causality vary by organization.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "ai-coding/agent-client-protocol-lets-one-editor",
           "text": "The Agent Client Protocol lets one editor host multiple third-party coding agents",
           "topic": "ai-coding",
@@ -18603,29 +18661,6 @@
           "documents": []
         },
         {
-          "id": "ai-coding/claude-models-lead-major-coding-tools",
-          "text": "Claude models lead the major AI coding tools on agentic coding benchmarks",
-          "topic": "ai-coding",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "WTLrlkp5Y3c"
-          ],
-          "note": "Claude models have often topped SWE-bench and similar leaderboards, but GPT-5.x/Codex and Gemini models trade the lead release to release; also, Cursor and Copilot can run Claude models.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "ai-coding/code-review-complements-but-does-not",
           "text": "AI code review complements but does not replace automated tests",
           "topic": "ai-coding",
@@ -18668,29 +18703,6 @@
             "gPwa7eHDFkw"
           ],
           "note": "Codex does use Seatbelt/Landlock sandboxing; Claude Code added an OS-level sandbox option in late 2025, so the contrast is outdated.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/codex-cli-uses-far-fewer-tokens",
-          "text": "Codex CLI uses far fewer tokens than Claude Code for the same task",
-          "topic": "ai-coding",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "gPwa7eHDFkw"
-          ],
-          "note": "Several practitioner comparisons report lower token use for Codex, but results vary by task, model and settings; a single run isn't evidence.",
           "source": null,
           "documents": []
         },
@@ -20586,29 +20598,6 @@
           "documents": []
         },
         {
-          "id": "ai-coding/underlying-model-matters-more-agent-harness",
-          "text": "The underlying model matters more than the agent harness for AI coding results",
-          "topic": "ai-coding",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "MrfiUMm2Qxk"
-          ],
-          "note": "Model choice is the largest driver of benchmark results, but harness differences also produce sizable gaps on agentic benchmarks.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "ai-coding/usage-concentrated-software-mathematical-tasks",
           "text": "AI usage is concentrated in software and mathematical tasks",
           "topic": "ai-coding",
@@ -20771,7 +20760,7 @@
         "ai-coding/vibe-coded-apps-work-prototypes-but"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20809,7 +20798,7 @@
       "wrong": [
         "ai-coding/developers-should-read-correct-generated-plans"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20851,7 +20840,7 @@
       "testable": 12,
       "novelty": 1.3148809523809526,
       "redundancy": 0,
-      "thinEvidence": 0.75,
+      "thinEvidence": 0.6666666666666666,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/combining-semantic-embedding-code-search-grep",
@@ -20869,7 +20858,7 @@
       "wrong": [
         "ai-coding/open-weight-coding-models-now-handle"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20939,7 +20928,7 @@
       "testable": 3,
       "novelty": 0.049107142857142856,
       "redundancy": 0,
-      "thinEvidence": 0.3333333333333333,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/background-coding-agents-assigned-routine-issues",
@@ -20948,7 +20937,7 @@
       "wrong": [
         "ai-coding/coding-agents-working-background-will-eliminate"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20984,7 +20973,7 @@
       "testable": 10,
       "novelty": 0.7229258241758243,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0.4166666666666667,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/benchmarks-overstate-real-world-usefulness-because",
@@ -21000,7 +20989,7 @@
       "wrong": [
         "ai-coding/frontier-model-improvements-have-become-incremental"
       ],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21016,7 +21005,7 @@
       "testable": 7,
       "novelty": 0.3154923507864684,
       "redundancy": 0,
-      "thinEvidence": 0.42857142857142855,
+      "thinEvidence": 0.2857142857142857,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/code-review-tools-catch-real-bugs",
@@ -21028,7 +21017,7 @@
         "ai-coding/running-many-coding-agents-parallel-not"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21092,9 +21081,9 @@
       "rating": null,
       "assertions": 4,
       "testable": 4,
-      "novelty": 0.8214285714285714,
+      "novelty": 0.9607142857142857,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/agents-reliable-success-task-horizon-several",
@@ -21103,7 +21092,7 @@
         "ai-coding/length-tasks-agents-can-complete-autonomously"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21140,9 +21129,9 @@
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 0.39667366946778715,
+      "novelty": 0.40917366946778716,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0.25,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/classic-software-engineering-fundamentals-matter-much",
@@ -21155,7 +21144,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21181,7 +21170,7 @@
         "ai-coding/having-agent-plan-research-before-implementing"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21211,7 +21200,7 @@
         "ai-coding/will-transform-software-engineering-jobs-rather"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21293,7 +21282,7 @@
         "ai-coding/self-reported-code-maintainability-tends-decline"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21335,7 +21324,7 @@
       "testable": 5,
       "novelty": 1.4166666666666665,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.8,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/code-review-complements-but-does-not",
@@ -21345,7 +21334,7 @@
         "ai-coding/tools-correctly-find-bugs-still-usually"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21373,7 +21362,7 @@
         "ai-coding/updating-agent-rules-workflows-after-each"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21389,7 +21378,7 @@
       "testable": 11,
       "novelty": 0.3606268731268731,
       "redundancy": 0,
-      "thinEvidence": 0.36363636363636365,
+      "thinEvidence": 0.18181818181818182,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assisted-development-shifts-developer-effort-toward",
@@ -21406,7 +21395,7 @@
         "ai-coding/coding-productivity-gains-appear-only-after",
         "ai-coding/open-weight-coding-models-now-handle"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21575,7 +21564,7 @@
       "wrong": [
         "ai-coding/goal-loop-commands-prompt-agent-until"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21705,7 +21694,7 @@
       "wrong": [
         "ai-coding/assisted-development-specification-not-code-should"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21733,7 +21722,7 @@
         "ai-coding/tools-slowed-experienced-open-source-developers"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21749,7 +21738,7 @@
       "testable": 5,
       "novelty": 1.0333333333333332,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.8,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/agent-configuration-formats-instruction-files-skill",
@@ -21759,7 +21748,7 @@
         "ai-coding/opencode-offers-richer-agent-harness-openai"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21775,7 +21764,7 @@
       "testable": 7,
       "novelty": 0.4332212885154062,
       "redundancy": 0,
-      "thinEvidence": 0.42857142857142855,
+      "thinEvidence": 0.2857142857142857,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assistants-tend-agree-users-rather-challenge",
@@ -21787,7 +21776,7 @@
         "ai-coding/measuring-impact-developers-requires-multidimensional-metrics"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21818,7 +21807,7 @@
         "ai-coding/vibe-coded-apps-work-prototypes-but"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21832,9 +21821,9 @@
       "rating": null,
       "assertions": 10,
       "testable": 9,
-      "novelty": 0.6019624819624819,
+      "novelty": 0.6269624819624819,
       "redundancy": 0,
-      "thinEvidence": 0.3,
+      "thinEvidence": 0.2,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assistance-must-reliable-save-experts-time",
@@ -21848,7 +21837,7 @@
         "ai-coding/most-professional-developers-now-use-coding"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21906,7 +21895,7 @@
         "ai-coding/vibe-coded-apps-work-prototypes-but"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21922,7 +21911,7 @@
       "testable": 12,
       "novelty": 0.7461309523809524,
       "redundancy": 0,
-      "thinEvidence": 0.5833333333333334,
+      "thinEvidence": 0.5,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/best-practices-coding-tools-stale-within",
@@ -21940,7 +21929,7 @@
         "ai-coding/ide-based-assistants-like-cursor-obsolete",
         "ai-coding/running-many-coding-agents-parallel-not"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22002,7 +21991,7 @@
         "ai-coding/updating-agent-rules-workflows-after-each"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22139,14 +22128,14 @@
       "testable": 3,
       "novelty": 0.11666666666666667,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.6666666666666666,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/claude-code-more-expensive-rate-limited",
         "ai-coding/code-review-tools-catch-real-bugs"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22202,7 +22191,7 @@
         "ai-coding/vibe-coded-apps-work-prototypes-but"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22218,7 +22207,7 @@
       "testable": 9,
       "novelty": 0.8922619047619047,
       "redundancy": 0,
-      "thinEvidence": 0.3333333333333333,
+      "thinEvidence": 0.1111111111111111,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
@@ -22232,7 +22221,7 @@
         "ai-coding/substantially-shortens-time-takes-developers-onboard"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22248,7 +22237,7 @@
       "testable": 7,
       "novelty": 0.2364125457875458,
       "redundancy": 0,
-      "thinEvidence": 0.375,
+      "thinEvidence": 0.25,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/coding-productivity-gains-appear-only-after",
@@ -22261,7 +22250,7 @@
       "wrong": [
         "ai-coding/frontier-model-improvements-have-become-incremental"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22320,7 +22309,7 @@
         "ai-coding/ide-based-assistants-like-cursor-obsolete",
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22351,7 +22340,7 @@
       "wrong": [
         "ai-coding/context-engineering-delivers-order-magnitude-10x"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22367,7 +22356,7 @@
       "testable": 12,
       "novelty": 1.317906603200721,
       "redundancy": 0,
-      "thinEvidence": 0.3333333333333333,
+      "thinEvidence": 0.25,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/assisted-changes-should-integrated-small-verifiable",
@@ -22384,7 +22373,7 @@
         "ai-coding/underlying-model-matters-more-agent-harness"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22416,7 +22405,7 @@
         "ai-coding/time-boxing-attempts-get-solve-task"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22432,7 +22421,7 @@
       "testable": 12,
       "novelty": 0.6454365079365079,
       "redundancy": 0,
-      "thinEvidence": 0.5833333333333334,
+      "thinEvidence": 0.5,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/code-review-tools-catch-real-bugs",
@@ -22450,7 +22439,7 @@
         "ai-coding/investing-upfront-comprehensive-written-context-requirements",
         "ai-coding/running-many-coding-agents-parallel-not"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22500,7 +22489,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22635,7 +22624,7 @@
       "testable": 11,
       "novelty": 1.2103425006366182,
       "redundancy": 0,
-      "thinEvidence": 0.5833333333333334,
+      "thinEvidence": 0.5,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
@@ -22652,7 +22641,7 @@
       "wrong": [
         "ai-coding/natural-language-prompts-have-become-new"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22668,7 +22657,7 @@
       "testable": 11,
       "novelty": 0,
       "redundancy": 0,
-      "thinEvidence": 0.36363636363636365,
+      "thinEvidence": 0.2727272727272727,
       "worthWatching": "superseded by antirez-news-169",
       "right": [
         "ai-coding/broad-proficiency-across-stack-shifts-value",
@@ -22685,7 +22674,7 @@
         "ai-coding/coding-tools-amplify-experienced-engineers-far",
         "ai-coding/developers-overestimate-how-much-tools-speed"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": "antirez-news-169"
     },
     {
@@ -22845,7 +22834,7 @@
         "ai-coding/security-data-critical-code-auth-payments"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22886,9 +22875,9 @@
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 0.48252976190476193,
+      "novelty": 0.49681547619047617,
       "redundancy": 0,
-      "thinEvidence": 0.125,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assistance-must-reliable-save-experts-time",
@@ -22902,7 +22891,7 @@
       "wrong": [
         "ai-coding/coding-productivity-gains-appear-only-after"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22927,7 +22916,7 @@
         "ai-coding/measuring-impact-developers-requires-multidimensional-metrics"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22956,7 +22945,7 @@
         "ai-coding/security-data-critical-code-auth-payments"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22990,7 +22979,7 @@
       "wrong": [
         "ai-coding/coding-assistants-improve-developer-satisfaction-help"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23004,9 +22993,9 @@
       "rating": null,
       "assertions": 11,
       "testable": 11,
-      "novelty": 1.8308630952380953,
+      "novelty": 1.8701488095238097,
       "redundancy": 0,
-      "thinEvidence": 0.18181818181818182,
+      "thinEvidence": 0,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/assistance-must-reliable-save-experts-time",
@@ -23022,7 +23011,7 @@
         "ai-coding/tools-slowed-experienced-open-source-developers"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23036,9 +23025,9 @@
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 0.4613095238095238,
+      "novelty": 0.4738095238095238,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
@@ -23051,7 +23040,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23067,7 +23056,7 @@
       "testable": 5,
       "novelty": 0.3892857142857143,
       "redundancy": 0,
-      "thinEvidence": 0.8,
+      "thinEvidence": 0.6,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/code-review-tools-catch-real-bugs",
@@ -23078,7 +23067,7 @@
       "wrong": [
         "ai-coding/project-instruction-files-claude-agents-rules"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23102,7 +23091,7 @@
         "ai-coding/investing-upfront-comprehensive-written-context-requirements"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23118,14 +23107,14 @@
       "testable": 2,
       "novelty": 0.28846153846153844,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/current-code-review-tools-trade-precision",
         "ai-coding/giving-model-right-minimal-context-matters"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23262,7 +23251,7 @@
       "testable": 11,
       "novelty": 0.3953157953157953,
       "redundancy": 0,
-      "thinEvidence": 0.45454545454545453,
+      "thinEvidence": 0.36363636363636365,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assisted-changes-should-integrated-small-verifiable",
@@ -23278,7 +23267,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23311,7 +23300,7 @@
         "ai-coding/tasks-explicit-acceptance-criteria-out-scope"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23379,7 +23368,7 @@
       "testable": 12,
       "novelty": 1.2825396825396824,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0.25,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/adoption-increases-average-pull-request-size",
@@ -23396,7 +23385,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23412,7 +23401,7 @@
       "testable": 11,
       "novelty": 0.8978365384615383,
       "redundancy": 0,
-      "thinEvidence": 0.36363636363636365,
+      "thinEvidence": 0.2727272727272727,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/acceptance-rate-counts-generated-lines-poor",
@@ -23429,7 +23418,7 @@
       "wrong": [
         "ai-coding/frontier-model-improvements-have-become-incremental"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23445,7 +23434,7 @@
       "testable": 8,
       "novelty": 1.2395833333333333,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.875,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/claude-code-best-suited-autonomous-complex",
@@ -23458,7 +23447,7 @@
         "ai-coding/swe-bench-verified-scores-overstate-real"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23521,7 +23510,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23535,9 +23524,9 @@
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 0.6428571428571428,
+      "novelty": 0.6571428571428571,
       "redundancy": 0,
-      "thinEvidence": 0.8571428571428571,
+      "thinEvidence": 0.7142857142857143,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/agents-should-keep-notes-external-scratchpad",
@@ -23549,7 +23538,7 @@
         "ai-coding/summarizing-pruning-conversation-history-keeps-long"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23578,7 +23567,7 @@
         "ai-coding/non-engineers-such-pms-can-now"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23594,7 +23583,7 @@
       "testable": 10,
       "novelty": 0.6385010822510823,
       "redundancy": 0,
-      "thinEvidence": 0.4,
+      "thinEvidence": 0.3,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/code-review-tools-catch-real-bugs",
@@ -23609,7 +23598,7 @@
         "ai-coding/system-design-architecture-judgment-remain-human"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23649,7 +23638,7 @@
       "testable": 6,
       "novelty": 0.4144496434937612,
       "redundancy": 0,
-      "thinEvidence": 0.16666666666666666,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/agents-run-permission-prompts-disabled-should",
@@ -23660,7 +23649,7 @@
         "ai-coding/planning-alignment-need-human-loop-while"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23717,12 +23706,12 @@
       "channel": "Sajjaad Khader",
       "topic": "ai-coding",
       "watched": false,
-      "score": 0.7777777777777778,
+      "score": 0.8333333333333334,
       "scaled": 2,
       "rating": null,
       "assertions": 9,
       "testable": 9,
-      "novelty": 0.7147654428904429,
+      "novelty": 0.8647654428904429,
       "redundancy": 0,
       "thinEvidence": 0.6666666666666666,
       "worthWatching": "mixed",
@@ -23738,7 +23727,7 @@
         "ai-coding/will-transform-software-engineering-jobs-rather"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23771,7 +23760,7 @@
         "ai-coding/system-design-architecture-judgment-remain-human"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23826,7 +23815,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23874,7 +23863,7 @@
       "testable": 7,
       "novelty": 0,
       "redundancy": 0,
-      "thinEvidence": 0.42857142857142855,
+      "thinEvidence": 0.2857142857142857,
       "worthWatching": "superseded by antirez-news-169",
       "right": [
         "ai-coding/code-review-tools-catch-real-bugs",
@@ -23887,7 +23876,7 @@
       "wrong": [
         "ai-coding/manually-feeding-code-frontier-chat-model"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": "antirez-news-169"
     },
     {
@@ -23903,7 +23892,7 @@
       "testable": 6,
       "novelty": 0.2393939393939394,
       "redundancy": 0,
-      "thinEvidence": 0.42857142857142855,
+      "thinEvidence": 0.2857142857142857,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/code-review-tools-catch-real-bugs",
@@ -23915,7 +23904,7 @@
       "wrong": [
         "ai-coding/specs-code-workflows-ignore-generated-not"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23948,7 +23937,7 @@
         "ai-coding/experienced-engineers-using-coding-agents-can",
         "ai-coding/merging-work-many-parallel-agents-main"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23964,7 +23953,7 @@
       "testable": 3,
       "novelty": 0.3482142857142857,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.3333333333333333,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
@@ -23972,7 +23961,7 @@
         "ai-coding/only-minority-software-teams-currently-positioned"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23988,7 +23977,7 @@
       "testable": 12,
       "novelty": 0.3877450980392157,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0.3333333333333333,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/cheaper-software-production-will-increase-total",
@@ -24006,7 +23995,7 @@
         "ai-coding/frontier-model-improvements-have-become-incremental",
         "ai-coding/open-weight-coding-models-now-handle"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24115,7 +24104,7 @@
       "wrong": [
         "ai-coding/getting-good-results-coding-tools-takes"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24173,7 +24162,7 @@
       "testable": 6,
       "novelty": 0.5408424908424908,
       "redundancy": 0,
-      "thinEvidence": 0.8333333333333334,
+      "thinEvidence": 0.6666666666666666,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/agent-configuration-formats-instruction-files-skill",
@@ -24184,7 +24173,7 @@
         "ai-coding/models-perform-best-inside-their-own"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24211,7 +24200,7 @@
         "ai-coding/app-generation-governed-low-code-platform",
         "ai-coding/enterprise-grade-applications-can-idea-production"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24237,7 +24226,7 @@
         "ai-coding/large-share-code-major-companies-now"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24360,7 +24349,7 @@
         "ai-coding/vibe-coded-apps-work-prototypes-but"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24473,7 +24462,7 @@
       "testable": 12,
       "novelty": 0.9441468253968254,
       "redundancy": 0,
-      "thinEvidence": 0.6666666666666666,
+      "thinEvidence": 0.5833333333333334,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/agents-compile-lint-test-loops-catch",
@@ -24491,7 +24480,7 @@
       "wrong": [
         "ai-coding/will-transform-software-engineering-jobs-rather"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24500,12 +24489,12 @@
       "channel": "Razorwire Cybersecurity",
       "topic": "ai-coding",
       "watched": false,
-      "score": 0.25,
+      "score": 0.375,
       "scaled": 1,
       "rating": null,
       "assertions": 4,
       "testable": 4,
-      "novelty": 0.16001984126984126,
+      "novelty": 0.24126984126984127,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -24517,7 +24506,7 @@
       "wrong": [
         "ai-coding/continuous-automated-security-testing-ctem-only"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24531,9 +24520,9 @@
       "rating": null,
       "assertions": 11,
       "testable": 11,
-      "novelty": 0.8783630952380952,
+      "novelty": 0.9676488095238096,
       "redundancy": 0,
-      "thinEvidence": 0.2727272727272727,
+      "thinEvidence": 0.09090909090909091,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/agents-reliable-success-task-horizon-several",
@@ -24549,7 +24538,7 @@
         "ai-coding/tools-slowed-experienced-open-source-developers"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24605,7 +24594,7 @@
       "wrong": [
         "ai-coding/generated-changes-should-pass-human-review"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24644,7 +24633,7 @@
       "testable": 4,
       "novelty": 0.625,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.75,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/codex-cli-enforces-level-sandboxing-while",
@@ -24652,7 +24641,7 @@
         "ai-coding/many-developers-combine-several-coding-tools"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24679,7 +24668,7 @@
         "ai-coding/speeds-generation-human-attention-review-understanding"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24743,13 +24732,13 @@
       "testable": 2,
       "novelty": 0.1,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.5,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/open-weight-coding-models-now-handle"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24871,7 +24860,7 @@
       "wrong": [
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24904,7 +24893,7 @@
       "wrong": [
         "ai-coding/coding-tools-amplify-experienced-engineers-far"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24920,7 +24909,7 @@
       "testable": 11,
       "novelty": 0.7241071428571428,
       "redundancy": 0,
-      "thinEvidence": 0.6363636363636364,
+      "thinEvidence": 0.5454545454545454,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assisted-development-shifts-developer-effort-toward",
@@ -24937,7 +24926,7 @@
       "wrong": [
         "ai-coding/github-copilot-makes-developers-complete-tasks"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24994,12 +24983,12 @@
       "channel": "Native Notify",
       "topic": "ai-coding",
       "watched": false,
-      "score": 0.875,
+      "score": 0.9375,
       "scaled": 2,
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 0.4531891025641025,
+      "novelty": 0.6031891025641026,
       "redundancy": 0,
       "thinEvidence": 0.25,
       "worthWatching": "mixed",
@@ -25014,7 +25003,7 @@
         "ai-coding/tools-slowed-experienced-open-source-developers"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25093,7 +25082,7 @@
         "ai-coding/vendor-run-studies-their-own-coding"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25117,7 +25106,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25142,7 +25131,7 @@
         "ai-coding/specs-code-workflows-ignore-generated-not"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25156,9 +25145,9 @@
       "rating": null,
       "assertions": 10,
       "testable": 10,
-      "novelty": 0.6962202380952381,
+      "novelty": 0.7105059523809525,
       "redundancy": 0,
-      "thinEvidence": 0.3,
+      "thinEvidence": 0.2,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assistance-must-reliable-save-experts-time",
@@ -25173,7 +25162,7 @@
       "wrong": [
         "ai-coding/coding-productivity-gains-appear-only-after"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25285,7 +25274,7 @@
       "wrong": [
         "ai-coding/coding-tools-amplify-experienced-engineers-far"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25315,7 +25304,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25375,7 +25364,7 @@
         "ai-coding/updating-agent-rules-workflows-after-each"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25405,7 +25394,7 @@
       "wrong": [
         "ai-coding/summarizing-pruning-conversation-history-keeps-long"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25461,7 +25450,7 @@
         "ai-coding/when-agent-writes-both-code-tests"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25494,7 +25483,7 @@
         "ai-coding/unattended-agent-loops-suit-low-stakes"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25555,7 +25544,7 @@
         "ai-coding/coding-productivity-gains-appear-only-after",
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25564,12 +25553,12 @@
       "channel": "Max Woolf",
       "topic": "ai-coding",
       "watched": false,
-      "score": 0.5,
+      "score": 0.5416666666666666,
       "scaled": 1,
       "rating": null,
       "assertions": 12,
       "testable": 12,
-      "novelty": 0.6910984848484848,
+      "novelty": 0.7723484848484848,
       "redundancy": 0,
       "thinEvidence": 0.4166666666666667,
       "worthWatching": "mixed",
@@ -25589,7 +25578,7 @@
         "ai-coding/heavy-reliance-coding-assistance-erodes-developers",
         "ai-coding/helps-little-can-hurt-when-working"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25657,12 +25646,12 @@
       "channel": "Neil Madden",
       "topic": "ai-coding",
       "watched": false,
-      "score": 0.5833333333333334,
+      "score": 0.6666666666666666,
       "scaled": 1,
       "rating": null,
       "assertions": 6,
       "testable": 6,
-      "novelty": 0.6771915584415584,
+      "novelty": 0.7584415584415585,
       "redundancy": 0,
       "thinEvidence": 0.5,
       "worthWatching": "mixed",
@@ -25675,7 +25664,7 @@
         "ai-coding/security-data-critical-code-auth-payments"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25699,7 +25688,7 @@
         "ai-coding/helps-little-can-hurt-when-working"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25742,7 +25731,7 @@
       "testable": 6,
       "novelty": 0.5502976190476191,
       "redundancy": 0,
-      "thinEvidence": 0.3333333333333333,
+      "thinEvidence": 0.16666666666666666,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/agents-let-engineers-take-refactoring-tech",
@@ -25753,7 +25742,7 @@
         "ai-coding/system-design-architecture-judgment-remain-human"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25796,14 +25785,14 @@
       "testable": 2,
       "novelty": 0.10267857142857142,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.5,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/agents-should-keep-notes-external-scratchpad",
         "ai-coding/background-coding-agents-assigned-routine-issues"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25834,7 +25823,7 @@
         "ai-coding/running-coding-agents-parallel-requires-isolating"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25896,7 +25885,7 @@
       "wrong": [
         "ai-coding/generated-code-drifts-codebase-established-conventions"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25936,14 +25925,14 @@
       "testable": 3,
       "novelty": 0.2916666666666667,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.3333333333333333,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/code-review-tools-catch-real-bugs",
         "ai-coding/current-code-review-tools-trade-precision"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25968,7 +25957,7 @@
       "wrong": [
         "ai-coding/coding-tools-amplify-experienced-engineers-far"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25997,7 +25986,7 @@
         "ai-coding/reliably-useful-generating-tests-documentation"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26013,7 +26002,7 @@
       "testable": 4,
       "novelty": 0.3301282051282051,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0.25,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/code-review-tools-catch-real-bugs",
@@ -26023,7 +26012,7 @@
       "wrong": [
         "ai-coding/coding-tools-amplify-experienced-engineers-far"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26079,7 +26068,7 @@
       "wrong": [
         "ai-coding/generated-code-drifts-codebase-established-conventions"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26109,7 +26098,7 @@
         "ai-coding/tools-slowed-experienced-open-source-developers"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26123,9 +26112,9 @@
       "rating": null,
       "assertions": 6,
       "testable": 6,
-      "novelty": 0.5287698412698413,
+      "novelty": 0.5537698412698413,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/adoption-has-not-reduced-developer-burnout",
@@ -26136,7 +26125,7 @@
         "ai-coding/most-professional-developers-now-use-coding"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26163,7 +26152,7 @@
         "ai-coding/large-share-code-major-companies-now"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26193,7 +26182,7 @@
         "ai-coding/top-down-usage-mandates-unrealistic-productivity"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26229,9 +26218,9 @@
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 0.558531746031746,
+      "novelty": 0.571031746031746,
       "redundancy": 0,
-      "thinEvidence": 0.625,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/adoption-has-not-reduced-developer-burnout",
@@ -26244,7 +26233,7 @@
         "ai-coding/most-professional-developers-now-use-coding"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26272,7 +26261,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26344,7 +26333,7 @@
       "testable": 12,
       "novelty": 0.6531250000000001,
       "redundancy": 0,
-      "thinEvidence": 0.4166666666666667,
+      "thinEvidence": 0.25,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assisted-development-shifts-developer-effort-toward",
@@ -26361,7 +26350,7 @@
         "ai-coding/updating-agent-rules-workflows-after-each"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26397,7 +26386,7 @@
         "ai-coding/vibe-coded-apps-work-prototypes-but"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26440,7 +26429,7 @@
       "testable": 8,
       "novelty": 0.3198946886446886,
       "redundancy": 0,
-      "thinEvidence": 0.625,
+      "thinEvidence": 0.5,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/acceptance-rate-counts-generated-lines-poor",
@@ -26453,7 +26442,7 @@
         "ai-coding/will-transform-software-engineering-jobs-rather"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26487,7 +26476,7 @@
         "ai-coding/measuring-engineers-token-usage-leaderboards-spend",
         "ai-coding/top-down-usage-mandates-unrealistic-productivity"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26530,7 +26519,7 @@
       "testable": 11,
       "novelty": 0.7936067404817405,
       "redundancy": 0,
-      "thinEvidence": 0.45454545454545453,
+      "thinEvidence": 0.36363636363636365,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/cheaper-software-production-will-increase-total",
@@ -26547,7 +26536,7 @@
         "ai-coding/coding-tools-amplify-experienced-engineers-far",
         "ai-coding/frontier-model-improvements-have-become-incremental"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26579,7 +26568,7 @@
         "ai-coding/measuring-engineers-token-usage-leaderboards-spend"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26593,9 +26582,9 @@
       "rating": null,
       "assertions": 9,
       "testable": 8,
-      "novelty": 1.0627164502164503,
+      "novelty": 1.0770021645021646,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.8888888888888888,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/coding-agents-deliberately-deceive-users-hide",
@@ -26606,7 +26595,7 @@
         "ai-coding/sandboxed-agents-can-escape-coordinate-through"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26622,14 +26611,14 @@
       "testable": 2,
       "novelty": 0.1142857142857143,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/fast-automated-feedback-loops-tests-type",
         "ai-coding/open-weight-coding-models-now-handle"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26674,7 +26663,7 @@
       "testable": 12,
       "novelty": 0.764233193277311,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0.4166666666666667,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assisted-changes-should-integrated-small-verifiable",
@@ -26692,7 +26681,7 @@
       "wrong": [
         "ai-coding/assisted-development-specification-not-code-should"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26720,7 +26709,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26747,7 +26736,7 @@
         "ai-coding/vibe-coded-apps-work-prototypes-but"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26785,9 +26774,9 @@
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 0.4507936507936508,
+      "novelty": 0.46329365079365076,
       "redundancy": 0,
-      "thinEvidence": 0.75,
+      "thinEvidence": 0.25,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
@@ -26800,7 +26789,7 @@
         "ai-coding/most-professional-developers-now-use-coding"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26843,7 +26832,7 @@
       "testable": 13,
       "novelty": 0.7353641456582632,
       "redundancy": 0,
-      "thinEvidence": 0.6153846153846154,
+      "thinEvidence": 0.5384615384615384,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assisted-changes-should-integrated-small-verifiable",
@@ -26862,7 +26851,7 @@
       "wrong": [
         "ai-coding/goal-loop-commands-prompt-agent-until"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26876,9 +26865,9 @@
       "rating": null,
       "assertions": 14,
       "testable": 14,
-      "novelty": 1.220873015873016,
+      "novelty": 1.233373015873016,
       "redundancy": 0,
-      "thinEvidence": 0.35714285714285715,
+      "thinEvidence": 0.21428571428571427,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/acceptance-rate-counts-generated-lines-poor",
@@ -26898,7 +26887,7 @@
       "wrong": [
         "ai-coding/large-share-code-major-companies-now"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26907,12 +26896,12 @@
       "channel": "Cloudflare Developers",
       "topic": "ai-coding",
       "watched": false,
-      "score": 0.7857142857142857,
+      "score": 0.8571428571428571,
       "scaled": 2,
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 1.3642045454545455,
+      "novelty": 1.4454545454545453,
       "redundancy": 0,
       "thinEvidence": 0.7142857142857143,
       "worthWatching": "new and sound",
@@ -26926,7 +26915,7 @@
         "ai-coding/splitting-agent-narrowly-scoped-sub-agents"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26957,7 +26946,7 @@
       "wrong": [
         "ai-coding/much-developer-use-agentic-tools-driven"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26973,7 +26962,7 @@
       "testable": 8,
       "novelty": 0.3654395604395604,
       "redundancy": 0,
-      "thinEvidence": 0.4444444444444444,
+      "thinEvidence": 0.3333333333333333,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/accelerating-merger-testing-operations-product-work",
@@ -26986,7 +26975,7 @@
         "ai-coding/speeds-generation-human-attention-review-understanding"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -27024,7 +27013,7 @@
       "testable": 11,
       "novelty": 1.5183035714285715,
       "redundancy": 0,
-      "thinEvidence": 0.3333333333333333,
+      "thinEvidence": 0.25,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/coding-agents-ignore-costs-not-visible",
@@ -27040,7 +27029,7 @@
         "ai-coding/specs-code-workflows-ignore-generated-not"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -27054,9 +27043,9 @@
       "rating": null,
       "assertions": 9,
       "testable": 9,
-      "novelty": 0.9493551587301589,
+      "novelty": 0.9618551587301589,
       "redundancy": 0,
-      "thinEvidence": 0.3333333333333333,
+      "thinEvidence": 0.2222222222222222,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/developers-overestimate-how-much-tools-speed",
@@ -27070,7 +27059,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -27086,7 +27075,7 @@
       "testable": 11,
       "novelty": 0.6975378787878788,
       "redundancy": 0,
-      "thinEvidence": 0.5454545454545454,
+      "thinEvidence": 0.45454545454545453,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/agents-run-permission-prompts-disabled-should",
@@ -27103,7 +27092,7 @@
         "ai-coding/ide-based-assistants-like-cursor-obsolete",
         "ai-coding/specs-code-workflows-ignore-generated-not"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     }
   ],

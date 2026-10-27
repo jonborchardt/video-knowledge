@@ -1,0 +1,1012 @@
+Received November 30, 2021, accepted February 16, 2022, date of publication February 18, 2022, date of current version February 28, 2022.
+Digital Object Identifier 10.1109/ACCESS.2022.3152803
+
+Monolithic vs. Microservice Architecture:
+A Performance and Scalability Evaluation
+
+GRZEGORZ BLINOWSKI 1, (Member, IEEE), ANNA OJDOWSKA2, AND ADAM PRZYBYŁEK                                             2
+
+1Institute of Computer Science, Warsaw University of Technology, 00-665 Warsaw, Poland
+2Faculty of Electronics, Telecommunications and Informatics, Gdańsk University of Technology, 80-233 Gdańsk, Poland
+
+Corresponding author: Grzegorz Blinowski (grzegorz.blinowski@pw.edu.pl)
+
+ABSTRACT Context. Since its proclamation in 2012, microservices-based architecture has gained
+widespread popularity due to its advantages, such as improved availability, fault tolerance, and horizontal
+scalability, as well as greater software development agility. Motivation. Yet, refactoring a monolith to
+microservices by smaller businesses and expecting that the migration will bring beneﬁts similar to those
+reported by top global companies, such as Netﬂix, Amazon, eBay, and Uber, might be an illusion. Indeed,
+for systems that do not have thousands of concurrent users and can be scaled vertically, the beneﬁts
+of such migration have not been sufﬁciently investigated, while the existing evidence is inconsistent.
+Objective. The purpose of this paper is to compare the performance and scalability of monolithic and
+microservice architectures on a reference web application. Method. The application was implemented in
+four different versions, covering not only two different architectural styles (monolith vs. microservices)
+but also two different implementation technologies (Java vs. C# .NET). Next, we conducted a series of
+controlled experiments in three different deployment environments (local, Azure Spring Cloud, and Azure
+App Service). Findings. The key lessons learned are as follows: (1) on a single machine, a monolith performs
+better than its microservice-based counterpart; (2) The Java platform makes better use of powerful machines
+in case of computation-intensive services when compared to .NET; the technology platform effect is reversed
+when non-computationally intensive services are run on machines with low computational capacity; (3)
+vertical scaling is more cost-effective than horizontal scaling in the Azure cloud; (4) scaling out beyond a
+certain number of instances degrades the application performance; (5) implementation technology (either
+Java or C# .NET) does not have a noticeable impact on the scalability performance.
+
+INDEX TERMS Software architecture, microservices, monolith, software measurement, benchmarking,
+performance, scalability, cloud computing, Azure.
+
+I. INTRODUCTION                                                         with end-users and external systems via different inter-
+The evolution of software architectures has been driven by              faces, including HTTP(S)/HTML, Web services, and REST
+the need to achieve a better separation of concerns. The term           API [5].
+separation of concerns refers to the ability to decompose and
+organise systems into logically cohesive and loosely-coupled               A microservice architecture decomposes a business
+modules that hide their implementation from each other and              domain into small, consistently bounded contexts imple-
+present services through well-deﬁned interfaces [1], [2].               mented by autonomous, self-contained, loosely coupled, and
+                                                                        independently deployable services [6]–[8]. One of the pio-
+   Nowadays, two software engineering paradigms dominate                neers of microservices was Netﬂix which began moving
+modern enterprise application development: monolithic and               away from its monolithic architecture in 2009 when the term
+microservice-based architecture [3]. The ﬁrst is a traditional          microservice did not even exist. The term was coined by a
+approach in which an application is built with a single                 group of software architects in 2011 and ofﬁcially announced
+code base that includes multiple services. These services               a year later at the 33rd Degree Conference in Kraków [6].
+are not independently executable [4]. They communicate                  However, it did not start gaining in popularity until 2014,
+                                                                        when Lewis and Fowler published their blog on the topic [6],
+   The associate editor coordinating the review of this manuscript and  while Netﬂix shared their expertise from a successful tran-
+                                                                        sition [9] paving the way for other companies. Since that
+approving it for publication was Muhammad Ali Babar .
+
+VOLUME 10, 2022 This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see https://creativecommons.org/licenses/by/4.0/  20357
+G. Blinowski et al.: Monolithic vs. Microservice Architecture: Performance and Scalability Evaluation
+
+time, microservices have received signiﬁcant attention from          • (RQ2) Which of the two architectures and scaling
+both academia and industry [4], [10]–[18], while the spread            approaches should be chosen to best beneﬁt an appli-
+of container technologies, such as Kubernetes and Docker               cation from scaling?
+[19]–[22] has helped this new architectural style to gain
+even more momentum, especially in cloud-based environ-               • (RQ3) In what circumstances do the implementation
+ments [23]–[25]. Indeed, microservices have been success-              technologies (Java vs. C# .NET) have any performance
+fully adopted by global companies, such as Amazon, eBay,               advantages or disadvantages?
+Zalando, Spotify, Uber, Airbnb, LinkedIn, Twitter, Groupon,
+and Coca-Cola.                                                    B. OUTLINE OF THE PAPER
+                                                                  The rest of the paper is organised as follows. The follow-
+A. MOTIVATION AND PROBLEM STATEMENT                               ing section describes monolithic and microservices archi-
+Inspired by success stories of tech giants, many small            tectural styles, and compares and contrasts their advantages
+companies or startups are considering joining the trend           and disadvantages. Section 3 discusses related work. The
+and are adopting microservices as a game changer. They            research method and the experimental design are explained in
+expect that it will help them improve scalability, availability,  Section 4. This is followed by Section 5, which contains the
+maintainability, and fault tolerance of deployed applications     experimental results. In Section 6, we discuss our ﬁndings.
+[26], [27] (which have been reported as difﬁcult to achieve in    In Section 7, we elaborate on threats to validity that are
+IT systems [28], [29]). Yet, microservice-based applications      relevant to our study and how we addressed them. Finally,
+come with their own challenges, including:                        Section 8 concludes the study along with suggestions for
+                                                                  future research.
+   • identifying optimal microservice boundaries [30], [31];
+   • orchestration of complex services (the complexity of         II. BACKGROUND
+                                                                  In the subsequent sections, we present more details on both
+     microservices applications is pushed from the compo-         the similarities and differences and the pros and cons of the
+     nents to the integration level [15], [23]);                  two architectural styles, as well as two primary approaches to
+   • maintaining data consistency and transaction manage-         application scaling.
+     ment across microservices [15], [19], [32], [33];
+   • the difﬁculty in understanding the system holisti-           A. MONOLITHIC ARCHITECTURE
+     cally [7], [27];                                             Enterprise applications are often internally built according
+   • increased consumption of computing resources                 to the classic three-tier model and hence consist of: (1) user
+     [7], [11], [17].                                             interface code (typically HTML pages and JavaScript running
+                                                                  in a browser on the user’s machine); (2) server-side business
+For small scale systems, these challenges may outweigh the        logic which handles HTTP requests, executes domain logic,
+beneﬁts [27].                                                     retrieves and updates data from the database, and selects
+                                                                  and populates HTML views to be sent to the browser; and
+   On the contrary, the aforementioned global companies           (3) database backend [34]. The server-side application is a
+moved to microservices in response to the growth pressures        monolith - a single logical executable [6].
+they faced rather than jumping on the latest trend [32].
+The volume of activity their systems performed outgrew the           From the operating system’s point of view, a mono-
+capacity of original technology choices, while the sheer size     lithic application runs as a single process in the application
+of the systems enormously slowed down the development             server’s environment. When a new version of an application is
+carried out by multiple teams [30]. Therefore, microservices      deployed, it replaces the previous version of the application in
+have been a compelling solution for them despite the added        a single step (for example, to deploy an application under the
+complexity of building and running a ﬁne-grained distributed      JEE Application Server, a single EAR/WAR ﬁle containing
+application [32].                                                 the application executable must be copied to a designated
+                                                                  folder).
+   On top of that, there are thousands of successful businesses
+around the world that are built on monolithic applications.          The most signiﬁcant advantage of the monolithic archi-
+So when does a company need microservices? Unfortunately,         tecture is its simplicity – in comparison to distributed appli-
+there is limited knowledge on this topic due to a lack of         cations of various genres, monolithic ones are much easier
+empirical evidence. Having witnessed this gap, we set forth       to test, deploy, debug and monitor. All data is retained in
+to compare the performance and scalability of monolithic and      one database with no need for its synchronization; all inter-
+microservice architectures in the context of a system that does   nal communication is done via intra-process mechanisms.
+not have thousands of concurrent users and can be scaled          Hence it is fast and does not suffer from problems typi-
+vertically. The following research questions were posed to        cal to inter-process communication (IPC). The monolithic
+guide the study:                                                  approach is a natural and ﬁrst-choice approach to building
+                                                                  an application – all logic for handling requests runs in a
+   • (RQ1) What is the performance difference between a           single process. The basic features of the development team’s
+     monolithic application versus a microservice
+     application?                                                                                                                                                  VOLUME 10, 2022
+
+20358
+G. Blinowski et al.: Monolithic vs. Microservice Architecture: Performance and Scalability Evaluation
+
+preferred language can be used to structure the application    ‘‘heavy-weight’’ facilities of message routing, ﬁltering, and
+into classes, functions, and namespaces.                       transformation. The microservice approach favors: ‘‘smart
+                                                               endpoints and dumb pipes’’ [3]. There is no standard
+   However, as the application’s size and complexity grow,     for communication or transport mechanisms for microser-
+problems start to arise – modifying the application’s source   vices. Microservices communicate with each other using
+becomes harder as more and more complex code starts to         well-standardized lightweight internet protocols, such as
+behave in unexpected ways. Changes in one module may           HTTP and REST [5], or messaging protocols, such as JMS
+lead to unexpected behavior in other modules and a cascade     or AMQP.
+of errors. The very size of the monolith results in longer
+start-up time, which in turn slows down the development           The most attractive feature of the microservice architecture
+and becomes an obstacle to continuous deployment. Over         is the decomposition of complex applications into smaller
+time it is increasingly harder for the development team to     components which are easier to develop, manage and main-
+keep changes that related to a particular module to only       tain than a single monolith application [40]. As long as
+affect this very module, and in effect, to retain a mod-       the public API does not change, internal modiﬁcations of
+ular structure of the application. Also, as the application    one service are more straightforward, easier, and less costly
+grows, the number of developers increases, which often leads   than in the case of a similar change in a traditional model.
+to unequal workforce utilization and, in effect, losses in     Microservices are autonomous and communicate via open
+productivity [34].                                             protocols, hence they can be developed fairly independently
+                                                               and even with different technologies [5], [41]–[43].
+B. MICROSERVICE ARCHITECTURE
+One of the ﬁrst attempts to describe the microservice archi-      Microservice-based applications scale well horizontally,
+tectural style was by Lewis and Fowler [6]. In their famous    not only in the technical sense, but also concerning the
+blog post, they deﬁned this new architectural term as ‘‘an     organization’s structuring of developer teams, which can be
+approach to developing a single application as a suite of      kept smaller and more agile [5], [22], [44], [45]. Efforts to
+small services, each running in its own process and com-       seamlessly integrate such options into adaptive business pro-
+municating with lightweight mechanisms, often an HTTP          cess management have already found their way into business
+resource API’’. Each microservice contains its own user        practice [46]. Furthermore, splitting large applications into
+handling functions, business logic, and backend functions.     individual microservices provides the next degree of indepen-
+Microservice may also include its own database service (but    dence to agile teams [7], [25], which supports scaling agile
+it is also possible to share a single backend among multiple   methods. Each team may work on different microservices and
+microservices).                                                develops user stories that affect only their microservices [44].
+                                                               As long as a team does not change the contracts among ser-
+   The main principles of this architecture are:               vices, a decision can be made within the service team rather
+                                                               than among several teams working on a large monolithic
+   • Single responsibility per service – according to the      application [7]. Accordingly, the adoption of microservice
+     SOLID principles, a single unit should only have one      architecture implies reducing the need for inter-team coor-
+     responsibility and at no point should two units share     dination, which is a serious challenge in large-scale software
+     one responsibility or one unit have more than one         development [47]–[52].
+     responsibility.
+                                                                  Another beneﬁt of microservice applications is that
+   • Microservices are autonomous – they are self-contained    its loosely coupled architecture makes them more fault-
+     and independently deployable services fully responsible   tolerant [37] – the failure of one component does not nec-
+     for executing a given business [33], [35]–[37]. Because   essarily result in the unavailability of the whole system,
+     of their autonomy, they contain all dependencies such     as functioning services can still fulﬁll user requests. It is
+     as: libraries, the execution environments – web servers   also possible to identify critical business functionality and
+     and containers or virtual machines. Thereby, microser-    deploy corresponding microservices in a more redundant
+     vices increase the possibility of monetization of system  environment.
+     parts, as access to relevant microservice APIs can be
+     charged [38].                                                Apart from numerous advantages, the microservice archi-
+                                                               tecture has its caveats and disadvantages mainly related to
+   • Services are ﬁrst-class citizens – they expose service    its distributed nature. Deployment, scaling, and monitoring
+     endpoints as APIs and abstract all their implementation   of a multi-service system is a more complex task than in
+     details. The internal structure: implementation logic,    the case of a monolithic application. For this reason, various
+     architecture, and technologies (including programming     automatization procedures in the continuous integration /
+     language, database, etc.) are completely hidden behind    continuous delivery (CI/CD) pipeline [53], monitoring, and
+     the API.                                                  demand-based autoscaling are used in the development of
+                                                               such applications [6], [34]. To fully take advantage of short
+   It is worth mentioning that the microservice communica-     development-to-operations, life-cycle testing must also be
+tion paradigm differs signiﬁcantly from approaches based       automated, which is a more challenging task in distributed
+on Service Oriented Architecture (SOA) [39] such as Enter-     environments [42], [54]. Another challenge lies in the design
+prise Service Bus (ESB), which include sophisticated and
+                                                                                                                                                              20359
+VOLUME 10, 2022
+G. Blinowski et al.: Monolithic vs. Microservice Architecture: Performance and Scalability Evaluation
+
+of data management facilities – the principles of microservice    III. RELATED WORK
+architecture state that maximum service isolation is preferred.   A. BENCHMARKING APPLICATIONS FOR COMPARING
+Hence, multiple independent database systems are introduced       MONOLITHIC VERSUS MICROSERVICE ARCHITECTURE
+into the distributed application, increasing complexity and       To compare the performance and scalability of the two
+reducing manageability [34].                                      investigated architectures, we need both monolithic and
+                                                                  microservices versions of the same application. When
+   In this work, we focus on application performance –            exhaustively searching the web, Aderaldo et al. [23] found
+IPC required between microservice components intro-               only two such systems: Acme Air and MusicStore. Three
+duces substantial overhead when compared to intra-process         years later, Francesco et al. [15] conducted a systematic map-
+communication (function calls and method invocations) used        ping study to characterize state of the art on architecting
+in monolithic applications. IPC is implemented as an oper-        with microservices. After screening 103 primary studies, they
+ating system’s kernel service. In most cases, it requires data    identiﬁed only one benchmarking application, namely Acme
+copying between user and kernel space, and hence it reduces       Air. Consequently, they called for developing open-source
+(in many cases signiﬁcantly) application performance. Appli-      benchmarking applications that can be used for comparing
+cations that do not service signiﬁcant user trafﬁc will show      monolithic versus microservice architecture. In addition,
+degraded throughput and response times when migrated from         we identiﬁed one more benchmarking application, namely
+monolithic to a distributed architecture. Only as the user        JHipster. All three aforementioned applications are shortly
+request increases, proper scaling of a microservice-based         discussed below.
+application can outweigh communication overhead – study-
+ing of this phenomenon is, in fact, the major topic of our work.     MusicStore was originally developed by Microsoft to
+                                                                  demonstrate ASP.NET components. Later on, it was bro-
+C. VERTICAL AND HORIZONTAL SCALING                                ken up into multiple independent services by the Steeltoe
+Scalability is the property of a system to handle a growing       team1 to illustrate how to use their open source library aimed
+amount of work by adding resources to the system [55].            at developing cloud native .NET microservice applications.
+The manner in which additional resources are added deﬁnes         Unfortunately, the original monolithic implementation has
+which of two scaling approaches is taken [8], [14], [56],         not been updated since 2018, while its GitHub repository
+[57] - vertical scaling or horizontal scaling. The former,        has been archived. Seeing that the monolith uses obsolete
+also known as scaling up, refers to adding more resources         technologies, whereas the microservice-based implementa-
+(CPU, memory, and storage) to an existing machine. It is the      tion uses the third party library, MusicStore is not a suitable
+more straightforward approach, but it is limited by the most      benchmark application.
+powerful hardware available on the market [56]. As for the
+Azure App Service, the most powerful VM instance avail-              Acme Air2 simulates the website for a ﬁctitious air-
+able has only eight cores and 32 GB of RAM. Additionally,         line company. It is available not only in two architectural
+beyond a speciﬁc conﬁguration of hardware resources, costs        styles but also in two different languages (i.e., Java EE and
+increase tremendously. It is worth mentioning that in cloud       Node.js). Besides, it has already been frequently used and
+platforms, vertical scaling allows for adding or removing         discussed in the microservices research literature [59], [60].
+virtual resources to a running virtual machine (VM) [58], thus    Unfortunately, Acme Air has also not been updated since
+it does not lead to downtime.                                     August 2015, while Java has evolved signiﬁcantly in that
+                                                                  time. Accordingly, this application also cannot be used as a
+   In contrast, horizontal scaling, also known as scaling out,    benchmark.
+refers to adding more machines and distributing the work-
+load. It is more complex because it has an inﬂuence on the           JHipster [41] is a development platform utilized to gen-
+application architecture, but can offer scales that far exceed    erate web applications. It is implemented with Java Spring
+those that are possible with vertical scaling [56]. Horizontal    Boot and Angular JS frameworks. Its source code is publicly
+scaling is more common with microservice applications [36],       available on GitHub in both monolithic and microservice
+even though a monolith may be also scaled out by running          versions.3 Nonetheless, when the Java version of our bench-
+many instances behind a load-balancer [6]. Nevertheless,          mark application was developed [61], we were not aware of
+scaling out a monolithic application may not be so effective      JHipster, as the paper that popularizes it was published later.
+because it commonly offers a lot of services - some of them
+more popular than others. In order to increase the availability   B. PERFORMANCE EVALUATION OF MONOLITHIC VERSUS
+of a monolithic application, the entire application needs to be   MICROSERVICE ARCHITECTURE
+replicated. This leads to over scaling in non-popular services,   The topic of performance and cost comparison of microser-
+which consume server resources even when they are idle,           vice and monolithic applications has already been tackled
+and in effect results in sub-optimal resource utilization [59].   in the literature. In [41] Al-Debagy and Martinek compared
+On the other hand, in order to increase the availability of       the performance of an application built both in monolithic
+a microservice application, only highly demanded microser-
+vices that consume a large amount of server resources will           1https://github.com/SteeltoeOSS/Samples/tree/main/MusicStore
+get more instances [18].                                             2https://github.com/acmeair/acmeair
+                                                                     3https://github.com/eugenp/tutorials/tree/master/jhipster
+20360
+                                                                                                                                                                   VOLUME 10, 2022
+G. Blinowski et al.: Monolithic vs. Microservice Architecture: Performance and Scalability Evaluation
+TABLE 1. Independent and dependent variables by experiment.
+
+and microservice style. The application was developed with      on a Node.js application server and by 2.69x on a Java EE
+Spring Boot and AngularJS with Apache JMeter used as            application server.
+a testbed. Tests were conducted in a local environment.
+Response time and throughput were used as performance              As this short review shows, the performance test results
+metrics. In concurrency testing, the monolithic version of the  conducted with different assumptions, and in environments
+application showed better performance by 6% in throughput       which are difﬁcult to relate to each other give conﬂicting
+with respect to the microservice-based variant, while in the    results. Some show signiﬁcant performance improvement
+load testing scenario, there was no signiﬁcant difference       for microservice, while others for monolithic architectures.
+between the two approaches. It is worth noting that in work     In this work, we present a more comprehensive benchmark
+quoted above, the application ran in a local (i.e., non-cloud)  environment focusing on the cloud deployment only, and
+environment, whereby neither vertical nor horizontal scaling    spanning multiple variants of differently scaled deployments
+effects were evaluated.                                         – more information follows in the next section.
+
+   In [62] Garces et al. have conducted a cost comparison of    IV. METHOD
+running web applications in three architecture variants: using  A. RESEARCH DESIGN
+both monolithic and client-operated microservice under AWS      To answer the research questions, we carried out three con-
+EC2 cloud as well as a provider-operated microservice under     trolled experiments. Each experiment was conducted in a
+AWS Lambda cloud environment. The authors used Java             different deployment environment (see Table 1) and inves-
+technology with Play and Jax-RX frameworks and Node.js.         tigated the effects of several factors (i.e. independent vari-
+The monolithic architecture was used as a baseline, to which    ables), which varied among the deployment environments,
+subsequent microservice tests referred. The measure that was    on performance and infrastructure cost. Performance was
+used was the maximum number of requests per minute sup-         calculated as the number of requests processed per second.
+ported by a given architecture. Test results have shown that    In turn, infrastructure cost was determined by the number and
+client-operated microservices indeed reduce infrastructure      type of virtual machine instances that were used to deploy an
+costs by 13% in comparison to standard monolithic archi-        application.
+tectures and in the case of services speciﬁcally designed for
+optimal scaling in the provider-operated cloud environment,        When it comes to our local environment, we considered
+infrastructure costs were reduced by 77%.                       the effects of architecture (monolith vs. microservices), ser-
+                                                                vice (City vs. Route), and technology (Java vs. C# .NET).
+   In [59] Ueda et al. analyzed the behavior of an application  Accordingly, we used a 2 × 2 × 2 factorial design. In a
+implemented as a microservice and monolithic variant for        factorial design, each level of one factor is combined with
+two popular language runtimes – Node.js and Java Enterprise     each level of the others to produce all possible combinations.
+Edition (EE) using Acme Air benchmark suite and Apache          Each combination, then, becomes a condition in the experi-
+JMeter for performance data collection. Additionally, tests     ment [63]. Note, that the infrastructure cost was the same for
+were conducted both for native process and Docker container     all experimental runs in the local environment as the same
+deployments. Throughput and cycles per instruction (CPI)        hardware conﬁguration was used, thus we did not calculate it.
+were used as performance metrics; the test environment
+was equivalent to a private cloud deployment. The authors          When it comes to both cloud experiments, they involved
+observed a signiﬁcant overhead in the microservice architec-    two more factors:
+ture – on the same hardware conﬁguration the performance
+of the microservice model was 79% lower with respect to            • VM type - as for Azure Spring Cloud, it speciﬁes the
+the monolithic model. The microservice model spent a more            number of vCPU the amount of memory for a single VM
+signiﬁcant amount of time in runtime libraries to process one        instance, while in the case of Azure App Service, it refers
+client request than the monolithic model, namely – 4.22x             to a generic description of a VM;
+
+VOLUME 10, 2022                                                    • #instances - denotes the number of instances of VM
+                                                                     type.
+
+                                                                                                                                                               20361
+G. Blinowski et al.: Monolithic vs. Microservice Architecture: Performance and Scalability Evaluation
+
+   Since all combinations of levels for all factors would
+require a large number of experimental runs and a signif-
+icant amount of resources, a full factorial design was not
+practical in that case. Besides, not all possible combinations
+of levels across all factors were available or interesting.
+For example, as for B1 machines of Azure App Service,
+the maximum number of instances was three, while Azure
+Spring Cloud supported only Java Spring Boot applications.
+Thereby, we used a fractional factorial design consisting of
+an adequately selected subset of the experimental runs of a
+full factorial design. All scenarios, as well as independent and
+dependent variables, are discussed in detail in the following
+subsections.
+
+B. EXPERIMENTAL OBJECT                                                  FIGURE 1. City and route services - response data and basic
+Since none of the existing benchmarking applications were               communication scheme.
+suitable to compare the performance of the investigated archi-
+tectures fairly, we developed a new one. Our benchmark-                 FIGURE 2. Monolithic and microservice logical architectures.
+ing application is implemented in four functionally identical
+versions, covering not only two different architectural styles          gateway is used to direct requests to the responsible service,
+(monolith and microservices) but also two leading technolo-             which is a typical solution for this type of architecture.
+gies intended for the development of server-side software:
+                                                                           The application was tested in a local (i.e., non-cloud)
+   • Java – implemented in Java 84 with Spring Boot frame-              environment to established baselines and in the Azure cloud.
+     work 2.3.0,                                                        In the case of the Java version of the application, we have
+                                                                        tested two deployment variants: Azure Spring Cloud and
+   • .NET – implemented in C# version 8 with ASP.NET                    Azure App Service. In the case of the monolithic version,
+     Core framework 3.1.                                                there is no difference between the local and cloud version.
+                                                                        In the case of microservice variants, additional components
+   The rationale behind the selection above is the following:           were added to enable horizontal scaling, namely – the appli-
+Spring Boot is the most dominant Java framework today [65],             cation was extended to use Sprint Cloud framework, which
+and is deﬁnitely the best documented and most common in
+cloud deployments [8]; ASP.NET Core is the new version of                                                                                                                VOLUME 10, 2022
+the popular and mature ASP.NET programming environment,
+its codebase is licensed as open-source and available on
+GitHub. Similar to Spring, it is well documented and has a
+large developer community backing it. It is also the ﬁrst and
+natural choice for deployments of microservice applications
+in the Azure cloud.
+
+   All versions of our application expose two REST endpoints
+that return serialized JSON objects as shown on Figure 1. The
+REST endpoints correspond to two services:
+
+   • City service – simulates a simple single object query, the
+     input contains city name string, while response contains
+     city data (id, name, state and population)
+
+   • Route service – simulates computationally intensive
+     query, the output contains a path (an ordered series of
+     points) being the shortest route between 10,000 ran-
+     domly chosen points, each time the route is computed by
+     the heuristic algorithm of the traveling salesman class.
+
+   The basic scheme of monolithic and microservice versions
+is shown in Figure 2 – in the case of the monolith, the
+REST API directs client queries directly to the application’s
+business logic. In the case of the microservice version, an API
+
+   4The annual survey on the state of the JVM ecosystem conducted in
+2020 [64], shows that 64% of developers still use Java 8 in production
+environments.
+
+20362
+G. Blinowski et al.: Monolithic vs. Microservice Architecture: Performance and Scalability Evaluation
+
+includes: Zuul load balancer, Spring Cloud Conﬁg, and                TABLE 2. Deployment scenarios for Azure spring cloud.
+Eureka5 – a registry providing service discovery.
+
+   In the case of Java, the difference between Azure Spring
+Cloud and Azure App Service deployment is that the latter
+offers a ‘‘built-in’’ application gateway component which is
+a part of the framework. Still, in the case of Spring cloud, the
+gateway must be deployed manually as a service provided
+by the user. The architecture of the microservice version of
+our test application under Azure Sprint Cloud is shown in
+Figure 3.
+
+                                                                     calculation takes into account provider’s overage memory
+                                                                     price (0.00825 USD per GB-hour) and overage vCPU price
+                                                                     (0.0783 USD per vCPU-hour). Note, that ‘‘24H Effective
+                                                                     Cost’’ refers to a total cost, including the cost of API Gateway
+                                                                     service conﬁgured with 1 CPU core and 1 GB RAM.
+
+                                                                     3) AZURE APP SERVICE
+                                                                     In the case of Azure App Service, the cost is based on the size
+                                                                     and number of instances according to the pricing tiers shown
+                                                                     in Table 3. (Please note that values from the ‘‘Identiﬁer’’ col-
+                                                                     umn will be further used in this work to designate hardware
+                                                                     resource conﬁgurations).
+
+                                                                     TABLE 3. Azure app service tiers.
+
+FIGURE 3. Microservices application deployed to Azure spring cloud.
+
+C. EXPERIMENTAL SETUP                                                   In the case of the total cost of microservice variants,
+1) LOCAL ENVIRONMENT                                                 we must also account for resources needed by the application
+Local tests were conducted on a PC machine running under             gateway, which is 0.025 USD per work-hour (the application
+Microsoft Windows version 10 Enterprise with the fol-                gateway needs only one core and 1 GB RAM).
+lowing hardware parameters: Intel(R) Core(TM) i7-9850H
+CPU 2.60GHz, six physical, 12 logical cores, and 32 GB                  Different deployment variants with respect to architec-
+RAM (Dell Precision 7540). During the local tests, only one          ture, technology and resources which we tested are listed in
+instance of each service without scaling was used.                   Table 4. ‘‘24H Cost’’, is the cost of a 24 hour continuous run
+                                                                     of the application with all required components.
+2) AZURE SPRING CLOUD ENVIRONMENT
+Test environment conﬁgurations for Azure Spring Cloud are            D. PROCEDURE
+shown in Table 2. Unfortunately, Azure Spring Cloud does             We have used Apache JMeter6 as a testing tool. JMeter is a
+not offer ﬁne-grained resource scaling. In the Standard Tier,        popular open-source software tool that can simulate a load
+if the size of consumed resources does not exceed 16 cores           on a server, group of servers, network, or object. We have
+and 32 GB RAM, Azure Spring Cloud charges a ﬁxed fee                 selected it because of its ﬂexibility – it allows us to precisely
+per hour. It means that according to the pricing list available      conﬁgure the load conﬁguration [66], i.e.:
+to the US East Region in September 2020, the infrastruc-
+ture costs of running our application in each deployment                • the total number of requests,
+scenario were ﬁxed at 1.65 USD per hour (39.6 USD per                   • the number of threads that will be used to execute the
+24h). Thereby, to compare the cost effectiveness of each
+deployment scenario, we calculated ‘‘24H Effective Cost’’ by              test, which simulates the number of users accessing the
+assuming ﬁne-grained resource prices as follows: 0.08 USD                 application simultaneously,
+per core per hour and 0.01 USD per 1GB RAM per hour. This               • the method of result veriﬁcation.
+
+   5https://github.com/Netﬂix/eureka                                    6https://jmeter.apache.org
+
+VOLUME 10, 2022                                                                                                                                                     20363
+                                                      G. Blinowski et al.: Monolithic vs. Microservice Architecture: Performance and Scalability Evaluation
+
+TABLE 4. Deployment scenarios for Azure app service.               20 times. Since the cloud environments do not necessarily
+                                                                   guarantee stable performance due to many factors related to
+                                                                   network stability, virtual server availability, etc. – to com-
+                                                                   pensate for various unexpected variations, we repeated each
+                                                                   test series ﬁve times, computed the median of the results, and
+                                                                   ﬁnally, we chose the test with the median being the median
+                                                                   of obtained medians of all test runs. The validity of such an
+                                                                   approach is discussed in ‘‘Software Microbenchmarking in
+                                                                   the Cloud’’ work by Laaber et al. [67].
+
+                                                                      Note that when testing the performance of the microservice-
+                                                                   based application, only one service was running. This is
+                                                                   a common approach when it comes to horizontal scaling
+                                                                   of microservices – each popular microservice gets its own
+                                                                   virtual machines according to the associated load [18], [68].
+                                                                   Nevertheless, this approach slightly handicapped the mono-
+                                                                   lithic application, where both services were running at one
+                                                                   time even though either was idle.
+
+                                                                   V. RESULTS
+                                                                   In this chapter, we present and analyze the results of applica-
+                                                                   tion performance and scalability tests.
+
+                                                                   A. LOCAL ENVIRONMENT
+                                                                   Tests executed in a local (non-cloud) environment let us
+                                                                   establish a performance baseline. In Figure 4 we present
+                                                                   throughput for monolithic and microservice applications
+                                                                   written in .NET and Java, both for City and Route services.
+
+   As the performance measure, we have used throughput,            FIGURE 4. Throughput in the local environment, city service (left), route
+which is calculated by JMeter as the number of requests            service (right). Hereinafter, MS denotes microservices.
+processed by the server, divided by the total time in seconds
+to process the requests. The time is measured from the start          In the microservice application, requests are passed
+of the ﬁrst request to the end of the last request. This includes  between API Gateway and the backend service, which
+any intervals between requests, as it is supposed to represent     imposes a communication overhead that deteriorates the
+the load on the server.                                            performance. As for the computationally intensive Route
+                                                                   service, this overhead is minor compared to the service exe-
+   Throughput is the most commonly used measure in similar         cution time. Therefore, throughput is only slightly higher
+works – see for example [42], [59]. Other measures include         for the monolithic application. In contrast, in the case of
+response time and cycles per instruction, CPI) but throughput      non-computationally intensive City service, the CPU time
+is best suited when we also want to compare the overall            required to execute the service may be the same order of
+costs of running the application in a given technology and         magnitude as the CPU time, to pass the data to and from the
+conﬁguration.                                                      backend service. Accordingly, the monolith system handled
+
+   To gather performance data, we used the following test                                                                                                           VOLUME 10, 2022
+procedure: the City service was invoked 1000 times, the Route
+service was invoked 100 times, the number of threads was set
+to 10 for both scenarios. Each of the test runs was repeated
+
+20364
+G. Blinowski et al.: Monolithic vs. Microservice Architecture: Performance and Scalability Evaluation
+
+on average over 2 times more requests in the .NET version,               FIGURE 5. Throughput in the Azure spring cloud environment—city
+and 1.37 times more requests in the Java version.                        application.
+
+   Comparing .NET and Java, we can conclude, that in the
+case of the non-computationally intensive City service, .NET
+is more efﬁcient in communication request handling than
+Java. This can be attributed to a high level of performance
+optimization in .NET Core libraries, especially regarding net-
+work request handling7 and JSON data serialization.8,9 On
+the other hand, with the Route service, Java implementations
+show better throughput than .NET both for monolithic and
+microservice applications – respectively by 5% and 1.5%.
+Some insight into CPU utilization gives an answer regarding
+better Java throughput in this case – CPU usage in .NET vari-
+ant was noticeably lower; hence we can conclude that Java,
+in the case of computationally intensive applications, is more
+aggressive in allocating this resource to the application (RAM
+utilization was similar for both cases).
+
+B. AZURE SPRING CLOUD ENVIRONMENT                                        FIGURE 6. Throughput and cost in the Azure spring cloud
+As Spring is a Java-speciﬁc framework, only the Java version             environment—city application.
+of the application was tested in the Azure Spring Cloud
+environment. We tested each service under four different                    The Route test gives different results – see Figure 7 –
+CPU/RAM resource allocation variants. The highest through-               the best performing conﬁguration is that of six instances
+put in City service 5 was achieved by microservice conﬁgured             of 1 CPU & 1 GB RAM machines, good throughput results
+on two instances of 2 CPU & 2 GB RAM machines; next                      were also obtained by two instances of 2 CPU & 2 GB RAM
+was the conﬁguration of six instances of 1 CPU & 1 GB                    and the monolithic version. Comparing these results to the
+RAM, whereas the worst performer was one microservice                    previous ones, we can conclude that in the case of computa-
+instance conﬁgured with 1 CPU & 1 GB RAM. We can                         tionally intensive applications, positive results of horizontal
+notice that in the case of this lightweight application, we can          scaling are more apparent – throughput scales almost linearly
+achieve throughput improvement when a higher number (six                 with the number of instances. Also, there is no substantial
+in this case) of instances is used – throughput of MSx3                  performance difference between monolithic and microservice
+was comparable to the throughput of the monolithic variant.              applications with the same CPU resources.
+We can also state that adding CPU and RAM to the mono-
+lithic variant improves performance only to a speciﬁc limit –               Route service daily cost to performance ratio is shown in
+compare 4 CPU & 6 GB RAM and 4 CPU & 6 GB RAM.                           Figure 8. In this case, three microservice conﬁgurations were
+Finally, the best throughput is achieved in a conﬁguration               Pareto dominated, whereas their resource-corresponding
+scaled vertically and horizontally – MSx2 2 CPU & 2 GB                   monolith versions were Pareto efﬁcient. It is worth noting
+RAM.                                                                     that MSx6 1 CPU & 1 GB RAM turned out to be the most
+                                                                         powerful conﬁguration, but MSx2 2 CPU & 2 GB RAM and
+   Application daily cost vs. performance is shown in                    monolithic version with 4 CPU & 6 GB RAM delivered only
+Figure 6, where the pricing was calculated according to data             slightly lower performance with substantially lower cost.
+presented in Table 2. Here, and in subsequent similar cases,
+we always use the obtained throughput’s median for a cost                C. AZURE APP SERVICE ENVIRONMENT
+comparison. On this and subsequent ﬁgures, Pareto domi-                  Figure 9 illustrates throughput results for City service
+nated conﬁgurations marked in red relate to cases where the              under Azure App Service environment. As in the previous
+same or better performance can be achieved by a cheaper –
+Pareto efﬁcient – conﬁguration. Comparing the costs, we can                                                                                                             20365
+conclude that in the Spring Cloud environment, horizontal
+scaling of low-performance machines (1 CPU & 1 GB RAM)
+always leads to Pareto dominated conﬁgurations.
+
+   7https://devblogs.microsoft.com/dotnet/performance-improvements-in-
+net-core
+
+   8https://devblogs.microsoft.com/dotnet/try-the-new-system-text-json-
+apis
+
+   9https://www.techempower.com/blog/2019/07/09/framework-
+benchmarks-round-18
+
+VOLUME 10, 2022
+G. Blinowski et al.: Monolithic vs. Microservice Architecture: Performance and Scalability Evaluation
+
+FIGURE 7. Throughput in the Azure spring cloud environment—route  applications performed worst in low power conﬁgurations,
+service.                                                          and similar or better than .NET in environments that were as
+                                                                  well vertically scaled as P4:14. This result is consistent with
+FIGURE 8. Throughput and cost in the Azure spring cloud           the earlier observation that Java applications have notable
+environment—route service.                                        resource overhead and require more computing power.
+
+section – monolith and MSx1, MSx2, . . . , MSx20 relate to           A surprising result is that in the highest power conﬁgura-
+the number of microservice instances ranging from 1 to 20.        tion – P4:14, both Java and .NET applications have shown
+The results are grouped by virtual machine conﬁguration           performance loss with respect to S4:7 even though P4:14
+(i.e., number of CPUs and RAM size) shown as a label – see        comes from the Premium v2 Service Plan, which provides
+table 4. This form of presentation lets us analyze the effects    faster processors and SSD storage compared to VMs offered
+of horizontal scaling.                                            in the Standard Service Plan. Our results suggest that CPU
+                                                                  types used in P4:14 conﬁguration are less suited to servic-
+   The same information is presented in Figure 10 to analyze      ing a large number of short requests and heavy network
+the effects of vertical scaling, as a function of ascending       trafﬁc.
+virtual machine computing power and grouped by the number
+of microservice instances. The full dataset and box plots            To illustrate the effect of scaling, we have prepared two
+ﬁgures of measured throughput under Azure App Service are         additional plots – Figure 11 shows how throughput’s median
+available at our GitHub repository.10                             changes in % relative to previous conﬁguration – when
+                                                                  the number of instances increases – from 1 to 3, from
+   The top-performing conﬁguration in the City test is            3 to 6, . . . , and ﬁnally from 15 to 20; respectively. Figure 12
+6 × S4:7 written in .NET. A very similar throughput was           shows how throughput’s median changes (also %-wise) when
+obtained by 3 × S4:7 also under .NET. The best conﬁguration       a single virtual machine conﬁguration is upgraded – from:
+for Java application was 6 × S4:7 – ranked ﬁfth. Worst            B/S1:1.75 to S2:3.5, from S2:3.5 to S4:7, and from S4:7
+performing were Java applications running on machines             to P4:14. From Figure 11 we can conclude that horizontal
+B1:1.75 and S1:1.75. In most conﬁgurations, .NET appli-           scaling of simple& short request applications is most beneﬁ-
+cations performed better than their Java counterparts. This       cial when the number of instances is moderately increased,
+is consistent with the results of local tests – here, also Java   here: from 1 to 3 and from 3 to 6. A further increase of
+                                                                  the number of instances is not notably beneﬁcial, and in
+   10https://github.com/przybylek/Monolith-vs-Microservices       half of the cases, it resulted in performance decrease (.NET
+20366                                                             S2:3.5, Java S2:3.5, .NET S4:7, Java S4:7, Java P4:14, Java
+                                                                  B/S1:1.75 with ten instances) – this is caused by communica-
+                                                                  tion overhead due to load balancing and the need of request
+                                                                  passing. The ﬁrst obvious conclusion from Figure 12 relating
+                                                                  to vertical scaling is that the changes are more signiﬁcant
+                                                                  when compared to horizontal scaling – compare the increase
+                                                                  of throughput by 24% in the case of Java Monolith and
+                                                                  MSx1 architecture up-scaled to S2:3.5 conﬁguration with
+                                                                  relation to maximum increase by 9% in case of the same
+                                                                  architectures horizontally scaled from 1 to 3 instances. Also,
+                                                                  we do not observe a notable performance increase with fur-
+                                                                  ther conﬁguration up-scaling. However, we should be care-
+                                                                  ful with the interpretation of these results – a signiﬁcant
+                                                                  performance increase, especially for the Java architecture,
+                                                                  is caused by the effect of ‘‘right-scaling’’ – the basic con-
+                                                                  ﬁguration B/S1:1.75 does not fully meet requirements of
+                                                                  the application, especially under the heavier Java run-time
+                                                                  environment. Finally, we should also mention the negative
+                                                                  impact of moving to the P4:14 conﬁguration caused by the
+                                                                  previously discussed change of the CPU architecture in the
+                                                                  Premium v2 Service Plan.
+
+                                                                     Application daily cost vs. performance is shown in
+                                                                  Figure 13. As in previous cases, the pricing was calculated
+                                                                  according to data presented in Table 2 and the obtained
+                                                                  throughput median was used. Comparing the costs of running
+                                                                  the City service in different conﬁgurations, we can conclude
+                                                                  that Pareto efﬁcient conﬁguration variants for .NET were:
+                                                                  monolithic B1:1.75, S2:3.5, S4:7 and microservice-based:
+
+                                                                                                                                                                   VOLUME 10, 2022
+G. Blinowski et al.: Monolithic vs. Microservice Architecture: Performance and Scalability Evaluation
+
+FIGURE 9. Throughput vs. horizontal scaling in the Azure app service environment—city service.
+
+FIGURE 10. Throughput vs. vertical scaling in the Azure app service environment—city service.
+
+B1:1.75, 1 x S2:3.5, 3 x S2:3.5, 3 x S4:7 and 6 x S4:7. In the   .NET – compare results for S4:7 and P4:14 on Figure 14. Java
+case of Java, an almost identical set of conﬁgurations with an   also exhibits better vertical scaling – see results for P4:14 on
+addition of 1 x S4:7 was Pareto efﬁcient.                        Figure 15.
+
+   Now we will focus on tests of the Route service – refer          Similar to the City service in the case of Route service,
+to Figure 14 which presents throughput median as a function      we have also visualized the effect of scaling on two addi-
+of the number of instances grouped by instance conﬁguration      tional plots – Figure 16 shows how throughput’s median
+(horizontal scaling) and to Figure 15 which presents the same    changes in % relative to the previous value when the number
+data but grouped by the number of instances (vertical scaling).  of instances increases; Figure 17 shows how throughput’s
+Java is a better performer here – attaining better results in    median changes (also %-wise) when single virtual machine
+all but one case. The effects of both horizontal and vertical    conﬁguration is upgraded. Values on the x-axis are identical,
+scaling are clearly visible – the more powerful the conﬁgu-      as with the City service. The largest throughput increase
+ration and the larger the number of microservice instances,      was measured when the number of instances was increased
+the better throughput. The best performance was registered       from 1 to 3 and from 3 to 6 – this is consistent with the
+for 10 x P4:14 Java conﬁguration. This result is consistent      previous results. The scale of the increase is much more
+with those obtained in the local conﬁguration of the Route       prominent with the Route service. In ﬁve cases (both .NET
+where Java was also a better choice for this computationally     and Java), performance increased by over 100% relative to
+intensive service. We can also observe an interesting trend:     the previous conﬁguration. The most signiﬁcant observed
+for low-power conﬁguration, throughput is similar for .NET       scaling gain was 148% (compared to maximum 9% gain in
+and Java variants, but as the power of the virtual machine       the City service). Again, similarly to the previous service,
+is increased, Java variant shows large performance gain over     we also observe no or minimal gain when the number of
+
+VOLUME 10, 2022                                                                                        20367
+G. Blinowski et al.: Monolithic vs. Microservice Architecture: Performance and Scalability Evaluation
+
+FIGURE 11. Throughput’s median change as an effect of horizontal  FIGURE 12. Throughput’s median change as an effect of vertical scaling
+scaling in the Azure app service environment—city service.        in the Azure app service environment—city service.
+
+instances increases to 15, and throughput reduction with the      VI. DISCUSSION
+increase to 20 instances. The effects of vertical scaling are     This section discusses the results of our study – we address
+also notably larger in the case of the Route service – we         research questions stated in the introduction regarding per-
+have observed 200% performance gain with the change from          formance differences between monolithic and microservice
+1 × B1.1:75 to 1 × S2:3.5 conﬁguration in the case of Java        applications, scaling approaches, and implementation tech-
+platform, and signiﬁcant gains no smaller than 48% in case        nologies. Here, we generalize the naming of our benchmark
+of other horizontal conﬁgurations. Note that in the case of       services: City is referred to as a simple service and Route as
+City test, vertical up-scaling resulted in an actual performance  a complex service.
+decrease in eleven cases. Here, only in one case, a minimal
+performance reduction was measured. In general, vertical          A. (RQ1) WHAT IS THE PERFORMANCE DIFFERENCE
+up-scaling almost always proved beneﬁcial in this test, and       BETWEEN A MONOLITHIC APPLICATION VERSUS A
+its results were meaningful (at least 30% improvement) in all     MICROSERVICE APPLICATION?
+but four cases.                                                   On a single machine, the monolith performs better than the
+                                                                  microservices (see Figure 4) because of the additional over-
+   Finally, in this section, we will analyze the costs of var-    head of request passing between microservice components.
+ious conﬁgurations of the Route service – see Figure 18.          Note that this difference is not noticeable in our cloud bench-
+Comparing the costs for the Route service we can conclude         marks because the application gateway was deployed on a
+that Pareto efﬁcient conﬁguration variants were: monolithic       separate virtual machine, which relieved the primary machine
+B1:1.75, S2:3.5, S4:7 and P4:14 as well as microservice-          that hosted microservices.
+based: 1 × S2:3.5 i 3 × S2:3.5, 3 × P4:14, 6 × P4:14,
+10 × P4:14. In the case of Java: an almost identical set             Thereby, as for both cloud experiments, rather than com-
+of conﬁgurations with an addition of 1 × S4:7 - both              paring the performance of both architectures running on
+for .NET and Java. Additionally, 15 × P4:14 may be                the same VM type, we must compare the performance of
+selected for microservice .NET and 1 × P4:14 for microser-        the architectures hosted on conﬁgurations that have similar
+vice Java. Almost all high-power conﬁgurations (except for        infrastructure costs.
+20 × P4:14) are Pareto efﬁcient – this is in contrast to
+the City test where high-power conﬁgurations were Pareto             When such comparisons are made, the monolith outper-
+dominated.                                                        forms the microservices (see Figures 6, 8, 13, and 18), even
+                                                                  though the latter was still privileged, because when testing
+20368                                                             the performance, only one service was running (for details
+                                                                  see Section IV-D).
+
+                                                                                                                                                                   VOLUME 10, 2022
+G. Blinowski et al.: Monolithic vs. Microservice Architecture: Performance and Scalability Evaluation
+
+FIGURE 13. Throughput and cost in the Azure app service environment—city service.
+
+FIGURE 14. Throughput vs. horizontal scaling in the Azure app service environment—route service.
+
+B. (RQ2) WHICH OF THE TWO ARCHITECTURES AND                  technology. Also note, that all experimental runs executed on
+SCALING APPROACHES SHOULD BE CHOSEN TO BEST                  P4:14 turned out to be Pareto dominated.
+BENEFIT AN APPLICATION FROM SCALING?
+                                                                Likewise, scaling up the microservice-based application
+The monolith scaled vertically was Pareto efﬁcient in ser-   performed well and was more cost-efﬁcient than horizontal
+vicing both simple and complex requests on all hardware      scaling. Nevertheless, vertical scaling was limited by the
+conﬁgurations except P4:14 regardless of the implementation  most powerful VM available; therefore the best performance
+
+VOLUME 10, 2022                                                                                        20369
+                                                                                    G. Blinowski et al.: Monolithic vs. Microservice Architecture: Performance and Scalability Evaluation
+FIGURE 15. Throughput vs. vertical scaling in the Azure app service environment—route service.
+
+FIGURE 16. Throughput’s median change as an effect of horizontal  FIGURE 17. Throughput’s median change as an effect of vertical scaling
+scaling in the Azure app service environment—route service.       in the Azure app service environment—route service.
+
+was achieved by the microservice architecture that was both       complex services. Concerning the number of instances, in the
+vertically and horizontally scaled.                               case of the simple service, top performance was achieved with
+                                                                  a smaller number of virtual machines than in the complex
+   Our experiments have also shown that the best cost-to-         service. There is a visible cap on horizontal scaling for both
+performance ratio was achieved with three instances of the        service types, where the further increase of the number of
+most powerful platform. Moreover, both horizontal and ver-        instances does not improve and may even degrade perfor-
+tical scaling exhibit signiﬁcant throughput gain in the case of   mance. This effect of over-scaling manifests itself when CPU
+complex services than in simple ones.                             overhead resulting from load distribution exceeds the beneﬁts
+                                                                  of increasing the total processing power.
+   Furthermore, with microservice architecture, horizontal
+scaling effects differed signiﬁcantly in the case of simple and                                                                                                    VOLUME 10, 2022
+
+20370
+G. Blinowski et al.: Monolithic vs. Microservice Architecture: Performance and Scalability Evaluation
+
+FIGURE 18. Throughput and cost in the Azure app service environment—route service.
+
+   Finally, the implementation technology (Java vs.             machines under the Azure App Service environment. Also,
+C# .NET) did not have a noticeable impact on the scalability    the cost of running the application under a given hardware
+performance.                                                    conﬁguration in Azure Spring Cloud is lower than in Azure
+                                                                App Service.
+C. (RQ3) IN WHAT CIRCUMSTANCES THE
+IMPLEMENTATION TECHNOLOGIES (Java VS. C# .NET)                  VII. THREATS TO VALIDITY
+HAVE ANY PERFORMANCE ADVANTAGES OR                              In this section, we report on the threats to the validity of
+DISADVANTAGES?                                                  our study. We distinguish between three types of threat to
+In the selection of the technology platform, characteristics    validity [2], [69]:
+of network load vs. CPU load should be taken into account
+– for intensive network services with a low CPU load .NET          • construct validity – the extent to which the independent
+is a better choice than Java; on the other hand, Java consis-        and dependent variables accurately measure the con-
+tently proved to utilize CPU better in computation-intensive         cepts they purport to measure;
+services..NET also better utilizes cheap hardware with lower
+computational capacity as long as the computation is not           • internal validity – the extent to which the observed
+intensive (see the ﬁrst plot on Figure 10). On the other hand,       effects are caused only by the experimental treatment
+The Java platform makes better use of powerful machines in           conditions;
+the case of computation-intensive services (see the last plot
+on Figure 15).                                                     • external validity – the extent to which the ﬁndings of
+                                                                     the study can be generalized outside the experimental
+D. OTHER FINDINGS                                                    setting.
+Java implementations deployed in the Azure Spring Cloud
+performed better (especially in the case of the simple ser-     A. CONSTRUCT VALIDITY
+vice) with respect to their counterparts deployed on similar    We narrowed the performance assessment to measuring the
+                                                                throughput. Although throughput is the predominant perfor-
+VOLUME 10, 2022                                                 mance metric, other metrics, such as response time (latency)
+                                                                and CPU utilization, have also been used in prior studies
+
+                                                                                                                                                               20371
+G. Blinowski et al.: Monolithic vs. Microservice Architecture: Performance and Scalability Evaluation
+
+[4], [14], [17], [18], [42], [70]. Our motivation was that        VIII. CONCLUSION AND FUTURE WORK
+throughput had also been commonly used as the scalability         Although microservices are gaining more and more momen-
+measure [18], while in this study, we were also interested in     tum in the IT industry, empirical studies evaluating their
+comparing the scalability of both architectural styles. Nev-      performance and scalability are still rare, while hands-on
+ertheless, we are aware that throughput does not capture all      experiences come only from global IT giants with mil-
+aspects of the performance, and future work should investi-       lions of concurrent users. Accordingly, shifting towards
+gate other performance metrics.                                   microservices by small companies is often based on intuition
+                                                                  rather than solid information. To support software archi-
+B. INTERNAL VALIDITY                                              tects in rational decision-making about migrating systems
+Readers need to keep in mind that experiments in a public         to microservices, or developing an entire application from
+cloud cannot be fully controlled [67]. Indeed, in a pilot study,  scratch under this architectural style, we carried out a series of
+we observed that the performance results varied considerably      controlled experiments in three different deployment environ-
+between different runs of the experiment. For instance, some      ments (local, Azure Spring Cloud, and Azure App Service).
+test runs showed worse measured throughput for a higher-end       We extensively investigated the effects of architectural style
+virtual machine than for a low-end machine. The reason for        (monolithic vs. microservice) and implementation technol-
+this phenomenon is unknown. We may suspect both variabil-         ogy (Java vs. C# .NET) on the application performance and
+ity between VM instances or random network disturbances.          scalability. Our key lessons learned are as follows:
+On the other hand, variability within a single test series was
+very stable. To eliminate the inﬂuence of such random bias,          • on a single machine, a monolith performs better than its
+we have employed test repetitions and median of medians                microservice-based counterpart;
+selection method described in Section IV-D.
+                                                                     • Java platform makes better use of powerful machines
+   Another factor that might have inﬂuenced the experiment’s           in case of computation-intensive services when com-
+result is the random selection of route points in the Route            pared to .NET; the platform effect is reversed if
+benchmark. We have veriﬁed in the local environment that               non-computationally intensive services are run on hard-
+repeating a series of identical queries leads to better through-       ware with low computational capacity;
+put results. However, such a coincidence is very improbable,
+given that 2000 queries are sent a single test series.               • vertical scaling is more cost-effective than horizontal
+                                                                       scaling in the Azure cloud;
+C. EXTERNAL VALIDITY
+The most important threat to the external validity of our            • scaling out beyond a certain number of instances
+study concerns the representativeness of the experimental              degrades the application performance;
+object. As it consists of only two independent services, our
+application is far away from being a realistic benchmark. In a       • the implementation technology does not have a notice-
+real application, dozens (if not hundreds) of microservices            able impact on the scalability performance.
+need to keep communicating by protocols such as HTTP. This
+communication may result in overhead due to inter-service            In conclusion, a microservice architecture is not the best
+communication when compared with method calls performed           suited for every context. A monolithic architecture seems to
+locally in the monolith [13], [71], [72]. However, our inten-     be a better choice for simple, small-sized systems that do not
+tion was to solely isolate the scalability and eliminate          have to support a large number of concurrent users. We hope
+factors that could affect the dependent variables. Accord-        that our ﬁndings will help companies avoid jumping into
+ingly, we traded some external validity for more internal         microservices simply because they are trendy, especially if
+validity.                                                         better results can be obtained by scaling up their monoliths.
+
+   Our analysis of the impact of vertical and horizontal scaling     We also believe that both researchers and practitioners can
+on application performance is based to a large extent on          beneﬁt from our reference benchmarking application,11 and
+test results conducted under the Azure App Service cloud.         use it as a starting point for further experimentation.
+Because of this, our conclusions concerning scaling are appli-
+cable to applications deployed in a similar environment and          In future work, we intend to make our benchmarking appli-
+on virtual machines of comparable characteristics. However,       cation more complex so that it will closely resemble real-life
+our cost analysis is strictly tied to the pricing models of the   systems used by companies. The ﬁrst extension will be to
+Azure platform. Accordingly, before generalizing our results      develop more microservices, of which some will communi-
+to other public clouds, the reader should carefully compare       cate with each other. The reality of the application will also
+their pricing models. On the other hand, our conclusions          beneﬁt from having a database. Another interesting future
+concerning the impact of chosen technology (Java vs. C#           direction is to provide new implementation alternatives for
+.NET) on application performances can be generalized to           other programming languages recommended for developing
+other cloud environments and application types.                   microservices, e.g., Golang, Python, and Node.js. Moreover,
+                                                                  we plan to deploy and benchmark our application on other
+20372                                                             cloud platforms, including Amazon Web Services, Google
+                                                                  Cloud Platform, and Alibaba Cloud. It would be also interest-
+                                                                  ing to adopt more performance assessment metrics, includ-
+                                                                  ing response time (latency) and CPU utilization. Finally,
+
+                                                                     11https://github.com/annaojdowska/monolith-vs-microservices
+
+                                                                                                                                                                   VOLUME 10, 2022
+G. Blinowski et al.: Monolithic vs. Microservice Architecture: Performance and Scalability Evaluation
+
+to address performance ﬂuctuation issues due to a shared                                [18] F. Auer, V. Lenarduzzi, M. Felderer, and D. Taibi, ‘‘From monolithic
+environment, in a follow-up study, we consider running VMs                                     systems to microservices: An assessment framework,’’ Inf. Softw. Technol.,
+in a private environment (e.g. Azure App Service Environ-                                      vol. 137, Dec. 2021, Art. no. 106600.
+ment) dedicated exclusively to a single customer.
+                                                                                        [19] M. Viggiato, R. Terra, H. Rocha, M. Tulio Valente, and E. Figueiredo,
+ACKNOWLEDGMENT                                                                                 ‘‘Microservices in practice: A survey study,’’ 2018, arXiv:1808.04836.
+The authors would like to thank Szymon Okrój, who devel-
+oped Java implementations of their benchmark application as                             [20] M. Jagiełło, M. Rusek, and W. Karwowski, ‘‘Performance and resilience
+a part of his master’s thesis project [61].                                                    to failures of an cloud-based application: Monolithic and microservices-
+                                                                                               based architectures compared,’’ in Computer Information Systems and
+REFERENCES                                                                                     Industrial Management, K. Saeed, R. Chaki, and V. Janev, Eds. Cham,
+                                                                                               Switzerland: Springer, 2019, pp. 445–456.
+ [1] A. Przybyłek, ‘‘Where the truth lies: AOP and its impact on soft-
+       ware modularity,’’ in Fundamental Approaches to Software Engineering,            [21] J. Fritzsch, J. Bogner, S. Wagner, and A. Zimmermann, ‘‘Microser-
+       D. Giannakopoulou and F. Orejas, Eds. Berlin, Germany: Springer, 2011,                  vices migration in industry: Intentions, strategies, and challenges,’’ in
+       pp. 447–461.                                                                            Proc. IEEE Int. Conf. Softw. Maintenance Evol. (ICSME), Dec. 2019,
+                                                                                               pp. 481–490.
+ [2] A. Przybyłek, ‘‘An empirical study on the impact of AspectJ on software
+       evolvability,’’ Empirical Softw. Eng., vol. 23, no. 4, pp. 2018–2050, 2018.      [22] A. Poniszewska-Marańda and E. Czechowska, ‘‘Kubernetes cluster for
+                                                                                               automating software production environment,’’ Sensors, vol. 21, no. 5,
+ [3] M. Fowler. Microservice Premium. Accessed: May 30, 2020. [Online].                        p. 1901, 2021.
+       Available: https://Martinfowler.com/bliki/MicroservicePremium.html
+                                                                                        [23] C. M. Aderaldo, N. C. Mendonca, C. Pahl, and P. Jamshidi, ‘‘Benchmark
+ [4] N. Bjørndal, A. Bucchiarone, M. Mazzara, N. Dragoni, S. Dustdar,                          requirements for microservices architecture research,’’ in Proc. IEEE/ACM
+       F. B. Kessler, and T. Wien, ‘‘Migration from monolith to microservices:                 1st Int. Workshop Establishing Community-Wide Infrastruct. Archit.-Based
+       Benchmarking a case study,’’ Tech. Rep., 2020. [Online]. Available:                     Softw. Eng. (ECASE), May 2017, pp. 8–13.
+       https://www.researchgate.net/proﬁle/Manuel-Mazzara/publication/
+       339749917_Migration_from_Monolith_to_Microservices_Benchmarking                  [24] A. Poth, H. Urban, and A. Riel, Make Product Service Requirements
+       _a_Case_Study/links/5e6359034585153fb3c8515f/Migration-from-                            Shippable—From Cloud Service Vision to a Continuous Value Stream
+       Monolith-to-Microservices-Benchmarking-a-Case-Study.pdf                                 Which Satisﬁes Current Future User Needs. Cham, Switzerland: Springer,
+                                                                                               2021.
+ [5] B. Terzić, V. Dimitrieski, S. Kordić, G. Milosavljević, and I. Luković,
+       ‘‘Development and evaluation of microbuilder: A model-driven tool for            [25] Y. Wang, H. Kadiyala, and J. Rubin, ‘‘Promises and challenges of microser-
+       the speciﬁcation of rest microservice software architectures,’’ Enterprise              vices: An exploratory study,’’ Empirical Softw. Eng., vol. 26, no. 4,
+       Inf. Syst., vol. 12, nos. 8–9, pp. 1034–1057, 2018.                                     pp. 1–44, Jul. 2021.
+
+ [6] J. Lewis and M. Fowler. (Mar. 2014). Microservices:                                [26] D. Taibi, V. Lenarduzzi, and C. Pahl, ‘‘Processes, motivations, and issues
+       A Deﬁnition of This New Architectural Term. [Online]. Available:                        for migrating to microservices architectures: An empirical investigation,’’
+       https://www.Martinfowler.com/articles/microservices.html                                IEEE Cloud Comput., vol. 4, no. 5, pp. 22–32, Sep. 2017.
+
+ [7] C. Posta, Microservices for Java Developers: A Hands-on Introduction to            [27] J. Ghofrani and D. Lübke, ‘‘Challenges of microservices architecture:
+       Frameworks Containers. Newton, MA, USA: O’Reilly Media, 2016.                           A survey on the state of the practice,’’ in Proc. ZEUS, 2018, pp. 1–8.
+
+ [8] R. Rajesh, Spring Microservices. London, U.K.: Packt, 2016.                        [28] S. Butt, S. Abbas, and M. Ahsan, ‘‘Software development life cycle &
+ [9] A. Cockroft. (Aug. 2004). Migrating to Microservices. [Online]. Available:                software quality measuring types,’’ Asian J. Math. Comput. Res., vol. 11,
+                                                                                               no. 2, pp. 112–122, 2016.
+       https://youtu.be/1wiMLkXz26M
+[10] P. Z. Y. N. Doro ski, A. Brzeski, J. Cychnerski, and T. Dziubich, ‘‘Towards        [29] A. Jarzębowicz and P. Marciniak, ‘‘A survey on identifying and address-
+                                                                                               ing business analysis problems,’’ Found. Comput. Decis. Sci., vol. 42,
+       healthcare cloud computing,’’ in Proc. 36th Int. Conf. Inf. Syst. Archit.               pp. 315–337, Dec. 2017.
+       Technol., J. Świątek, L. Borzemski, A. Grzech, and Z. Wilimowska, Eds.
+       Cham, Switzerland: Springer, 2016, pp. 87–97.                                    [30] S. Li, H. Zhang, Z. Jia, Z. Li, C. Zhang, J. Li, Q. Gao, J. Ge, and Z. Shan,
+[11] J. Soldani, D. A. Tamburri, and W.-J. Van Den Heuvel, ‘‘The pains and                     ‘‘A dataﬂow-driven approach to identifying microservices from monolithic
+       gains of microservices: A systematic grey literature review,’’ J. Syst. Softw.,         applications,’’ J. Syst. Softw., vol. 157, Nov. 2019, Art. no. 110380.
+       vol. 146, pp. 215–232, Dec. 2018.
+[12] H. Vural, M. Koyuncu, and S. Misra, ‘‘A case study on measuring the                [31] H. Stranner, S. Strobl, M. Bernhart, and T. Grechenig, ‘‘Microservice
+       size of microservices,’’ in Computer Science Application, O. Gervasi,                   decompositon: A case study of a large industrial software migration in
+       B. Murgante, S. Misra, E. Stankova, C. M. Torre, A. M. A. Rocha,                        the automotive industry,’’ in Proc. 15th Int. Conf. Eval. Novel Approaches
+       D. Taniar, B. O. Apduhan, E. Tarantino, and Y. Ryu, Eds. Cham,                          Softw. Eng., 2020, pp. 498–505.
+       Switzerland: Springer, 2018, pp. 454–463.
+[13] L. Carvalho, A. Garcia, W. K. G. Assunç ao, R. de Mello, and                       [32] M. Bruce and P. A. Pereira, Microservices in Action. New York, NY, USA:
+       M. J. de Lima, ‘‘Analysis of the criteria adopted in industry to extract                Simon and Schuster, 2018.
+       microservices,’’ in Proc. Joint 7th Int. Workshop Conducting Empirical
+       Stud. Ind., 2019, pp. 22–29.                                                     [33] A. Banijamali, P. Kuvaja, M. Oivo, and P. Jamshidi, ‘‘Kuksa: Self-adaptive
+[14] A. Kwan, J. Wong, H.-A. Jacobsen, and V. Muthusamy, ‘‘Hyscale: Hybrid                     microservices in automotive systems,’’ in Product-Focused Software Pro-
+       and network scaling of dockerized microservices in cloud data centres,’’                cess Improvemen, M. Morisio, M. Torchiano, and A. Jedlitschka, Eds.
+       in Proc. IEEE 39th Int. Conf. Distrib. Comput. Syst. (ICDCS), Dec. 2019,                Cham, Switzerland: Springer, 2020, pp. 367–384.
+       pp. 80–90.
+[15] P. Di Francesco, P. Lago, and I. Malavolta, ‘‘Architecting with microser-          [34] M. Kalske, N. Mäkitalo, and T. Mikkonen, ‘‘Challenges when moving from
+       vices: A systematic mapping study,’’ J. Syst. Softw., vol. 150, pp. 77–97,              monolith to microservice architecture,’’ in Current Trends in Web Engi-
+       Apr. 2019.                                                                              neering (Lecture Notes in Computer Science), vol. 10544, I. Garrigós and
+[16] J. Jaworski, W. Karwowski, and M. Rusek, ‘‘Microservice-based cloud                       M. Wimmer, Eds. Cham, Switzerland: Springer, 2018, doi: 10.1007/978-
+       application ported to unikernels: Performance comparison of different                   3-319-74433-9_3.
+       technologies,’’ in Proc. 40th Anniversary Int. Conf. Inf. Syst. Archit.
+       Technol., L. Borzemski, J. Świątek, and Z. Wilimowska, Eds. Cham,                [35] W. Karwowski, M. Rusek, G. Dwornicki, and A. Orłowski, ‘‘Swarm
+       Switzerland: Springer, 2019, pp. 255–264.                                               based system for management of containerized microservices in a cloud
+[17] M. Jayasinghe, J. Chathurangani, G. Kuruppu, P. Tennage, and S. Perera,                   consisting of heterogeneous servers,’’ in Proc. 38th Int. Conf. Inf. Syst.
+       ‘‘An analysis of throughput and latency behaviours under microservice                   Archit. Technol., L. Borzemski, J. Świątek, and Z. Wilimowska, Eds.
+       decomposition,’’ in Web Engineering, M. Bielikova, T. Mikkonen, and                     Cham, Switzerland: Springer, 2018, pp. 262–271.
+       C. Pautasso, Eds. Cham, Switzerland: Springer, 2020, pp. 53–69.
+                                                                                        [36] B. Terzic and V. Dimitrieski, ‘‘A model-driven approach to microservice
+VOLUME 10, 2022                                                                                software architecture establishment,’’ in Proc. Ann. Comput. Sci. Inf. Syst.,
+                                                                                               Sep. 2018, p. 73.
+
+                                                                                        [37] M. Štefanko, O. Chaloupka, and B. Rossi, ‘‘The saga pattern in a reactive
+                                                                                               microservices environment,’’ in Proc. 14th Int. Conf. Softw. Technol., 2019,
+                                                                                               pp. 483–490.
+
+                                                                                        [38] C. Rajasekharaiah, Case Study: Energence. Berkeley, CA, USA: Apress,
+                                                                                               2021, pp. 1–12.
+
+                                                                                        [39] A. Poniszewska-Marańda, P. Vesely, O. Urikova, and I. Ivanochko, ‘‘Build-
+                                                                                               ing microservices architecture for smart banking,’’ in Advances in Intelli-
+                                                                                               gent Networking and Collaborative Systems, L. Barolli, H. Nishino, and
+                                                                                               H. Miwa, Eds. Cham, Switzerland: Springer, 2020, pp. 534–543.
+
+                                                                                        [40] J. Ghofrani and A. Bozorgmehr, ‘‘Migration to microservices: Barriers and
+                                                                                               solutions,’’ in Applied Informatics, H. Florez, M. Leon, J. M. Diaz-Nafria,
+                                                                                               and S. Belli, Eds. Cham, Switzerland: Springer, 2019, pp. 269–281.
+
+                                                                                                                                                                                       20373
+G. Blinowski et al.: Monolithic vs. Microservice Architecture: Performance and Scalability Evaluation
+
+[41] O. Al-Debagy and P. Martinek, ‘‘A comparative review of microservices               [65] B. Vermeer. (2021) JVM Ecosystem Report 2021. Accessed: Oct. 22, 2021.
+       and monolithic architectures,’’ in Proc. IEEE 18th Int. Symp. Comput.                    [Online]. Available: https://res.cloudinary.com/snyk/image/upload/v162
+       Intell. Informat. (CINTI), Nov. 2018, pp. 149–154.                                       3860216/reports/jvm-ecosystem-report-2021.pdf
+
+[42] A. de Camargo, I. Salvadori, R. D. S. Mello, and F. Siqueira, ‘‘An archi-           [66] A. Derezinska and K. Kwaánik, ‘‘Performance-based refactoring of web
+       tecture to automate performance tests on microservices,’’ in Proc. 18th Int.             application: A case of public transport,’’ in Proc. 15th Int. Conf. Eval. Novel
+       Conf. Inf. Integr. Web-Based Appl. Services, Nov. 2016, pp. 422–429.                     Approaches to Softw. Eng., 2020, pp. 611–618.
+
+[43] V. Lenarduzzi, F. Lomio, N. Saarimäki, and D. Taibi, ‘‘Does migrating a             [67] C. Laaber, J. Scheuner, and P. Leitner, ‘‘Software microbenchmarking in
+       monolithic system to microservices decrease the technical debt?’’ J. Syst.               the cloud. How bad is it really?’’ Empirical Softw. Eng., vol. 24, no. 4,
+       Softw., vol. 169, Nov. 2020, Art. no. 110710.                                            pp. 2469–2508, Aug. 2019.
+
+[44] V. Lenarduzzi and O. Sievi-Korte, ‘‘On the negative impact of team                  [68] M. R. López and J. Spillner, ‘‘Towards quantiﬁable boundaries for elastic
+       independence in microservices software development,’’ in Proc. 19th Int.                 horizontal scaling of microservices,’’ in Proc. 10th Int. Conf. Utility Cloud
+       Conf. Agile Softw. Develop., Companion, New York, NY, USA, May 2018,                     Comput., New York, NY, USA, 2017, pp. 35–40.
+       pp. 1–4.
+                                                                                         [69] Y. Y. Ng and A. Przybyłek, ‘‘Instructor presence in video lectures: Pre-
+[45] F. Ramin, C. Matthies, and R. Teusner, ‘‘More than code: Contributions in                  liminary ﬁndings from an online experiment,’’ IEEE Access, vol. 9,
+       scrum software engineering teams,’’ in Proc. IEEE/ACM 42nd Int. Conf.                    pp. 36485–36499, 2021.
+       Softw. Eng. Workshops, New York, NY, USA, Jun. 2020, pp. 137–140.
+                                                                                         [70] T. Salah, M. J. Zemerly, C. Y. Yeun, M. Al-Qutayri, and Y. Al-Hammadi,
+[46] B. Marcinkowski and B. Gawin, ‘‘A study on the adaptive approach to                        ‘‘Performance comparison between container-based and VM-based ser-
+       technology-driven enhancement of multi-scenario business processes,’’                    vices,’’ in Proc. 20th Conf. Innov. Clouds, Internet Netw. (ICIN), 2017,
+       Inf. Technol. People, vol. 32, no. 1, pp. 118–146, Feb. 2019.                            pp. 185–190.
+
+[47] M. Kalenda, P. Hyna, and B. Rossi, ‘‘Scaling agile in large organizations:          [71] D. Namiot and M. Sneps-Sneppe, ‘‘On micro-services architecture,’’ Int.
+       Practices, challenges, and success factors,’’ J. Softw., Evol. Process, vol. 30,         J. Open Inf. Technol., vol. 2, pp. 24–27, Oct. 2014.
+       no. 10, p. e1954, Oct. 2018.
+                                                                                         [72] H. Knoche, ‘‘Sustaining runtime performance while incrementally mod-
+[48] P. Diebold, A. Schmitt, and S. Theobald, ‘‘Scaling agile: How to select                    ernizing transactional monolithic software towards microservices,’’ in
+       the most appropriate framework,’’ in Proc. 19th Int. Conf. Agile Softw.                  Proc. 7th ACM/SPEC Int. Conf. Perform. Eng., New York, NY, USA,
+       Develop., Companion, New York, NY, USA, May 2018, pp. 1–4.                               Mar. 2016, pp. 121–124.
+
+[49] S. Theobald, A. Schmitt, and P. Diebold, ‘‘Comparing scaling agile frame-                                          GRZEGORZ BLINOWSKI (Member, IEEE) was
+       works based on underlying practices,’’ in Agile Processes in Software                                            born in Warsaw, Poland. He received the M.Sc. and
+       Engineering and Extreme Programming, R. Hoda, Ed. Cham, Switzerland:                                             Ph.D. degrees in computer science from the Fac-
+       Springer, 2019, pp. 88–96.                                                                                       ulty of Electronics and Information Technology,
+                                                                                                                        Institute of Computer Science, Warsaw University
+[50] A. Poth, M. Kottke, and A. Riel, ‘‘Scaling agile—A large enterprise view                                           of Technology, Poland, in 1993 and 2001, respec-
+       on delivering and ensuring sustainable transitions,’’ in Agile Processes                                         tively. He has held a Certiﬁed Information Systems
+       in Software Engineering and Extreme Programming, A. Przybyłek and                                                Security Professional (CISSP) Certiﬁcate, since
+       M. E. Morales-Trujillo, Eds. Cham, Switzerland: Springer, 2020, pp. 1–18.                                        2014. Since 2001, he has been an Assistant Pro-
+                                                                                                                        fessor at the Parallel and Distributed Computing
+[51] A. Khalid, S. A. Butt, T. Jamal, and S. Gochhait, ‘‘Agile scrum issues at           Research Group, Institute of Computer Science. He is the author of two
+       large-scale distributed projects: Scrum project development at large,’’ Int.      books. His research and scientiﬁc interests include: distributed memory
+       J. Softw. Innov. (IJSI), vol. 8, no. 2, pp. 85–94, 2020.                          systems, software engineering, internet technology, and networks and sys-
+                                                                                         tems security, especially in context of WSN and the IoT and recently VLC
+[52] M. Kowalczyk, B. Marcinkowski, and A. Przybyłek, ‘‘Scaled agile frame-              systems. He has received the Warsaw University of Technology Rector’s
+       work: Dealing with software process-related challenges of a ﬁnancial              Award for Academic Achievements twice.
+       group with the action research approach,’’ J. Softw., Evol. Process, 2022.
+                                                                                                                        ANNA OJDOWSKA received the M.Sc. degree
+[53] M. Kösling and A. Poth, ‘‘Agile development offers the chance to establish                                         in computer science from the Gdańsk University
+       automated quality procedures,’’ in Systems, Software and Services Process                                        of Technology, in 2020. She has been working as
+       Improvement, J. Stolfa, S. Stolfa, R. V. O’Connor, and R. Messnarz, Eds.                                         a Software Engineer with IHS Markit, since June
+       Cham, Switzerland: Springer, 2017, pp. 495–503.                                                                  2018. She specializes in .NET technology. Her
+                                                                                                                        main professional interests include software archi-
+[54] V. Heorhiadi, S. Rajagopalan, H. Jamjoom, M. K. Reiter, and V. Sekar,                                              tecture, functional programming and its practical
+       ‘‘Gremlin: Systematic resilience testing of microservices,’’ in Proc. IEEE                                       applications, and impact on software engineering.
+       36th Int. Conf. Distrib. Comput. Syst. (ICDCS), Jun. 2016, pp. 57–66.
+                                                                                                                        ADAM PRZYBYŁEK received the master’s degree
+[55] A. B. Bondi, ‘‘Characteristics of scalability and their impact on perfor-                                          in management information systems and the Ph.D.
+       mance,’’ in Proc. 2nd Int. Workshop Softw. Perform., New York, NY, USA,                                          degree in software engineering, in 2002 and 2011,
+       2000, pp. 195–203.                                                                                               respectively. Between 2002 and 2011, he was a
+                                                                                                                        Network Consultant and an Instructor at the Cisco
+[56] B. Wilder, Cloud Architecture Patterns: Using Microsoft Azure. Newton,                                             Networking Academy. He has been working as
+       MA, USA: O’Reilly Media, 2012.                                                                                   an Assistant Professor with the Gdańsk University
+                                                                                                                        of Technology, Poland, since October 2012. His
+[57] L. Lu, X. Zhu, R. Grifﬁth, P. Padala, A. Parikh, P. Shah, and E. Smirni,                                           main research interests include empirical software
+       ‘‘Application-driven dynamic vertical scaling of virtual machines in                                             engineering with a focus on software modularity,
+       resource pools,’’ in Proc. IEEE Netw. Oper. Manage. Symp. (NOMS),                 post object-oriented paradigms, and agile methods. He is the Founder of
+       May 2014, pp. 1–9.                                                                the International Conference on Lean and Agile Software Development
+                                                                                         (https://lasd.pl). He has also served on the program committees of ENASE
+[58] S. Spinner, N. Herbst, S. Kounev, X. Zhu, L. Lu, M. Uysal, and R. Grifﬁth,          and ACM SAC, since 2015, and MADEISD@ADBIS since its origin,
+       ‘‘Proactive memory scaling of virtualized applications,’’ in Proc. IEEE 8th       in 2019.
+       Int. Conf. Cloud Comput., Jun. 2015, pp. 277–284.
+                                                                                                                                                                                          VOLUME 10, 2022
+[59] T. Ueda, T. Nakaike, and M. Ohara, ‘‘Workload characterization for
+       microservices,’’ in Proc. IEEE Int. Symp. Workload Characterization
+       (IISWC), Sep. 2016, pp. 1–10.
+
+[60] G. Granchelli, M. Cardarelli, P. Di Francesco, I. Malavolta, L. Iovino,
+       and A. Di Salle, ‘‘Towards recovering the software architecture of
+       microservice-based systems,’’ in Proc. IEEE Int. Conf. Softw. Archit. Work-
+       shops (ICSAW), Apr. 2017, pp. 46–53.
+
+[61] S. Okrój, ‘‘A comparative analysis of the performance of monolithic and
+       microservice architecture,’’ M.S. thesis, Gdansk Univ. Technol., Gdańsk,
+       Poland, 2018.
+
+[62] M. Villamizar, O. Garces, and L. Ochoa, ‘‘Infrastructure cost comparison
+       of running web applications in the cloud using aws lambda and monolithic
+       and microservice architectures,’’ in Proc. 16th IEEE/ACM Int. Symp. Clus-
+       ter, Cloud Grid Comput. (CCGrid), 2016, pp. 179–182.
+
+[63] J. Shaughnessy, E. Zechmeister, and J. Zechmeister, Research Methods
+       Psychology. Surrey, BC, Canada: Kwantlen Polytechnic Univ., 2019.
+
+[64] B. Vermeer. (2020). JVM Ecosystem Report 2020. Accessed: Oct. 22, 2021.
+       [Online]. Available: https://snyk.io/wp-content/uploads/jvm_2020.pdf
+
+20374
+

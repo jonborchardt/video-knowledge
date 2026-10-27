@@ -1,0 +1,522 @@
+featuresoftware metrics
+
+Does Test-Driven
+Development Really
+Improve Software
+Design Quality?
+
+                        David S. Janzen, California Polytechnic State University, San Luis Obispo
+                        Hossein Saiedian, University of Kansas
+
+TDD is first and        S oftware developers are known for adopting new technologies and practices on the
+foremost a design                       basis of their novelty or anecdotal evidence of their promise. Who can blame them?
+practice. The question                  With constant pressure to produce more with less, we often can’t wait for evidence
+is, how good are the                    before jumping in. We become convinced that competition won’t let us wait.
+resulting designs?         Advocates for test-driven development claim           who were using TDD and willing to participate in
+Empirical studies       that TDD produces code that’s simpler, more co­          the study. We interviewed representatives from four
+help clarify the        hesive, and less coupled than code developed in a        reputable Fortune 500 companies who claimed to be
+practice and answer     more traditional test-last way. Support for TDD is       using TDD. However, when we dug a little deeper,
+this question.          growing in many development contexts beyond its          we discovered some unfortunate misconceptions:
+                        common association with Extreme Programming.
+                        Examples such as Robert C. Martin’s bowling game          ■	 Misconception #1: TDD equals automated test­
+                        demonstrate the clean and sometimes surprising de­           ing. Some developers we met placed a heavy
+                        signs that can emerge with TDD,1 and the buzz has            emphasis on automated testing. Because TDD
+                        proven sufficient for many software developers to            has helped propel automated testing to the fore­
+                        try it. Positive personal experiences have led many          front, many seem to think that TDD is only
+                        to add TDD to their list of “best practices,” but for        about writing automated tests.
+                        others, the jury is still out. And although the litera­
+                        ture includes many publications that teach us how         ■	 Misconception #2: TDD means write all tests
+                        to do TDD, it includes less empirical evaluation of          first. Some developers thought that TDD in­
+                        the results.                                                 volved writing the tests (all the tests) first,
+                                                                                     rather than using the short, rapid test-code it­
+                           In 2004, we began a study to collect evidence             erations of TDD.
+                        that would substantiate or question the claims re­
+                        garding TDD’s influence on software.                     Unfortunately, these perspectives miss TDD’s pri­
+                                                                                 mary purpose, which is design. Granted, the tests
+                        TDD misconceptions                                       are important, and automated test suites that can
+                           We looked for professional development teams          run at the click of a button are great. However,
+
+0740-7459/08/$25.00 © 2008 IEEE	                                                 March/April 2008 I E E E S o f t w a r E 	 77
+                                                                                                                Code
+
+        High-level           Detailed design                                              Code                        Unit test  Test
+   design/architecture                                                                                                           Test
+                                                                               Unit test  Design and code             Refactor
+(a)                                                                                                       Code
+
+        High-level
+   design/architecture
+(b)
+
+Figure 1. Development        from early on, TDD pioneers have been clear that                                   ities, such as simplicity, size, coupling, and cohe­
+flow: (a) traditional test-  TDD is about design, not the tests.2                                               sion, would emphasize TDD’s design aspects and
+last and (b) test-driven                                                                                        help clarify how to use it.
+development/test-first          Why the confusion regarding TDD? We propose
+flow.                        two possible explanations.                                                         TDD in a traditional
+                                                                                                                development process
+                                First, we can blame it on the name, which in­
+                             cludes the word “test” but not the word “design.”                                     We wanted to examine TDD independent
+                             But, alas, “test-driven development” seems to be                                   of other process practices, but we had to select a
+                             here to stay. We’re unlikely to revert to earlier,                                 methodology to minimize independent variables.
+                             more accurately descriptive names such as “test­                                   We chose to study TDD in the context of a some­
+                             driven design.”                                                                    what traditional development process based on the
+                                                                                                                Unified Process.8 The projects in this research were
+                                A second source of confusion is the difference                                  relatively short (typically three to four months). We
+                             between internal and external quality. Several                                     believe the process we used could be repeated as it­
+                             early studies focused on TDD’s effects on defects                                  erations in a larger evolutionary process model, but
+                             (external quality) and productivity.3 Many re­                                     we didn’t study this.
+                             sults were promising although somewhat mixed.
+                             Boby George and Laurie Williams reported fewer                                        Figure 1a illustrates a traditional test-last flow
+                             defects but lower productivity.4 Hakan Erdog­                                      of development. This process involves significant
+                             mus, Maurizio Morisio, and Marco Torchiano                                         effort in specifying the system architecture and
+                             reported minimal external quality differences but                                  design before any significant software develop­
+                             improved productivity.5 Adam Geras, Michael                                        ment. Such an approach does not preclude some
+                             Smith, and James Miller reported no changes in                                     programming to explore a prototype or prove a
+                             productivity, but more frequent unplanned test                                     concept, but it assumes that no significant produc­
+                             failures.6 The emphasis on external quality is                                     tion software is constructed without a detailed de­
+                             valid and beneficial, but it can also miss TDD’s                                   sign. Unit testing occurs after a unit is coded. We
+                             primary focus on design.                                                           asked test-last programmers in the study to use an
+                                                                                                                iterative approach in which the time from unit con­
+                                Matthias Müller addressed internal quality in a                                 struction to unit testing was very short (seconds or
+                             recent case study comparing five open-source and                                   minutes rather than weeks or months).
+                             student TDD projects with three open-source non-
+                             TDD projects.7 (The study incorrectly identified                                      Figure 1b illustrates the test-first development
+                             one TDD project, JUnit, as being non-TDD, and                                      flow. In this approach, the project identifies some
+                             it didn’t confirm whether two projects, Ant and                                    high-level architecture early, but that design doesn’t
+                             log4j, were TDD or non-TDD.) Although Müller                                       proceed to a detailed level. Instead, the test-first
+                             focused on a new metric to gauge testability, he                                   process of writing unit tests and constructing the
+                             indicated that software developed with TDD had                                     units in short, rapid iterations allows the design to
+                             lower coupling, smaller classes, and higher testabil­                              emerge and evolve.
+                             ity, but less cohesiveness.
+                                                                                                                   Neither of these flows makes any assumptions
+                                Despite the misconceptions about TDD, some                                      about other process practices.
+                             of the traditional test-last development teams we
+                             interviewed reported positive experiences with au­                                 Study design and execution
+                             tomated testing, resulting in quality and productiv­                                  We designed our study to compare the test-first
+                             ity improvements. Other test-last teams reported
+                             frustrations and eventual abandonment of the ap­                                   TDD approach with a comparable but reversed test-
+                             proach. We believed that focusing on internal qual­                                last approach. In particular, programmers in both
+
+78	 I E E E S o f t w a r E w w w . c o m p u t e r . o r g / s o f t w a r e
+                                                        Table 1                             test-Last
+
+                                                    Study profile                           teams†/
+                                                                                            experience
+                                          test-first
+                                                                                            A/>5 years
+Study*  Experiment        Classes   LoC   teams†/          technologies/   Classes  LoC                      technologies/
+INT-TF  type                 28      842  experience*      real world?         18   1,562                    real world?
+                             28      842                                       21
+ITL-TF  Quasi-               69    1,559  A/>5 years       J2EE, Spring/       57                            J2EE/real world
+        controlled                                         real world
+ITF-TL                      126    2,750                                     831
+        Quasi-                            A/>5 years       J2EE, Spring/            811 AB/>5 years          J2EE/real world
+        controlled           19    1,301                   real world            4
+
+        Quasi-               28    1,053  ABC/>5 years     J2EE, Spring,       17    2,071  BC/>5 years      J2EE, Spring,
+        controlled                                         Struts/real              49,330                   Struts/real
+                            173                            world                            ABCDE‡/          world
+                                                                                       867  >5 years         J2EE, Spring,
+ICS Case study                            ABC/>5 years     J2EE, Spring,             1,254  One team of      Struts/real
+                                                           Struts/real                      3 participants/  world
+                                                           world                    51,451  >5 years         Java/academic
+                                                                                            Two teams
+GSE Quasi-                                Two teams of     Java/ academic                   of 3 and 4       Java/academic
+              controlled                  3 participants/                                   participants/
+                                          0–5 years                                         novice           N/A
+USE Quasi-                                                                                  15
+              controlled                  One team of      Java/academic                    participants
+                                          3 participants/
+                                          novice
+
+Unique totals                      5,104  12               N/A             852
+                                          participants
+
+* INT-TF (industry no-tests followed by test-first), ITL-TF (industry test-last followed by test-first), ITF-TL (industry test-first followed by test-last), ICS (industry case study), GSE (graduate software engineering), USE (undergraduate
+  software engineering).
+
+† A, B, C, D, and E identify five developers to show overlap between teams.
+‡ One of the early test-last projects had additional developers.
+
+the test-first and test-last groups wrote automated    four programmers each. Both courses involved the
+unit tests and production code in short, rapid itera­  same semester-long project.
+tions. We conducted pre-experiment surveys to en­
+sure no significant differences existed between the       Table 1 summarizes the studies. The three in­
+test-first and test-last groups in terms of program­   dustry quasi-controlled experiments involved five
+ming experience, age, and acceptance of TDD. The       similar but distinct projects completed by overlap­
+only difference was whether they wrote the tests       ping groups of five developers. The “Teams” col­
+before or after writing the code under test.           umns in table 1 identify these developers with the
+                                                       letters A through E and indicate how the teams
+   We selected a development group in one com­         overlap on projects. All industry developers had
+pany to conduct three quasi-controlled experi­         computing degrees and a minimum of six years’
+ments and one case study. (We call the studies         professional development experience. The projects
+quasi-controlled because the teams weren’t ran­        were all Web applications completed in Java, devel­
+domly assigned.) We selected this group because        oped as part of the team’s normal work domain,
+of their willingness to participate in the study, to   and completed in three to 12 months each.
+share project data, and to use TDD as an integral
+part of design. Developers voluntarily participated       Companies are rarely willing to commit two
+as part of their regular full-time work for the com­   teams to develop the same system just to see which
+pany, which assigned all projects and used the re­     approach works better. So, to make things fair,
+sults in production.                                   we interleaved the approaches and mixed up their
+                                                       order in completing individual projects. The first
+   In addition, we conducted two quasi-con­            quasi-experiment involved a test-last project with
+trolled experiments in undergraduate and gradu­        no automated tests, followed by a second phase
+ate software engineering courses at the University     of the same project completed with a test-first
+of Kansas during the summer and fall of 2005.          approach. The test-first project used the Spring
+Nineteen students worked in teams of three or          framework. We labeled this comparison INT-TF
+
+	 March/April 2008 I E E E S o f t w a r E 	 79
+                                 100                                                                                 160
+                                            Test-first
+Average line coverage (percent)             Test-last                                      Lines of code per module  140              Test-first
+                                                                                                                                      Test-last
+                                  80
+                                                                                                                     120
+
+                                 60                                                                                  100
+
+                                                                                                                     80
+
+                                 40                                                                                  60
+
+                                 20                                                                                  40
+
+                                                                                                                     20
+
+(a)                              0          GSE         ICS INT-TF ITL-TF ITF-TL           (b)                       0         GSE    ICS INT-TF ITL-TF ITF-TL
+                                       USE                                                                                USE
+
+                                 35                                                                                  16
+
+                                 30                                            Test-first                            14   Test-first
+                                                                               Test-last                                  Test-last
+Lines of code per method                                                                                             12
+                                 25                                                        Methods per class
+
+                                 20                                                                                  10
+
+                                 15                                                                                  8
+
+                                                                                                                     6
+
+                                 10                                                                                  4
+
+                                 5                                                                                   2
+
+(c)                              0          GSE         ICS INT-TF ITL-TF ITF-TL           (d)                       0         GSE    ICS INT-TF ITL-TF ITF-TL
+                                       USE                                                                                USE
+
+Figure 2. Code size                                     for “industry no-tests followed by test-first.” The                  We labeled the academic studies GSE for “grad­
+metrics: (a) average                                    second quasi-experiment involved a test-last project              uate software engineering” and USE for “under­
+line coverage of                                        followed by a test-first project. Again, the test-first           graduate software engineering.” We divided the
+automated tests, (b)                                    application used the Spring framework; we labeled                 student programmers into test-first and test-last
+lines of code per module                                this comparison ITL-TF for “industry test-last fol­               groups and gave them the same set of programming
+(class), (c) lines of code                              lowed by test-first.” The third quasi-experiment                  requirements for the semester-long project—specif­
+per method, and (d)                                     involved a test-first project followed by a test-last             ically, to design and build an HTML pretty-print
+methods per class.                                      project. Both projects used the Struts and Spring                 system. The system was to take an HTML file as
+                                                        frameworks along with object-relational mapping                   input and transform the file into a more human-
+                                                        patterns and extensive mock objects in testing; we                readable format by performing operations such as
+                                                        labeled this comparison ITF-TL for “industry test-                deleting redundant tags and adding appropriate
+                                                        first followed by test-last.”                                     indentation.
+
+                                                           The case study, labeled ICS, examined 15 soft­                    Students self-selected their teammates, and we
+                                                        ware projects completed in one development group                  compared the results from pre-experiment surveys
+                                                        over five years. The 15 projects included the five                to ensure that no statistically significant differences
+                                                        test-first and test-last projects from the industry               existed between the teams in preparation or bias.
+                                                        quasi-experiments. The group had completed the                    In particular, we established Java experience as a
+                                                        remaining 10 projects prior to the quasi-experiment               blocking variable to ensure that each team had a
+                                                        projects. We interviewed the developers from these                minimum and balanced skill set. In every case, the
+                                                        10 projects and determined that all 10 used a test-               teams were fairly balanced and didn’t change dur­
+                                                        last approach. All 15 case study projects were com­               ing the study. All but one student in the GSE study
+                                                        pleted in three to 12 months with less than 10,000                had at least one year of professional development
+                                                        lines of code by development teams of three or fewer              experience. Students in the USE study were all ju­
+                                                        primary developers. Six projects were completed                   niors or seniors.
+                                                        with no automated unit tests; six projects, with au­
+                                                        tomated tests in a test-last manner; and three proj­                 We developed TDD and automated testing
+                                                        ects, with automated tests in a test-first manner. All            training materials and delivered them in conjunc­
+                                                        projects used Java to develop Web applications in a               tion with each study. We gave the training to the
+                                                        single domain.                                                    industry participants in summer 2004. The test-
+                                                                                                                          first and test-last projects began in fall 2004 and
+
+80	 I E E E S o f t w a r E w w w . c o m p u t e r . o r g / s o f t w a r e
+ran through spring 2006. Although the develop­          ing, so the group had no line coverage. In the case
+ers might have experienced some learning curve          study, we omitted test-last projects with no auto­
+with TDD during the first few months, we be­            mated tests from the line-coverage percentage cal­
+lieve the project durations and total time elapsed      culation to avoid unfairly penalizing the test-last
+established sufficient experience in the test-first     measures. In all the studies, we found additional
+projects.                                               testing metrics such as branch coverage and num­
+                                                        ber of assertions to be generally consistent with
+   The software engineering courses involved rel­       the line-coverage results.
+atively short training sessions (about two hours)
+dedicated to automated unit testing and TDD top­           In the final study, when the same professional
+ics. Some students noted challenges with applying       developers completed a test-last project after having
+TDD at first. We observed undergraduate students        completed a test-first project earlier, they increased
+in a lab setting and provided additional informal       their average line coverage. Average branch test cov­
+instruction as needed to keep them writing au­          erage (Boolean expressions in control structures)
+tomated tests. The industry training consisted of       was actually a bit lower at 74 percent for test-last
+a full-day course on automated unit testing and         while the test-first project achieved 94 percent. We
+TDD. We carefully presented the materials for both      observed a similar phenomenon in a separate study
+test-first and test-last approaches to avoid introduc­  with beginning programmers.11 In that study, stu­
+ing any approach bias.                                  dent programmers who used the test-first approach
+                                                        first wrote more tests than their test-last counter­
+Analyzing the studies                                   parts. However, on the subsequent project, when
+   We used several popular software metrics to          students were asked to use the opposite approach,
+                                                        the test-last programmers (those who used test-first
+evaluate the artifacts from the study. Although         on the first project) again wrote more tests. Could
+experts differ regarding the most appropriate met­      it be that the test-first approach has some sort of
+rics, particularly in areas such as coupling9 and co­   a residual effect on a programmer’s disposition to
+hesion,10 we selected a representative set that are     write more tests? If so, we wonder whether this ef­
+widely calculated and reported.                         fect would diminish over time.
+
+   We began our analysis by considering whether         Impact on code size
+the programmers in our studies actually wrote au­          The simplest software metric is size. Figure 2b
+tomated unit tests. We informally monitored devel­
+opers during the studies through brief interviews       reports lines of code per module (generally a class).
+and observed code samples. The post-experiment          In all studies, test-first programmers wrote smaller
+survey asked developers to anonymously report           modules than their test-last counterparts. The case
+whether they used the prescribed approach. In all       study was the only study with enough classes to
+the studies but one, programmers reported using         analyze the data statistically. A two-sample, two-
+the approach they were instructed to use (test-first    tailed, unequal variance t-test indicated that the
+or test-last). The one exception was a team in the      difference in ICS lines of code per module was sta­
+undergraduate software engineering course. De­          tistically significant with p < 0.05. Unless stated
+spite being instructed to use a test-first approach,    otherwise, we use this same test and criteria when
+the team reported using a test-last approach, so we     claiming statistical significance.
+reclassified them into the test-last control group.
+                                                           Similarly, test-first programmers tended to write
+   Figure 2a reports each study’s average line cover­   smaller methods on average. Figure 2c reveals that
+age. This measure indicates the percentage of lines     test-first programmers’ average method size in lines
+of code that the automated test suites execute. Not     of code was below the test-last averages in all but
+surprisingly, line coverage is rather low in the stu­   the last two industry studies (ITL-TF and ITF-TL).
+dent studies and some test-last teams failed to write   The use of simple one-line accessor methods af­
+any automated tests. In their post-survey comments,     fects these differences. The ITF-TL study had the
+several student test-last team members reported         most striking difference with nearly 40 percent of
+running out of time to write tests. In contrast, pro­   the methods in the test-last project being simple
+fessional test-last developers in the ICS, ITL-TF, and  one-line accessors. In contrast, only 11 percent of
+ITF-TL studies reported more faithful adherence to      the test-first methods were simple accessors. Inlin­
+the rapid-cycle “code-test-refactor” practice.          ing the one-line accessor methods strengthens the
+                                                        claim that test-first programmers write smaller
+   In every study but the last one, the test-first      methods on average.
+programmers wrote tests that covered a higher
+percentage of code. The test-last control group in         Finally, figure 2d indicates that the test-first
+the INT-TF study performed only manual test­
+
+	 March/April 2008 I E E E S o f t w a r E 	 81
+180 7                                                                                                                                                                 3.5
+Weighted-methods complexityTest-first                                             Test-first                                                                          3.0
+                                                                    Cyclomatic complexity per method160Test-last6Test-last                                            2.5  Test-first
+140                                                                            5                                                                                           Test-last
+                                                                                                                                       Nested-block depth per method120
+                                                                                                                                                                      2.0
+100 4
+
+80 3                                                                                                                                                                  1.5
+60                                                                                                                                                                    1.0
+40                                                                             2                                                                                      0.5
+
+20 1
+
+00                                                                                                                                                                    0.0
+(a) USE GSE ICS INT-TF ITL-TF ITF-TL (b) USE GSE ICS INT-TF ITL-TF ITF-TL (c) USE GSE ICS INT-TF ITL-TF ITF-TL
+
+Figure 3. Complexity    programmers wrote fewer methods per class in all          we question the difference, given the earlier discus­
+metrics: (a) weighted-  but the ITL-TF study (the difference was very slight      sion on accessor methods in this study.
+methods complexity,     in the USE study).
+(b) cyclomatic                                                                       NBD comparisons were similar. The test-first
+complexity per method,     In summary, the data shows a possible tendency         projects had lower NBD in three studies. In the
+and (c) nested block    for test-first programmers to write smaller, simpler      remaining three studies, the test-last projects had
+depth per method.       classes and methods.                                      lower NBD, but the values are low and the differ­
+                                                                                  ences are small.
+                        Impact on complexity
+                           Size is one measure of complexity: smaller classes        We think the complexity metrics point to a ten­
+                                                                                  dency of test-first programmers to write simpler
+                        and methods are generally simpler and easier to un­       classes and sometimes simpler methods.
+                        derstand. Other common complexity measures in­
+                        clude counting the number of independent paths            Impact on coupling
+                        through code (cyclomatic complexity) and mea­                The tendency of test-first programmers to imple­
+                        suring the degree of nesting (nested block depth).
+                        More branches, paths, and nesting make code more          ment solutions with more and smaller classes and
+                        complex and therefore more difficult to understand,       methods might generate more connections between
+                        test, and maintain.                                       classes. Figure 4a shows the coupling between ob­
+                                                                                  jects (CBO), which measures the number of connec­
+                           We report three metrics to compare the com­            tions between objects. Half the studies had a lower
+                        plexity differences between the test-first and test-last  CBO in the test-first projects, and half were lower
+                        projects. Weighted-methods complexity measures            in the test-last projects. The average CBO values
+                        the sum of cyclomatic complexities for all methods        were acceptable in all the studies; none of the differ­
+                        in a class. In figure 3a, we see that test-first pro­     ences were statistically significant. The maximum
+                        grammers consistently produced classes with lower         CBO for any class was acceptably low (12 or fewer)
+                        complexity in terms of the number of branches and         for all the projects except two test-last ICS projects
+                        the number of methods. The ICS and ITF-TL dif­            (CBO of 28 and 49) and the two projects in the ITF­
+                        ferences were statistically significant. The consis­      TL study. Interestingly, the test-first project in the
+                        tently simpler classes by test-first programmers isn’t    ITF-TL study had a class with a CBO of 26 and the
+                        surprising considering the earlier report of fewer        test-last project had a class with a CBO of 16, both
+                        methods per class.                                        of which might be considered unacceptably high.
+
+                           The remaining two metrics, cyclomatic com­                Figure 4b reports differences in another cou­
+                        plexity per method and nested block depth (NBD)           pling measure: fan-out per class. Fan-out refers to
+                        per method, measure whether individual methods            the number of classes used by a class. Not surpris­
+                        are more or less complex. Figures 3b compares             ingly, the results are similar to those for CBO. The
+                        cyclomatic complexity per method, and figure 3c           differences are small—not statistically significant—
+                        compares NBD per method. The method-level dif­            and the values are acceptable.
+                        ferences are less consistent than those at the class-
+                        level. Cyclomatic complexity per method was lower            Two additional metrics seem informative when
+                        in the test-first projects in four of the six studies.    considering coupling: the average number of method
+                        The difference was statistically significant in ICS       parameters (PAR) and the information flow (IF =
+                        and INT-TF. In the two studies where the test-last        fan-in2 * fan-out2), where fan-in refers to the num­
+                        methods were less complex, the difference was             ber of classes using a particular class. In all but the
+                        small and the method complexity was low for both          GSE study, PAR was higher in the test-first projects.
+                        test-first and test-last methods. The difference in       This difference was statistically significant in all the
+                        the ITF-TL study was statistically significant, but       industry studies. In all but the ITL-TF study, IF was
+                                                                                  higher in the test-first projects.
+
+82	 I E E E S o f t w a r E w w w . c o m p u t e r . o r g / s o f t w a r e
+6                                            3.0                                                                                                                 0.6
+
+Coupling between objects5Test-first          2.5           Test-first                                                                                            0.5  Test-first
+                                                                 Fan-out per classTest-lastTest-last                                                                  Test-last
+
+                                                                                                                                    Lack of cohesion of methods42.00.4
+
+3                                            1.5                                                                                                                 0.3
+
+2                                            1.0                                                                                                                 0.2
+
+1                                            0.5                                                                                                                 0.1
+
+      0        ICS INT-TF ITL-TF ITF-TL (b)             0  USE GSE     ICS INT-TF ITL-TF ITF-TL          0
+
+(a) USE GSE                                                                                      (c) USE GSE ICS INT-TF ITL-TF ITF-TL
+
+   The PAR and IF measures indicate a high vol­            Henderson-Sellers’ definition of lack of cohesion of                                                                   Figure 4. Coupling
+ume of interaction and data passing between units          methods, LCOM5,14 because it normalizes cohe­                                                                          and cohesion between
+in the test-first projects. This could reflect the in­     sion values between zero and one. In addition, sev­                                                                    objects per project:
+creased testing discussed earlier. Test-first develop­     eral popular tools calculate LCOM5.                                                                                    (a) coupling between
+ers often report writing more parameters to make                                                                                                                                  objects per project,
+a method easier to configure and test. The higher             Figure 4c reports LCOM5 measures for the                                                                            (b) fan-out per class,
+IF values in the test-first projects might indicate        studies. LCOM is an inverse metric, so lower values                                                                    and (c) lack of cohesion
+high reuse (fan-in).                                       indicate better cohesion. The chart indicates that                                                                     of methods.
+                                                           cohesion was better in the test-first projects in half
+   We were curious about whether the possible in­          the studies (ICS, ITL-TF, and ITF-TL) and worse in
+creased coupling was good or bad. Coupling can             the other half. The difference was statistically sig­
+be bad when it’s rigid and changes in one module           nificant in only two studies (ICS and ITF-TL).
+cause changes in another module. However, some
+coupling can be good, particularly when it’s con­             One known problem with most cohesion met­
+figurable or uses abstract connections such as in­         rics is their failure to account for accessor meth­
+terfaces or abstract classes. Such code can be highly      ods.10 Most cohesion metrics, including LCOM5,
+flexible and thus more maintainable and reusable.          penalize classes that use accessor methods. The use
+                                                           of accessor methods is common in Java software,
+   Many test-first programmers make heavy use              and all the study projects involved Java.
+of interfaces and abstract classes to simplify test­
+ing. For instance, the dependency-injection pat­              To gauge the impact of this concern, we calcu­
+tern12 is popular among TDD developers, and it’s           lated the percentage of accessor to total methods in
+central to frameworks such as Spring,13 which sev­         all but the ICS studies. The test-first projects had
+eral projects in our study used. To check this out,        an average of 10 percent more accessors in all but
+we looked at several abstraction metrics, including        the ITF-TL study. It seems plausible that correcting
+Robert Martin’s abstractness measure (RMA),1               for the accessor problem would bring the test-first
+number of interfaces implemented (NII), number             cohesion metrics in line with the test-last measures.
+of interfaces (NOI), and number of abstract classes        We were nevertheless unable to substantiate claims
+(NOA) in all the projects. Our evaluation of these         that TDD improves cohesion.
+measures didn’t give a conclusive answer to whether
+the test-first approach produces more abstract de­         Threats to validity
+signs. However in most of the studies, the test-first         Like most empirical studies, the validity of our
+approach resulted in more abstract projects in terms
+of RMA, NOI, and NII.                                      results is subject to several threats. In particular, the
+                                                           results are based on a small number of developers.
+   The coupling analysis doesn’t reveal clear an­          Team selection wasn’t randomized, and participants
+swers. It appears that test-first programmers might        knew that we were comparing TDD and non-TDD
+actually tend to write more highly coupled smaller         approaches, leading to a possible Hawthorne effect.
+units. However, possible increases in abstractness         Furthermore, in the industry experiments, it was
+might indicate that the higher coupling is a good          nearly impossible to control all variables except the
+kind of coupling, resulting in more flexible soft­         use or non-use of TDD, while keeping the projects
+ware. The coupling question needs more work.               real and in-domain.
+
+Impact on cohesion                                            We made every effort to ensure that the TDD
+   Cohesion is difficult to measure. The most              and non-TDD teams were applying the approach
+                                                           assigned to them. We interviewed developers during
+common metrics look at the sharing (or use) of at­         the projects and at their conclusion. We observed
+tributes among methods. We elected to use Brian            the undergraduate academic teams in a lab setting
+                                                           and examined multiple in-process code samples to
+
+	 March/April 2008 I E E E S o f t w a r E 	 83
+About the Authors
+                                                                                                   see that automated unit tests were written in step
+                                                                                                                     with production code. Still, developers could have
+                         David Janzen is an assistant professor of computer science at California Polytechnic        misapplied the TDD and non-TDD approaches at
+                         State University, San Luis Obispo, and president of Simex, a software consulting and        some points. We look forward to additional stud­
+                         training company. His teaching and research interests include agile methodologies and       ies in varied domains that will increase the results’
+                         practices, empirical software engineering, software architecture, and software metrics. He  validity and broaden their applicability.
+                         received his PhD in computer science from the University of Kansas and is a member of the
+                         IEEE Computer Society and the ACM. Contact him at California Polytechnic State University,  B y focusing on how TDD influences design
+                         Computer Science Department, San Luis Obispo, California, 93407, djanzen@calpoly.edu or                characteristics, we hope to raise awareness
+                         david@simexusa.com.                                                                                    of TDD as a design approach and assist
+Hossein Saiedian is a professor of software engineering in the Department of                                         others in decisions on whether and how to adopt
+Electrical Engineering and Computer Science at the University of Kansas and a member                                 TDD. Our results indicate that test-first program­
+of the university’s Information and Telecommunication Technology Center. His research                                mers are more likely to write software in more and
+interests are in software engineering—particularly, technical and managerial models for                              smaller units that are less complex and more highly
+quality software development. He received his PhD in computer science from Kansas State                              tested. We weren’t able to confirm claims that TDD
+University. He’s a senior member of the IEEE. Contact him at EECS, University of Kansas,                             improves cohesion while lowering coupling, but we
+Lawrence, KS 66049, saiedian@eecs.ku.edu.                                                                            anticipate ways to clarify the questions these design
+                                                                                                                     characteristics raised. In particular, we’re working
+                                                                                                                     to eliminate the confounding factor of accessor us­
+                                                                                                                     age in the cohesion metrics.
+
+How To ReACH uS                                                                                                      References
+
+Writers                             Subscription Change of Address                                                     1.	 R.C. Martin, Agile Software Development: Principles,
+                                                                                                                           Patterns, and Practices, Pearson Education, 2003.
+For detailed information on sub­    Send change-of-address requests
+mitting articles, write for our     for magazine subscriptions to                                                      2.	 K. Beck, “Aim, Fire,” IEEE Software, Sept./Oct. 2001,
+Editorial Guidelines (software@     address.change@ieee.org. Be sure                                                       pp. 87–89.
+computer.org) or access www.        to specify IEEE Software.
+computer.org/software/author.                                                                                          3.	 D. Janzen and H. Saiedian, “Test-Driven Development:
+htm.                                Membership Change of Address                                                           Concepts, Taxonomy, and Future Direction,” Com­
+                                                                                                                           puter, Sept. 2005, pp. 43–50.
+Letters to the Editor               Send change-of-address requests
+                                    for IEEE and Computer Society                                                      4.	 B. George and L. Williams, “A Structured Experiment
+Send letters to                     membership to member.services@                                                         of Test-Driven Development,” Information and Soft­
+                                    ieee.org.                                                                              ware Technology, vol. 46, no. 5, 2004, pp. 337–342.
+    Editor, IEEE Software
+    10662 Los Vaqueros Circle       Missing or Damaged Copies                                                          5.	 H. Erdogmus, M. Morisio, and M. Torchiano, “On the
+    Los Alamitos, CA 90720                                                                                                 Effectiveness of the Test-First Approach to Program­
+    software@computer.org           If you are missing an issue or you                                                     ming,” IEEE Trans. Software Eng., vol. 31, no. 3,
+                                    received a damaged copy, contact                                                       2005, pp. 226–237.
+Please provide an email address or  help@computer.org.
+daytime phone number with your                                                                                         6.	 A. Geras, M. Smith, and J. Miller, “A Prototype Em­
+letter.                             Reprints of Articles                                                                   pirical Evaluation of Test Driven Development,” Proc.
+                                                                                                                           10th Int’l Symp. Software Metrics (Metrics 04), IEEE
+On the Web                          For price information or to order                                                      CS Press, 2004, pp. 405–416.
+                                    reprints, send email to software@
+Access www.computer.org/            computer.org or fax +1 714 821                                                     7.	 M.M. Müller, “The Effect of Test-Driven Development
+software for information about      4010.                                                                                  on Program Code,” Proc. Int’l Conf. Extreme Program­
+IEEE Software.                                                                                                             ming and Agile Processes in Software Eng. (XP 06),
+                                    Reprint Permission                                                                     Springer, 2006, pp. 94–103.
+Subscribe
+                                    To obtain permission to reprint                                                    8.	 P. Kruchten, The Rational Unified Process: An Intro­
+Visit www.computer.                 an article, contact the Intellectual                                                   duction, 3rd ed., Addison-Wesley, 2003.
+org/subscribe.                      Property Rights Office at
+                                    copyrights@ieee.org.                                                               9.	 L.C. Briand, J.W. Daly, and K. Wüst, “A Unified
+                                                                                                                           Framework for Coupling Measurement in Object-Ori­
+                                                                                                                           ented Systems,” IEEE Trans. Software Eng., vol. 25,
+                                                                                                                           no. 1, 1999, pp. 91–121.
+
+                                                                                                                     10.	 L. Briand, J. Daly, and J. Wüst, “A Unified Framework
+                                                                                                                           for Cohesion Measurement in Object-Oriented Sys­
+                                                                                                                           tems,” Empirical Software Eng., vol. 3, no. 1, 1998, pp.
+                                                                                                                           65–117.
+
+                                                                                                                     11.	 D. Janzen and H. Saiedian, “A Leveled Examination of
+                                                                                                                           Test-Driven Development Acceptance,” Proc. 29th Int’l
+                                                                                                                           Conf. Software Eng. (ICSE 07), IEEE CS Press, 2007,
+                                                                                                                           pp. 719–722.
+
+                                                                                                                     12.	 M. Fowler, “Inversion of Control Containers and the
+                                                                                                                           Dependency Injection Patterns,” 2004; www.martin­
+                                                                                                                           fowler.com/articles/injection.html.
+
+                                                                                                                     13.	 R. Johnson et al., Java Development with the Spring
+                                                                                                                           Framework, Wrox, 2005.
+
+                                                                                                                     14.	 B. Henderson-Sellers, Object-Oriented Metrics: Mea­
+                                                                                                                           sures of Complexity, Prentice Hall, 1996.
+
+84	 I E E E S o f t w a r E w w w . c o m p u t e r . o r g / s o f t w a r e
+

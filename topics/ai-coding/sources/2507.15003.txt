@@ -1,0 +1,1152 @@
+                                        The Rise of AI Teammates in Software Engineering (SE) 3.0: How Autonomous
+                                        Coding Agents Are Reshaping Software Engineering
+
+arXiv:2507.15003v1 [cs.SE] 20 Jul 2025  HAO LI, Queen's University, Canada
+
+                                        HAOXIANG ZHANG, Queen's University, Canada
+
+                                        AHMED E. HASSAN, Queen's University, Canada
+
+                                        The future of software engineering--SE 3.0--is already unfolding with the rise of AI teammates: autonomous, goal-driven systems
+                                        that collaborate with human developers in real-world workflows. Autonomous coding agents are among the most transformative of
+                                        these systems. Such agents are now actively initiating, reviewing, and evolving code at scale throughout the open source ecosystem.
+                                        In this paper, we introduce AIDev, the first large-scale dataset capturing how such autonomous coding agents operate in the wild.
+                                        Spanning over 456,000 pull requests authored by five leading autonomous agents--OpenAI Codex, Devin, GitHub Copilot, Cursor, and
+                                        Claude Code--across 61,000 repositories and involving 47,000 developers, AIDev provides an unprecedented empirical foundation for
+                                        studying the integration of autonomous teammates into modern software development.
+
+                                           Unlike prior work that has largely theorized the rise of AI-native software engineering, AIDev offers concrete, structured, and
+                                        open data that can power future research in benchmarking, agent readiness, optimization avenues, collaboration modeling, and AI
+                                        governance. The dataset includes rich metadata on pull requests (PR), authorship, review timelines, code changes, and integration
+                                        outcomes--enabling researchers to explore questions that existing synthetic benchmarks like SWE-bench cannot answer. For example,
+                                        although agents frequently outperform humans in speed, our analysis shows their pull requests are accepted less frequently, revealing
+                                        a stark gap between benchmark performance and real-world trust and utility. Moreover, while agents can massively accelerate code
+                                        submission--one developer submitted as many Agentic-PRs in three days as they submitted without Agentic help in the previous three
+                                        years--these contributions tend to be structurally simpler (quantified through traditional code complexity metrics).
+
+                                           We envision AIDev as a living resource: extensible, analyzable, and immediately usable by the software engineering and AI
+                                        communities. By grounding the vision and planning of SE 3.0 in real-world evidence, we hope to unlock a new generation of research
+                                        into AI-native SE workflows, and lay the empirical groundwork for building and governing the next wave of symbiotic human­AI
+                                        collaboration in SE. The AIDev dataset is publicly available at https://github.com/SAILResearch/AI_Teammates_in_SE3.
+
+                                        CCS Concepts: · Software and its engineering  Software development techniques; Collaboration in software development;
+                                        Software creation and management; · Computing methodologies  Artificial intelligence.
+
+                                        Additional Key Words and Phrases: AI Agent, Agentic AI, Coding Agent, Agentic Coding, Software Engineering Agent
+
+                                        ACM Reference Format:
+                                        Hao Li, Haoxiang Zhang, and Ahmed E. Hassan. 2025. The Rise of AI Teammates in Software Engineering (SE) 3.0: How Autonomous
+                                        Coding Agents Are Reshaping Software Engineering. In Proceedings of Make sure to enter the correct conference title from your rights
+                                        confirmation email (Conference acronym 'XX). ACM, New York, NY, USA, 22 pages. https://doi.org/XXXXXXX.XXXXXXX
+
+                                        Authors' Contact Information: Hao Li, hao.li@queensu.ca, Queen's University, Kingston, ON, Canada; Haoxiang Zhang, haoxiang.zhang@queensu.ca,
+                                        Queen's University, Kingston, ON, Canada; Ahmed E. Hassan, ahmed@cs.queensu.ca, Queen's University, Kingston, ON, Canada.
+
+                                        Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not
+                                        made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for components
+                                        of this work owned by others than the author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on
+                                        servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from permissions@acm.org.
+
+                                        © 2025 Copyright held by the owner/author(s). Publication rights licensed to ACM.
+                                        Manuscript submitted to ACM
+
+                                        Manuscript submitted to ACM                                                1
+2 Hao Li, Haoxiang Zhang, and Ahmed E. Hassan
+
+1 Introduction
+
+                                                                       "Software is eating the world, but AI is going to eat software."
+                                                                                                       -- Jensen Huang (CEO of NVIDIA)
+
+   Software Engineering (SE) is entering a new era, one increasingly shaped by AI Teammates: autonomous, task-driven
+agents capable of completing complex SE tasks such as feature development, debugging, and code review with minimal
+human oversight. Among the most transformative of these agents are Autonomous Coding Agents. While early AI
+coding assistants operated primarily in an autocomplete or co-pilot role, today's Autonomous Coding Agents are
+beginning to function as AI teammates who initiate pull requests and engage in feedback loops; in turn reshaping
+software development workflows. What was once a futuristic vision [19] is now unfolding rapidly: these AI teammates
+are actively contributing to codebases at scale. Autonomous Coding Agents are becoming routine actors in software
+development workflows, participating in thousands of pull requests (PRs)1 daily. Based on our collected dataset, OpenAI
+Codex [1] alone has created over 400,000 PRs in open-source GitHub repositories in less than two months since its
+release in May 2025 (see Figure 1a).
+
+                  Cumulative PR Count                                                                   Cumulative PR Count (Popular Repos Only)
+
+400000    Agent                                                                              2500       Agent
+300000    OpenAI Codex                                                                                  OpenAI Codex
+200000    Devin                                                                                         Devin
+          Copilot
+          Cursor
+          Claude Code
+Cumulative PR Count                                                                          2000       Copilot
+                                                                        Cumulative PR Count             Cursor
+                                                                                             1500 Claude Code
+
+                                                                                             1000
+
+100000                                                                                       500
+
+0         Feb 2025 Mar 2025  Apr 2025 May 2025  Jun 2025  Jul 2025                           0          Feb 2025 Mar 2025  Apr 2025 May 2025  Jun 2025  Jul 2025
+Jan 2025                                                                                      Jan 2025
+                              Date                                                                                          Date
+
+          (a) AIDev (full dataset)                                                                 (b) AIDev-pop (repositories with >500 stars)
+
+Fig. 1. Cumulative PR volume by Autonomous Coding Agents, shown across all repositories (AIDev) and popular repositories
+(AIDev-pop).
+
+   Much of the existing literature has anticipated this shift. Researchers have speculated about the rise of AI-native SE
+(SE 3.0) [19], examined challenges around trust and reliability in human-AI interactions [18], and proposed system
+architectures that blend human creativity with AI-native automation. However, these discussions were primarily con-
+ceptual or forward-looking. So far, we lacked empirical grounding for how such AI teammates (e.g., Autonomous Coding
+Agents) would actually operate in the wild? How would Autonomous Coding Agents affect developer productivity and
+review latency? Do Autonomous Coding Agents produce mergeable code? And how are human teams adapting to the
+presence of Autonomous Coding Agents?
+
+   Our paper is the first work to demonstrate that the era of Autonomous Coding Agent in SE is not an
+
+impending future, but an unfolding reality. To support this claim, we introduce AIDev, a new large-scale dataset
+comprised of 456,535 Agentic PRs created by five leading Autonomous Coding Agents: OpenAI Codex, GitHub Copilot,
+Devin, Cursor, and Claude Code on GitHub. Spanning 47,303 developers and 61,453 repositories, AIDev provides
+
+1From now on, we refer to such pull requests as Agentic-PRs.
+Manuscript submitted to ACM
+The Rise of AI Teammates in Software Engineering (SE) 3.0  3
+
+the first systematic look at how these AI teammates are being used, how they interact with human collaborators,
+and the nature of their contributions. Unlike existing codeLLM benchmarks (e.g., SWE-bench), which tend to rely
+on static and curated datasets, and fail to capture the messy and emergent nature of real-world SE; AIDev offers a
+dynamic, large-scale perspective grounded in real-life human-AI collaborations. We designed AIDev to serve both as an
+observational lens and a catalyst for future research, reflecting how Autonomous Coding Agents are used in practice.
+
+   We envision the AIDev dataset as a foundation for the next frontier of software engineering research.
+
+Researchers can use it to study human-AI cooperation, longitudinal productivity trends, Autonomous Coding Agent
+review behaviours, and emerging governance challenges around AI autonomy in real-world software projects. By
+grounding the vision of SE 3.0 [19] in large-scale empirical evidence, AIDev bridges the gap between an unpredictable,
+fast-evolving future and ongoing real-world software engineering practices.
+
+   The main contributions of our paper are as follows:
+
+     · We curate and release AIDev,2 a large-scale dataset of 456,535 Agentic-PRs created by Autonomous Coding
+        Agents across 61,453 GitHub repositories, capturing the breadth and diversity of Autonomous Coding Agents
+        activity in the open-source software ecosystem.
+
+     · We present three case studies to demonstrate the value of AIDev and highlight the following key findings:
+        ­ Although Autonomous Coding Agents like GitHub Copilot can complete half of their PRs within 13 minutes,
+          we find that their PRs are less likely to be accepted than those of human developers, indicating quality gaps in
+           Agentic-PRs and deviation from traditional benchmark results.
+        ­ PRs authored by OpenAI Codex are reviewed and merged more quickly than human-authored ones, suggesting
+           increased efficiency but also raising concerns about the thoroughness of the review process.
+        ­ Autonomous Coding Agents can drastically scale developer output (e.g., the same developer producing 164
+           Agentic-PRs in 3 days vs. 176 Human-PRs over 3 years), yet these PRs alter fewer structural aspects of code
+           (e.g., lower rates of cyclomatic complexity changes), raising new questions about the complexity and long-term
+           maintainability of Agentic Code Changes.
+
+     · A list of nine research directions that are derived from our empirical findings in AIDev, intended to guide future
+        exploration at the intersection of SE and Autonomous Coding Agent.
+
+   The remainder of this paper is structured as follows. Section 2 presents the background information. Section 3
+introduces the AIDev dataset collected in our study. Section 4 outlines three case studies, along with key findings and
+future research directions based on the AIDev dataset. Section 5 reflects on the future of software engineering (SE 3.0)
+in the Autonomous Coding Agent era. Section 6 concludes the paper.
+
+2 Background
+
+2.1 From SE 1.0 to SE 3.0
+
+Software engineering has undergone a profound evolution, marked by increasing system complexity and deeper
+integration of Artificial Intelligence (AI) into development workflows. This evolution can be understood through three
+major paradigms: SE 1.0, SE 2.0, and SE 3.0. Additionally, we propose an intermediate step--SE 1.5--to capture the
+transitional role of token-level AI assistance, as summarized in Table 1.
+
+2 https://github.com/SAILResearch/AI_Teammates_in_SE3
+
+                                                           Manuscript submitted to ACM
+4 Hao Li, Haoxiang Zhang, and Ahmed E. Hassan
+
+   SE 1.0 (Classical Software Engineering) represented the traditional era, where software was hand-coded using
+explicit rules and deterministic flows (e.g., waterfall model). Programs were built and deployed in tightly controlled
+environments, requiring precise specifications and predictable behavior. No AI assistance was present.
+
+   SE 1.5 (Predictive Coding) introduced token-level, context-aware assistance such as autocomplete and smart
+suggestions. This paradigm includes tools that predict the next token, line, or code block a developer is likely to type,
+based on recent edits and the surrounding context. While useful for speeding up typing and reducing boilerplate, these
+tools operate only at a micro-scale and provide inline suggestions without autonomy.
+
+     · Focus: Micro-level suggestions during typing.
+     · Typical tools: IntelliSense, IntelliCode, early versions of GitHub Copilot.
+     · Human role: Choose or ignore suggestions in real-time.
+   SE 2.0 (AI-Assisted Software Engineering) marks the advent of large language models (LLMs) in development
+environments. Tools in this category generate full functions, tests, or boilerplate code in response to natural-language
+prompts. These tools maintain file- or project-level context and assist with code explanation, translation, and review.
+Human developers remain in control, using the AI as a powerful assistant.
+     · Focus: Macro-level generation and transformation of code.
+     · Typical tools: GitHub Copilot, Amazon CodeWhisperer, Gemini Code Assist, Cursor, Windsurf.
+     · Human role: Provide intent, review AI output, integrate or revise suggestions.
+   SE 3.0 (Agentic Software Engineering) envisions software development as an intent-driven, conversational process
+where developers collaborate with autonomous AI teammates [19]. These agents operate at the task level--reading
+codebases, planning changes, executing tools, refactoring code, running tests, and submitting pull requests.
+   The developer's role shifts to orchestration: setting goals, permissions, and reviewing final changes. These workflows
+typically extend beyond classic IDEs and into AI-native orchestration environments ­ with recent experts projecting
+the death of the IDE by as early as end of 2025.
+   The role of Developers shifts from manual coding to high-level orchestration, setting goals, permissions, and reviewing
+completed work. Increasingly, workflows move beyond traditional IDEs into AI-native orchestration environments
+designed for human-agent collaboration. As Boris Cherny (lead engineer on Claude Code at Anthropic) observed,
+"There's a good chance that by the end of the year, people aren't using IDEs anymore" --suggesting that familiar
+development tools may give way to new agent orchestration platforms.
+     · Focus: End-to-end execution of development tasks (design  code  test  commit).
+     · Typical tools: Devin, GitHub Copilot Workspace, Google Jules, OpenAI Codex, Claude Code, Cursor Deep Agent,
+
+        Genie.
+     · Human role: Define goals, constraints, and permissions; review final changes; refine agent policies.
+
+                                          Table 1. Dimensions of AI Integration in Software Engineering
+
+Dimension Predictive Coding (SE 1.5) AI-Assisted SE (SE 2.0)              Agentic SE (SE 3.0)
+
+Unit of work           Tokens / lines              Functions / files                Features / tickets
+Autonomy           None (inline hints)     Low (single-shot generation)   High (plan­execute­verify loops)
+Context scope    Current cursor position
+Primary benefit                                       File / repo           Whole system + external tools
+Main risk              Typing speed       Rapid prototyping, refactoring  Scalable automation of dev tasks
+                    Minor distraction                                     Unintended repo or infra changes
+                                                 Hallucinated code
+
+Manuscript submitted to ACM
+The Rise of AI Teammates in Software Engineering (SE) 3.0  5
+
+2.2 Autonomous Coding Agent in Software Engineering
+
+Autonomous Coding Agents go far beyond predictive code completion. They can autonomously decompose complex
+goals, invoke external tools (e.g., debuggers, compilers, search engines), execute code, and iteratively refine their outputs
+with minimal human oversight. These capabilities mark a shift toward intelligent systems that exhibit decision-making,
+adaptation, and autonomy in practical development workflows. Early research prototypes illustrate this trend. For
+example, RepairAgent couples an LLM with a finite-state controller to automatically identify, edit, and test buggy
+code, successfully repairing real-world software defects with limited human input [8]. Cheng et al. [11] present BRT
+Agent, an LLM-powered system that autonomously generates bug reproduction tests (BRTs) from real bug reports
+at Google. These agent-generated BRTs improve automated program repair effectiveness, enabling more accurate fix
+selection using their proposed Ensemble Pass Rate (EPR) metric. These emerging systems share four defining properties
+of Autonomous Coding Agents: (i) persistent memory across dialogue turns and interactions, (ii) tool-use planning
+to select and sequence external operations, (iii) self-reflection to assess and revise intermediate results, and (iv) the
+ability to negotiate control by handing off tasks to human reviewers when needed. Together, these properties enable
+a new class of semi-autonomous intelligent systems that can serve as collaborators, not just assistants, in software
+engineering workflows.
+
+2.3 Benchmarking Autonomous Capabilities
+
+Evaluation of AI in software engineering has progressed from single-function code correctness to full-scale, project-level
+assessment. For example, SWE-bench evaluates whether models can resolve real GitHub issues in multi-file Python
+projects [21]. While early models showed low resolution rate, recent improvements highlight rapid progress. SWE-bench
+Multimodal [34] extends these challenges to JavaScript with visual context. REPOCOD [23] evaluates repository-level
+code completion by combining retrieval of repository-level context with developer-written test cases. FeedbackEval [14]
+investigates iterative, feedback-driven repair by assessing models' ability to use compiler and test feedback over
+multiple rounds. Together, these efforts reveal the gap between research-oriented benchmarks and real-world software
+engineering, highlighting the need for more comprehensive and practical evaluations.
+
+2.4 Human-AI Collaboration and Productivity
+
+Empirical studies show that developers engage AI tools in two distinct modes: acceleration (speeding up familiar
+work) and exploration (probing unfamiliar design spaces) [17]. Productivity gains thus depend on balancing rapid code
+generation with the overhead of validation, testing, and trust calibration, dimensions captured by the multifaceted
+SPACE framework for developer productivity [17]. Other research emphasizes the importance of human-AI interaction
+factors, particularly how developers form mental models of AI behavior and adapt through feedback. For example,
+Desolda et al. [15] studied focus groups with 56 developers and introduced ATHENA, an adaptive code assistant
+designed to improve trust, usability, and integration in real-world workflows. These findings suggest that as AI tools
+become more autonomous, successful integration will depend as much on aligning with human cognitive models and
+workflows as on raw technical capability.
+
+3 The AIDev Dataset
+
+In this section, we present the methodology used to construct the AIDev dataset, which captures the contributions of
+Autonomous Coding Agents to open-source software development on GitHub.
+
+                                                                                                                                                    Manuscript submitted to ACM
+6 Hao Li, Haoxiang Zhang, and Ahmed E. Hassan
+
+Table 2. GitHub search query and collection start date for each Autonomous Coding Agent.
+
+                GitHub Search Query                     Start Date
+
+OpenAI Codex    is:pr head:codex/                       2025-05-16
+Devin           is:pr author:devin-ai-integration[bot]  2024-12-24
+GitHub Copilot  is:pr head:copilot/                     2025-01-01
+Cursor          is:pr head:cursor/                      2025-01-01
+Claude Code     is:pr "Co-Authored-By: Claude"          2025-02-24
+
+3.1 Data Collection
+
+To construct the AIDev dataset, we mine pull requests (PRs) from GitHub that are associated with five widely used
+Autonomous Coding Agents: OpenAI Codex, Devin, GitHub Copilot, Cursor, and Claude Code. These agents are
+selected based on their growing adoption and their explicit roles as autonomous contributors or co-authors in software
+repositories. We use the GitHub REST API3 in combination with targeted search queries to extract PRs attributed to
+these agents. Table 2 outlines the specific search queries used to identify PRs for each agent. These queries are adapted
+from PRarena4 and leverage recognizable signals such as bot author names (e.g., "devin-ai-integration[bot]"), branch
+prefixes (e.g., "head:copilot/"), and explicit messages in the PR body (e.g., "Co-Authored-By: Claude"). We add a custom
+search query for Claude Code and, to ensure the quality of the results, apply a start date filter to exclude unrelated
+PRs. For GitHub Copilot, we additionally verify that the user login name is "copilot", as this signal cannot be captured
+directly through the search query.
+
+   Release or public launch dates of Autonomous Coding Agents are determined from official announcements and
+documentation where available. For instance, OpenAI Codex has clearly stated launch dates in its release announce-
+ment [1]. Devin5 and Claude Code6 also have documented release dates in their respective release notes. For tools
+such as Cursor and GitHub Copilot, where no official release date was found, we adopted a conservative start date of
+January 1, 2025. The data collection cut-off date is June 22, 2025. Figure 1 visualizes the cumulative PR growth during
+this period, showing that the majority of PRs from Cursor and Claude Code occur after March 2025, which justifies
+the conservative start date of January 1, 2025.
+
+3.2 Dataset Overview
+
+The collected AIDev dataset contains 456,535 pull requests opened by 47,303 distinct developers across 61,453 repositories
+(Table 3a). Although OpenAI Codex was released on 2025-05-16, it dominates the overall volume, surpassing Devin,
+the second highest, by approximately 17 times. To focus subsequent analyses on popular projects, we filter the AIDev
+dataset by retaining only repositories with  500 GitHub stars, resulting in a subset named AIDev-pop. This filter
+reduces the sample to 7,122 PRs from 1,240 developers spanning 856 repositories (Table 3b), yet maintains representation
+from all five agents. Figure 1b shows the cumulative PR volume in AIDev-pop .
+
+   For comparison, we stratified PRs from the same popular repositories created in 2025, excluding those created by
+Autonomous Coding Agents, to serve as human-created PRs, i.e., Human-PRs. This comparison set comprises 6,628 PRs
+
+3 https://docs.github.com/en/rest
+4 https://github.com/aavetis/PRarena
+5 https://docs.devin.ai/release- notes/overview#december- 24%2C- 2024
+6 https://docs.anthropic.com/en/release- notes/claude- code
+Manuscript submitted to ACM
+The Rise of AI Teammates in Software Engineering (SE) 3.0                                                                          7
+
+             Table 3. Statistics of the AIDev dataset (full dataset) and AIDev-pop (repositories with >500 stars).
+
+             (a) AIDev: Full dataset.                                                   (b) AIDev-pop: Filtered (>500 stars).
+
+                          #PR #Developer #Repo                                                           #PR #Developer #Repo
+
+OpenAI Codex              411,621        41,619       53,702                     OpenAI Codex    2,686     522 467
+Devin                      24,893         2,897        3,857                     Devin           2,729     300 130
+GitHub Copilot             16,531         1,916        3,097                     GitHub Copilot  1,462     309 215
+Cursor                      1,981                                                Cursor                     66 52
+Claude Code                 1,509           753          828                     Claude Code       144      68 61
+                                            585          645                                       101
+
+Total                     456,535        47,303 61,453                           Total           7,122     1,240 856
+
+issue                     related_issue               pull_request     integer   pr_commits                pr_commit_details
+id                                                    id               integer   sha                       sha
+number          integer   pr_id          integer      number           varchar   pr_id         varchar     pr_id                   varchar
+title           integer                               title                      author        integer     author                  integer
+body            varchar   issue_id       integer      body                 text  committer     varchar     committer               varchar
+user                                                  user_id          integer   message       varchar     message                 varchar
+state               text  source         varchar      user             varchar                             commit_stats_total
+created_at      varchar                               state            varchar                     text    commit_stats_additions      text
+closed_at       varchar   pr_comments                 created_at    timestamp                              commit_stats_deletions  integer
+             timestamp    id                integer   closed_at     timestamp    user             integer  filename                integer
+pr_timeline  timestamp    pr_id             integer   merged_at     timestamp    id               varchar  status                  integer
+pr_id                     user              varchar   repo_id          integer   login            varchar  additions               varchar
+event           integer   user_id           integer   repo_url         varchar   name             varchar  deletions               varchar
+commit_id       varchar   created_at     timestamp    html_url         varchar   email            varchar  changes                 integer
+created_at                body                                                   company          varchar  patch                   integer
+actor            varcha                         text                             location         integer                          integer
+assignee     timestamp                                                           followers        integer                          varchar
+label                     pr_reviews                  repository                 following        integer
+message         varchar   id                integer   id            integer      public_repos  timestamp
+                varchar   pr_id             integer   url           varchar      created_at
+                varchar   user              varchar   full_name     varchar
+                          state             varchar   language      varchar
+                    text  submitted_at   timestamp    forks         integer
+                          body                        stars         integer
+                                                text
+
+                                         Fig. 2. Dataset schema of the AIDev dataset.
+
+that are created by 2,515 developers from 818 repositories (we cannot sample enough PRs for some repositories). All
+downstream applications of the AIDev dataset presented in this paper (Section 4) are based on AIDev-pop.
+
+3.3 Dataset Schema
+
+Figure 2 shows the dataset schema of the AIDev dataset. At its centre lies the pull_request table. Each supporting
+table serves a distinct analytic purpose:
+
+     · repository: records static project attributes such as name, primary language, star count, and fork count.
+     · user: stores profile attributes such as location, company affiliation, and follower count.
+     · pr_timeline: tracks events for each PR--such as opened, assigned, labelled, merged--making it straightforward
+
+        to reconstruct PR lifecycles.
+
+                                                                                                                                                    Manuscript submitted to ACM
+8 Hao Li, Haoxiang Zhang, and Ahmed E. Hassan
+
+     · pr_reviews and pr_comments: capture feedback from reviewers and developers, along with timestamps and
+        author identities, supporting studies of communication dynamics.
+
+     · pr_commits and pr_commit_details: list the commit hashes included in each PR, and provide file-level diff
+        statistics (added, deleted, modified) and the raw patch, supporting commit-level studies (e.g., code changes).
+
+     · related_issue and issue: link PRs to issues they close or reference, and provide issue metadata, enabling
+        tracing back to the source event that triggered the PR (e.g., bug reports or feature requests).
+
+   All tables are provided as CSV files, accompanied by scripts that recreate the dataset schema. The dataset is included in
+our replication packages along with example Python notebooks to minimize onboarding friction for future researchers.
+
+4 Applications of the AIDev dataset
+
+   In this section, we demonstrate the applications of our AIDev dataset by conducting three case studies. We highlight
+our insights from the AIDev dataset, including ten findings and nine research directions.
+
+4.1 Productivity in Autonomous Coding Agents Era
+
+Understanding how Autonomous Coding Agents affect developer productivity at scale is essential before introducing
+new solutions into already complex workflows. With a rapidly expanding landscape of Autonomous Coding Agents
+such as Claude Code, OpenAI Codex, and others, it is tempting to adopt the latest innovations even without empirical
+evidence of their effectiveness. However, adopting new tools risks adding noise, becoming counterproductive rather than
+valuable. Instead, we propose to take a more disciplined approach for software engineering research: carefully evaluating
+which Autonomous Coding Agents meaningfully support real-world development through rigorous measurements.
+Only by measuring the actual impact of these emerging Autonomous Coding Agents can we identify which tools
+genuinely enhance productivity and warrant prioritization.
+
+   To move towards this goal, our first effort focuses on systematically categorizing software engineering tasks within
+a representative set of Agentic-PRs. Specifically, we construct AIDev-pop, a filtered high-quality dataset of PRs from
+popular open-source repositories (each with over 500 GitHub stars as of June 22, 2025). Each PR (title and body) is
+automatically classified into one of 11 task categories defined by Conventional Commits Specification7 (e.g., feat, fix,
+docs) using GPT-4.1-mini. Such state-of-the-art LLMs have demonstrated strong performance in annotating software
+engineering artifacts [3], making them suitable for this task. This categorization provides a structured view of how
+Autonomous Coding Agents are being used across different software development activities.
+
+   Building on this categorization, we evaluate two key indicators that reflect the quality and efficiency of Agentic-PRs
+contribution. First, we compute the acceptance rate, i.e., the proportion of Agentic-PRs that are successfully merged.
+We calculate the acceptance rate per task category for each Autonomous Coding Agent, and compare with Human-PRs.
+Second, for agents that provide sufficient metadata, we analyze during-work time (i.e., resolution time) [27] to estimate
+how long Autonomous Coding Agent actively worked on each PR. For example, in the case of GitHub Copilot, we
+measure the elapsed time from PR creation to the point when the agent finishes its job (distinct from the time until
+the PR is merged or closed). These metrics enable a quantitative comparison between agent- and human-authored
+contributions, offering actionable insights into which Autonomous Coding Agents are most effective in real-world
+development settings.
+
+7 https://www.conventionalcommits.org
+Manuscript submitted to ACM
+The Rise of AI Teammates in Software Engineering (SE) 3.0               9
+
+Table 4. Percent distribution of PR task types for Autonomous Coding Agents in AIDev-pop, along with the total number of PRs.
+
+             %feat %fix %perf %refac %sty %doc %test %chore %build %ci %other #total
+
+Human        29.4 26.9 1.3    5.6 0.9 7.8 2.8 12.8         9.3 1.5      1.7 6,618
+
+OpenAI Codex 28.4 27.2 0.6    7.1 0.8 21.3 9.2             2.6 1.6 1.1  0.1 2,686
+                                                           6.2 1.9 1.0  0.1 2,729
+Devin        35.8 27.4 1.6 10.4 0.4 12.0 3.0               1.8 3.5 1.4  0.2 1,462
+                                                           4.2 3.5 0.0  1.4 144
+GitHub Copilot 29.7 42.2 1.4  5.2 0.3 9.8 4.4              1.0 3.0 2.0  0.0 101
+
+Cursor       41.7 34.7 0.7    2.8 1.4 6.9 2.8
+
+Claude Code  49.5 18.8 0.0    8.9 0.0 13.9 3.0
+
+   Next, we present our experimental findings and discuss their implications in depth:
+
+   Finding #1: Autonomous Coding Agents have moved beyond the role of mere coding assistants, becoming
+
+indispensable collaborators, as recent 2025 trends suggest, each contributing unique strengths across a wide
+
+range of software engineering tasks such as feature development and bug fixing. Table 4 shows that over
+55% of PRs submitted by Autonomous Coding Agents are either feature development (feat) or bug remediation (fix),
+matching the overall human distribution. However, individual agents diverge in how they allocate effort: OpenAI
+Codex and Devin exhibit a well-balanced mix of various SE capabilities, closely mirroring human developers' task
+profiles. By contrast, 42.2% of the GitHub Copilot Agentic-PRs are bug fixing PRS, surpassing both human developers
+and other agents. This emphasis is likely driven by GitHub Copilot's tight integration with GitHub issues, which
+frequently assigns it targeted bug-related tasks. Finally, Cursor and Claude Code appear to be primarily used for
+feature implementation, each submitting over 40% of their PRs as features. However, since these two tools are mainly
+used locally, their relatively low usage, as indicated by PR counts, suggests that their characteristics would be better
+understood through analysis within local environments rather than relying solely on GitHub data.
+
+   Finding #2: Autonomous Coding Agents lag human in PR acceptance rates by a large margin, especially on
+
+complex tasks such as feature development and bug fixing. Figure 3 reveals a striking pattern: across all evaluated
+Autonomous Coding Agents, PR acceptance rates consistently lag behind human performance, particularly for feature
+development (feat), bug fixes (fix), and performance optimization (perf) tasks. Among the Autonomous Coding
+Agents, OpenAI Codex achieves the highest acceptance rate at 64%, followed by Devin at 49% and GitHub Copilot
+at 35%. These substantial performance gaps, ranging from 15 to 40 percentage points below human performance,
+suggest systemic limitations rather than isolated implementation flaws. Notably, these results contrast sharply with
+benchmark performance on SWE-bench verified [21], a human-validated benchmark, where top-performing AI solutions
+report success rates exceeding 70%8. This significant disparity between benchmark and real-world performance raises
+important questions about the ecological validity of current evaluation methodologies for Autonomous Coding Agents
+in software engineering contexts. These concerns about real-world AI performance are further supported by recent
+empirical evidence showing that AI tools actually increased task completion time by 19% among experienced developers,
+despite expectations of productivity gains [2].
+
+   We do note that these performance gaps should not be interpreted as a sign of failure; they should be seen as a
+testament to how early we are in this transformation. These results were captured just two months into the public
+release of many of these agents. The fact that autonomous AI teammates are already operating across tens of thousands
+of repositories, submitting hundreds of thousands of PRs, and successfully landing complex changes--even at lower
+
+8 https://www.swebench.com
+
+                                                           Manuscript submitted to ACM
+10 Hao Li, Haoxiang Zhang, and Ahmed E. Hassan
+
+rates--is itself astonishing. As tools, RL training paradigms, frameworks evolve and best practices emerge, these early
+shortfalls will prove to be the launchpad for rapid and sustained improvement. The revolution is already underway and
+it is moving fast.
+
+        perf refactor                              perf refactor                         perf refactor
+                                                                                                     75%100s%tyle
+   fix                     75%100s%tyle     fix                    75%100s%tyle     fix
+feat                                     feat                                    feat                 50%
+                         50%                                     50%                               25%
+                       25%                                     25%
+                                                                                               0% docs
+                     0% docs                                 0% docs
+
+ci test ci test ci test
+
+    build chore                                    build chore                         build chore
+Human vs. OpenAI Codex                             Human vs. Devin                Human vs. GitHub Copilot
+                                                                     perf refactor
+                        perf             refactor                                75%100s%tyle
+                 fix
+                                               75%100s%tyle     fix               50%
+             feat                                            feat              25%
+                                             50%
+                                           25%                             0% docs
+
+                                         0% docs
+
+        Human
+        OpenAI Codex
+        Devin           ci                         test      ci test
+        GitHub Copilot                                             build chore
+        Cursor               build chore
+        Claude Code         Human vs. Cursor                   Human vs. Claude Code
+
+Fig. 3. PR acceptance rate by task category for Human vs. Autonomous Coding Agents (each subplot compares one Autonomous
+Coding Agent against the human baseline).
+
+   Finding #3: Documentation emerges as a clear strength of Autonomous Coding Agents. In Figure 3, both
+OpenAI Codex (88.6%) and Claude Code (85.7%) outperform the human baseline (76.5%) in documentation-related PRs.
+Since documentation tasks primarily involve natural language generation rather than complex program logic, such
+tasks align well with the core strengths of LLM-powered Autonomous Coding Agents. The high acceptance rates for
+documentation-related PRs may also reflect greater reviewer confidence in AI-generated documentation. Unlike code
+changes, documentation modifications pose minimal functional risk, making documentation tasks a promising area for
+Autonomous Coding Agents applications.
+
+   Finding #4: GitHub Copilot completes 75% of its PR jobs in under 18.5 minutes, faster than typical
+human issue resolution, which usually takes more than half a day. As shown in Figure 4, GitHub Copilot
+delivers half of its PRs within 12.8 minutes. While 75% of jobs are completed within 18.5 minutes, the distribution
+exhibits a long tail extending up to 60 minutes, with the 95th percentile exceeding one hour. Despite strong average
+performance, this tail latency suggests potential infrastructure issues such as cold starts, dependency resolution, or API
+throttling. In human-AI collaboration, such variability may hinder real-time feedback loops and delay CI/CD pipelines.
+In contrast, analyses of Apache Jira projects show that human developers typically resolve issues over multi-day periods.
+
+Manuscript submitted to ACM
+The Rise of AI Teammates in Software Engineering (SE) 3.0                               11
+
+0 10 20 Resolut3io0n Time (M4in0utes) 50 60
+
+Fig. 4. Distribution of GitHub Copilot resolution time.
+
+More than 50% of Major and Critical issues take over 5 days, and even Trivial and Minor issues often (more than 50%)
+take over half a day [27]. These disparities underscore GitHub Copilot's advantage in job completion speed, enabling
+tighter iteration cycles and improving CI/CD responsiveness.
+
+Research Direction #1: Develop integration-oriented benchmarks grounded in real-world software engi-
+
+neering workflows. Our findings expose a key limitation reflecting AI's applications to software engineering: models
+generate syntactically valid code but often fail the nuanced human judgments essential for real-world acceptance.
+Unlike synthetic benchmarks that measure curated datasets [10, 21], actual PR merges depend on factors such as
+maintainability, style, and project-specific context, elements that are central to practical adoption. Our AIDev dataset
+captures these workflows, enabling future benchmarks that evaluate what truly matters: not just functional correctness,
+but seamless integration into developer practices. This shifts the focus from "Can we leverage AI to generate code?" to
+"Do AI contributions improve real-world software development?" This marks a vital step towards deeper and closer
+evaluation of AI's actual impact on everyday software engineering workflows. It also helps identify where current
+Autonomous Coding Agents fall short compared to human developers, specially in terms of atomic software engineering
+capabilities, in turn guiding targeted improvements.
+
+   Research Direction #2: Analyze rejected PRs to identify Autonomous Coding Agent failure modes. Rejected
+PRs often contain valuable diagnostic artifacts--such as review comments, timeline events, and patch-level feedback--
+that are preserved in the AIDev dataset. By mapping GitHub events to specific failure modes, including logic bugs,
+syntax errors, inadequate testing, or misalignment with project conventions, researchers can classify errors and develop
+targeted mitigation strategies. This analysis complements static benchmarks and informs the design of agents with
+retry capabilities or self-diagnostic features, ultimately enabling reflexive agents that can detect and address their own
+mistakes.
+
+   Research Direction #3: Latency-aware orchestration for Autonomous Coding Agents. The heavy-tailed
+latency we observe in GitHub Copilot's traces reveals systemic bottlenecks that undermine the timely feedback
+cycles expected in modern CI/CD workflows. Rich telemetry recorded in GitHub Actions logs9 already captures
+environment setup, MCP server start-up, and inference steps of GitHub Copilot, providing a concrete foundation
+for root-cause analysis. Researchers can therefore investigate systems-level remedies such as caching, speculative
+execution, incremental previews, or warm-started runtime systems. In addition, prompt-level efficiency techniques
+merit further study. For instance, the Chain-of-Draft prompting strategy reduces token usage to approximately 55%
+
+9 https://github.com/NethermindEth/nethermind/actions/runs/15811046373/job/44562368029
+
+                                                                                        Manuscript submitted to ACM
+12 Hao Li, Haoxiang Zhang, and Ahmed E. Hassan
+
+Table 5. Turnaround time comparison for Agentic-PRs and Human-PRs. MT.: median turnaround time (in hours); Sig.: statistical
+significance of difference (=  < 0.05).
+
+                Accepted PRs                        Rejected PRs
+
+                %Accepted MT. (h) Sig. Effect Size  %Rejected MT. (h) Sig. Effect Size
+
+Human           76.8 3.9 NA   NA                    16.1 27.6 NA  NA
+
+OpenAI Codex    65.3 0.3  medium (+)                21.3 2.4  small (+)
+Devin                                               48.4 93.9  negligible (-)
+GitHub Copilot  48.9 2.2  negligible (+)            32.1 4.6  small (+)
+Cursor                                              21.5 1.1  small (+)
+Claude Code     38.2 17.2     small (-)             32.7 1.8  small (+)
+
+                51.4 2.4      NA
+
+                52.5 6.9      NA
+
+of Chain-of-Thought while retaining over 90% of solution quality on SWE-bench, resulting in roughly 45% shorter
+wall-clock times for code-fix tasks [35]. Combining such token-efficient reasoning with adaptive workload orchestration
+has the potential to reduce both median and tail latencies, helping Autonomous Coding Agents better deliver results
+within a possibly shorter and more predictable timeframe rather than occasionally leaving users waiting indefinitely.
+
+4.2 Agentic Code Review Dynamics
+
+Section 4.1 shows that Autonomous Coding Agent activities on GitHub are increasing rapidly, with such agents
+generating PRs at scale. This trend exposes a critical yet often overlooked bottleneck: despite rapid advancements
+in code generation capabilities and volume, human-centric code review processes have remained largely unchanged.
+Consequently, the scalability of Autonomous Coding Agent contributions has created a growing imbalance between PR
+submission rates and review capacity. Traditional software engineering workflows already experience possible delays in
+feedback and integration, which are further exacerbated by agentic workflows that accelerate contribution rates beyond
+the capacity of existing review mechanisms, thereby risking bottlenecks in quality assurance and integration/release
+cycle. In this section, we examine how review dynamics are adapting to this evolving context by answering two key
+questions: (1) how quickly agentic contributions are processed, and (2) who is responsible for reviewing them.
+
+   For each PR, we calculate its review turnaround time, defined as the elapsed duration from PR creation to closure
+(either acceptance or rejection), to compare review efficiency between Agentic-PRs and Human-PRs. To assess whether
+differences in turnaround times are statistically significant, we perform the Mann-Whitney U test [26] at a significance
+level of  = 0.05, conducted separately for accepted and rejected PRs. Additionally, we quantify effect sizes using Cliff's
+delta  [25], interpreting results according to established thresholds from prior studies [30].
+
+   In addition, we extract PRs and their corresponding reviews from AIDev-pop. Reviewer identities are classified as
+human or bot based on username patterns (e.g., the suffix [bot]) and GitHub's type field. Each PR is then categorized
+into one of four groups: reviewed exclusively by humans, exclusively by bots, by both, or by neither. We further identify
+the 10 most active bot reviewers among Agentic-PRs and analyze their review activities in comparison to human
+reviewers.
+
+   Finding #5: OpenAI Codex PRs cut review time by 10 times, boosting efficiency but questioning review
+depth. As shown in Figure 5 and Table 5, accepted PRs from OpenAI Codex close in a median of 0.3 hours (18 minutes),
+which is significantly faster than Human-PRs (3.9 hours) with a medium effect size. Rejected PRs from OpenAI Codex
+are also triaged significantly faster (2.4 vs. 27.6 hours) with a small effect size. This suggests that OpenAI Codex PRs
+
+Manuscript submitted to ACM
+The Rise of AI Teammates in Software Engineering (SE) 3.0                                                                       13
+
+                 6mo                                                Accept                                              Reject
+
+Turnaround Time  1mo
+
+                  7d                OpenAI Codex     Devin  Cursor  Claude Code GitHub Copilot
+                  3d
+                  1d
+                  8h
+
+                  2h
+                  1h
+                  0h
+
+                             Human
+
+                      Fig. 5. Distribution of turnaround times for accepted and rejected PRs across agents and humans.
+
+are often either unambiguously correct or noticeably flawed, allowing reviewers to make rapid decisions. In contrast,
+GitHub Copilot shows the opposite pattern: slow to accept, fast to reject. Accepted GitHub Copilot PRs take 17.2
+hours to review, which is over 4 times longer than accepted Human-PRs (3.9 hours), with a small negative effect size. In
+contrast, its rejected PRs are reviewed in just 4.6 hours, significantly faster than human rejections (27.6 hours). This
+disparity implies that reviewers struggle more with validating or iterating GitHub Copilot's PRs, whereas flawed ones
+are rapidly dismissed. This may reflect quality inconsistency or ambiguity in GitHub Copilot outputs that demand
+closer scrutiny.
+
+   In addition, rejected PRs from Autonomous Coding Agents are generally triaged faster than Human-PRs, saving
+reviewer time despite higher rejection rates. Table 5 shows that across all Autonomous Coding Agents except Devin,
+rejected Agentic-PRs are closed significantly faster than those from humans. While these trends suggest improved
+efficiency, they raise concerns about review depth. Given the scale of contributions and the lack of strong accountability
+mechanisms, this rapid pace may suggest superficial review rather than genuine confidence. Without assessing the
+presence and depth of review comments or formal, actionable change requests, it remains uncertain whether these
+Agetnic-PRs undergo meaningful scrutiny or are merely triaged.
+
+Finding #6: Human reviewers remain dominant across Agentic-PRs yet GitHub Copilot drives a shift
+
+toward automated hybrid collaboration in review. Figure 6 shows that both Human-PRs and Agentic-PRs receive
+no explicit review in the majority of cases (75.3% and 58.2%, respectively), while the second most common category
+involves reviews conducted solely by humans, at 14.7% and 21.8%. Notably, bot reviewers are more prevalent in Agentic-
+PRs (20.1%) than in Human-PRs (10.0%). Breaking down review dynamics by tool reveals distinct patterns. In Devin,
+Cursor, and Claude Code, human reviewers remain dominant, with 33.2%, 32.6%, and 23.8% of PRs reviewed solely
+by humans, respectively. OpenAI Codex, by contrast, presents a more balanced distribution, with bot-only reviewers
+roughly matching with human-only reviewers. Most notably, GitHub Copilot shows a marked shift toward a hybrid
+human-bot review mode, where 37.4% of PRs involve both. In such cases, bots commonly function as co-reviewers10 or as
+
+10 https://github.com/kanisterio/kanister/pull/3505
+
+                                                                    Manuscript submitted to ACM
+14 Hao Li, Haoxiang Zhang, and Ahmed E. Hassan
+
+  Human      14.7 3.6 6.4                  75.3                 Reviewer Type
+All Agents      21.8 11.0 9.1                       58.2           Only Human
+                      33.2 2.5 6.1                  58.3           Human + Bot
+    Devin                                                          Only Bot
+                                                                   No Reviews
+
+Cursor                     32.6  6.9 18.1                 42.4
+
+Claude Code          23.8        9.9 12.9        53.5
+
+GitHub Copilot 15.7              37.4 2.9                 44.0
+
+OpenAI Codex 12.8 5.4 15.0                 66.8
+
+             0 20 40 60 80 100
+                                                 Share of PRs (%)
+
+                                                 Fig. 6. Reviewer types across the PRs in AIDev-pop.
+
+first-pass screeners,11 providing initial assessments that can benefit the subsequent human review. This trend highlights
+a potential transformation in the allocation of review responsibilities in GitHub Copilot and may significantly reduce
+the need for manual triage if this pattern continues to grow.
+
+   Finding #7: Autonomous Coding Agents and their paired review bots often originate from the same
+
+provider, forming closed PR-review loops that streamline workflows; but risk reinforcing provider-specific
+
+biases. We analyze the top 10 most active review bots to understand on which Autonomous Coding Agents they operate.
+Figure 7 illustrates a strong association between review bots and Autonomous Coding Agents from the same provider.
+For example, PRs from GitHub Copilot are often reviewed by copilot-pull-request-reviewer[bot], responsible
+for 91.0% of bot reviews on GitHub Copilot PRs. Similarly, cursor[bot] is responsible for reviewing 13.5% (53.8% of
+bot reviews) of PRs submitted through Cursor.
+
+   These provider-aligned PR-review loops offer practical advantages with developers benefitting from tightly integrated
+workflows, consistent UX, and faster iteration cycles. However, they also raise concerns about internal bias: when
+a review bot repeatedly evaluates code produced by an Autonomous Coding Agent from the same provider, it may
+overlook stylistic issues or latent errors that fall outside its tuned assumptions. In contrast, bots like coderabbitai[bot]
+operate across both human- and agent-authored code and are not confined to a single provider ecosystem. Their broader
+exposure may enable more robust and diverse code evaluation.
+
+   Finally, among the top 10 review bots, only github-advanced-security[bot] remains rule-based rather than
+AI-powered. Its continued presence highlights a notable frontier--security. For critical tasks like vulnerability detection,
+traditional static analysis tools still outperform current AI systems. The absence of trusted AI-powered security reviewers
+underscores an important research direction: designing Autonomous Coding Agents that can operate reliably and
+transparently in safety-critical domains.
+
+   Research Direction #4: Understand and reduce the human cost of reviewing agentic code changes. The
+cost of reviewing Agentic-PRs lies not only in their correctness, but in the ambiguity and required mental effort to
+validate them. Although some Autonomous Coding Agent submitted Agentic-PRs are reviewed rapidly (Figure 5), it
+remains unclear whether this indicates reviewer confidence, superficial engagement, or a lack of oversight. Future
+
+11 https://github.com/ryoppippi/ccusage/pull/128
+Manuscript submitted to ACM
+The Rise of AI Teammates in Software Engineering (SE) 3.0                                                       15
+
+Reviewer Bot                   copilot-swe-agent[bot] 0.0 0.0 0.0 0.0 0.0 91.0     100Share of Bot Reviews (%)
+                                          cursor[bot] 0.0 2.0 0.0 53.8 31.3 0.5    80
+                                                                                   60
+                              gemini-code-assist[bot] 6.9 10.4 32.4 1.9 1.3 0.0    40
+                     copilot-pull-request-reviewer[bot] 0.0 25.2 29.4 8.5 8.9 6.9  20
+                                                                                   0
+                                    coderabbitai[bot] 40.2 24.1 14.7 17.9 5.1 0.0
+                                      ellipsis-dev[bot] 13.1 15.1 8.8 8.5 0.2 0.0
+                                    greptile-apps[bot] 10.4 4.9 0.0 1.9 12.1 0.0
+                        entelligence-ai-pr-reviews[bot] 3.7 0.0 0.0 0.0 16.7 0.0
+
+                                              Copilot 13.4 0.0 0.0 0.0 0.0 0.0
+                        github-advanced-security[bot] 3.1 1.1 2.9 0.9 3.2 1.0
+
+              GOitpClHeaunubAdIeHCCCuoDuCopreiomdslviadeooxerntn
+
+                         Fig. 7. Top-10 bot reviewers and their review distribution across PRs from different agents.
+
+research could leverage the AIDev dataset to capture signals of review effort, such as review comment volume, presence
+of requested changes, follow-up commits addressing feedback, or the time taken to integrate any received feedback.
+These signals could help researchers design new agent capabilities or workflows aimed at reducing review burden. For
+example, Autonomous Coding Agents may explain their code changes, proactively resolve merge conflicts, or minimize
+diff complexity. Our AIDev dataset supports such potential investigations with detailed PR timelines, review histories,
+and reviewer metadata. This research aligns with the growing research interest in human-aligned AI behaviour, and
+opens new directions for making autonomous contributions more interpretable, reviewable, and trustworthy.
+
+   Research Direction #5: Understand and improve how agentic code review contributes to the quality and
+process of pull request workflows. As review bots such as coderabbitai and copilot-pull-request-reviewer
+become a routine part of software development workflows (Figure 7), and Autonomous Coding Agents become more
+active in writing and changing code, the importance of code review continues to grow. It remains a key step to
+ensure software quality, especially when more and more code will be produced by AI. However, current evaluations of
+automated code review tools rely on developer opinions or post-hoc metrics [13], which do not fully answer questions
+such as how useful these reviews are. To help move the field forward, our dataset can be leveraged to study review
+behaviour in more detail, especially in PRs involving Autonomous Coding Agents. Review histories can be analyzed,
+allowing future research to investigate the kinds of feedback that review bots give, how such feedback connects to
+whether a PR gets merged, and how bots work alongside human reviewers. Especially as human-AI collaboration
+becomes more common, our dataset offers a solid starting point for future research that wishes to understand, evaluate,
+and improve how agentic code review fits into real-world workflows, thus improving software quality.
+
+   Research Direction #6: Design review triage systems that manage reviewer effort in response to the
+scale and complexity of AI-generated contributions. As Autonomous Coding Agents generate PRs at scale, the
+
+                                                                                                                                                    Manuscript submitted to ACM
+16 Hao Li, Haoxiang Zhang, and Ahmed E. Hassan
+
+allocation of human reviewer effort quickly becomes a bottleneck. To manage this increasing review workload, triage
+systems must go beyond static rules and incorporate dynamic factors such as PR complexity, risk level, and reviewer
+availability. For example, low-risk PRs like documentation edits can be routed to junior developers or bots, while
+high-impact system-level changes should be escalated to experienced reviewers. Research at Meta has shown that
+reviewer recommender systems, when tuned to account for reviewer workload and response latency, can reduce review
+times without sacrificing quality [29]. Our AIDev dataset includes metadata such as reviewer identities, timestamps,
+and task categories, which makes it possible to identify and evaluate triage strategies. Future work could use this dataset
+to measure how different triage approaches impact metrics such as reviewer time saved, workload distribution, and the
+reduction of review smells. A deeper understanding of agentic review processes is essential to scale human oversight in
+workflows increasingly shaped by AI. As PR volume continues to grow, effective triage mechanisms will be essential to
+maintain reviewer capacity without compromising review quality or speed.
+
+4.3 Beyond Agentic/Vibe Coding for Software Engineering
+
+The integration of Autonomous Coding Agents into software development workflows is rapidly accelerating, as
+reflected by the over 456K GitHub PRs now containing AI-generated code. These agents are no longer just assisting
+with isolated tasks, as they now actively shape development practices ranging from individual programming to team-
+based collaboration on GitHub. This growing presence of AI agents in the software lifecycle presents both significant
+opportunities and pressing questions about its long-term impact on software quality.
+
+   While AI tools can dramatically increase output, raw quantity is no longer the primary bottleneck. The core concern
+is whether AI-generated code meets the standards of correctness, maintainability, and robustness required in production
+environments. To better understand this, we analyze over 7K Agentic-PRs drawn from 856 repositories with more
+than 500 stars, using metrics like cyclomatic complexity to evaluate code structure and potential maintainability costs.
+However, measuring code quality alone is insufficient. Without clear attribution, it is difficult to assign responsibility or
+intervene when issues arise. Moreover, AI behaviour is not monolithic and varies by programming language, domain,
+and workflow. We will explore the above aspects to understand how to guide the responsible integration of Autonomous
+Coding Agents into software engineering.
+
+   Finding #8: AI-assisted coding prioritizes throughput over complexity. Our analysis of OpenAI Codex usage,
+using the OpenHFT/Chronicle-Wire project as a case study, reveals an notable shift in development dynamics. Between
+May 30 and June 3, 2025, a single developer submitted 164 Codex-assisted PRs, nearly matching the 176 human-authored
+PRs produced over the preceding three and a half years (from November 2021 to May 2025). Despite this surge in output,
+only 9.1% of the Agentic-PRs introduced changes in cyclomatic complexity, compared to 23.3% for Human-PRs. Figure 8
+shows the distribution of non-zero complexity changes, suggesting that agentic code changes tend to favour minimal,
+boilerplate-style updates over more intricate implementations. This tradeoff, i.e., sheer throughput at the expense of
+per-PR intricacy, raises key questions: Does reduced complexity lead to fewer defects or faster review? Or, conversely,
+might this simplicity be a liability in domains where complexity, such as in highly optimized code, is essential?
+
+   Finding #9: Clear authorship attribution remains limited but essential for accountability. Among the Agentic-
+PRs, we found that Devin, GitHub Copilot, and Cursor explicitly indicate their authorship in commit metadata. In
+contrast, OpenAI Codex and Claude Code attribute their contributions to human developers. While Claude Code
+includes a default "Co-Authored-By: Claude" message (which can be disabled), OpenAI Codex provides no attribution at
+all. This lack of authorship traceability undermines core principles of responsible AI--such as transparency, auditability,
+and accountability--especially in the context of software engineering. For instance, tracing precise authorship in
+
+Manuscript submitted to ACM
+The Rise of AI Teammates in Software Engineering (SE) 3.0                                                                       17
+
+Nonzero Cyclomatic Complexity Change0
+                            5
+                           10                                        Human
+                           15
+                           20
+                           25
+                           30
+
+                                                       OpenAI Codex
+
+                                      Fig. 8. Distribution of non-zero cyclomatic complexity change by OpenAI Codex vs. human.
+
+Codex-assisted PRs is often difficult due to incomplete or obscured metadata, even among follow-up commits.12 Without
+clear ownership, it becomes harder to perform post hoc debugging, triage bugs, or assign responsibility for regressions.
+We argue that standardized authorship labelling should be a fundamental requirement for all AI-assisted development
+practices. Clear attribution not only enables code provenance tracking and behavioural analysis of Autonomous Coding
+Agents, but also supports more robust human-AI collaboration and aligns with emerging norms in responsible AI
+governance. Moreover, linking ownership-labelled code to artifacts like issue reports and bug fixes would open new
+opportunities to study how AI- versus human-authored code affects software quality and maintainability over time.
+
+   Finding #10: Autonomous Coding Agents exhibit distinct language preferences reflecting domain spe-
+
+cialization in their capabilities. To examine how different Autonomous Coding Agents integrate into development
+workflows, we analyze the programming languages used in repositories where their PRs are submitted. Table 6 shows
+that TypeScript is the most common language across all agents, underscoring its popularity in AI-assisted development.
+However, notable divergences emerge: OpenAI Codex shows a pronounced skew toward Python, while GitHub
+Copilot heavily favours C#, likely reflecting their respective integrations and user bases. These variations suggest that
+each agent has developed domain-specific affinities, shaped by tooling ecosystems, developer intent, and integration
+contexts. Understanding these language-specific patterns is a key step toward evaluating agent behavior with greater
+precision and building agents better tuned to diverse development environments.
+
+   Research Direction #7: Understand and evaluate the long-term quality of agentic code contributions.
+
+While our findings suggest that AI-generated code may simplify certain maintenance tasks, critical questions remain
+about its long-term impact on software quality. Future work should go beyond static complexity metrics and examine
+how AI-authored code performs over time, through indicators such as defect density, review latency, test coverage, and
+bug-fix effort. Moreover, the effects of AI vary across project types: infrastructure libraries, mobile apps, and backend
+systems may each exhibit different tolerances for simplicity vs. optimization. This calls for more nuanced evaluations
+that factor in domain, project scale, and team practices.
+
+   To support this direction, we release our curated AIDev dataset of Agentic-PRs, alongside full histories of each
+developer's contributions, including pre "Autonomous Coding Agents" periods. This enables benchmarking across
+time, authorship, and tool usage, providing a robust foundation for studying agentic code quality. By anchoring future
+research in empirical evidence and open data, we aim to move beyond anecdotal impressions of AI coding agents
+and toward a systematic understanding of when, where, and how these agents produce code that truly meets, or
+
+12 https://github.com/stanfordnlp/dspy/pull/8319
+
+                                                                            Manuscript submitted to ACM
+18 Hao Li, Haoxiang Zhang, and Ahmed E. Hassan
+
+        Table 6. Top-10 languages used in GitHub repositories across agents in AIDev-pop.
+
+        All Agents   OpenAI Codex    Devin  GitHub Copilot   Cursor                        Claude Code
+
+        #%              #%          #%       #%              #%                             #%
+
+TypeScript 226 26.4  117 25.1      71 54.6  36 16.7         24 46.2                        16 26.2
+                                            20 9.3
+Python  172 20.1     119 25.5      24 18.5                  12 23.1                        14 23.0
+                                    1 0.8   64 29.8          1 1.9                          1 1.6
+C# 78 9.1             12 2.6       10 7.7                    3 5.8                          9 14.8
+                      37 7.9       10 7.7   18 8.4           5 9.6                          4 6.6
+Go 72 8.4             28 6.0        0 0.0    6 2.8           1 1.9                          3 4.9
+                      25 5.4        4 3.1   13 6.0           0 0.0                          3 4.9
+Rust 49 5.7           23 4.9        0 0.0   10 4.7           0 0.0                          1 1.6
+                      18 3.9        3 2.3    6 2.8           1 1.9                          0 0.0
+C++ 42 4.9            10 2.1        1 0.8    6 2.8           3 5.8                          2 3.3
+                      12 2.6                 1 0.5
+JavaScript 40 4.7
+
+Java 25 2.9
+
+C 20 2.3
+
+PHP 18 2.1
+
+exceeds human craftsmanship and standards. This is especially critical as generative models are deployed in real-world,
+high-stakes environments where quality cannot be compromised.
+
+   Research Direction #8: Analyze and improve the planning phase of human-AI software collaboration.
+
+As AI agents become more autonomous in software development, one key but often overlooked phase is how tasks
+are scoped and planned before any code is written. This planning process is central to translating human intent into
+executable steps, and it plays a defining role in the success of AI-generated code. However, many current agents obscure
+this reasoning stage, making it difficult to understand how decisions are made or how errors originate. Tools like GitHub
+Copilot preserve rich planning traces embedded in PR descriptions. For instance, in a bug-fix PR,13 GitHub Copilot
+automatically generated a multi-step action plan that was updated iteratively across five versions, demonstrating how
+it contextualizes an issue and proposes structured solutions. These traces offer a valuable research opportunity: future
+work could investigate what kinds of input prompts and planning structures lead to more effective outcomes, how
+developers interact with AI-generated plans, and what planning capabilities differentiate stronger agents from weaker
+ones. As task planning becomes a defining component of agentic workflows, studying it in depth will be crucial for
+improving reliability, transparency, and overall software quality.
+
+   Research Direction #9: Investigate how programming language features influence agent effectiveness
+
+and reliability. For example, an open question is whether languages with stronger type systems--such as TypeScript
+and Rust--offer implicit advantages to autonomous agents. These languages may provide a form of built-in scaffolding
+via richer compile-time feedback and structural constraints, helping agents both avoid errors and converge on correct
+implementations more efficiently. This hypothesis points to a promising area of future research at the intersection
+of programming language design and AI-powered automation: how language-level affordances can support, amplify,
+or constrain agentic behavior. Deeper study of this interplay could guide both the selection of languages that better
+support agent capabilities and shape the design of language-aware AI teammates.
+
+5 The Road Ahead
+
+AIDev demonstrates that autonomous agents have already moved beyond proof-of-concept prototypes and are now
+embedded in everyday software development. In this section, we look ahead to how Autonomous Coding Agents may
+reshape the future of software engineering, and we offer a roadmap for research and practice.
+
+13https://github.com/owncast/owncast/pull/4354, see the edit history of PR body
+Manuscript submitted to ACM
+The Rise of AI Teammates in Software Engineering (SE) 3.0  19
+
+5.1 Software Repositories as Training Environments for AI Agents
+
+Autonomous Coding Agents differ fundamentally from traditional coding assistants [18]. Rather than simply completing
+code snippets in response to a developer's keystrokes (e.g., auto-completion), they can execute entire development
+tasks autonomously [4]. For example, Autonomous Coding Agents can set up environments, draft implementation
+plans, execute tests, and submit PRs. This shift from reactive assistance to proactive agency introduces a new paradigm:
+treating software repositories as interactive agent training environments.
+
+   We propose that the research community embrace software repositories as structured environments, analogous to
+reinforcement learning (RL) simulators such as OpenAI Gym [9], in which Autonomous Coding Agents can iteratively
+improve through interaction. Each software repository offers natural reward signals: successful CI builds, merged pull
+requests, or positive reviewer feedback. In contrast, failed tests or rejected PRs yield negative feedback. Unlike synthetic
+benchmarks with hand-crafted and often fragile reward functions, repositories provide feedback grounded in real-world
+human judgment and developer expectations. Two key observations motivate this: (i) Pretraining LLMs on code has
+been shown to improve general reasoning capabilities, with recent work reporting gains of up to 8.2% over text-only
+pretraining [5], reinforcing the dual role of software repositories as both SE benchmarks and enablers of broader AI
+capabilities. (ii) As AI Agents inherently leverage the test time scaling [33] of LLMs, software repositories naturally
+serve as "learning environments," enabling agents to continually improve through experience, in line with RL-style
+paradigms [32].
+
+5.2 Dynamic Benchmarking and Living Leaderboards
+
+Traditional benchmarks such as HumanEval [10] and SWE-bench [21] offer useful insights into AI performance,
+but they fall short in capturing the evolving, collaborative, and context-rich reality of real-world software projects.
+These benchmarks are static, limited to single-language (typically Python) tasks, and often lack important aspects
+such as code review dynamics or evolving team preferences. Moreover, they are increasingly susceptible to data
+contamination [22] and leakage through pretraining [36], which undermines their ability to reflect generalization and
+real-world applicability.
+
+   We advocate for a shift toward dynamic benchmarking using live data from active repositories. Agentic contributions
+can be assessed on an ongoing basis using metrics such as acceptance rates, review turnaround times, and code quality
+indicators. This approach enables the development of a living leaderboard, similar to the Chatbot Arena [12], but
+tailored for software engineering agents. Such a leaderboard would reflect not only who solves the most test cases, but
+also who integrates most effectively into real projects.
+
+   Recent work has begun to move in this direction. For example, SPICE [6] proposes a modular benchmarking
+pipeline and introduces a manually curated SWE-bench-style dataset for evaluating AI-generated patches across a
+wide range of open source projects. Notably, SPICE is fully open-sourced, providing both tools and datasets that the
+community can adapt to their own evaluation needs. It also offers valuable commentary on the high cost--both manual
+and computational--of building reliable, real-world benchmarks. These insights reinforce that while such efforts are
+essential, they are also resource-intensive and require careful design tradeoffs.
+
+   Ultimately, these efforts highlight that effective benchmarking in the age of AI teammates must go beyond static,
+general-purpose leaderboards. We anticipate a growing need for customized benchmarks that reflect the unique
+characteristics, workflows, and quality standards of individual projects or organizations. Dynamic and domain-specific
+
+                                                                                                                                                    Manuscript submitted to ACM
+20 Hao Li, Haoxiang Zhang, and Ahmed E. Hassan
+
+benchmarking supports more meaningful comparisons between agents, enables informed decision-making for tool
+integration, and better aligned evaluation metrics with the realities of real-world software engineering practice.
+
+5.3 Towards SE 3.0 Methodologies
+
+Agile, Scrum, and DevOps practices emerged in a world where all contributors were human, working in diurnal
+cycles and constrained by cognitive and communication limits. Autonomous Coding Agents fundamentally disrupt
+these assumptions [24, 28]. A single developer can now orchestrate multiple autonomous agents, each capable of
+independently creating pull requests, writing tests, generating documentation, and responding to review feedback
+around the clock [7, 16]. This shift alters the cadence of development, the locus of decision-making, and the definition
+of team velocity [20, 31]. The influx of agentic contributions also introduces new challenges. How should developers
+manage the review load from always-active agents? How should teams triage overlapping changes or resolve the
+conflicted versions? These complexities call for new software engineering methodologies.
+
+   We propose that SE 3.0 requires a rethinking of practices and infrastructure: (1) Orchestration frameworks are needed
+to manage high-throughput agentic workflows while preserving human oversight and control. (2) Review systems
+must adapt to triage contributions from Autonomous Coding Agents, potentially requiring agents to provide structured
+rationales, test plans, or explanations for code edits. (3) Governance models should clarify when agents are allowed
+to act autonomously, how their contributions are validated, and who holds accountability for defects. Just as Agile
+reshaped engineering for development, SE 3.0 must redefine engineering practices for a world in which autonomy and
+collaboration are not mutually exclusive, but deeply interwoven. Hybrid human-AI development teams will demand new
+norms, tools, and theories. This is an opportunity for the research community to lead this methodological transition.
+
+6 Conclusion
+
+We present AIDev, a large-scale dataset capturing the real-world activities of Autonomous Coding Agents within
+GitHub pull requests. While prior work has speculated about the emergence of AI-native software development (SE
+3.0), AIDev offers the first empirical and systematic evidence of how widely used Autonomous Coding Agents such as
+OpenAI Codex, GitHub Copilot, Devin, Cursor, and Claude Code contribute to modern codebases. The dataset contains
+over 456K PRs authored by AI Agents across 61K GitHub repositories and 47K developers.
+
+   Our analyses reveal surprising and sometimes sobering insights into the integration of Autonomous Coding Agents
+into real-world workflows. For example, although these agents can dramatically accelerate code contribution rates,
+substantial disparities remain in PR acceptance rates and review dynamics when compared to human developers.
+Notably, agents like OpenAI Codex can close PRs up to ten times faster than humans, yet quality and trustworthiness
+remain open challenges. Agentic-PRs are significantly less likely to be merged, particularly when they involve complex
+reasoning tasks such as feature development or bug fixing. These results expose a growing gap between benchmark
+performance and real-world effectiveness, calling into question the ecological validity of current static evaluation
+methods.
+
+   AIDev not only grounds the next wave of software engineering research in reality, but also unlocks new directions for
+studying productivity, authorship, code review practices, and human-agent governance. By releasing AIDev as a living,
+extensible resource, we invite the community to iterate on and extend this foundation gy building new benchmarks,
+crafting better collaboration paradigms, and advancing AI-native tooling. The future of software engineering will be
+shaped not just by what AI teammates can do, but by how we choose to evaluate, guide, and partner with them. AIDev
+takes us from speculation to evidence--from theory to practice--in defining that future.
+
+Manuscript submitted to ACM
+The Rise of AI Teammates in Software Engineering (SE) 3.0  21
+
+References
+
+ [1] [n. d.]. Introducing Codex. https://openai.com/index/introducing-codex/. [Accessed 07-07-2025].
+ [2] [n. d.]. Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity. https://metr.org/blog/2025-07-10-early-2025-
+
+      ai-experienced-os-dev-study/. [Accessed 17-07-2025].
+ [3] Toufique Ahmed, Premkumar Devanbu, Christoph Treude, and Michael Pradel. 2025. Can LLMs Replace Manual Annotation of Software Engineering
+
+      Artifacts?. In 2025 IEEE/ACM 22nd International Conference on Mining Software Repositories (MSR). 526­538. doi:10.1109/MSR66628.2025.00086
+ [4] Leonhard Applis, Yuntong Zhang, Shanchao Liang, Nan Jiang, Lin Tan, and Abhik Roychoudhury. 2025. Unified Software Engineering agent as AI
+
+      Software Engineer. arXiv:2506.14683 [cs.SE] https://arxiv.org/abs/2506.14683
+ [5] Viraat Aryabumi, Yixuan Su, Raymond Ma, Adrien Morisot, Ivan Zhang, Acyr Locatelli, Marzieh Fadaee, Ahmet Üstün, and Sara Hooker. 2025.
+
+      To Code or Not To Code? Exploring Impact of Code in Pre-training. In The Thirteenth International Conference on Learning Representations.
+      https://openreview.net/forum?id=zSfeN1uAcx
+ [6] Aaditya Bhatia, Gustavo A. Oliva, Gopi Krishnan Rajbahadur, Haoxiang Zhang, Yihao Chen, Zhilong Chen, Arthur Leung, Dayi Lin, Boyuan Chen,
+      and Ahmed E. Hassan. 2025. SPICE: An Automated SWE-Bench Labeling Pipeline for Issue Clarity, Test Coverage, and Effort Estimation. (Jul 2025).
+      arXiv:2507.09108 [cs.SE] doi:10.48550/arXiv.2507.09108
+ [7] Islem Bouzenia, Prem Devanbu, and Michael Pradel. 2024. RepairAgent: An Autonomous, LLM-Based Agent for Program Repair. 2025 IEEE/ACM
+      47th International Conference on Software Engineering (ICSE) (2024), 2188­2200.
+ [8] Islem Bouzenia, Premkumar Devanbu, and Michael Pradel. 2025. RepairAgent: An Autonomous, LLM-Based Agent for Program Repair . In 2025
+      IEEE/ACM 47th International Conference on Software Engineering (ICSE). IEEE Computer Society, Los Alamitos, CA, USA, 2188­2200. doi:10.1109/
+      ICSE55347.2025.00157
+ [9] Greg Brockman, Vicki Cheung, Ludwig Pettersson, Jonas Schneider, John Schulman, Jie Tang, and Wojciech Zaremba. 2016. OpenAI Gym.
+      arXiv:1606.01540 [cs.LG] https://arxiv.org/abs/1606.01540
+[10] Mark Chen, Jerry Tworek, Heewoo Jun, Qiming Yuan, Henrique Ponde de Oliveira Pinto, Jared Kaplan, Harri Edwards, Yuri Burda, Nicholas Joseph,
+      Greg Brockman, et al. 2021. Evaluating large language models trained on code. arXiv:2107.03374 [cs.SE] https://arxiv.org/abs/2107.03374
+[11] Runxiang Cheng, Michele Tufano, Jürgen Cito, José Cambronero, Pat Rondon, Renyao Wei, Aaron Sun, and Satish Chandra. 2025. Agentic Bug
+      Reproduction for Effective Automated Program Repair at Google. (2025). arXiv:2502.01821 [cs.SE] https://arxiv.org/abs/2502.01821
+[12] Wei-Lin Chiang, Lianmin Zheng, Ying Sheng, Anastasios Nikolas Angelopoulos, Tianle Li, Dacheng Li, Hao Zhang, Banghua Zhu, Michael Jordan,
+      Joseph E. Gonzalez, and Ion Stoica. 2024. Chatbot Arena: An Open Platform for Evaluating LLMs by Human Preference. arXiv:2403.04132 [cs.AI]
+      https://arxiv.org/abs/2403.04132
+[13] Umut Cihan, Vahid Haratian, Arda çöz, Mert Kaan Gül, Ömercan Devran, Emircan Furkan Bayendur, Baykal Mehmet Uçar, and Eray Tüzün. 2024.
+      Automated Code Review In Practice. arXiv:2412.18531 [cs.SE] https://arxiv.org/abs/2412.18531
+[14] Dekun Dai, MingWei Liu, Anji Li, Jialun Cao, Yanlin Wang, et al. 2025. FeedbackEval: A Benchmark for Evaluating Large Language Models in
+      Feedback-Driven Code Repair Tasks. arXiv preprint arXiv:2504.06939 (2025).
+[15] Giuseppe Desolda, Andrea Esposito, Francesco Greco, Cesare Tucci, Paolo Buono, and Antonio Piccinno. 2025. Understanding User Mental Models
+      in AI-Driven Code Completion Tools: Insights from an Elicitation Study. arXiv:2502.02194 [cs.HC] https://arxiv.org/abs/2502.02194
+[16] Yihong Dong, Xue Jiang, Zhi Jin, and Ge Li. 2023. Self-Collaboration Code Generation via ChatGPT. ACM Transactions on Software Engineering and
+      Methodology 33 (2023), 1­38.
+[17] Nicole Forsgren, Margaret-Anne Storey, Chandra Maddila, Thomas Zimmermann, Brian Houck, and Jenna Butler. 2021. The SPACE of Developer
+      Productivity: There's more to it than you think. Queue 19, 1 (March 2021), 20­48. doi:10.1145/3454122.3454124
+[18] Ahmed E. Hassan, Dayi Lin, Gopi Krishnan Rajbahadur, Keheliya Gallaba, Filipe Roseiro Cogo, Boyuan Chen, Haoxiang Zhang, Kishanthan
+      Thangarajah, Gustavo Oliva, Jiahuei (Justina) Lin, et al. 2024. Rethinking Software Engineering in the Era of Foundation Models: A Curated
+      Catalogue of Challenges in the Development of Trustworthy FMware. In Companion Proceedings of the 32nd ACM International Conference on the
+      Foundations of Software Engineering (FSE). 294­305.
+[19] Ahmed E. Hassan, Gustavo A. Oliva, Dayi Lin, Boyuan Chen, and Zhen Ming Jiang. 2024. Towards AI-Native Software Engineering (SE 3.0): A Vision
+      and a Challenge Roadmap. arXiv:2410.06107 [cs.SE] https://arxiv.org/abs/2410.06107
+[20] Junda He, Christoph Treude, and David Lo. 2025. LLM-Based Multi-Agent Systems for Software Engineering: Literature Review, Vision, and the
+      Road Ahead. ACM Trans. Softw. Eng. Methodol. 34, 5, Article 124 (May 2025), 30 pages. doi:10.1145/3712003
+[21] Carlos E Jimenez, John Yang, Alexander Wettig, Shunyu Yao, Kexin Pei, Ofir Press, and Karthik R Narasimhan. 2024. SWE-bench: Can Language
+      Models Resolve Real-world Github Issues?. In The Twelfth International Conference on Learning Representations. https://openreview.net/forum?id=
+      VTF8yNQM66
+[22] Shanchao Liang, Spandan Garg, and Roshanak Zilouchian Moghaddam. 2025. The SWE-Bench Illusion: When State-of-the-Art LLMs Remember
+      Instead of Reason. arXiv:2506.12286 [cs.AI] https://arxiv.org/abs/2506.12286
+[23] Shanchao Liang, Yiran Hu, Nan Jiang, and Lin Tan. 2024. Can Language Models Replace Programmers? REPOCOD Says "Not Yet". arXiv preprint
+      arXiv:2410.21647 (2024).
+[24] Feng Lin, Dong Jae Kim, and Tse-Hsun Chen. 2024. SOEN-101: Code Generation by Emulating Software Process Models Using Large Language
+      Model Agents. 2025 IEEE/ACM 47th International Conference on Software Engineering (ICSE) (2024), 1527­1539.
+
+                                                                                                                                                    Manuscript submitted to ACM
+22 Hao Li, Haoxiang Zhang, and Ahmed E. Hassan
+
+[25] Jeffrey D. Long, Du Feng, and Norman Cliff. 2003. Ordinal Analysis of Behavioral Data. In Handbook of Psychology, Irving B. Weiner (Ed.). John
+      Wiley & Sons, Inc., Hoboken, NJ, USA, Chapter 25, 635­661. doi:10.1002/0471264385.wei0225
+
+[26] H. B. Mann and D. R. Whitney. 1947. On a Test of Whether one of Two Random Variables is Stochastically Larger than the Other. Annals of
+      Mathematical Statistics 18 (1947), 50­60.
+
+[27] Dimitrios-Nikitas Nastos, Themistoklis Diamantopoulos, Davide Tosi, Martina Tropeano, and Andreas L. Symeonidis. 2025. Towards an Interpretable
+      Analysis for Estimating the Resolution Time of Software Issues. arXiv:2505.01108 [cs.SE] https://arxiv.org/abs/2505.01108
+
+[28] Ketai Qiu, Niccolò Puccinelli, Matteo Ciniselli, and Luca Di Grazia. 2025. From Today's Code to Tomorrow's Symphony: The AI Transformation of
+      Developer's Routine by 2030. ACM Trans. Softw. Eng. Methodol. 34, 5, Article 121 (May 2025), 17 pages. doi:10.1145/3709353
+
+[29] Peter C. Rigby, Seth Rogers, Sadruddin Saleem, Parth Suresh, Daniel Suskin, Patrick Riggs, Chandra Maddila, Nachiappan Nagappan, and Audris
+      Mockus. 2025. Improving Code Reviewer Recommendation: Accuracy, Latency, Workload, and Bystanders. ACM Trans. Softw. Eng. Methodol. (May
+      2025). doi:10.1145/3736405 Just Accepted.
+
+[30] Jeanine Romano, Jeffrey D Kromrey, Jesse Coraggio, Jeff Skowronek, and Linda Devine. 2006. Exploring methods for evaluating group differences
+      on the NSSE and other surveys: Are the t-test and Cohen'sd indices the most appropriate choices. In annual meeting of the Southern Association for
+      Institutional Research. Citeseer, 1­51.
+
+[31] Abhik Roychoudhury, Corina Pasareanu, Michael Pradel, and Baishakhi Ray. 2025. Agentic AI Software Engineers: Programming with Trust.
+      arXiv:2502.13767 [cs.SE] https://arxiv.org/abs/2502.13767
+
+[32] David Silver and Richard S Sutton. 2025. Welcome to the era of experience. Google AI 1 (2025).
+[33] Charlie Victor Snell, Jaehoon Lee, Kelvin Xu, and Aviral Kumar. 2025. Scaling LLM Test-Time Compute Optimally Can be More Effective than Scaling
+
+      Parameters for Reasoning. In The Thirteenth International Conference on Learning Representations. https://openreview.net/forum?id=4FWAwZtd2n
+[34] John Yang, Carlos E. Jimenez, Alex L. Zhang, et al. 2024. SWE-bench Multimodal: Do AI Systems Generalize to Visual Software Domains? arXiv
+
+      preprint arXiv:2410.03859 (2024).
+[35] Shaoyi Yang. 2025. Chain of Draft for Software Engineering: Challenges in Applying Concise Reasoning to Code Tasks. arXiv:2506.10987 [cs.SE]
+
+      https://arxiv.org/abs/2506.10987
+[36] Xin Zhou, Martin Weyssow, Ratnadira Widyasari, Ting Zhang, Junda He, Yunbo Lyu, Jianming Chang, Beiqi Zhang, Dan Huang, and David Lo.
+
+      2025. LessLeak-Bench: A First Investigation of Data Leakage in LLMs Across 83 Software Engineering Benchmarks. arXiv:2502.06215 [cs.SE]
+      https://arxiv.org/abs/2502.06215
+
+Manuscript submitted to ACM
+

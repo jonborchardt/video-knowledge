@@ -5,6 +5,7 @@
 // Stages, the same videos and their Shorts grouped by that state, each linking the page where the work happens;
 // Pipeline, each topic's research pipeline; Artifacts, artifact-by-artifact inspection of every script directory.
 import NextStep from '../components/NextStep.astro';
+import Seal from './Seal.astro';
 import { site } from '../config/site';
 import {
   type ArticleState,
@@ -331,6 +332,7 @@ function ctaNotes(topic: string, id: string): string[] {
               >
                 <td class="py-2 pr-3 whitespace-nowrap">{r.topic.label}</td>
                 <td class="max-w-64 py-2 pr-3">
+                  <Seal topic={r.topic.name} />
                   <a class="leading-snug font-medium text-primary" href={workPageOf(r, c)}>
                     {r.story.title}
                   </a>
@@ -527,6 +529,7 @@ function ctaNotes(topic: string, id: string): string[] {
             {v.map((r) => (
               <li class="flex flex-wrap items-center gap-x-3 gap-y-1 border-t pt-2">
                 <span class={small}>{r.topic.label}</span>
+                <Seal topic={r.topic.name} />
                 <a class="font-medium text-primary" href={workPageOf(r, c)}>
                   {r.story.title}
                 </a>
@@ -556,6 +559,7 @@ function ctaNotes(topic: string, id: string): string[] {
             {s.map(({ r, s }) => (
               <li class="flex flex-wrap items-center gap-x-3 gap-y-1 border-t pt-2">
                 <span class={small}>{r.topic.label}</span>
+                <Seal topic={r.topic.name} />
                 <a class="font-medium text-primary" href={shortPageOf(r, s, c)}>
                   Short {s.slug ?? s.key}
                 </a>
@@ -591,6 +595,7 @@ function ctaNotes(topic: string, id: string): string[] {
               {items.map(({ r, state, next }) => (
                 <li class="flex flex-wrap items-center gap-x-3 gap-y-1 border-t pt-2">
                   <span class={small}>{r.topic.label}</span>
+                  <Seal topic={r.topic.name} />
                   <a class="font-medium text-primary" href={workPageOf(r, columnOf(r)!)}>
                     {r.story.title}
                   </a>
@@ -621,6 +626,7 @@ function ctaNotes(topic: string, id: string): string[] {
     topics.map(({ topic: t, checks, stories, rejected, next }) => (
       <div class="grid gap-2 rounded-lg border bg-card p-3 text-card-foreground sm:grid-cols-[14rem_1fr]">
         <div>
+          <Seal topic={t.name} />{' '}
           <a class="font-semibold text-primary" href={href(`/${t.name}/`)}>
             {t.label}
           </a>

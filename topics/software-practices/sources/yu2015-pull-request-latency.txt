@@ -1,0 +1,318 @@
+Wait For It: Determinants of Pull Request
+
+       Evaluation Latency on GitHub
+
+Yue Yu, Huaimin Wang, Vladimir Filkov, Premkumar Devanbu, and Bogdan Vasilescu
+     College of Computer, National University of Defense Technology, Changsha, 410073, China
+      Department of Computer Science, University of California, Davis, Davis, CA 95616, USA
+               {yuyue, hmwang}@nudt.edu.cn, {vfilkov, ptdevanbu, vasilescu}@ucdavis.edu
+
+   Abstract--The pull-based development model, enabled by git            While the pull-based model offers a much lower barrier to
+and popularised by collaborative coding platforms like BitBucket,     entry for potential contributors, it also increases the burden on
+Gitorius, and GitHub, is widely used in distributed software          core team members who decide whether to integrate them into
+teams. While this model lowers the barrier to entry for potential     the main development branch [14], [17]. In large projects, the
+contributors (since anyone can submit pull requests to any repos-     volume of incoming pull requests is quite a challenge [14],
+itory), it also increases the burden on integrators (i.e., members    [21], e.g., Ruby on Rails receives upwards of three hundred
+of a project's core team, responsible for evaluating the proposed     pull requests each month. Prioritizing pull requests is one of
+changes and integrating them into the main development line),         the main concerns of integrators in their daily work [14].
+who struggle to keep up with the volume of incoming pull
+requests. In this paper we report on a quantitative study that tries     From a perspective of increasing numbers of pull requests,
+to resolve which factors affect pull request evaluation latency       in this paper we report on a preliminary quantitative study
+in GitHub. Using regression modeling on data extracted from           that tries to resolve which factors affect pull request evalu-
+a sample of GitHub projects using the Travis-CI continuous            ation latency in GitHub. Using regression modeling on data
+integration service, we find that latency is a complex issue,         extracted from a sample of GitHub projects using the Travis-
+requiring many independent variables to explain adequately.           CI continuous integration service, we find that:
+
+                          I. INTRODUCTION                                · latency is a complex issue, requiring many independent
+                                                                            variables to explain adequately;
+   The pull-based development model [1] is widely used in
+distributed software teams to integrate incoming changes into            · the presence of CI is a strong positive predictor;
+a project's codebase [14]. Enabled by git, the distributed               · the number of comments is the best single predictor of
+version control system, pull-based development implies that
+contributors to a software project need not share access to a               the latency;
+central repository anymore. Instead, anyone can create forks             · as expected, the size of a pull request (lines added,
+(i.e., local clones of the central repository), update them locally
+and, whenever ready, request to have their changes merged                   commits) is a positive, strong predictor.
+back into the main branch by submitting a pull request.
+Compared to patch submission and acceptance via mailing                      II. THE PULL REQUEST EVALUATION PROCESS
+lists and issue tracking systems, the traditional model of col-
+laboration in open source [3], [9], the pull-based model offers       Continuous Integration: The principal mechanism through
+several advantages, including centralization of information and       which integrators ensure that pull requests can be handled
+process automation: the contributed code (the patch) resides          efficiently without compromising quality is automatic testing,
+in the same version control system, albeit in a different branch      as supported by continuous integration (CI) services [14],
+or fork, therefore authorship information is effortlessly main-       [17]. Whenever a new contribution is received by a project
+tained; modern collaborative coding platforms (e.g., BitBucket,       using CI, it is merged automatically into a testing branch, the
+Gitorius, GitHub) provide integrated functionality for pull           existing test suites are run, and the submitter and integrators
+request generation, automatic testing, contextual discussion,         are notified of the outcomes. If tests fail, the pull request is
+in-line code review, and merger.                                      typically rejected (closed and not merged in GitHub parlance)
+                                                                      by one of the integrators, who may also comment on why
+   Pull requests are used in many scenarios beyond basic patch        the contribution is inappropriate and how it can be improved.
+submission, e.g., conducting code reviews, discussing new             If tests pass, core team members proceed to do a team-wide
+features [14]. On GitHub alone, currently the largest code host       code review by commenting inline on (parts of) the code, and
+in open source, almost half of the collaborative projects use         including requests for modifications to be carried out by the
+pull requests exclusively (i.e., all contributions, irrespective of   submitter (who can then update the pull request with new
+whether they come from core developers with write access to           code), if necessary. After a cycle of comments and revisions,
+the repository or from outside contributors, are submitted as         and if everyone is satisfied, the pull request is closed and
+pull requests, ensuring that only reviewed code gets merged)          merged. In rare cases, pull requests are merged even if (some)
+or complementarily to the shared repository model [14].               tests failed. Only core team members (integrators) and the
+                                                                      submitter can close (to merge or reject--integrators, and to
+                                                                      withdraw--submitter) and reopen pull requests.
+   CI is becoming widely used on GitHub: 75% of projects            H1. Previously-identified social and technical factors influ-
+that use pull requests heavily also use CI, either in hosted        ence pull request latency in expected ways.
+services (e.g., Travis-CI [25]) or in standalone setups [14].
+                                                                       There is recurring support for the importance of process
+Pull Request Evaluation: As described above, evaluating             factors to team outcomes in the empirical software engineering
+pull requests is a complex iterative process involving many         literature, e.g., [2], [16]. Focusing on the integrator workflow,
+stakeholders. Recently, researchers have started investigating      we expect a multitude of process-related factors to influence
+the pull request workflow in GitHub [11], [14], [21], [22],         pull request latency, e.g., current workload and availability of
+trying to understand which factors influence pull request ac-       reviewers, pull request description quality (akin to the quality
+ceptance (i.e., decision to merge) and latency (i.e., evaluation    of issue reports said to impact the issues' resolution time [7],
+time). However, (i) these effects are not yet well understood       [27]), and the integrators' responsiveness (in recent work [23]
+(e.g., results from different studies often diverge, as discussed   we found that pull request submitters may become discour-
+below); and (ii) pull request evaluation has not been studied       aged by unresponsive integrators, leading to communication
+in the context of CI.                                               breakdown and conflict). We hypothesize:
+
+   Pull request acceptance has been studied by Gousios et           H2. Process-related factors have a significant impact on pull
+al. [11], [14] and Tsay et al. [21], [22]. For example, using       request latency.
+machine learning techniques, Gousios et al. [11] found that
+pull requests touching actively developed (hot) parts of the           The general literature on CI suggests that the continuous
+system are preferentially accepted. In contrast, based on results   application of quality control checks speeds up overall de-
+from a regression modeling study, Tsay et al. [21] argue that       velopment, and ultimately improves software quality [8]. On
+the strength of the social connection between the submitter and     GitHub, the integration of CI in the pull request workflow
+integrators is the determining factor of pull request acceptance.   should enable project members to find integration errors more
+In a follow-up qualitative study, Gousios et al. [14] found that    quickly, tightening the feedback loop. Based on reported
+target area hotness, existence of tests, and overall code quality   widespread use of CI and the importance of testing related
+are recognized as important determinants of pull request            factors [14], [17], [21], we expect that CI will play a prominent
+acceptance by GitHub integrators taking part in their survey.       role in the pull request evaluation process, enabling integrators
+                                                                    to better deal with general issues of scale. We posit:
+   In the same qualitative study [14], the authors also asked
+survey respondents to: (i) rate several predefined factors by       H3. CI is a dominant factor of pull request latency.
+perceived importance to pull request latency; and (ii) list
+additional determinants of latency, if any. The following                                III. METHODS AND DATA
+ranking of predefined factors emerged (in decreasing order):
+project area hotness, existence of tests in the project, presence   Dataset and Preprocessing: We compose a sample of GitHub
+of tests in the pull request, pull request churn (i.e., number      projects that make heavy use of pull requests and CI. In this
+of changed lines), the submitter's track record, number of          preliminary study we only consider projects using Travis-CI,1
+discussion comments, and number of commits. Among the               the most popular CI service on GitHub, integrated into the pull
+many other self-identified factors, only reviewer availability      request workflow [25]. Using the 10/11/2014 GHTorrent [10],
+and pull request complexity are recognized by at least 5%           [12] dump, we identify candidate non-forked projects that
+of their respondents. These factors, perceived to be important,     received at least 1000 pull requests in total, and were written
+differ significantly from those data mined in an earlier machine    in Ruby, Python, JavaScript, Java, and C++, the most popular
+learning experiment (three classes: merged within one hour;         languages on GitHub.2 Then, we identify which of these
+one day; the rest) by the same authors [11], i.e., the submit-      projects use Travis-CI, with our previous techniques [25].
+ter's track record, the project size and its test coverage, and     Finally, in trying to assemble a relatively balanced data set, we
+the project's openness to external contributors (in decreasing      further select, from among these, the top ten projects (ranked
+importance order).                                                  by number of pull requests) for each programming language.3
+                                                                    For each project, we further extract data about incoming pull
+Hypotheses: In this paper we focus on pull request latency, the     requests, received after 01/01/2010 and closed by the time of
+understudied and arguably more complex of the two facets of         data collection (January 2015; i.e., we ignore pull requests
+pull request evaluation. The literature reviewed above revealed     that are still open), from GHTorrent (metadata, e.g., number
+that maintaining software quality and handling a high volume        of comments) and the GitHub API (description title, body, and
+of incoming pull requests are the top priorities of integrators,    actual contents of the pull request, i.e., diffs). For each pull
+who subscribe to a complex evaluation process, involving code       request, we extract data about the automatic builds from the
+review and automatic testing. Even though prior work [11],          Travis-CI API [25]. Lastly, we identify the integrators as those
+[14], [21], [22] has identified several social and technical        project members that closed others' issues or pull requests,
+factors that influence pull request evaluation, as discussed        using GHTorrent. We also perform identity merging [24].
+above, we believe the intricacies of this process are not yet
+accurately captured. Still, to establish a baseline (and replicate     1https://travis-ci.com
+previous results), we hypothesize:                                     2http://githut.info/
+                                                                       3We only select five projects for C++ and Java due to insufficient samples.
+                                           Table I                  higher complexity (longer evaluation), or better documentation
+BASIC STATISTICS FOR OUR DATA SET. WE ONLY MODEL THE EVALUATION     (facilitating evaluation akin to issue reports [27]).
+                                                                    Workload: Total number of pull requests still open in each
+        TIME OF PULL REQUESTS (PRS) TESTED BY CI AND MERGED.        project at current pull request creation time.
+                                                                    Integrator availability: The minimum number of hours
+Attributes             Ruby Python JavaScript Java/C++ Total        (0 . . . 23) until either of the top two integrators (by number
+                                                                    of pull requests handled the last three months) are active, on
+#Integrators              220     177     190     103       690     average (based on activity in the last three months), during
+#PRs received          28,409  28,903  26,983  18,989  103,284      24 hours. Two reviewers find an optimal number of defects
+#PRs merged            20,755  24,039  17,920  13,456               during code review [18], [19], hence our choice for top two.
+#PRs merged&CI-tested  11,562  11,955  11,821           76,170      Friday effect: True if the pull request arrives Friday [20].
+                                                5,510   40,848      #Issue tag and @mention tag: Binary variables to encode the
+                                                                    presence of "#" tags (links to issues) and "@" tags (to notify
+   Table I presents basic statistics about our dataset. In total,   integrators directly) in the pull request title or description.
+we collected 103,284 pull requests from 40 different projects.      First human response: Time interval in minutes from pull
+We found that 74% of pull requests have been merged (using          request creation to first response by reviewers, as a measure
+heuristics similar to those in [13]), and that 59% have been        of the project team's responsiveness.
+submitted after CI was adopted (measured, per project, as the       Total CI latency: Time interval in minutes from pull request
+date of the earliest pull request tested by Travis-CI). In this     creation to the last commit tested by CI. The team-wide code
+preliminary study we only model the evaluation time of pull         review typically starts after all commits have been tested.
+requests that have been tested by Travis-CI and eventually          CI result: Binary variables to encode the presence of errors
+merged. Rejected pull requests and pull requests that do            while running Travis-CI (most often, branch already deleted)
+not undergo automatic testing may be subject to different           and test failures across the different pull request commits.
+processes; we will address these in future work.                    Analysis: We use multiple linear regression to model the
+Measures:                                                           latency of evaluating pull requests. We build three models,
+                                                                    the first only with predictors previously used in the literature
+   1) Outcome: The outcome measure is the pull request              (H1), and the subsequent two by adding groups of variables
+latency, i.e., the time interval between pull request creation and  corresponding to H2 and H3. The age of the project, the team
+closing date, in minutes (in case of "reopened" pull requests,      size, and their interaction were added to all models as control
+we only consider the date when they are first closed).              variables. All numeric variables were first log transformed
+                                                                    (plus 0.5) to stabilize variance and reduce heteroscedastic-
+   2) Predictors: We compute project-level, pull-request level,     ity [5], then standardized (mean 0, standard deviation 1). To
+and submitter-level measures, as discussed in Section II.           test for multicollinearity, we computed the variance inflation
+Project age: At time of pull request creation, in minutes. Older    factors (VIFs) for each predictor (all remained well below 3,
+projects are likely to have different contribution dynamics.        indicating absence of multicollinearity). We use the adjusted
+Team size: Number of integrators active (i.e., closed at least      R2 statistic to evaluate the goodness-of-fit of our models. For
+one issue/pull request, not their own) during the three months      each model variable, we report its coefficients, standard error,
+prior to pull request creation. Larger teams may be better          and significance level. We consider coefficients important if
+prepared to handle higher volumes of incoming pull requests.        they were statistically significant (p < 0.05). We obtain effect
+Project area hotness: Median number of commits to files             sizes from ANOVA analyses. The resulting multivariate linear
+touched by the pull request relative to all project commits         regression models are shown in Table II.
+during the last three months.
+Commits: Total number of commits part of the pull request.                                       IV. RESULTS
+Travis-CI tests each commit separately.
+Churn: Total number of lines added and deleted by the pull re-         Model 1 has a relatively low goodness of fit (R2 = 36.2%).
+quest. Bigger changes may require longer code reviews/testing.      As expected, the pull request churn, size, and length of discus-
+Test inclusion: Binary variable measuring if the pull request       sion play a dominant role in explaining the variance in the data.
+touched at least one test file (based on file name/path regular     All three effects are highly significant, and together account
+expressions). Integrators prefer pull requests containing tests.    for 85% of the variance explained. Pull requests with more
+Comments: Total number of overall and inline comments               discussion, consisting of more commits, and adding more lines
+part of a pull request discussion. Pull requests with lots of       of code are associated with longer evaluation latencies. Effects
+comments tend to signal controversy [6].                            related to the submitter's track record, reputation, and social
+Submitter's success rate: Fraction of previous pull requests        connection to project members are also highly significant, with
+merged, relative to all previous pull requests by this submitter.   smaller but still sizeable contributions to explaining the data
+Integrator: True if the submitter is an integrator.                 variance. Pull requests by the core team members, contributors
+Strength of social connection: The fraction of team members         with more followers, more ties to project integrators, and
+that interacted with the submitter in the last three months         higher previous pull request success rates are associated with
+(computed using comment networks [26]). Integrators may
+favor contributors more strongly connected to them.
+Followers: Total number of GitHub developers following the
+submitter at pull request creation, as a measure of reputation.
+Description complexity: Total number of words in the pull
+request title and description. Longer descriptions may indicate
+                                                                     Table II
+
+                                                     PULL REQUEST LATENCY MODELS
+
+                                                     Model 1                      Model 2               Model 3
+
+                                                     Coeffs(Errors)  Sum Sq.   Coeffs(Errors)  Sum Sq.  Coeffs(Errors)  Sum Sq.
+                                                     0.072 (0.009)             0.045 (0.009)            0.155 (0.008)
+(Intercept)                                          0.022 (0.004) 276.96      -0.014 (0.004) 276.96    -0.028 (0.004) 276.96
+scale(log(proj age))                                 -0.055 (0.004) 7.92       -0.108 (0.004) 7.92      -0.108 (0.004) 7.92
+scale(log(team size))                                0.064 (0.005) 3354.64     0.065 (0.005) 3354.64    0.035 (0.004) 3354.64
+scale(log(n additions + 0.5))                        -0.016 (0.005) 54.92
+scale(log(n deletions + 0.5))                        0.147 (0.005) 3789.65     0.001 (0.005)   54.92    -0.000 (0.004)  54.92
+scale(log(n commits + 0.5))                                                    0.130 (0.005) 3789.65    0.028 (0.004) 3789.65
+scale(log(hotness + 0.5))                            0.016 (0.004) 74.31                                0.016 (0.003) 74.31
+pr includes testsTRUE                                                          0.001 (0.004)   74.31
+scale(log(n comments + 0.5))                         0.108 (0.010) 194.91      0.076 (0.009) 194.91
+scale(submitter success rate)                                                                           0.009 (0.008) 194.91
+scale(strength social connection)                    0.409 (0.005) 5482.16     0.189 (0.005) 5482.16    0.037 (0.005) 5482.16
+scale(log(n followers + 0.5))                        -0.037 (0.005) 432.86     -0.023 (0.004) 432.86    -0.016 (0.004) 432.86
+submitter is integratorTRUE                          -0.072 (0.005) 494.32     -0.037 (0.005) 494.32    -0.052 (0.004) 494.32
+scale(log(proj age)):scale(log(team size))           -0.090 (0.004) 358.74     -0.108 (0.004) 358.74    -0.064 (0.004) 358.74
+scale(log(description complexity))                   -0.129 (0.011) 56.10      -0.095 (0.010) 56.10     -0.078 (0.009) 56.10
+scale(log(availability + 0.5))                       -0.074 (0.004) 234.23     -0.012 (0.004) 107.07    -0.016 (0.004) 70.27
+scale(log(n open pr + 0.5))                                                    0.115 (0.004) 960.00     0.087 (0.004) 960.00
+Friday effectTRUE                                                              0.037 (0.004) 124.96     0.033 (0.003) 124.96
+issue tagTRUE                                                                  0.166 (0.005) 908.33     0.151 (0.004) 908.33
+mention tagTRUE                                                                0.068 (0.010) 34.68      0.062 (0.009) 34.68
+scale(log(first rsp + 0.5))                                                    0.096 (0.009) 56.72      0.081 (0.008) 56.72
+scale(log(team size)):scale(log(workload+0.5))                                 -0.060 (0.013) 14.11
+scale(log(total ci time))                                                      0.274 (0.005) 1892.64    -0.020 (0.012)  14.11
+ci errorTRUE                                                                                            0.243 (0.004) 1892.64
+ci failTRUE                                                                    -0.071 (0.004) 163.80    -0.041 (0.004) 60.39
+scale(log(first rsp+0.5)):scale(log(total ci time))                                                     0.481 (0.005) 3855.79
+                                                                                                        -0.401 (0.009) 977.41
+Adjusted R-squared
+p < 0.001, p < 0.01, p < 0.05                                                                           -0.016 (0.009)  0.27
+                                                                                                        -0.102 (0.003) 434.71
+
+                                                     0.362                     0.461                    0.587
+
+shorter evaluation latencies. Perhaps more surprisingly, project     length of discussion). The prominence of the total CI latency
+area hotness and test case inclusion have highly significant         effect (16%) supports the process description in Section II:
+positive effects, i.e., pull requests touching active parts of       integrators wait for the automatic testing phase to end (median
+the system, and including tests, are associated with longer          39min) before proceeding to do a team-wide code review and
+evaluation latencies. Since all predictors suggested by prior        eventually close the pull request. The total CI latency effect
+work are highly significant, we confirm H1.                          is moderated by first human response. As discussed above,
+                                                                     CI errors will occur when the pull request has already been
+   Model 2 offers a significantly better fit (R2 = 46.1%).           merged (then the branch has been deleted), hence the negative
+Pull request churn, size, and length of discussion, all highly       significant effect on latency. Therefore, H3 is confirmed.
+significant, remain the most prominent predictors, together
+explaining 67% of the variance explained. However, the new                       V. CONCLUSIONS AND FUTURE WORK
+process-related factors are all highly significant, and have
+sizeable effects. Pull requests with later initial reactions from       Allowing greater inclusivity in contributions can result in a
+integrators (10% of the variance explained) tend to also be          deluge of pull requests, which, if unchecked, can significantly
+closed later, suggesting that the initial priorities integrators     increase the burden on integrators in distributed software
+assign to pull requests very early in the evaluation process (the    development projects. Our preliminary models show that pull
+median first comment time is 16min) are already indicative of        request review latency is complex, and depends on many
+the (much later) closing time (median 11.2h). The description        predictors. Naturally, the size of the pull request matters: the
+length (5%) seems indicative of a pull request's complexity          shorter it is the faster it will be reviewed. Other actionable
+(impact) rather than its legibility, since the effect is positive    strong predictors are the delay to the first human response
+(longer closing time). The integrators' workload is another          and the availability of the CI pipeline. Improving on both may
+sizeable positive effect (5%), moderated by team size. Other         hasten the review process.
+positive, albeit smaller, effects are integrator availability (pull
+requests submitted outside "business hours" and on Fridays              This preliminary study suffers from at least the similar
+tend to be closed later) and links to issue reports; @mention        threats that other preliminary studies do [4], [15]: possible is-
+tags have a small negative effect (pull requests assigned to         sues with data gathering, no validation, and unrefined models.
+reviewers early in the process, i.e., at creation, tend to be        We are working on addressing all of these in a more mature
+processed quicker). Therefore, H2 is confirmed.                      study of this subject, that will also elaborate on the impact of
+                                                                     CI on the distributed software development process.
+   Model 3 achieves the best fit among our models (R2 =
+58.7%). The CI-related factors are highly significant and cover                          VI. ACKNOWLEDGEMENTS
+more than 20% of the variance explained, on par with the
+main social and technical effects (pull request churn, size, and        YY and HW acknowledge support from NSFC (grants
+                                                                     61432020, 61472430). VF, PD, and BV are partially supported
+                                                                     by NSF (grants 1247280, 1414172).
+                             REFERENCES                                               perspective. In International Conference on Software Engineering,
+                                                                                      ICSE. IEEE, 2015. to appear.
+ [1] E. T. Barr, C. Bird, P. C. Rigby, A. Hindle, D. M. German, and             [15] E. Kalliamvakou, G. Gousios, K. Blincoe, L. Singer, D. M. German,
+      P. Devanbu. Cohesive and isolated development with branches. In                 and D. Damian. The promises and perils of mining github. In Working
+      International Conference on Fundamental Approaches to Software En-              Conference on Mining Software Repositories, MSR, pages 92­101.
+      gineering, FASE, pages 316­331. Springer, 2012.                                 ACM, 2014.
+                                                                                [16] N. Nagappan, B. Murphy, and V. Basili. The influence of organizational
+ [2] N. Bettenburg and A. E. Hassan. Studying the impact of social                    structure on software quality: An empirical case study. In International
+      structures on software quality. In International Conference on Program          Conference on Software Engineering, ICSE, pages 521­530. ACM,
+      Comprehension, ICPC, pages 124­133. IEEE, 2010.                                 2008.
+                                                                                [17] R. Pham, L. Singer, O. Liskin, and K. Schneider. Creating a shared
+ [3] C. Bird et al. Open borders? immigration in open source projects.                understanding of testing culture on a social coding site. In International
+      In International Working Conference on Mining Software Repositories,            Conference on Software Engineering, ICSE, pages 112­121. IEEE,
+      MSR, page 6. IEEE, 2007.                                                        2013.
+                                                                                [18] P. C. Rigby and C. Bird. Convergent contemporary software peer review
+ [4] C. Bird, P. Rigby, E. Barr, D. Hamilton, D. German, and P. Devanbu.              practices. In SIGSOFT Foundations of Software Engineering, FSE, pages
+      The promises and perils of mining git. In Working Conference on Mining          202­212. ACM, 2013.
+      Software Repositories, MSR, pages 1­10. IEEE, 2009.                       [19] C. Sauer, D. R. Jeffery, L. Land, and P. Yetton. The effectiveness
+                                                                                      of software development technical reviews: A behaviorally motivated
+ [5] J. Cohen, P. Cohen, S. G. West, and L. S. Aiken. Applied multiple                program of research. IEEE Transactions on Software Engineering,
+      regression/correlation analysis for the behavioral sciences. Routledge,         26(1):1­14, 2000.
+      2013.                                                                     [20] J. S´ liwerski, T. Zimmermann, and A. Zeller. When do changes induce
+                                                                                      fixes? ACM Sigsoft Software Engineering Notes, 30(4):1­5, 2005.
+ [6] L. Dabbish, C. Stuart, J. Tsay, and J. Herbsleb. Social coding in GitHub:  [21] J. Tsay, L. Dabbish, and J. Herbsleb. Influence of social and technical
+      Transparency and collaboration in an open software repository. In ACM           factors for evaluating contribution in GitHub. In International Confer-
+      Conference on Computer Supported Cooperative Work, CSCW, pages                  ence on Software Engineering, ICSE, pages 356­366. ACM, 2014.
+      1277­1286. ACM, 2012.                                                     [22] J. Tsay, L. Dabbish, and J. Herbsleb. Let's talk about it: Evaluating
+                                                                                      contributions through discussion in GitHub. In ACM SIGSOFT Interna-
+ [7] N. Duc Anh, D. S. Cruzes, R. Conradi, and C. Ayala. Empirical                    tional Symposium on Foundations of Software Engineering, FSE, pages
+      validation of human factors in predicting issue lead time in open source        144­154. ACM, 2014.
+      projects. In International Conference on Predictive Models in Software    [23] B. Vasilescu, V. Filkov, and A. Serebrenik. Perceptions of diversity on
+      Engineering, page 13. ACM, 2011.                                                GitHub: A user survey. unpublished, 2015.
+                                                                                [24] B. Vasilescu, D. Posnett, B. Ray, M. G. J. van den Brand, A. Serebrenik,
+ [8] P. M. Duvall, S. Matyas, and A. Glover. Continuous integration:                  P. Devanbu, and V. Filkov. Gender and tenure diversity in GitHub teams.
+      improving software quality and reducing risk. Pearson Education, 2007.          In CHI Conference on Human Factors in Computing Systems, CHI.
+                                                                                      ACM, 2015. to appear.
+ [9] M. Gharehyazie, D. Posnett, B. Vasilescu, and V. Filkov. Developer         [25] B. Vasilescu, S. van Schuylenburg, J. Wulms, A. Serebrenik, and
+      initiation and social interactions in OSS: A case study of the Apache           M. G. J. van den Brand. Continuous integration in a social-coding
+      Software Foundation. Empirical Software Engineering, pages 1­36,                world: Empirical evidence from GitHub. In International Conference
+      2014.                                                                           on Software Maintenance and Evolution, ICSME, pages 401­405. IEEE,
+                                                                                      2014.
+[10] G. Gousios. The GHTorrent dataset and tool suite. In Working               [26] Y. Yu, H. Wang, G. Yin, and C. Ling. Reviewer recommender of
+      Conference on Mining Software Repositories, MSR, pages 233­236.                 pull-requests in GitHub. In International Conference on Software
+      IEEE, 2013.                                                                     Maintenance and Evolution, ICSME, pages 609­612. IEEE, 2014.
+                                                                                [27] T. Zimmermann, R. Premraj, N. Bettenburg, S. Just, A. Schroter, and
+[11] G. Gousios, M. Pinzger, and A. v. Deursen. An exploratory study of the           C. Weiss. What makes a good bug report? IEEE Transactions on
+      pull-based software development model. In International Conference on           Software Engineering, 36(5):618­643, 2010.
+      Software Engineering, ICSE, pages 345­355. ACM, 2014.
+
+[12] G. Gousios, B. Vasilescu, A. Serebrenik, and A. Zaidman. Lean
+      GHTorrent: GitHub data on demand. In Working Conference on Mining
+      Software Repositories, MSR, pages 384­387. ACM, 2014.
+
+[13] G. Gousios and A. Zaidman. A dataset for pull-based development
+      research. In Working Conference on Mining Software Repositories,
+      MSR, pages 368­371. ACM, 2014.
+
+[14] G. Gousios, A. Zaidman, M.-A. Storey, and A. Van Deursen. Work
+      practices and challenges in pull-based development: The integrator's
+

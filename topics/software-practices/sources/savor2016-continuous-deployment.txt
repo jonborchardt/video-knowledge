@@ -1,0 +1,715 @@
+        2016 IEEE/ACM 38th IEEE International Conference on Software Engineering Companion
+
+Continuous Deployment at Facebook and OANDA
+
+       Tony Savor                 Mitchell Douglas                                                   Michael Gentili
+
+             Facebook           Dept. of Computer Science                                                 OANDA Corp.
+          1 Hacker Way               Stanford University                                                  140 Broadway
+Menlo Park, CA, U.S.A. 94025                                                                     New York, NY, U.S.A. 10005
+            tsavor@fb.com      Stanford, CA, U.S.A. 94305                                                gentili@oanda.com
+                                    mrdoug95@stanford.edu
+    Laurie Williams                                                                                 Michael Stumm
+                                      Kent Beck
+   Dept. Computer Science                                                                               ECE Department
+       NC State University                 Facebook                                                   University of Toronto
+                                        1 Hacker Way                                              Toronto, Canada M8X 2A6
+  Raleigh, NC, U.S.A. 27695   Menlo Park, CA, U.S.A. 94025                                          stumm@eecg.toronto.edu
+       williams@csc.ncsu.edu              kbeck@fb.com
+
+ABSTRACT                                                                                         This practice leads to a continuous stream of software de-
+                                                                                                 ployments, with organizations deploying 10s, 100s, or even
+Continuous deployment is the software engineering practice of                                    1,000s of software updates a day.
+deploying many small incremental software updates into produc-
+tion, leading to a continuous stream of 10s, 100s, or even 1,000s                                   Continuous deployment has been embraced by a number
+of deployments per day. High-profile Internet firms such as Ama-                                 of high-profile Internet firms. Facebook was utilizing con-
+zon, Etsy, Facebook, Flickr, Google, and Netflix have embraced                                   tinuous deployment as early as 2005. Flickr was one of the
+continuous deployment. However, the practice has not been cov-                                   first organizations to publicly embrace continuous deploy-
+ered in textbooks and no scientific publication has presented an                                 ment; it reported an average of 10 software deployments a
+analysis of continuous deployment.                                                               day in 2009 [1]. At Etsy, another early adopter which re-
+                                                                                                 ported over 11,000 software deployments in 2011 [2], newly
+   In this paper, we describe the continuous deployment practices                                hired software developers are assigned a simple bug to find
+at two very different firms: Facebook and OANDA. We show that                                    and fix on their first day of work, and are expected to deploy
+continuous deployment does not inhibit productivity or quality                                   their fix to production servers within a day or two -- with-
+even in the face of substantial engineering team and code size                                   out supervision and without a separate testing team. Netflix
+growth. To the best of our knowledge, this is the first study to                                 utilizes continuous deployment at scale in the cloud [3].
+show it is possible to scale the size of an engineering team by 20X
+and the size of the code base by 50X without negatively impact-                                     Potential benefits of continuous deployment that are often
+ing developer productivity or software quality. Our experience                                   mentioned include improved productivity and motivation of
+suggests that top-level management support of continuous de-                                     developers, decreased risk, and increased software quality.
+ployment is necessary, and that given a choice, developers prefer                                Often stated potential drawbacks include lack of control of
+faster deployment. We identify elements we feel make continuous                                  the software cycle, increased instability, and unsuitability
+deployment viable and present observations from operating in a                                   for safety- or mission-critical software. It is open to debate
+continuous deployment environment.                                                               whether these stated pros and cons are valid, complete, and
+                                                                                                 lead to a compelling answer about the well-foundedness of
+1. INTRODUCTION                                                                                  continuous deployment.
+
+Continuous deployment is the process of deploying software                                          In this paper, we present both quantitative and qualita-
+into production as quickly and iteratively as permitted by                                       tive analyses of the continuous deployment practices at two
+agile software development. Key elements of continuous de-                                       very different firms over a period of 7 years and 5 years, re-
+ployment are:                                                                                    spectively. Facebook has thousands of engineers and a set
+                                                                                                 of products that are used by well over a billion users; its
+   1. software updates are kept as small and isolated as rea-                                    backend servers can process billions of queries per second.
+       sonably feasible;                                                                         OANDA, the second firm, has only roughly 100 engineers;
+                                                                                                 it operates a currency trading system that processes many
+   2. they are released for deployment immediately after de-                                     billion dollars worth of trades per day and is thus consid-
+       velopment and testing completes;                                                          ered mission critical. The continuous deployment processes
+                                                                                                 at both firms are strikingly similar even though they were
+   3. the decision to deploy is largely left up to the develop-                                  developed independently.
+       ers (without the use of separate testing teams); and
+                                                                                                    We make two key contributions in this paper:
+   4. deployment is fully automated.
+                                                                                                    1. We present quantitative evidence that (i) continuous
+Permission to make digital or hard copies of all or part of this work for personal or                   deployment does not inhibit productivity or quality
+classroom use is granted without fee provided that copies are not made or distributed                   even when the size of the engineering team increases
+for profit or commercial advantage and that copies bear this notice and the full cita-                  by a factor of 20 and the code size grows by a factor of
+tion on the first page. Copyrights for components of this work owned by others than                     50; (ii) management support of continuous deployment
+ACM must be honored. Abstracting with credit is permitted. To copy otherwise, or re-                    is vital; and (iii) developers prefer faster deployment
+publish, to post on servers or to redistribute to lists, requires prior specific permission             of the code they develop.
+and/or a fee. Request permissions from permissions@acm.org.
+ICSE '16 Companion, May 14-22, 2016, Austin, TX, USA
+
+ c 2016 ACM. ISBN 978-1-4503-4205-6/16/05. . . $15.00
+DOI: http://dx.doi.org/10.1145/2889160.2889223
+
+                                                                                             21
+   2. We identify elements that, based on our experience,            of system failures [14]. This broad responsibility provides
+       make continuous deployment viable and present ob-             the fastest turn-around time in the event of failures. A quick
+       servations from operating in a continuous deployment          feedback loop is an important aspect of the process, because
+       environment. In doing so, our aim is to help software         developers still have the code design and implementation
+       development organizations better understand key is-           details fresh in their minds, allowing them to rectify issues
+       sues they will be confronted with when implementing           quickly. Moreover, this ensures a single point of contact in
+       continuous deployment.                                        the event of a problem.
+
+Section 2 provides background on continuous deployment.                 Continuous deployment is a team-oriented approach shar-
+Section 3 describes our methodology. Section 4 presents              ing common goals but having decentralized decision-making.
+findings derived from our quantitative analysis, and Sec-            Developers have significant responsibility and accountability
+tion 5 presents insights and lessons learned from our quali-         for the entire software lifecycle and in particular for deci-
+tative analysis. We close with limitations, related work and         sions related to releasing software. Proper tools reduce risk,
+concluding remarks.                                                  as well as make common processes repeatable and less error
+                                                                     prone.
+2. CONTINUOUS DEPLOYMENT
+                                                                        A continuous deployment process includes the following
+Continuous deployment is a software engineering practice             key practices:
+in which incremental software updates are tested, vetted,
+and deployed to production environments. Deployments can                Testing. Software changes1 are unit- and subsystem-
+occur within hours of the original changes to the software.          tested by the developers incrementally and iteratively, as
+                                                                     they are being implemented. Automated testing tools are
+   A number of key developments have enabled and moti-               used to enable early and frequent testing. A separate test-
+vated continuous deployment, the primary one being agile             ing group is not generally used. The developers are tasked
+software development [4, 5, 6] that began in the late 1990s          with creating effective tests for their software.
+and that is now used in some form in many if not most orga-
+nizations. Agile development methodologies embrace higher               Developers begin integration testing to test the entire sys-
+rates of change in software requirements. Software is de-            tem with the updated software. For this, developers may use
+veloped iteratively with cycles as short as a day [7]. Agile         virtual machine environments that can be instantiated at a
+development has been shown to increase productivity, and             push of a button, with the target system as similar to the
+it is arguably one of the reasons software productivity has          production environment as possible. At any given time, each
+started to increase some 10-15 years ago after decades of            developer may have one or more virtual test environments
+stagnation [8, 9]. Continuous deployment is a natural ex-            instantiated for unit and system testing. Automated system
+tension of agile development. Other developments include             tests simulate production workloads and exercise regression
+lean software development [10], kanban [11], and kaizan [10].        corner cases.
+DevOps is a movement that emerged from combining roles
+and tools from both the development and operations sides                After successful completion of system testing, performance
+of the business [12].                                                tests are run to catch performance issues as early as possi-
+                                                                     ble. The performance tests are executed by the developers
+   For Web-based applications and cloud-based SAAS of-               in non-virtual environments for reproducibility. Automated
+ferings, software updates can occur continuously intraday            measurements are made and compared with historical data.
+because the updates are largely transparent to the end-
+user. The process of updating software on PCs, smart-                   The developers are responsible for and perform these tests.
+phones, tablets, and now cars, has largely been automated            When problems are identified, the process loops back so they
+and can occur as frequently as daily, since the updates are          can be addressed immediately.
+downloaded over the Internet. In these cases, software is
+deployed continuously to a beta or demo site, and a cut                 Code review. Code reviews are prevalent in continuous
+is taken periodically (e.g., every two weeks for iOS) to de-         deployment processes. Because developers are fully respon-
+ploy to production. HP applies continuous deployment to              sible for the entire lifecycle of the software, code reviews are
+its printer firmware, so that each printer is always shipped         taken more seriously and there is far less resistance to them.
+with the latest version of software [13].
+                                                                        Release engineering. Once the developer determines
+2.1 Continuous deployment process                                    the software is functionally correct and will perform as ex-
+                                                                     pected, she identifies the update as ready to deploy. This
+Two key principles are followed in a continuous deployment           identification might occur by committing the update to a
+process. First, software is updated in relatively small incre-       specific code repository or an update might be made avail-
+ments that are independently deployable; when the update             able for deployment through a deployment management tool.
+has been completed, it is deployed as rapidly as possible.           The update may be handed off to a separate release engi-
+The size of the increments will depend in part on the na-            neering team.2
+ture of the update and will also differ from organization to
+organization.                                                           Release engineering is a team separate from the devel-
+                                                                     opment group. The mission of release engineering is to
+   Second, software updates are the responsibility of the soft-      compile, configure and release source code into production-
+ware developers who created them. As a consequence, de-
+velopers must be involved in the full deployment cycle: they         1We use the term software "change" and "update" interchange-
+are responsible for testing and staging, as well as provid-          ably; in practice, a software update that is deployed may include
+ing configuration for, and supporting their updates post-            multiple changes.
+deployment, including being on call so they can be notified          2A number of organizations do not use such a release engineering
+                                                                     team; e.g., Etsy and Netflix. Instead, the developers are able to
+                                                                     initiate deployment themselves by using a tool that deploys the
+                                                                     software automatically. However, based on our experiences at
+                                                                     Facebook and OANDA, we have come to believe that having a
+                                                                     separate team is valuable when reliable software is important.
+
+                                                                 22
+ready products. Release engineering ensures traceability                    similar to a production environment. An example of
+of changes, reproducibility of build, configuration and re-                 this is called shadow testing where production traffic
+lease while maintaining a revertible repository of all changes.             is cloned and sent to a set of shadow machines that
+Tasks include full build from source to ensure compatibility                execute newer code than production. Results between
+with the production environment, re-verification of devel-                  production and shadow environments can be automat-
+oper evaluation of the tests done by developers and a full                  ically compared and discrepancies reported as failures.
+install/uninstall test. Software with issues is rejected for
+release and passed back to developers. Otherwise, the soft-          Configuration tools are used to dynamically control (at run
+ware is deployed into production. The deployment is highly           time) which clients obtain the new functionality. If issues
+automated to prevent errors, to make it repeatable and to            occur after the update is deployed, the release engineering
+have each step be appropriately logged.                              group triages the issue with the developer that created the
+                                                                     update. Possible remedies include: reverting the deployed
+   The release engineering group begins its involvement early,       update to the previous version of the software through a
+when development begins. The group communicates with                 deployment rollback, rapid deployment of a hotfix, a con-
+teams to learn of new updates in progress to identify high-          figuration change to disable the feature that triggers the
+risk updates so they can provide advice on best practices            issue using for example feature flags or blue-green deploy-
+to increase the probability of a smooth deployment. The              ments [15], or (for lower priority issues) filing a bug report
+group also identifies potential interactions between software        for future remediation.
+updates that could cause issues when deployed together and
+handles them accordingly. For example, two software re-              2.2 Transition to Continuous Deployment
+leases that require opposing configurations of an individual
+parameter may not have been noticed by the two separate              Introducing continuous deployment into an organization is
+teams but should be noticed by release engineering. The              non trivial and involves significant cultural shifts [16]. A
+release engineering group assesses the risk of each upgrade,         number of requirements must be met before continuous de-
+based on the complexity of the upgrade, the caliber of the           ployment can be successful. Firstly, buy-in from the organi-
+team that created the update, and the history of the devel-          zation, and in particular from senior management is critical.
+opers involved. With upgrades deemed to have higher risk             Without full support, the process can easily be subverted.
+release engineering group may do extensive tests of its own.         This support is particularly important when a major failure
+                                                                     occurs, at which point organizations often tend to gravitate
+   When the release engineering group is ready to deploy an          back to more traditional processes.
+update, it coordinates with the appropriate developers to
+ensure they are available when deployment occurs.                       Secondly, highly cohesive, loosely coupled software makes
+                                                                     small changes more likely to be better isolated. Small de-
+   Deployment. Software is deployed in stages. Initially             ployment units allow updating of software with higher pre-
+software updates are deployed onto a beta or a demo sys-             cision and give the release engineering team flexibility in not
+tem. Only after the new software has been running without            releasing problematic updates.
+issue on the beta or demo site for a period of time, are they
+pushed to the final production site. Beta/demo sites have               Thirdly, tools to support the process are important, but
+real users and are considered production sites. Where pos-           they require appropriate investment. Tools not only increase
+sible, organizations use a practice commonly referred to as          the productivity of developers, but also decreases risk be-
+"dog fooding" whereby a portion of the development orga-             cause they reduce the number of manual operations (where
+nization uses the most updated software before the changes           errors are most likely to occur) and make deployment op-
+are pushed to external users. Generally, the release of de-          erations repeatable. Beyond standard tools, such as revi-
+ployed software occurs in stages to contain any issues before        sion control and configuration management systems (as de-
+general availability to the entire customer code base. Staged        scribed, e.g., in [15]) we highlight a few tools that are par-
+deployment strategies might include:                                 ticularly important for continuous deployment:
+
+    · blue-green deployments: A deployment strategy                      · automated testing infrastructure: testing func-
+       where a defective change to a production environment                 tionality, performance, capacity, availability, and secu-
+       (blue) can be quickly switched to the latest stable pro-             rity must be fully automated with the ability to initiate
+       duction build (green) [15]. The change may initially be              these tests at the push of a button. This automation
+       made available to, for example, 1% of the client base in             enables frequent testing and reduces overhead. Test-
+       a specific geographical location, thus limiting exposure             ing environments must be as identical to the produc-
+       (and with it, reputational risk), and only when confi-               tion environment as possible with full, realistic work-
+       dence increases that the software is running properly                load generation. As mentioned earlier, virtual machine
+       is the fraction gradually increased, until it ultimately             technology can play an important role.
+       reaches 100%. When problems are detected, the frac-
+       tion is quickly reduced to 0%.                                    · deployment management system (DMS): helps
+                                                                            the release engineering group manage the flow of up-
+    · dark launches: A deployment strategy where changes                    dates. The DMS has various dashboards that provide
+       are released during off peak hours; or where code is in-             an overview of the updates progressing through the de-
+       stalled on all servers, but configured so that users do              velopment and deployment phases. For each update,
+       not see their effects because their user interface com-              the DMS links together all the disparate systems (the
+       ponents are switched off. Such launches can be used to               change set from source control, the bug tracking sys-
+       test scalability and performance [14] and can be used                tem, code review comments, testing results, etc.) and
+       to break a larger release into smaller ones.                         the developers responsible for the update. Ultimately,
+                                                                            the DMS is used to schedule the deployment.
+    · staging/baking: A stage in the deployment pipeline
+       where a new version of software is tested in conditions
+
+                                                                 23
+                                                                      Table 1: Facebook commits considered
+
+    · deployment tool: executes all the steps necessary for            WWW       commits   lines inserted or modified
+       single-button deployment of an update to a specified           Android     705,631                      76,667,915
+       environment, from initial compilation of source code,                                                   10,635,605
+       to configuration, to the actual installation of a work-              IOS    68,272                      12,671,047
+       ing system and all steps in between. The tools can             Backend     146,658                      30,828,829
+       also roll-back any previous deployment, which may be                       238,742
+       necessary when a serious error is detected after de-
+       ployment. Automating the roll-back minimizes the               billions of dollars a day for online customers around the
+       time from when a critical error is identified to when it       world. OANDA has about 80 developers, all located in
+       is removed, and ensures that the rollback is executed          Toronto, Canada; this number stayed reasonably constant
+       smoothly.                                                      during the period of the study.
+
+    · monitoring infrastructure: a sophisticated moni-                   The trading system frontend software is implemented in
+       toring system is particularly important to quickly iden-       Java (Web and Android), and Objective-C (iOS). Backend
+       tify newly-deployed software that is misbehaving.              infrastructure software servicing the front end is primarily
+                                                                      implemented in C++, but also Perl, Python and other lan-
+Some of these tools are not readily available off-the-shelf           guages.
+because they need to be customized to the development or-
+ganization. Hence, they tend to be developed in house. For               OANDA also "white-labeled" its trading system software
+example, the DMS is highly customized because of the num-             to several large banks, which means the software ran on the
+ber of systems it is required to interface with, and it also          banks' infrastructure and was customized with the banks'
+automates a good portion of the software deployment work-             look and feel. The banks did not allow continuous updates
+flow, thus making it quite specific to the organization. The          of the software running on their servers. As a result, the
+deployment tool is also highly customized for each partic-            authors had a unique opportunity to compare and contrast
+ular environment. For each deployment module, automatic               some differences between continuous and noncontinuous de-
+installation and rollback scripts are required.                       ployment of the same software base.
+
+3. CASE STUDIES                                                          In OANDA's case, the demo system is a full trading sys-
+                                                                      tem, but one that only trades with virtual money (instead of
+In this section, we present information about our case study          real money) -- it has real clients and, in fact a much larger
+companies, Facebook and OANDA, as well as the method-                 client base than the real-money system.
+ology we used.
+                                                                      3.3 Methodology
+3.1 Facebook
+                                                                      For our quantitative analysis, we extracted and used data
+Facebook is a company that provides social networking prod-           from a number of sources at both Facebook and OANDA.
+ucts and services, servicing well over a billion users. The case      At Facebook, Git repositories provided us with informa-
+study presented here covers the time period 2008-2014, dur-           tion on which software was submitted for deployment when,
+ing which time, the software development staff at Facebook            since developers committed to specific repositories to trans-
+grew 20-fold from low 100's to 1000's. The vast majority of           fer code to the release engineering team for deployment. For
+the staff is located at Facebook headquarters in Menlo Park,          each commit, we extracted the timestamp, the deploying de-
+CA, but staff from roughly a dozen smaller remote offices lo-         veloper, the commit message, and for each file: the number
+cated around the world also contributes to the software.              of lines added, removed or modified.
+
+   The case study covers all software deployed within Face-              Commits were recorded from June, 2005 (with Android
+book during the above stated time period, with the excep-             and iPhone code starting in 2009). For this study we only
+tion of newly acquired companies that have not yet been               considered data from 2008 onwards up until June 1014. Ta-
+integrated into the Facebook processes and infrastructure             ble 1 lists the four repositories used along with the number of
+(e.g., Instagram that is in the process of being integrated).         commits recorded. The table also provides an indication of
+The software is roughly partitioned into 4 segments:                  the magnitude of these commits in terms of lines inserted or
+                                                                      modified. In total these repositories recorded over 1 million
+   1. Web frontend code: primarily implemented in PHP,                commits involving over 100 million lines of modified code.3
+       but also a number of other languages, such as Python,
+                                                                         All identified failures at Facebook are recorded in a "SEV"
+   2. Android frontend code: primarily implemented in Java            database and we extracted all errors from this database.
+                                                                      Failures are registered by employees when they are detected
+   3. iOS frontend code: primarily written in Objective- C            using an internal SEV tool. Each failure is assigned a sever-
+                                                                      ity level between 1 and 3: (1) critical, where the error needs
+   4. Backend infrastructure code that services the front-end         to be addressed immediately at high priority, (2) medium-
+       software: implemented in C, C++, Java, Python, and             priority, and (3) low-priority.4 In total, the SEV database
+       a host of other languages.                                     contained over 4,750 reported failures.
+
+In Facebook's case, the beta site is the Facebook site and            3In our analysis, we did not include commits that added
+mobile applications with live data used by internal employ-           or modified more than 2,000 lines of code so as not to in-
+ees and some outside users.                                           clude third party (i.e., open-source) software packages being
+                                                                      added or directories being moved. Not considering these
+3.2 OANDA                                                             large commits may cause us to underreport the productiv-
+                                                                      ity of Facebook developers.
+OANDA is a small, privately held company that provides                4The developer that developed the software does not typi-
+currency information and currency trading as a service. Its           cally set the severity level of the error.
+currency trading service processes a cash flow in the many
+
+                                                                  24
+   For our analysis, a developer was considered "active" at            Figure 1: Lines of modified or added code deployed
+any given point in time if she had committed code to de-               per developer per week at Facebook.
+ployment in the previous three weeks. We only considered
+the developer that issued the commit, even though other de-            fact that the number of developers increased by a factor of
+velopers may have also contributed to the code being com-              over 20 during that period.
+mitted. This may skew our analysis, but since we found
+that a Facebook developer deploys software once a day on               Observation 1: Productivity scaled with the size of the en-
+average, we believe the skew is minimal.                               gineering organization.
+
+   OANDA used a (inhouse-developed) deployment manage-                 Our experience has been that when developers are incen-
+ment system (DMS)to keep track of every stage of software              tivized with having the primary measure of progress be work-
+as it progressed through the deployment process. In aggre-             ing software in production, they self-organize into smaller
+gate, over 20,000 deployments were recorded between April,             teams of like-minded individuals. Intuitively, developers
+2010 and June, 2014. Git repositories, which deployment                understand that smaller teams have significantly reduced
+records refer to, provided information with respect to the             communication overheads, as identified by Brooks [17, 18].
+number of lines of code added/changed/deleted with each                Hence, one would expect productivity to remain high in such
+deployment.                                                            organizations and to scale with an increased number of de-
+                                                                       velopers.
+   Unfortunately, OANDA did not maintain a failure data-
+base as Facebook did (and only started to use Redmine and                 Moreover, productivity remained constant despite the fact
+JIRA relatively recently). Instead, detected failures were             that over the same period:
+typically communicated to the developers responsible for the
+code through email/messenger in an ad hoc way. As a result,               1. the size of the overall code base has increased by a
+OANDA failure data is largely unavailable. However, we                        factor of 50; and
+extrapolated critical (i.e., severity level 1) failures using the
+following heuristic: if software is deployed a second time                2. the products have matured considerably, and hence,
+within 48 hours of a first deployment, then we assume that                    the code and its structure have become more complex,
+the second deployment was necessary to fix a critical error                   and management places more emphasis on quality.
+that became visible after the first deployment.
+                                                                       Observation 2: Productivity scaled as the product matured,
+4. QUANTITATIVE ANALYSIS                                               became larger and more complex.
+
+Wherever possible, we present both OANDA and Facebook                     Note that we do not claim that continuous deployment is
+data together. However, some observations could be made                necessarily a key contributor to this scalability of produc-
+at only one company. Facebook understandably had a larger              tivity since productivity scalability is influenced by many
+sample size and more accurate production failure data, but             factors, including belief in company mission, compensation,
+OANDA had better data related to management and human                  individual career growth, work fulfillment etc.-- an organi-
+aspects.                                                               zation needs to get most (if not all) of these factors right for
+                                                                       good scalability.
+   .
+                                                                          However, we can conclude from the data that continuous
+4.1 Productivity                                                       deployment does not prevent an engineering organization
+                                                                       from scaling productivity as the organization grows and the
+We measure productivity as number of commented lines of                product becomes larger and more complex. Within Face-
+code shipped to production (while realizing that LoC per               book, we consider this observation a startling discovery that
+person week can be controversial). The metric was chosen               to the best of our knowledge, has not been shown for other
+largely because it is easy to count, readily understood and            software engineering methodologies.
+the data was available.
+                                                                          In the authors' opinion, a focus on quality is one factor
+   Each Facebook developer releases an average of 3.5 soft-            that enables the software development process to scale. A
+ware updates into production per week. Each update in-                 strong focus on quality company-wide with buy in from man-
+volves an average of 92 lines of code (median of 33) that              agement implies clear accountability and emphasis on au-
+were added or modified. Each OANDA developer releases                  tomating routine tasks to make them repeatable and error
+on average 1 update per week with each update involving                free. High degrees of automation also make it easier to run
+273 lines of code on average (median of 57) that were added
+or modified. OANDA has a far higher proportion of back-
+end releases than Facebook, which may explain some of the
+productivity differences.
+
+   Figure 1 depicts the average number of new and modi-
+fied lines of code deployed into production per developer per
+week at Facebook for the period January 1, 2008 to July 31,
+2014.5 The figure shows that productivity has remained rel-
+atively constant for more than six years. This is despite the
+
+5OANDA's software development productivity is shown
+later in Figure 3, where it is depicted in terms of number of
+deployments per week. Since the size of OANDA's engineer-
+ing team did not change materially over the period studied,
+no conclusions can be drawn from the OANDA data as it
+relates to scalability.
+
+                                                                   25
+Figure 2: Number of production issues per month                       Figure 3: Number of deployments at OANDA per
+as a function of the number of deployments at Face-                   week over three management regimes. The red lines
+book.                                                                 depict the average over the time periods shown.
+
+tests and collect metrics, making it more likely for develop-         Finding the appropriate quality vs. productivity tradeoff can
+ers to take these initiatives.                                        require iteration. For example, Figure 2 is a representation
+                                                                      of the quality vs productivity tradeoff Facebook made. Dur-
+4.2 Quality                                                           ing the approximate period January 2009 ­ July 2010, there
+                                                                      was a surge in productivity (Figure 1). Figure 4 shows there
+The quality of deployed software is of interest because con-          was a degradation in quality during this same period as mea-
+tinuous deployment does not have the same checks and bal-             sured by the number of hotfixes (used as a proxy for quality).
+ances that more traditional software engineering processes            Efforts to improve quality then came at the expense of some
+have with their independent test teams. (Neither Facebook             productivity.
+nor OANDA had a test team, although both had release en-
+gineering teams.) Rather, continuous deployment relies on             4.3 Human Factors
+the accountability of high-caliber developers who are respon-
+sible for software throughout its entire lifecycle, including         Management buy-in
+idea generation, architecture, design, implementation, test-
+ing and support in production; developers independently de-           Management buy-in and competence in continuous deploy-
+cide when to deploy their code and hence are responsible if           ment can significantly affect the productivity of the engi-
+production issues arise by being part of an on-call rotation.         neering organization and possibility the viability of the con-
+                                                                      tinuous development process. As an example, OANDA had
+   Production failures are used as an indicator of quality. At        a number of executive changes in the past four years with
+Facebook, each failure is categorized by severity: (i) critical,      most other factors relatively constant. It started with man-
+where the issue needs to be addressed immediately at high             agement team (Mgmt-A) having an engineering background
+priority, (ii) medium-priority, and (iii) low-priority. The           and supporting continuous deployment. In mid 2012, man-
+graph in Figure 2 depicts the number of failures for each             agement was replaced with executives having a business
+severity level as a function of the number of deployments             background (Mgmt-B). Their inclinations were more towards
+per month. The triangular marks in red represent critical             more traditional software engineering processes. At the end
+failures. The number of critical and medium priority fail-            of 2013, executive management was replaced again (Mgmt-
+ures grow significantly slower than the number of deploy-             C). This team had a Silicon Valley background and was well
+ments per month, with trendline slopes of 0.0004, 0.0013,             versed with and supportive of continuous deployment.
+and 0.0061, respectively; and this despite the growth in size
+and complexity of the product.                                           Figure 3 shows the effects of management on productiv-
+                                                                      ity levels. For example, the average number of deployments
+Observation 3: The number of critical issues arising from             dropped by 23% after Mgmt-B took control, despite other
+deployments was almost constant regardless of the number              factors such as the engineering team remaining largely un-
+of deployments.                                                       changed. Perhaps most surprising is how quickly productiv-
+                                                                      ity changes occurred after new management was introduced.
+This observation demonstrates that it is possible to manage
+quality with continuous deployment without having separate            Observation 4: Management support can affect the pro-
+independent test teams. The number of low-priority issues             ductivity of an engineering organization.
+increases linearly with the number of lines of code deployed
+(which is not much of a surprise given Facebook engineer-             Developer motivation
+ing's focus on productivity). Perhaps more interesting is the
+fact that the release engineering team did not increase in size       Some argue that developers are more motivated if their soft-
+as the number of deployments increased (primarily because             ware is deployed into production quickly. While we do not
+of the focus on automating the process as much as possible).          know how to measure motivation directly, at Facebook, de-
+                                                                      velopers can choose whether their software is deployed as
+   Each organization will have to make its own tradeoffs with         part of the next weekly release (which is the default) or,
+respect to quality and productivity. Often these tradeoffs            more quickly, as part of the next daily release. Figure 4
+are difficult if not impossible to make a priori. They are            indicates that developers chose to deploy their software as
+influenced many factors such as customer tolerance, compa-
+nies values, the type of product etc. and can vary over time.
+
+                                                                  26
+Figure 4: The number of deployment requests per                       Considerable and continuous investment is required
+week by type of request.                                              Continuous deployment requires continuous investments in
+                                                                      educating and coaching developers as well as in building,
+quickly as possible when given the choice. Figure 4 depicts           improving, and maintaining tool infrastructure.
+the release rate over time for daily and weekly releases. Ini-
+tially, they are fairly similar. However, as time progresses,            Education is needed because the software process with
+the number of deployments in the weekly release decreases,            continuous deployment is sufficiently different from what is
+even in the presence of rapid engineering growth rates. With          traditionally taught and practiced. Both companies offer
+the choice of a daily or weekly deployment entirely up to the         6-12 week training periods for new developers. Developers
+individual engineer, we conclude the preference is towards            joining OANDA are typically first assigned to the release
+shorter release cycles.                                               engineering team for several months for broad training.
+
+Observation 5: Developers prefer faster deployments over                 Both organizations have separate teams developing and
+slower ones.                                                          improving tools that enable continuous deployment (Section
+                                                                      2.2). Although some tools are readily available, many had
+5. LESSONS LEARNED                                                    to be developed or adapted to suit organizational needs. Ex-
+                                                                      isting tools are often too limited or force a specific process
+Combined, the authors have 13 years of experience with con-           that does not fit the organization. For example, both Face-
+tinuous deployment at Facebook and OANDA. In this sec-                book and OANDA found it necessary to develop their own
+tion, we discuss some of the insights and lessons learned             deployment management systems.
+at the two organizations. These are obviously subjective
+-- other organizations that have embraced continuous de-                 Developing, improving, and maintaining these tools takes
+ployment may have had different experiences and may draw              considerable effort. Facebook had approximately 5% of its
+different conclusions. The objective of this section is primar-       engineers dedicated to the task, while OANDA had 15% at
+ily to present some of the issues an organization supporting          time of writing. In our experience, it is more difficult for
+continuous deployment will likely be confronted with.                 smaller companies to use continuous deployment because a
+                                                                      larger percentage of its engineering resources are needed for
+Desirability of continuous deployment                                 internal tool development.
+OANDA used continuous deployment for its own systems,
+but also rebranded and "white-labeled" its systems to sev-            Versatile and skilled developers required
+eral large, international banks. The banks' policies did not          To thrive in an continuous deployment environment, devel-
+allow continuous deployment. This allowed a side-by-side              opers need to be: (i) generalists with the ability to under-
+comparison of experiences between continuous deployment               stand many aspects of the system; (ii) good at firefighting
+and non-continuous deployments of the same software base.             and systems debugging; (iii) bottom-up capable, willing and
+                                                                      able to be responsible (and accountable) for making sound
+   A first observation was that white-labeled trading systems         deployment decisions, taking quality, security, performance,
+were at a competitive disadvantage. What their clients con-           and scalability into account; and (iv ) able to work in an orga-
+sidered irritating bugs , but deemed by the bank to be non-           nization that some see as disorganized and perhaps chaotic;
+critical, were not fixed for many months. New functionality           taking appropriate initiatives when necessary. This makes
+that became standard in the fast moving currency trading              finding suitable candidates to hire more challenging.
+market were made available late.
+                                                                         Being a generalist is particularly important when working
+   A second observation was that each deployment in the               on complex software, such as backend systems. Generalists
+white-labeled product incorporated thousands of changes,              require a broader set of skills and a mindset to be able to
+which increased anxiety surrounding the deployment and led            reason with systems that they haven't developed and don't
+to much more extensive testing than deployments of indi-              have intimate knowledge of. In our experience, there are
+vidual changes. Moreover, failures identified at deployment           talented developers who are not well suited, or interested, in
+time were significantly harder to isolate to identify their root      this type of role and may be better suited in more structured
+cause. Developers had mentally moved on to work on soft-              organizations.
+ware several generations later, and as a result worked on
+fixing the fault with a negative attitude, knowing they were          Technical management essential
+working on software that was already obsolete. Fixing these           As with other agile methodologies, organizations embracing
+faults was clearly less efficient and caused more overhead.           continuous deployment tend to have a strong bottom-up cul-
+                                                                      ture with developers making many key decisions. Organiza-
+                                                                      tions are flatter, as managers can have an increased number
+                                                                      of direct reports. However, a different type of manager is
+                                                                      needed because they play a different role: they influence
+                                                                      rather than operate within a chain of command. We find
+                                                                      that in this environment, it is critical that managers be re-
+                                                                      spected by the developers. Being technologically excellent
+                                                                      makes this easier. Filling management roles with suitable
+                                                                      candidates has been a key challenge in both organizations.
+                                                                      This is exacerbated because the continuous deployment pro-
+                                                                      cess is not yet practiced in many other organizations. As a
+                                                                      result, management roles are often filled by promoting from
+                                                                      within.
+
+                                                                  27
+Empowered culture                                                     frameworks, and require that the output of those testing
+A suitable culture within the organization is critically impor-       systems be part of the deployment decision.
+tant to make continuous deployment effective. Developers
+need to be appropriately supported and given freedom along               Having a continuous deployment champion in the senior
+with their responsibilities. At both Facebook and OANDA,              management team is, in our view, critical, especially for non-
+developers are given almost full access to the company's code         technical management teams.
+base and are empowered to release new code within days of
+being hired. At Facebook, developers are given much free-             Dependencies considered harmful
+dom over which team to join and are encouraged to move                In our experience, engineering teams that practice continu-
+to different teams periodically. Open and transparent com-            ous deployment work best if divided into small, cohesive and
+munication across the company is particularly important so            largely autonomous groups that are not architecturally de-
+that developers have context in which to make informed de-            pendent on (many) other teams. According to Brooks, com-
+cisions in a decentralized way.                                       munication overhead increases at a rate of n2, with n the
+                                                                      number of people in a group [17]. Software that is modular-
+   Developers must be encouraged to take calculated risks,            ized into smaller, loosely coupled units reduces the need for
+and the presence of effective testing and deployment in-              inter-team communication. Inevitably, the product archi-
+frastructure makes it possible to identify and correct errors         tecture and the team communication structure are aligned,
+quickly while supporting developers who move fast. They               per Conway's law [20]. Cohesive teams typically have the
+should not be penalized for failures that occur as a result of        characteristic of being self-organized with like-minded indi-
+the risks taken (as long as the taken decisions were reason-          viduals that work well together.
+able and prudent given the circumstances).
+                                                                      Extra effort for comprehensive software updates
+Managing the risk-reward tradeoff                                     Changes, bug fixes and enhancements localized to one sys-
+Because deployment decisions rest with each individual de-            tem or one organization are generally handled well by con-
+veloper, he or she evaluates risks and rewards independently.         tinuous deployment. However, as per Conway's Law [20] "or-
+Examples of risks include insufficient testing, unrepeatable          ganizations that design systems are constrained to produce
+release procedures and the overhead and inconvenience of              designs which are copies of the communication structures in
+dealing with defects in deployed software. Rewards include            these organizations." In our experience, this occurs in one of
+benefits to the company, incentives, and self-fulfillment.            two circumstances. First, if the individual group has a high
+                                                                      friction release process. Second, if the change spans mul-
+   An important role of management is to improve the risk-            tiple teams with poor communications between them. We
+reward tradeoff so that better decisions can be made by the           describe both in further detail.
+developers. In particular, management should play a role in
+systematically reducing risks for the continuous deployment              Instituting continuous deployment requires effort, infras-
+process. Examples include allocating resources for building           tructure and iteration over a period of time. For exam-
+tools to improve repeatability of deployments and testing             ple, OANDA spent 2 years perfecting continuous deploy-
+as well as having a no-blame culture. This risk reduction             ment for mission critical infrastructure trading billions of
+allows engineers to execute at a faster pace because it frees         dollars a day. OANDA's backend infrastructure release pro-
+them up from mitigating their own risks. At the same time,            cess was more sophisticated than Facebook's resulting from
+proper incentives encourage developers to move even faster.           a concerted engineering effort. However, OANDA's database
+For example, at Facebook, the impact of working code in               schema changes always were always ad hoc and full of fear.
+production is a principle parameter of incentives.                    OANDA never spent the time to streamline its database
+                                                                      schema changes which resulted in changes that added ta-
+Need for objective retrospective when failures occur                  bles and columns resulting in a superset of what was needed
+The culture of a software development organization is often           over time. Database schema changes have been shown to be
+defined after a serious failure occurs. One of the most chal-         possible with a concerted effort.
+lenging aspects is to retain management support after such
+an event. It is easy to lose confidence when the approach                Changes spanning multiple teams are more difficult to
+differs significantly from the "textbook" approach. A com-            coordinate without agreed upon procedures. For example,
+mon reaction is to blame the process as the root cause and,           Facebook has had difficulty with configuration changes in
+in turn, increase the complexity of it. Over time, this makes         part because they spanned multiple groups. The company
+the process more cumbersome, resulting in a more conser-              didn't have the appropriate communication channels in place
+vative, less productive organization. This phenomenon is              for configuration changes to be properly vetted. As a re-
+commonly referred to as runaway process inflation [19].               sult, a group might make changes that seem reasonable when
+                                                                      viewed locally but had undesirable consequences globally.
+   The authors experienced this first hand at OANDA: after
+using continuous deployment successfully for several years,           Absence of separate testing team
+a major failure occurred that cost the company a signif-              Whether to have a separate testing team or not is one of
+icant amount of money within seconds. Senior manage-                  the more controversial questions and still an active area of
+ment's initial reaction was to add engineering hierarchy, a           debate. Some engineers and managers argue that a test
+more complicated approvals process and a full-blown, sep-             team would benefit a continuous deployment organization
+arate and traditional testing team. A postmortem analysis             while others argue strongly against it.
+of the event identified what had gone wrong: the output of
+failing unit tests (that correctly identified the bug) were dis-         One tenant of continuous deployment is clear accountabil-
+regarded because of too many false positive error messages.           ity between code in production and the engineer who created
+Fortunately, engineering was able to convince management              it. A testing group dilutes this accountability, especially
+to instead promote a renewed focus on automated testing               during times of system failures ­ opinions often disagree in
+                                                                      whether the failure was due to a system test escape or poor
+
+                                                                  28
+development practices because not everything is testable. In        this by making developers aware of the issue and continu-
+our experience, diluting responsibility of ownership increases      ously monitor for resource creep. Tools that allow precise
+the time to resolution of system failures.                          measurement (e.g., static analysis, lint rules, run-time mea-
+                                                                    surements) of incremental changes give developers feedback
+   Proponents of testing groups claim that individuals who          on the implications of their releases. We have also found it
+are not versed in the code and have a broader product per-          useful to dedicate a group to look at variance in traffic pat-
+spective are better testers, and that career testers will al-       terns and propose performance optimizations and efficient
+ways be more effective than developers having less inter-           architectural generalizations of common usage patterns.
+est but more subject matter knowledge. Moreover, context
+switching between development and testing also yields inef-         Susceptible to not-invented-here syndrome
+ficiencies. In other words, software developers are not best        We observed that developers working in a continuous de-
+at testing and specialization of tasks is the best approach.        ployment environment do not like to be held back. They
+                                                                    find it difficult to work with other parts of the organiza-
+   In the experiences of the authors, developers have a higher      tion, or outside organizations, that work at slower speeds or
+degree of influence and better software development skills.         with a different culture. As a result, teams may reinvent
+By being less interested in testing, developers are motivated       components that would otherwise be available from outside
+to find creative means to automate it. Both Facebook and            the team. In particular, third-party software vendors have
+OANDA have pre-software release systems (internal beta              their own release schedules and product philosophies typ-
+used by Facebook employees and a virtual money system               ically aimed at the masses, which developers feel impede
+used by OANDA's customers) that serve effectively as test           their freedom. Thus, developers often implement their own
+systems. Both were conceived by developers to improve               version, which allows them to march to their own schedule
+test coverage by leveraging user resources. In the case of          and allows them to create customized highly optimized solu-
+OANDA, the systems also provides a marketing benefit.               tions most appropriate for their needs, however duplication
+                                                                    can result. We have even encountered similar components
+Convergence on local minima                                         being developed in different groups concurrently.
+The iterative process may lead to local minima in products
+when continuous, but incremental, improvements are made.            Variability in quality
+Teams may have resistance to make larger, bolder moves              The structural and functional quality of software produced
+(perhaps because of the fear of risks involved). OANDA's            can vary substantially from developer to developer. Simi-
+trading GUI is an example. The product is reasonable, but           larly, the ability to effectively deal with operational issues
+the number of users using it makes it difficult to make dra-        in the production system will also vary from developer to
+matic changes. Getting out of the local minima may require          developer. With smaller teams, the quality of the contribu-
+an initiative that comes from outside the culture, perhaps          tions each developer makes is much more noticeable. The
+through a separate skunks work project (or by acquiring             release engineering team and management can play a valu-
+another firm).                                                      able role in mentoring and advising to equalize quality.
+
+Sub-standard product releases                                       6. LIMITATIONS OF STUDY
+Developers may deploy products or product features too
+early with the understanding that they can be improved              This study has several obvious limitations. Firstly, the data,
+later through quick iterations. The continuous deployment           findings and experiences are from two companies and thus
+process can make the use of this argument too easy, yet re-         represent only two data points. While we believe that the
+leasing too early can alienate end-users (who often will not        two data points are interesting and important, they may not
+give the released product a second chance). Hence, the flex-        be representative, and other firms may have different expe-
+ibility the continuous deployment process offers should be          riences and or use different approaches. Secondly, while our
+used with care. A stakeholder representing end users (e.g.,         quantitative analysis allows us to identify a number of find-
+a product manager) can play an important roll in educating          ings, we can only hypothesize the root cause of our observa-
+and convincing developers.                                          tions. Thirdly, our insights and the lessons we learned are
+                                                                    fundamentally subjective; other organizations may well have
+Susceptible to resource and performance creep                       had different experiences and come to completely different
+With continuous deployment, each deployed update is rel-            conclusions.
+atively small, so increases in system resource usage (e.g.
+CPU, memory etc.) due to the update are expected to                 7. RELATED WORK
+be small. However, aggregated over a large number of de-
+ployments, the additional resource usage may become sub-            Few studies have evaluated continuous deployment. Hum-
+stantial. That is, continuous deployment can suffer from a          ble et al. provide an early overview of continuous deploy-
+"death by a thousand cuts," because release decisions are           ment [21]. Ollson et al. [22] and Dijkstra [23] present several
+decentralized to individual developers rather than having a         case studies identifying barriers in transitioning from agile
+central coordinating body as in the waterfall model.                development to continuous deployment. Pulkkinen discusses
+                                                                    strategies for continuous deployment in the cloud [24]. Neely
+   Consider a hypothetical example where a set of updates           et al. describe their experiences introducing continuous de-
+each consume an additional 0.05% of CPU. The 0.05% ad-              ployment at Rally [25].
+ditional CPU may seem reasonable and justifiable given the
+added functionality. However, having 100 such releases per             Continuous deployment impacts the work arrangements
+week (for example) means that CPU utilization would in-             of the software development team. Marschall reports that
+crease by 260% within a year.                                       continuous deployments change developers' perceptions on
+                                                                    quality when they can better see the link between their con-
+   Decentralized release decisions may lead to aggregate de-
+cisions that do not make sense. We have been able to solve
+
+                                                                29
+tribution and the result "in the wild" [26]. Developers are                [9] V. Nguyen, L. Huang, and B. W. Boehm, "An analysis of
+responsible for making and testing changes that reach the                       trends in productivity and cost drivers over years," in Proc.
+customer rapidly and for responding to failures that result                     of the 7th Intl. Conf. on Predictive Models in Software
+as a consequence of deploying those changes. Claps et al.                       Engineering, 2011, pp. 3:1­3:10.
+found that stress may be increased, due to perceived pres-
+sure to deploy [16]. Hence, tools automating deployment are               [10] M. Poppendeick and T. Poppendeick, Lean Software
+essential in keeping demands on developers realistic.                           Development. Addison Wesley, 2002.
+
+   Hoff describes how Netflix's focus on high velocity delivery           [11] D. J. Anderson, Kanban: Successful Evolutionary Change
+has caused them to virtually abandon standard software en-                      for Your Technology Business. Blue Hole Press, 2010.
+gineering processes [27]. Instead, small teams of developers
+are independently responsible for the development, support,               [12] D. Edwards, "The history of DevOps," June 2009. [Online].
+and deployment of their software. Lehman's seminal work                         Available: http://itrevolution.com/the-history-of-devops/
+on software evolution predicts that progress on a product
+will slow when size and complexity increase [28]. In a prior              [13] G. Gruver, M. Young, and P. Fulgham, A Practical
+study, Facebook has found that the code base of their prod-                     Approach to Large-scale Agile Development -- How HP
+uct has grown superlinearly over time [14].                                     Transformed LaserJet FutureSmart Firmware.
+                                                                                Addison-Wesley, 2013.
+8. CONCLUDING REMARKS
+                                                                          [14] D. Feitelson, E. Frachtenberg, and K. Beck, "Development
+   We compared experiences with continuous deployment at                        and deployment at Facebook," IEEE Internet Computing,
+two very different companies. The data reveals that contin-                     vol. 17, no. 4, pp. 8­17, 2013.
+uous deployment allows scaling of the number of developers
+and code base size. For example, Facebook has been able                   [15] J. Humble and D. Farley, Continuous delivery: reliable
+to maintain productivity and keep critical-rated production                     software releases through build, test, and deployment
+issues relatively constant for over half a decade despite an                    automation. Addison-Wesley, 2010.
+order of magnitude increase in developers and code base size.
+Findings also reveal that developers, given the choice, prefer            [16] G. G. Claps, R. B. Svensson, and A. Aurum, "On the
+short release cycles over longer ones.                                          journey to continuous deployment: Technical and social
+                                                                                challenges along the way," Information and Software
+   Continuous deployment is highly dependent on the incli-                      Technology, vol. 57, pp. 21­31, 2015.
+nations of management, which may affect productivity, or
+even the viability of the approach. Customized tools, in-                 [17] F. P. Brooks, Mythical Man Month: Essays on Software
+cluding deployment management, testing environments, and                        Engineering. Addison-Wesley, 1975.
+performance monitoring etc. are important and may con-
+sume a significant portion of engineering resources. Finally,             [18] ----, "No silver bullet: Essence and accidents of software
+continuous deployment has the limitation of resource creep                      engineering," IEEE Computer, vol. 20, no. 4, pp. 10­19,
+-- small changes' incremental resource demands may seem                         1987.
+reasonable individually but not in the aggregate.
+                                                                          [19] R. C. Martin, Agile Software Development: Principles,
+9. REFERENCES                                                                   Patterns, and Practices. Prentice Hall, 2003.
+
+  [1] J. Allspaw and P. Hammond, "10 deploys per day -- Dev               [20] M. Conway, "How do committees invent?" Datamation,
+       and Ops cooperation at Flickr," 2009, slides. [Online].                  vol. 14, no. 5, pp. 28­31, April 1968.
+       Available: http://www.slideshare.net/jallspaw/
+       10-deploys-per-day-dev-and-ops-cooperation-at-flickr               [21] J. Humble, C. Read, and D. North, "The deployment
+                                                                                production line," in Proc. AGILE Conf., 2006, pp. 113­118.
+  [2] M. Brittain, "Continuous deployment: The dirty details."
+       [Online]. Available: http://www.slideshare.net/                    [22] H. Olsson, H. Alahyari, and J. Bosch, "Climbing the
+       mikebrittain/mbrittain-continuous-deploymentalm3public                   "Stairway to Heaven" ­ a mulitiple-case study exploring
+                                                                                barriers in the transition from agile development towards
+  [3] B. Schmaus, "Deploying the Netflix API," 2013. [Online].                  continuous deployment of software," in Proc. 38th
+       Available: http:                                                         Euromicro Conf. on Software Engineering and Advanced
+       //techblog.netflix.com/2013/08/deploying-netflix-api.html                Applications, 2012, pp. 392­399.
+
+  [4] K. Beck, Extreme Programming Explained: Embrace                     [23] O. Dijkstra, "Extending the agile development discipline to
+       Change. Addison-Wesley, 2000.                                            deployment: The need for a holistic approach," Master's
+                                                                                thesis, Utrecht University, 2013.
+  [5] K. Beck, M. Beedle, A. van Bennekum, A. Cockburn,
+       W. Cunningham, M. Fowler, J. Grenning, J. Highsmith,               [24] V. Pulkkinen, "Continuous deployment of software," in
+       A. Hunt, R. Jeffries, J. Kern, B. Marick, R. C. Martin,                  Proc. of the Seminar no. 58312107: Cloud-based Software
+       S. Mellor, K. Schwaber, J. Sutherland, and D. Thomas,                    Engineering. University of Helsinki, 2013, pp. 46­52.
+      "Manifesto for agile software development," 2001. [Online].
+       Available: http://www.agilemanifesto.org/                          [25] S. Neely and S. Stolt, "Continuous delivery? Easy! Just
+                                                                                change everything (well, maybe it is not that easy)," in
+  [6] A. Cockburn, Agile Software Development. Addison                          Proc. Agile Conf., 2013, pp. 121­128.
+       Wesley Longman, 2002.
+                                                                          [26] M. Marschall, "Transforming a six month release cycle to
+  [7] A. Cockburn and L. Williams, "Agile software                              continuous flow," in Proc. Agile Conf., 2007, pp. 395­400.
+       development: It's about feedback and change," Computer,
+       vol. 36, no. 6, pp. 39­43, 2003.                                   [27] T. Huff, "Netflix: Developing, deploying, and supporting
+                                                                                software according to the way of the cloud," 2011. [Online].
+  [8] F. Maurer and S. Martel, "On the productivity of agile                    Available: http://highscalability.com/blog/2011/12/12/
+       software practices: An industrial case study," in Proc. Intl.            netflix-developing-deploying-and-supporting-software-accordi.
+       Workshop on Economics-Driven Software Engineering                        html
+       Research, 2002.
+                                                                          [28] M. M. Lehman, D. E. Perry, and J. F. Ramil, "Implications
+                                                                                of evolution metrics on software maintenance," in Proc.
+                                                                                Intl. Conf. on Software Maintenance, 1998, pp. 208­217.
+
+                                                                      30
+

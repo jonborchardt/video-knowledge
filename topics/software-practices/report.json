@@ -54,8 +54,10 @@
           "note": "The SmartBear Cisco field study found defect density per line falling past roughly 200-400 lines per review, though it is a single vendor-run industrial dataset rather than a controlled experiment.",
           "source": null,
           "documents": [
+            "software-practices/sources/bosu2015-useful-reviews.txt",
             "software-practices/sources/mcintosh2014-code-review-coverage.txt",
-            "software-practices/sources/sadowski2018-code-review-google.txt"
+            "software-practices/sources/sadowski2018-code-review-google.txt",
+            "software-practices/sources/santos2018-review-distributed.txt"
           ]
         },
         {
@@ -220,7 +222,9 @@
           "source": null,
           "documents": [
             "software-practices/sources/fucci2016-tdd-replication.txt",
-            "software-practices/sources/karac2018-tdd-what-we-know.txt"
+            "software-practices/sources/janzen2008-tdd-design-quality.txt",
+            "software-practices/sources/karac2018-tdd-what-we-know.txt",
+            "software-practices/sources/siniaalto2007-tdd-design.txt"
           ]
         },
         {
@@ -249,7 +253,10 @@
           ],
           "note": "Studies of TDD find modest improvements in some internal quality metrics such as coupling and cohesion, with mixed results overall and effects that depend on developer experience.",
           "source": null,
-          "documents": []
+          "documents": [
+            "software-practices/sources/janzen2008-tdd-design-quality.txt",
+            "software-practices/sources/siniaalto2007-tdd-design.txt"
+          ]
         },
         {
           "id": "software-practices/test-suite-known-gaps-gives-decision",
@@ -447,7 +454,9 @@
           ],
           "note": "Case studies and surveys of mob teams consistently report faster knowledge spread, but no study measures onboarding time against a control.",
           "source": null,
-          "documents": []
+          "documents": [
+            "software-practices/sources/buchan2018-mob-mentality.txt"
+          ]
         },
         {
           "id": "software-practices/switching-tasks-fill-time-while-blocked",
@@ -483,19 +492,21 @@
           "tally": {
             "right": 0,
             "wrong": 0,
-            "partly": 0,
-            "untestable": 1,
+            "partly": 1,
+            "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
-          "effective": "untestable",
-          "confidence": 0,
+          "strongest": "source",
+          "effective": "partly",
+          "confidence": 0.25,
           "videos": [
             "5cvaCq1q9_E"
           ],
-          "note": "A team norm whose necessity cannot be separated from the practice in available evidence.",
-          "source": null,
-          "documents": []
+          "note": "In the one case team, mobbing made interpersonal interactions more frequent and intense, and unresolved interpersonal problems became an insurmountable barrier to mobbing; it observes the barrier rather than testing kindness as a requirement.",
+          "source": "software-practices/sources/buchan2018-mob-mentality.txt#L138-L145",
+          "documents": [
+            "software-practices/sources/buchan2018-mob-mentality.txt"
+          ]
         },
         {
           "id": "software-practices/pairing-mobbing-puts-best-each-participant",
@@ -510,9 +521,9 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "partly",
-          "confidence": 0.45,
+          "confidence": 0.6,
           "videos": [
             "5cvaCq1q9_E",
             "UQrlEXU6RM8",
@@ -521,9 +532,11 @@
             "martinfowler-pairprogrammingmisconceptions",
             "xS6yH0VqJjw"
           ],
-          "note": "Pair programming meta-analyses show modest quality gains at higher effort, with effects depending on task complexity and pair expertise; no measurement exists for mobs.",
-          "source": null,
-          "documents": []
+          "note": "A meta-analysis of 18 pair-vs-solo experiments concludes pairing is not uniformly beneficial: the overall quality gain is small (g .23-.33, shrinking to .03-.07 after correcting for publication bias), higher quality on complex tasks costs much more effort, and on simpler tasks pairs finish sooner but with noticeably lower quality, so the code does not reliably get the best of both.",
+          "source": "software-practices/sources/hannay2009-pair-programming-meta.txt#L1016-L1039",
+          "documents": [
+            "software-practices/sources/hannay2009-pair-programming-meta.txt"
+          ]
         },
         {
           "id": "software-practices/short-daily-retrospectives-keep-improvement-track",
@@ -1057,7 +1070,9 @@
           ],
           "note": "DORA surveys associate continuous delivery with lower burnout and higher job satisfaction, but causation is not isolated and this is one team's impression.",
           "source": null,
-          "documents": []
+          "documents": [
+            "software-practices/sources/savor2016-continuous-deployment.txt"
+          ]
         },
         {
           "id": "software-practices/feature-flags-carry-ongoing-removal-cost",
@@ -1526,15 +1541,15 @@
           "asserted": 6,
           "denied": 0,
           "tally": {
-            "right": 1,
+            "right": 0,
             "wrong": 0,
-            "partly": 0,
+            "partly": 1,
             "untestable": 0,
             "unknown": 0
           },
           "strongest": "source",
-          "effective": "right",
-          "confidence": 0.2,
+          "effective": "partly",
+          "confidence": 0.25,
           "videos": [
             "GBTdnfD6s5Q",
             "martinfowler-microservicepremium",
@@ -1543,9 +1558,10 @@
             "signalvnoise-the-majestic-monolith",
             "signalvnoise-the-majestic-monolith-can-become-the-citadel"
           ],
-          "note": "A footnote states it is important to avoid premature decomposition of new systems into services, which can inhibit delivery performance, citing Fowler's MonolithFirst; this is an authorial assertion, not a measured result.",
-          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1091-L1092",
+          "note": "The authors conclude from their Azure throughput benchmarks of a two-service app that a monolith seems the better choice for simple, small systems without many concurrent users, and that scaling up a monolith can beat moving to microservices; this backs the default only for small, low-traffic systems and only on performance and infrastructure cost, not on development or organisational outcomes.",
+          "source": "software-practices/sources/blinowski-2022-monolith-vs-microservices.txt#L776-L782",
           "documents": [
+            "software-practices/sources/blinowski-2022-monolith-vs-microservices.txt",
             "software-practices/sources/dora2019-state-of-devops.txt"
           ]
         },
@@ -1606,7 +1622,10 @@
           "note": "Operational overhead of distributed systems is well documented and several public cases of consolidating back to a monolith cite cost; evidence is case studies not controlled data.",
           "source": null,
           "documents": [
-            "software-practices/sources/soldani2018-microservices-pains-gains.txt"
+            "software-practices/sources/blinowski-2022-monolith-vs-microservices.txt",
+            "software-practices/sources/lenarduzzi2020-migration-technical-debt.txt",
+            "software-practices/sources/soldani2018-microservices-pains-gains.txt",
+            "software-practices/sources/su2023-microservice-to-monolith.txt"
           ]
         },
         {
@@ -1908,10 +1927,12 @@
             "google-github-small-cls",
             "graphite-the-ideal-pr-is-50-lines-long"
           ],
-          "note": "At Google the median wait for first reviewer feedback is under an hour for small changes versus about 5 hours for very large ones; overall median review latency is under 4 hours with a median change of 24 lines.",
-          "source": "software-practices/sources/sadowski2018-code-review-google.txt#L358-L362",
+          "note": "Regression on about 40,000 merged, CI-tested pull requests from 40 GitHub projects finds that pull requests adding more lines and more commits take significantly longer from creation to close, with size and discussion length the dominant predictors; an observational preliminary study of open-source projects.",
+          "source": "software-practices/sources/yu2015-pull-request-latency.txt#L164-L172",
           "documents": [
-            "software-practices/sources/sadowski2018-code-review-google.txt"
+            "software-practices/sources/sadowski2018-code-review-google.txt",
+            "software-practices/sources/santos2018-review-distributed.txt",
+            "software-practices/sources/yu2015-pull-request-latency.txt"
           ]
         },
         {
@@ -1941,7 +1962,8 @@
           "note": "DORA's small-batch findings and defect-per-line research support the direction, but the evidence is correlational and vendor-sourced.",
           "source": null,
           "documents": [
-            "software-practices/sources/dora2019-state-of-devops.txt"
+            "software-practices/sources/dora2019-state-of-devops.txt",
+            "software-practices/sources/mockus2000-change-risk.txt"
           ]
         },
         {
@@ -2685,7 +2707,9 @@
           ],
           "note": "Test-induced indirection is widely reported in practice and in the DHH debate, but controlled studies of TDD on design quality show small mixed effects.",
           "source": null,
-          "documents": []
+          "documents": [
+            "software-practices/sources/janzen2008-tdd-design-quality.txt"
+          ]
         },
         {
           "id": "software-practices/unit-tests-alone-cannot-catch-integration",
@@ -4191,17 +4215,18 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "partly",
-          "confidence": 0.5,
+          "confidence": 0.6,
           "videos": [
             "WELBnE33dpY",
             "hillelwayne-what-we-know-we-dont-know"
           ],
-          "note": "Hannay et al.'s meta-analysis found small quality gains and effort increases with high heterogeneity.",
-          "source": null,
+          "note": "Across 18 controlled experiments the effect on quality is small and the evidence shows publication bias, which supports 'little effect on defects', but pairs show a medium gain in duration and a medium loss in effort, so the effect on productivity is measurable rather than little.",
+          "source": "software-practices/sources/hannay2009-pair-programming-meta.txt#L36-L43",
           "documents": [
-            "software-practices/sources/dyba2008-agile-review.txt"
+            "software-practices/sources/dyba2008-agile-review.txt",
+            "software-practices/sources/hannay2009-pair-programming-meta.txt"
           ]
         },
         {
@@ -4374,7 +4399,9 @@
           ],
           "note": "Anecdotal; some companies did cut QA, but no study links this to measured quality loss.",
           "source": null,
-          "documents": []
+          "documents": [
+            "software-practices/sources/savor2016-continuous-deployment.txt"
+          ]
         },
         {
           "id": "software-practices/strict-tdd-which-forbids-production-code",
@@ -4786,16 +4813,17 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
-          "confidence": 0.5,
+          "confidence": 0.65,
           "videos": [
             "aItVJprLYkg"
           ],
-          "note": "Meta-analysis finds pairs cut elapsed time but raise total effort; the sixty-percent figure comes from small student studies.",
-          "source": null,
+          "note": "The meta-analysis of 18 experiments finds a medium positive effect of pairing on duration (pairs finish sooner) and a medium negative effect on effort (more total person-hours), with high between-study variance.",
+          "source": "software-practices/sources/hannay2009-pair-programming-meta.txt#L36-L43",
           "documents": [
-            "software-practices/sources/dyba2008-agile-review.txt"
+            "software-practices/sources/dyba2008-agile-review.txt",
+            "software-practices/sources/hannay2009-pair-programming-meta.txt"
           ]
         },
         {
@@ -4811,15 +4839,17 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "partly",
           "confidence": 0.5,
           "videos": [
             "aItVJprLYkg"
           ],
-          "note": "Meta-analysis finds pairing's benefit concentrated on complex tasks, consistent with this.",
-          "source": null,
-          "documents": []
+          "note": "Pairing yields higher-quality solutions on complex tasks (at considerably greater effort), but on simple tasks it is not plain waste: pairs finish faster there, at the price of lower quality.",
+          "source": "software-practices/sources/hannay2009-pair-programming-meta.txt#L39-L43",
+          "documents": [
+            "software-practices/sources/hannay2009-pair-programming-meta.txt"
+          ]
         },
         {
           "id": "software-practices/skill-mismatch-within-pair-matters-little",
@@ -7592,7 +7622,9 @@
           ],
           "note": "The Prime Video post concerned one team's service; Amazon overall remained service-based.",
           "source": null,
-          "documents": []
+          "documents": [
+            "software-practices/sources/su2023-microservice-to-monolith.txt"
+          ]
         },
         {
           "id": "software-practices/creating-services-which-team-free-rather",
@@ -8103,21 +8135,22 @@
           "denied": 0,
           "tally": {
             "right": 0,
-            "wrong": 1,
-            "partly": 0,
+            "wrong": 0,
+            "partly": 1,
             "untestable": 0,
             "unknown": 0
           },
           "strongest": "source",
-          "effective": "wrong",
-          "confidence": 0.35,
+          "effective": "partly",
+          "confidence": 0.4,
           "videos": [
             "martinfowler-on-pair-programming"
           ],
-          "note": "The review describes research on particular practices like pair programming as at an intermediate or even mature state, and cites an earlier review calling pair programming supported by a well-established research stream; the evidence may be mixed, but the authors treat it as a scientifically studiable question, not an unmeasurable one.",
-          "source": "software-practices/sources/dyba2008-agile-review.txt#L1315-L1319",
+          "note": "Controlled experiments do measure pairing's effects on quality, duration and effort, but the meta-analysis concludes that 'is pairing better' has no single answer: it depends on programmer expertise and task complexity, so the value is measurable yet context-bound rather than unprovable.",
+          "source": "software-practices/sources/hannay2009-pair-programming-meta.txt#L839-L846",
           "documents": [
-            "software-practices/sources/dyba2008-agile-review.txt"
+            "software-practices/sources/dyba2008-agile-review.txt",
+            "software-practices/sources/hannay2009-pair-programming-meta.txt"
           ]
         },
         {
@@ -8284,7 +8317,9 @@
           ],
           "note": "Case reports from Hunter Industries and others are positive; no controlled studies.",
           "source": null,
-          "documents": []
+          "documents": [
+            "software-practices/sources/buchan2018-mob-mentality.txt"
+          ]
         },
         {
           "id": "software-practices/rewrite-viable-when-codebase-small-product",
@@ -8427,7 +8462,9 @@
           ],
           "note": "Lambda pricing and duration limits make this true for sustained workloads; Cockcroft's advice is widely echoed.",
           "source": null,
-          "documents": []
+          "documents": [
+            "software-practices/sources/su2023-microservice-to-monolith.txt"
+          ]
         },
         {
           "id": "software-practices/microservices-speed-time-market",
@@ -9111,19 +9148,21 @@
           "tally": {
             "right": 0,
             "wrong": 0,
-            "partly": 0,
+            "partly": 1,
             "untestable": 0,
-            "unknown": 1
+            "unknown": 0
           },
-          "strongest": "prior",
-          "effective": "unknown",
-          "confidence": 0,
+          "strongest": "source",
+          "effective": "partly",
+          "confidence": 0.3,
           "videos": [
             "signalvnoise-the-majestic-monolith-can-become-the-citadel"
           ],
-          "note": "There are prominent consolidation stories (Amazon Prime Video, Segment) but no survey establishes a net trend.",
-          "source": null,
-          "documents": []
+          "note": "A systematic search of academic and grey literature found only four documented cases of switching from microservices back to a monolith, and the authors conclude it is still too early to call it a trend; retreats happen, but the record does not show many.",
+          "source": "software-practices/sources/su2023-microservice-to-monolith.txt#L224-L228",
+          "documents": [
+            "software-practices/sources/su2023-microservice-to-monolith.txt"
+          ]
         },
         {
           "id": "software-practices/measured-productivity-gaps-between-programmers-mostly",
@@ -9911,7 +9950,9 @@
           "source": "software-practices/sources/sadowski2018-code-review-google.txt#L31-L34",
           "documents": [
             "software-practices/sources/dora2019-state-of-devops.txt",
-            "software-practices/sources/sadowski2018-code-review-google.txt"
+            "software-practices/sources/dora2023-state-of-devops.txt",
+            "software-practices/sources/sadowski2018-code-review-google.txt",
+            "software-practices/sources/savor2016-continuous-deployment.txt"
           ]
         },
         {
@@ -10163,31 +10204,6 @@
           ]
         },
         {
-          "id": "software-practices/pairing-value-cannot-proven-scientifically-because",
-          "text": "Pairing's value cannot be proven scientifically because development output is too hard to measure, so teams must try it themselves",
-          "topic": "software-practices",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 1,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "source",
-          "effective": "wrong",
-          "confidence": 0.35,
-          "videos": [
-            "martinfowler-on-pair-programming"
-          ],
-          "note": "The review describes research on particular practices like pair programming as at an intermediate or even mature state, and cites an earlier review calling pair programming supported by a well-established research stream; the evidence may be mixed, but the authors treat it as a scientifically studiable question, not an unmeasurable one.",
-          "source": "software-practices/sources/dyba2008-agile-review.txt#L1315-L1319",
-          "documents": [
-            "software-practices/sources/dyba2008-agile-review.txt"
-          ]
-        },
-        {
           "id": "software-practices/per-change-pull-request-gates-break",
           "text": "Per-change pull request gates break down under continuous delivery with many deployments a day",
           "topic": "software-practices",
@@ -10210,7 +10226,9 @@
           "source": "software-practices/sources/sadowski2018-code-review-google.txt#L31-L34",
           "documents": [
             "software-practices/sources/dora2019-state-of-devops.txt",
-            "software-practices/sources/sadowski2018-code-review-google.txt"
+            "software-practices/sources/dora2023-state-of-devops.txt",
+            "software-practices/sources/sadowski2018-code-review-google.txt",
+            "software-practices/sources/savor2016-continuous-deployment.txt"
           ]
         },
         {
@@ -10290,8 +10308,10 @@
             "note": "The SmartBear Cisco field study found defect density per line falling past roughly 200-400 lines per review, though it is a single vendor-run industrial dataset rather than a controlled experiment.",
             "source": null,
             "documents": [
+              "software-practices/sources/bosu2015-useful-reviews.txt",
               "software-practices/sources/mcintosh2014-code-review-coverage.txt",
-              "software-practices/sources/sadowski2018-code-review-google.txt"
+              "software-practices/sources/sadowski2018-code-review-google.txt",
+              "software-practices/sources/santos2018-review-distributed.txt"
             ]
           },
           "prior": "right",
@@ -10587,7 +10607,10 @@
             "note": "Operational overhead of distributed systems is well documented and several public cases of consolidating back to a monolith cite cost; evidence is case studies not controlled data.",
             "source": null,
             "documents": [
-              "software-practices/sources/soldani2018-microservices-pains-gains.txt"
+              "software-practices/sources/blinowski-2022-monolith-vs-microservices.txt",
+              "software-practices/sources/lenarduzzi2020-migration-technical-debt.txt",
+              "software-practices/sources/soldani2018-microservices-pains-gains.txt",
+              "software-practices/sources/su2023-microservice-to-monolith.txt"
             ]
           },
           "prior": "right",
@@ -10604,10 +10627,10 @@
           "evidenceRecord": {
             "method": "source",
             "verdict": "partly",
-            "confidence": 0.3,
-            "note": "Industrial sources name higher compute and network resource consumption than monoliths as the primary operational pain (network cited by 17 of 51), supporting higher running cost; no source quantifies money or distinguishes short from long term.",
-            "source": "software-practices/sources/soldani2018-microservices-pains-gains.txt#L1029-L1037",
-            "date": "2026-10-15"
+            "confidence": 0.35,
+            "note": "In one SME extracting five services from a 280K-line monolith, the architect and project manager reported overall development cost up more than 20% from building a distributed system, while SonarQube technical debt spiked at each extraction and then grew about 90% slower than in the monolith; higher short-term cost is supported, but a single migration case says nothing about whether money is rarely saved.",
+            "source": "software-practices/sources/lenarduzzi2020-migration-technical-debt.txt#L862-L869",
+            "date": "2026-10-26"
           }
         },
         {
@@ -11458,48 +11481,48 @@
         },
         {
           "claim": {
-            "id": "software-practices/pair-finishes-task-faster-one-person",
-            "text": "A pair finishes a task faster than one person but spends more total person-hours on it",
+            "id": "software-practices/confidence-programmer-written-tests-led-many",
+            "text": "Confidence from programmer-written tests led many teams to drop QA and ship lower quality.",
             "topic": "software-practices",
             "asserted": 1,
             "denied": 0,
             "tally": {
-              "right": 1,
+              "right": 0,
               "wrong": 0,
-              "partly": 0,
+              "partly": 1,
               "untestable": 0,
               "unknown": 0
             },
             "strongest": "prior",
-            "effective": "right",
-            "confidence": 0.5,
+            "effective": "partly",
+            "confidence": 0.4,
             "videos": [
-              "aItVJprLYkg"
+              "YNw4baDz6WA"
             ],
-            "note": "Meta-analysis finds pairs cut elapsed time but raise total effort; the sixty-percent figure comes from small student studies.",
+            "note": "Anecdotal; some companies did cut QA, but no study links this to measured quality loss.",
             "source": null,
             "documents": [
-              "software-practices/sources/dyba2008-agile-review.txt"
+              "software-practices/sources/savor2016-continuous-deployment.txt"
             ]
           },
-          "prior": "right",
-          "evidence": "partly",
+          "prior": "partly",
+          "evidence": "wrong",
           "method": "source",
           "overrides": false,
           "priorRecord": {
             "method": "prior",
-            "verdict": "right",
-            "confidence": 0.7,
-            "note": "Meta-analysis finds pairs cut elapsed time but raise total effort; the sixty-percent figure comes from small student studies.",
+            "verdict": "partly",
+            "confidence": 0.4,
+            "note": "Anecdotal; some companies did cut QA, but no study links this to measured quality loss.",
             "date": "2026-10-15"
           },
           "evidenceRecord": {
             "method": "source",
-            "verdict": "partly",
-            "confidence": 0.2,
-            "note": "A survey of 122 IT employees found 73% of those who pair believe it speeds up development; this is perception only and says nothing about total person-hours.",
-            "source": "software-practices/sources/dyba2008-agile-review.txt#L996-L998",
-            "date": "2026-10-15"
+            "verdict": "wrong",
+            "confidence": 0.25,
+            "note": "Neither Facebook nor OANDA had a test team, and critical and medium failures at Facebook grew far slower than deployments as the product grew, though low-priority issues rose with code volume and one productivity surge brought more hotfixes; two firms, not many teams.",
+            "source": "software-practices/sources/savor2016-continuous-deployment.txt#L377-L411",
+            "date": "2026-10-26"
           }
         },
         {
@@ -11979,6 +12002,52 @@
         },
         {
           "claim": {
+            "id": "software-practices/headlines-about-big-companies-abandoning-microservices",
+            "text": "Headlines about big companies abandoning microservices usually describe one team consolidating a few components",
+            "topic": "software-practices",
+            "asserted": 1,
+            "denied": 0,
+            "tally": {
+              "right": 1,
+              "wrong": 0,
+              "partly": 0,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "right",
+            "confidence": 0.5,
+            "videos": [
+              "j2AQ9eTZ3-0"
+            ],
+            "note": "The Prime Video post concerned one team's service; Amazon overall remained service-based.",
+            "source": null,
+            "documents": [
+              "software-practices/sources/su2023-microservice-to-monolith.txt"
+            ]
+          },
+          "prior": "right",
+          "evidence": "partly",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "right",
+            "confidence": 0.7,
+            "note": "The Prime Video post concerned one team's service; Amazon overall remained service-based.",
+            "date": "2026-10-15"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "partly",
+            "confidence": 0.25,
+            "note": "Of the four documented switch-backs, the most discussed (Prime Video, nine articles) concerned one audio/video monitoring service and Istio merged its control plane, which fits the claim, but Segment consolidated its many destination services into one, so not every case is a few components.",
+            "source": "software-practices/sources/su2023-microservice-to-monolith.txt#L82-L86",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
             "id": "software-practices/estimation-learnable-skill-recording-estimates-comparing",
             "text": "Estimation is a learnable skill: recording estimates and comparing them to outcomes calibrates future estimates",
             "topic": "software-practices",
@@ -12279,7 +12348,9 @@
             "source": "software-practices/sources/sadowski2018-code-review-google.txt#L31-L34",
             "documents": [
               "software-practices/sources/dora2019-state-of-devops.txt",
-              "software-practices/sources/sadowski2018-code-review-google.txt"
+              "software-practices/sources/dora2023-state-of-devops.txt",
+              "software-practices/sources/sadowski2018-code-review-google.txt",
+              "software-practices/sources/savor2016-continuous-deployment.txt"
             ]
           },
           "prior": "partly",
@@ -12472,62 +12543,6 @@
       ],
       "thinEvidence": [
         {
-          "id": "software-practices/pairing-mobbing-puts-best-each-participant",
-          "text": "Pairing or mobbing puts the best of each participant into the code and rarely the worst",
-          "topic": "software-practices",
-          "asserted": 6,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.45,
-          "videos": [
-            "5cvaCq1q9_E",
-            "UQrlEXU6RM8",
-            "aItVJprLYkg",
-            "martinfowler-on-pair-programming",
-            "martinfowler-pairprogrammingmisconceptions",
-            "xS6yH0VqJjw"
-          ],
-          "note": "Pair programming meta-analyses show modest quality gains at higher effort, with effects depending on task complexity and pair expertise; no measurement exists for mobs.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "software-practices/writing-tests-first-forces-code-decoupled",
-          "text": "Writing tests first forces the code to be decoupled and testable by construction",
-          "topic": "software-practices",
-          "asserted": 6,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "4SIpyrko-x4",
-            "HBqhjLaZejA",
-            "KoL_or1P4f4",
-            "blog-cleancoder-monogamoustdd",
-            "github-aposd-vs-clean-code",
-            "henrikwarne-a-response-to-why-most-unit-testing-is-waste"
-          ],
-          "note": "Studies of TDD find modest improvements in some internal quality metrics such as coupling and cohesion, with mixed results overall and effects that depend on developer experience.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "software-practices/hype-drives-teams-adopt-microservices-they",
           "text": "Hype drives teams to adopt microservices they do not need, adding cost and risk",
           "topic": "software-practices",
@@ -12551,33 +12566,6 @@
             "signalvnoise-the-majestic-monolith"
           ],
           "note": "Microservice envy is widely reported; its magnitude is unmeasured.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "software-practices/mob-programming-onboards-new-members-quickly",
-          "text": "Mob programming onboards new members quickly and spreads knowledge so the team does not depend on one person",
-          "topic": "software-practices",
-          "asserted": 5,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "5cvaCq1q9_E",
-            "aItVJprLYkg",
-            "martinfowler-on-pair-programming",
-            "mobprogramming-mob-programming-basics",
-            "xS6yH0VqJjw"
-          ],
-          "note": "Case studies and surveys of mob teams consistently report faster knowledge spread, but no study measures onboarding time against a control.",
           "source": null,
           "documents": []
         },
@@ -13640,30 +13628,6 @@
           "documents": []
         },
         {
-          "id": "software-practices/tdd-biases-design-toward-extra-abstraction",
-          "text": "TDD biases design toward extra abstraction and indirection, which harms clarity unless the designer pushes back.",
-          "topic": "software-practices",
-          "asserted": 2,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "OAarkiAcsAk",
-            "dhh-tdd-is-dead-long-live-testing"
-          ],
-          "note": "Test-induced indirection is widely reported in practice and in the DHH debate, but controlled studies of TDD on design quality show small mixed effects.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "software-practices/teams-stop-reading-agent-written-code",
           "text": "Teams that stop reading agent-written code accumulate hidden defects that later force large rewrites",
           "topic": "software-practices",
@@ -14496,29 +14460,6 @@
           "documents": []
         },
         {
-          "id": "software-practices/confidence-programmer-written-tests-led-many",
-          "text": "Confidence from programmer-written tests led many teams to drop QA and ship lower quality.",
-          "topic": "software-practices",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.4,
-          "videos": [
-            "YNw4baDz6WA"
-          ],
-          "note": "Anecdotal; some companies did cut QA, but no study links this to measured quality loss.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "software-practices/consistency-across-codebase-worth-more-any",
           "text": "Consistency across a codebase is worth more than any individual better idea that would break it",
           "topic": "software-practices",
@@ -14745,29 +14686,6 @@
             "H3nlvHQHb5E"
           ],
           "note": "A generalisation about motivation that varies by team.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "software-practices/developers-who-deploy-their-own-work",
-          "text": "Developers who deploy their own work to production are happier because they see its impact",
-          "topic": "software-practices",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.45,
-          "videos": [
-            "DDkjBqlks40"
-          ],
-          "note": "DORA surveys associate continuous delivery with lower burnout and higher job satisfaction, but causation is not isolated and this is one team's impression.",
           "source": null,
           "documents": []
         },
@@ -15439,29 +15357,6 @@
           "documents": []
         },
         {
-          "id": "software-practices/headlines-about-big-companies-abandoning-microservices",
-          "text": "Headlines about big companies abandoning microservices usually describe one team consolidating a few components",
-          "topic": "software-practices",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 1,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "j2AQ9eTZ3-0"
-          ],
-          "note": "The Prime Video post concerned one team's service; Amazon overall remained service-based.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "software-practices/higher-level-behavioural-tests-make-mutation",
           "text": "Higher-level behavioural tests make mutation testing more practical than many fine-grained unit tests",
           "topic": "software-practices",
@@ -15853,29 +15748,6 @@
           "documents": []
         },
         {
-          "id": "software-practices/many-teams-adopted-microservices-retreating-monoliths",
-          "text": "Many teams that adopted microservices are retreating to monoliths",
-          "topic": "software-practices",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 1
-          },
-          "strongest": "prior",
-          "effective": "unknown",
-          "confidence": 0,
-          "videos": [
-            "signalvnoise-the-majestic-monolith-can-become-the-citadel"
-          ],
-          "note": "There are prominent consolidation stories (Amazon Prime Video, Segment) but no survey establishes a net trend.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "software-practices/maturity-models-out-date-too-quickly",
           "text": "Maturity models go out of date too quickly to guide technology transformations.",
           "topic": "software-practices",
@@ -15941,29 +15813,6 @@
             "j2AQ9eTZ3-0"
           ],
           "note": "Definitional.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "software-practices/mob-group-coaches-less-skilled-driver",
-          "text": "In a mob the group coaches a less-skilled driver on the spot, raising everyone's skills",
-          "topic": "software-practices",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "mobprogramming-mob-programming-basics"
-          ],
-          "note": "Case reports from Hunter Industries and others are positive; no controlled studies.",
           "source": null,
           "documents": []
         },
@@ -16332,29 +16181,6 @@
             "xS6yH0VqJjw"
           ],
           "note": "Plausible social mechanism reported by one team; no independent evidence.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "software-practices/pairing-pays-off-novel-hard-work",
-          "text": "Pairing pays off on novel, hard work and wastes effort on routine or repetitive tasks",
-          "topic": "software-practices",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "aItVJprLYkg"
-          ],
-          "note": "Meta-analysis finds pairing's benefit concentrated on complex tasks, consistent with this.",
           "source": null,
           "documents": []
         },
@@ -17233,29 +17059,6 @@
           "documents": []
         },
         {
-          "id": "software-practices/single-process-design-suits-long-running",
-          "text": "A single-process design suits long-running compute jobs and predictable traffic better than serverless functions",
-          "topic": "software-practices",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "nordicapis-back-to-the-monolith-why-did-amazon-dump-microservices"
-          ],
-          "note": "Lambda pricing and duration limits make this true for sustained workloads; Cockcroft's advice is widely echoed.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "software-practices/sleep-stress-hours-worked-affect-output",
           "text": "Sleep, stress and hours worked affect output more than any technical practice.",
           "topic": "software-practices",
@@ -17551,29 +17354,6 @@
             "YNw4baDz6WA"
           ],
           "note": "A logical argument about methodology consistency rather than a measurable outcome.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "software-practices/sustained-mob-programming-requires-members-treat",
-          "text": "Sustained mob programming requires members to treat each other with kindness, consideration and respect",
-          "topic": "software-practices",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 1,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "untestable",
-          "confidence": 0,
-          "videos": [
-            "5cvaCq1q9_E"
-          ],
-          "note": "A team norm whose necessity cannot be separated from the practice in available evidence.",
           "source": null,
           "documents": []
         },
@@ -18123,7 +17903,7 @@
       "testable": 4,
       "novelty": 0.39166666666666666,
       "redundancy": 0,
-      "thinEvidence": 0.6666666666666666,
+      "thinEvidence": 0.5,
       "worthWatching": "mixed",
       "right": [
         "software-practices/test-first-development-reduces-time-spent",
@@ -18132,7 +17912,7 @@
         "software-practices/writing-tests-first-forces-code-decoupled"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18141,24 +17921,25 @@
       "channel": "NDC Conferences",
       "topic": "software-practices",
       "watched": false,
-      "score": 0.6,
+      "score": 0.5833333333333334,
       "scaled": 1,
       "rating": null,
       "assertions": 8,
-      "testable": 7,
-      "novelty": 1.0875000000000001,
+      "testable": 8,
+      "novelty": 1.225,
       "redundancy": 0,
-      "thinEvidence": 0.875,
+      "thinEvidence": 0.5,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/having-whole-team-one-keyboard-eliminates",
         "software-practices/mob-programming-onboards-new-members-quickly",
         "software-practices/pairing-mobbing-puts-best-each-participant",
+        "software-practices/sustained-mob-programming-requires-members-treat",
         "software-practices/switching-tasks-fill-time-while-blocked",
         "software-practices/working-one-group-stream-work-removes"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18224,7 +18005,7 @@
       "testable": 10,
       "novelty": 2.65,
       "redundancy": 0,
-      "thinEvidence": 0.6,
+      "thinEvidence": 0.5,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/developers-who-deploy-their-own-work",
@@ -18239,7 +18020,7 @@
         "software-practices/trunk-based-development-unsuited-products-must"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18324,12 +18105,12 @@
       "channel": "GOTO Conferences",
       "topic": "software-practices",
       "watched": false,
-      "score": 0.6875,
+      "score": 0.625,
       "scaled": 1,
       "rating": null,
       "assertions": 9,
       "testable": 8,
-      "novelty": 1.6333333333333333,
+      "novelty": 1.6208333333333333,
       "redundancy": 0,
       "thinEvidence": 0.3333333333333333,
       "worthWatching": "new and sound",
@@ -18344,7 +18125,7 @@
         "software-practices/splitting-shared-relational-database-hardest-part"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18415,7 +18196,7 @@
         "software-practices/smaller-changes-mean-less-rework-fewer"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18431,7 +18212,7 @@
       "testable": 8,
       "novelty": 2.375,
       "redundancy": 0,
-      "thinEvidence": 0.375,
+      "thinEvidence": 0.25,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/equivalent-mutants-cannot-detected-automatically-require",
@@ -18443,7 +18224,7 @@
         "software-practices/writing-tests-first-forces-code-decoupled"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18484,7 +18265,7 @@
       "testable": 7,
       "novelty": 1.5,
       "redundancy": 0,
-      "thinEvidence": 0.2857142857142857,
+      "thinEvidence": 0.14285714285714285,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/emergency-changes-made-under-stress-usually",
@@ -18496,7 +18277,7 @@
         "software-practices/writing-tests-first-forces-code-decoupled"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18566,7 +18347,7 @@
       "testable": 5,
       "novelty": 1,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.8,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/higher-level-tests-often-pay-back",
@@ -18576,7 +18357,7 @@
         "software-practices/unit-tests-alone-cannot-catch-integration"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18635,7 +18416,7 @@
         "software-practices/trunk-based-development-one-small-change"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18734,9 +18515,9 @@
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 0.8624999999999999,
+      "novelty": 0.875,
       "redundancy": 0,
-      "thinEvidence": 0.25,
+      "thinEvidence": 0.125,
       "worthWatching": "mixed",
       "right": [
         "software-practices/asynchronous-review-loses-two-way-conversation",
@@ -18749,7 +18530,7 @@
         "software-practices/trunk-based-development-one-small-change"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18830,7 +18611,7 @@
         "software-practices/smaller-changes-mean-less-rework-fewer"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18844,7 +18625,7 @@
       "rating": null,
       "assertions": 11,
       "testable": 11,
-      "novelty": 2.504166666666667,
+      "novelty": 2.529166666666667,
       "redundancy": 0,
       "thinEvidence": 0.18181818181818182,
       "worthWatching": "new and sound",
@@ -18862,7 +18643,7 @@
         "software-practices/test-driven-development-produces-better-quality"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18922,7 +18703,7 @@
       "testable": 7,
       "novelty": 1.4833333333333334,
       "redundancy": 0,
-      "thinEvidence": 0.6666666666666666,
+      "thinEvidence": 0.5555555555555556,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/automated-tests-give-little-feedback-whether",
@@ -18934,7 +18715,7 @@
         "software-practices/trustworthy-automated-test-suite-lets-developers"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18962,7 +18743,7 @@
         "software-practices/teams-stop-reading-agent-written-code"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19023,9 +18804,9 @@
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 1.2125,
+      "novelty": 1.375,
       "redundancy": 0,
-      "thinEvidence": 0.42857142857142855,
+      "thinEvidence": 0,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/mob-programming-onboards-new-members-quickly",
@@ -19037,7 +18818,7 @@
         "software-practices/skill-mismatch-within-pair-matters-little"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19113,7 +18894,7 @@
         "software-practices/small-pull-requests-picked-merged-faster"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19149,7 +18930,7 @@
       "testable": 6,
       "novelty": 0.9333333333333332,
       "redundancy": 0,
-      "thinEvidence": 0.8571428571428571,
+      "thinEvidence": 0.7142857142857143,
       "worthWatching": "mixed",
       "right": [
         "software-practices/gui-driven-integration-tests-cannot-reach",
@@ -19160,7 +18941,7 @@
         "software-practices/writing-tests-first-forces-code-decoupled"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19397,7 +19178,7 @@
         "software-practices/writing-down-architecture-decisions-their-reasoning"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19413,7 +19194,7 @@
       "testable": 5,
       "novelty": 0.3333333333333333,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.8333333333333334,
       "worthWatching": "mixed",
       "right": [
         "software-practices/higher-level-tests-often-pay-back",
@@ -19423,7 +19204,7 @@
       "wrong": [
         "software-practices/slow-driven-end-test-suites-fragile"
       ],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19452,7 +19233,7 @@
         "software-practices/trunk-based-development-requires-developers-learn"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19500,7 +19281,7 @@
       "testable": 12,
       "novelty": 1.2458333333333333,
       "redundancy": 0,
-      "thinEvidence": 0.5833333333333334,
+      "thinEvidence": 0.5,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/decomposing-code-small-methods-can-too",
@@ -19516,7 +19297,7 @@
         "software-practices/writing-tests-first-forces-code-decoupled"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19572,7 +19353,7 @@
         "software-practices/smaller-changes-mean-less-rework-fewer"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19599,7 +19380,7 @@
         "software-practices/smaller-changes-mean-less-rework-fewer"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19615,7 +19396,7 @@
       "testable": 9,
       "novelty": 1.875,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.9,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/combining-unit-integration-tests-catches-more",
@@ -19629,7 +19410,7 @@
         "software-practices/writing-tests-first-forces-code-decoupled"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19667,7 +19448,7 @@
       "rating": null,
       "assertions": 12,
       "testable": 12,
-      "novelty": 2.995833333333333,
+      "novelty": 3.0208333333333335,
       "redundancy": 0,
       "thinEvidence": 0.16666666666666666,
       "worthWatching": "new and sound",
@@ -19686,7 +19467,7 @@
         "software-practices/test-driven-development-produces-better-quality"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19785,7 +19566,7 @@
       "testable": 9,
       "novelty": 2.05,
       "redundancy": 0,
-      "thinEvidence": 0.7,
+      "thinEvidence": 0.6,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/creating-services-which-team-free-rather",
@@ -19799,7 +19580,7 @@
         "software-practices/splitting-services-too-finely-raises-inter"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19909,12 +19690,12 @@
       "channel": "martinfowler.com",
       "topic": "software-practices",
       "watched": false,
-      "score": 0.8,
-      "scaled": 2,
+      "score": 0.7,
+      "scaled": 1,
       "rating": null,
       "assertions": 5,
       "testable": 5,
-      "novelty": 0.7166666666666668,
+      "novelty": 0.7041666666666667,
       "redundancy": 0,
       "thinEvidence": 0.4,
       "worthWatching": "mixed",
@@ -19926,7 +19707,7 @@
         "software-practices/single-process-monolith-right-default-microservices"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19935,12 +19716,12 @@
       "channel": "martinfowler.com",
       "topic": "software-practices",
       "watched": false,
-      "score": 0.75,
-      "scaled": 2,
+      "score": 0.625,
+      "scaled": 1,
       "rating": null,
       "assertions": 4,
       "testable": 4,
-      "novelty": 0.4083333333333333,
+      "novelty": 0.3958333333333333,
       "redundancy": 0,
       "thinEvidence": 0.5,
       "worthWatching": "mixed",
@@ -19951,7 +19732,7 @@
         "software-practices/single-process-monolith-right-default-microservices"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19960,14 +19741,14 @@
       "channel": "martinfowler.com",
       "topic": "software-practices",
       "watched": false,
-      "score": 0.3333333333333333,
+      "score": 0.5,
       "scaled": 1,
       "rating": null,
       "assertions": 9,
       "testable": 9,
-      "novelty": 1.4125,
+      "novelty": 1.625,
       "redundancy": 0,
-      "thinEvidence": 0.7777777777777778,
+      "thinEvidence": 0.5555555555555556,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/after-fact-code-review-weaker-pairing",
@@ -19976,13 +19757,12 @@
         "software-practices/pairing-all-day-unsustainable-because-sustained",
         "software-practices/pairing-limits-team-work-progress-which",
         "software-practices/pairing-mobbing-puts-best-each-participant",
+        "software-practices/pairing-value-cannot-proven-scientifically-because",
         "software-practices/power-dynamics-such-seniority-gender-distort",
         "software-practices/rote-repetitive-code-design-smell-pairing"
       ],
-      "wrong": [
-        "software-practices/pairing-value-cannot-proven-scientifically-because"
-      ],
-      "lastJudged": "2026-10-15",
+      "wrong": [],
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19996,9 +19776,9 @@
       "rating": null,
       "assertions": 5,
       "testable": 5,
-      "novelty": 0.8999999999999999,
+      "novelty": 0.9125,
       "redundancy": 0,
-      "thinEvidence": 0.4,
+      "thinEvidence": 0.2,
       "worthWatching": "mixed",
       "right": [
         "software-practices/most-developers-who-try-pair-programming",
@@ -20008,7 +19788,7 @@
         "software-practices/rote-repetitive-code-design-smell-pairing"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20047,7 +19827,7 @@
       "testable": 4,
       "novelty": 0.5,
       "redundancy": 0,
-      "thinEvidence": 0.75,
+      "thinEvidence": 0.25,
       "worthWatching": "mixed",
       "right": [
         "software-practices/mob-group-coaches-less-skilled-driver",
@@ -20056,7 +19836,7 @@
         "software-practices/rotating-driver-every-few-minutes-keeps"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20099,7 +19879,7 @@
       "testable": 6,
       "novelty": 0.8,
       "redundancy": 0,
-      "thinEvidence": 0.5714285714285714,
+      "thinEvidence": 0.42857142857142855,
       "worthWatching": "mixed",
       "right": [
         "software-practices/decomposing-monolith-only-works-already-has",
@@ -20110,7 +19890,7 @@
         "software-practices/single-process-design-suits-long-running"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20158,7 +19938,7 @@
         "software-practices/serverless-lets-small-teams-ship-without"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20205,7 +19985,7 @@
         "software-practices/microservices-cost-more-short-term-rarely"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20242,12 +20022,12 @@
       "channel": "Shopify",
       "topic": "software-practices",
       "watched": false,
-      "score": 0.7222222222222222,
+      "score": 0.6666666666666666,
       "scaled": 1,
       "rating": null,
       "assertions": 9,
       "testable": 9,
-      "novelty": 1.3416666666666668,
+      "novelty": 1.3291666666666668,
       "redundancy": 0,
       "thinEvidence": 0.6666666666666666,
       "worthWatching": "new and sound",
@@ -20263,7 +20043,7 @@
         "software-practices/single-process-monolith-right-default-microservices"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20293,7 +20073,7 @@
         "software-practices/static-typing-catches-type-errors-compile"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20302,12 +20082,12 @@
       "channel": "Signal v. Noise",
       "topic": "software-practices",
       "watched": false,
-      "score": 0.6666666666666666,
+      "score": 0.5833333333333334,
       "scaled": 1,
       "rating": null,
       "assertions": 6,
       "testable": 6,
-      "novelty": 0.6833333333333333,
+      "novelty": 0.6708333333333334,
       "redundancy": 0,
       "thinEvidence": 0.5,
       "worthWatching": "mixed",
@@ -20320,7 +20100,7 @@
         "software-practices/small-team-can-maintain-large-product"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20329,22 +20109,23 @@
       "channel": "Signal v. Noise",
       "topic": "software-practices",
       "watched": false,
-      "score": 0.6666666666666666,
+      "score": 0.5,
       "scaled": 1,
       "rating": null,
       "assertions": 4,
       "testable": 4,
-      "novelty": 0.33333333333333337,
+      "novelty": 0.4708333333333333,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0.25,
       "worthWatching": "mixed",
       "right": [
         "software-practices/coordination-cost-grows-faster-linearly-team",
         "software-practices/extracting-one-slice-divergent-performance-needs",
+        "software-practices/many-teams-adopted-microservices-retreating-monoliths",
         "software-practices/single-process-monolith-right-default-microservices"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20398,7 +20179,7 @@
         "software-practices/using-code-review-metrics-performance-evaluation"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20576,9 +20357,9 @@
       "rating": null,
       "assertions": 11,
       "testable": 11,
-      "novelty": 1.1458333333333335,
+      "novelty": 1.1583333333333334,
       "redundancy": 0,
-      "thinEvidence": 0.6363636363636364,
+      "thinEvidence": 0.45454545454545453,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/capping-pull-request-size-makes-developers",
@@ -20595,7 +20376,7 @@
       "wrong": [
         "software-practices/per-change-pull-request-gates-break"
       ],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20821,38 +20602,6 @@
       "wrong": []
     },
     {
-      "channel": "martinfowler.com",
-      "videos": 5,
-      "mean": 1.6,
-      "harmful": 0,
-      "right": [
-        "software-practices/after-fact-code-review-weaker-pairing",
-        "software-practices/code-unhealthy-files-has-many-times",
-        "software-practices/continuous-delivery-does-not-require-microservices",
-        "software-practices/decomposing-monolith-only-works-already-has",
-        "software-practices/even-excellent-teams-accumulate-inadvertent-debt",
-        "software-practices/hype-drives-teams-adopt-microservices-they",
-        "software-practices/juniors-who-always-pair-can-lose",
-        "software-practices/keeping-modules-one-process-enforced-boundaries",
-        "software-practices/microservices-cost-more-short-term-rarely",
-        "software-practices/mob-programming-onboards-new-members-quickly",
-        "software-practices/most-developers-who-try-pair-programming",
-        "software-practices/most-software-effort-goes-understanding-maintaining",
-        "software-practices/moving-functionality-across-service-boundaries-far",
-        "software-practices/pair-programming-practice-not-requirement-agile",
-        "software-practices/pairing-all-day-unsustainable-because-sustained",
-        "software-practices/pairing-limits-team-work-progress-which",
-        "software-practices/pairing-mobbing-puts-best-each-participant",
-        "software-practices/power-dynamics-such-seniority-gender-distort",
-        "software-practices/rote-repetitive-code-design-smell-pairing",
-        "software-practices/service-boundaries-usually-wrong-first-attempt",
-        "software-practices/single-process-monolith-right-default-microservices"
-      ],
-      "wrong": [
-        "software-practices/pairing-value-cannot-proven-scientifically-because"
-      ]
-    },
-    {
       "channel": "GitHub",
       "videos": 2,
       "mean": 1.5,
@@ -20991,12 +20740,44 @@
         "software-practices/pairing-mobbing-puts-best-each-participant",
         "software-practices/skipping-architecture-review-project-first-weeks",
         "software-practices/surviving-mutant-reveals-either-missing-test",
+        "software-practices/sustained-mob-programming-requires-members-treat",
         "software-practices/switching-tasks-fill-time-while-blocked",
         "software-practices/taking-small-third-party-dependencies-trivial",
         "software-practices/work-expands-fill-time-headcount-given",
         "software-practices/working-one-group-stream-work-removes",
         "software-practices/writing-down-architecture-decisions-their-reasoning",
         "software-practices/writing-tests-first-forces-code-decoupled"
+      ],
+      "wrong": []
+    },
+    {
+      "channel": "martinfowler.com",
+      "videos": 5,
+      "mean": 1.2,
+      "harmful": 0,
+      "right": [
+        "software-practices/after-fact-code-review-weaker-pairing",
+        "software-practices/code-unhealthy-files-has-many-times",
+        "software-practices/continuous-delivery-does-not-require-microservices",
+        "software-practices/decomposing-monolith-only-works-already-has",
+        "software-practices/even-excellent-teams-accumulate-inadvertent-debt",
+        "software-practices/hype-drives-teams-adopt-microservices-they",
+        "software-practices/juniors-who-always-pair-can-lose",
+        "software-practices/keeping-modules-one-process-enforced-boundaries",
+        "software-practices/microservices-cost-more-short-term-rarely",
+        "software-practices/mob-programming-onboards-new-members-quickly",
+        "software-practices/most-developers-who-try-pair-programming",
+        "software-practices/most-software-effort-goes-understanding-maintaining",
+        "software-practices/moving-functionality-across-service-boundaries-far",
+        "software-practices/pair-programming-practice-not-requirement-agile",
+        "software-practices/pairing-all-day-unsustainable-because-sustained",
+        "software-practices/pairing-limits-team-work-progress-which",
+        "software-practices/pairing-mobbing-puts-best-each-participant",
+        "software-practices/pairing-value-cannot-proven-scientifically-because",
+        "software-practices/power-dynamics-such-seniority-gender-distort",
+        "software-practices/rote-repetitive-code-design-smell-pairing",
+        "software-practices/service-boundaries-usually-wrong-first-attempt",
+        "software-practices/single-process-monolith-right-default-microservices"
       ],
       "wrong": []
     },
@@ -21143,6 +20924,7 @@
         "software-practices/extracting-one-slice-divergent-performance-needs",
         "software-practices/hype-drives-teams-adopt-microservices-they",
         "software-practices/many-small-services-make-easy-knowledge",
+        "software-practices/many-teams-adopted-microservices-retreating-monoliths",
         "software-practices/microservices-cost-more-short-term-rarely",
         "software-practices/single-process-monolith-right-default-microservices",
         "software-practices/small-team-can-maintain-large-product"

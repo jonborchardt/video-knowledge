@@ -31,6 +31,26 @@
     "software-practices/static-typing-catches-type-errors-compile|asserts|software-practices/sources/ray2014-languages-github.txt#L600-L605": {
       "level": "contextual",
       "reason": "observational bug-fix counts from a corpus whose TypeScript sample Berger et al. later showed was mislabelled; it cannot decide what a compiler catches"
+    },
+    "software-practices/small-pull-requests-picked-merged-faster|asserts|software-practices/sources/yu2015-pull-request-latency.txt#L164-L172": {
+      "level": "direct",
+      "reason": "measures time from pull request creation to close for merged pull requests, which includes the wait to be picked up, and finds more added lines and commits go with longer latency across 40 GitHub projects; an association in open-source projects, not an experiment"
+    },
+    "software-practices/small-pull-requests-picked-merged-faster|asserts|software-practices/sources/santos2018-review-distributed.txt#L697-L708": {
+      "level": "partial",
+      "reason": "larger patches take longer to reach final approval in one industrial project; it measures approval, not pickup or merge, and size explains little of the variance"
+    },
+    "software-practices/reviewer-defect-finding-effectiveness-drops-sharply|asserts|software-practices/sources/santos2018-review-distributed.txt#L758-L768": {
+      "level": "partial",
+      "reason": "review comments of any kind per 100 lines fall as patches grow, mostly among small patches, and level off past about 600 lines; no defects are counted and no sharp drop at a few hundred lines is shown"
+    },
+    "software-practices/reviewer-defect-finding-effectiveness-drops-sharply|asserts|software-practices/sources/bosu2015-useful-reviews.txt#L543-L552": {
+      "level": "partial",
+      "reason": "the share of useful review comments falls gradually with the number of files in a change at Microsoft; usefulness, not defects, by files, not lines, and no threshold"
+    },
+    "software-practices/smaller-changes-mean-less-rework-fewer|asserts|software-practices/sources/mockus2000-change-risk.txt#L375-L391": {
+      "level": "partial",
+      "reason": "a change with more added lines, deltas and subsystems is more likely to cause a field failure in one telecom system; that is the incidents part as a per-change association, with nothing on rework or restoration time"
     }
   },
   "stories": {
@@ -39,10 +59,15 @@
         "score": 0.9,
         "reason": "One question: does writing the test first produce better code or faster work than testing in small steps afterwards? Three independent studies answer it."
       },
-      "claims": ["software-practices/test-driven-development-produces-better-quality"],
+      "claims": [
+        "software-practices/test-driven-development-produces-better-quality"
+      ],
       "question": "Does writing tests first actually give you better code than writing them right after?",
       "title": "Does Test-Driven Development Actually Make Better Code?",
-      "alternates": ["Test First or Test After: Does the Order Matter?", "What Happened When Researchers Put TDD to the Test"],
+      "alternates": [
+        "Test First or Test After: Does the Order Matter?",
+        "What Happened When Researchers Put TDD to the Test"
+      ],
       "whyWatch": "TDD is sold as the discipline that makes code better, and plenty of teams require it. Controlled experiments with students and professionals checked whether the test-first order is what makes the difference.",
       "tension": "Advocates say test-first forces better design and fewer bugs. The experiments compared it with writing tests in small steps straight after the code and could not tell the two apart.",
       "evidenceNeeded": "Controlled comparisons of TDD against a disciplined test-last practice on quality and productivity, plus a review of the wider literature.",
@@ -55,7 +80,9 @@
         "takeaway": "Write tests in small, steady steps; whether each test comes first or second is a matter of taste, not quality."
       },
       "qualificationsAccepted": true,
-      "chain": ["decision:testing-and-tdd"],
+      "chain": [
+        "decision:testing-and-tdd"
+      ],
       "chainWhy": "Once the order of writing tests turns out not to matter, the viewer asks what does make a test suite worth having, and whether the coverage number most teams track tells them."
     },
     "decision:testing-and-tdd": {
@@ -70,7 +97,10 @@
       ],
       "question": "Does high test coverage mean your tests will catch your bugs?",
       "title": "Does High Test Coverage Mean Your Tests Work?",
-      "alternates": ["Why 90% Coverage Can Still Miss Your Bugs", "What Makes a Test Suite Worth Trusting?"],
+      "alternates": [
+        "Why 90% Coverage Can Still Miss Your Bugs",
+        "What Makes a Test Suite Worth Trusting?"
+      ],
       "whyWatch": "Coverage is the number teams put on dashboards and gate merges on. A large experiment checked whether a higher number means a suite actually catches more faults.",
       "tension": "Coverage feels like a measure of safety, but it only counts lines that ran, not whether any test would notice them being wrong.",
       "evidenceNeeded": "A controlled measure of coverage against fault detection with suite size held fixed, and evidence on what a trusted suite does for delivery.",
@@ -97,7 +127,10 @@
       ],
       "question": "Do static types actually save you time and bugs?",
       "title": "Do Static Types Really Prevent Bugs?",
-      "alternates": ["Static vs Dynamic Typing: What the Experiments Show", "The Language-Bug Study That Fell Apart"],
+      "alternates": [
+        "Static vs Dynamic Typing: What the Experiments Show",
+        "The Language-Bug Study That Fell Apart"
+      ],
       "whyWatch": "The typing argument is usually settled by taste. Controlled experiments, a check of real JavaScript bugs, and a failed replication of the most cited repository study show what types do and do not buy.",
       "tension": "Fans say types catch bugs before users do; skeptics say most bugs are not type errors and dynamic languages are faster to write. Both have some evidence.",
       "evidenceNeeded": "Controlled experiments on type-error fixing, a measure of how many real bugs a type checker would catch, the replication of the repository-scale study, and development-time comparisons.",
@@ -126,7 +159,10 @@
       ],
       "question": "Are 10x programmers real, or is that number a myth?",
       "title": "Are 10x Programmers Real?",
-      "alternates": ["Where the 10x Programmer Number Really Comes From", "How Much Faster Is the Fastest Programmer, Really?"],
+      "alternates": [
+        "Where the 10x Programmer Number Really Comes From",
+        "How Much Faster Is the Fastest Programmer, Really?"
+      ],
       "whyWatch": "The 10x programmer shapes hiring, pay and how people judge themselves. A reanalysis of 61 experiments traces the famous figure to its source and measures the typical gap.",
       "tension": "Everyone has met a programmer who seems ten times faster, and the 28:1 figure is quoted as proof. The data behind it are thin, and the typical gap is far smaller.",
       "evidenceNeeded": "Work-time distributions from many controlled programming experiments, the original source of the 28:1 figure, and other examples of repeated figures that did not hold up.",
@@ -151,7 +187,10 @@
       ],
       "question": "Do open-plan offices actually get people talking more?",
       "title": "Do Open-Plan Offices Make People Talk More?",
-      "alternates": ["What Happened When Two Companies Tore Down Their Cubicles", "The Open Office Was Meant to Bring People Together. Did It?"],
+      "alternates": [
+        "What Happened When Two Companies Tore Down Their Cubicles",
+        "The Open Office Was Meant to Bring People Together. Did It?"
+      ],
       "whyWatch": "Companies tear down walls to get people collaborating, and developers pay for it in focus. Two headquarters measured with sensor badges what actually happened to face-to-face contact.",
       "tension": "The open office is sold as a trade: less quiet, more collaboration. The measurements suggest you can lose the collaboration as well.",
       "evidenceNeeded": "Measured face-to-face and electronic interaction before and after a move to open plan, and evidence on distraction and focus.",
@@ -170,10 +209,15 @@
         "score": 0.85,
         "reason": "The group mixed four questions (switch-versus-polymorphism speed, code health, modular design, rewrites); pruned to the only one a study checks, does unhealthy code cost more in defects and change time. The other claims are unchecked beliefs, two with wording flags."
       },
-      "claims": ["software-practices/code-unhealthy-files-has-many-times"],
+      "claims": [
+        "software-practices/code-unhealthy-files-has-many-times"
+      ],
       "question": "Does messy code really cause more bugs and slower changes?",
       "title": "Does Messy Code Really Cost You?",
-      "alternates": ["How Much Do Bad Files Actually Slow You Down?", "Technical Debt, Measured"],
+      "alternates": [
+        "How Much Do Bad Files Actually Slow You Down?",
+        "Technical Debt, Measured"
+      ],
       "whyWatch": "Every team argues about whether cleaning up code is worth the time. A study of 39 codebases put numbers on how much more trouble the worst files cause.",
       "tension": "Clean-code advocates say messy code is where bugs and delays live; skeptics say it is aesthetics. The data back the defect half strongly and the time half more modestly.",
       "evidenceNeeded": "Defect counts and task times for files graded by code quality across many codebases, and an independent check of the defect link.",
@@ -186,7 +230,9 @@
         "takeaway": "Spend clean-up effort on the unhealthy files you change most often, where the defect and time cost concentrates."
       },
       "qualificationsAccepted": true,
-      "chain": ["surprise:organisational-structure-metrics-predict-defect-prone"],
+      "chain": [
+        "surprise:organisational-structure-metrics-predict-defect-prone"
+      ],
       "chainWhy": "Once messy files are shown to carry many times the defects, the viewer asks whether the code itself is the best place to look for where bugs will be, and the Windows data say the organisation around the code predicts them better."
     },
     "surprise:organisational-structure-metrics-predict-defect-prone": {
@@ -194,10 +240,15 @@
         "score": 0.85,
         "reason": "One question: does who works on the code predict its defects better than measures of the code itself?"
       },
-      "claims": ["software-practices/organisational-structure-metrics-predict-defect-prone"],
+      "claims": [
+        "software-practices/organisational-structure-metrics-predict-defect-prone"
+      ],
       "question": "Does the way a team is organised predict bugs better than the code itself?",
       "title": "Your Org Chart Predicts Your Bugs",
-      "alternates": ["Why Too Many Cooks Means More Bugs", "The Best Bug Predictor at Microsoft Was Not in the Code"],
+      "alternates": [
+        "Why Too Many Cooks Means More Bugs",
+        "The Best Bug Predictor at Microsoft Was Not in the Code"
+      ],
       "whyWatch": "Teams hunt bugs with complexity metrics, coverage and churn. Microsoft's own data found that measures of who worked on the code predicted failures better than any of them.",
       "tension": "You would expect the code to be the best guide to where its bugs are. In Windows, the organisation behind the code was a better one.",
       "evidenceNeeded": "Head-to-head prediction of defect-prone components from organisational and code metrics, and replications outside one company.",
@@ -223,21 +274,37 @@
       ],
       "question": "Do small pull requests really get reviewed faster and break less?",
       "title": "Are Small Pull Requests Really Better?",
-      "alternates": ["How Big Should a Pull Request Be?", "What Google's Review Data Say About Change Size"],
-      "whyWatch": "Keep your PRs small is the most repeated code-review advice. The data show part of it and leave the rest unmeasured.",
-      "tension": "Small changes are said to be reviewed faster, reviewed better and to break less; the evidence here shows the first only partly and the others indirectly.",
+      "alternates": [
+        "How Big Should a Pull Request Be?",
+        "What Google's Review Data Say About Change Size"
+      ],
+      "whyWatch": "Keep your PRs small is the most repeated code-review advice. Review data from GitHub, Google, Microsoft and an industrial team show which part of it holds and which numbers nobody has measured.",
+      "tension": "Small changes are said to be reviewed faster, reviewed better and to break less. The data back the first, show reviewers giving less per line on big changes without the sharp cliff the advice describes, and tie size to failures only as risk per change.",
       "evidenceNeeded": "Review-to-merge time by change size, defect-finding by review size, and incident rates by change size.",
-      "research": "Sadowski et al. show only that small changes get first feedback sooner at Google, not that they merge faster; McIntosh et al. measure review rate, not review size; DORA ties batch size to failures only through approvals. Unblock with review-to-merge latency broken down by change size (for example Rigby and Bird's cross-project review data), a measured link between lines under review and defects found (for example the Cisco review study), and change size against change failure or restore time."
+      "premise": "Across about 40,000 merged pull requests in 40 GitHub projects, those adding more lines and commits took significantly longer from creation to close; at Google small changes get first reviewer feedback in under an hour against about five hours for very large ones; and in one 201-person industrial project larger patches took longer to reach final approval, though size explained little of the variance. These are associations in observational data, not experiments. On review quality, comments per 100 lines fall as patches grow (levelling off past about 600 lines) and the share of comments Microsoft authors found useful falls gradually with the number of files; neither counts defects found, and nothing here shows effectiveness dropping sharply past a few hundred lines, while at Google comments per change keep rising up to about 1,250 lines. On breakage, in a telecom system a change with more added lines and more subsystems touched was more likely to cause a failure, and DORA links extra approvals to larger batches and higher change failure; that is risk per change, not proof that splitting work lowers total failures, and rework and restoration time by change size are unmeasured.",
+      "arc": {
+        "hook": "Every code-review guide says keep your pull requests small. Is that advice measured, or just repeated?",
+        "conflict": "The advice bundles three promises: small changes get reviewed faster, get reviewed better past a line-count cliff, and break less. Each rests on different evidence.",
+        "evidence": "GitHub pull-request latency and Google first-feedback times for speed; comment density and comment usefulness by change size for review quality; a telecom change-risk model and DORA for failures.",
+        "resolution": "Speed holds: bigger changes take longer to get through review in every dataset here, as an association. Reviewers do give less per line on bigger changes, but gradually, and the few-hundred-lines cliff is not measured. Bigger changes carry more failure risk each; whether splitting them cuts total failures, rework or restore time is not shown.",
+        "takeaway": "Keep changes small to get them reviewed and merged sooner and to give reviewers less to skim; treat any exact line limit as a rule of thumb, not a finding."
+      },
+      "qualificationsAccepted": true
     },
     "surprise:relative-size-estimation-more-accurate-time": {
       "coherence": {
         "score": 0.9,
         "reason": "One question: are relative-size estimates such as story points more accurate than estimates in hours?"
       },
-      "claims": ["software-practices/relative-size-estimation-more-accurate-time"],
+      "claims": [
+        "software-practices/relative-size-estimation-more-accurate-time"
+      ],
       "question": "Are story points actually more accurate than estimating in hours?",
       "title": "Are Story Points More Accurate Than Hours?",
-      "alternates": ["Story Points vs Hours: Which Lands Closer?", "Does Estimating in Points Make You More Accurate?"],
+      "alternates": [
+        "Story Points vs Hours: Which Lands Closer?",
+        "Does Estimating in Points Make You More Accurate?"
+      ],
       "whyWatch": "Teams switch to story points because hours estimates keep failing. The research on relative estimation says whether points fix the accuracy problem.",
       "tension": "Points are pitched as the honest way to estimate uncertain work. The studies find no general accuracy gain, and a specific bias when tasks differ a lot in size.",
       "evidenceNeeded": "Comparisons of relative and absolute time predictions on accuracy, and evidence on when relative estimates go wrong.",
@@ -250,7 +317,10 @@
         "takeaway": "Use points for convenience if you like, but do not expect them to fix accuracy, and compare tasks of similar size."
       },
       "qualificationsAccepted": true,
-      "chain": ["surprise:estimation-learnable-skill-recording-estimates-comparing", "decision:estimation-and-agile"],
+      "chain": [
+        "surprise:estimation-learnable-skill-recording-estimates-comparing",
+        "decision:estimation-and-agile"
+      ],
       "chainWhy": "If switching to points does not make estimates more accurate, the viewer asks whether they can at least get better by tracking their estimates against what actually happened; when that does not help either, the last question is whether estimates are bad enough to stop making them."
     },
     "surprise:estimation-learnable-skill-recording-estimates-comparing": {
@@ -258,10 +328,15 @@
         "score": 0.9,
         "reason": "One question: does recording estimates and comparing them with actuals make your future estimates more accurate?"
       },
-      "claims": ["software-practices/estimation-learnable-skill-recording-estimates-comparing"],
+      "claims": [
+        "software-practices/estimation-learnable-skill-recording-estimates-comparing"
+      ],
       "question": "Does tracking your estimates against actuals make you a better estimator?",
       "title": "Does Tracking Your Estimates Make You Better at Estimating?",
-      "alternates": ["Why Estimate-vs-Actual Reviews Do Not Fix Your Estimates", "Can You Train Yourself to Estimate Better?"],
+      "alternates": [
+        "Why Estimate-vs-Actual Reviews Do Not Fix Your Estimates",
+        "Can You Train Yourself to Estimate Better?"
+      ],
       "whyWatch": "Logging estimates against actuals is the standard advice for getting better at estimating. Studies of training programmes built on exactly that measured whether accuracy improved.",
       "tension": "Feedback improves most skills, so comparing your guesses with outcomes should calibrate you. For time estimates, the programmes that did this found no gain in accuracy.",
       "evidenceNeeded": "Evaluations of estimation training that uses outcome feedback, with untrained controls, and evidence on what feedback does improve.",
@@ -280,14 +355,19 @@
         "score": 0.8,
         "reason": "One question: can mandatory review of every change keep up with continuous delivery? Distinct from decision:pairing-and-code-review, which asks about change size."
       },
-      "claims": ["software-practices/per-change-pull-request-gates-break"],
+      "claims": [
+        "software-practices/per-change-pull-request-gates-break"
+      ],
       "question": "Can reviewing every change keep up when you deploy many times a day?",
       "title": "Can Code Review Keep Up With Continuous Delivery?",
-      "alternates": ["Does Mandatory Review Slow Down Fast-Shipping Teams?", "How Google Reviews 20,000 Changes a Day"],
+      "alternates": [
+        "Does Mandatory Review Slow Down Fast-Shipping Teams?",
+        "How Google Reviews 20,000 Changes a Day"
+      ],
       "whyWatch": "Teams moving to continuous delivery are told review gates will become the bottleneck. One company runs mandatory review on every change at enormous scale.",
       "tension": "Critics say per-change gates cannot survive many deploys a day; Google does it, but Google is not a typical team.",
       "evidenceNeeded": "Delivery throughput or lead time measured against per-change peer review in continuous-delivery teams, beyond one company.",
-      "research": "The only counter-evidence is Sadowski et al.'s description of Google (0.4: one highly tuned company and its own tooling, not a pull-request workflow, with no throughput comparison), and DORA 2019 says per-change approval breaks down only for external boards, not teammate review. Unblock with a study measuring lead time or deployment frequency against mandatory per-change peer review across several continuous-delivery organisations, for example DORA data split by review practice."
+      "research": "The counter-evidence is Sadowski et al.'s description of Google (0.4: one highly tuned company and its own tooling, not a pull-request workflow, with no throughput comparison) and Savor et al.'s report that review is prevalent at Facebook and OANDA under continuous deployment (0.2: no measure of review's effect); DORA 2019 says per-change approval breaks down only for external boards, not teammate review, and DORA 2023 finds teams with faster reviews deliver better (0.35: review speed, not whether every change is gated, correlational). None compares teams that gate every change with teams that do not. Unblock with a study measuring lead time or deployment frequency against mandatory per-change peer review across several continuous-delivery organisations, for example DORA data split by review practice."
     },
     "decision:microservices-vs-monolith": {
       "coherence": {
@@ -302,11 +382,14 @@
       ],
       "question": "Should a new project start as microservices or as a monolith?",
       "title": "Microservices or a Monolith: Which Should You Start With?",
-      "alternates": ["Do Microservices Pay Off for a New Project?", "Why So Many Teams Regret Starting with Microservices"],
+      "alternates": [
+        "Do Microservices Pay Off for a New Project?",
+        "Why So Many Teams Regret Starting with Microservices"
+      ],
       "whyWatch": "The choice shapes a system for years and is usually made on conference talks. The evidence on outcomes is much thinner than the advice.",
       "tension": "Microservices promise team independence; critics say they cost more and the boundaries are wrong at first. The studies here catalogue pains but do not measure outcomes.",
       "evidenceNeeded": "Measured cost, delivery or failure outcomes for comparable systems built as microservices and as monoliths, ideally greenfield against monolith-first.",
-      "research": "The only sources are a review of practitioner reports (Soldani 2018) that lists pains without measuring cost or outcomes, a DORA footnote advising against premature decomposition with no data, and coordination findings (Bird 2011, Halkjelsvik 2018) that never test service boundaries. Unblock with a study that measures cost, delivery performance or failures for comparable systems built as microservices and as monoliths, or tracks greenfield microservice projects against monolith-first ones."
+      "research": "The only sources are a review of practitioner reports (Soldani 2018) that lists pains without measuring cost or outcomes, a DORA footnote advising against premature decomposition with no data, coordination findings (Bird 2011, Halkjelsvik 2018) that never test service boundaries, one SME's monolith-to-microservices migration (Lenarduzzi 2020: development cost up 20%+, technical debt growing slower afterwards, no greenfield or comparable control) and a grey-literature review of four switch-backs to a monolith (Su 2023), and one throughput benchmark of a two-endpoint app on Azure (Blinowski 2022: the monolith wins at equal infrastructure cost, but the cost is Azure pricing and nothing is measured on development cost, delivery or failures). Unblock with a study that measures cost, delivery performance or failures for comparable systems built as microservices and as monoliths, or tracks greenfield microservice projects against monolith-first ones."
     },
     "decision:continuous-delivery": {
       "coherence": {
@@ -319,7 +402,10 @@
       ],
       "question": "If you ship more often, do you break more things?",
       "title": "Does Shipping Faster Mean Breaking More?",
-      "alternates": ["Speed or Stability: Do You Really Have to Choose?", "Why the Teams That Deploy Most Break the Least"],
+      "alternates": [
+        "Speed or Stability: Do You Really Have to Choose?",
+        "Why the Teams That Deploy Most Break the Least"
+      ],
       "whyWatch": "Release freezes and change boards exist because shipping less often feels safer. Six years of DORA survey data checked whether speed and stability really trade off.",
       "tension": "The intuition is a trade-off: every deploy is a chance to break production. The survey finds the fastest teams are also the most stable.",
       "evidenceNeeded": "Delivery speed and stability measured together across many teams, and the practices that go with high performance on both.",
@@ -345,7 +431,10 @@
       ],
       "question": "Are software estimates so unreliable that you should stop making them?",
       "title": "Should Your Team Stop Estimating?",
-      "alternates": ["Are Software Estimates Really That Bad?", "NoEstimates: Is Estimating a Waste of Time?"],
+      "alternates": [
+        "Are Software Estimates Really That Bad?",
+        "NoEstimates: Is Estimating a Waste of Time?"
+      ],
       "whyWatch": "The NoEstimates movement says estimating is wasted effort because estimates are always wrong. A review of time-prediction research measured how wrong they are, and where.",
       "tension": "Software is known for overruns, so estimates look useless. The review finds them off by a fifth to a third on average, not biased overall, and too low mainly on larger projects.",
       "evidenceNeeded": "Measured accuracy and bias of time predictions in software, split by task size, and evidence on what replaces an estimate if you stop.",
@@ -358,32 +447,6 @@
         "takeaway": "Keep estimating, but break large work into smaller pieces and update the forecast from how fast the first pieces actually went."
       },
       "qualificationsAccepted": true
-    },
-    "gap:pairing-mobbing-puts-best-each-participant": {
-      "coherence": {
-        "score": 0.8,
-        "reason": "One question: does code written by a pair or a mob take the best of each person? It was pruned from decision:pairing-and-code-review as unchecked and is its own question, about collaboration rather than change size."
-      },
-      "question": "Does pair or mob programming really give you the best of everyone in the room?",
-      "title": "Does Pair Programming Really Produce Better Code?",
-      "alternates": ["Pairing and Mobbing: Better Code or Just More People?", "Two Heads at One Keyboard: Does It Pay?"],
-      "whyWatch": "Six sources say pairing and mobbing put each person's best into the code and filter out the worst, and teams pay for that belief in developer hours; nothing in the corpus measures it.",
-      "tension": "Advocates describe fewer mistakes and shared knowledge from experience; a pair costs two people's time, and whether the code is that much better is the open question.",
-      "evidenceNeeded": "Controlled comparisons of pairs or mobs against individuals on the same tasks, measuring defects, design quality and total effort.",
-      "research": "No study in the corpus measures pair or mob programming; the lean is an AI guess about meta-analyses. Needs the primary evidence, such as a meta-analysis of pair-programming experiments (for example Hannay et al. 2009) reporting quality and effort against solo work, and any measured study of mob programming."
-    },
-    "gap:writing-tests-first-forces-code-decoupled": {
-      "coherence": {
-        "score": 0.8,
-        "reason": "One question: does writing the test first produce more decoupled, testable design? Distinct from surprise:test-driven-development-produces-better-quality, whose studies measure external quality and productivity, not design structure."
-      },
-      "question": "Does writing tests first really force cleaner, less tangled code?",
-      "title": "Does Test-First Really Lead to Better Design?",
-      "alternates": ["TDD and Code Design: Does Testability Come for Free?", "Is Decoupled Code a Side Effect of Writing Tests First?"],
-      "whyWatch": "Six sources defend TDD less for bug counts than for design, saying test-first forces decoupled, testable code; the TDD experiments in the corpus measured other outcomes.",
-      "tension": "If the order of tests does not change quality, as the experiments found, the design argument is the one left; nobody here has measured it.",
-      "evidenceNeeded": "Studies comparing coupling, cohesion or other internal design metrics of code written test-first against test-last, on comparable tasks.",
-      "research": "No study in the corpus measures design structure under TDD; Fucci et al. and Karac and Turhan measure external quality and productivity. Needs a controlled study or review of internal quality metrics (coupling, cohesion, complexity) in test-first against test-last code, for example Janzen and Saiedian's experiments."
     },
     "surprise:time-spent-estimating-wasted-better-building": {
       "reject": "a chapter of decision:estimation-and-agile, which now carries this claim: whether estimating is wasted is the NoEstimates half of the same question (are estimates bad enough to stop), and alone it rests on one review's 0.4 judgement with no test of teams that stopped estimating"
