@@ -605,7 +605,8 @@ const stamp = (a: { now?: Date }) => (a.now ?? new Date()).toISOString();
 export function recordUploaded(
   topic: string,
   storyId: string,
-  a: VerbArgs & { id: string; url?: string; visibility?: Visibility; captions?: string },
+  // captionsSent: the package's captions went up with the upload (a Studio upload recorded by hand)
+  a: VerbArgs & { id: string; url?: string; visibility?: Visibility; captions?: string; captionsSent?: boolean },
 ): VerbResult {
   const o = openOutput(topic, storyId, a);
   if (o.out.kind.startsWith('youtube') && !YOUTUBE_ID.test(a.id)) {
@@ -629,9 +630,11 @@ export function recordUploaded(
       throw new Refusal(
         `build ${o.build.sha} is not approved under the title "${o.metadata.title}"; a public upload needs npm run publish -- approve first`,
       );
-    const problem = goLiveProblem(o, a.by);
+    const problem = goLiveProblem(o, a.by, o.build.status);
     if (problem) throw new Refusal(problem);
   }
+  if (a.captionsSent && !a.captions && !o.metadata.captions)
+    throw new Refusal('the package has no captions; upload without --captions');
   const at = stamp(a);
   const e: PublishEvent = {
     at,
@@ -644,7 +647,8 @@ export function recordUploaded(
     visibility,
   };
   if (a.url) e.url = a.url;
-  if (a.captions) e.captions = a.captions;
+  const captions = a.captions ?? (a.captionsSent ? o.metadata.captions?.sha : undefined);
+  if (captions) e.captions = captions;
   return write(o, e, (l) =>
     visibility === 'public'
       ? appendEvent(l, o.id, { at, type: 'published', by: a.by, id: a.id, ...(a.url ? { url: a.url } : {}) }).ledger
@@ -672,7 +676,7 @@ export function recordApproved(
   const generic = flowOf(o.out.kind) === 'generic';
   const build = a.build ?? o.build?.sha ?? (generic ? 'none' : undefined);
   if (!build) throw new Refusal('nothing to approve: no review package, no source file and no build named');
-  const uploaded = o.out.events.find((e) => e.type === 'uploaded' && e.build === build);
+  const uploaded = o.out.events.findLast((e) => e.type === 'uploaded' && e.build === build);
   const onDisk = o.build?.sha === build ? o.build : null;
   // `accepted` is `npm run video -- final` naming the draft it accepted; nobody else approves a draft (edge voice)
   if (!a.accepted && (uploaded?.buildStatus === 'draft' || onDisk?.status === 'draft'))
@@ -721,9 +725,13 @@ export function recordChangesRequested(
 
 /** Why `o` may not go public or be scheduled by `by`, or null: only a person does it, never with a draft upload (edge
  *  voice), and a derivative (a Short) only after the output it derives from is live. go-live asks before calling YouTube. */
-export function goLiveProblem(o: ReturnType<typeof openOutput>, by: string): string | null {
+export function goLiveProblem(
+  o: ReturnType<typeof openOutput>,
+  by: string,
+  buildStatus?: 'draft' | 'release', // the build about to go public (a public upload), else the last upload's
+): string | null {
   if (by.trim().startsWith('automated:')) return 'an output goes live by a person, never by an automated run';
-  if (o.out.events.findLast((e) => e.type === 'uploaded')?.buildStatus === 'draft')
+  if ((buildStatus ?? o.out.events.findLast((e) => e.type === 'uploaded')?.buildStatus) === 'draft')
     return 'the upload is a draft build (edge voice); npm run video -- final makes the release build';
   if (!o.parentLive) return `${o.id} derives from ${o.out.derivedFrom}: publish ${o.out.derivedFrom} first`;
   return null;

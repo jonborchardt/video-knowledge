@@ -19,6 +19,7 @@ import {
   emptyLedger,
   eventKey,
   flowOf,
+  lastCaptions,
   ledgerProblems,
   loadLedger,
   mainOutput,
@@ -908,5 +909,70 @@ describe('going live is a person, on the latest decision, after the parent', () 
     } finally {
       f.cleanup();
     }
+  });
+});
+
+describe('a Studio upload recorded by hand', () => {
+  const now = new Date('2026-10-26T00:00:00Z');
+  const later = new Date('2026-10-26T01:00:00Z');
+  const later2 = new Date('2026-10-26T02:00:00Z');
+  const fixtures: Fixture[] = [];
+  afterAll(() => fixtures.forEach((f) => f.cleanup()));
+  const fresh = (release = true) => {
+    const f = syntheticProduction('packaged', { release });
+    fixtures.push(f);
+    return f;
+  };
+  const events = (f: Fixture) => loadLedger(f.topic, f.story, f.root)!.outputs.youtube.events;
+  const reviewPath = (f: Fixture) => join(f.dir, 'video', 'review', 'review.json');
+  const patchReview = (f: Fixture, extra: Record<string, unknown>) =>
+    writeFileSync(reviewPath(f), JSON.stringify({ ...readJson<object>(reviewPath(f)), ...extra }));
+
+  it('uploaded --captions records the package captions sha so push does not resend them', () => {
+    const f = fresh();
+    const r = recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001', captionsSent: true });
+    expect(r.event!.captions).toBe(openOutput(f.topic, f.story, { root: f.root }).metadata!.captions!.sha);
+    expect(lastCaptions(loadLedger(f.topic, f.story, f.root)!.outputs.youtube)).toBe(r.event!.captions);
+  });
+
+  it('uploaded --captions is refused when the package has none', () => {
+    const f = fresh();
+    patchReview(f, { captionsSha: null });
+    expect(() =>
+      recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001', captionsSent: true }),
+    ).toThrow(/has no captions/);
+  });
+
+  it('approve after a Studio re-upload of the same build names the latest upload', () => {
+    const f = fresh();
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'apiupload01' });
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now: later, id: 'studio00001' });
+    const a = recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now: later2 });
+    expect(a.event!.id).toBe('studio00001');
+    expect(openOutput(f.topic, f.story, { root: f.root }).state).toMatchObject({
+      status: 'approved',
+      id: 'studio00001',
+    });
+  });
+
+  it('a public Studio upload of the release build after a recorded draft upload records uploaded and published', () => {
+    const f = fresh(false);
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'apiupload01' });
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, build: 'draftsha', accepted: true });
+    patchReview(f, { status: 'release build', mp4Sha: 'releasesha' }); // final made the release build
+    expect(openOutput(f.topic, f.story, { root: f.root }).build).toMatchObject({
+      sha: 'releasesha',
+      status: 'release',
+    });
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now: later });
+    const r = recordUploaded(f.topic, f.story, {
+      root: f.root,
+      by: 'Jon',
+      now: later2,
+      id: 'studio00001',
+      visibility: 'public',
+    });
+    expect(r.event).toMatchObject({ type: 'uploaded', buildStatus: 'release', visibility: 'public' });
+    expect(events(f).at(-1)).toMatchObject({ type: 'published', id: 'studio00001' });
   });
 });
