@@ -33,12 +33,15 @@ import {
 import { corpusOf } from '../src/lib/corpus';
 import { loadStories } from '../src/lib/stories';
 import { passageReader } from '../src/lib/evidence';
+import { storyboardFingerprint } from '../src/lib/release';
+import type { Storyboard } from '../src/lib/storyboard';
 import { docHasher, docReader } from '../src/lib/evidence-package';
 import { loadReview } from '../src/lib/review';
 import { validateScript } from '../src/lib/script-validation';
 import { loadTopic } from '../src/lib/topics';
 import {
   type EvidencePackage,
+  type Release,
   type Script,
   type ScriptReviewFile,
   type ScriptValidation,
@@ -586,7 +589,7 @@ describe('the article on the board', () => {
     approvedBy: 'fixture approver',
     date: '2026-01-02',
     revision: 1,
-    fingerprints: { article: articleFingerprint(a), package: '', validation: '' },
+    fingerprints: { article: articleFingerprint(a), package: a.generation.evidencePackage ?? '', validation: '' },
     article: a,
     history: [],
   });
@@ -726,34 +729,97 @@ describe('the article on the board', () => {
     }
   });
 
+  // A released article with one figure over a chart on the first storyboard scene, reviewed at the current package.
+  const point = { label: 'Homes', value: 40, unit: 'percent', display: '40%', cite: 'x#L1' };
+  const chart = { type: 'stat-tiles', points: [point] };
+  const figured = (fx: Fixture, figures: boolean) => {
+    const sb = readJson<Storyboard>(join(fx.dir, 'storyboard.json'))!;
+    (sb.scenes[0].visual as { chart?: unknown }).chart = chart;
+    write(fx, 'storyboard.json', sb);
+    const ref = `${storySlug(fx.story)}/${sb.scenes[0].id}`;
+    const a = articleOf(fx);
+    a.sections[0].blocks.push({ kind: 'figure', ref, caption: 'Homes' });
+    write(fx, 'article.json', a);
+    const pkg = readJson<EvidencePackage>(join(fx.dir, 'evidence-package.json'))!;
+    write(fx, 'article-review.json', {
+      reviewer: 'fixture reviewer',
+      date: '2026-01-02',
+      revision: 1,
+      packageFingerprint: pkg.fingerprint,
+      approved: Object.fromEntries([
+        ...articleSentences(a).map((x) => [x.id, sentenceFingerprint(x)]),
+        ...articleReviewUnits(a),
+      ]),
+      findings: [],
+    });
+    const r = { ...released(a), fingerprints: { ...released(a).fingerprints, package: pkg.fingerprint } };
+    write(fx, 'article-release.json', figures ? { ...r, figures: { [ref]: { chart } } } : r);
+    const recut = () => {
+      (sb.scenes[0].visual as { chart?: unknown }).chart = {
+        ...chart,
+        points: [{ ...point, value: 41, display: '41%' }],
+      };
+      write(fx, 'storyboard.json', sb);
+    };
+    return { sb, pkg, recut };
+  };
+  const reviewer = (fx: Fixture) =>
+    `agent: scripts/briefs/article-review.md -> ${relative(fx.root, join(fx.dir, 'article-review.json')).replaceAll(sep, '/')}`;
+  const correctCmd = (fx: Fixture) =>
+    `npm run article -- correct ${fx.topic} ${fx.story} --approved-by "<your name>" --note "<what changed>"`;
+
   it('a released article whose chart changed shows changed with the correct command', { timeout: 30_000 }, () => {
     const fx = syntheticProduction('locked');
     try {
-      const sb = readJson<{ scenes: { id: string; visual: Record<string, unknown> }[] }>(
-        join(fx.dir, 'storyboard.json'),
-      )!;
-      const point = { label: 'Homes', value: 40, unit: 'percent', display: '40%', cite: 'x#L1' };
-      const chart = { type: 'stat-tiles', points: [point] };
-      sb.scenes[0].visual.chart = chart;
-      write(fx, 'storyboard.json', sb);
-      const ref = `${storySlug(fx.story)}/${sb.scenes[0].id}`;
-      const a = articleOf(fx);
-      a.sections[0].blocks.push({ kind: 'figure', ref, caption: 'Homes' });
-      write(fx, 'article.json', a);
-      const pkg = readJson<EvidencePackage>(join(fx.dir, 'evidence-package.json'))!;
-      const r = { ...released(a), fingerprints: { ...released(a).fingerprints, package: pkg.fingerprint } };
-      write(fx, 'article-release.json', { ...r, figures: { [ref]: { chart } } });
+      const { recut } = figured(fx, true);
       expect(articleState(fx)).toEqual({ state: 'released', next: 'none' });
-      sb.scenes[0].visual.chart = { ...chart, points: [{ ...point, value: 41, display: '41%' }] };
-      write(fx, 'storyboard.json', sb);
-      expect(articleState(fx)).toEqual({
-        state: 'changed',
-        next: `npm run article -- correct ${fx.topic} ${fx.story} --approved-by "<your name>" --note "<what changed>"`,
-      });
+      recut();
+      expect(articleState(fx)).toEqual({ state: 'changed', next: correctCmd(fx) });
     } finally {
       fx.cleanup();
     }
   });
+
+  it(
+    'a rebuilt package the review does not cover goes to the reviewer, with or without a re-cut chart',
+    { timeout: 30_000 },
+    () => {
+      const fx = syntheticProduction('locked');
+      try {
+        const { pkg, recut } = figured(fx, true);
+        write(fx, 'evidence-package.json', { ...pkg, fingerprint: 'rebuilt' });
+        expect(articleState(fx)).toEqual({ state: 'review', next: reviewer(fx) });
+        recut(); // correct would refuse: the validation does not pass
+        expect(articleState(fx)).toEqual({ state: 'review', next: reviewer(fx) });
+      } finally {
+        fx.cleanup();
+      }
+    },
+  );
+
+  it(
+    'a release without a figure copy asks for the copy-only lock while its storyboard is the locked one',
+    { timeout: 30_000 },
+    () => {
+      const fx = syntheticProduction('locked');
+      try {
+        const { sb } = figured(fx, false);
+        // the storyboard edited after the script lock: its charts were never approved, a correction
+        expect(articleState(fx)).toEqual({ state: 'changed', next: correctCmd(fx) });
+        const locked = readJson<Release>(join(fx.dir, 'release.json'))!;
+        write(fx, 'release.json', {
+          ...locked,
+          fingerprints: { ...locked.fingerprints, storyboard: storyboardFingerprint(sb) },
+        });
+        expect(articleState(fx)).toEqual({
+          state: 'changed',
+          next: `npm run article -- lock ${fx.topic} ${fx.story}`,
+        });
+      } finally {
+        fx.cleanup();
+      }
+    },
+  );
 
   // A review at revision 1 approving every unit but the first sentence, which carries a finding of this severity.
   const heldReview = (fx: Fixture, severity: 'warning' | 'info') => {

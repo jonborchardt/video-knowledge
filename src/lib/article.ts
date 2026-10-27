@@ -158,9 +158,17 @@ export function articleDrift(r: ArticleRelease, now: { package: string; figures:
   ];
 }
 
+/** What the copy-only lock of a release without a figure copy must know: whether its video is live, and whether the
+ *  storyboard its charts come from is the one the script lock approved. */
+export interface CopyGuard {
+  live: boolean;
+  storyboardLocked: boolean;
+}
+
 /** The first release. Locking the released text again changes nothing; a changed text is a correction. A release
- *  from before figure snapshots, its text unchanged, gains the snapshot and nothing else (no approval is given or
- *  recorded, no public revision), unless its video is live: readers have seen those charts, so that takes correct. */
+ *  from before figure snapshots, its text unchanged, gains the snapshot and nothing else (no approval is recorded, no
+ *  public revision), only while the copy is what the release covered: a passing validation, the release's own package,
+ *  the storyboard as the script was locked, and a video not yet live (readers have seen those charts: correct). */
 export function lockArticle(
   prev: ArticleRelease | null,
   a: Article,
@@ -168,13 +176,23 @@ export function lockArticle(
   approvedBy: string,
   date: string,
   figures: Record<string, FigureData>,
-  live = false,
+  guard: CopyGuard = { live: false, storyboardLocked: false },
 ): ArticleRelease {
   const fp = articleFingerprint(a);
   const same = !!prev && articleFingerprint(prev.article) === fp;
   if (prev && same && !prev.figures) {
+    const why = approvedBy ? approverProblem(approvedBy) : null;
+    if (why) throw new Refusal(why);
     if (v.status !== 'passed') throw new Refusal(`validation is ${v.status}, not passed`);
-    if (live) throw new Refusal('the video is live: its figures enter the release through correct, with a note');
+    if (guard.live) throw new Refusal('the video is live: its figures enter the release through correct, with a note');
+    if (prev.fingerprints.package !== v.packageFingerprint)
+      throw new Refusal(
+        `the evidence package moved since the release (${prev.fingerprints.package} -> ${v.packageFingerprint}): the figures enter through correct, with a note`,
+      );
+    if (!guard.storyboardLocked)
+      throw new Refusal(
+        'the storyboard is not the one the script lock approved: its charts enter the release through correct, with a note',
+      );
     return { ...prev, figures };
   }
   releasable(v, approvedBy);

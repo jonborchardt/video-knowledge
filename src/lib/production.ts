@@ -43,6 +43,7 @@ import {
 } from './publish';
 import { type ReviewFile, loadReview, reviewPath } from './review';
 import { buildPackage, docHasher, docReader } from './evidence-package';
+import { storyOutputs } from './outputs';
 import { loadPublicRecord } from './public-record';
 import { releaseCheck, storyboardFingerprint, validationFingerprint } from './release';
 import {
@@ -891,12 +892,20 @@ function articleOf({
   pkg,
   script,
   release,
+  plan,
   short,
 }: BoardContext): Production['article'] {
   if (!release || short) return null;
   const writer = `agent: scripts/briefs/article.md (revise) -> ${r(ARTICLE_FILES.article)}`;
   const a = readJson<Article>(p(ARTICLE_FILES.article));
   const out = loadArticleRelease(topic, storyId, root);
+  const correct: Production['article'] = {
+    state: 'changed',
+    next: `npm run article -- correct ${topic} ${storyId} --approved-by "<your name>" --note "<what changed>"`,
+  };
+  // After a release, what a passing validation asks for (lock refuses changed text: a correction).
+  let passed: Production['article'] = out ? correct : null;
+  let text = a;
   // The released text stands until article.json differs from it (or is gone); a revised text takes the live path.
   if (out && (!a || articleFingerprint(out.article) === articleFingerprint(a))) {
     const stale = articleStale(out, loadPublicRecord(topic, root));
@@ -905,37 +914,31 @@ function articleOf({
         state: 'stale',
         next: `${stale.id} was revised on ${stale.at}: ${stale.note}, then ${writer}, or if the text stands: npm run article -- reaffirm ${topic} ${storyId} --approved-by "<your name>" --note "<why unchanged>"`,
       };
-    // A rebuilt package or a re-cut chart moves under the release: judge the text again, and a figure whose data
-    // changed is a correction. A package that moved and still passes changes nothing a reader sees.
+    // A rebuilt package or a re-cut chart moves under the release: the text is judged again below, as an unreleased
+    // one is. Passing, a package that moved changes nothing a reader sees; a figure whose data changed is a correction,
+    // or for a release without a figure copy whose video is not live, the copy-only lock (no public revision).
     const drift = articleDrift(out, { package: pkg?.fingerprint ?? '', figures: figureData(topic, storyId, root) });
     if (!drift.length) return { state: 'released', next: 'none' };
-    if (!pkg) return { state: 'blocked', next: `npm run script -- package ${topic} ${storyId}` };
-    const now = validateArticleIn(
-      topic,
-      storyId,
-      a ?? out.article,
-      t,
-      read,
-      { judgments: review.applicability, pkg, script },
-      root,
-    );
-    if (now.status === 'blocked') return { state: 'blocked', next: writer };
-    return drift.some((d) => d.startsWith('figure '))
-      ? {
-          state: 'changed',
-          next: `npm run article -- correct ${topic} ${storyId} --approved-by "<your name>" --note "<what changed>"`,
-        }
-      : { state: 'released', next: 'none' };
+    text = a ?? out.article;
+    passed = !drift.some((d) => d.startsWith('figure '))
+      ? { state: 'released', next: 'none' }
+      : !out.figures &&
+          !drift.some((d) => d.startsWith('package ')) &&
+          !!plan &&
+          release.fingerprints.storyboard === storyboardFingerprint(plan as Storyboard) &&
+          !storyOutputs(topic, storyId, root).video
+        ? { state: 'changed', next: `npm run article -- lock ${topic} ${storyId}` }
+        : correct;
   }
   // Nothing released yet: each state says how it halts the video.
   const k = (kind: HaltKind) => (out ? {} : { kind });
-  if (!a)
+  if (!text)
     return { state: 'none', next: `agent: scripts/briefs/article.md -> ${r(ARTICLE_FILES.article)}`, kind: 'missing' };
-  if (a.generation?.needsEvidence?.length)
+  if (text.generation?.needsEvidence?.length)
     return { state: 'writing', next: 'agent: scripts/briefs/evidence.md', ...k('needs-evidence') };
   if (!pkg) return { state: 'blocked', next: `npm run script -- package ${topic} ${storyId}`, ...k('missing') };
   const areview = readJson<ScriptReviewFile>(p(ARTICLE_FILES.review));
-  const live = validateArticleIn(topic, storyId, a, t, read, { judgments: review.applicability, pkg, script }, root);
+  const live = validateArticleIn(topic, storyId, text, t, read, { judgments: review.applicability, pkg, script }, root);
   if (live.status === 'blocked')
     return {
       state: 'blocked',
@@ -946,16 +949,11 @@ function articleOf({
   // unapproved unit (an edit beside a held sentence, a new headline) is the reviewer's, whatever the revision.
   const units = [
     ...live.sentences,
-    ...articleReviewUnits(a).map(([id, fp]) => ({ id, fingerprint: fp, approved: areview?.approved?.[id] === fp })),
+    ...articleReviewUnits(text).map(([id, fp]) => ({ id, fingerprint: fp, approved: areview?.approved?.[id] === fp })),
   ];
   const covered =
     areview?.packageFingerprint === pkg.fingerprint && heldOnFindings(units, areview.findings ?? []).writer;
-  // After a release, lock refuses: a passing revision is a correction.
-  if (out && live.status === 'passed')
-    return {
-      state: 'changed',
-      next: `npm run article -- correct ${topic} ${storyId} --approved-by "<your name>" --note "<what changed>"`,
-    };
+  if (passed && live.status === 'passed') return passed;
   return live.status === 'passed'
     ? { state: 'review', next: `npm run article -- lock ${topic} ${storyId} --approved-by "<approver>"`, kind: 'lock' }
     : covered

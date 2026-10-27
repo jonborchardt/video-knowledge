@@ -28,7 +28,16 @@ import { readJson, toJson, writeArtifact, ROOT } from '../src/lib/io';
 import { loadPublicRecord, publicRecordPath, withArticleRevision } from '../src/lib/public-record';
 import { Refusal } from '../src/lib/publish';
 import { loadReview } from '../src/lib/review';
-import { type EvidencePackage, FILES, type Script, type ScriptValidation, scriptDir } from '../src/lib/script';
+import { storyboardFingerprint } from '../src/lib/release';
+import {
+  type EvidencePackage,
+  FILES,
+  type Release,
+  type Script,
+  type ScriptValidation,
+  scriptDir,
+} from '../src/lib/script';
+import type { Storyboard } from '../src/lib/storyboard';
 import { loadTopic } from '../src/lib/topics';
 
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
@@ -98,8 +107,12 @@ function run() {
       const { a, v } = releasable();
       const prev = loadArticleRelease(topic, storyId);
       const figures = releaseFigures(a, figureData(topic, storyId));
-      const live = !!storyOutputs(topic, storyId).video;
-      const r = lockArticle(prev, a, v, flag('--approved-by') ?? '', today, figures, live);
+      const locked = readJson<Release>(p(FILES.release));
+      const sb = readJson<Storyboard>(p(FILES.storyboard));
+      const r = lockArticle(prev, a, v, flag('--approved-by') ?? '', today, figures, {
+        live: !!storyOutputs(topic, storyId).video,
+        storyboardLocked: !!locked && !!sb && locked.fingerprints.storyboard === storyboardFingerprint(sb),
+      });
       if (r === prev) return console.log(`${rel(p(ARTICLE_FILES.release))} unchanged: revision ${r.revision}`);
       if (prev) {
         // a release from before figure snapshots: the snapshot added, nothing else (approver, history, recordSeen)
