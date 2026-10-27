@@ -47,7 +47,7 @@ const steps: Step[] = [
     col: 'In production',
     who: 'agent',
     t: '/produce runs the stages',
-    d: 'package, script, review, storyboard, graphics, lock, render, music, QA, package: the strip on the card shows the stage. A red row means it stopped (a revision limit, a story that left the list, a stop: step): fix what the step names and paste the same prompt again. Once the script is locked, the article is written and reviewed on the side (the Article column); you release it with the command below.',
+    d: 'package, script, review, storyboard, graphics, lock, render, music, QA, article, package: the strip on the card shows the stage. A red row means it stopped (a revision limit, a story that left the list, a stop: step): fix what the step names and paste the same prompt again. The run writes, reviews and locks the article before the review package; by hand it is the command below.',
     run: `npm run article -- lock ${topic} ${story} --approved-by "<your name>"`,
     where: board,
     done: 'the card moves to Your review',

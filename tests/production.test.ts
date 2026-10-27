@@ -74,8 +74,9 @@ describe('production board', () => {
         'storyboard',
         'graphics',
         'release',
+        'article', // owed from the lock, a halt only once the video is scored
       ]);
-      expect(prod.checks.every((c) => c.health === 'current' || c.health === 'done')).toBe(true);
+      expect(prod.checks.slice(0, -1).every((c) => c.health === 'current' || c.health === 'done')).toBe(true);
       expect(prod.stage).toBe('locked');
       expect(prod.next).toBe(`npm run video -- spike ${f.topic} ${f.story}`);
       expect(prod.blockers).toEqual([]);
@@ -328,6 +329,7 @@ describe('board columns', () => {
     expect(columnOf(row({ readiness: 'needs-research' }))).toBe('needs-research');
     expect(columnOf(row({ partOf: 'decision:first' }))).toBeNull(); // answered on its first question's card
     expect(columnOf(row({}, { stage: 'storyboard' }))).toBe('producing');
+    expect(columnOf(row({}, { stage: 'article' }))).toBe('article');
     expect(columnOf(row({}, { stage: 'packaged' }))).toBe('your-review');
     expect(columnOf(row({}, { stage: 'packaged' }, { decision: 'parked' }))).toBe('parked');
     const at = (status: string, stage = 'packaged', live = status === 'published') =>
@@ -603,6 +605,7 @@ describe('the article on the board', () => {
       expect(articleState(fx)).toEqual({
         state: 'none',
         next: `agent: scripts/briefs/article.md -> ${relative(fx.root, join(fx.dir, 'article.json')).replaceAll(sep, '/')}`,
+        kind: 'missing',
       });
       const a = articleOf(fx);
       write(fx, 'article.json', a);
@@ -620,7 +623,8 @@ describe('the article on the board', () => {
       });
       expect(articleState(fx)).toEqual({
         state: 'review',
-        next: `npm run article -- lock ${fx.topic} ${fx.story} --approved-by "<your name>"`,
+        next: `npm run article -- lock ${fx.topic} ${fx.story} --approved-by "<approver>"`,
+        kind: 'lock',
       });
       const r = released(a);
       write(fx, 'article-release.json', r);
@@ -684,7 +688,19 @@ describe('the article on the board', () => {
     }
   });
 
-  it('the article never changes the video stage or halt', { timeout: 30_000 }, () => {
+  it('the article stage: halts a scored video until released, never earlier', { timeout: 30_000 }, () => {
+    const fx = syntheticProduction('packaged');
+    try {
+      rmSync(join(fx.dir, 'article-release.json'));
+      const p = productionOf(fx.topic, fx.story, fx.root)!;
+      expect([p.stage, p.halt?.kind]).toEqual(['article', 'missing']);
+      expect(p.next).toContain('scripts/briefs/article.md');
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  it('before the video is scored the article never changes the stage or halt', { timeout: 30_000 }, () => {
     const fx = syntheticProduction('locked');
     try {
       const before = productionOf(fx.topic, fx.story, fx.root)!;
@@ -703,7 +719,11 @@ describe('the article on the board', () => {
       const a = articleOf(fx);
       a.generation.needsEvidence = [{ claim: 'heat-pumps/some-claim', why: 'baseline' }];
       write(fx, 'article.json', a);
-      expect(articleState(fx)).toEqual({ state: 'writing', next: 'agent: scripts/briefs/evidence.md' });
+      expect(articleState(fx)).toEqual({
+        state: 'writing',
+        next: 'agent: scripts/briefs/evidence.md',
+        kind: 'needs-evidence',
+      });
     } finally {
       fx.cleanup();
     }

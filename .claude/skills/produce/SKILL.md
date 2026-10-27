@@ -41,14 +41,14 @@ Repeat, at most 60 times:
 1. `npm run board -- next <topic> <story> --json`. If `done`, go to Finish.
 2. If `next` starts with `stop:`, or `halt.kind` is `revision-limit` or `story-left`, go to Stop.
 3. Take `steps` in order:
-   - `run`: run the command from the repo root. Replace `<approver>` in the lock command with
+   - `run`: run the command from the repo root. Replace `<approver>` in a lock command (script or article) with
      `automated: /produce run started by <name>`. Read the exit code, not the log: 0 is done, 2 is
      a refusal or a failed check (the last line says why; `RESULT: FAILED (...)` for render and QA).
      A non-zero exit ends this pass of the steps; ask the board again.
    - `prompt`: give the text to a **fresh** agent (Agent tool, a new agent every time), adding the
      notes for a notes pass. Never reuse an agent across briefs: the script writer and the script
      reviewer, the graphics builder and the visual reviewer, the writer and the evidence agent are
-     always different agents. A reviewer sees only the artifacts, never the writer's reasoning.
+     always different agents, and so are the article writer and the article reviewer. A reviewer sees only the artifacts, never the writer's reasoning.
    - a step after `packaged` (the board names `npm run publish -- upload ...` or a hand upload): publishing is a
      person's, never this run's. Go to Finish.
 4. Go to 1.
