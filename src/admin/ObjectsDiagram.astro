@@ -318,8 +318,8 @@ const vocab: { obj: string; t: string; file: string; v: [string, string][] }[] =
         'the script stage: the first artifact missing or not current is the stage',
       ],
       [
-        'locked, video, rendered, scored, packaged',
-        'release.json written; a segment rendered; every scene passes QA; the soundtrack mixed; the review package made',
+        'locked, video, rendered, scored, article, packaged',
+        'release.json written; a segment rendered; every scene passes QA; the soundtrack mixed; the article released; the review package made',
       ],
       [
         'health: done, current, stale, blocked, missing, pending',
@@ -375,7 +375,10 @@ const vocab: { obj: string; t: string; file: string; v: [string, string][] }[] =
     t: 'state',
     file: 'production.ts (ArticleState)',
     v: [
-      ['none, writing, review, blocked', 'not started; a writer owes it; a reviewer owes it; a blocking finding'],
+      [
+        'none, writing, review, blocked',
+        'not started; a writer owes it; a reviewer owes it; a blocking finding (the article stage until released)',
+      ],
       ['released', 'article-release.json is what the site shows'],
       ['changed, stale', 'the text changed since release (correct); a cited finding was revised (correct or reaffirm)'],
     ],

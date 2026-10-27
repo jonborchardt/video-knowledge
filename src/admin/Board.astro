@@ -85,7 +85,7 @@ const HEALTH: Record<Health, { label: string; colour: string }> = {
   blocked: { label: 'blocked', colour: 'text-destructive' },
   missing: { label: 'missing', colour: 'text-muted-foreground' },
 };
-// The article's side track: never red, since it never stops /produce.
+// The article's state: a stage before the review package (the strip shows it), then a side track for corrections.
 const ARTICLE: Record<ArticleState, string> = {
   none: 'text-muted-foreground',
   writing: 'text-warning',
@@ -106,6 +106,11 @@ const COLUMN: Record<Column, { label: string; help: string; colour: string }> = 
   producing: {
     label: 'In production',
     help: '/produce is on it; the strip shows the stage, red means it stopped and needs you',
+    colour: '',
+  },
+  article: {
+    label: 'Article',
+    help: 'the video is scored; /produce writes, reviews and locks the companion article before the review package',
     colour: '',
   },
   'draft-review': {
@@ -165,6 +170,7 @@ const PAGE: Record<Column, 'stories' | 'script' | 'review' | 'artifacts'> = {
   'needs-review': 'stories',
   ready: 'stories',
   producing: 'script',
+  article: 'script',
   parked: 'script',
   'draft-review': 'review',
   'your-review': 'review',
@@ -193,14 +199,14 @@ const stages = COLUMNS.map((c) => ({
   videos: videos.filter((r) => columnOf(r) === c),
   shorts: videos.flatMap((r) => r.shorts.filter((s) => shortColumnOf(s) === c).map((s) => ({ r, s }))),
 }));
-// The side track: the article is a step owed beside a video's state, not a state of its own (its own Board column).
+// A released article's correction or stale finding, owed beside the video's state (the article stage is a column).
 const side = [
   {
-    id: 'article',
-    label: 'Article',
-    help: 'the companion article, a side track once the script is locked: writer, reviewer, validate, lock',
+    id: 'article-corrections',
+    label: 'Article corrections',
+    help: 'a released article whose text changed (correct) or whose cited finding was revised (correct or reaffirm)',
     items: videos
-      .filter((r) => r.production?.article && r.production.article.next !== 'none')
+      .filter((r) => r.production?.article && !r.production.article.kind && r.production.article.next !== 'none')
       .map((r) => ({ r, state: r.production!.article!.state, next: r.production!.article!.next })),
   },
 ];

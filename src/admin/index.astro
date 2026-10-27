@@ -93,10 +93,14 @@ const flow: Step[] = [
   },
   {
     t: 'Draft video',
+    d: ['video init, music cues; spike: edge voice,', 'Remotion render, mix, QA (fit guard)'],
+  },
+  {
+    t: 'Article',
     d: [
-      'video init, music cues; spike: edge voice,',
-      'Remotion render, mix, QA (fit guard);',
-      'private package; board: your-review',
+      'a writer (article.md), a different reviewer',
+      '(article-review.md), validate, lock; then',
+      'the private package; board: your-review',
     ],
   },
   {
@@ -190,31 +194,6 @@ const flow: Step[] = [
       'set each related video in YouTube Studio',
       '(no API): updated --fields relatedVideo;',
       "a Short's description links the live video",
-    ],
-  },
-  {
-    t: 'Write the article',
-    d: [
-      'a side track: starts once the script is',
-      'locked, never blocks the video; a writer',
-      '(article.md), evidence.md if needed',
-    ],
-  },
-  {
-    t: 'Review the article',
-    d: [
-      'a different reviewer (article-review.md)',
-      'writes article-review.json; npm run',
-      'article -- validate; board: Article column',
-    ],
-  },
-  {
-    you: true,
-    t: 'Release the article',
-    d: [
-      'npm run article -- lock <topic> <story>',
-      '--approved-by "<your name>"; the site shows',
-      'the released text, not article.json',
     ],
   },
   {

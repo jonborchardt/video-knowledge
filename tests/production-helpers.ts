@@ -3,7 +3,9 @@
 import { cpSync, existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
+import { ARTICLE_FILES } from '../src/lib/article';
 import type { BuildSummary } from '../src/lib/build-report';
+import { article } from './article-helpers';
 import { corpusOf } from '../src/lib/corpus';
 import { passageReader } from '../src/lib/evidence';
 import { buildPackage, docHasher, docReader } from '../src/lib/evidence-package';
@@ -190,6 +192,18 @@ export function syntheticProduction(upTo: FixtureStage, opts: { release?: boolea
   };
   write(FILES.release, release);
   if (upTo === 'locked') return fixture;
+
+  // 7a. a released article: the stage between scored and packaged
+  write(ARTICLE_FILES.release, {
+    topic: TOPIC,
+    story: story.id,
+    approvedBy: 'fixture approver',
+    date: '2026-01-01',
+    revision: 1,
+    fingerprints: { article: '', package: '', validation: '' },
+    article: article({ topic: TOPIC, story: story.id }),
+    history: [],
+  });
 
   // 7. a passing full build with a soundtrack, and the review package made from it. No media: the board reads the
   // build report's summary and the review package's sha of it, never the mp4.

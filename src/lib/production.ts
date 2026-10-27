@@ -129,7 +129,8 @@ export type ProductionStage =
   | 'locked' // release.json, no render yet
   | 'video' // a segment rendered (partial, stale or failing QA)
   | 'rendered' // every storyboard scene rendered against the locked fingerprints and QA passed; no soundtrack yet
-  | 'scored' // the soundtrack mixed in and QA passed; no review package yet
+  | 'scored' // the soundtrack mixed in and QA passed; no released article yet
+  | 'article' // the companion article written, reviewed and locked (article-release.json); a Short has none
   | 'packaged'; // video/review/ made from this build: upload it privately and review it
 export const PRODUCTION_STAGES: ProductionStage[] = [
   'package',
@@ -143,6 +144,7 @@ export const PRODUCTION_STAGES: ProductionStage[] = [
   'video',
   'rendered',
   'scored',
+  'article',
   'packaged',
 ];
 const VIDEO_REPORT = 'video/build-report.json';
@@ -176,7 +178,8 @@ export interface Production {
   publish: { main: string | null; outputs: OutputView[] } | null; // the ledger's outputs and their states, once there is a package or a ledger
   upload: UploadMetadata | null; // what the upload form takes for the main output, once there is something to upload or update
   halt: { kind: HaltKind; stage: ProductionStage; why: string } | null; // the first halt, if any
-  article: { state: ArticleState; next: string } | null; // the companion article, a side track once the script is locked
+  // the companion article once the script is locked; kind is the halt it puts on the video while nothing is released
+  article: { state: ArticleState; next: string; kind?: HaltKind } | null;
 }
 export type ArticleState = 'none' | 'writing' | 'review' | 'blocked' | 'released' | 'changed' | 'stale';
 /** One output of the publishing ledger as the board shows it. */
@@ -259,6 +262,7 @@ interface BoardContext {
   short: { parent: string; slug: string; shorts: ShortsFile | null; parentPkg: EvidencePackage | null } | null;
   live: ScriptValidation | null; // the validation re-run in memory (validation stage)
   sb: Storyboard | null; // the storyboard re-filled against it (storyboard stage)
+  article: Production['article']; // articleOf, once per board
 }
 /** Where the fold stands: the stage reached, the command that moves it on, and whether a stage has halted it. */
 interface BoardState {
@@ -773,6 +777,31 @@ const soundtrackStage: BoardStage = ({ topic, storyId, r, release, vr, short }, 
   };
 };
 
+// 9b. Article: written, reviewed and locked before the review package; once released it never holds the video back
+// (a correction or a stale finding is the Article column's, not a stage).
+const articleStage: BoardStage = ({ r, article }, s) => {
+  if (!article) return {};
+  const check: Check = {
+    name: 'article',
+    health: article.kind
+      ? article.state === 'none'
+        ? 'missing'
+        : article.state === 'blocked'
+          ? 'blocked'
+          : 'pending'
+      : 'done',
+    detail: article.kind ? `${article.state}: ${article.next}` : article.state,
+    file: r(article.kind ? ARTICLE_FILES.article : ARTICLE_FILES.release),
+  };
+  if (s.stage !== 'scored') return { checks: [check] };
+  return article.kind
+    ? {
+        checks: [check],
+        halt: { stage: 'article', kind: article.kind, why: `article ${article.state}`, cmd: article.next },
+      }
+    : { checks: [check] };
+};
+
 /** What moves the main output on, from the ledger; or the way out when every youtube-video output is retracted. */
 const publishNext = (c: BoardContext) => {
   const main = mainOf(c.publish);
@@ -823,12 +852,14 @@ const BOARD_STAGES: BoardStage[] = [
   releaseStage,
   videoStage,
   soundtrackStage,
+  articleStage,
   reviewPackageStage,
   clearanceStage,
 ];
 
-/** The article beside a locked script: never a stage or a halt of the video. Its validation re-runs live, as the
- *  script's does, so review and blocked mean what npm run article -- validate would say now. */
+/** The article beside a locked script: a stage of the video until its first release (kind), then a side track. Its
+ *  validation re-runs live, as the script's does, so review and blocked mean what npm run article -- validate would
+ *  say now. */
 function articleOf({
   topic,
   storyId,
@@ -857,15 +888,20 @@ function articleOf({
         }
       : { state: 'released', next: 'none' };
   }
-  if (!a) return { state: 'none', next: `agent: scripts/briefs/article.md -> ${r(ARTICLE_FILES.article)}` };
-  if (a.generation?.needsEvidence?.length) return { state: 'writing', next: 'agent: scripts/briefs/evidence.md' };
-  if (!pkg) return { state: 'blocked', next: `npm run script -- package ${topic} ${storyId}` };
+  // Nothing released yet: each state says how it halts the video.
+  const k = (kind: HaltKind) => (out ? {} : { kind });
+  if (!a)
+    return { state: 'none', next: `agent: scripts/briefs/article.md -> ${r(ARTICLE_FILES.article)}`, kind: 'missing' };
+  if (a.generation?.needsEvidence?.length)
+    return { state: 'writing', next: 'agent: scripts/briefs/evidence.md', ...k('needs-evidence') };
+  if (!pkg) return { state: 'blocked', next: `npm run script -- package ${topic} ${storyId}`, ...k('missing') };
   const areview = readJson<ScriptReviewFile>(p(ARTICLE_FILES.review));
   const live = validateArticleIn(topic, storyId, a, t, read, { judgments: review.applicability, pkg, script }, root);
   if (live.status === 'blocked')
     return {
       state: 'blocked',
       next: live.revisionLimitReached ? 'stop: revision limit reached with blocking findings' : writer,
+      ...k(validationHaltKind(live)),
     };
   // A review of this revision that still holds sentences is the writer's to answer, not another review's.
   const covered = areview?.revision === a.revision && areview.packageFingerprint === pkg.fingerprint;
@@ -875,15 +911,15 @@ function articleOf({
       state: 'changed',
       next: `npm run article -- correct ${topic} ${storyId} --approved-by "<your name>" --note "<what changed>"`,
     };
-  return {
-    state: 'review',
-    next:
-      live.status === 'passed'
-        ? `npm run article -- lock ${topic} ${storyId} --approved-by "<your name>"`
-        : covered
-          ? writer
-          : `agent: scripts/briefs/article-review.md -> ${r(ARTICLE_FILES.review)}`,
-  };
+  return live.status === 'passed'
+    ? { state: 'review', next: `npm run article -- lock ${topic} ${storyId} --approved-by "<approver>"`, kind: 'lock' }
+    : covered
+      ? { state: 'review', next: writer, ...k('review-findings') }
+      : {
+          state: 'review',
+          next: `agent: scripts/briefs/article-review.md -> ${r(ARTICLE_FILES.review)}`,
+          ...k('review-pending'),
+        };
 }
 
 /** One script directory, checked artifact by artifact against what the library would produce now. */
@@ -927,7 +963,9 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
       : null,
     live: null,
     sb: null,
+    article: null,
   };
+  c.article = articleOf(c);
   // The ledger view: every output's state against the build on disk and the metadata it would send. A Short's view is
   // its own output in the parent's ledger (present once it is packaged), judged against its own build: c.build is the
   // parent's package, which outputStates uses only for an output without a source; a Short's output names its folder.
@@ -1011,7 +1049,7 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
     publish,
     upload: main && (stage === 'packaged' || main.state.status !== 'not-uploaded') ? main.metadata : null,
     halt,
-    article: articleOf(c),
+    article: c.article,
     fingerprints: {
       script: v?.scriptFingerprint ?? null,
       package: pkg?.fingerprint ?? null,
@@ -1294,6 +1332,7 @@ export const COLUMNS = [
   'needs-review',
   'ready',
   'producing',
+  'article',
   'draft-review',
   'your-review',
   'changes-requested',
@@ -1340,7 +1379,13 @@ function buildColumn(p: Production | null): Column | null {
   return c === 'uploaded' && p?.build?.status === 'draft' ? 'draft-review' : c;
 }
 const producingColumn = (p: Production): Column =>
-  p.stage !== 'packaged' ? 'producing' : p.build?.status === 'draft' ? 'draft-review' : 'your-review';
+  p.stage === 'article'
+    ? 'article'
+    : p.stage !== 'packaged'
+      ? 'producing'
+      : p.build?.status === 'draft'
+        ? 'draft-review'
+        : 'your-review';
 
 export function board(root = ROOT): TopicBoard[] {
   const decisions = loadDecisions(root);
@@ -1378,6 +1423,7 @@ const promptOf = (brief: string, topic: string, story?: string, mode?: string, o
     mode && /^sc\d+(,sc\d+)*$/.test(mode) && `Scenes: ${mode}`,
     out && `Write: ${out}`,
     brief === 'script-review.md' && 'You did not write this script; review it independently.',
+    brief === 'article-review.md' && 'You did not write this article; review it independently.',
     brief === 'visual-review.md' && 'You did not build these graphics; judge them independently.',
     mode && !/^sc\d/.test(mode) && (MODES[mode] ?? `Mode: ${mode}`),
     point && `Settle: ${point}`,
