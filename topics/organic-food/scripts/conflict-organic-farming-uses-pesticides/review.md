@@ -3,21 +3,23 @@
 | | |
 |---|---|
 | Story | `conflict:organic-farming-uses-pesticides` (organic-food) |
-| Revision | 4 (4 of at most 3 in this pass) |
-| Validation | **passed** (2026-10-21) |
+| Revision | 5 (5 of at most 3 in this pass) |
+| Validation | **passed** (2026-10-27) |
 | Words / runtime | 784 words, about 5.3 min at 150 wpm |
 | Sentences | 32 (23 factual or attributed) |
 | Assertions | 28, 28 verified |
 | Issues | 0 blocking, 1 warnings, 16 dispositioned |
 | Unreviewed sentences | 0 |
 | Scenes | 26, 5:29 (ok) |
-| Evidence package | db3fc8d736 (10 documents, 5 claims) |
+| Evidence package | 0a1129e37a (13 documents, 5 claims) |
 | Model | claude-opus-5-5 |
 
 Automated validation says whether the narration is eligible for human editorial review; it does not establish truth.
 
 ## Open issues
 
+- **warning** - release-stale (deterministic): release.json locked package db3fc8d736; it is now 0a1129e37a: the approved package has changed, lock it again after review
+- **warning** - release-stale (deterministic): release.json locked validation 0f34bd6df9; it is now b59d3eac25: the approved package has changed, lock it again after review
 - **warning** s10 (s10.a) omission (review): The quote includes 'they're more closely regulated', and the script never comes back to it. The corpus speaks against it: Mie 2017 says the 26 EU organic substances are approved 'as evaluated in accordance with the same legal framework' as all pesticides. Only the 'not as harmful' half is investigated (s11 to s18), so a viewer may keep the regulation claim as true.
 
 ## Dispositions
@@ -55,10 +57,12 @@ Deterministic warnings the reviewer judged false positives or already carried by
 ## Research gaps
 
 - Baranski 2014 meta-analysis, organic crops is context only: a one-line background paraphrase of organic standards in the introduction of a crop-composition meta-analysis; it does not examine the rules, and the regulation's own list of allowed synthetics (7 CFR 205.601) decides whether every synthetic pesticide is banned
-- What explains the split between USDA organic regulations (7 CFR 205), Mie 2017 review, health effects of organic food and farming, Baranski 2014 meta-analysis, organic crops?
+- What explains the split between USDA AMS 2010-2011 pilot, residue testing of retail organic produce, USDA organic regulations (7 CFR 205), Mie 2017 review, health effects of organic food and farming, Baranski 2014 meta-analysis, organic crops?
 
 ## Outstanding editorial decisions
 
+- -: release.json locked package db3fc8d736; it is now 0a1129e37a: the approved package has changed, lock it again after review
+- -: release.json locked validation 0f34bd6df9; it is now b59d3eac25: the approved package has changed, lock it again after review
 - s10 s10.a: The quote includes 'they're more closely regulated', and the script never comes back to it. The corpus speaks against it: Mie 2017 says the 26 EU organic substances are approved 'as evaluated in accordance with the same legal framework' as all pesticides. Only the 'not as harmful' half is investigated (s11 to s18), so a viewer may keep the regulation claim as true.
 
 ## History
@@ -66,4 +70,5 @@ Deterministic warnings the reviewer judged false positives or already carried by
 - revision 1, 2026-10-21: blocked, 3 blocking, 9 warnings
 - revision 2, 2026-10-21: blocked, 1 blocking, 5 warnings
 - revision 3, 2026-10-21: blocked, 1 blocking, 1 warnings
-- revision 4, 2026-10-21: passed, 0 blocking, 1 warnings
+- revision 4, 2026-10-27: needs-review, 0 blocking, 18 warnings
+- revision 5, 2026-10-27: passed, 0 blocking, 1 warnings

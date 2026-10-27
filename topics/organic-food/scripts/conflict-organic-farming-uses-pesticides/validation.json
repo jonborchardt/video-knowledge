@@ -1,11 +1,11 @@
 {
  "topic": "organic-food",
  "story": "conflict:organic-farming-uses-pesticides",
- "revision": 4,
- "date": "2026-10-21T14:17:19.704Z",
+ "revision": 5,
+ "date": "2026-10-27T02:55:58.242Z",
  "status": "passed",
  "scriptFingerprint": "1754c299c9",
- "packageFingerprint": "db3fc8d736",
+ "packageFingerprint": "0a1129e37a",
  "wordsPerMinute": 150,
  "words": 784,
  "spokenWords": 799,
@@ -55,6 +55,22 @@
       "independent": 0,
       "supporting": [],
       "contradicting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "organic-food/organic-farming-uses-pesticides",
+         "cite": "organic-food/sources/usda-ams-2012-organic-residue.txt#L60-L64"
+        },
+        "cited": false,
+        "role": "contradicts",
+        "by": "USDA AMS 2010-2011 pilot, residue testing of retail organic produce",
+        "verdict": "wrong",
+        "confidence": 0.55,
+        "note": "USDA's report states that organic agriculture uses permitted pest-control materials, mostly naturally derived (pyrethrum, Bt) plus a few synthetics such as sulfur, insecticidal soap, horticultural oils and copper hydroxide.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
        {
         "ref": {
          "kind": "study",
@@ -123,13 +139,14 @@
       "problems": [],
       "limitations": [
        "Reports what the sources said, not whether it is true.",
+       "Contradicted by USDA AMS 2010-2011 pilot, residue testing of retail organic produce: USDA's report states that organic agriculture uses permitted pest-control materials, mostly naturally derived (pyrethrum, Bt) plus a few synthetics such as sulfur, insecticidal soap, horticultural oils and copper hydroxide.",
        "Contradicted by USDA organic regulations (7 CFR 205): 7 CFR 205.206(e) lets organic producers apply biological or botanical substances or National List synthetics to control pests, weeds and diseases when cultural, mechanical and physical methods are not enough, so organic farming does use pesticides.",
        "Contradicted by Mie 2017 review, health effects of organic food and farming: Of 385 pesticide substances authorised in the EU, 26 are also approved for organic agriculture, including pyrethrins and copper.",
        "Contradicted by Baranski 2014 meta-analysis, organic crops: Organic standards permit certain plant or microbial extracts and copper- and sulfur-based crop protection products.",
        "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
       ],
       "suggestions": [],
-      "explanation": "supported (approved): no direct support, 3 contradicting, 1 source statement."
+      "explanation": "supported (approved): no direct support, 4 contradicting, 1 source statement."
      },
      "issues": [
       {
@@ -190,6 +207,22 @@
       "independent": 0,
       "supporting": [],
       "contradicting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "organic-food/organic-farming-uses-pesticides",
+         "cite": "organic-food/sources/usda-ams-2012-organic-residue.txt#L60-L64"
+        },
+        "cited": false,
+        "role": "contradicts",
+        "by": "USDA AMS 2010-2011 pilot, residue testing of retail organic produce",
+        "verdict": "wrong",
+        "confidence": 0.55,
+        "note": "USDA's report states that organic agriculture uses permitted pest-control materials, mostly naturally derived (pyrethrum, Bt) plus a few synthetics such as sulfur, insecticidal soap, horticultural oils and copper hydroxide.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
        {
         "ref": {
          "kind": "study",
@@ -258,13 +291,14 @@
       "problems": [],
       "limitations": [
        "Reports what the sources said, not whether it is true.",
+       "Contradicted by USDA AMS 2010-2011 pilot, residue testing of retail organic produce: USDA's report states that organic agriculture uses permitted pest-control materials, mostly naturally derived (pyrethrum, Bt) plus a few synthetics such as sulfur, insecticidal soap, horticultural oils and copper hydroxide.",
        "Contradicted by USDA organic regulations (7 CFR 205): 7 CFR 205.206(e) lets organic producers apply biological or botanical substances or National List synthetics to control pests, weeds and diseases when cultural, mechanical and physical methods are not enough, so organic farming does use pesticides.",
        "Contradicted by Mie 2017 review, health effects of organic food and farming: Of 385 pesticide substances authorised in the EU, 26 are also approved for organic agriculture, including pyrethrins and copper.",
        "Contradicted by Baranski 2014 meta-analysis, organic crops: Organic standards permit certain plant or microbial extracts and copper- and sulfur-based crop protection products.",
        "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
       ],
       "suggestions": [],
-      "explanation": "supported (approved): no direct support, 3 contradicting, 1 source statement."
+      "explanation": "supported (approved): no direct support, 4 contradicting, 1 source statement."
      },
      "issues": [
       {
@@ -1826,7 +1860,22 @@
      ]
     }
    ],
-   "issues": []
+   "issues": [
+    {
+     "sentence": "s23",
+     "assertion": "s23.a",
+     "fingerprint": "116264cfc9",
+     "revision": 5,
+     "category": "omission",
+     "severity": "info",
+     "explanation": "The new USDA AMS 2010-2011 pilot in the corpus found detectable residues on 42.7 percent of 571 US retail organic samples (lines 298-301, uncited). It only strengthens the point s23 makes (organic is lower, not none), so the sentence is not misleading without it.",
+     "refs": [
+      "organic-food/sources/usda-ams-2012-organic-residue.txt#L298-L301"
+     ],
+     "suggestion": "Optional: a writer could cite it through record-sources in a later revision; no change needed.",
+     "by": "review"
+    }
+   ]
   },
   {
    "id": "s24",
@@ -2523,6 +2572,20 @@
  ],
  "issues": [
   {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked package db3fc8d736; it is now 0a1129e37a: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  },
+  {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked validation 0f34bd6df9; it is now b59d3eac25: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  },
+  {
    "sentence": "s07",
    "category": "needs-qualification",
    "severity": "warning",
@@ -2761,6 +2824,20 @@
    "assertion": "s20.a"
   },
   {
+   "sentence": "s23",
+   "assertion": "s23.a",
+   "fingerprint": "116264cfc9",
+   "revision": 5,
+   "category": "omission",
+   "severity": "info",
+   "explanation": "The new USDA AMS 2010-2011 pilot in the corpus found detectable residues on 42.7 percent of 571 US retail organic samples (lines 298-301, uncited). It only strengthens the point s23 makes (organic is lower, not none), so the sentence is not misleading without it.",
+   "refs": [
+    "organic-food/sources/usda-ams-2012-organic-residue.txt#L298-L301"
+   ],
+   "suggestion": "Optional: a writer could cite it through record-sources in a later revision; no change needed.",
+   "by": "review"
+  },
+  {
    "sentence": "s26",
    "category": "wording",
    "severity": "info",
@@ -2928,7 +3005,14 @@
   },
   {
    "revision": 4,
-   "date": "2026-10-21T14:17:19.704Z",
+   "date": "2026-10-27T02:53:43.487Z",
+   "status": "needs-review",
+   "blocking": 0,
+   "warnings": 18
+  },
+  {
+   "revision": 5,
+   "date": "2026-10-27T02:55:58.242Z",
    "status": "passed",
    "blocking": 0,
    "warnings": 1
