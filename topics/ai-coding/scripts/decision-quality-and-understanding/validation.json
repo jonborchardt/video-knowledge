@@ -1,23 +1,23 @@
 {
  "topic": "ai-coding",
  "story": "decision:quality-and-understanding",
- "revision": 3,
- "date": "2026-10-21T15:25:01.695Z",
+ "revision": 5,
+ "date": "2026-10-27T00:54:26.949Z",
  "status": "passed",
- "scriptFingerprint": "577b3309e7",
- "packageFingerprint": "38da9c6bef",
+ "scriptFingerprint": "cfd7e3449b",
+ "packageFingerprint": "09874f191a",
  "wordsPerMinute": 150,
- "words": 796,
- "spokenWords": 808,
- "minutes": 5.4,
+ "words": 911,
+ "spokenWords": 929,
+ "minutes": 6.2,
  "counts": {
-  "sentences": 33,
-  "factual": 23,
-  "assertions": 28,
-  "verified": 28,
+  "sentences": 36,
+  "factual": 26,
+  "assertions": 33,
+  "verified": 33,
   "blocking": 0,
   "warnings": 0,
-  "dispositioned": 25,
+  "dispositioned": 30,
   "unreviewed": 0
  },
  "revisionLimitReached": false,
@@ -341,6 +341,38 @@
         "ref": {
          "kind": "study",
          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2607.09902.txt#L469-L477"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Post-merge fate study (182 repos)",
+        "verdict": "partly",
+        "confidence": 0.4,
+        "note": "Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L32-L33"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "CodeRabbit AI vs human PRs report",
+        "verdict": "partly",
+        "confidence": 0.25,
+        "note": "CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
          "cite": "ai-coding/sources/2310.02059.txt#L930-L936"
         },
         "cited": false,
@@ -407,7 +439,7 @@
        "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
       ],
       "suggestions": [],
-      "explanation": "supported (approved): no direct support, 3 qualifying, 1 source statement."
+      "explanation": "supported (approved): no direct support, 5 qualifying, 1 source statement."
      },
      "issues": [
       {
@@ -1597,6 +1629,38 @@
         "ref": {
          "kind": "study",
          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2607.09902.txt#L469-L477"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Post-merge fate study (182 repos)",
+        "verdict": "partly",
+        "confidence": 0.4,
+        "note": "Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L32-L33"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "CodeRabbit AI vs human PRs report",
+        "verdict": "partly",
+        "confidence": 0.25,
+        "note": "CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
          "cite": "ai-coding/sources/2310.02059.txt#L930-L936"
         },
         "cited": false,
@@ -1630,6 +1694,8 @@
       "problems": [],
       "limitations": [
        "Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate]",
+       "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+       "CodeRabbit AI vs human PRs report: CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
        "2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
        "Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
        "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
@@ -1637,7 +1703,7 @@
       "suggestions": [
        "Add the qualification: the evidence supports a narrower or weaker statement."
       ],
-      "explanation": "qualified (qualify): no direct support, 3 qualifying."
+      "explanation": "qualified (qualify): no direct support, 5 qualifying."
      },
      "issues": [
       {
@@ -1704,6 +1770,38 @@
         "ref": {
          "kind": "study",
          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2607.09902.txt#L469-L477"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Post-merge fate study (182 repos)",
+        "verdict": "partly",
+        "confidence": 0.4,
+        "note": "Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L32-L33"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "CodeRabbit AI vs human PRs report",
+        "verdict": "partly",
+        "confidence": 0.25,
+        "note": "CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
          "cite": "ai-coding/sources/2310.02059.txt#L930-L936"
         },
         "cited": false,
@@ -1737,6 +1835,8 @@
       "problems": [],
       "limitations": [
        "Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate]",
+       "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+       "CodeRabbit AI vs human PRs report: CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
        "2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
        "Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
        "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
@@ -1744,7 +1844,7 @@
       "suggestions": [
        "Add the qualification: the evidence supports a narrower or weaker statement."
       ],
-      "explanation": "qualified (qualify): no direct support, 3 qualifying."
+      "explanation": "qualified (qualify): no direct support, 5 qualifying."
      },
      "issues": [
       {
@@ -1798,6 +1898,38 @@
         "ref": {
          "kind": "study",
          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2607.09902.txt#L469-L477"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Post-merge fate study (182 repos)",
+        "verdict": "partly",
+        "confidence": 0.4,
+        "note": "Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L32-L33"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "CodeRabbit AI vs human PRs report",
+        "verdict": "partly",
+        "confidence": 0.25,
+        "note": "CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
          "cite": "ai-coding/sources/2310.02059.txt#L930-L936"
         },
         "cited": false,
@@ -1831,6 +1963,8 @@
       "problems": [],
       "limitations": [
        "Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate]",
+       "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+       "CodeRabbit AI vs human PRs report: CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
        "2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
        "Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
        "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
@@ -1838,7 +1972,7 @@
       "suggestions": [
        "Add the qualification: the evidence supports a narrower or weaker statement."
       ],
-      "explanation": "qualified (qualify): no direct support, 3 qualifying."
+      "explanation": "qualified (qualify): no direct support, 5 qualifying."
      },
      "issues": [
       {
@@ -2029,6 +2163,38 @@
         "ref": {
          "kind": "study",
          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2607.09902.txt#L469-L477"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Post-merge fate study (182 repos)",
+        "verdict": "partly",
+        "confidence": 0.4,
+        "note": "Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L32-L33"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "CodeRabbit AI vs human PRs report",
+        "verdict": "partly",
+        "confidence": 0.25,
+        "note": "CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
          "cite": "ai-coding/sources/2603.28592v3.txt#L918-L933"
         },
         "cited": false,
@@ -2062,6 +2228,8 @@
       "problems": [],
       "limitations": [
        "2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
+       "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+       "CodeRabbit AI vs human PRs report: CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
        "Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate]",
        "Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
        "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
@@ -2069,7 +2237,7 @@
       "suggestions": [
        "Add the qualification: the evidence supports a narrower or weaker statement."
       ],
-      "explanation": "qualified (qualify): no direct support, 3 qualifying."
+      "explanation": "qualified (qualify): no direct support, 5 qualifying."
      },
      "issues": [
       {
@@ -2088,15 +2256,442 @@
    "issues": []
   },
   {
+   "id": "s34",
+   "section": "investigation",
+   "text": "A newer audit went further: researchers sampled deployed web apps built at least 90 percent by AI agents, confirmed each finding by hand, and found at least one vulnerability in over 90 percent of them.",
+   "type": "factual",
+   "fingerprint": "379c8d303b",
+   "words": 35,
+   "status": "verified",
+   "approved": true,
+   "assertions": [
+    {
+     "id": "s34.a",
+     "text": "Of sampled publicly deployed apps that were at least 90% AI-authored, over 90% contained at least one manually validated vulnerability.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s34.a",
+      "text": "Of sampled publicly deployed apps that were at least 90% AI-authored, over 90% contained at least one manually validated vulnerability.",
+      "kind": "fact",
+      "modality": "plain",
+      "status": "qualified",
+      "decision": "qualify",
+      "review": true,
+      "verbatim": false,
+      "strength": 0.6,
+      "independent": 1,
+      "supporting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2606.23130.txt#L457-L464"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "Vibe-coded apps security audit (200 deployed)",
+        "verdict": "right",
+        "confidence": 0.6,
+        "note": "Of 200 randomly sampled publicly deployed apps that were at least 90% AI-authored, 91% contained at least one manually validated vulnerability, 65.8% of them Critical or High, concentrated in broken access control, injection and authentication; open-source GitHub apps from two agents only, with no human-written baseline.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "contradicting": [],
+      "qualifying": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2607.09902.txt#L469-L477"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Post-merge fate study (182 repos)",
+        "verdict": "partly",
+        "confidence": 0.4,
+        "note": "Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L32-L33"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "CodeRabbit AI vs human PRs report",
+        "verdict": "partly",
+        "confidence": 0.25,
+        "note": "CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2310.02059.txt#L930-L936"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "2310.02059.txt",
+        "verdict": "partly",
+        "confidence": 0.55,
+        "note": "733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2603.28592v3.txt#L918-L933"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Debt study (302k AI commits)",
+        "verdict": "partly",
+        "confidence": 0.5,
+        "note": "AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells.",
+        "applicability": "partial",
+        "basis": "review",
+        "why": "counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2607.21652v1.txt#L1793-L1803"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Vibe-coding literature review",
+        "verdict": "partly",
+        "confidence": 0.35,
+        "note": "Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "context": [],
+      "problems": [],
+      "limitations": [
+       "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+       "CodeRabbit AI vs human PRs report: CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+       "2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
+       "Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate]",
+       "Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
+      "suggestions": [
+       "Add the qualification: the evidence supports a narrower or weaker statement."
+      ],
+      "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.6), 5 qualifying."
+     },
+     "issues": [
+      {
+       "sentence": "s34",
+       "category": "needs-qualification",
+       "severity": "warning",
+       "explanation": "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms. CodeRabbit AI vs human PRs report: CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability. 2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline. Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate] Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized. Add the qualification: the evidence supports a narrower or weaker statement.",
+       "by": "deterministic",
+       "assertion": "s34.a",
+       "suggestion": "The writer says the narration carries it: s31 says this audit, like the snippet count, checked AI-built code alone, with no hand-written apps checked the same way.",
+       "disposition": "The sentence names the population (sampled deployed apps at least 90 percent AI-built), the measure (findings confirmed by hand) and the threshold (at least one); s31 gives the missing human baseline."
+      }
+     ]
+    }
+   ],
+   "issues": []
+  },
+  {
    "id": "s31",
    "section": "investigation",
-   "text": "That is a count of weaknesses in AI code alone; it cannot tell you whether code written by hand would score any better on the same check.",
+   "text": "Both are counts of weaknesses in AI code alone; neither can tell you whether code written by hand would score any better on the same check.",
    "type": "rhetorical",
-   "fingerprint": "b0adc6fb12",
-   "words": 27,
+   "fingerprint": "e25d4dac93",
+   "words": 26,
    "status": "verified",
    "approved": true,
    "assertions": [],
+   "issues": []
+  },
+  {
+   "id": "s35",
+   "section": "investigation",
+   "text": "One study that did compare, in open-source repositories, found code written by AI agents introduced security findings at 1.14 times the rate of human code, line for line, and the most severe ones at 1.51 times, all flagged by an automated scanner rather than confirmed.",
+   "type": "factual",
+   "fingerprint": "311abb640d",
+   "words": 45,
+   "status": "verified",
+   "approved": true,
+   "assertions": [
+    {
+     "id": "s35.a",
+     "text": "In the post-merge study, agentic contributions introduced Semgrep security-related findings at 1.14 times the human per-source-line rate.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s35.a",
+      "text": "In the post-merge study, agentic contributions introduced Semgrep security-related findings at 1.14 times the human per-source-line rate.",
+      "kind": "fact",
+      "modality": "plain",
+      "status": "qualified",
+      "decision": "qualify",
+      "review": true,
+      "verbatim": false,
+      "strength": 0,
+      "independent": 0,
+      "supporting": [],
+      "contradicting": [],
+      "qualifying": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2607.09902.txt#L469-L477"
+        },
+        "cited": true,
+        "role": "qualifies",
+        "by": "Post-merge fate study (182 repos)",
+        "verdict": "partly",
+        "confidence": 0.4,
+        "note": "Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L32-L33"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "CodeRabbit AI vs human PRs report",
+        "verdict": "partly",
+        "confidence": 0.25,
+        "note": "CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2310.02059.txt#L930-L936"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "2310.02059.txt",
+        "verdict": "partly",
+        "confidence": 0.55,
+        "note": "733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2603.28592v3.txt#L918-L933"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Debt study (302k AI commits)",
+        "verdict": "partly",
+        "confidence": 0.5,
+        "note": "AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells.",
+        "applicability": "partial",
+        "basis": "review",
+        "why": "counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2607.21652v1.txt#L1793-L1803"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Vibe-coding literature review",
+        "verdict": "partly",
+        "confidence": 0.35,
+        "note": "Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "context": [],
+      "problems": [],
+      "limitations": [
+       "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+       "CodeRabbit AI vs human PRs report: CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+       "2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
+       "Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate]",
+       "Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
+      "suggestions": [
+       "Add the qualification: the evidence supports a narrower or weaker statement."
+      ],
+      "explanation": "qualified (qualify): no direct support, 5 qualifying."
+     },
+     "issues": [
+      {
+       "sentence": "s35",
+       "category": "needs-qualification",
+       "severity": "warning",
+       "explanation": "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms. Add the qualification: the evidence supports a narrower or weaker statement.",
+       "by": "deterministic",
+       "assertion": "s35.a",
+       "suggestion": "The writer says the narration carries it: s35 says the rate is relative to human code and from automated static analysis, not confirmed by hand.",
+       "disposition": "The sentence gives the rate as relative to human code, line for line, and says the findings were flagged by an automated scanner rather than confirmed, which is the limit the package lists."
+      }
+     ]
+    },
+    {
+     "id": "s35.b",
+     "text": "In the post-merge study, agentic contributions introduced high-severity (ERROR) Semgrep findings at 1.51 times the human per-source-line rate.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s35.b",
+      "text": "In the post-merge study, agentic contributions introduced high-severity (ERROR) Semgrep findings at 1.51 times the human per-source-line rate.",
+      "kind": "fact",
+      "modality": "plain",
+      "status": "qualified",
+      "decision": "qualify",
+      "review": true,
+      "verbatim": false,
+      "strength": 0,
+      "independent": 0,
+      "supporting": [],
+      "contradicting": [],
+      "qualifying": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2607.09902.txt#L469-L477"
+        },
+        "cited": true,
+        "role": "qualifies",
+        "by": "Post-merge fate study (182 repos)",
+        "verdict": "partly",
+        "confidence": 0.4,
+        "note": "Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L32-L33"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "CodeRabbit AI vs human PRs report",
+        "verdict": "partly",
+        "confidence": 0.25,
+        "note": "CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2310.02059.txt#L930-L936"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "2310.02059.txt",
+        "verdict": "partly",
+        "confidence": 0.55,
+        "note": "733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2603.28592v3.txt#L918-L933"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Debt study (302k AI commits)",
+        "verdict": "partly",
+        "confidence": 0.5,
+        "note": "AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells.",
+        "applicability": "partial",
+        "basis": "review",
+        "why": "counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2607.21652v1.txt#L1793-L1803"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Vibe-coding literature review",
+        "verdict": "partly",
+        "confidence": 0.35,
+        "note": "Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "context": [],
+      "problems": [],
+      "limitations": [
+       "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+       "CodeRabbit AI vs human PRs report: CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+       "2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
+       "Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate]",
+       "Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
+      "suggestions": [
+       "Add the qualification: the evidence supports a narrower or weaker statement."
+      ],
+      "explanation": "qualified (qualify): no direct support, 5 qualifying."
+     },
+     "issues": [
+      {
+       "sentence": "s35",
+       "category": "needs-qualification",
+       "severity": "warning",
+       "explanation": "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms. Add the qualification: the evidence supports a narrower or weaker statement.",
+       "by": "deterministic",
+       "assertion": "s35.b",
+       "suggestion": "The writer says the narration carries it: s35 says the rate is relative to human code and from automated static analysis, not confirmed by hand.",
+       "disposition": "The high-severity rate is stated in the same sentence as relative to human code and scanner-flagged, not confirmed."
+      }
+     ]
+    }
+   ],
    "issues": []
   },
   {
@@ -2148,6 +2743,38 @@
         "ref": {
          "kind": "study",
          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2607.09902.txt#L469-L477"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Post-merge fate study (182 repos)",
+        "verdict": "partly",
+        "confidence": 0.4,
+        "note": "Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L32-L33"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "CodeRabbit AI vs human PRs report",
+        "verdict": "partly",
+        "confidence": 0.25,
+        "note": "CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
          "cite": "ai-coding/sources/2310.02059.txt#L930-L936"
         },
         "cited": false,
@@ -2181,6 +2808,8 @@
       "problems": [],
       "limitations": [
        "Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
+       "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+       "CodeRabbit AI vs human PRs report: CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
        "2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
        "Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate]",
        "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
@@ -2188,7 +2817,7 @@
       "suggestions": [
        "Add the qualification: the evidence supports a narrower or weaker statement."
       ],
-      "explanation": "qualified (qualify): no direct support, 3 qualifying."
+      "explanation": "qualified (qualify): no direct support, 5 qualifying."
      },
      "issues": [
       {
@@ -2255,6 +2884,38 @@
         "ref": {
          "kind": "study",
          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2607.09902.txt#L469-L477"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Post-merge fate study (182 repos)",
+        "verdict": "partly",
+        "confidence": 0.4,
+        "note": "Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L32-L33"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "CodeRabbit AI vs human PRs report",
+        "verdict": "partly",
+        "confidence": 0.25,
+        "note": "CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
          "cite": "ai-coding/sources/2310.02059.txt#L930-L936"
         },
         "cited": false,
@@ -2288,6 +2949,8 @@
       "problems": [],
       "limitations": [
        "Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
+       "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+       "CodeRabbit AI vs human PRs report: CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
        "2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
        "Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate]",
        "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
@@ -2295,7 +2958,7 @@
       "suggestions": [
        "Add the qualification: the evidence supports a narrower or weaker statement."
       ],
-      "explanation": "qualified (qualify): no direct support, 3 qualifying."
+      "explanation": "qualified (qualify): no direct support, 5 qualifying."
      },
      "issues": [
       {
@@ -3034,13 +3697,299 @@
   {
    "id": "s25",
    "section": "answer",
-   "text": "The louder warnings rest on questionnaires, counts of concern and issue tallies with nothing human to compare them to.",
+   "text": "The louder maintenance warnings rest on questionnaires, counts of concern and issue tallies with nothing human to compare them to.",
    "type": "rhetorical",
-   "fingerprint": "cbf7c32cb3",
-   "words": 19,
+   "fingerprint": "c4c0c21d29",
+   "words": 20,
    "status": "verified",
    "approved": true,
    "assertions": [],
+   "issues": []
+  },
+  {
+   "id": "s36",
+   "section": "answer",
+   "text": "Security is where the worry holds up: most of the AI-built apps that audit sampled had at least one vulnerability, and against human code the rate was higher, more so for the most severe findings.",
+   "type": "factual",
+   "fingerprint": "02312e4094",
+   "words": 35,
+   "status": "verified",
+   "approved": true,
+   "assertions": [
+    {
+     "id": "s36.a",
+     "text": "Over 90% of the sampled deployed vibe-coded apps contained at least one vulnerability.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s36.a",
+      "text": "Over 90% of the sampled deployed vibe-coded apps contained at least one vulnerability.",
+      "kind": "fact",
+      "modality": "plain",
+      "status": "qualified",
+      "decision": "qualify",
+      "review": true,
+      "verbatim": false,
+      "strength": 0.6,
+      "independent": 1,
+      "supporting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2606.23130.txt#L457-L464"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "Vibe-coded apps security audit (200 deployed)",
+        "verdict": "right",
+        "confidence": 0.6,
+        "note": "Of 200 randomly sampled publicly deployed apps that were at least 90% AI-authored, 91% contained at least one manually validated vulnerability, 65.8% of them Critical or High, concentrated in broken access control, injection and authentication; open-source GitHub apps from two agents only, with no human-written baseline.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "contradicting": [],
+      "qualifying": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2607.09902.txt#L469-L477"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Post-merge fate study (182 repos)",
+        "verdict": "partly",
+        "confidence": 0.4,
+        "note": "Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L32-L33"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "CodeRabbit AI vs human PRs report",
+        "verdict": "partly",
+        "confidence": 0.25,
+        "note": "CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2310.02059.txt#L930-L936"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "2310.02059.txt",
+        "verdict": "partly",
+        "confidence": 0.55,
+        "note": "733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2603.28592v3.txt#L918-L933"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Debt study (302k AI commits)",
+        "verdict": "partly",
+        "confidence": 0.5,
+        "note": "AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells.",
+        "applicability": "partial",
+        "basis": "review",
+        "why": "counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2607.21652v1.txt#L1793-L1803"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Vibe-coding literature review",
+        "verdict": "partly",
+        "confidence": 0.35,
+        "note": "Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "context": [],
+      "problems": [],
+      "limitations": [
+       "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+       "CodeRabbit AI vs human PRs report: CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+       "2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
+       "Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate]",
+       "Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
+      "suggestions": [
+       "Add the qualification: the evidence supports a narrower or weaker statement."
+      ],
+      "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.6), 5 qualifying."
+     },
+     "issues": [
+      {
+       "sentence": "s36",
+       "category": "needs-qualification",
+       "severity": "warning",
+       "explanation": "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms. CodeRabbit AI vs human PRs report: CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability. 2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline. Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate] Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized. Add the qualification: the evidence supports a narrower or weaker statement.",
+       "by": "deterministic",
+       "assertion": "s36.a",
+       "suggestion": "The writer says the narration carries it: s34 names the sample (deployed apps at least 90 percent AI-built) and s31 says the audit had no human baseline.",
+       "disposition": "The sentence scopes the figure to the apps that audit sampled, which s34 describes (deployed, at least 90 percent AI-built, each finding confirmed by hand)."
+      }
+     ]
+    },
+    {
+     "id": "s36.b",
+     "text": "Agentic contributions introduced security findings, and high-severity findings by more, at a higher per-line rate than human code.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s36.b",
+      "text": "Agentic contributions introduced security findings, and high-severity findings by more, at a higher per-line rate than human code.",
+      "kind": "fact",
+      "modality": "plain",
+      "status": "qualified",
+      "decision": "qualify",
+      "review": true,
+      "verbatim": false,
+      "strength": 0,
+      "independent": 0,
+      "supporting": [],
+      "contradicting": [],
+      "qualifying": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2607.09902.txt#L469-L477"
+        },
+        "cited": true,
+        "role": "qualifies",
+        "by": "Post-merge fate study (182 repos)",
+        "verdict": "partly",
+        "confidence": 0.4,
+        "note": "Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L32-L33"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "CodeRabbit AI vs human PRs report",
+        "verdict": "partly",
+        "confidence": 0.25,
+        "note": "CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2310.02059.txt#L930-L936"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "2310.02059.txt",
+        "verdict": "partly",
+        "confidence": 0.55,
+        "note": "733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2603.28592v3.txt#L918-L933"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Debt study (302k AI commits)",
+        "verdict": "partly",
+        "confidence": 0.5,
+        "note": "AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells.",
+        "applicability": "partial",
+        "basis": "review",
+        "why": "counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+         "cite": "ai-coding/sources/2607.21652v1.txt#L1793-L1803"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Vibe-coding literature review",
+        "verdict": "partly",
+        "confidence": 0.35,
+        "note": "Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "context": [],
+      "problems": [],
+      "limitations": [
+       "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+       "CodeRabbit AI vs human PRs report: CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+       "2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
+       "Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate]",
+       "Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
+      "suggestions": [
+       "Add the qualification: the evidence supports a narrower or weaker statement."
+      ],
+      "explanation": "qualified (qualify): no direct support, 5 qualifying."
+     },
+     "issues": [
+      {
+       "sentence": "s36",
+       "category": "needs-qualification",
+       "severity": "warning",
+       "explanation": "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms. Add the qualification: the evidence supports a narrower or weaker statement.",
+       "by": "deterministic",
+       "assertion": "s36.b",
+       "suggestion": "The writer says the narration carries it: s35 says the rate is relative and from automated static analysis.",
+       "disposition": "The relative rate and its automated-scanner limit were stated in s35, the sentence just before; s36 points back without new figures."
+      }
+     ]
+    }
+   ],
    "issues": []
   },
   {
@@ -3341,6 +4290,27 @@
  ],
  "issues": [
   {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked script 577b3309e7; it is now cfd7e3449b: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  },
+  {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked package 38da9c6bef; it is now 09874f191a: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  },
+  {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked validation 640bb773de; it is now ebf617d5ac: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  },
+  {
    "sentence": "s02",
    "category": "needs-qualification",
    "severity": "warning",
@@ -3481,6 +4451,36 @@
    "disposition": "'Weaknesses' (not exploits) is the passage's word, and s31 says there is no hand-written baseline."
   },
   {
+   "sentence": "s34",
+   "category": "needs-qualification",
+   "severity": "warning",
+   "explanation": "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms. CodeRabbit AI vs human PRs report: CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability. 2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline. Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate] Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized. Add the qualification: the evidence supports a narrower or weaker statement.",
+   "by": "deterministic",
+   "assertion": "s34.a",
+   "suggestion": "The writer says the narration carries it: s31 says this audit, like the snippet count, checked AI-built code alone, with no hand-written apps checked the same way.",
+   "disposition": "The sentence names the population (sampled deployed apps at least 90 percent AI-built), the measure (findings confirmed by hand) and the threshold (at least one); s31 gives the missing human baseline."
+  },
+  {
+   "sentence": "s35",
+   "category": "needs-qualification",
+   "severity": "warning",
+   "explanation": "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms. Add the qualification: the evidence supports a narrower or weaker statement.",
+   "by": "deterministic",
+   "assertion": "s35.a",
+   "suggestion": "The writer says the narration carries it: s35 says the rate is relative to human code and from automated static analysis, not confirmed by hand.",
+   "disposition": "The sentence gives the rate as relative to human code, line for line, and says the findings were flagged by an automated scanner rather than confirmed, which is the limit the package lists."
+  },
+  {
+   "sentence": "s35",
+   "category": "needs-qualification",
+   "severity": "warning",
+   "explanation": "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms. Add the qualification: the evidence supports a narrower or weaker statement.",
+   "by": "deterministic",
+   "assertion": "s35.b",
+   "suggestion": "The writer says the narration carries it: s35 says the rate is relative to human code and from automated static analysis, not confirmed by hand.",
+   "disposition": "The high-severity rate is stated in the same sentence as relative to human code and scanner-flagged, not confirmed."
+  },
+  {
    "sentence": "s19",
    "category": "needs-qualification",
    "severity": "warning",
@@ -3569,6 +4569,26 @@
    "assertion": "s24.b",
    "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence.",
    "disposition": "\"Over the time it ran\" carries the short-term limit next to the verdict; s09 already gave the Bayesian exception."
+  },
+  {
+   "sentence": "s36",
+   "category": "needs-qualification",
+   "severity": "warning",
+   "explanation": "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms. CodeRabbit AI vs human PRs report: CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability. 2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline. Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate] Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized. Add the qualification: the evidence supports a narrower or weaker statement.",
+   "by": "deterministic",
+   "assertion": "s36.a",
+   "suggestion": "The writer says the narration carries it: s34 names the sample (deployed apps at least 90 percent AI-built) and s31 says the audit had no human baseline.",
+   "disposition": "The sentence scopes the figure to the apps that audit sampled, which s34 describes (deployed, at least 90 percent AI-built, each finding confirmed by hand)."
+  },
+  {
+   "sentence": "s36",
+   "category": "needs-qualification",
+   "severity": "warning",
+   "explanation": "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms. Add the qualification: the evidence supports a narrower or weaker statement.",
+   "by": "deterministic",
+   "assertion": "s36.b",
+   "suggestion": "The writer says the narration carries it: s35 says the rate is relative and from automated static analysis.",
+   "disposition": "The relative rate and its automated-scanner limit were stated in s35, the sentence just before; s36 points back without new figures."
   },
   {
    "sentence": "s26",
@@ -3702,6 +4722,36 @@
    ],
    "suggestion": "Make the reference unambiguous and keep the population neutral: \"In a separate experiment with different participants, working with AI cut their chance of answering questions about their own code correctly by 5.95 percentage points.\" Naming \"mostly students\" needs a passage the writer cannot record, so an editor may accept the neutral wording.",
    "resolvedBy": 3
+  },
+  {
+   "sentence": "s35",
+   "assertion": "s35.a",
+   "fingerprint": "7f4b3263b7",
+   "revision": 4,
+   "category": "selective",
+   "severity": "warning",
+   "explanation": "The cited passage gives 1.14 times for all Semgrep security findings but 1.51 times for high-severity ones, in the same sentence; 'more, but modestly' reports only the smaller figure, and the study adds (L297-L305) that possible AI help in the human baseline biases the gap toward zero. The modest framing is true of the overall rate only.",
+   "refs": [
+    "ai-coding/sources/2607.09902.txt#L469-L477",
+    "ai-coding/sources/2607.09902.txt#L297-L305"
+   ],
+   "suggestion": "Add the high-severity rate, e.g. '1.14 times the rate of human code, line for line, and 1.51 times for the most severe findings', or scope 'modestly' to the overall rate.",
+   "resolvedBy": 5
+  },
+  {
+   "sentence": "s36",
+   "assertion": "s36.a",
+   "fingerprint": "d882e37aff",
+   "revision": 4,
+   "category": "overgeneralization",
+   "severity": "warning",
+   "explanation": "The cited passage establishes that over 90% of sampled deployed apps had at least one vulnerability, not that each was 'riddled' with them; the sample is open-source apps from two agents (Claude Code, Lovable), so 'AI-built apps' is broader than the audit. 'If not by much' also carries over the s35 issue: high-severity findings were 1.51 times the human rate.",
+   "refs": [
+    "ai-coding/sources/2606.23130.txt#L457-L464",
+    "ai-coding/sources/2607.09902.txt#L469-L477"
+   ],
+   "suggestion": "Say 'most of the AI-built apps audited had at least one vulnerability' and drop or qualify 'if not by much' to match the revised s35.",
+   "resolvedBy": 5
   }
  ],
  "history": [
@@ -3721,7 +4771,21 @@
   },
   {
    "revision": 3,
-   "date": "2026-10-21T15:25:01.695Z",
+   "date": "2026-10-27T00:47:49.136Z",
+   "status": "needs-review",
+   "blocking": 0,
+   "warnings": 26
+  },
+  {
+   "revision": 4,
+   "date": "2026-10-27T00:52:13.198Z",
+   "status": "needs-review",
+   "blocking": 0,
+   "warnings": 5
+  },
+  {
+   "revision": 5,
+   "date": "2026-10-27T00:54:26.949Z",
    "status": "passed",
    "blocking": 0,
    "warnings": 0

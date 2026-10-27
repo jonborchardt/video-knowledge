@@ -1,9 +1,9 @@
 {
   "reviewer": "scripts/briefs/script-review.md",
   "model": "claude-opus-5-5",
-  "date": "2026-10-21",
-  "revision": 3,
-  "packageFingerprint": "38da9c6bef",
+  "date": "2026-10-26",
+  "revision": 5,
+  "packageFingerprint": "09874f191a",
   "approved": {
     "s01": "f65a115d53",
     "s02": "e18d462195",
@@ -23,13 +23,13 @@
     "s17": "d49f2de364",
     "s18": "c79ee76bf8",
     "s30": "a5cca0ec22",
-    "s31": "b0adc6fb12",
+    "s31": "e25d4dac93",
     "s19": "d4f6efa2d2",
     "s20": "c8a21f9dfa",
     "s21": "b11d8af83c",
     "s32": "70ebff8ff8",
     "s33": "3a6a245300",
-    "s25": "cbf7c32cb3",
+    "s25": "c4c0c21d29",
     "s27": "b7e4be005e",
     "s28": "803f8d2d36",
     "s29": "3ffaf181b4",
@@ -37,7 +37,10 @@
     "s23": "b48c9ecee7",
     "s24": "2865bece10",
     "s26": "07170029ba",
-    "s22": "ed064ecd1a"
+    "s22": "ed064ecd1a",
+    "s34": "379c8d303b",
+    "s35": "311abb640d",
+    "s36": "02312e4094"
   },
   "dispositions": {
     "s02.a": {
@@ -164,6 +167,31 @@
       "fingerprint": "ed064ecd1a",
       "category": "needs-qualification",
       "reason": "Now worded as a separate experiment with different participants and never called developers or colleagues, so it no longer borrows the crowd-worker population; the 5.95-point drop in correct answers about their own code is the passage figure and measure."
+    },
+    "s34.a": {
+      "fingerprint": "379c8d303b",
+      "category": "needs-qualification",
+      "reason": "The sentence names the population (sampled deployed apps at least 90 percent AI-built), the measure (findings confirmed by hand) and the threshold (at least one); s31 gives the missing human baseline."
+    },
+    "s35.a": {
+      "fingerprint": "311abb640d",
+      "category": "needs-qualification",
+      "reason": "The sentence gives the rate as relative to human code, line for line, and says the findings were flagged by an automated scanner rather than confirmed, which is the limit the package lists."
+    },
+    "s35.b": {
+      "fingerprint": "311abb640d",
+      "category": "needs-qualification",
+      "reason": "The high-severity rate is stated in the same sentence as relative to human code and scanner-flagged, not confirmed."
+    },
+    "s36.a": {
+      "fingerprint": "02312e4094",
+      "category": "needs-qualification",
+      "reason": "The sentence scopes the figure to the apps that audit sampled, which s34 describes (deployed, at least 90 percent AI-built, each finding confirmed by hand)."
+    },
+    "s36.b": {
+      "fingerprint": "02312e4094",
+      "category": "needs-qualification",
+      "reason": "The relative rate and its automated-scanner limit were stated in s35, the sentence just before; s36 points back without new figures."
     }
   },
   "findings": [
@@ -247,6 +275,34 @@
         "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L700-L721"
       ],
       "suggestion": "Make the reference unambiguous and keep the population neutral: \"In a separate experiment with different participants, working with AI cut their chance of answering questions about their own code correctly by 5.95 percentage points.\" Naming \"mostly students\" needs a passage the writer cannot record, so an editor may accept the neutral wording."
+    },
+    {
+      "sentence": "s35",
+      "assertion": "s35.a",
+      "fingerprint": "7f4b3263b7",
+      "revision": 4,
+      "category": "selective",
+      "severity": "warning",
+      "explanation": "The cited passage gives 1.14 times for all Semgrep security findings but 1.51 times for high-severity ones, in the same sentence; 'more, but modestly' reports only the smaller figure, and the study adds (L297-L305) that possible AI help in the human baseline biases the gap toward zero. The modest framing is true of the overall rate only.",
+      "refs": [
+        "ai-coding/sources/2607.09902.txt#L469-L477",
+        "ai-coding/sources/2607.09902.txt#L297-L305"
+      ],
+      "suggestion": "Add the high-severity rate, e.g. '1.14 times the rate of human code, line for line, and 1.51 times for the most severe findings', or scope 'modestly' to the overall rate."
+    },
+    {
+      "sentence": "s36",
+      "assertion": "s36.a",
+      "fingerprint": "d882e37aff",
+      "revision": 4,
+      "category": "overgeneralization",
+      "severity": "warning",
+      "explanation": "The cited passage establishes that over 90% of sampled deployed apps had at least one vulnerability, not that each was 'riddled' with them; the sample is open-source apps from two agents (Claude Code, Lovable), so 'AI-built apps' is broader than the audit. 'If not by much' also carries over the s35 issue: high-severity findings were 1.51 times the human rate.",
+      "refs": [
+        "ai-coding/sources/2606.23130.txt#L457-L464",
+        "ai-coding/sources/2607.09902.txt#L469-L477"
+      ],
+      "suggestion": "Say 'most of the AI-built apps audited had at least one vulnerability' and drop or qualify 'if not by much' to match the revised s35."
     }
   ]
 }

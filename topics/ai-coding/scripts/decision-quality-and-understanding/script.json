@@ -2,13 +2,13 @@
   "topic": "ai-coding",
   "story": "decision:quality-and-understanding",
   "title": "Is AI-Written Code Harder to Maintain?",
-  "revision": 3,
+  "revision": 5,
   "generation": {
     "model": "claude-opus-5-5",
     "brief": "scripts/briefs/script.md",
-    "date": "2026-10-21",
+    "date": "2026-10-26",
     "wordsPerMinute": 150,
-    "evidencePackage": "38da9c6bef"
+    "evidencePackage": "09874f191a"
   },
   "sections": [
     {
@@ -479,10 +479,89 @@
           "note": "Answers the claim quoted in s04 without re-reading its figure. The cited lines do not name the tools or the projects, so the sentence does not either."
         },
         {
+          "id": "s34",
+          "type": "factual",
+          "text": "A newer audit went further: researchers sampled deployed web apps built at least 90 percent by AI agents, confirmed each finding by hand, and found at least one vulnerability in over 90 percent of them.",
+          "assertions": [
+            {
+              "id": "s34.a",
+              "text": "Of sampled publicly deployed apps that were at least 90% AI-authored, over 90% contained at least one manually validated vulnerability.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "cite": "ai-coding/sources/2606.23130.txt#L457-L464"
+                }
+              ],
+              "qualifications": [
+                "s31 says this audit, like the snippet count, checked AI-built code alone, with no hand-written apps checked the same way."
+              ]
+            }
+          ],
+          "note": "The decisive study for the claim. The 90% authorship threshold is in the verdict note; \"over 90%\" is the passage wording (the note gives 91%)."
+        },
+        {
           "id": "s31",
-          "text": "That is a count of weaknesses in AI code alone; it cannot tell you whether code written by hand would score any better on the same check.",
+          "text": "Both are counts of weaknesses in AI code alone; neither can tell you whether code written by hand would score any better on the same check.",
           "type": "rhetorical",
-          "note": "The cited lines count only generated snippets; the sentence says what that figure cannot show and adds no fact about the study."
+          "note": "s30 and s34 count only AI-generated code; the sentence says what those figures cannot show and adds no fact."
+        },
+        {
+          "id": "s35",
+          "type": "factual",
+          "text": "One study that did compare, in open-source repositories, found code written by AI agents introduced security findings at 1.14 times the rate of human code, line for line, and the most severe ones at 1.51 times, all flagged by an automated scanner rather than confirmed.",
+          "assertions": [
+            {
+              "id": "s35.a",
+              "text": "In the post-merge study, agentic contributions introduced Semgrep security-related findings at 1.14 times the human per-source-line rate.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "cite": "ai-coding/sources/2607.09902.txt#L469-L477"
+                }
+              ],
+              "qualifications": [
+                "s35 says the rate is relative to human code and from automated static analysis, not confirmed by hand."
+              ]
+            },
+            {
+              "id": "s35.b",
+              "text": "In the post-merge study, agentic contributions introduced high-severity (ERROR) Semgrep findings at 1.51 times the human per-source-line rate.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "cite": "ai-coding/sources/2607.09902.txt#L469-L477"
+                }
+              ],
+              "qualifications": [
+                "s35 says the rate is relative to human code and from automated static analysis, not confirmed by hand."
+              ]
+            }
+          ],
+          "note": "Answers the question s31 raises with the one human comparison in the package that is a study. The vendor report (2.74x) is left out as weaker."
         },
         {
           "id": "s19",
@@ -718,9 +797,59 @@
         },
         {
           "id": "s25",
-          "text": "The louder warnings rest on questionnaires, counts of concern and issue tallies with nothing human to compare them to.",
+          "text": "The louder maintenance warnings rest on questionnaires, counts of concern and issue tallies with nothing human to compare them to.",
           "type": "rhetorical",
-          "note": "Points back in words to s12, s14 and s18 without new figures."
+          "note": "Points back in words to s12, s14 and s18 without new figures; scoped to maintenance, since s35 gives security a human comparison."
+        },
+        {
+          "id": "s36",
+          "type": "factual",
+          "text": "Security is where the worry holds up: most of the AI-built apps that audit sampled had at least one vulnerability, and against human code the rate was higher, more so for the most severe findings.",
+          "assertions": [
+            {
+              "id": "s36.a",
+              "text": "Over 90% of the sampled deployed vibe-coded apps contained at least one vulnerability.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "cite": "ai-coding/sources/2606.23130.txt#L457-L464"
+                }
+              ],
+              "qualifications": [
+                "s34 names the sample (deployed apps at least 90 percent AI-built) and s31 says the audit had no human baseline."
+              ]
+            },
+            {
+              "id": "s36.b",
+              "text": "Agentic contributions introduced security findings, and high-severity findings by more, at a higher per-line rate than human code.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "cite": "ai-coding/sources/2607.09902.txt#L469-L477"
+                }
+              ],
+              "qualifications": [
+                "s35 says the rate is relative and from automated static analysis."
+              ]
+            }
+          ],
+          "note": "Points back in words to s34 and s35 without re-reading figures."
         },
         {
           "id": "s26",
