@@ -1,0 +1,146 @@
+{
+  "reviewer": "scripts/briefs/article-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-27",
+  "revision": 2,
+  "packageFingerprint": "17538cd756",
+  "approved": {
+    "meta.headline": "0368da1766",
+    "meta.seoTitle": "730d3b38be",
+    "meta.dek": "6caf4f0458",
+    "meta.description": "45d24d4eca",
+    "heading:hook": "373c7a6420",
+    "heading:question-1": "4605346db9",
+    "heading:question-2": "e0b003f4d4",
+    "heading:close": "80ef75d259",
+    "decision-how-much-faster/sc11": "c4ea288b77",
+    "decision-how-much-faster/sc14": "9cc406befe",
+    "decision-how-much-faster/sc21": "0d4f6f392c",
+    "decision-how-much-faster/sc23": "713fda5413",
+    "s01": "138bfe38ce",
+    "s02": "6289c90e70",
+    "s04": "bcbcf53cc2",
+    "s05": "a92f9ad4f1",
+    "s06": "0ede50d74b",
+    "s07": "8c92b730ac",
+    "s10": "cd29278353",
+    "s11": "d4fbad6555",
+    "s12": "00f098a243",
+    "s13": "b6c1f1e162",
+    "s15": "492daa24fa",
+    "s16": "06e23d8759",
+    "s17": "5d6f2aa75b",
+    "s18": "1ef2ba124a",
+    "s20": "cc32833abc",
+    "s21": "c2c713b9e7",
+    "s22": "dc161010f7",
+    "s23": "7b566a4a0d",
+    "s24": "1d75669399",
+    "s25": "d9ff55cc6f",
+    "s26": "6edaf8e75c",
+    "s27": "f959247f49",
+    "s28": "3d36fc1b21",
+    "s29": "0e2a138f94",
+    "s31": "7729dd9a51",
+    "s32": "ce974b71ea",
+    "s03": "65780db6b5",
+    "s09": "95d63569ce",
+    "s14": "92261e6845",
+    "s19": "a86e751ed9",
+    "t1": "2b3c3dfee7"
+  },
+  "findings": [
+    {
+      "sentence": "s14",
+      "assertion": "s14.a",
+      "fingerprint": "48826113c0",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "blocking",
+      "explanation": "This qualification callout names ai-coding/measured-slowdown-mainly-artifact-older-models, whose verdict note says the 2026 data do not separate models from other changes. The passage compares early 2026 with early 2025 ('more sped up from AI tools now'), not newer models with older ones, yet s14 opens 'Newer tools may have changed the picture', and nothing in s14 to s16 says the change cannot be put down to the models. A reader takes the callout as partial support for the model-artifact claim, which is the claim's own wording. 'but only under conditions' also names no condition.",
+      "refs": [
+        "ai-coding/sources/metr-2026-experiment-design.txt#L61-L62"
+      ],
+      "suggestion": "Say METR compares two periods, not two generations of models, so its update cannot say how much of any change is due to newer models; drop 'but only under conditions' or name the condition."
+    },
+    {
+      "sentence": "s09",
+      "assertion": "s09.a",
+      "fingerprint": "4831c1d400",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "blocking",
+      "explanation": "The unresolved callout names ai-coding/real-enterprise-codebases-yields-modest-average but gives only the Cui standard error and the Google significance. The claim's listed limitation for the Shan study (usage was self-reported and partly self-selected) is stated nowhere in the article, so the 18.12 percent in s08 and t1 reads as a clean causal estimate. The METR and migration limits are carried by s10 to s13 and s20, so only the Shan condition is missing.",
+      "refs": [
+        "ai-coding/sources/4859137.txt#L489-L493"
+      ],
+      "suggestion": "Add to the callout (or beside s08) that in the field study developers chose whether to use the tools and disclosed their own use, so its estimate may carry selection bias."
+    },
+    {
+      "sentence": "s08",
+      "assertion": "s08.a",
+      "fingerprint": "8f445b3108",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "warning",
+      "explanation": "The 18.12 percent comes from a difference-in-differences on developers who disclosed their own use and partly chose it (verdict note); the figure stands without that limit beside it. See the s09 finding.",
+      "refs": [
+        "ai-coding/sources/4859137.txt#L489-L493"
+      ],
+      "suggestion": "Carry the self-selected, self-reported usage beside the figure, e.g. 'among developers who chose to use the tools'."
+    },
+    {
+      "sentence": "s30",
+      "fingerprint": "cbeb70f972",
+      "revision": 1,
+      "category": "repetition",
+      "severity": "blocking",
+      "explanation": "s30 restates s28 two sentences later: s28 says the self-estimates missed in opposite directions, too high in METR and too low in the Copilot lab trial; s30 says they were far from the measured effect, once above and once below. The only addition is 'not reliably', which s28 could carry.",
+      "refs": [
+        "ai-coding/sources/2507.09089v2.txt#L17-L24",
+        "ai-coding/sources/2302.06590.txt#L184-L188"
+      ],
+      "suggestion": "Keep one: fold 'not reliably' into s28 and cut s30, or cut s28 and let s30 answer the question."
+    },
+    {
+      "sentence": "s03",
+      "fingerprint": "65780db6b5",
+      "revision": 1,
+      "category": "incompatible-comparison",
+      "severity": "warning",
+      "explanation": "Table t1 (in this section) puts five different measures under one column 'Measured effect': output (PRs), development speed, user stories, task completion time and lab productivity. The METR cell is a 19 percent increase in completion time, a slowdown, shown as a bare positive '19%' beside four gains; a reader scanning the column reads it as a gain. The 55.8 percent is a single lab task, not a workplace measure like the rows above it.",
+      "refs": [
+        "ai-coding/sources/2507.09089v2.txt#L11-L27",
+        "ai-coding/sources/2302.06590.txt#L184-L188"
+      ],
+      "suggestion": "Split t1 into gains and the METR slowdown (or a column that names the direction), and say in the caption that the rows measure different things on different baselines."
+    },
+    {
+      "sentence": "s19",
+      "assertion": "s19.b",
+      "fingerprint": "63f5432eb0",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "warning",
+      "explanation": "'the workplace gains above come from a code suggestion tool' is true of the Cui field experiments only; the Shan field study (s08) measured GitHub Copilot, ChatGPT and Gemini, and the Google trial its own AI features. The point the gap needs (none measured agentic coding) holds, but the stated reason is narrower than the studies.",
+      "refs": [
+        "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784",
+        "ai-coding/sources/4859137.txt#L489-L493"
+      ],
+      "suggestion": "Say 'the workplace gains above come from 2023-24 assistants, not agentic coding'."
+    },
+    {
+      "sentence": "s19",
+      "assertion": "s19.b",
+      "fingerprint": "a86e751ed9",
+      "revision": 2,
+      "category": "wording",
+      "severity": "info",
+      "explanation": "\"the largest workplace estimate above\" is the 26.08 percent field estimate; s17 calls Anthropic's 50 and 67 percent the largest figures. The sentence is right because those are a self-report and a count, not estimates of speed, which it says in the next clause; an editor may want \"the largest measured workplace estimate\".",
+      "refs": [
+        "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784"
+      ]
+    }
+  ],
+  "dispositions": {}
+}
