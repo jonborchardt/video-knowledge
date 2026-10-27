@@ -1,5 +1,19 @@
 # Run report: heat-pumps decision:what-happens-when-it-gets-cold
 
+## 2026-10-26 re-run (stale evidence package)
+
+- Release mp4: `video/review/decision-what-happens-when-it-gets-cold.mp4` (release build from 2026-10-22, azure narration); checklist `video/review/checklist.md`.
+- Wall-clock: about 10 min (approver jonathan m borchardt). Nothing re-rendered: the script fingerprint (106cb5cd54), storyboard and render.json are unchanged, so the board kept the build.
+- Evidence added: none by this run. The package was rebuilt (8cb301861b, 8 claims, 12 documents, 3 gaps) because the Efficiency Maine 2026 whole-home study and the Energy Systems Catapult 2023 UK trial were recorded on cited claims.
+- Script r3: no narration changed. Qualifications added to s17.a, s19.a, s40.b (they cite only the US field tests, not the UK trial, which reported no capacity figures) and s26 (22 field-test sites; Maine found backup mostly fossil, resistance rare). The re-review approved 47 of 47 and retired the three new needs-qualification warnings with dispositions; one info note on s41 (Maine backup mix, and its COP of about 2 at -10 F supports s40), optional.
+- Re-locked: release.json revision 3, package 8cb301861b, approved by `automated: /produce run started by jonathan m borchardt`.
+- Graphics and music: unchanged (Undertow, 4 cues).
+- QA: `RESULT: PASSED` (36 of 36, from the 2026-10-22 release build).
+- Release blockers: none new; narration (azure) and music are recorded cleared in the build report.
+
+## Earlier run (2026-10-21)
+
+
 - Review mp4: `video/review/decision-what-happens-when-it-gets-cold-review-private.mp4`
 - Checklist: `video/review/checklist.md`
 - Wall-clock: 57 min (one /produce run, approver jon, 2026-10-21)
