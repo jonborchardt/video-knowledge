@@ -145,6 +145,19 @@ export function releaseFigures(a: Article, all: Map<string, FigureData>): Record
   );
 }
 
+const figureSha = (d: FigureData | undefined) => sha(JSON.stringify(d ?? null));
+
+/** What moved under a release since it was locked: its evidence package, then each figure whose data differs from
+ *  the snapshot (every figure, for a release without one). [] when nothing did. */
+export function articleDrift(r: ArticleRelease, now: { package: string; figures: Map<string, FigureData> }): string[] {
+  return [
+    ...(r.fingerprints.package === now.package ? [] : [`package ${r.fingerprints.package} -> ${now.package}`]),
+    ...figureRefs(r.article)
+      .filter((ref) => figureSha(now.figures.get(ref)) !== figureSha(r.figures?.[ref]))
+      .map((ref) => `figure ${ref}`),
+  ];
+}
+
 /** The first release. Locking the released text again changes nothing; a changed text is a correction. A release
  *  from before figure snapshots, its text unchanged, gains the snapshot and nothing else (no approval is given or
  *  recorded, no public revision), unless its video is live: readers have seen those charts, so that takes correct. */
@@ -219,12 +232,11 @@ export function correctArticle(
   const before = new Map(unitsOf(prev.article));
   const now = unitsOf(a);
   const ids = new Set(now.map(([id]) => id));
-  const data = (d: FigureData | undefined) => sha(JSON.stringify(d ?? null));
   const sentences = [
     ...new Set([
       ...now.filter(([id, print]) => before.get(id) !== print).map(([id]) => id),
       ...[...before.keys()].filter((id) => !ids.has(id)),
-      ...Object.keys(figures).filter((ref) => data(figures[ref]) !== data(prev.figures?.[ref])),
+      ...Object.keys(figures).filter((ref) => figureSha(figures[ref]) !== figureSha(prev.figures?.[ref])),
     ]),
   ];
   if (!sentences.length) throw new Refusal('the article is unchanged since its release');

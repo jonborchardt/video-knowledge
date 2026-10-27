@@ -5,7 +5,8 @@ import { describe, expect, it } from 'vitest';
 import { ARTICLE_FILES, type ArticleRelease, loadArticleRelease } from '../src/lib/article';
 import { articleStale, articleView, releaseFigureDraws } from '../src/lib/article-view';
 import type { PublicRecord, Revision } from '../src/lib/public-record';
-import { scriptDir } from '../src/lib/script';
+import { readJson } from '../src/lib/io';
+import { scriptDir, scriptDirs } from '../src/lib/script';
 import type { SourceView } from '../src/lib/topics';
 import { article } from './article-helpers';
 import { DOC_D, MLM, fact, sentence } from './script-helpers';
@@ -171,6 +172,15 @@ describe('article view', () => {
         new RegExp(`figure ${ref}`),
       );
     });
+  });
+
+  it('every committed article release snapshots each figure it shows', () => {
+    for (const { topic: name, slug, dir } of scriptDirs()) {
+      const r = readJson<ArticleRelease>(join(dir, ARTICLE_FILES.release));
+      if (!r) continue;
+      for (const b of r.article.sections.flatMap((s) => s.blocks))
+        if (b.kind === 'figure') expect(r.figures?.[b.ref], `${name}/${slug} ${b.ref}`).toBeDefined();
+    }
   });
 
   it('a figure with a known ref carries what it draws; an unknown one only its caption', () => {

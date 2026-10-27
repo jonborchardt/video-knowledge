@@ -7,6 +7,7 @@ import {
   type Block,
   type FigureData,
   articleAsScript,
+  articleDrift,
   articleFingerprint,
   articleModified,
   articleReviewUnits,
@@ -509,6 +510,19 @@ describe('article release', () => {
         legacy.date,
       ]);
       expect(() => lockArticle(legacy, fa, check(fa), '', 'd2', figs)).toThrow(Refusal);
+    });
+    it('articleDrift names a moved package and a changed figure, and nothing when both match', () => {
+      const r1 = lockArticle(null, fa, fv, 'Jon', 'd', figs);
+      const pkgNow = r1.fingerprints.package;
+      expect(articleDrift(r1, { package: pkgNow, figures: new Map([[ref, figs[ref]]]) })).toEqual([]);
+      const moved: FigureData = { chart: { ...chart, title: 'Re-cut' } };
+      expect(articleDrift(r1, { package: 'new', figures: new Map([[ref, moved]]) })).toEqual([
+        `package ${pkgNow} -> new`,
+        `figure ${ref}`,
+      ]);
+      expect(
+        articleDrift({ ...r1, figures: undefined }, { package: pkgNow, figures: new Map([[ref, figs[ref]]]) }),
+      ).toEqual([`figure ${ref}`]);
     });
     it('lock refuses to add a snapshot to a live story', () => {
       const legacy = { ...lockArticle(null, fa, fv, 'Jon', 'd', figs), figures: undefined };

@@ -45,6 +45,7 @@ import {
   scriptDir,
   sentenceFingerprint,
   shortId,
+  storySlug,
 } from '../src/lib/script';
 import { addOutputTo, recordApproved, recordPublished, recordUploaded, setThumbnail } from '../src/lib/publish';
 import { type Fixture, copyTopic, syntheticProduction, syntheticShort } from './production-helpers';
@@ -684,6 +685,71 @@ describe('the article on the board', () => {
         ]),
       });
       expect(articleState(fx)?.state).toBe('changed');
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  it('a released article whose package moved a cite shows blocked', { timeout: 30_000 }, () => {
+    const fx = syntheticProduction('locked');
+    try {
+      const pkg = readJson<EvidencePackage>(join(fx.dir, 'evidence-package.json'))!;
+      // a table cell stating a figure of a cited passage in the package
+      const cite = pkg.documents[0].cites[0];
+      const n = Number(passageReader(fx.root)(cite)!.match(/\d+/)![0]);
+      const a = articleOf(fx);
+      const cell = { label: 'Figure', value: n, unit: 'count' as const, display: String(n), cite };
+      a.sections[0].blocks.push({
+        kind: 'table',
+        id: 't1',
+        caption: 'c',
+        columns: ['n'],
+        rows: [{ label: 'r', cells: [cell] }],
+      });
+      write(fx, 'article.json', a);
+      write(fx, 'article-release.json', {
+        ...released(a),
+        fingerprints: { ...released(a).fingerprints, package: pkg.fingerprint },
+      });
+      expect(articleState(fx)).toEqual({ state: 'released', next: 'none' });
+      // the rebuilt package cites that passage at other lines
+      const documents = pkg.documents.map((d, i) =>
+        i ? d : { ...d, cites: d.cites.map((c) => (c === cite ? `${c.split('#')[0]}#L999999` : c)) },
+      );
+      write(fx, 'evidence-package.json', { ...pkg, fingerprint: 'moved', documents });
+      expect(articleState(fx)).toEqual({
+        state: 'blocked',
+        next: `agent: scripts/briefs/article.md (revise) -> ${relative(fx.root, join(fx.dir, 'article.json')).replaceAll(sep, '/')}`,
+      });
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  it('a released article whose chart changed shows changed with the correct command', { timeout: 30_000 }, () => {
+    const fx = syntheticProduction('locked');
+    try {
+      const sb = readJson<{ scenes: { id: string; visual: Record<string, unknown> }[] }>(
+        join(fx.dir, 'storyboard.json'),
+      )!;
+      const point = { label: 'Homes', value: 40, unit: 'percent', display: '40%', cite: 'x#L1' };
+      const chart = { type: 'stat-tiles', points: [point] };
+      sb.scenes[0].visual.chart = chart;
+      write(fx, 'storyboard.json', sb);
+      const ref = `${storySlug(fx.story)}/${sb.scenes[0].id}`;
+      const a = articleOf(fx);
+      a.sections[0].blocks.push({ kind: 'figure', ref, caption: 'Homes' });
+      write(fx, 'article.json', a);
+      const pkg = readJson<EvidencePackage>(join(fx.dir, 'evidence-package.json'))!;
+      const r = { ...released(a), fingerprints: { ...released(a).fingerprints, package: pkg.fingerprint } };
+      write(fx, 'article-release.json', { ...r, figures: { [ref]: { chart } } });
+      expect(articleState(fx)).toEqual({ state: 'released', next: 'none' });
+      sb.scenes[0].visual.chart = { ...chart, points: [{ ...point, value: 41, display: '41%' }] };
+      write(fx, 'storyboard.json', sb);
+      expect(articleState(fx)).toEqual({
+        state: 'changed',
+        next: `npm run article -- correct ${fx.topic} ${fx.story} --approved-by "<your name>" --note "<what changed>"`,
+      });
     } finally {
       fx.cleanup();
     }

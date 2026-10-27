@@ -204,7 +204,7 @@ const side = [
   {
     id: 'article-corrections',
     label: 'Article corrections',
-    help: 'a released article whose text changed (correct) or whose cited finding was revised (correct or reaffirm)',
+    help: 'a released article whose text or figure data changed (correct), whose cited finding was revised (correct or reaffirm), or that a moved package blocks (the writer)',
     items: videos
       .filter((r) => r.production?.article && !r.production.article.kind && r.production.article.next !== 'none')
       .map((r) => ({ r, state: r.production!.article!.state, next: r.production!.article!.next })),

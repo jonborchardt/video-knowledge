@@ -5,8 +5,15 @@
 // queue, park or mark a story published, which no artifact records.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { ARTICLE_FILES, type Article, articleFingerprint, articleReviewUnits, loadArticleRelease } from './article';
-import { validateArticleIn } from './article-validation';
+import {
+  ARTICLE_FILES,
+  type Article,
+  articleDrift,
+  articleFingerprint,
+  articleReviewUnits,
+  loadArticleRelease,
+} from './article';
+import { figureData, validateArticleIn } from './article-validation';
 import { articleStale } from './article-view';
 import { type Corpus, corpusOf } from './corpus';
 import { type PassageReader, passageReader } from './evidence';
@@ -893,10 +900,30 @@ function articleOf({
   // The released text stands until article.json differs from it (or is gone); a revised text takes the live path.
   if (out && (!a || articleFingerprint(out.article) === articleFingerprint(a))) {
     const stale = articleStale(out, loadPublicRecord(topic, root));
-    return stale
+    if (stale)
+      return {
+        state: 'stale',
+        next: `${stale.id} was revised on ${stale.at}: ${stale.note}, then ${writer}, or if the text stands: npm run article -- reaffirm ${topic} ${storyId} --approved-by "<your name>" --note "<why unchanged>"`,
+      };
+    // A rebuilt package or a re-cut chart moves under the release: judge the text again, and a figure whose data
+    // changed is a correction. A package that moved and still passes changes nothing a reader sees.
+    const drift = articleDrift(out, { package: pkg?.fingerprint ?? '', figures: figureData(topic, storyId, root) });
+    if (!drift.length) return { state: 'released', next: 'none' };
+    if (!pkg) return { state: 'blocked', next: `npm run script -- package ${topic} ${storyId}` };
+    const now = validateArticleIn(
+      topic,
+      storyId,
+      a ?? out.article,
+      t,
+      read,
+      { judgments: review.applicability, pkg, script },
+      root,
+    );
+    if (now.status === 'blocked') return { state: 'blocked', next: writer };
+    return drift.some((d) => d.startsWith('figure '))
       ? {
-          state: 'stale',
-          next: `${stale.id} was revised on ${stale.at}: ${stale.note}, then ${writer}, or if the text stands: npm run article -- reaffirm ${topic} ${storyId} --approved-by "<your name>" --note "<why unchanged>"`,
+          state: 'changed',
+          next: `npm run article -- correct ${topic} ${storyId} --approved-by "<your name>" --note "<what changed>"`,
         }
       : { state: 'released', next: 'none' };
   }
