@@ -15,7 +15,7 @@ import { href } from '../lib/url';
 /** The request comes from a page this server served: its Origin header is the server's own origin. */
 export const sameOrigin = (req: Request) => req.headers.get('origin') === new URL(req.url).origin;
 
-const ACTIONS = ['approve', 'request-changes', 'accept-draft', 'upload', 'push', 'sync', 'go-live'] as const;
+const ACTIONS = ['approve', 'request-changes', 'accept-draft', 'upload', 'push', 'sync', 'verify', 'go-live'] as const;
 type Action = (typeof ACTIONS)[number];
 const CAN: Partial<Record<Action, keyof ReviewView['can']>> = {
   approve: 'approve',
@@ -56,7 +56,8 @@ export async function handle(
       throw new Refusal(`the title changed since this page was loaded (now "${view.title}"): reload it`);
     const can = CAN[action as Action];
     if (can && view.can[can] !== true) throw new Refusal(String(view.can[can]));
-    if ((action === 'push' || action === 'sync') && !view.state?.id) throw new Refusal('nothing uploaded yet');
+    if ((action === 'push' || action === 'sync' || action === 'verify') && !view.state?.id)
+      throw new Refusal('nothing uploaded yet');
     const job = (label: string, args: string[]) => {
       start(scriptDir(topic, storyId, root), label, args, root);
       return back('ok', `${label} started`);
@@ -83,6 +84,7 @@ export async function handle(
       case 'upload':
       case 'push':
       case 'sync':
+      case 'verify':
         return job(action, ['publish', action, topic, storyId, '--by', by]);
       case 'go-live': {
         const when = field('when');

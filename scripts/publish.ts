@@ -20,6 +20,8 @@
 //   push <topic> <story-id> [--output <id>]                   send the composed title, description, tags, thumbnail and captions when they changed
 //   go-live <topic> <story-id> [--at <ISO>] [--output <id>]   make the APPROVED upload public now, or schedule it (private until --at); records it
 //   sync <topic> <story-id> [--output <id>]                   read the video back: records a scheduled video gone public, a rejection, a deletion
+//   verify <topic> <story-id> [--output <id>]                 compare what YouTube holds with the package (metadata, chapters, captions, thumbnail,
+//                                                             file size, visibility, restrictions) and record it; exit 1 on a failed check
 // Every verb is idempotent: a key already in the ledger prints the existing event and exits 0. A refusal prints one line and
 // exits 2 without writing. --by defaults to $PUBLISH_BY, else git's user.name; approve needs it explicitly.
 // The ledger is topics/<topic>/scripts/<slug>/publish.json (src/lib/publish.ts); events are written only here, metadata may
@@ -51,7 +53,8 @@ import {
   uploadMetadataOf,
 } from '../src/lib/publish';
 import { scriptDir, shortOf, storySlug } from '../src/lib/script';
-import { goLive, push, sync, upload } from '../src/lib/uploader';
+import { goLive, push, sync, upload, verify } from '../src/lib/uploader';
+import { METADATA_CHECKS } from '../src/lib/verify';
 import { TOKEN_FILE, YouTubeError, authorize, loadCredentials, youtubeClient } from '../src/lib/youtube';
 
 if (existsSync(join(ROOT, '.env'))) process.loadEnvFile(join(ROOT, '.env')); // keys only; never committed
@@ -86,7 +89,7 @@ const usage = () => {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 25)
+      .slice(0, 27)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -142,7 +145,7 @@ function show() {
     }
     for (const e of out.events)
       lines.push(
-        `  ${e.at} ${e.type}${e.id ? ` ${e.id}` : ''}${e.build ? ` build ${e.build}` : ''}${e.publishAt ? ` at ${e.publishAt}` : ''}${e.fields ? ` ${e.fields.join(',')}` : ''}${e.error ? ` ${e.step}: ${e.error}` : ''} by ${e.by}${e.note ? ` (${e.note})` : ''}`,
+        `  ${e.at} ${e.type}${e.id ? ` ${e.id}` : ''}${e.build ? ` build ${e.build}` : ''}${e.publishAt ? ` at ${e.publishAt}` : ''}${e.fields ? ` ${e.fields.join(',')}` : ''}${e.result ? ` ${e.result}` : ''}${e.error ? ` ${e.step}: ${e.error}` : ''} by ${e.by}${e.note ? ` (${e.note})` : ''}`,
       );
   }
   console.log(lines.join('\n'));
@@ -237,6 +240,41 @@ async function main() {
         console.log(
           `${x.id}: ${x.privacyStatus}, upload ${x.uploadStatus}, processing ${x.processingStatus ?? 'n/a'}${x.publishAt ? `, publishAt ${x.publishAt}` : ''}`,
         );
+      break;
+    }
+    case 'verify': {
+      const v = await verify(topic, storyId, api());
+      for (const k of v.checks) console.log(`${k.result.padEnd(7)}  ${k.name.padEnd(12)}  ${k.detail ?? ''}`.trimEnd());
+      // the remote values are printed for the person, never stored (API data may not be kept)
+      const remote = v.remote;
+      const pairs: Record<string, [unknown, unknown]> = {
+        title: [remote?.title, v.expected.title],
+        description: [remote?.description, v.expected.description],
+        tags: [remote?.tags, v.expected.tags],
+        category: [remote?.categoryId, v.expected.category],
+        language: [remote?.defaultLanguage, v.expected.language],
+        chapters: [remote?.description, v.expected.chapters.map((c) => `${c.stamp} ${c.title}`).join('\n')],
+      };
+      for (const k of v.checks)
+        if (k.result === 'fail' && METADATA_CHECKS.includes(k.name) && pairs[k.name])
+          console.log(
+            `    youtube:  ${JSON.stringify(pairs[k.name][0] ?? null)}\n    composed: ${JSON.stringify(pairs[k.name][1])}`,
+          );
+      const names = (r: string) =>
+        v.checks
+          .filter((k) => k.result === r)
+          .map((k) => k.name)
+          .join(', ');
+      console.log(v.result.message);
+      const result = v.result.event!.result;
+      if (result === 'failed') {
+        console.log(`RESULT: FAILED (${names('fail')})`);
+        process.exitCode = 1;
+      } else if (result === 'pending')
+        console.log(
+          `RESULT: PENDING (${names('pending')}): YouTube is still processing or syncing; run npm run publish -- verify again later`,
+        );
+      else console.log('RESULT: PASSED');
       break;
     }
     default:

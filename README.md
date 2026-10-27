@@ -369,7 +369,7 @@ Short; the board's "Watch and review" link) plays the packaged build streamed fr
 site or git), lists every failed QA check, validation issue, review finding and pacing warning with a link to its moment,
 and does every step below from buttons: approve (every checklist item ticked, a person's name), request changes (one
 note per line, `[m:ss sc20 s31]` places it; "Note at current time" stamps the player's position), accept a draft
-(`video final`), upload privately, push, sync, go live now or at a time (a confirmation box). Each form carries the
+(`video final`), upload privately, push, sync, verify, go live now or at a time (a confirmation box). Each form carries the
 build it judged and is refused if a newer build was packaged since. Long verbs run the CLI in the background; the page
 shows the job and its log. A change request (`request-changes`) moves the card to "changes requested" and its
 send-back prompt carries the notes; an approval binds the build **and** the title, so a new render or a changed title
@@ -390,6 +390,7 @@ The flow, as the board's next step walks it (every step is one `npm run publish 
    `published`; a schedule more than 15 minutes past with the video still private is a `failed` event.
 5. Later changes to the title, tags, thumbnail (`thumbnail <file>`) or the `metadata` block: `push` sends them and
    records `updated`. A live video is never replaced: a re-release is a new output, `add <id> --kind youtube-video`.
+6. After any upload, push or go-live, `verify` checks what YouTube holds against the package (below).
 
 A Short is another output of the same ledger: `add short-1 --kind youtube-short --from youtube --source <file>`,
 then the same `upload`, `approve`, `go-live`. Shorts are made and approved before the full video launches, and
@@ -436,6 +437,21 @@ a network drop is a `failed` event with `retryable` and the same `upload` resume
 YouTube no longer knows is a final failure: look for the title in Studio and record it with `uploaded --id`, or delete
 the session file to upload again. `sync` reconciles what happened on YouTube (rejected, deleted, gone public).
 
+`verify` reads the video back and checks it against the approved package and the ledger, for an API upload, a Studio
+upload recorded by hand and a Short alike: it exists, the upload and processing finished, the privacy (and schedule) is
+what the ledger says, an anonymous request reaches it only when it should (YouTube's oEmbed: 200 is reachable without
+signing in), the title, description, tags, category and language are the composed ones, the description's chapter
+lines are the measured chapters, nobody marked it made for kids or changed the altered-content answer, no age, region,
+embedding or licence restriction is set, a custom thumbnail is set (the API cannot return the image), an English
+standard captions track is serving, and the uploaded file's size is the packaged mp4's (the build binding for a Studio
+upload; the API offers no hash). It costs one `videos.list` unit plus 50 for `captions.list` when the package has
+captions; oEmbed is free. Each check is `pass`, `fail`, `pending` or `skip`, and the run is recorded once per distinct
+outcome as a `verified` event holding the check names, results and our own reasons, never YouTube's values (API data may
+not be kept; the CLI prints them live). `RESULT: PENDING` means YouTube is still processing or syncing, or the
+anonymous request had no network: run `verify` again later. `RESULT: FAILED` (exit 1) names the checks: a failed
+metadata or captions check makes the next `push` resend them; fix anything else in Studio (then `updated --fields`).
+A verification never changes the output's status or hides a failure.
+
 #### Publishing through YouTube Studio
 
 The route when the API keeps a video private, or by choice. In this order:
@@ -452,7 +468,8 @@ The route when the API keeps a video private, or by choice. In this order:
 --checked <n>`. The approval names the latest upload of the build.
 6. Either `go-live` (the API makes it public and the read-back confirms it), or set Public or a schedule in Studio
    and record it with `published` or `scheduled --at <ISO>`, or let `sync` observe it.
-7. A Short: the same steps with `<story-id>/shorts/<slug>`, after its video is live.
+7. `npm run publish -- verify <topic> <story-id>`; on `PENDING` run it again once Studio shows processing finished.
+8. A Short: the same steps with `<story-id>/shorts/<slug>`, after its video is live.
 
 A metadata change made in Studio afterwards is recorded with `updated --fields <list>`. An earlier API upload of the
 same build stays in the log; leave it private, or delete it in Studio.
@@ -471,7 +488,7 @@ It asks for:
   also holds the terms), whether it is public, and demo credentials or an end-to-end screencast.
 - **Per Cloud project:** the project number, the use case ("Video Uploading & Account Management"), OAuth (yes),
   volume (under 1,000 requests a day), the endpoints (`videos.insert`, `videos.update`, `videos.list`,
-  `thumbnails.set`, `captions.insert`) and the quota (the default is enough).
+  `thumbnails.set`, `captions.insert`, `captions.list`) and the quota (the default is enough).
 - **Evidence (720p or larger, address bar visible, one file under 10 MB each):** the privacy page showing its YouTube
   sections, the Google Privacy Policy link and what is kept; the home page showing the footer's Privacy link beside the
   channel links; the terms; the consent screen, scopes and revocation; for uploading, the upload script
