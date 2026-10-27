@@ -631,8 +631,9 @@ describe('the article on the board', () => {
       expect(articleState(fx)).toEqual({ state: 'released', next: 'none' });
       const headlined = { ...a, meta: { ...a.meta, headline: 'Is a heat pump cheaper to run than gas?' } };
       write(fx, 'article.json', headlined);
-      // the new headline is unapproved: the review still covers this revision, so it is the writer's
+      // the new headline is unapproved and no finding holds it: the reviewer's
       expect(articleState(fx)?.state).toBe('review');
+      expect(articleState(fx)?.next).toContain('article-review.md');
       const reviewed = readJson<{ approved: Record<string, string> }>(join(fx.dir, 'article-review.json'))!;
       write(fx, 'article-review.json', {
         ...reviewed,
@@ -683,6 +684,81 @@ describe('the article on the board', () => {
         ]),
       });
       expect(articleState(fx)?.state).toBe('changed');
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  // A review at revision 1 approving every unit but the first sentence, which carries a finding of this severity.
+  const heldReview = (fx: Fixture, severity: 'warning' | 'info') => {
+    const a = articleOf(fx);
+    write(fx, 'article.json', a);
+    const [s0] = articleSentences(a);
+    write(fx, 'article-review.json', {
+      reviewer: 'fixture reviewer',
+      date: '2026-01-02',
+      revision: 1,
+      packageFingerprint: a.generation.evidencePackage,
+      approved: Object.fromEntries([
+        ...articleSentences(a)
+          .filter((x) => x.id !== s0.id)
+          .map((x) => [x.id, sentenceFingerprint(x)]),
+        ...articleReviewUnits(a),
+      ]),
+      findings: [
+        { sentence: s0.id, fingerprint: sentenceFingerprint(s0), severity, category: 'wording', explanation: 'x' },
+      ],
+    });
+    return a;
+  };
+
+  it('A: an edit beside a held sentence goes to the reviewer, not back to the writer', { timeout: 30_000 }, () => {
+    const fx = syntheticProduction('locked');
+    try {
+      const a = heldReview(fx, 'warning');
+      const edited = structuredClone(a);
+      articleSentences(edited)[1].text += ' Indeed.'; // a sentence beside the held one, at the same revision
+      write(fx, 'article.json', edited);
+      expect(articleState(fx)).toMatchObject({
+        state: 'review',
+        kind: 'review-pending',
+        next: expect.stringContaining('article-review.md'),
+      });
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  it('B: only held sentences unapproved: the writer revises them', { timeout: 30_000 }, () => {
+    const fx = syntheticProduction('locked');
+    try {
+      heldReview(fx, 'warning');
+      expect(articleState(fx)).toMatchObject({
+        state: 'review',
+        kind: 'review-findings',
+        next: expect.stringContaining('article.md (revise)'),
+      });
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  it('C: an edited headline with no finding goes to the reviewer', { timeout: 30_000 }, () => {
+    const fx = syntheticProduction('locked');
+    try {
+      const a = heldReview(fx, 'warning');
+      write(fx, 'article.json', { ...a, meta: { ...a.meta, headline: 'Is a heat pump cheaper than gas?' } });
+      expect(articleState(fx)).toMatchObject({ kind: 'review-pending' });
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  it('D: an info finding never holds a sentence', { timeout: 30_000 }, () => {
+    const fx = syntheticProduction('locked');
+    try {
+      heldReview(fx, 'info');
+      expect(articleState(fx)).toMatchObject({ kind: 'review-pending' });
     } finally {
       fx.cleanup();
     }

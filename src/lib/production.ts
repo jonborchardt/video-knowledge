@@ -5,7 +5,7 @@
 // queue, park or mark a story published, which no artifact records.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { ARTICLE_FILES, type Article, articleFingerprint, loadArticleRelease } from './article';
+import { ARTICLE_FILES, type Article, articleFingerprint, articleReviewUnits, loadArticleRelease } from './article';
 import { validateArticleIn } from './article-validation';
 import { articleStale } from './article-view';
 import { type Corpus, corpusOf } from './corpus';
@@ -42,6 +42,7 @@ import {
   type EvidencePackage,
   FILES,
   type Release,
+  type ReviewFinding,
   type Script,
   type ScriptReviewFile,
   type ScriptValidation,
@@ -490,6 +491,21 @@ const validationStage: BoardStage = ({ topic, storyId, root, r, read, t, review,
   return { checks: [check], halt, live };
 };
 
+/** The units a review holds on open findings at their current text (an info finding holds nothing). The writer's turn
+ *  only when every unapproved unit is held; any other unapproved unit needs the reviewer. Script and article alike. */
+export function heldOnFindings(
+  units: { id: string; fingerprint: string; approved: boolean }[],
+  findings: ReviewFinding[],
+): { held: string[]; writer: boolean } {
+  const open = units.filter((u) => !u.approved);
+  const held = open
+    .filter((u) =>
+      findings.some((f) => f.sentence === u.id && f.fingerprint === u.fingerprint && f.severity !== 'info'),
+    )
+    .map((u) => u.id);
+  return { held, writer: held.length > 0 && held.length === open.length };
+}
+
 // 4. Independent review: present, bound to this package, and the revision it reviewed.
 const reviewStage: BoardStage = ({ topic, storyId, r, pkg, script, sreview, live }) => {
   if (!script || !pkg) return {};
@@ -509,12 +525,8 @@ const reviewStage: BoardStage = ({ topic, storyId, r, pkg, script, sreview, live
   const health: Health = !bound || !sameRev ? 'stale' : unreviewed ? 'pending' : 'current';
   // The reviewer has judged the current revision and holds sentences on findings at their current text: those are the
   // writer's to fix (a warning is not a blocker, so the validation is not blocked), not another review's.
-  const held = (live?.sentences ?? []).filter(
-    (x) =>
-      !x.approved &&
-      sreview.findings.some((f) => f.sentence === x.id && f.fingerprint === x.fingerprint && f.severity !== 'info'),
-  );
-  const writer = health === 'pending' && held.length === unreviewed;
+  const { held, writer: allHeld } = heldOnFindings(live?.sentences ?? [], sreview.findings);
+  const writer = health === 'pending' && allHeld;
   return {
     checks: [
       {
@@ -532,7 +544,7 @@ const reviewStage: BoardStage = ({ topic, storyId, r, pkg, script, sreview, live
           ? {
               stage: 'script',
               kind: 'review-findings',
-              why: `the reviewer holds ${held.map((x) => x.id).join(', ')} on findings`,
+              why: `the reviewer holds ${held.join(', ')} on findings`,
               cmd: `agent: scripts/briefs/script.md (revise), then npm run script -- validate ${topic} ${storyId}`,
             }
           : {
@@ -903,8 +915,14 @@ function articleOf({
       next: live.revisionLimitReached ? 'stop: revision limit reached with blocking findings' : writer,
       ...k(validationHaltKind(live)),
     };
-  // A review of this revision that still holds sentences is the writer's to answer, not another review's.
-  const covered = areview?.revision === a.revision && areview.packageFingerprint === pkg.fingerprint;
+  // A review of this package that holds every unapproved unit on findings is the writer's to answer; any other
+  // unapproved unit (an edit beside a held sentence, a new headline) is the reviewer's, whatever the revision.
+  const units = [
+    ...live.sentences,
+    ...articleReviewUnits(a).map(([id, fp]) => ({ id, fingerprint: fp, approved: areview?.approved?.[id] === fp })),
+  ];
+  const covered =
+    areview?.packageFingerprint === pkg.fingerprint && heldOnFindings(units, areview.findings ?? []).writer;
   // After a release, lock refuses: a passing revision is a correction.
   if (out && live.status === 'passed')
     return {
