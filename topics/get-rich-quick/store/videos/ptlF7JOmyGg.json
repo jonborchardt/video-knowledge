@@ -50,6 +50,14 @@
           "confidence": 0.8,
           "note": "Look-ahead bias, overfitting and the absence of execution costs and emotion make backtests systematically optimistic.",
           "date": "2026-10-16"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.3,
+          "note": "On prices close to a random walk the simulated performance of profit-taking and stop-loss pairs shows no consistent pattern, so picking the pair that happened to maximise the Sharpe ratio in a historical simulation is backtest overfitting: a mechanism for overstated backtests shown in simulation, not a measured gap between backtested and live results.",
+          "source": "get-rich-quick/sources/carr-lopez-de-prado-optimal-trading-rules.txt#L373-L377",
+          "date": "2026-10-26"
         }
       ]
     },
