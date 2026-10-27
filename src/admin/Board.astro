@@ -234,13 +234,12 @@ function ctaNotes(topic: string, id: string): string[] {
   <h2 class="text-featured font-semibold">Board</h2>
   <p class="max-w-prose text-muted-foreground">
     One row per video; its state is whoever acts next. A chain of questions is one row; its follow-up questions have
-    none. Click a header to sort; filter by text, topic or state. The state comes from the committed artifacts:
-    readiness from <code>stories.json</code>, then the first production stage whose file is missing or not current
-    (re-running the library on today's inputs must reproduce the file, the test <code>lock</code> applies). The strip in each
-    row is the production stages: what has run (filled), the stage it is at, and what is still to come; red means <code
-      >/produce</code
-    > stopped and a person must act. Only <code>production.json</code> is hand-written (queued, parked), because no artifact
-    records those.
+    none. Click a header to sort; filter by text or state. The state comes from the committed artifacts: readiness from <code
+      >stories.json</code
+    >, then the first production stage whose file is missing or not current (re-running the library on today's inputs
+    must reproduce the file, the test <code>lock</code> applies). The strip in each row is the production stages: what has
+    run (filled), the stage it is at, and what is still to come; red means <code>/produce</code> stopped and a person must
+    act. Only <code>production.json</code> is hand-written (queued, parked), because no artifact records those.
   </p>
   <form id="story-filter" class="grid gap-2 text-sm">
     <div class="flex flex-wrap items-center gap-2">
@@ -259,11 +258,6 @@ function ctaNotes(topic: string, id: string): string[] {
     {
       (
         [
-          [
-            'topic',
-            'Topic',
-            topics.map(({ topic: t }) => [t.name, t.label, videos.filter((r) => r.topic.name === t.name).length]),
-          ],
           ['state', 'State', COLUMNS.map((c) => [c, COLUMN[c].label, videos.filter((r) => columnOf(r) === c).length])],
         ] as const
       ).map(([name, legend, options]) => (
@@ -313,7 +307,6 @@ function ctaNotes(topic: string, id: string): string[] {
             return (
               <tr
                 class="border-t"
-                data-topic={r.topic.name}
                 data-state={c}
                 data-stopped={stopped(r) ? '' : undefined}
                 data-search={[
@@ -971,7 +964,7 @@ function ctaNotes(topic: string, id: string): string[] {
 
 <script>
   // The stories table: click a header to sort (numbers high first, text A-Z first; again to reverse), and the form
-  // above it filters rows by text, topic tags, state tags and whether /produce stopped.
+  // above it filters rows by text, state tags and whether /produce stopped.
   const table = document.getElementById('story-table') as HTMLTableElement;
   const body = table.tBodies[0];
   const heads = [...table.tHead!.rows[0].cells];
@@ -1000,13 +993,11 @@ function ctaNotes(topic: string, id: string): string[] {
   form.addEventListener('submit', (e) => e.preventDefault());
   form.addEventListener('input', () => {
     const q = field('q').value.trim().toLowerCase();
-    const topic = checked('topic');
     const state = checked('state');
     const stopped = field('stopped').checked;
     let shown = 0;
     for (const r of body.rows) {
       r.hidden = !(
-        (!topic.length || topic.includes(r.dataset.topic!)) &&
         (!state.length || state.includes(r.dataset.state!)) &&
         (!stopped || r.dataset.stopped !== undefined) &&
         (!q || r.dataset.search!.includes(q))
