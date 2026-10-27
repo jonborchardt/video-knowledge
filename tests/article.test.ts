@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import {
   type Article,
   type Block,
+  type FigureData,
   articleAsScript,
   articleFingerprint,
   articleModified,
@@ -12,11 +13,13 @@ import {
   correctArticle,
   lockArticle,
   reaffirmArticle,
+  releaseFigures,
   renderArticleMd,
 } from '../src/lib/article';
+import type { ChartSpec } from '../src/lib/storyboard';
 import { Refusal } from '../src/lib/publish';
 import { publicRecordProblems, withArticleRevision } from '../src/lib/public-record';
-import { LIMITS, figuresOf, validateArticle } from '../src/lib/article-validation';
+import { LIMITS, figureData, figuresOf, validateArticle } from '../src/lib/article-validation';
 import { buildPackage } from '../src/lib/evidence-package';
 import { type EvidencePackage, type Sentence, scriptDir } from '../src/lib/script';
 import { approveArticle, article } from './article-helpers';
@@ -209,7 +212,7 @@ describe('article validation', () => {
     expect(v.issues.filter((i) => i.category === 'figure').map((i) => i.sentence)).toEqual(['x/sc99']);
     expect(cats(check(a, { figures: new Set(['x/sc99']) }))).not.toContain('figure');
   });
-  it('figuresOf lists the storyboard scenes that draw a chart', { timeout: 5000 }, () => {
+  it('figureData lists storyboard charts and datasets, and figuresOf is its keys', { timeout: 5000 }, () => {
     const root = mkdtempSync(join(tmpdir(), 'figures-'));
     const dir = scriptDir('demo', 'decision:mlm-and-seminars', root);
     mkdirSync(dir, { recursive: true });
@@ -219,6 +222,9 @@ describe('article validation', () => {
     ];
     writeFileSync(join(dir, 'storyboard.json'), JSON.stringify({ scenes }));
     expect([...figuresOf('demo', 'decision:mlm-and-seminars', root)]).toEqual(['decision-mlm-and-seminars/sc01']);
+    expect(figureData('demo', 'decision:mlm-and-seminars', root).get('decision-mlm-and-seminars/sc01')).toEqual({
+      chart: { type: 'bar', points: [] },
+    });
     expect(figuresOf('demo', 'decision:none', root).size).toBe(0);
     mkdirSync(join(root, 'topics', 'demo', 'data'), { recursive: true });
     writeFileSync(join(root, 'topics', 'demo', 'data', 'prices.json'), JSON.stringify({ id: 'prices' }));
@@ -324,18 +330,18 @@ describe('article release', () => {
   const edited = structuredClone(a);
   (edited.sections[1].blocks[1] as { sentences: Sentence[] }).sentences[0].text = 'One survey is not the final word.';
   const passedEdited = check(edited, { review: approveArticle(edited) });
-  const r = lockArticle(null, a, passed, 'Jon', '2026-11-01');
+  const r = lockArticle(null, a, passed, 'Jon', '2026-11-01', {});
 
   it('the fixtures pass', () => {
     expect([passed.status, passedEdited.status]).toEqual(['passed', 'passed']);
   });
   it('lock refuses a placeholder approver, an unpassed validation, and a changed article after release', () => {
-    expect(() => lockArticle(null, a, passed, '<name>', 'd')).toThrow(Refusal);
-    expect(() => lockArticle(null, a, check(a), 'Jon', 'd')).toThrow(Refusal);
-    expect(() => lockArticle(r, edited, passedEdited, 'Jon', 'd')).toThrow(/correct/);
+    expect(() => lockArticle(null, a, passed, '<name>', 'd', {})).toThrow(Refusal);
+    expect(() => lockArticle(null, a, check(a), 'Jon', 'd', {})).toThrow(Refusal);
+    expect(() => lockArticle(r, edited, passedEdited, 'Jon', 'd', {})).toThrow(/correct/);
   });
   it('lock is idempotent', () => {
-    expect(lockArticle(r, a, passed, 'Jon', '2026-11-02')).toBe(r);
+    expect(lockArticle(r, a, passed, 'Jon', '2026-11-02', {})).toBe(r);
   });
   it('the release snapshots the article and starts its history', () => {
     expect(r.article).toEqual(a);
@@ -345,10 +351,18 @@ describe('article release', () => {
     ]);
   });
   it('correct needs a note, names the changed sentences and records an article revision', () => {
-    expect(() => correctArticle(r, edited, passedEdited, 'Jon', ' ', '2026-11-05')).toThrow(Refusal);
-    expect(() => correctArticle(r, edited, check(edited), 'Jon', 'n', '2026-11-05')).toThrow(Refusal);
-    expect(() => correctArticle(r, edited, passedEdited, 'automated:', 'n', '2026-11-05')).toThrow(Refusal);
-    const { release, revision } = correctArticle(r, edited, passedEdited, 'Jon', 'Fixed the 2024 price', '2026-11-05');
+    expect(() => correctArticle(r, edited, passedEdited, 'Jon', ' ', '2026-11-05', {})).toThrow(Refusal);
+    expect(() => correctArticle(r, edited, check(edited), 'Jon', 'n', '2026-11-05', {})).toThrow(Refusal);
+    expect(() => correctArticle(r, edited, passedEdited, 'automated:', 'n', '2026-11-05', {})).toThrow(Refusal);
+    const { release, revision } = correctArticle(
+      r,
+      edited,
+      passedEdited,
+      'Jon',
+      'Fixed the 2024 price',
+      '2026-11-05',
+      {},
+    );
     expect(revision).toEqual({
       at: '2026-11-05',
       kind: 'article',
@@ -366,7 +380,7 @@ describe('article release', () => {
     expect(publicRecordProblems({ exhibits: {}, revisions: [revision] })).toEqual([]);
   });
   const fix = (prev: typeof r, b: Article) =>
-    correctArticle(prev, b, check(b, { review: approveArticle(b) }), 'Jon', 'n', 'd');
+    correctArticle(prev, b, check(b, { review: approveArticle(b) }), 'Jon', 'n', 'd', {});
   it('correct names added and removed sentences, and a changed headline or heading', () => {
     const b = structuredClone(a);
     b.sections[0].blocks = [prose('s09', 'Say you sign up under a friend.')];
@@ -388,11 +402,11 @@ describe('article release', () => {
     const base = withBlock(tb);
     const v = check(base, { review: approveArticle(base) });
     expect(v.status).toBe('passed');
-    const released = lockArticle(null, base, v, 'Jon', 'd');
+    const released = lockArticle(null, base, v, 'Jon', 'd', {});
     expect(fix(released, withBlock({ ...tb, caption: 'Outcomes reported' })).revision.sentences).toEqual(['tb1']);
   });
   it('a re-run of correct does not record the same revision twice', () => {
-    const { revision } = correctArticle(r, edited, passedEdited, 'Jon', 'n', '2026-11-05');
+    const { revision } = correctArticle(r, edited, passedEdited, 'Jon', 'n', '2026-11-05', {});
     const once = withArticleRevision({ exhibits: {}, revisions: [] }, revision);
     expect(once.revisions).toEqual([revision]);
     expect(withArticleRevision(once, structuredClone(revision))).toBe(once);
@@ -423,7 +437,7 @@ describe('article release', () => {
     });
   });
   it('correct refuses an unchanged article', () => {
-    expect(() => correctArticle(r, a, passed, 'Jon', 'n', '2026-11-05')).toThrow(Refusal);
+    expect(() => correctArticle(r, a, passed, 'Jon', 'n', '2026-11-05', {})).toThrow(Refusal);
   });
   it('an edit no reader sees (a note, a qualification, whitespace) leaves the release standing', () => {
     const quiet = structuredClone(a);
@@ -432,21 +446,21 @@ describe('article release', () => {
     s02.assertions![0].qualifications = ['s03 says it is one survey.'];
     s02.text = s02.text.replace(' ', '  ');
     expect(articleFingerprint(quiet)).toBe(articleFingerprint(a));
-    expect(lockArticle(r, quiet, passed, 'Jon', '2026-11-02')).toBe(r);
-    expect(() => correctArticle(r, quiet, passed, 'Jon', 'n', '2026-11-05')).toThrow(/unchanged/);
+    expect(lockArticle(r, quiet, passed, 'Jon', '2026-11-02', {})).toBe(r);
+    expect(() => correctArticle(r, quiet, passed, 'Jon', 'n', '2026-11-05', {})).toThrow(/unchanged/);
     // a release whose stored fingerprint predates the unit fingerprint still matches its own snapshot
     const legacy = { ...r, fingerprints: { ...r.fingerprints, article: 'legacy' } };
-    expect(lockArticle(legacy, a, passed, 'Jon', '2026-11-02')).toBe(legacy);
+    expect(lockArticle(legacy, a, passed, 'Jon', '2026-11-02', {})).toBe(legacy);
   });
   it('the last text change dates the article; a reaffirmation does not', () => {
     const x = reaffirmArticle(r, true, a, passed, 'Jon', 'stands', '2026-11-09');
     expect(articleModified(x)).toBe('2026-11-01');
-    expect(articleModified(correctArticle(x, edited, passedEdited, 'Jon', 'n', '2026-11-12').release)).toBe(
+    expect(articleModified(correctArticle(x, edited, passedEdited, 'Jon', 'n', '2026-11-12', {}).release)).toBe(
       '2026-11-12',
     );
   });
   it('a correction carries its release number, and the record dedupes on it', () => {
-    const one = correctArticle(r, edited, passedEdited, 'Jon', 'n', '2026-11-05').revision;
+    const one = correctArticle(r, edited, passedEdited, 'Jon', 'n', '2026-11-05', {}).revision;
     expect(one.release).toBe(2);
     const rec = withArticleRevision({ exhibits: {}, revisions: [] }, one);
     // a re-run on a later day finds it
@@ -454,6 +468,52 @@ describe('article release', () => {
     // a second, identical correction the same day is a new release: both are recorded
     expect(withArticleRevision(rec, { ...one, release: 3 }).revisions).toHaveLength(2);
     expect(publicRecordProblems(rec)).toEqual([]);
+  });
+  describe('figure snapshots', () => {
+    const ref = 'decision-mlm-and-seminars/sc01';
+    const point = { label: 'Lost money', value: 47, unit: 'percent' as const, display: '47%', cite: DOC_D };
+    const chart: ChartSpec = { type: 'bar', points: [point] };
+    const figs: Record<string, FigureData> = { [ref]: { chart } };
+    const fa = withBlock({ kind: 'figure', ref, caption: 'Outcomes' });
+    const fv = check(fa, { review: approveArticle(fa), figures: new Set([ref]) });
+    it('the fixture passes', () => expect(fv.status).toBe('passed'));
+    it('the release snapshots the figures it names', () => {
+      expect(lockArticle(null, fa, fv, 'Jon', '2026-11-01', figs).figures).toEqual(figs);
+      expect(releaseFigures(fa, new Map([[ref, figs[ref]]]))).toEqual(figs);
+      expect(() => releaseFigures(fa, new Map())).toThrow(/not a chart this story has/);
+    });
+    it('a chart changed after the release is a correction naming the figure', () => {
+      const r1 = lockArticle(null, fa, fv, 'Jon', '2026-11-01', figs);
+      const moved = { [ref]: { chart: { ...chart, points: [{ ...point, value: 48, display: '48%' }] } } };
+      const { release, revision } = correctArticle(r1, fa, fv, 'Jon', 'the chart was re-cut', '2026-11-05', moved);
+      expect(revision.sentences).toEqual([ref]);
+      expect(release.figures).toEqual(moved);
+    });
+    it('a release without a snapshot names every figure on its first correction', () => {
+      const legacy = { ...lockArticle(null, fa, fv, 'Jon', 'd', figs), figures: undefined };
+      expect(correctArticle(legacy, fa, fv, 'Jon', 'figures now fixed', 'd2', figs).revision.sentences).toEqual([ref]);
+    });
+    it('correct still refuses when neither text nor figures changed', () => {
+      const r1 = lockArticle(null, fa, fv, 'Jon', 'd', figs);
+      expect(() => correctArticle(r1, fa, fv, 'Jon', 'n', 'd2', figs)).toThrow(/unchanged/);
+    });
+    it('lock adds the missing snapshot to an unchanged legacy release without a revision', () => {
+      const legacy = { ...lockArticle(null, fa, fv, 'automated: x started by Jon', 'd', figs), figures: undefined };
+      // no approval is given: the release keeps its own approver, revision and history
+      const x = lockArticle(legacy, fa, fv, '', '2026-11-09', figs);
+      expect(x).toEqual({ ...legacy, figures: figs });
+      expect([x.revision, x.history, x.approvedBy, x.date]).toEqual([
+        legacy.revision,
+        legacy.history,
+        legacy.approvedBy,
+        legacy.date,
+      ]);
+      expect(() => lockArticle(legacy, fa, check(fa), '', 'd2', figs)).toThrow(Refusal);
+    });
+    it('lock refuses to add a snapshot to a live story', () => {
+      const legacy = { ...lockArticle(null, fa, fv, 'Jon', 'd', figs), figures: undefined };
+      expect(() => lockArticle(legacy, fa, fv, 'Jon', 'd2', figs, true)).toThrow(/live.*correct/);
+    });
   });
   it('the markdown shows headings, sentence states and open issues', () => {
     const md = renderArticleMd(a, check(a));

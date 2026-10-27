@@ -12,7 +12,12 @@ import {
   scriptDir,
   sentenceFingerprint,
 } from './script';
-import type { ChartPoint } from './storyboard';
+import type { DataTable } from './datasets';
+import type { ChartPoint, ChartSpec } from './storyboard';
+
+/** What a figure draws, as released: a storyboard chart or an evidence dataset, copied so a later edit of either never
+ *  reaches the page unapproved. */
+export type FigureData = { chart: ChartSpec } | { table: DataTable };
 
 export const ARTICLE_FILES = {
   article: 'article.json',
@@ -89,6 +94,7 @@ export interface ArticleRelease {
   recordSeen?: number; // how many public-record revisions existed at release: any at a later index is newer
   fingerprints: { article: string; package: string; validation: string };
   article: Article;
+  figures?: Record<string, FigureData>; // by figure ref; a release locked before snapshots has none
   history: {
     revision: number;
     date: string;
@@ -125,19 +131,47 @@ const snapshot = (a: Article, v: ScriptValidation, approvedBy: string, date: str
   article: a,
 });
 
-/** The first release. Locking the released text again changes nothing; a changed text is a correction. */
+const figureRefs = (a: Article) =>
+  a.sections.flatMap((s) => s.blocks.flatMap((b) => (b.kind === 'figure' ? [b.ref] : [])));
+
+/** The data of each figure the article names, from every chart and dataset the story has (figureData). */
+export function releaseFigures(a: Article, all: Map<string, FigureData>): Record<string, FigureData> {
+  return Object.fromEntries(
+    figureRefs(a).map((ref) => {
+      const d = all.get(ref);
+      if (!d) throw new Refusal(`figure ${ref} is not a chart this story has`);
+      return [ref, d];
+    }),
+  );
+}
+
+/** The first release. Locking the released text again changes nothing; a changed text is a correction. A release
+ *  from before figure snapshots, its text unchanged, gains the snapshot and nothing else (no approval is given or
+ *  recorded, no public revision), unless its video is live: readers have seen those charts, so that takes correct. */
 export function lockArticle(
   prev: ArticleRelease | null,
   a: Article,
   v: ScriptValidation,
   approvedBy: string,
   date: string,
+  figures: Record<string, FigureData>,
+  live = false,
 ): ArticleRelease {
-  releasable(v, approvedBy);
   const fp = articleFingerprint(a);
-  if (prev && articleFingerprint(prev.article) === fp) return prev;
+  const same = !!prev && articleFingerprint(prev.article) === fp;
+  if (prev && same && !prev.figures) {
+    if (v.status !== 'passed') throw new Refusal(`validation is ${v.status}, not passed`);
+    if (live) throw new Refusal('the video is live: its figures enter the release through correct, with a note');
+    return { ...prev, figures };
+  }
+  releasable(v, approvedBy);
+  if (same) return prev;
   if (prev) throw new Refusal(`released at revision ${prev.revision} with other text: use correct, with a note`);
-  return { ...snapshot(a, v, approvedBy, date, 1), history: [{ revision: 1, date, approvedBy, fingerprint: fp }] };
+  return {
+    ...snapshot(a, v, approvedBy, date, 1),
+    figures,
+    history: [{ revision: 1, date, approvedBy, fingerprint: fp }],
+  };
 }
 
 /** Every unit a correction can name, in reading order, with its fingerprint: the headline, SEO title, each sentence
@@ -168,7 +202,8 @@ export function articleReviewUnits(a: Article): [string, string][] {
   return unitsOf(a).filter(([id]) => !ids.has(id));
 }
 
-/** A new release of changed text, and the noted revision it adds to the topic's public record. */
+/** A new release of changed text or figure data, and the noted revision it adds to the topic's public record. A
+ *  figure whose data differs from the release's snapshot is named, so a release without one names every figure. */
 export function correctArticle(
   prev: ArticleRelease,
   a: Article,
@@ -176,23 +211,28 @@ export function correctArticle(
   approvedBy: string,
   note: string,
   date: string,
+  figures: Record<string, FigureData>,
 ): { release: ArticleRelease; revision: Extract<Revision, { kind: 'article' }> } {
   if (!note.trim()) throw new Refusal('a correction needs a --note');
   releasable(v, approvedBy);
   const fp = articleFingerprint(a);
-  if (articleFingerprint(prev.article) === fp) throw new Refusal('the article is unchanged since its release');
   const before = new Map(unitsOf(prev.article));
   const now = unitsOf(a);
   const ids = new Set(now.map(([id]) => id));
+  const data = (d: FigureData | undefined) => sha(JSON.stringify(d ?? null));
   const sentences = [
-    ...now.filter(([id, print]) => before.get(id) !== print).map(([id]) => id),
-    ...[...before.keys()].filter((id) => !ids.has(id)),
+    ...new Set([
+      ...now.filter(([id, print]) => before.get(id) !== print).map(([id]) => id),
+      ...[...before.keys()].filter((id) => !ids.has(id)),
+      ...Object.keys(figures).filter((ref) => data(figures[ref]) !== data(prev.figures?.[ref])),
+    ]),
   ];
-  if (!sentences.length) throw new Refusal('the text changed but no sentence, heading, table or figure did');
+  if (!sentences.length) throw new Refusal('the article is unchanged since its release');
   const revision = prev.revision + 1;
   return {
     release: {
       ...snapshot(a, v, approvedBy, date, revision),
+      figures,
       history: [...prev.history, { revision, date, approvedBy, fingerprint: fp, note: note.trim(), sentences }],
     },
     revision: {

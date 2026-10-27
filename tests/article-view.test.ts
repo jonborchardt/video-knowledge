@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { ARTICLE_FILES, type ArticleRelease, loadArticleRelease } from '../src/lib/article';
-import { articleStale, articleView } from '../src/lib/article-view';
+import { articleStale, articleView, releaseFigureDraws } from '../src/lib/article-view';
 import type { PublicRecord, Revision } from '../src/lib/public-record';
 import { scriptDir } from '../src/lib/script';
 import type { SourceView } from '../src/lib/topics';
@@ -141,6 +141,36 @@ describe('article view', () => {
     expect(v.corrections.map((c) => c.date)).toEqual(['2026-11-05', '2026-11-03']);
     const b = v.sections[0].blocks[0];
     expect(b.kind === 'p' && b.sentences.map((s) => s.correctedOn)).toEqual(['2026-11-03', undefined, '2026-11-05']);
+  });
+
+  describe('released figures', () => {
+    const ref = 'decision-mlm-and-seminars/sc01';
+    const chart = {
+      type: 'bar' as const,
+      points: [{ label: 'Lost money', value: 47, unit: 'percent' as const, display: '47%', cite: B }],
+    };
+    const withFigure = (extra: Partial<ArticleRelease>) =>
+      release({
+        article: article({
+          sections: [{ name: 'answer', heading: 'H', blocks: [{ kind: 'figure', ref, caption: 'C' }] }],
+        }),
+        ...extra,
+      });
+    it('figures are drawn from the release snapshot, not the storyboard', () => {
+      const draws = releaseFigureDraws(withFigure({ figures: { [ref]: { chart } } }), topic.docNames);
+      expect(draws.get(ref)).toEqual({ chart, source: 'Field C, lines 20-21' });
+    });
+    it('a release whose figure has no snapshot fails closed', () => {
+      expect(() => releaseFigureDraws(withFigure({ figures: undefined }), topic.docNames)).toThrow(
+        /no snapshot.*npm run article -- correct/,
+      );
+    });
+    it('a snapshot that would mislead fails the build', () => {
+      const bad = { ...chart, points: [{ ...chart.points[0], value: 147, display: '147%' }] };
+      expect(() => releaseFigureDraws(withFigure({ figures: { [ref]: { chart: bad } } }), topic.docNames)).toThrow(
+        new RegExp(`figure ${ref}`),
+      );
+    });
   });
 
   it('a figure with a known ref carries what it draws; an unknown one only its caption', () => {
