@@ -1069,6 +1069,17 @@ describe('verification events', () => {
     expect(events(f).filter((e) => e.type === 'verified')).toHaveLength(3);
   });
 
+  it('the same failure after a push is a new verification', () => {
+    const f = fresh();
+    recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
+    const fail = { result: 'failed' as const, checks: [{ name: 'title', result: 'fail' as const, detail: 'differs' }] };
+    recordVerified(f.topic, f.story, { ...a(f), ...fail });
+    recordUpdated(f.topic, f.story, { ...a(f), fields: ['snippet'] }); // push resent it
+    const again = recordVerified(f.topic, f.story, { ...a(f), ...fail });
+    expect(again.existing).toBe(false);
+    expect(failedSince(loadLedger(f.topic, f.story, f.root)!.outputs.youtube, ['title'])).toBe(true);
+  });
+
   it('a verification does not hide a failure and is shown on the state', () => {
     const f = fresh();
     recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });

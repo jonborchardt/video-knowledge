@@ -489,6 +489,15 @@ describe('thumbnail, captions, update, list', () => {
     expect(tracks).toEqual([{ id: 'c1', language: 'en', name: 'English', trackKind: 'standard', status: 'serving' }]);
   });
 
+  it('deleteCaptions deletes the track by id', async () => {
+    const f = fakeFetch([
+      token,
+      { match: /youtube\/v3\/captions\?/, method: 'DELETE', reply: () => new Response(null, { status: 204 }) },
+    ]);
+    await youtubeClient(creds(), f.fn).deleteCaptions('cap1');
+    expect(f.calls.at(-1)!.url).toContain('captions?id=cap1');
+  });
+
   it('oembedStatus asks anonymously and returns the status, 0 on a network error', async () => {
     const f = fakeFetch([{ match: /youtube\.com\/oembed\?/, reply: () => json({}, 403) }]);
     expect(await oembedStatus('vid00000001', f.fn)).toBe(403);

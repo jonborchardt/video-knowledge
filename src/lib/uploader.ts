@@ -237,9 +237,15 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
   };
   if (thumbnail) await asset('thumbnail', () => c.client.setThumbnail(id, thumbnail));
   if (captions)
-    await asset('captions', () =>
-      c.client.insertCaptions(id, join(o.root, captions.file), captions.language, 'English'),
-    );
+    await asset('captions', async () => {
+      // a verification found no serving track: replace the ones not serving rather than pile up another
+      // (captions.list and captions.delete, 50 units each, only on this path)
+      if (failedSince(o.out, ['captions']))
+        for (const t of await c.client.listCaptions(id))
+          if (t.trackKind.toLowerCase() === 'standard' && t.language === captions.language && t.status !== 'serving')
+            await c.client.deleteCaptions(t.id);
+      await c.client.insertCaptions(id, join(o.root, captions.file), captions.language, 'English');
+    });
   const r = recordUpdated(topic, storyId, {
     ...c,
     fields: landed,

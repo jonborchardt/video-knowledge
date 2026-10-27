@@ -71,6 +71,7 @@ function fakeClient(over: Partial<YouTubeClient> = {}): YouTubeClient & { calls:
     updateVideo: async () => undefined,
     getVideo: async (id) => remoteOf(id),
     listCaptions: async () => [],
+    deleteCaptions: async () => undefined,
   };
   const c = { ...base, ...over };
   return {
@@ -81,6 +82,7 @@ function fakeClient(over: Partial<YouTubeClient> = {}): YouTubeClient & { calls:
     updateVideo: rec('updateVideo', c.updateVideo),
     getVideo: rec('getVideo', c.getVideo),
     listCaptions: rec('listCaptions', c.listCaptions),
+    deleteCaptions: rec('deleteCaptions', c.deleteCaptions),
   };
 }
 const err = (status: number, reason: string, retryable: boolean, message = reason) =>
@@ -652,6 +654,18 @@ describe('verify', () => {
     const p = await push(f.topic, f.story, ctx(f, client));
     expect(client.calls.filter((c) => c.method === 'insertCaptions')).toHaveLength(2);
     expect(p.event!.captions).toBeTruthy();
+  });
+
+  it('a failed captions track is replaced on resend, not piled up', async () => {
+    const f = fresh();
+    const failed = { id: 'old1', language: 'en', name: 'English', trackKind: 'standard', status: 'failed' };
+    const client = fakeClient({ getVideo: matching(f), listCaptions: async () => [failed] });
+    await upload(f.topic, f.story, ctx(f, client));
+    const r = await verify(f.topic, f.story, ctx(f, client, { anonymous }));
+    expect(r.checks.find((k) => k.name === 'captions')!.result).toBe('fail');
+    await push(f.topic, f.story, ctx(f, client));
+    expect(client.calls.filter((c) => c.method === 'deleteCaptions').map((c) => c.args[0])).toEqual(['old1']);
+    expect(client.calls.filter((c) => c.method === 'insertCaptions')).toHaveLength(2);
   });
 
   it('verifies a Short against its own package', async () => {

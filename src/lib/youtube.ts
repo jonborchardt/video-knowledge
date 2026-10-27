@@ -267,6 +267,7 @@ export interface YouTubeClient {
   updateVideo(id: string, body: { snippet?: Snippet; status?: VideoStatus }): Promise<void>;
   getVideo(id: string): Promise<RemoteVideo | null>;
   listCaptions(videoId: string): Promise<RemoteCaption[]>;
+  deleteCaptions(trackId: string): Promise<void>;
 }
 
 /** The anonymous oEmbed status of a video (no key, no quota): 200 when it is reachable without signing in, 0 on a
@@ -453,6 +454,9 @@ export function youtubeClient(creds: Credentials, fetchFn: typeof fetch = fetch)
         fileSize: fd.fileSize === undefined ? undefined : Number(fd.fileSize),
         fileAvailability: v.processingDetails?.fileAvailability,
       };
+    },
+    async deleteCaptions(trackId) {
+      await request(`${API}/captions?id=${trackId}`, { method: 'DELETE' });
     },
     async listCaptions(videoId) {
       const r = await request(`${API}/captions?part=snippet&videoId=${videoId}`, { method: 'GET' });

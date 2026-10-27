@@ -121,6 +121,25 @@ describe('verificationChecks', () => {
     expect(check(c, 'public')).toMatchObject({ result: 'fail', detail: 'reachable without signing in' });
   });
 
+  it('a schedule gone public before sync is pending on public too, not failed', () => {
+    const due = { ...x, publishAt: '2026-10-27T11:00:00Z' };
+    const c = verificationChecks(due, { ...ok, privacyStatus: 'public' }, [track], 200, now);
+    expect(check(c, 'public').result).toBe('pending');
+    expect(check(c, 'public').detail).toContain('sync');
+    expect(verdictOf(c)).toBe('pending');
+    const ahead = { ...x, publishAt: '2026-10-28T11:00:00Z' };
+    expect(check(verificationChecks(ahead, ok, [track], 200, now), 'public').result).toBe('fail');
+  });
+
+  it('any serving track in the language passes, whatever order the API lists them in', () => {
+    const failed = { ...track, id: 'old', status: 'failed' };
+    expect(check(verificationChecks(x, ok, [failed, track], 403, now), 'captions').result).toBe('pass');
+    expect(
+      check(verificationChecks(x, ok, [failed, { ...track, status: 'syncing' }], 403, now), 'captions').result,
+    ).toBe('pending');
+    expect(check(verificationChecks(x, ok, [failed], 403, now), 'captions').result).toBe('fail');
+  });
+
   it('the uploaded file must be the packaged build', () => {
     expect(check(verificationChecks(x, { ...ok, fileSize: x.file!.size + 1 }, [track], 403, now), 'file').result).toBe(
       'fail',

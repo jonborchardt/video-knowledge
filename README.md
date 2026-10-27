@@ -449,7 +449,8 @@ captions; oEmbed is free. Each check is `pass`, `fail`, `pending` or `skip`, and
 outcome as a `verified` event holding the check names, results and our own reasons, never YouTube's values (API data may
 not be kept; the CLI prints them live). `RESULT: PENDING` means YouTube is still processing or syncing, or the
 anonymous request had no network: run `verify` again later. `RESULT: FAILED` (exit 1) names the checks: a failed
-metadata or captions check makes the next `push` resend them; fix anything else in Studio (then `updated --fields`).
+metadata or captions check makes the next `push` resend them (a captions track that is not serving is deleted and
+replaced, never added to: 100 more units); fix anything else in Studio (then `updated --fields`).
 A verification never changes the output's status or hides a failure.
 
 #### Publishing through YouTube Studio

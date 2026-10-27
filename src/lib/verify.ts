@@ -107,11 +107,15 @@ export function verificationChecks(
 ): LedgerCheck[] {
   const k = (name: CheckName, result: CheckResult, detail?: string): LedgerCheck =>
     detail ? { name, result, detail } : { name, result };
+  // a schedule whose time has passed may be public before sync records it: pending here as in the privacy check
+  const due = x.publishAt !== null && Date.parse(x.publishAt) <= now.getTime();
   const reachable = (): LedgerCheck => {
     if (anonymous === 0) return k('public', 'pending', 'not reachable from here; run verify again');
     if (x.visibility === 'private')
       return anonymous === 200
-        ? k('public', 'fail', 'reachable without signing in')
+        ? due
+          ? k('public', 'pending', 'went public on schedule; npm run publish -- sync records it')
+          : k('public', 'fail', 'reachable without signing in')
         : k('public', [401, 403, 404].includes(anonymous) ? 'pass' : 'pending');
     if (anonymous === 200) return k('public', 'pass');
     if (x.visibility === 'public') return k('public', 'fail', `anonymous request answered ${anonymous}`);
@@ -152,7 +156,6 @@ export function verificationChecks(
           ? k('processing', 'fail', v.processingStatus)
           : k('processing', 'pending', 'still processing; run verify again'),
     privacy: () => {
-      const due = x.publishAt !== null && Date.parse(x.publishAt) <= now.getTime();
       if (due && v.privacyStatus === 'public')
         return k('privacy', 'pending', 'went public on schedule; npm run publish -- sync records it');
       const ok =
@@ -208,12 +211,20 @@ export function verificationChecks(
     captions: () => {
       if (!x.captionsLanguage) return k('captions', 'skip');
       if (captions === null) return k('captions', 'pending', 'captions not read; run verify again');
-      const track = captions.find((c) => c.trackKind.toLowerCase() === 'standard' && c.language === x.captionsLanguage);
-      if (!track)
-        return k('captions', 'fail', `no ${x.captionsLanguage} captions track; npm run publish -- push sends it`);
-      if (track.status === 'serving') return k('captions', 'pass');
-      if (track.status === 'syncing') return k('captions', 'pending', 'captions still syncing; run verify again');
-      return k('captions', 'fail', `the captions track is ${track.status === 'failed' ? 'failed' : 'not serving'}`);
+      // the API lists tracks in no stated order: any serving one in the language will do
+      const tracks = captions.filter(
+        (c) => c.trackKind.toLowerCase() === 'standard' && c.language === x.captionsLanguage,
+      );
+      if (tracks.some((t) => t.status === 'serving')) return k('captions', 'pass');
+      if (tracks.some((t) => t.status === 'syncing'))
+        return k('captions', 'pending', 'captions still syncing; run verify again');
+      return k(
+        'captions',
+        'fail',
+        tracks.length
+          ? `no ${x.captionsLanguage} captions track is serving; npm run publish -- push replaces it`
+          : `no ${x.captionsLanguage} captions track; npm run publish -- push sends it`,
+      );
     },
     file: () =>
       !x.file
