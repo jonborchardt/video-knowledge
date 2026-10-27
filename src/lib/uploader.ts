@@ -1,4 +1,4 @@
-// The uploader verbs: what `npm run publish -- upload | push | go-live | sync` do between the ledger and YouTube.
+// The uploader verbs: what `npm run publish -- upload | push | go-live | sync | verify` do between the ledger and YouTube.
 // Each one reads the output's state, refuses what the files do not support, calls the client, and records through the
 // ledger verbs in publish.ts, so a hand upload and an API upload leave the same events. `upload` is always private;
 // `go-live` is the only path to public or a schedule, and it needs the ledger's `approved` for the uploaded build.
@@ -8,6 +8,8 @@ import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT, readJson, sha, toJson } from './io';
 import {
+  type LedgerCheck,
+  METADATA_CHECKS,
   type Output,
   type PublishEvent,
   Refusal,
@@ -21,10 +23,21 @@ import {
   recordScheduled,
   recordUpdated,
   recordUploaded,
+  recordVerified,
+  failedSince,
   lastCaptions,
   lastSent,
 } from './publish';
-import { type RemoteVideo, type Snippet, type VideoStatus, type YouTubeClient, YouTubeError } from './youtube';
+import { type Expected, expectedOf, verdictOf, verificationChecks } from './verify';
+import {
+  type RemoteCaption,
+  type RemoteVideo,
+  type Snippet,
+  type VideoStatus,
+  type YouTubeClient,
+  YouTubeError,
+  oembedStatus,
+} from './youtube';
 
 export const SESSION_FILE = (output: string) =>
   output === 'youtube' ? 'video/upload-session.json' : `video/upload-session.${output}.json`;
@@ -197,8 +210,10 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
   const o = openOutput(topic, storyId, c);
   if (!o.state.id) throw new Refusal(`${o.id} is ${o.state.status}; there is nothing on YouTube to update`);
   if (!o.metadata) throw new Refusal('no review package; the metadata cannot be composed');
-  const captionsCurrent = !o.metadata.captions || o.metadata.captions.sha === lastCaptions(o.out);
-  if (lastSent(o.out)?.metadata === o.metadata.sha && captionsCurrent)
+  // what a verification since the last send found missing is sent again, whatever the shas say
+  const captionsCurrent =
+    !o.metadata.captions || (o.metadata.captions.sha === lastCaptions(o.out) && !failedSince(o.out, ['captions']));
+  if (lastSent(o.out)?.metadata === o.metadata.sha && !failedSince(o.out, METADATA_CHECKS) && captionsCurrent)
     return { event: null, existing: true, message: `the metadata on YouTube is current (${o.metadata.sha})` };
   const problem = uploadProblem(o.metadata);
   if (problem) throw new Refusal(problem);
@@ -310,4 +325,31 @@ export async function sync(topic: string, storyId: string, c: Ctx): Promise<Verb
       `the schedule ${publishAt} passed and ${id} is still ${v.privacyStatus}: ${keptPrivate(id, v.privacyStatus)}`,
     );
   return v;
+}
+
+/** Reads the video back (one videos.list, a captions.list when the package has captions, an anonymous oEmbed request)
+ *  and records the checks against the package as a `verified` event. `remote` and `expected` are for the CLI to print;
+ *  they are never written. A captions.list failure leaves that check pending rather than recording a failure. */
+export async function verify(
+  topic: string,
+  storyId: string,
+  c: Ctx & { anonymous?: typeof fetch },
+): Promise<{ result: VerbResult; checks: LedgerCheck[]; remote: RemoteVideo | null; expected: Expected }> {
+  const o = openOutput(topic, storyId, c);
+  if (!o.state.id) throw new Refusal(`${o.id} is ${o.state.status}; nothing on YouTube to verify`);
+  const expected = expectedOf(o);
+  if (!expected) throw new Refusal('no review package; nothing to verify against');
+  const id = o.state.id;
+  const remote = await guarded(topic, storyId, c, 'verify', () => c.client.getVideo(id));
+  let captions: RemoteCaption[] | null = null;
+  if (expected.captionsLanguage && remote)
+    try {
+      captions = await c.client.listCaptions(id);
+    } catch (e) {
+      if (!(e instanceof YouTubeError)) throw e;
+    }
+  const anonymous = await oembedStatus(id, c.anonymous ?? fetch);
+  const checks = verificationChecks(expected, remote, captions, anonymous, c.now ?? new Date());
+  const result = recordVerified(topic, storyId, { ...c, result: verdictOf(checks), checks });
+  return { result, checks, remote, expected };
 }
