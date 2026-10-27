@@ -239,7 +239,14 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
   return r;
 }
 
-/** Makes the approved upload public now, or schedules it (private with a publishAt) for `at`. */
+/** How long after a schedule's publishAt sync waits before calling a still-private video a failure. */
+export const SCHEDULE_GRACE_MS = 15 * 60_000;
+/** Why a video is not public after go-live (or its schedule), and the Studio route that gets it out. */
+export const keptPrivate = (id: string, privacy: string): string =>
+  `YouTube kept ${id} ${privacy} after go-live (an upload from an unaudited API project can be locked private): upload the same video/review file in YouTube Studio, record it with npm run publish -- uploaded --id <id> [--captions], approve it, then go live; if Studio shows ${id} public, npm run publish -- sync records it`;
+
+/** Makes the approved upload public now, or schedules it (private with a publishAt) for `at`. Going public now is
+ *  recorded only when the read-back says public: YouTube can keep an upload private whatever the write asked. */
 export async function goLive(topic: string, storyId: string, c: Ctx & { at?: string }): Promise<VerbResult> {
   const o = openOutput(topic, storyId, c);
   if (o.state.status === 'scheduled' || o.state.status === 'published')
@@ -263,6 +270,14 @@ export async function goLive(topic: string, storyId: string, c: Ctx & { at?: str
   await guarded(topic, storyId, c, 'go-live', () =>
     c.client.updateVideo(id, { status: { ...statusOf(o.out), privacyStatus: 'public' } }),
   );
+  const v = await guarded(topic, storyId, c, 'go-live', () => c.client.getVideo(id));
+  if (v?.privacyStatus !== 'public')
+    return recordFailed(topic, storyId, {
+      ...c,
+      step: 'go-live',
+      error: keptPrivate(id, v?.privacyStatus ?? 'missing'),
+      retryable: false,
+    });
   return recordPublished(topic, storyId, { ...c, url: urlOf(id) });
 }
 
@@ -278,5 +293,14 @@ export async function sync(topic: string, storyId: string, c: Ctx): Promise<Verb
   if (v.uploadStatus === 'rejected') return failed(`rejected: ${v.rejectionReason ?? 'no reason given'}`);
   if (v.privacyStatus === 'public' && (o.state.status === 'scheduled' || o.state.status === 'approved'))
     return recordPublished(topic, storyId, { ...c, url: urlOf(id), observed: true });
+  const publishAt = o.out.events.findLast((e) => e.type === 'scheduled' && e.id === id)?.publishAt;
+  if (
+    o.state.status === 'scheduled' &&
+    publishAt &&
+    Date.parse(publishAt) + SCHEDULE_GRACE_MS < (c.now ?? new Date()).getTime()
+  )
+    return failed(
+      `the schedule ${publishAt} passed and ${id} is still ${v.privacyStatus}: ${keptPrivate(id, v.privacyStatus)}`,
+    );
   return v;
 }

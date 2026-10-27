@@ -18,6 +18,7 @@ import { storySlug } from '../src/lib/script';
 import {
   CATEGORY_DEFAULT,
   MIN_SCHEDULE_LEAD_MS,
+  SCHEDULE_GRACE_MS,
   SESSION_FILE,
   type Session,
   goLive,
@@ -42,6 +43,15 @@ function withMedia(f: Fixture): Fixture {
 const BUILD = sha(Buffer.alloc(1024, 3));
 
 type Calls = { method: string; args: unknown[] }[];
+/** What the fake client's getVideo answers by default: a processed private video. */
+const remoteOf = (id: string): RemoteVideo => ({
+  id,
+  privacyStatus: 'private',
+  uploadStatus: 'processed',
+  rejectionReason: null,
+  publishAt: null,
+  processingStatus: 'succeeded',
+});
 function fakeClient(over: Partial<YouTubeClient> = {}): YouTubeClient & { calls: Calls } {
   const calls: Calls = [];
   const rec = <K extends keyof YouTubeClient>(method: K, impl: YouTubeClient[K]) =>
@@ -57,14 +67,7 @@ function fakeClient(over: Partial<YouTubeClient> = {}): YouTubeClient & { calls:
     setThumbnail: async () => undefined,
     insertCaptions: async () => undefined,
     updateVideo: async () => undefined,
-    getVideo: async (id) => ({
-      id,
-      privacyStatus: 'private',
-      uploadStatus: 'processed',
-      rejectionReason: null,
-      publishAt: null,
-      processingStatus: 'succeeded',
-    }),
+    getVideo: async (id) => remoteOf(id),
   };
   const c = { ...base, ...over };
   return {
@@ -433,18 +436,30 @@ describe('goLive', () => {
 
   it('without --at it goes public now', async () => {
     const f = fresh();
-    const client = fakeClient();
+    const client = fakeClient({ getVideo: async (id) => ({ ...remoteOf(id), privacyStatus: 'public' }) });
     await upload(f.topic, f.story, ctx(f, client));
     recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
     const r = await goLive(f.topic, f.story, ctx(f, client));
     expect(r.event).toMatchObject({ type: 'published', id: 'vid00000001', url: 'https://youtu.be/vid00000001' });
-    expect(client.calls.at(-1)).toMatchObject({
+    expect(client.calls.at(-2)).toMatchObject({
       method: 'updateVideo',
       args: [
         'vid00000001',
         { status: { privacyStatus: 'public', selfDeclaredMadeForKids: false, containsSyntheticMedia: false } },
       ],
     });
+  });
+
+  it('go-live records failed, not published, when YouTube keeps the video private', async () => {
+    const f = fresh();
+    const client = fakeClient(); // getVideo answers privacyStatus 'private'
+    await upload(f.topic, f.story, ctx(f, client));
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
+    const r = await goLive(f.topic, f.story, ctx(f, client));
+    expect(r.event).toMatchObject({ type: 'failed', step: 'go-live', retryable: false });
+    expect(r.event!.error).toContain('YouTube Studio');
+    expect(events(f).some((e) => e.type === 'published')).toBe(false);
+    expect(client.calls.map((c) => c.method)).toEqual(expect.arrayContaining(['updateVideo', 'getVideo']));
   });
 });
 
@@ -489,6 +504,24 @@ describe('sync', () => {
   it('refuses before an upload', async () => {
     const f = fresh();
     await expect(sync(f.topic, f.story, ctx(f, fakeClient()))).rejects.toThrow(Refusal);
+  });
+
+  it('sync flags a schedule that passed while the video stayed private', async () => {
+    const f = fresh();
+    const client = fakeClient();
+    await upload(f.topic, f.story, ctx(f, client));
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
+    const at = '2026-10-28T15:00:00.000Z';
+    await goLive(f.topic, f.story, ctx(f, client, { at }));
+    const T = Date.parse(at);
+    const n = events(f).length;
+    const inGrace = await sync(f.topic, f.story, ctx(f, client, { now: new Date(T + 10 * 60_000) }));
+    expect(inGrace).toMatchObject({ privacyStatus: 'private' });
+    expect(events(f)).toHaveLength(n);
+    expect(SCHEDULE_GRACE_MS).toBe(15 * 60_000);
+    const late = await sync(f.topic, f.story, ctx(f, client, { now: new Date(T + 20 * 60_000) }));
+    expect('event' in late && late.event).toMatchObject({ type: 'failed', step: 'sync', retryable: false });
+    expect('event' in late && late.event!.error).toContain('still private');
   });
 });
 void readFileSync;
