@@ -226,6 +226,31 @@ export interface RemoteVideo {
   rejectionReason: string | null;
   publishAt: string | null;
   processingStatus: string | null;
+  // what verification reads; absent when the response did not carry it (fileDetails: owner only, once available)
+  title?: string;
+  description?: string;
+  tags?: string[];
+  categoryId?: string;
+  defaultLanguage?: string;
+  license?: string;
+  embeddable?: boolean;
+  madeForKids?: boolean;
+  selfDeclaredMadeForKids?: boolean;
+  containsSyntheticMedia?: boolean;
+  failureReason?: string;
+  ytRating?: string;
+  regionRestriction?: { allowed?: string[]; blocked?: string[] };
+  hasCustomThumbnail?: boolean;
+  fileName?: string;
+  fileSize?: number;
+  fileAvailability?: string;
+}
+export interface RemoteCaption {
+  id: string;
+  language: string;
+  name: string;
+  trackKind: string;
+  status: string;
 }
 export interface YouTubeClient {
   /** Resumable insert. With no `session` it opens one and reports its URI before the first byte; with one it asks
@@ -241,6 +266,18 @@ export interface YouTubeClient {
   insertCaptions(id: string, file: string, language: string, name: string): Promise<void>;
   updateVideo(id: string, body: { snippet?: Snippet; status?: VideoStatus }): Promise<void>;
   getVideo(id: string): Promise<RemoteVideo | null>;
+  listCaptions(videoId: string): Promise<RemoteCaption[]>;
+}
+
+/** The anonymous oEmbed status of a video (no key, no quota): 200 when it is reachable without signing in, 0 on a
+ *  network error. Google documents no status; 401, 403 and 404 were observed or reported for the unreachable. */
+export async function oembedStatus(id: string, fetchFn: typeof fetch = fetch): Promise<number> {
+  const url = `https://www.youtube.com/oembed?url=${encodeURIComponent('https://www.youtube.com/watch?v=' + id)}&format=json`;
+  try {
+    return (await fetchFn(url, { method: 'GET', signal: AbortSignal.timeout(10_000) })).status;
+  } catch {
+    return 0;
+  }
 }
 
 const MIME: Record<string, string> = {
@@ -353,24 +390,82 @@ export function youtubeClient(creds: Credentials, fetchFn: typeof fetch = fetch)
       });
     },
     async getVideo(id) {
-      const r = await request(`${API}/videos?part=status,processingDetails&id=${id}`, { method: 'GET' });
+      const r = await request(
+        `${API}/videos?part=snippet,status,contentDetails,processingDetails,fileDetails&id=${id}`,
+        { method: 'GET' },
+      );
       const j = (await r.json()) as {
         items?: {
           id: string;
-          status?: { privacyStatus?: string; uploadStatus?: string; rejectionReason?: string; publishAt?: string };
-          processingDetails?: { processingStatus?: string };
+          snippet?: {
+            title?: string;
+            description?: string;
+            tags?: string[];
+            categoryId?: string;
+            defaultLanguage?: string;
+          };
+          status?: {
+            privacyStatus?: string;
+            uploadStatus?: string;
+            rejectionReason?: string;
+            failureReason?: string;
+            publishAt?: string;
+            license?: string;
+            embeddable?: boolean;
+            madeForKids?: boolean;
+            selfDeclaredMadeForKids?: boolean;
+            containsSyntheticMedia?: boolean;
+          };
+          contentDetails?: {
+            hasCustomThumbnail?: boolean;
+            contentRating?: { ytRating?: string };
+            regionRestriction?: { allowed?: string[]; blocked?: string[] };
+          };
+          processingDetails?: { processingStatus?: string; fileAvailability?: string };
+          fileDetails?: { fileName?: string; fileSize?: string };
         }[];
       };
       const v = j.items?.[0];
       if (!v) return null;
+      const { snippet: sn = {}, status: st = {}, contentDetails: cd = {}, fileDetails: fd = {} } = v;
       return {
         id: v.id,
-        privacyStatus: v.status?.privacyStatus ?? 'unknown',
-        uploadStatus: v.status?.uploadStatus ?? 'unknown',
-        rejectionReason: v.status?.rejectionReason ?? null,
-        publishAt: v.status?.publishAt ?? null,
+        privacyStatus: st.privacyStatus ?? 'unknown',
+        uploadStatus: st.uploadStatus ?? 'unknown',
+        rejectionReason: st.rejectionReason ?? null,
+        publishAt: st.publishAt ?? null,
         processingStatus: v.processingDetails?.processingStatus ?? null,
+        title: sn.title,
+        description: sn.description,
+        tags: sn.tags,
+        categoryId: sn.categoryId,
+        defaultLanguage: sn.defaultLanguage,
+        license: st.license,
+        embeddable: st.embeddable,
+        madeForKids: st.madeForKids,
+        selfDeclaredMadeForKids: st.selfDeclaredMadeForKids,
+        containsSyntheticMedia: st.containsSyntheticMedia,
+        failureReason: st.failureReason,
+        ytRating: cd.contentRating?.ytRating,
+        regionRestriction: cd.regionRestriction,
+        hasCustomThumbnail: cd.hasCustomThumbnail,
+        fileName: fd.fileName,
+        fileSize: fd.fileSize === undefined ? undefined : Number(fd.fileSize),
+        fileAvailability: v.processingDetails?.fileAvailability,
       };
+    },
+    async listCaptions(videoId) {
+      const r = await request(`${API}/captions?part=snippet&videoId=${videoId}`, { method: 'GET' });
+      const j = (await r.json()) as {
+        items?: { id: string; snippet?: { language?: string; name?: string; trackKind?: string; status?: string } }[];
+      };
+      return (j.items ?? []).map((c) => ({
+        id: c.id,
+        language: c.snippet?.language ?? '',
+        name: c.snippet?.name ?? '',
+        trackKind: c.snippet?.trackKind ?? '',
+        status: c.snippet?.status ?? '',
+      }));
     },
   };
 }

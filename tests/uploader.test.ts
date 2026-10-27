@@ -68,6 +68,7 @@ function fakeClient(over: Partial<YouTubeClient> = {}): YouTubeClient & { calls:
     insertCaptions: async () => undefined,
     updateVideo: async () => undefined,
     getVideo: async (id) => remoteOf(id),
+    listCaptions: async () => [],
   };
   const c = { ...base, ...over };
   return {
@@ -77,6 +78,7 @@ function fakeClient(over: Partial<YouTubeClient> = {}): YouTubeClient & { calls:
     insertCaptions: rec('insertCaptions', c.insertCaptions),
     updateVideo: rec('updateVideo', c.updateVideo),
     getVideo: rec('getVideo', c.getVideo),
+    listCaptions: rec('listCaptions', c.listCaptions),
   };
 }
 const err = (status: number, reason: string, retryable: boolean, message = reason) =>
