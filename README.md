@@ -565,6 +565,20 @@ Pushing to `main` runs `.github/workflows/pages.yml`: `npm ci`, `npm run validat
 
 Rehearsing a go-live: the public build shows only stories with a live video, so the live-only templates and tests meet real content only at the first go-live. `npm run rehearse -- <topic> <story-id> [--keep]` copies the working tree (tracked and untracked files, not gitignored ones) into a temp folder outside the repo, junctions `node_modules`, writes a fixture `published` event (video id `REHEARSAL00`) into the copy's `publish.json`, and runs the go-live sequence there (`report -- seed`, `brand`, `build`, `links -- freeze`, `quality -- --no-build` with every page checked). The real checkout is never written. It prints `RESULT: PASSED` or `RESULT: FAILED (<step>)` and refuses (exit 2) a follow-up, a story already live or one not packaged. `DEPLOY_TARGET=pages` rehearses the mirror; `--keep` leaves the copy to preview (`npm run preview` in it).
 
+### Refreshing a dataset
+
+A dataset (`topics/<topic>/data/<id>.json`) needs a refresh when `tests/datasets.test.ts` fails with "refresh it", which it does once the dataset's `retrieved` date is older than `DATASET_MAX_AGE_DAYS` (`src/lib/datasets.ts`), or when EIA publishes a newer full year of prices (the Electric Power Annual and the Natural Gas Annual).
+
+The new figures come in as a new source document. A source agent (`scripts/briefs/sources.md`) writes `topics/<topic>/sources/eia-<year>-state-residential-energy-prices.txt` in the same layout as the current one: line 1 names the tables and ends `(retrieved YYYY-MM-DD)`, Parts 1 and 2 hold the raw prices, and the derived section shows its method. It never edits the old file, whose cites stay valid for everything that already cites it.
+
+The document enters the corpus through `npm run record-sources -- <topic> topics/<topic>/work/sv_*.json`, with a verdict on `heat-pumps/whether-heat-pump-cheaper-run-gas` that cites the method lines, as `topics/heat-pumps/work/sv_A.json` does for the current file. The store is never hand-edited. Then run `npm run report`; if the claim's finding changes, it prints the revision that needs a `note`.
+
+Then rewrite the dataset: its cites point into the new file, and `asOf` and `retrieved` say what the new file says. Point the tool's own cites (`src/tools/heating-cost/spec.ts`: `justification`, `afue`, `cops`, `latest`) at the new file as well.
+
+Check with `npx vitest run tests/datasets.test.ts tests/tools.test.ts`. The recompute test in `tests/tools.test.ts` reads the raw columns by line range: update the ranges and the file name for the new file, never the expected arithmetic. Then run `npm run validate` and `npm run quality`.
+
+A new verdict can change the story's evidence package on its next `npm run script -- package`, and the board then says what to re-bind. A changed finding makes released articles stale, and `npm run board -- next` names the article step.
+
 The data scripts (`report`, `record`, `record-sources`, `watcher`) run the watcher CLI from `../retire-sim/watcher` (or `$WATCHER_DIR`). It isn't an npm dependency, so CI, which only builds the site, doesn't need it.
 
 The watcher's agent contract is `.claude/skills/watcher/SKILL.md`, a copy of `../retire-sim/watcher/SKILL.md`. Re-copy it when the library changes.
