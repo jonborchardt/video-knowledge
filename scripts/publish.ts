@@ -1,8 +1,8 @@
 // npm run publish -- <verb> <topic> <story-id> [--output <id>] [flags]
-//   show <topic> <story-id>                                   the build, every output's state and next step, the composed upload metadata, the event log
-//   uploaded <topic> <story-id> --id <youtube id> [--url <u>] [--visibility private|unlisted|public] [--by <name>]
-//                                                             record an upload of the packaged build (public needs a prior approve; it also records published)
-//   approve <topic> <story-id> --by <name> [--note <text>]    approve the uploaded build, or the release build on disk (a draft is accepted by video final)
+//   show <topic> <story-id>                                   the build, every output's state and next step, the composed upload metadata (the description to paste into Studio), the event log
+//   uploaded <topic> <story-id> --id <youtube id> [--url <u>] [--visibility private|unlisted|public] [--captions] [--by <name>]
+//                                                             record an upload of the packaged build (public needs a prior approve; it also records published; --captions: the package's captions went up with it)
+//   approve <topic> <story-id> --by <name> --checked <n> [--note <text>]  approve the uploaded build, or the release build on disk, with n checklist items ticked (a draft is accepted by video final)
 //   thumbnail <topic> <story-id> <file>                       use this PNG/JPEG (under the script directory, e.g. video/publish/) as the output's thumbnail
 //   request-changes <topic> <story-id> --by <name> --note <text> [--note <text> ...]
 //                                                             send the current build back; a note may start [m:ss sc20 s31]
@@ -79,6 +79,7 @@ const VALUED = [
   '--kind',
   '--from',
   '--source',
+  '--checked',
 ];
 const positional = rest.filter((a, i) => !a.startsWith('--') && !VALUED.includes(rest[i - 1]));
 const usage = () => {
@@ -135,6 +136,8 @@ function show() {
         `  thumbnail: ${meta.thumbnail ? `${meta.thumbnail.file} (${meta.thumbnail.sha})` : 'none'}`,
         `  captions: ${meta.captions ? `${meta.captions.file} (${meta.captions.sha})` : 'none'}`,
         `  metadata sha: ${meta.sha}`,
+        '  description:',
+        ...meta.description.split('\n').map((l) => (l ? `  ${l}` : '')),
       );
     }
     for (const e of out.events)
@@ -157,11 +160,17 @@ async function main() {
         id: need('--id'),
         url: flag('--url'),
         visibility: flag('--visibility') as Visibility | undefined,
+        captionsSent: has('--captions'),
       });
       break;
-    case 'approve':
-      r = recordApproved(topic, storyId, { output, by: flag('--by') ?? '', note: flag('--note') });
+    case 'approve': {
+      // without --checked the count is 0: a package with a checklist refuses, as the review page does
+      const checked = Number(flag('--checked') ?? 0);
+      if (!Number.isInteger(checked) || checked < 0)
+        throw new Refusal('--checked needs the number of checklist items you ticked');
+      r = recordApproved(topic, storyId, { output, by: flag('--by') ?? '', note: flag('--note'), checked });
       break;
+    }
     case 'request-changes': {
       const notes = rest.flatMap((x, i) => (rest[i - 1] === '--note' ? [{ text: x }] : []));
       const build = openOutput(topic, storyId, { output }).build?.sha ?? '';
@@ -234,6 +243,7 @@ async function main() {
       usage();
   }
   if (r) console.log(r.message + (r.event && !r.existing ? `\n${toJson(r.event).trim()}` : ''));
+  if (r?.event?.type === 'failed' && !r.existing) process.exitCode = 1; // e.g. go-live that YouTube kept private
 }
 
 main().catch((e: unknown) => {

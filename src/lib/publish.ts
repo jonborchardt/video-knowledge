@@ -435,7 +435,7 @@ export function outputState(
       'uploaded',
       status === 'draft'
         ? `watch ${url} with video/review/checklist.md, then npm run video -- final ${ctx.topic} ${ctx.story} --approved-by "<name>"`
-        : `watch ${url} with video/review/checklist.md, then ${verb('approve', ' --by "<name>"')}`,
+        : `watch ${url} with video/review/checklist.md, then ${verb('approve', ' --by "<name>" --checked <n>')}`,
     );
   }
   if (metadataSha && sentSha && metadataSha !== sentSha) return done('metadata-behind', behind);
@@ -670,7 +670,9 @@ export function recordApproved(
   if (a.checked !== undefined) {
     const list = reviewJsonOf(o)?.checklist ?? [];
     if (a.checked < list.length)
-      throw new Refusal(`${a.checked} of ${list.length} checklist items ticked; every one is needed to approve`);
+      throw new Refusal(
+        `${a.checked} of ${list.length} checklist items ticked; every one is needed to approve (tick them on the review page, or pass --checked ${list.length} after going through video/review/checklist.md)`,
+      );
   }
   // a generic output (blog post, page, post) is approved as its source file: that file's sha stands in for the build
   const generic = flowOf(o.out.kind) === 'generic';

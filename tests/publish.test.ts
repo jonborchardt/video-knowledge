@@ -975,4 +975,21 @@ describe('a Studio upload recorded by hand', () => {
     expect(r.event).toMatchObject({ type: 'uploaded', buildStatus: 'release', visibility: 'public' });
     expect(events(f).at(-1)).toMatchObject({ type: 'published', id: 'studio00001' });
   });
+
+  it('the CLI approve passes --checked and refuses without it', () => {
+    const f = fresh();
+    patchReview(f, { checklist: ['watched it', 'captions read'] });
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001' });
+    expect(() => recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', checked: 0 })).toThrow(
+      /pass --checked \d+/,
+    );
+    const n = readJson<{ checklist: string[] }>(reviewPath(f))!.checklist.length;
+    expect(recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', checked: n }).event!.type).toBe('approved');
+  });
+
+  it('the release next step names --checked', () => {
+    const f = fresh();
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001' });
+    expect(openOutput(f.topic, f.story, { root: f.root }).state.next).toContain('--checked <n>');
+  });
 });
