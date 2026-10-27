@@ -1,41 +1,34 @@
 # Run report: organic-food conflict:eating-organic-food-has-proven-health
 
-- Review mp4: `video/review/conflict-eating-organic-food-has-proven-health-review-private.mp4`
+- Release mp4: `video/review/conflict-eating-organic-food-has-proven-health.mp4` (release build, unchanged)
 - Checklist: `video/review/checklist.md`
-- Wall-clock: 45 min (one /produce run, approver jon, 2026-10-20/21)
+- Wall-clock: about 10 min (one /produce run, approver jonathan m borchardt, 2026-10-26)
+- The story was already packaged before the run; it came back only because new verdicts on its claims made the evidence package stale. Nothing was re-rendered.
 
 ## Evidence added
 
-None.
+None by this run. The rebuilt package (ce1d8b6558) picks up the earlier Sandoval-Insausti 2021 verdicts (organic-cancer associations may reflect education, activity and other confounders; supports residual confounding), uncited by the script.
 
 ## Script revisions
 
-- r1-r2: chain of two questions (proven health benefit; lower cancer risk). The writer bumped to r2 while clearing deterministic blocks (author-year labels read as figures, "53 769") before any review.
-- Review of r2: no blocking; held s15 (said "levels" without saying of what, beside urine pesticide results) and s32 (made the diet adjustment sound absent).
-- r3: s15 names nutrients and other markers; s32 cites the review's adjustment caveat. Review held s32 (left out that the French team's extra diet measures did not change its result).
-- r4: s32 gives both sides (baudry L183-L185, vigar L123-L125). Review passed, 35 of 35.
-
-## Notes for the editor
-
-- sc20 shows the 0.6% absolute difference while the narration says "25 percent lower" (relative); the explanation is in the chart note only.
+- r5: text unchanged (every sentence keeps its fingerprint); the writer rebound `generation.evidencePackage` to ce1d8b6558. The new caveat is already carried by s30-s33 (s32: a benefit may be partly whole-food diets and healthier lives).
+- Re-review: 35 of 35 approved, 0 blocking, 0 warnings, 16 needs-qualification dispositions kept; notes on s24, s26-s28 point to s32 for the new caveat.
+- Re-locked: release.json revision 5, script 65e3c41d95, package ce1d8b6558, approved by `automated: /produce run started by jonathan m borchardt`.
 
 ## Graphics
 
-None bespoke: 31 generic scenes (2 charts, 15 excerpts, 14 typography).
+None built or changed.
 
 ## Music
 
-Undertow (cleared): opening sc01-sc03, evidence sc04-sc29, ending sc30-sc31. Music -20.8 dB under the voice, peak -1.3 dB.
+`undertow` unchanged: cues opening (pulse, sc01-sc03), evidence (texture, sc04-sc29), ending (pulse, sc30-sc31).
 
 ## QA
 
-`RESULT: PASSED`, 36 checks ok (322.4 s, 31 scenes).
+QA: passed (36 of 36), from the existing build report; no render or QA re-run.
 
 ## Release blockers
 
-- Narration is draft only (edge-tts: unofficial Microsoft Edge read-aloud API, no terms for published media).
-- Music: cleared.
-
-## Release build
-
-- 2026-10-22: `npm run video -- final organic-food conflict:eating-organic-food-has-proven-health --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.
+- Narration: Azure release voice already (commercial licence recorded in the build report).
+- Music clearance: as recorded in the build report; a person confirms before go-live.
+- Publishing (upload, approval, go-live) is a person's step.
