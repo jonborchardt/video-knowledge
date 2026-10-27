@@ -109,28 +109,22 @@ for (const b of release?.article.sections.flatMap((x) => x.blocks) ?? []) {
 const view = release && articleView(release, t, loadPublicRecord(t.name), site.repo, figures);
 const meta = release?.article.meta;
 const jsonLd = [
-  articleJsonLd(
-    {
-      headline: meta?.headline ?? s.title,
-      description: meta?.description.text ?? s.question,
-      path,
-      image,
-      series: commission.fullName,
-      datePublished: outputs.video?.publishedAt,
-      dateModified: (release && articleModified(release)) ?? revised ?? undefined,
-    },
-    Astro.site!,
-  ),
-  ...(outputs.video && !first ? [videoJsonLd(outputs.video, s.question, image, Astro.site!)] : []),
-  breadcrumbJsonLd(
-    [
-      { name: site.name, path: '/' },
-      { name: commission.name, path: `/commissions/${commissionKey(commission)}/` },
-      { name: t.label, path: `/${t.name}/` },
-      { name: s.title, path },
-    ],
-    Astro.site!,
-  ),
+  articleJsonLd({
+    headline: meta?.headline ?? s.title,
+    description: meta?.description.text ?? s.question,
+    path,
+    image,
+    series: commission.fullName,
+    datePublished: outputs.video?.publishedAt,
+    dateModified: (release && articleModified(release)) ?? revised ?? undefined,
+  }),
+  ...(outputs.video && !first ? [videoJsonLd(outputs.video, s.question, image)] : []),
+  breadcrumbJsonLd([
+    { name: site.name, path: '/' },
+    { name: commission.name, path: `/commissions/${commissionKey(commission)}/` },
+    { name: t.label, path: `/${t.name}/` },
+    { name: s.title, path },
+  ]),
 ];
 const storyHref = (x: Pick<Story, 'id'>) => href(matterPath(t.name, x));
 const body = commissionBody(commission);

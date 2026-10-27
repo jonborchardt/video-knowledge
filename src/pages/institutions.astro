@@ -34,14 +34,11 @@ const description = `The institutions of ${site.name}: what each is for, where i
   title={`Institutions · ${site.name}`}
   description={description}
   jsonLd={[
-    collectionJsonLd(`Institutions of ${site.name}`, description, '/institutions/', Astro.site!),
-    breadcrumbJsonLd(
-      [
-        { name: site.name, path: '/' },
-        { name: 'Institutions', path: '/institutions/' },
-      ],
-      Astro.site!,
-    ),
+    collectionJsonLd(`Institutions of ${site.name}`, description, '/institutions/'),
+    breadcrumbJsonLd([
+      { name: site.name, path: '/' },
+      { name: 'Institutions', path: '/institutions/' },
+    ]),
   ]}
 >
   <SourceIcons />

@@ -40,15 +40,12 @@ const base = `/${t.name}/data`;
   description={`The figures behind the ${t.label} inquiry, as tables with the passages they come from, and CSV and JSON downloads.`}
   image={`/og/${brand}.jpg`}
   jsonLd={[
-    breadcrumbJsonLd(
-      [
-        { name: site.name, path: '/' },
-        { name: commission.name, path: `/commissions/${brand}/` },
-        { name: t.label, path: `/${t.name}/` },
-        { name: 'Data', path: `${base}/` },
-      ],
-      Astro.site!,
-    ),
+    breadcrumbJsonLd([
+      { name: site.name, path: '/' },
+      { name: commission.name, path: `/commissions/${brand}/` },
+      { name: t.label, path: `/${t.name}/` },
+      { name: 'Data', path: `${base}/` },
+    ]),
   ]}
 >
   <div class="grid gap-6">

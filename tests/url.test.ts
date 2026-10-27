@@ -1,5 +1,22 @@
-import { describe, expect, it } from 'vitest';
-import { datasetSource, textUrls } from '../src/lib/url';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { absoluteUrl, datasetSource, sitePath, textUrls } from '../src/lib/url';
+
+describe('absolute urls', () => {
+  afterEach(() => vi.unstubAllEnvs());
+  it('absoluteUrl is on the canonical host, never the base', () => {
+    vi.stubEnv('BASE_URL', '/video-knowledge/');
+    expect(absoluteUrl('/heat-pumps/x/')).toBe('https://commonwealthofreason.com/heat-pumps/x/');
+    expect(absoluteUrl('/')).toBe('https://commonwealthofreason.com/');
+  });
+  it('sitePath strips the base', () => {
+    vi.stubEnv('BASE_URL', '/video-knowledge/');
+    expect(sitePath('/video-knowledge/about/')).toBe('/about/');
+    expect(sitePath('/video-knowledge/')).toBe('/');
+    vi.stubEnv('BASE_URL', '/');
+    expect(sitePath('/about/')).toBe('/about/');
+    expect(sitePath('/')).toBe('/');
+  });
+});
 
 describe('datasetSource', () => {
   it('names each document once with its overall line range and the period', () => {

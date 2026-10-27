@@ -27,6 +27,9 @@ const DIST = join(ROOT, 'dist');
 const PAGES = process.env.DEPLOY_TARGET === 'pages';
 const SITE = PAGES ? 'https://jonborchardt.github.io' : 'https://commonwealthofreason.com';
 const BASE = PAGES ? '/video-knowledge/' : '/';
+// Every absolute URL a page claims (canonical, og, JSON-LD, robots' sitemap) is on the canonical host, from both
+// targets: the mirror points search engines at commonwealthofreason.com.
+const CANON = 'https://commonwealthofreason.com/';
 // The live view, never siteGraph: vitest runs with DEV true, which would pick the preview view.
 const live = contentGraph();
 const liveTopics = publicTopicNames().filter((t) => live.nodes.get(t)?.public);
@@ -166,7 +169,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       expect(html).toContain('data-verdict=');
       expect(html).toContain(`href="${BASE}${topic}/"`);
       // its own share card, the question drawn on it (npm run brand)
-      expect(html).toContain(`<meta property="og:image" content="${SITE}${BASE}og/stories/${topic}/${slug}.jpg"`);
+      expect(html).toContain(`<meta property="og:image" content="${CANON}og/stories/${topic}/${slug}.jpg"`);
       expect(existsSync(join(DIST, 'og/stories', topic, `${slug}.jpg`)), `${topic}/${slug} card`).toBe(true);
       if (!s.partOf) {
         const c = Object.entries(commissions).find(([, c]) => c.topics.includes(topic))![0];
@@ -342,12 +345,13 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
 
   it.each(pages)('%s: canonical and social metadata', (p) => {
     const html = readFileSync(join(DIST, p), 'utf8');
-    expect(html).toContain(`<link rel="canonical" href="${SITE}${BASE}`);
+    expect(html).toContain(`<link rel="canonical" href="${CANON}`);
+    expect(html.match(/<meta property="og:url" content="([^"]+)"/)?.[1], 'og:url').toMatch(new RegExp(`^${CANON}`));
     expect(html).not.toContain('name="robots"');
     expect(html).toContain('type="application/ld+json"');
     const image = html.match(/<meta property="og:image" content="([^"]+)"/)?.[1];
-    expect(image, 'og:image').toMatch(new RegExp(`^${SITE}${BASE}`));
-    expect(existsSync(join(DIST, image!.slice((SITE + BASE).length))), image).toBe(true);
+    expect(image, 'og:image').toMatch(new RegExp(`^${CANON}`));
+    expect(existsSync(join(DIST, image!.slice(CANON.length))), image).toBe(true);
     expect(html).toContain('<meta name="twitter:card" content="summary_large_image"');
   });
 
@@ -359,7 +363,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
 
   it('robots.txt points at the sitemap, which lists every page', () => {
     const robots = readFileSync(join(DIST, 'robots.txt'), 'utf8');
-    expect(robots).toContain(`Sitemap: ${SITE}${BASE}sitemap-index.xml`);
+    expect(robots).toContain(`Sitemap: ${CANON}sitemap-index.xml`);
     const sitemap = sitemapXml();
     for (const p of pages) {
       expect(sitemap).toContain(`<loc>${SITE}${BASE}${p.replace('index.html', '')}</loc>`);

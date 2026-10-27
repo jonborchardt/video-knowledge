@@ -3,7 +3,7 @@
 // the one way a page, description or package builds a link to a node (D2); a URL comes from an id, never a title.
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { commissionKey, commissionOf, site } from '../config/site';
+import { commissionKey, commissionOf } from '../config/site';
 import { toolOf } from '../tools';
 import { loadArticleRelease } from './article';
 import { dataRef, loadDatasets } from './datasets';
@@ -13,6 +13,7 @@ import { loadLedger } from './publish';
 import { scriptDir } from './script';
 import { loadStories, type Story, storyUrlSlug } from './stories';
 import { publicTopicNames } from './topics';
+import { absoluteUrl } from './url';
 
 export type NodeKind =
   'institution' | 'inquiry' | 'story' | 'video' | 'short' | 'article' | 'chart' | 'dataset' | 'tool';
@@ -192,10 +193,8 @@ export function urlOf(g: Graph, id: string): string | null {
  *  as its watch URL. */
 export const absoluteOf = (g: Graph, id: string): string | null => {
   const u = urlOf(g, id);
-  return u && (u.startsWith('/') ? absolute(u) : u);
+  return u && (u.startsWith('/') ? absoluteUrl(u) : u);
 };
-/** A root-relative site path as its absolute URL under `site.url`. */
-export const absolute = (path: string) => new URL(path.slice(1), site.url).toString();
 
 /** A story node's chain: a follow-up resolves to its first question's node id, any other story to itself. */
 export const chainRoot = (g: Graph, id: string) => {

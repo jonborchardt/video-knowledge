@@ -6,12 +6,13 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { commissionKey, commissionOf, site } from '../config/site';
-import { absolute, contentGraph, matterPath, storyNode } from '../lib/content-graph';
+import { contentGraph, matterPath, storyNode } from '../lib/content-graph';
 import { type CtaType, ctaPath, loadCta, resolveCtas } from '../lib/cta';
 import { fileSha, readJson, ROOT, sha, toJson, topicDir } from '../lib/io';
 import { loadLedger, mainOutput } from '../lib/publish';
 import { sectionTitle } from '../lib/script';
 import { uploadProblem } from '../lib/uploader';
+import { absoluteUrl } from '../lib/url';
 import { renderSrt } from './captions';
 import { extractFrame } from './ffmpeg';
 import type { BuildReport } from './report';
@@ -62,7 +63,7 @@ export function descriptionLinks(
   const g = contentGraph(root, [topic], 'live', [node]);
   const s = g.stories.get(node);
   if (!s) return { cta: 'default', links: [recordLink(topic)] };
-  const matter = absolute(matterPath(topic, s));
+  const matter = absoluteUrl(matterPath(topic, s));
   if (shortParent)
     return {
       cta: 'default',
@@ -297,7 +298,7 @@ export function renderDescription(
   const c = commissionOf(tl.topic);
   const block = links.links.map((l) => `${l.text}: ${l.url}`);
   const at = links.links.findIndex((l) => l.type === 'inquiry-record' || l.type === 'inquiry');
-  if (c) block.splice(at < 0 ? block.length : at, 0, `${c.name}: ${absolute(`/commissions/${commissionKey(c)}/`)}`);
+  if (c) block.splice(at < 0 ? block.length : at, 0, `${c.name}: ${absoluteUrl(`/commissions/${commissionKey(c)}/`)}`);
   // a Short (brand/design.md 2.6): the hook, the links, the studies, #Shorts; the uploader adds the full video once live
   const body = pkg.short
     ? [seg.pkg.short?.hook ?? tl.title, '', ...block]

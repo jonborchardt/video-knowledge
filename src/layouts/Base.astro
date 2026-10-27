@@ -3,7 +3,7 @@ import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { author, site } from '../config/site';
-import { absoluteUrl, href } from '../lib/url';
+import { absoluteUrl, href, sitePath } from '../lib/url';
 import { websiteJsonLd, type PageMeta } from '../lib/seo';
 import { isPreview, urlOf } from '../lib/content-graph';
 import { siteGraph } from '../lib/site-graph';
@@ -16,13 +16,13 @@ const {
   image: imagePath = '/og/site.jpg',
   jsonLd: pageLd = [],
 } = Astro.props;
-const siteUrl = Astro.site!;
-const canonical = new URL(Astro.url.pathname, siteUrl).href;
+// Absolute URLs are on the canonical host from both deploy targets: the mirror's pages point at commonwealthofreason.com.
+const canonical = absoluteUrl(sitePath(Astro.url.pathname));
 // Social image: the brand kit's share card (1200x675), the Commonwealth's unless the page belongs to an institution.
-const image = absoluteUrl(imagePath, siteUrl);
+const image = absoluteUrl(imagePath);
 const imageAlt = title === site.name ? site.name : `${title} - ${site.name}`;
 // JSON-LD sits in a <script>: escape < so no value can close the tag.
-const jsonLd = [websiteJsonLd(siteUrl), ...pageLd].map((x) => JSON.stringify(x).replaceAll('<', '\\u003c'));
+const jsonLd = [websiteJsonLd(), ...pageLd].map((x) => JSON.stringify(x).replaceAll('<', '\\u003c'));
 // Dev server only: a page injected by astro.config.mjs (src/admin) is framed in pink; so is any link to one and any
 // `.dev-only` section on a public page. A build renders none of it.
 const dev = import.meta.env.DEV;

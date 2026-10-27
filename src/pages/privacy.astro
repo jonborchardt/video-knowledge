@@ -18,13 +18,10 @@ const list = 'mt-3 grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
   title={`Privacy and terms · ${site.name}`}
   description="What this site and its publishing tool collect, the services they use, the YouTube API Services terms, and how to reach the publisher."
   jsonLd={[
-    breadcrumbJsonLd(
-      [
-        { name: site.name, path: '/' },
-        { name: 'Privacy and terms', path: '/privacy/' },
-      ],
-      Astro.site!,
-    ),
+    breadcrumbJsonLd([
+      { name: site.name, path: '/' },
+      { name: 'Privacy and terms', path: '/privacy/' },
+    ]),
   ]}
 >
   <header class="grid gap-4 border-y-4 border-double py-5">
