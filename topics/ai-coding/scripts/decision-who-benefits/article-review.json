@@ -1,0 +1,139 @@
+{
+  "reviewer": "scripts/briefs/article-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-27",
+  "revision": 2,
+  "packageFingerprint": "5315c81f0b",
+  "approved": {
+    "meta.headline": "93e8d96a69",
+    "meta.seoTitle": "d6fa83c4a4",
+    "meta.dek": "d81734c423",
+    "meta.description": "169d4fc197",
+    "heading:hook": "0f85bba7a2",
+    "heading:question-1": "d6fa83c4a4",
+    "heading:question-2": "c413d90f36",
+    "heading:close": "46adb3881a",
+    "t2": "ad9682e76e",
+    "decision-who-benefits/sc11": "29730467ca",
+    "decision-who-benefits/sc16": "bcc2945883",
+    "s01": "ce89149c37",
+    "s02": "65c1ca8b8a",
+    "s03": "bddb4562a4",
+    "s04": "97558646cc",
+    "s05": "9e9d86fc9b",
+    "s07": "edb694374d",
+    "s08": "2d44c2ab7c",
+    "s09": "6388001ed4",
+    "s10": "4915a989a9",
+    "s11": "96a8752135",
+    "s12": "06d5bd6337",
+    "s13": "5c96d8bddb",
+    "s14": "f77bbd2039",
+    "s15": "d7b8135671",
+    "s16": "3a8f976847",
+    "s17": "eee58a851c",
+    "s18": "646131306f",
+    "s19": "5dc0616248",
+    "s20": "eed434e0ca",
+    "s21": "ad90ca3a68",
+    "s23": "27f8c9750e",
+    "s25": "2b01dff6e2",
+    "s26": "e1e7ff2a9e",
+    "s27": "7beceb887d",
+    "s28": "4ab148b185",
+    "s30": "18e70e8b1a",
+    "s31": "cc2b6cbfae",
+    "s32": "eea06f68f3",
+    "s33": "a369cf66c5",
+    "s34": "6812433948",
+    "s35": "2e759cb763",
+    "s36": "170271af81",
+    "s37": "9bb052ed90",
+    "s38": "68710cab61",
+    "t1": "296ad69633",
+    "s06": "330e988733",
+    "s22": "ca31827ef1",
+    "s24": "5c840e5fe9",
+    "s29": "f0fb3fe31d"
+  },
+  "findings": [
+    {
+      "sentence": "s06",
+      "assertion": "s06.a",
+      "fingerprint": "2bf7c52da7",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "blocking",
+      "explanation": "The tenure and level split is from the Microsoft experiment only: the paper says it has developer characteristics only for the Microsoft experiment and breaks out tenure, level and prior productivity 'of employees at Microsoft' (L594-L598). 'Field experiments that gave developers Copilot in their jobs' tells a reader the ordering held across the paper's field experiments, which makes one experiment at one company look like a replication.",
+      "refs": [
+        "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770",
+        "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L586-L606"
+      ],
+      "suggestion": "Name the single experiment: 'A field experiment at Microsoft that gave developers Copilot in their jobs points the opposite way: ...'. The L586-L606 lines carry no verdict, so the fix is to narrow the wording, not to cite them."
+    },
+    {
+      "sentence": "s03",
+      "fingerprint": "bddb4562a4",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "info",
+      "explanation": "Table t1 (on this section's first sentence, as the brief places table findings): the caption says 'in the field experiments', but the tenure and seniority rows come from the Microsoft experiment alone (see the s06 finding). The cells and row labels are otherwise right. s03 itself is approved; this finding is about t1, which is not approved. Resolved in revision 2: the t1 caption now reads 'in the Microsoft field experiment', and every cell is from that experiment (L758-L770); t1 is approved. Kept as info because s03 did not change, so the validator cannot mark it resolved.",
+      "refs": [
+        "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+      ],
+      "suggestion": "Caption: 'Output gain with Copilot in the Microsoft field experiment, by tenure and by seniority; ...'."
+    },
+    {
+      "sentence": "s24",
+      "assertion": "s24.a",
+      "fingerprint": "fbd710e3f8",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "blocking",
+      "explanation": "'gains were larger for developers newer to the company in the field experiments' has the same population problem as s06: only the Microsoft experiment was split by tenure.",
+      "refs": [
+        "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+      ],
+      "suggestion": "Say 'in the Microsoft field experiment'."
+    },
+    {
+      "sentence": "s22",
+      "assertion": "s22.a",
+      "fingerprint": "6df629f67a",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "blocking",
+      "explanation": "The passage says 'the more AI-skilled the Task 1 participants were, the stronger the effect of their AI usage on Task 2 CodeHealth'. That finding is about the effect of AI use growing with AI skill. The sentence says the code from more AI-practised developers scored better and leaves out 'when they used AI', so a reader can take it as AI-practised developers simply writing better code, which is not the tool-skill finding this paragraph relies on.",
+      "refs": [
+        "ai-coding/sources/2507.00788.txt#L2541-L2551"
+      ],
+      "suggestion": "'... the more practised with AI the original developers were, the more their use of AI raised the CodeHealth of the code someone else then built on it, though the original developer's Java proficiency mattered more.'"
+    },
+    {
+      "sentence": "s29",
+      "assertion": "s29.a",
+      "fingerprint": "f658c75b77",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "blocking",
+      "explanation": "'make the same calculation' ties the Anthropic engineers to s28's calculation, which is about unreliability and the time spent reviewing output. The passage files these quotes under 'Faster to prompt than execute' and the cold-start problem (context Claude lacks). That is the cost of prompting and briefing set against doing the task, not the cost of checking output. The passage never mentions review or checking time.",
+      "refs": [
+        "ai-coding/sources/anthropic-work-at-anthropic.txt#L67-L69"
+      ],
+      "suggestion": "'Engineers at Anthropic weigh a related cost when choosing what to delegate: whether prompting would take longer than doing the job. Of a job expected to take less than 10 minutes, one said, \"I'm probably not going to bother using Claude.\"'"
+    },
+    {
+      "sentence": "s09",
+      "assertion": "s09.a",
+      "fingerprint": "6388001ed4",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "info",
+      "explanation": "The package notes that this is an appendix result from easy tasks done with a ChatGPT-3.5 chat. The sentence leaves that out. s23 summarises these results as noisy or provisional, so it does not mislead, but the editor may want the task scope stated.",
+      "refs": [
+        "ai-coding/sources/4859137.txt#L872-L878"
+      ]
+    }
+  ],
+  "dispositions": {}
+}
