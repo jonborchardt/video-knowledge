@@ -3,21 +3,23 @@
 | | |
 |---|---|
 | Story | `conflict:organic-farming-yields-less-food-per` (organic-food) |
-| Revision | 2 (2 of at most 3 in this pass) |
-| Validation | **passed** (2026-10-21) |
+| Revision | 3 (3 of at most 3 in this pass) |
+| Validation | **passed** (2026-10-27) |
 | Words / runtime | 603 words, about 4.2 min at 150 wpm |
 | Sentences | 26 (20 factual or attributed) |
 | Assertions | 25, 25 verified |
 | Issues | 0 blocking, 3 warnings, 13 dispositioned |
 | Unreviewed sentences | 0 |
 | Scenes | 20, 4:21 (ok) |
-| Evidence package | 6688cc1dd7 (4 documents, 5 claims) |
+| Evidence package | 0766e57110 (5 documents, 5 claims) |
 | Model | claude-opus-5-5 |
 
 Automated validation says whether the narration is eligible for human editorial review; it does not establish truth.
 
 ## Open issues
 
+- **warning** - release-stale (deterministic): release.json locked package 6688cc1dd7; it is now 0766e57110: the approved package has changed, lock it again after review
+- **warning** - release-stale (deterministic): release.json locked validation d87358ca90; it is now ed035c07d6: the approved package has changed, lock it again after review
 - **warning** s13 (s13.c) needs-human (review): The clause mirrors the authors' summary at L99, but the paper's results (L87, uncited) show the 9% and 8% gaps compare diversified organic fields with undiversified conventional ones; when both systems were polycultures the gap was 21 +/- 6%, and with similar rotations 20 +/- 2%. A viewer may hear that diversified farming in general nearly closes the gap. The writer cannot cite L87 without a person authorising a corpus change (one verdict per claim and document).
 - **warning** s17 (s17.a) missing-qualification (review): Clark and Tilman say most of the 742 LCA analyses are from high-input systems in Europe and North America, so the results reflect industrialised, high-input farming; the package premise lists this limit. The narration gives the land, energy and eutrophication figures (s18-s19) without it; s21's local-scale caveat is a different limit.
 - **warning** s17 (s17.a) needs-human (review): The revision-1 scope warning stands (Europe/North America, high-input systems, L468-L476), but the writer cannot cite it: the store already holds the one Clark and Tilman verdict for this claim. Approved because s21 carries a scope limit and the figures are not misleading for the viewer's likely context; only an editor can add the passage.
@@ -47,10 +49,12 @@ Deterministic warnings the reviewer judged false positives or already carried by
 
 ## Research gaps
 
-- What explains the split between Ponisio 2015 meta-analysis, organic yield gap, Mie 2017 review, health effects of organic food and farming, AAP 2012 clinical report on organic foods, abstract?
+- What explains the split between Crowder and Reganold 2015 meta-analysis, organic farm profitability, Ponisio 2015 meta-analysis, organic yield gap, Mie 2017 review, health effects of organic food and farming, AAP 2012 clinical report on organic foods, abstract?
 
 ## Outstanding editorial decisions
 
+- -: release.json locked package 6688cc1dd7; it is now 0766e57110: the approved package has changed, lock it again after review
+- -: release.json locked validation d87358ca90; it is now ed035c07d6: the approved package has changed, lock it again after review
 - s13 s13.c: The clause mirrors the authors' summary at L99, but the paper's results (L87, uncited) show the 9% and 8% gaps compare diversified organic fields with undiversified conventional ones; when both systems were polycultures the gap was 21 +/- 6%, and with similar rotations 20 +/- 2%. A viewer may hear that diversified farming in general nearly closes the gap. The writer cannot cite L87 without a person authorising a corpus change (one verdict per claim and document).
 - s17 s17.a: Clark and Tilman say most of the 742 LCA analyses are from high-input systems in Europe and North America, so the results reflect industrialised, high-input farming; the package premise lists this limit. The narration gives the land, energy and eutrophication figures (s18-s19) without it; s21's local-scale caveat is a different limit.
 - s17 s17.a: The revision-1 scope warning stands (Europe/North America, high-input systems, L468-L476), but the writer cannot cite it: the store already holds the one Clark and Tilman verdict for this claim. Approved because s21 carries a scope limit and the figures are not misleading for the viewer's likely context; only an editor can add the passage.
@@ -58,4 +62,5 @@ Deterministic warnings the reviewer judged false positives or already carried by
 ## History
 
 - revision 1, 2026-10-21: blocked, 1 blocking, 3 warnings
-- revision 2, 2026-10-21: passed, 0 blocking, 3 warnings
+- revision 2, 2026-10-27: needs-review, 0 blocking, 17 warnings
+- revision 3, 2026-10-27: passed, 0 blocking, 3 warnings
