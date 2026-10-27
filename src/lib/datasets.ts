@@ -40,14 +40,20 @@ const fields = (line: string) => line.split('|').map((f) => f.replace(/\s+/g, ' 
 /** The problems with a dataset: its retrieval date against line 1 of each cited document, a row's cell count, each cell's passage, and its figures against that passage. A cell
  *  citing one table line (fields separated by '|') must sit on its row's line (the first field is the row label) and
  *  in its own column: column i is field i + 1. */
-export function datasetProblems(d: DataTable, read: PassageReader): string[] {
+export function datasetProblems(
+  d: DataTable,
+  read: PassageReader,
+  today = new Date().toISOString().slice(0, 10), // YYYY-MM-DD; a retrieval cannot be in the future
+): string[] {
   const out: string[] = [];
   if (!/^\d{4}-\d{2}-\d{2}$/.test(d.retrieved ?? '') || Number.isNaN(Date.parse(d.retrieved)))
     out.push(`retrieved "${d.retrieved}" is not a date`);
-  else
+  else {
+    if (d.retrieved > today) out.push(`retrieved ${d.retrieved} is after today (${today})`);
     for (const file of new Set(d.rows.flatMap((r) => r.cells.map((c) => c.cite.split('#')[0]))))
       if (!read(`${file}#L1`)?.includes(`retrieved ${d.retrieved}`))
         out.push(`${file.split('/').pop()}: line 1 does not say "retrieved ${d.retrieved}"`);
+  }
   for (const row of d.rows) {
     if (row.cells.length !== d.columns.length)
       out.push(`row "${row.label}": ${row.cells.length} cells for ${d.columns.length} columns`);

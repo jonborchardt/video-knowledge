@@ -80,6 +80,8 @@ describe('datasets', () => {
       'prices.txt: line 1 does not say "retrieved 2025-01-01"',
     ]);
     expect(datasetProblems({ ...ok, retrieved: 'last week' }, read)).toContain('retrieved "last week" is not a date');
+    expect(datasetProblems(ok, read, '2026-10-17')).toContain('retrieved 2026-10-18 is after today (2026-10-17)');
+    expect(datasetProblems(ok, read, '2026-10-18')).toEqual([]);
   });
   it('a dataset ages from its retrieval date', () => {
     const d = table([]);
