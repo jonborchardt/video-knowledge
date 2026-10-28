@@ -1,0 +1,173 @@
+{
+  "reviewer": "scripts/briefs/article-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-28",
+  "revision": 2,
+  "packageFingerprint": "0766e57110",
+  "approved": {
+    "meta.headline": "82db137e72",
+    "meta.seoTitle": "02efe7ae41",
+    "heading:hook": "ef221929f0",
+    "heading:question-1": "0c26ecde7a",
+    "heading:question-2": "b190d867e2",
+    "heading:close": "7f4c687015",
+    "meta.dek": "2583cec9ea",
+    "s01": "f53f74fca5",
+    "s02": "15221cbc42",
+    "s03": "dc7014c7cd",
+    "s04": "1bc3dc6da4",
+    "s05": "26510dfde1",
+    "s06": "aecc323f9c",
+    "s07": "a7923b5d01",
+    "s08": "6de917c4fc",
+    "s09": "057e49d2e2",
+    "s11": "8e7ff107b5",
+    "s12": "0294cfe7a0",
+    "s13": "d312248465",
+    "s14": "d2fe6cf8d5",
+    "s17": "7ea2b3b969",
+    "s18": "aa05512e59",
+    "s19": "886f0030ee",
+    "s20": "2dea38ab70",
+    "s22": "ed044d8e38",
+    "s23": "2d8fc7fcf4",
+    "s24": "4b1d622165",
+    "s25": "5587134b49",
+    "s26": "7fe0649b5e",
+    "s27": "b2d268e084",
+    "s28": "b0f1983052",
+    "s29": "eb8cb51fb0",
+    "s30": "81327fc8ce",
+    "s31": "9476930e30",
+    "s32": "d63f7df768",
+    "meta.description": "f63be81747",
+    "s15": "266e03e1f7",
+    "s16": "82bb99fd21",
+    "s21": "034b0670e0",
+    "t1": "364ce55c31",
+    "t2": "36859fc782"
+  },
+  "findings": [
+    {
+      "sentence": "s10",
+      "assertion": "s10.a",
+      "fingerprint": "059d7016ab",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "blocking",
+      "explanation": "The 9% and 8% gaps are not diversified farms against conventional farms in general. Ponisio's abstract and results (ponisio-2015-yield-gap.txt L12, L87) say these gaps hold when only the organic system diversified (organic polycultures against conventional monocultures; more rotations in the organic system); when both systems were polycultures the gap was 21 +/- 6%, and with a similar number of rotations 20 +/- 2%. A reader comes away believing diversified organic farming nearly closes the gap, which the study does not show. 'Narrowed the shortfall most' is also not in the cited lines. The cited passage L95-L99 does not state the organic-only condition, so stating it needs a passage the package lacks: only a person can add L87 (or L12) through record-sources.",
+      "refs": [
+        "organic-food/sources/ponisio-2015-yield-gap.txt#L95-L99"
+      ],
+      "suggestion": "Either a person records L87 and the sentence says the gap fell to about 9% and 8% when only the organic fields were multi-cropped or rotated more (about 20% when both were), or the diversification figures come out of s10, s16, table t1 and the figure caption."
+    },
+    {
+      "sentence": "s16",
+      "assertion": "s16.c",
+      "fingerprint": "39ebbe0971",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "blocking",
+      "explanation": "'By far less where farms rotate or mix their crops' carries the same unstated condition as s10: Ponisio's 9% and 8% gaps compare diversified organic systems with non-diversified conventional ones; where both diversified, the gap stayed around 20%. The section's answer overstates what diversification does. Table t1's rows 'farms using multi-cropping / crop rotations' and the figure caption for sc10 ('farms that used multi-cropping or crop rotations') carry the same omission and are left unapproved until it is fixed.",
+      "refs": [
+        "organic-food/sources/ponisio-2015-yield-gap.txt#L95-L99"
+      ],
+      "suggestion": "Follow the fix chosen for s10; if the figures stay, say 'where only the organic fields were rotated or mixed', and relabel the t1 rows and the figure caption to match."
+    },
+    {
+      "sentence": "meta.description",
+      "assertion": "meta.description.a",
+      "fingerprint": "76fb4d66d9",
+      "revision": 1,
+      "category": "overclaim",
+      "severity": "blocking",
+      "explanation": "'Organic fields yield less for every crop type studied' states a disputed claim (audit: disputed, qualify) as a flat fact about organic fields, without its source (a meta-analysis of pooled comparisons) or 'on average'. Ponisio finds average yields significantly lower for every crop type, not that organic fields yield less; the dek gets this right ('Pooled field comparisons find'). The second sentence lists land, energy and emissions but drops the 37% higher eutrophication potential, the other significant difference, which tilts the summary towards organic.",
+      "refs": [
+        "organic-food/sources/ponisio-2015-yield-gap.txt#L65-L65",
+        "organic-food/sources/clark-tilman-2017-lca.txt#L224-L236"
+      ],
+      "suggestion": "'A meta-analysis of pooled comparisons finds organic yields lower on average for every crop type. Per unit of food, organic needs more land and less energy, adds more nutrient pollution, and has similar emissions.'"
+    },
+    {
+      "sentence": "s15",
+      "assertion": "s15.c",
+      "fingerprint": "ee8f421687",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "warning",
+      "explanation": "The package holds only the AAP abstract. s14 says 'that abstract'; s15 says 'the report that disagrees does not show which comparisons it read differently', a statement about the full clinical report, which the evidence has not read and which may cite its studies.",
+      "refs": [
+        "organic-food/sources/aap-2012-organic.txt#L31-L33"
+      ],
+      "suggestion": "Say 'the abstract that disagrees does not show which comparisons it read differently'."
+    },
+    {
+      "sentence": "s21",
+      "assertion": "s21.a",
+      "fingerprint": "0a5fc25a84",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "warning",
+      "explanation": "'Land showed the largest difference' is not in the passage, and the range's low end (25%) is below the eutrophication difference (37%). The verdict note on the land claim also limits the result to mostly high-input systems in Europe and North America, which the article never says beside the land figure.",
+      "refs": [
+        "organic-food/sources/clark-tilman-2017-lca.txt#L224-L236"
+      ],
+      "suggestion": "Drop 'the largest difference' (or say 'the widest range'). Carrying the Europe/North America scope would need a person to record the passage that says so."
+    },
+    {
+      "sentence": "s18",
+      "fingerprint": "aa05512e59",
+      "revision": 1,
+      "category": "incompatible-comparison",
+      "severity": "warning",
+      "explanation": "Table t2: its one column 'Organic against conventional' mixes directions without showing them. Land 25% to 110% is more, energy 15% is less, eutrophication 37% is higher, greenhouse gases 4% is lower, acidification 13% is higher; the cells print bare percentages, so a reader can take energy or greenhouse gases as higher for organic. s18 itself is fine; the finding sits here because t2 is in this section. t2 is left unapproved.",
+      "refs": [
+        "organic-food/sources/clark-tilman-2017-lca.txt#L224-L236"
+      ],
+      "suggestion": "Show the direction in each cell ('25% to 110% more', '15% less', '37% higher', '4% lower', '13% higher')."
+    },
+    {
+      "sentence": "s03",
+      "fingerprint": "dc7014c7cd",
+      "revision": 1,
+      "category": "overclaim",
+      "severity": "info",
+      "explanation": "'Settles the yield question' is strong for a claim the package marks disputed, beside a callout (s15) saying the evidence cannot explain the split. The article does answer the question on the measured comparisons, so it is approved; 'takes the yield question first' would be safer.",
+      "refs": []
+    },
+    {
+      "sentence": "s27",
+      "fingerprint": "b2d268e084",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "info",
+      "explanation": "Tying Clark and Tilman's land range to the yield gaps Ponisio thinks may be overstated is a cross-study inference: Ponisio's overstatement applies to the yield literature, not to the LCA pairs. Ponisio's own verdict on the land claim makes the same link, so it is approved.",
+      "refs": [
+        "organic-food/sources/ponisio-2015-yield-gap.txt#L95-L99"
+      ]
+    },
+    {
+      "sentence": "s21",
+      "assertion": "s21.a",
+      "fingerprint": "034b0670e0",
+      "revision": 2,
+      "category": "missing-qualification",
+      "severity": "info",
+      "explanation": "Fixed: widest range is what the passage shows. The land verdict note still limits the result to mostly high-input systems in Europe and North America, which the article never says; carrying it needs a passage the package lacks (a person would record it), so it stays a note for the editor.",
+      "refs": [
+        "organic-food/sources/clark-tilman-2017-lca.txt#L224-L236"
+      ]
+    },
+    {
+      "sentence": "s06",
+      "assertion": "s06.a",
+      "fingerprint": "aecc323f9c",
+      "revision": 2,
+      "category": "wording",
+      "severity": "info",
+      "explanation": "The assertion qualification still says the next sentences give the narrower gaps on diversified farms; those sentences were removed. Reader text is unaffected; the writer may tidy the note.",
+      "refs": []
+    }
+  ],
+  "dispositions": {}
+}

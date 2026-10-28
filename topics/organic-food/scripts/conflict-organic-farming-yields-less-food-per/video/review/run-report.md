@@ -48,3 +48,12 @@ Undertow (cleared): opening sc01-sc03, evidence sc04-sc18, ending sc19-sc20. Mus
 - Script r3: no sentence changed. The writer left Crowder and Reganold uncited (it infers yields from gross returns; s07-s09 already give the measured gap and its limits). The re-review approved all 26 sentences again, with no blocking findings. The s13 and s17 editor notes above still stand.
 - Validate: passed (25 of 25 assertions verified, 3 warnings, 13 dispositioned). Lock: revision 3, package 0766e57110.
 - QA: passed (36 of 36), from the existing build.
+
+## Article and re-render, 2026-10-28
+
+- Approver: Jon Borchardt (automated: /produce run started by Jon Borchardt). Wall-clock: about 40 min. No evidence added; script unchanged (no script revisions).
+- Article r1: review blocked three findings: s10/s16 (the 9% multi-cropping and 8% rotation gaps hold only when the organic field alone diversified, Ponisio L12/L87, not in the cited L95-L99), and meta.description (stated the yield gap as flat fact, left out the higher nutrient pollution); warnings s15 ("the report" for an abstract), s21 ("largest difference"), t2 (cells without direction).
+- Article r2: dropped the 8-9% figures (s10 deleted, s16 clause, two t1 rows, the sc10 figure); description says "lower on average" and adds nutrient pollution; s15 "the abstract"; s21 "widest range"; t2 cells carry direction. Re-review passed, 39 of 39 assertions verified. Locked: `article-release.json` revision 1.
+- Editor note: the same 8-9% condition still applies to the video's s13/sc10 narration (see the s13 note above); recording Ponisio L87 would need `--replace-cited`, a person's call.
+- Re-render in the institution kit: 21 scenes (20 + close card `end`), 266.3 s; soundtrack 3 cues, music -20.5 dB under the voice, peak -1.4 dB. QA `RESULT: PASSED` (36 of 36).
+- The re-render narrated with edge (draft), so the Azure release build of 2026-10-22 is replaced by a draft private review package (`video/review/conflict-organic-farming-yields-less-food-per-review-private.mp4`). Release needs `npm run video -- final organic-food conflict:organic-farming-yields-less-food-per --approved-by <name>` again.
