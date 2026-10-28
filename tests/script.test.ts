@@ -1194,4 +1194,13 @@ describe('chart point units', () => {
   it('refuses a unit outside UNITS', () => {
     expect(pointProblems(p({ unit: 'eur' as Unit }), new Set([CITE]), read)).toContain('unknown unit "eur"');
   });
+  it('refuses a currency sign that contradicts the unit', () => {
+    expect(pointProblems(p({ unit: 'usd' }), new Set([CITE]), read)).toEqual([
+      'display "£190" is in pounds; the unit is usd',
+    ]);
+    const r2: PassageReader = () => 'it cost $240';
+    expect(pointProblems(p({ value: 240, display: '$240' }), new Set([CITE]), r2)).toEqual([
+      'display "$240" is in dollars; the unit is gbp',
+    ]);
+  });
 });

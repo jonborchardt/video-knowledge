@@ -126,6 +126,10 @@ export function pointProblems(pt: ChartPoint, known: Set<string>, read: PassageR
     bad(`display "${pt.display}" does not state the value ${pt.value}`);
   if (pt.unit === 'percent' && (pt.value < 0 || pt.value > 100)) bad(`${pt.value} is not a percentage`);
   if (!(UNITS as readonly string[]).includes(pt.unit)) bad(`unknown unit "${pt.unit}"`);
+  if (pt.unit === 'usd' && (pt.display ?? '').includes('£'))
+    bad(`display "${pt.display}" is in pounds; the unit is usd`);
+  if (pt.unit === 'gbp' && (pt.display ?? '').includes('$'))
+    bad(`display "${pt.display}" is in dollars; the unit is gbp`);
   for (const n of figures) if (passage === null || !hasFigure(passage, n)) bad(`"${n}" is not in ${pt.cite}`);
   for (const n of nums(pt.label ?? ''))
     if (passage === null || !hasFigure(passage, n)) bad(`label figure "${n}" is not in ${pt.cite}`);

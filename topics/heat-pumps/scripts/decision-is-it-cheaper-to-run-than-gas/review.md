@@ -21,6 +21,10 @@ Automated validation says whether the narration is eligible for human editorial 
 - **warning** s21 (s21.a) needs-human (review): The Cosy result (and the £4,675 in s35 that more than covers the heat pump's net cost) comes from authors whose Centre for Net Zero is part of Octopus Energy Group (Bernard front matter, conflicts of interest), in an NBER working paper not peer reviewed. The narration now names Cosy as Octopus's own tariff and drops the £318, but never says who did the study; the writer notes the affiliation decides no claim and so cannot be cited. Only an editor can decide whether to record it or accept the sentence as is.
 - **warning** s25 (s25.b) missing-qualification (review): 'Still paid more' is the standard-tariff result (Bernard L1850-L1855); s21 has just told the viewer that Cosy customers saved against that tariff, and the paper's £318 Cosy saving exceeds the £190 gap, so the unqualified line reads as if every British home paid more. The halving rebuttal itself holds either way.
 
+### Storyboard
+
+- **warning** - release-stale: release.json locked storyboard 3952ed728a; it is now 8da4531a4d: the approved package has changed, lock it again after review
+
 ## Dispositions
 
 Deterministic warnings the reviewer judged false positives or already carried by the narration, at the current sentence fingerprint.

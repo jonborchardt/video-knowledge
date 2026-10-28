@@ -1,6 +1,6 @@
 # Is a heat pump cheaper to run than gas, and does it ever pay for itself? [meta.headline fp=27ced44e97]
 
-Story `decision:is-it-cheaper-to-run-than-gas` (heat-pumps), revision 5. SEO title: Heat pump vs gas furnace: running cost and payback [meta.seoTitle fp=ec4a7112ef]. Validation: **passed**, 0 blocking, 0 warnings, 60/60 assertions verified.
+Story `decision:is-it-cheaper-to-run-than-gas` (heat-pumps), revision 6. SEO title: Heat pump vs gas furnace: running cost and payback [meta.seoTitle fp=ec4a7112ef]. Validation: **passed**, 0 blocking, 0 warnings, 60/60 assertions verified.
 
 > Whether a heat pump heats a home for less than a gas furnace turns on local electricity and gas prices and on the unit you buy; whether it repays its price turns largely on timing, and for a gas home the clearest case is when the furnace and the air conditioner both need replacing. [meta.dek ok fp=585115616d]
 
@@ -45,7 +45,7 @@ Measured use tells a similar story: a large British study of homes that replaced
 
 **qualification (heat-pumps/switching-gas-heat-pump-raises-household):** Switching from gas raises the bill only under some conditions: in the NREL model most gas homes with air conditioning pay more with a minimum-efficiency unit and nearly all pay less with the best units, and in RMI's city models energy costs rose in cold Chicago and Providence but not in Houston and Oakland, where the saving was simply too small to repay the extra equipment cost. [s17 ok fp=40d96050ed]
 
-Table t3: UK homes that replaced a gas boiler with a heat pump: running costs and Cosy tariff savings, in pounds a year [t3 fp=62fb496999]
+Table t3: UK homes that replaced a gas boiler with a heat pump: running costs and Cosy tariff savings, in pounds a year [t3 fp=0851385c36]
 
 | | Pounds a year |
 |---|---|

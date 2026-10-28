@@ -2,6 +2,10 @@
 
 34 scenes, 9:26 at 150 wpm including pauses. Script 84f4a5f41a (passed). Storyboard status: **ok**.
 
+## Issues
+
+- **warning** - release-stale: release.json locked storyboard 3952ed728a; it is now 8da4531a4d: the approved package has changed, lock it again after review
+
 ## 1. sc01 (0:00 to 0:11, 11.2s)
 
 **Purpose.** Open on two neighbours with opposite results from the same decision.
@@ -263,8 +267,8 @@ Note: Modelled bills; at older prices the shares are lower.
 
 | Label | Display | Value | Unit | Source |
 |---|---|---|---|---|
-| Extra running cost a year | £190 | 190 | usd | Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff, lines 1850-L1863 |
-| Gas connection saved a year | £100 | 100 | usd | Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff, lines 1850-L1863 |
+| Extra running cost a year | £190 | 190 | gbp | Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff, lines 1850-L1863 |
+| Gas connection saved a year | £100 | 100 | gbp | Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff, lines 1850-L1863 |
 
 Note: British prices in pounds; not a forecast for a US furnace.
 
@@ -453,8 +457,8 @@ Note: All heating fuels; switching from gas rarely pays.
 
 | Label | Display | Value | Unit | Source |
 |---|---|---|---|---|
-| Net private cost after grant | £4,121 | 4121 | usd | Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff, lines 1850-L1871 |
-| Cosy tariff savings, if they persist | £4,675 | 4675 | usd | Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff, lines 1898-L1906 |
+| Net private cost after grant | £4,121 | 4121 | gbp | Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff, lines 1850-L1871 |
+| Cosy tariff savings, if they persist | £4,675 | 4675 | gbp | Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff, lines 1898-L1906 |
 
 Note: British pounds; the tariff savings assume they persist for 20 years.
 
