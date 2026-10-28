@@ -43,7 +43,7 @@ import { writeRenderCheck } from '../src/video/check';
 import { initVideo } from '../src/video/init';
 
 // Matched against the path inside the topic, never the checkout's own path (CI checks out under .../work/...).
-const SKIP = ['/store/transcripts', '/work', '/video/scenes', '/video/narration', '/video/frames'];
+const SKIP = ['/store/transcripts', '/work', '/video/scenes', '/video/narration', '/video/frames', '/publish.json'];
 const SKIP_EXT = ['.pdf', '.mp4', '.wav', '.png'];
 
 /** Re-record a build's look (undefined: a report from before builds recorded it) and re-point the review package at
