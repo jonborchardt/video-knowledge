@@ -1,0 +1,107 @@
+{
+  "reviewer": "scripts/briefs/article-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-27",
+  "revision": 2,
+  "packageFingerprint": "52bd330e8e",
+  "approved": {
+    "meta.headline": "3f6067a00e",
+    "meta.seoTitle": "fb92b322a5",
+    "meta.dek": "e18636306a",
+    "heading:hook": "4bc7f8f8e7",
+    "heading:setup": "838ba7d48f",
+    "heading:investigation": "e1a682c364",
+    "heading:answer": "cb995f4748",
+    "heading:takeaway": "dcc3b63dc5",
+    "t1": "1fa55b52ed",
+    "t2": "c29ce77e14",
+    "t3": "a127cbeb73",
+    "decision-is-the-economy-booming/sc06": "d37f1b2620",
+    "decision-is-the-economy-booming/sc13": "ff27df3d9b",
+    "s01": "0c7033eaf6",
+    "s02": "e078a65cae",
+    "s03": "dde90cb9ce",
+    "s04": "9582b2b5dc",
+    "s05": "7683fbe449",
+    "s06": "1046f52428",
+    "s07": "4bcab022f1",
+    "s08": "a5c17ad507",
+    "s09": "312069f6c1",
+    "s10": "5885bb390e",
+    "s11": "a5967d57bf",
+    "s12": "4991484a6a",
+    "s13": "8f2633342e",
+    "s14": "f0b47c6419",
+    "s15": "deb5310e4b",
+    "s16": "07530109a5",
+    "s17": "073d818dbc",
+    "s18": "00d4943e96",
+    "s19": "abde41f3eb",
+    "s20": "142d8d5627",
+    "s21": "17d280e328",
+    "s22": "66370ba372",
+    "s25": "c1c858e18e",
+    "s26": "746a84416f",
+    "s27": "e8fb02ce1f",
+    "meta.description": "9549b33ea5",
+    "s23": "d09492722b",
+    "s24": "7d61c0098c"
+  },
+  "findings": [
+    {
+      "sentence": "s23",
+      "fingerprint": "217a5b5ddd",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "'That described the year to January' asserts when Trump's statement was made or what period it referred to. The KOMO statement (67ESj3hDZ9U) carries no date in the package or the store, and it is recorded under the undated claim recent-economic-growth-has-raised-purchasing, not under real-wages-rose-over-past-year [January 2026]. No assertion or passage covers the link between the quote and the year to January.",
+      "refs": [
+        "67ESj3hDZ9U",
+        "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L1434-L1434"
+      ],
+      "suggestion": "Drop the dating of the quote: e.g. 'That held over the year to January; over the year to September, real average hourly pay fell instead, ...' (s23.a already covers the January figure)."
+    },
+    {
+      "sentence": "s24",
+      "assertion": "s24.b",
+      "fingerprint": "d0a2188faa",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "'payroll growth has slowed to little change' asserts a deceleration. The cited release lines (L14-L27) say only that September payrolls (+29,000) changed little; they give no earlier pace to compare against, and no assertion covers 'slowed'.",
+      "refs": [
+        "inflation-2026/sources/bls-employment-situation-2026-09.txt#L14-L27"
+      ],
+      "suggestion": "Say what the passage says: 'and payrolls changed little in September'. A slowdown needs a passage the package does not have; only a person can add one through record-sources. Consider also scoping 'output is growing' to the first half, the period the evidence measures."
+    },
+    {
+      "sentence": "meta.description",
+      "assertion": "meta.description.b",
+      "fingerprint": "8abb12fa6a",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "warning",
+      "explanation": "'unemployment held at 4.2 percent' reads as a constant rate; the release gives 4.2 percent in September within a 4.1 to 4.3 percent range since March (as s12 and t2 say). 'its long-run pace' also states as a fact what is the median FOMC projection (s10 makes that point in the body).",
+      "refs": [
+        "inflation-2026/sources/bls-employment-situation-2026-09.txt#L14-L27",
+        "inflation-2026/sources/fomc-sep-2026-09-16.txt#L13-L17"
+      ],
+      "suggestion": "E.g. 'Output grew a little above the long-run pace Fed officials project and unemployment stayed near 4.2 percent, but real hourly pay fell 0.7 percent in the year to September.'"
+    },
+    {
+      "sentence": "s20",
+      "assertion": "s20.b",
+      "fingerprint": "142d8d5627",
+      "revision": 1,
+      "category": "attribution",
+      "severity": "info",
+      "explanation": "The sentence attributes the 3.0 percent pay and 3.7 percent price figures to 'the Bureau of Labor Statistics' own release', but s20.b cites the BLS API series (derived real AHE block), not the Real Earnings release lines. The figures are BLS data and correct; only the word 'release' is loose. Approved.",
+      "refs": [
+        "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L1436-L1442",
+        "inflation-2026/sources/bls-real-earnings-2026-09.txt#L11-L14"
+      ],
+      "suggestion": "Optionally: 'BLS figures put ...' or move 'release' to the 0.7 percent only."
+    }
+  ],
+  "dispositions": {}
+}

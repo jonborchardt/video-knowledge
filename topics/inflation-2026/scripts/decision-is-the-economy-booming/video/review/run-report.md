@@ -59,3 +59,21 @@ ending sc16-sc18 `pulse`. Music sits 19.5 dB under the voice; peak -1.4 dB.
 ## Release build
 
 - 2026-10-22: `npm run video -- final inflation-2026 decision:is-the-economy-booming --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.
+
+## Article and re-render (2026-10-27)
+
+Second /produce run, from `article` to `packaged`, about 45 minutes wall-clock. No evidence added; no script revisions.
+
+- Article: written (revision 1), reviewed: 2 blocking findings (s23 dated Trump's quote to "the year to January"
+  without a source for the date; s24 said payroll growth "slowed", the cited release only says September payrolls
+  changed little) and a warning on `meta.description` ("held at 4.2 percent", long-run pace stated as a measurement
+  rather than a Fed projection). Revision 2 fixed all three; a fresh reviewer approved them (29/29 assertions
+  verified, 0 blocking, 16 needs-qualification warnings left open). Locked: `article-release.json`, approved by
+  `automated: /produce run started by Jon Borchardt`.
+- Re-render: the 2026-10-22 build predated the branding merge (board: `look-stale`).
+  `npm run video -- spike` re-rendered all 19 scenes in the institution kit (5990 frames, 199.7 s), QA
+  `passed: 36 of 36 checks` - RESULT: PASSED; `npm run video -- package` rewrote `video/review/`.
+- Release blocker again: the re-render narrates with edge (draft), so the 2026-10-22 Azure release build is now a
+  private draft package. Once the draft is accepted, `npm run video -- final inflation-2026
+  decision:is-the-economy-booming --approved-by <name>` re-narrates it with Azure for release. Music `undertow`
+  remains cleared.
