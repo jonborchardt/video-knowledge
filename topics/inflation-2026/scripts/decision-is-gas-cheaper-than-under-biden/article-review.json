@@ -1,0 +1,175 @@
+{
+  "reviewer": "scripts/briefs/article-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-27",
+  "revision": 1,
+  "packageFingerprint": "8545d02d4d",
+  "approved": {
+    "meta.headline": "08bf98e2e2",
+    "meta.seoTitle": "ed932a81e2",
+    "meta.dek": "c88a9cc20f",
+    "meta.description": "94afdd9a9f",
+    "heading:hook": "d07e51be72",
+    "heading:question-1": "0fce1f443b",
+    "heading:question-2": "99e9ae7bfa",
+    "heading:close": "a2a255bc9d",
+    "t1": "3312b9413e",
+    "t2": "2163277684",
+    "t3": "1bcf4f8513",
+    "decision-is-gas-cheaper-than-under-biden/sc14": "6729f77b3a",
+    "decision-is-gas-cheaper-than-under-biden/sc22": "79be1060ab",
+    "s01": "2da1e305b2",
+    "s02": "1880d2d33f",
+    "s03": "d2a901def2",
+    "s04": "6b61520e01",
+    "s06": "d3a5e0aacf",
+    "s07": "aeb6b37dbc",
+    "s08": "a1f6e558c3",
+    "s09": "783d7bc20d",
+    "s10": "3b77545050",
+    "s11": "8be7b960d2",
+    "s12": "08d1c3f7c8",
+    "s13": "0246734e0e",
+    "s14": "5ab8d3c98f",
+    "s15": "96eaba216a",
+    "s16": "9731fd6dd0",
+    "s17": "51f79016e4",
+    "s18": "d6dc81a53e",
+    "s19": "3c17507a61",
+    "s20": "3bab93d6d7",
+    "s21": "17d3ddd054",
+    "s22": "65c6a8e24d",
+    "s23": "61c6059d31",
+    "s24": "8d8aec345a",
+    "s25": "a5a948591c",
+    "s26": "9f76dbf19d",
+    "s27": "17279abbdd",
+    "s28": "b27911c69f"
+  },
+  "findings": [
+    {
+      "sentence": "meta.dek",
+      "fingerprint": "c88a9cc20f",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "info",
+      "explanation": "The dek and description compare nominal prices (the passage is dollars not adjusted for inflation; s07 and the table captions say so). Correct as written, and nominal is the ordinary reading of 'cost less'; an editor may want 'not adjusted for inflation' nearer the top, since in real terms the Biden-era average would be higher than $3.46.",
+      "refs": [
+        "inflation-2026/sources/eia-gasoline-regular-monthly.txt#L47-L56"
+      ]
+    },
+    {
+      "sentence": "s04",
+      "fingerprint": "6b61520e01",
+      "revision": 1,
+      "category": "omission",
+      "severity": "info",
+      "explanation": "The quoted '225' is never answered directly: the national monthly average's lowest month in the record is $2.81 (January 2026). s08 and s09 let a reader infer it; nothing here is wrong.",
+      "refs": [
+        "inflation-2026/sources/eia-gasoline-regular-monthly.txt#L47-L56"
+      ]
+    },
+    {
+      "sentence": "s06",
+      "fingerprint": "d3a5e0aacf",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "info",
+      "explanation": "'A few months later' is a connective the package does not date (the statements carry no dates; the claims place Trump's remark in 2025 and CBS's in spring 2026). Consistent with those buckets, so left as a note."
+    },
+    {
+      "sentence": "s12",
+      "fingerprint": "08d1c3f7c8",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "info",
+      "explanation": "The callout says the link rests on timing and matches the verdict note, but the article never says when the war began (the verdict treats February 2026 as the pre-war baseline); the reader gets it only from MS NOW's 'since the war started'. No dated passage for the war's start is in the package; adding one would be a record-sources job for a person.",
+      "refs": [
+        "inflation-2026/sources/eia-gasoline-regular-weekly.txt#L467-L470"
+      ]
+    },
+    {
+      "sentence": "s22",
+      "fingerprint": "65c6a8e24d",
+      "revision": 1,
+      "category": "selective",
+      "severity": "info",
+      "explanation": "'Bears out the totals' after quoting only the channel's 21%: the channel's second figure (about 5.4 for the first 20 months) is not what the index shows (6.1). The sentence states the index's own figures, so a reader is not misled, but 'bears out' fits only the first total.",
+      "refs": [
+        "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L31-L99"
+      ]
+    }
+  ],
+  "dispositions": {
+    "s10.a": {
+      "fingerprint": "3b77545050",
+      "category": "needs-qualification",
+      "reason": "s10 states only the weekly prices, no cause; the attribution and its limit (timing only) are the callout s12 two sentences later."
+    },
+    "s10.b": {
+      "fingerprint": "3b77545050",
+      "category": "needs-qualification",
+      "reason": "s10 states only the weekly prices, no cause; the attribution and its limit (timing only) are the callout s12 two sentences later."
+    },
+    "s12.a": {
+      "fingerprint": "08d1c3f7c8",
+      "category": "needs-qualification",
+      "reason": "s12 is the qualification itself; 'causes' names the other causes a price series cannot exclude."
+    },
+    "s16.a": {
+      "fingerprint": "9731fd6dd0",
+      "category": "needs-qualification",
+      "reason": "s16 states co-movement only; the callout s18 directly after says co-movement cannot show policy played no part."
+    },
+    "s16.c": {
+      "fingerprint": "9731fd6dd0",
+      "category": "needs-qualification",
+      "reason": "s16 states co-movement only; the callout s18 directly after says co-movement cannot show policy played no part."
+    },
+    "s18.a": {
+      "fingerprint": "d6dc81a53e",
+      "category": "needs-qualification",
+      "reason": "s18 is the qualification from the verdict note, stated in full."
+    },
+    "s22.a": {
+      "fingerprint": "65c6a8e24d",
+      "category": "needs-qualification",
+      "reason": "The period-length condition is the callout s23 directly after table t3, with equal windows in s24 and the annualized conclusion in s26."
+    },
+    "s22.b": {
+      "fingerprint": "65c6a8e24d",
+      "category": "needs-qualification",
+      "reason": "The period-length condition is the callout s23 directly after table t3, with equal windows in s24 and the annualized conclusion in s26."
+    },
+    "s23.a": {
+      "fingerprint": "61c6059d31",
+      "category": "needs-qualification",
+      "reason": "s23 is the qualification (20 months against 48)."
+    },
+    "s24.a": {
+      "fingerprint": "8d8aec345a",
+      "category": "needs-qualification",
+      "reason": "Equal 20-month windows: this is the like-for-like comparison the qualification calls for."
+    },
+    "s24.b": {
+      "fingerprint": "8d8aec345a",
+      "category": "needs-qualification",
+      "reason": "Equal 20-month windows: this is the like-for-like comparison the qualification calls for."
+    },
+    "s25.a": {
+      "fingerprint": "a5a948591c",
+      "category": "needs-qualification",
+      "reason": "Inside the qualification callout; adds that the running term is not finished."
+    },
+    "s26.a": {
+      "fingerprint": "9f76dbf19d",
+      "category": "needs-qualification",
+      "reason": "s26 states the verdict's condition: slower pace, but a smaller gap than the totals imply."
+    },
+    "s26.b": {
+      "fingerprint": "9f76dbf19d",
+      "category": "needs-qualification",
+      "reason": "s26 states the verdict's condition: slower pace, but a smaller gap than the totals imply."
+    }
+  }
+}
