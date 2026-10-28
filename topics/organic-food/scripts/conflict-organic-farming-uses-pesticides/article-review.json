@@ -1,0 +1,181 @@
+{
+  "reviewer": "scripts/briefs/article-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-28",
+  "revision": 3,
+  "packageFingerprint": "0a1129e37a",
+  "approved": {
+    "meta.headline": "85ff234e56",
+    "meta.seoTitle": "87a4aa8988",
+    "heading:hook": "da06209c0e",
+    "heading:question-1": "dab7f96160",
+    "heading:question-2": "4648b7654e",
+    "heading:close": "6b15b235b3",
+    "t3": "c1cfeddd70",
+    "meta.dek": "f1df2008cb",
+    "meta.description": "e54bcd0fd1",
+    "s01": "437144b1f9",
+    "s02": "c5962dfe8b",
+    "s03": "020c6b55eb",
+    "s04": "92c5b6316f",
+    "s05": "1ea10a4bf4",
+    "s06": "f8cb91fe39",
+    "s07": "d31b22b3bf",
+    "s08": "386b2556fe",
+    "s09": "099d45030e",
+    "s10": "715f3e76ae",
+    "s11": "c7d79c4afa",
+    "s12": "13ef5ab802",
+    "s14": "a9766c7746",
+    "s15": "0bb1de9a17",
+    "s16": "e766d10ba2",
+    "s17": "81c6359d4e",
+    "s18": "c5676cb4dd",
+    "s19": "67767317bf",
+    "s20": "e3ce3b41ea",
+    "s21": "c4c097b460",
+    "s23": "4db59b6891",
+    "s24": "e9ef705e9c",
+    "s25": "f0a2991e8b",
+    "s26": "758071441c",
+    "s28": "36554a673e",
+    "s29": "b63184d4c2",
+    "s30": "2d433dd3fe",
+    "s32": "a4a372ba43",
+    "s33": "d7975258a8",
+    "s34": "2a93628969",
+    "s35": "21e6be4dbe",
+    "s36": "1e582d1b72",
+    "s13": "3c51ae9569",
+    "s27": "6c22e06ac1",
+    "s31": "1fed851ab3",
+    "s37": "adfc5addd8",
+    "t1": "b5a4d5bb04",
+    "s22": "09020f3458",
+    "t2": "655c88c50b"
+  },
+  "findings": [
+    {
+      "sentence": "s31",
+      "assertion": "s31.b",
+      "fingerprint": "884a5084be",
+      "revision": 1,
+      "category": "double-counting",
+      "severity": "blocking",
+      "explanation": "Hyland 2019 and Fagan 2020 report the same intervention: four racially and geographically diverse US families, n = 16 participants, 158 urine samples. The sentence presents them as two single studies showing the same pattern ('in 16 people from four US families ... and in a study of 16 participants'), so a reader counts a replication that is one cohort analysed for different compounds. The package also limits both: Hyland is abstract only, a small uncontrolled pre-post design; Fagan is small and advocacy-funded. Neither limit is stated.",
+      "refs": [
+        "organic-food/sources/hyland-2019-intervention.txt#L21-L38",
+        "organic-food/sources/fagan-2020-glyphosate.txt#L9-L13"
+      ],
+      "suggestion": "Say it is one small study without a control group, e.g. 'One small study of 16 people in four US families, with no control group, found urinary levels of 13 pesticide compounds fell significantly after an organic diet began, and mean glyphosate fell 70.93 percent within six days.' t3 already labels its rows as the same families."
+    },
+    {
+      "sentence": "s27",
+      "fingerprint": "e1ac4f646e",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "blocking",
+      "explanation": "This callout names organic-food/organic-produce-carries-lower-pesticide-residues, a qualified claim (not an unresolved one), but drops the condition its verdict notes state: the Baranski meta-analysis's 46% vs 11% rests on only 11 studies that compared frequency, and none allowed a robust comparison of concentrations. The article shows that figure in t2 and says 'the amounts are lower too' in s26 without that limit anywhere. (The Winter and Katz condition, 23% of organic samples with residues, is carried by s25.) The callout's point about legal limits is sound but is a different limit from the one the package gives.",
+      "refs": [
+        "organic-food/sources/baranski-2014-crops.txt#L654-L663"
+      ],
+      "suggestion": "Make the callout a 'qualification' on this claim and open it with the Baranski limit: the meta-analysis's frequency figure comes from 11 comparing studies, which could not compare residue amounts robustly (the amounts come from the US data sets and the German monitoring). Keep s27 and s28 after it."
+    },
+    {
+      "sentence": "s13",
+      "fingerprint": "c54278005e",
+      "revision": 1,
+      "category": "selective",
+      "severity": "blocking",
+      "explanation": "Table t1, introduced by this sentence as the review's count of 'their hazard classes', keeps the rows where the organic column is 0 and drops the two rows of the review's Table 1 where organic-approved substances appear: acutely toxic, 99 of all approved against 3 organic-approved (pyrethrins, and the trap-only pyrethroids lambda-cyhalothrin and deltamethrin), and two PBT criteria fulfilled, 54 against 1 (copper). Those two rows are the evidence behind the claim's 'partly' verdict, so the table reads as a clean sweep the source does not show.",
+      "refs": [
+        "organic-food/sources/mie-2017-health.txt#L84-L133"
+      ],
+      "suggestion": "Add the rows 'Classed as acutely toxic' (99, 3) and 'Meet two of the persistent, bioaccumulative and toxic criteria' (54, 1), and let s13 say the table shows where the two lists differ and where they overlap."
+    },
+    {
+      "sentence": "s22",
+      "fingerprint": "6757e3d6d0",
+      "revision": 1,
+      "category": "incompatible-comparison",
+      "severity": "warning",
+      "explanation": "Table t2's 'Comparison samples' column mixes baselines and measures: rows 1-3 are EFSA's all samples (residues below the legal limit, over the limit, over the acute reference dose), row 4 is Baranski's conventional crops with detectable residues. No row label says which baseline it uses, and row 4 displays '11' and '46' without a percent sign. s24 states the all-samples baseline in prose, so the numbers are not wrong, but the table alone cannot be read correctly.",
+      "refs": [
+        "organic-food/sources/mie-2017-health.txt#L137-L138",
+        "organic-food/sources/baranski-2014-crops.txt#L654-L663"
+      ],
+      "suggestion": "Name the baseline in each row label ('organic against all samples', 'organic against conventional crops'), display row 4 as 11% and 46%, and say in that row that 11 studies compared frequency."
+    },
+    {
+      "sentence": "s26",
+      "assertion": "s26.a",
+      "fingerprint": "758071441c",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "info",
+      "explanation": "The package tempers Baker 2002: older data, and authors linked to the organic sector. The 2021 German monitoring in the same sentence corroborates the direction, so the sentence does not mislead; an editor may still want the date said ('a 2002 analysis').",
+      "refs": [
+        "organic-food/sources/baker-2002-residues.txt#L20-L26"
+      ]
+    },
+    {
+      "sentence": "s17",
+      "assertion": "s17.a",
+      "fingerprint": "81c6359d4e",
+      "revision": 1,
+      "category": "selective",
+      "severity": "info",
+      "explanation": "The quotation stops before the source's 'but are less stable'. The review still names pyrethrins an exception, so the sentence stands, but the clause is part of the source's own weighing.",
+      "refs": [
+        "organic-food/sources/mie-2017-health.txt#L84-L133"
+      ]
+    },
+    {
+      "sentence": "s37",
+      "assertion": "s37.a",
+      "fingerprint": "adfc5addd8",
+      "revision": 2,
+      "category": "missing-qualification",
+      "severity": "info",
+      "explanation": "The callout now carries the half of the Baranski verdict note that changes what the figure means (frequency, not concentration). The other half, that only 11 studies compared frequency, is a strength note the cited lines do not state; an editor may add it to t2 row 4 when that row is fixed.",
+      "refs": [
+        "organic-food/sources/baranski-2014-crops.txt#L654-L663"
+      ]
+    },
+    {
+      "sentence": "s22",
+      "fingerprint": "6757e3d6d0",
+      "revision": 2,
+      "category": "incompatible-comparison",
+      "severity": "warning",
+      "explanation": "Revision 2 changed only t2 caption (against all or conventional samples). The rows still do not say which baseline each uses (rows 1-3 EFSA all samples, row 4 Baranski conventional crops), and row 4 still displays 11 and 46 with no percent sign. t2 stays unapproved until the table can be read on its own.",
+      "refs": [
+        "organic-food/sources/mie-2017-health.txt#L137-L138",
+        "organic-food/sources/baranski-2014-crops.txt#L654-L663"
+      ],
+      "suggestion": "Row labels: EU monitoring (EFSA), organic against all samples, ...; Meta-analysis of crop studies, organic against conventional crops, detectable residues. Display row 4 as 11% and 46%."
+    }
+  ],
+  "dispositions": {
+    "s05.b": {
+      "fingerprint": "1ea10a4bf4",
+      "category": "speaker-missing",
+      "reason": "the sentence attributes the words to a College of Naturopathic Medicine video, the channel the package names"
+    },
+    "s06.a": {
+      "fingerprint": "f8cb91fe39",
+      "category": "speaker-missing",
+      "reason": "the package names no speaker; the sentence says 'a speaker at a Harvard public health forum', which is what the source shows"
+    },
+    "s24.a": {
+      "fingerprint": "e9ef705e9c",
+      "category": "needs-qualification",
+      "reason": "'all' is EFSA's own all-samples baseline, and the sentence says the comparison is with every sample, not conventional food alone"
+    },
+    "s25.a": {
+      "fingerprint": "f0a2991e8b",
+      "category": "needs-qualification",
+      "reason": "the sentence states the Winter and Katz limit itself: 23 percent of organic samples had residues"
+    }
+  }
+}
