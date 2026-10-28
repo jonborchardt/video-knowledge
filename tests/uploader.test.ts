@@ -103,7 +103,7 @@ const fresh = () => {
   fixtures.push(f);
   return f;
 };
-afterAll(() => fixtures.forEach((f) => f.cleanup()));
+afterAll(() => fixtures.forEach((f) => f.cleanup()), 60_000);
 
 describe('uploadProblem', () => {
   const ok = { file: 'a.mp4', title: 'T', description: 'D', tags: ['a b'], thumbnail: null, sha: 'x' };

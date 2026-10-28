@@ -17,6 +17,7 @@ import { movedRedirects } from '../src/lib/content-graph';
 import { toJson, topicDir } from '../src/lib/io';
 import { addOutput, appendEvent, emptyLedger, type Ledger, publishPath, saveLedger } from '../src/lib/publish';
 import { scriptDir } from '../src/lib/script';
+import { copyTopic } from './production-helpers';
 import { loadStories, type Story, storyUrlSlug } from '../src/lib/stories';
 import { publicTopicNames } from '../src/lib/topics';
 
@@ -138,8 +139,14 @@ describe('content graph', () => {
     const s = `${T}/decision:is-it-cheaper-to-run-than-gas`;
     const ds = 'data:heat-pumps/state-prices';
     expect(contentGraph(undefined, undefined, 'live', [s]).nodes.get(ds)?.public).toBe(true);
-    expect(contentGraph(undefined, undefined, 'live', []).nodes.get(ds)?.public).toBe(false);
-  });
+    // the real topic has a live video: judge "not otherwise" on a copy without its publishing ledgers
+    const c = copyTopic(T);
+    try {
+      expect(contentGraph(c.root, [T], 'live', []).nodes.get(ds)?.public).toBe(false);
+    } finally {
+      c.cleanup();
+    }
+  }, 30_000);
 
   it('every edge joins two existing nodes', () => {
     const g = contentGraph();
