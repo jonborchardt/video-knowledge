@@ -1,0 +1,89 @@
+{
+  "reviewer": "scripts/briefs/article-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-27",
+  "revision": 2,
+  "packageFingerprint": "5108ce9ff2",
+  "approved": {
+    "meta.headline": "71ce3b867b",
+    "meta.seoTitle": "b7f5a9cefc",
+    "meta.dek": "6e30e4fe25",
+    "meta.description": "3b6e6980a3",
+    "heading:hook": "dedf6fbf8c",
+    "heading:setup": "530d04bbf3",
+    "heading:investigation": "fd53397550",
+    "heading:answer": "8d4ae9aa3e",
+    "heading:takeaway": "12d7b44604",
+    "conflict-heat-pumps-cut-home-carbon-emissions/sc11": "4b4b4e82ce",
+    "s01": "ba054ba974",
+    "s02": "ccfc22428a",
+    "s03": "051d4295e0",
+    "s04": "3d71aacc9c",
+    "s06": "829c81c9cc",
+    "s07": "c93f38d661",
+    "s08": "e1d94b3929",
+    "s09": "85ed3c6977",
+    "s10": "0283d54dd3",
+    "s11": "9418452e80",
+    "s12": "2e214cdabb",
+    "s13": "be79c5e2e5",
+    "s14": "1b58218b1a",
+    "s15": "23047bdb28",
+    "s16": "a56fdb3902",
+    "s17": "707b3601ad",
+    "s19": "69cc2084e4",
+    "s20": "27c50dd952",
+    "t1": "31d8485443",
+    "s05": "ba7ee33d0f",
+    "s18": "9565ea2d93"
+  },
+  "findings": [
+    {
+      "sentence": "s05",
+      "fingerprint": "ba7ee33d0f",
+      "revision": 2,
+      "category": "info",
+      "severity": "info",
+      "explanation": "Revision 1 held s05 with a blocking incompatible-comparison finding about table t1 (one column mixed the NBER whole-home footprint cut with the Fraunhofer and CCI cuts against gas heating). Revision 2 splits t1 into 'Cut in whole-home energy emissions' (NBER 36% and 68%) and 'Cut against gas heating' (Fraunhofer 64%, CCI between 20 and 30 per cent), puts the baseline in each row label and says in the caption that the baselines differ, and shows the CCI range in full. The finding sat on s05 only because t1 has no sentence of its own; s05 itself was not wrong and is approved unchanged. Optional polish: the Fraunhofer row could name 2024, the year of the 64 percent, and the cells mix %, percent and per cent.",
+      "refs": [
+        "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L193-L198",
+        "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt#L77-L83",
+        "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L459-L462"
+      ]
+    },
+    {
+      "sentence": "s18",
+      "fingerprint": "99fca92c23",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "warning",
+      "explanation": "'Their results line up with what each assumes about the grid' generalises across all seven studies, but only two are shown: RMI's Chicago case and the NBER lifetime projection. Nothing in the package ties the spread between, say, NBER's 36% and Fraunhofer's 64% to the grid; part of that spread is the different baseline (see the t1 finding on s05). The sentence hands the reader an explanation for the split that gap 0 says the evidence does not settle.",
+      "refs": [
+        "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L225-L231",
+        "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L193-L198"
+      ],
+      "suggestion": "Keep to what the two studies show: 'Why the studies differ is not settled here; two of them tie their results to the grid: RMI links its Chicago exception to coal answering extra demand, and the British saving grows in the projection where the grid decarbonizes.' Optionally add that the studies also measure against different baselines."
+    },
+    {
+      "sentence": "s04",
+      "fingerprint": "b87a3d94d9",
+      "revision": 1,
+      "category": "wording",
+      "severity": "info",
+      "explanation": "'A gas-fired plant behind the meter' misuses the term: behind-the-meter means generation on the customer's side, and the source means a central power station. The attribution and the quote are otherwise accurate.",
+      "suggestion": "'even when the electricity comes from a gas-fired power plant'."
+    },
+    {
+      "sentence": "s05",
+      "fingerprint": "ba7ee33d0f",
+      "revision": 1,
+      "category": "info",
+      "severity": "info",
+      "explanation": "The NBER households are Octopus Energy customers who bought their heat pumps from Octopus (the paper's sample; Centre for Net Zero, part of Octopus Energy Group, wrote it). 'British households that swapped' describes that sample correctly, but an editor may want to name it.",
+      "refs": [
+        "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L193-L198"
+      ]
+    }
+  ],
+  "dispositions": {}
+}

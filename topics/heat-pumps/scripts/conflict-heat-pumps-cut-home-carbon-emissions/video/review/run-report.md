@@ -48,3 +48,11 @@ Undertow (cleared): opening sc01-sc02, setup sc03-sc05, evidence sc06-sc14, endi
 - Script: r5, no sentence changed (the script cites only US and UK evidence; nothing it says is contradicted or counted). Re-review approved 26 of 26, carried the 17 dispositions forward, logged an info omission on s20 (Fraunhofer uses the average German mix, not marginal grid power; 0.4 confidence).
 - Re-locked `release.json` (package 5108ce9ff2). Graphics, music and render untouched: nothing re-rendered; QA stays `passed (36 of 36)` / `RESULT: PASSED`.
 - Release blockers: none new (narration and music cleared per the build report).
+
+## Article and re-render run, 2026-10-27
+
+- Mp4: `video/review/conflict-heat-pumps-cut-home-carbon-emissions-review-private.mp4` (draft build, private review package); checklist `video/review/checklist.md`. Approver: Jon Borchardt (`automated: /produce run started by Jon Borchardt`).
+- Article: written (r1), reviewed: one blocking finding (table t1 put NBER whole-home footprint cuts, 36% and 68%, in one column with Fraunhofer's and the Canadian Climate Institute's cuts against gas heating only) and one warning (s18 claimed every study's result lines up with its grid assumption; only RMI and NBER show it). Revision r2 split the table by baseline, narrowed s18, and fixed "behind the meter" in s04. A fresh reviewer passed it (22 sentences, 25 of 25 assertions, 0 blocking; 23 needs-qualification warnings left open). Locked `article-release.json` revision 1.
+- Evidence added: none. Script: unchanged (r5, release.json untouched).
+- Re-render: the 2026-10-22 build predated the institution kit (board: look-stale). `video spike` re-rendered all 17 scenes (277.9 s, 8338 frames; the kit's close card is the new 17th scene) and mixed Undertow (4 cues, music -19.9 dB under the voice, peak -1.3 dB). QA: `passed: 36 of 36 checks` / `RESULT: PASSED`. Packaged.
+- Release blockers: the re-render narrated with edge (draft), so the Azure release build of 2026-10-22 is now a private review build again. A person re-runs `npm run video -- final heat-pumps conflict:heat-pumps-cut-home-carbon-emissions --approved-by <name>` after watching it. Music: cleared.
