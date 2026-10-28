@@ -38,3 +38,11 @@ Undertow (cleared): sc01-sc04, sc05-sc32, sc33-sc34. Music -20.4 dB under the vo
 ## Release build
 
 - 2026-10-22: `npm run video -- final sovereign-citizens decision:money-debt-and-taxes --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.
+
+## Article and re-render in the institution kit (2026-10-28)
+
+- Wall-clock: about 50 min (approver Jon Borchardt, `automated: /produce run started by Jon Borchardt`).
+- Article: written (r1, 40 sentences, 48 assertions, figure sc01, table t1, two unresolved callouts and one qualification callout). The first review held `heading:hook` ("A mortgage paid with a bill on a secret account": Bryant says the bill was refused and she did not tender payment); r2 changed it to "A mortgage bill drawn on a secret account"; a fresh reviewer passed it (48 of 48 verified, 0 blocking) and it was locked (`article-release.json`). One stale warning on s01 (the r1 heading overclaim) stays listed; it no longer applies.
+- Evidence added: none. Script revisions: none.
+- Re-render: `video/segment.mp4` dated 2026-10-22 predated the kit merge (board: look-stale). `npm run video -- spike` re-rendered all 35 scenes (incl. the `end` close card) in the institution kit: 12399 frames, 413.3 s; music -20.3 dB under the voice, peak -1.3 dB. QA `RESULT: PASSED`, 36 of 36 checks. Packaged as a private review build.
+- The re-render turned the 2026-10-22 Azure release build back into an edge draft: release is blocked again until a person re-runs `npm run video -- final sovereign-citizens decision:money-debt-and-taxes --approved-by <name>`.
