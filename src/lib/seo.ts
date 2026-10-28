@@ -37,9 +37,10 @@ export const isoDuration = (seconds: number) => {
   return `PT${Math.floor(s / 60)}M${s % 60}S`;
 };
 
+/** A BreadcrumbList from the home page down: pass the levels below it. */
 export const breadcrumbJsonLd = (items: { name: string; path: string }[]) => ({
   ...ld('BreadcrumbList'),
-  itemListElement: items.map((x, i) => ({
+  itemListElement: [{ name: site.name, path: '/' }, ...items].map((x, i) => ({
     '@type': 'ListItem',
     position: i + 1,
     name: x.name,

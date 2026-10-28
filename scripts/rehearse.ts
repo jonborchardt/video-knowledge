@@ -5,7 +5,7 @@
 // passes through, so `DEPLOY_TARGET=pages npm run rehearse -- ...` rehearses the mirror. --keep leaves the copy to
 // preview. Exit 0 RESULT: PASSED, 1 RESULT: FAILED (<step>), 2 on a refusal.
 import { spawnSync } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, symlinkSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
 import { dirname, isAbsolute, join, relative } from 'node:path';
 import { ROOT, toJson } from '../src/lib/io';
 import { publishPath } from '../src/lib/publish';
@@ -43,6 +43,9 @@ symlinkSync(join(ROOT, 'node_modules'), join(dir, 'node_modules'), 'junction');
 writeFileSync(publishPath(topic, storyId, dir), toJson(rehearsalLedger(topic, storyId, new Date().toISOString())));
 console.log(`Rehearsal copy: ${dir} (${files.length} files)`);
 
+// the real checkout's dist/<topic> may exist (a live topic); the rehearsal must not touch it
+const realDist = () => (existsSync(join(ROOT, 'dist', topic)) ? statSync(join(ROOT, 'dist', topic)).mtimeMs : null);
+const distBefore = realDist();
 let failed: string | null = null;
 for (const cmd of rehearsalSteps(topic)) {
   console.log(`\n== rehearse: ${cmd}`);
@@ -54,7 +57,7 @@ for (const cmd of rehearsalSteps(topic)) {
 }
 if (!failed && !existsSync(join(dir, 'dist', topic, storyUrlSlug({ id: storyId }), 'index.html')))
   failed = 'the story page was not built';
-if (existsSync(join(ROOT, 'dist', topic))) failed = `leak: ${join(ROOT, 'dist', topic)} exists in the real checkout`;
+if (realDist() !== distBefore) failed = `leak: ${join(ROOT, 'dist', topic)} changed in the real checkout`;
 
 if (keep) console.log(`\nTo review: cd "${dir}" && npm run preview (then stop it: kill the process on port 4321)`);
 else removeRehearsal(dir);

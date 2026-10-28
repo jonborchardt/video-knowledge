@@ -7,6 +7,7 @@ import logo from '../assets/logo.svg?raw';
 
 const current = Astro.url.pathname;
 const isActive = (path: string) => current.startsWith(href(path));
+const nav = import.meta.env.DEV ? [...site.nav, { label: 'Admin', href: '/admin' }] : site.nav;
 ---
 
 <header class="border-b print:hidden">
@@ -22,7 +23,7 @@ const isActive = (path: string) => current.startsWith(href(path));
     <nav aria-label="Main">
       <ul class="flex items-center gap-1 text-sm">
         {
-          site.nav.map((item) => (
+          nav.map((item) => (
             <li>
               <a
                 href={href(item.href)}
@@ -33,19 +34,6 @@ const isActive = (path: string) => current.startsWith(href(path));
               </a>
             </li>
           ))
-        }
-        {
-          import.meta.env.DEV && (
-            <li>
-              <a
-                href={href('/admin')}
-                aria-current={isActive('/admin') ? 'page' : undefined}
-                class="rounded-sm px-2 py-1 text-muted-foreground no-underline hover:text-foreground aria-[current=page]:font-medium aria-[current=page]:text-foreground"
-              >
-                Admin
-              </a>
-            </li>
-          )
         }
         <li><ThemeToggle /></li>
       </ul>

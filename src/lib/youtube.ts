@@ -242,14 +242,12 @@ export interface RemoteVideo {
   ytRating?: string;
   regionRestriction?: { allowed?: string[]; blocked?: string[] };
   hasCustomThumbnail?: boolean;
-  fileName?: string;
   fileSize?: number;
   fileAvailability?: string;
 }
 export interface RemoteCaption {
   id: string;
   language: string;
-  name: string;
   trackKind: string;
   status: string;
 }
@@ -424,7 +422,7 @@ export function youtubeClient(creds: Credentials, fetchFn: typeof fetch = fetch)
             regionRestriction?: { allowed?: string[]; blocked?: string[] };
           };
           processingDetails?: { processingStatus?: string; fileAvailability?: string };
-          fileDetails?: { fileName?: string; fileSize?: string };
+          fileDetails?: { fileSize?: string };
         }[];
       };
       const v = j.items?.[0];
@@ -451,7 +449,6 @@ export function youtubeClient(creds: Credentials, fetchFn: typeof fetch = fetch)
         ytRating: cd.contentRating?.ytRating,
         regionRestriction: cd.regionRestriction,
         hasCustomThumbnail: cd.hasCustomThumbnail,
-        fileName: fd.fileName,
         fileSize: fd.fileSize === undefined ? undefined : Number(fd.fileSize),
         fileAvailability: v.processingDetails?.fileAvailability,
       };
@@ -462,12 +459,11 @@ export function youtubeClient(creds: Credentials, fetchFn: typeof fetch = fetch)
     async listCaptions(videoId) {
       const r = await request(`${API}/captions?part=snippet&videoId=${videoId}`, { method: 'GET' });
       const j = (await r.json()) as {
-        items?: { id: string; snippet?: { language?: string; name?: string; trackKind?: string; status?: string } }[];
+        items?: { id: string; snippet?: { language?: string; trackKind?: string; status?: string } }[];
       };
       return (j.items ?? []).map((c) => ({
         id: c.id,
         language: c.snippet?.language ?? '',
-        name: c.snippet?.name ?? '',
         trackKind: c.snippet?.trackKind ?? '',
         status: c.snippet?.status ?? '',
       }));

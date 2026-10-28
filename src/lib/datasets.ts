@@ -43,7 +43,7 @@ const fields = (line: string) => line.split('|').map((f) => f.replace(/\s+/g, ' 
 export function datasetProblems(
   d: DataTable,
   read: PassageReader,
-  today = new Date().toISOString().slice(0, 10), // YYYY-MM-DD; a retrieval cannot be in the future
+  today = new Date().toLocaleDateString('en-CA'), // the local YYYY-MM-DD, as a retrieval is dated; a retrieval cannot be in the future
 ): string[] {
   const out: string[] = [];
   if (!/^\d{4}-\d{2}-\d{2}$/.test(d.retrieved ?? '') || Number.isNaN(Date.parse(d.retrieved)))

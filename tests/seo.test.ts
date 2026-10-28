@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { author } from '../src/config/site';
+import { author, site } from '../src/config/site';
 import { articleJsonLd, breadcrumbJsonLd, isoDuration, websiteJsonLd } from '../src/lib/seo';
 
 describe('seo', () => {
@@ -23,10 +23,8 @@ describe('seo', () => {
   });
 
   it('breadcrumbs are absolute and numbered from 1', () => {
-    const b = breadcrumbJsonLd([
-      { name: 'A', path: '/' },
-      { name: 'B', path: '/b/' },
-    ]);
+    const b = breadcrumbJsonLd([{ name: 'B', path: '/b/' }]);
+    expect(b.itemListElement[0].name).toBe(site.name);
     expect(b.itemListElement.map((x: { position: number }) => x.position)).toEqual([1, 2]);
     expect(b.itemListElement[1].item).toBe('https://commonwealthofreason.com/b/');
     for (const x of b.itemListElement) expect(x.item).toMatch(/^https:\/\/commonwealthofreason\.com\//);

@@ -187,13 +187,12 @@ export function reviewView(topic: string, storyId: string, root = ROOT): ReviewV
           ? 'a draft (edge voice) is never approved: Accept draft makes the release build'
           : !pkg.qaOk
             ? 'QA failed on this build'
-            : lookWhy
-              ? lookWhy
-              : !o
+            : (lookWhy ??
+              (!o
                 ? 'no ledger entry yet: npm run video -- package records it'
                 : state!.status === 'approved' || state!.status === 'scheduled'
                   ? `already ${state!.status}`
-                  : true)),
+                  : true)))),
     requestChanges: !pkg
       ? 'no review package yet'
       : !o
@@ -217,7 +216,7 @@ export function reviewView(topic: string, storyId: string, root = ROOT): ReviewV
             ? 'approved: upload it privately first'
             : !o.parentLive
               ? `publish ${o.out.derivedFrom} first`
-              : true,
+              : (lookWhy ?? true),
   };
 
   const parent = short

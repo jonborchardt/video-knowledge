@@ -43,7 +43,6 @@ import {
 } from './publish';
 import { type ReviewFile, loadReview, reviewPath } from './review';
 import { buildPackage, docHasher, docReader } from './evidence-package';
-import { storyOutputs } from './outputs';
 import { loadPublicRecord } from './public-record';
 import { releaseCheck, storyboardFingerprint, validationFingerprint } from './release';
 import {
@@ -923,7 +922,6 @@ function articleOf({
   pkg,
   script,
   release,
-  plan,
   short,
 }: BoardContext): Production['article'] {
   if (!release || short) return null;
@@ -946,20 +944,11 @@ function articleOf({
         next: `${stale.id} was revised on ${stale.at}: ${stale.note}, then ${writer}, or if the text stands: npm run article -- reaffirm ${topic} ${storyId} --approved-by "<your name>" --note "<why unchanged>"`,
       };
     // A rebuilt package or a re-cut chart moves under the release: the text is judged again below, as an unreleased
-    // one is. Passing, a package that moved changes nothing a reader sees; a figure whose data changed is a correction,
-    // or for a release without a figure copy whose video is not live, the copy-only lock (no public revision).
+    // one is. Passing, a package that moved changes nothing a reader sees; a figure whose data changed is a correction.
     const drift = articleDrift(out, { package: pkg?.fingerprint ?? '', figures: figureData(topic, storyId, root) });
     if (!drift.length) return { state: 'released', next: 'none' };
     text = a ?? out.article;
-    passed = !drift.some((d) => d.startsWith('figure '))
-      ? { state: 'released', next: 'none' }
-      : !out.figures &&
-          !drift.some((d) => d.startsWith('package ')) &&
-          !!plan &&
-          release.fingerprints.storyboard === storyboardFingerprint(plan as Storyboard) &&
-          !storyOutputs(topic, storyId, root).video
-        ? { state: 'changed', next: `npm run article -- lock ${topic} ${storyId}` }
-        : correct;
+    passed = drift.some((d) => d.startsWith('figure ')) ? correct : { state: 'released', next: 'none' };
   }
   // Nothing released yet: each state says how it halts the video.
   const k = (kind: HaltKind) => (out ? {} : { kind });

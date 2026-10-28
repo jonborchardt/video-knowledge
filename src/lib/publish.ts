@@ -300,12 +300,24 @@ export const lastCaptions = (o: Pick<Output, 'events'>) => {
 /** The last upload or update that sent metadata: what the platform has now. */
 export const lastSent = (o: Pick<Output, 'events'>) =>
   o.events.findLast((e) => (e.type === 'uploaded' || e.type === 'updated') && e.metadata);
-/** Whether the latest verification since the last upload or update failed one of `names`: what push resends. */
-export const failedSince = (o: Pick<Output, 'events'>, names: string[]): boolean => {
+/** Whether the latest verification since the last upload or update failed one of `names` (with a detail matching
+ *  `detail`, when given): what push resends. */
+export const failedSince = (o: Pick<Output, 'events'>, names: string[], detail?: RegExp): boolean => {
   const i = o.events.findLastIndex((e) => e.type === 'uploaded' || e.type === 'updated');
   const v = o.events.slice(i + 1).findLast((e) => e.type === 'verified');
-  return !!v?.checks?.some((c) => c.result === 'fail' && names.includes(c.name));
+  return !!v?.checks?.some(
+    (c) => c.result === 'fail' && names.includes(c.name) && (!detail || detail.test(c.detail ?? '')),
+  );
 };
+/** Whether the captions must be sent again: a verification since the last send found none serving, or a send failed. */
+export const captionsDue = (o: Pick<Output, 'events'>): boolean => {
+  const i = o.events.findLastIndex((e) => e.type === 'uploaded' || e.type === 'updated');
+  return (
+    failedSince(o, ['captions']) || o.events.slice(i + 1).some((e) => e.type === 'failed' && e.step === 'captions')
+  );
+};
+/** A restriction a status resend fixes (embedding, licence); age and region restrictions are YouTube's to lift. */
+export const FIXABLE_RESTRICTION = /embedding off|licence/;
 
 // ---- state ------------------------------------------------------------------------------------------------------
 
@@ -348,7 +360,6 @@ export interface OutputState {
   status: OutputStatus;
   live: boolean; // published and not since unpublished, whatever else the status says (metadata-behind keeps it live)
   failed: PublishEvent | null; // an overlay: the last event (a verification aside), when it is a failure
-  verification: PublishEvent | null; // the latest verified event for the uploaded id; it never changes the status
   requested: PublishEvent | null; // the changes-requested event that holds the current build, if any
   id: string | null;
   url: string | null;
@@ -409,7 +420,6 @@ export function outputState(
   const base: Omit<OutputState, 'status' | 'next' | 'due'> = {
     live,
     failed,
-    verification: (id && ev.findLast((e) => e.type === 'verified' && e.id === id)) || null,
     requested: requested?.type === 'changes-requested' ? requested : null,
     id,
     url: id ? url : null,
@@ -760,7 +770,7 @@ export function recordApproved(
 }
 
 /** The output's video folder (a Short's own, in its folder). */
-const videoDirOf = (o: ReturnType<typeof openOutput>) => {
+export const videoDirOf = (o: ReturnType<typeof openOutput>) => {
   const nested = nestedSource(o.root, o.out);
   return join(nested ? join(o.root, nested) : o.dir, 'video');
 };
@@ -853,8 +863,14 @@ export function recordUpdated(
   if (!o.metadata) throw new Refusal('no review package; the metadata cannot be composed');
   const sent = lastSent(o.out);
   // unchanged text is nothing new unless captions landed that the video did not have, or a verification found it missing
-  const captionsNew = !!a.captions && (a.captions !== lastCaptions(o.out) || failedSince(o.out, ['captions']));
-  if (sent?.metadata === o.metadata.sha && !failedSince(o.out, METADATA_CHECKS) && !captionsNew)
+  const captionsNew = !!a.captions && (a.captions !== lastCaptions(o.out) || captionsDue(o.out));
+  // a status resent for a restriction is new too, so the verification that asked for it is answered
+  if (
+    sent?.metadata === o.metadata.sha &&
+    !failedSince(o.out, METADATA_CHECKS) &&
+    !captionsNew &&
+    !a.fields.includes('status')
+  )
     return { event: sent, existing: true, message: `the metadata is unchanged since ${describe(sent)}` };
   return write(o, {
     at: stamp(a),
@@ -874,11 +890,16 @@ export function recordVerified(
 ): VerbResult {
   const o = openOutput(topic, storyId, a);
   if (!o.state.id) throw new Refusal('nothing uploaded; there is nothing on YouTube to verify');
-  const e: PublishEvent = { at: stamp(a), type: 'verified', by: a.by, id: o.state.id };
+  const e: PublishEvent = {
+    at: stamp(a),
+    type: 'verified',
+    by: a.by,
+    id: o.state.id,
+    result: a.result,
+    checks: a.checks,
+  };
   if (o.state.uploadedBuild) e.build = o.state.uploadedBuild;
   if (o.metadata?.sha) e.metadata = o.metadata.sha;
-  e.result = a.result;
-  e.checks = a.checks;
   return write(o, e);
 }
 

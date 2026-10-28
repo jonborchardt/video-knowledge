@@ -6,7 +6,7 @@
 //                                                                      as a revision in the topic's public-record.json
 //   reaffirm <topic> <story-id> --approved-by "<name>" --note "<why unchanged>"  a stale article's text stands
 // lock and correct validate afresh and refuse (exit 2, nothing written) unless it passes; a real name or "automated: ...".
-// Both copy each figure's data into the release; lock on an unchanged release without that copy adds only the copy.
+// Both copy each figure's data into the release.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import {
@@ -21,23 +21,13 @@ import {
 } from '../src/lib/article';
 import { articleStale } from '../src/lib/article-view';
 import { figureData, validateArticleIn } from '../src/lib/article-validation';
-import { storyOutputs } from '../src/lib/outputs';
 import { corpusOf } from '../src/lib/corpus';
 import { passageReader } from '../src/lib/evidence';
 import { readJson, toJson, writeArtifact, ROOT } from '../src/lib/io';
 import { loadPublicRecord, publicRecordPath, withArticleRevision } from '../src/lib/public-record';
 import { Refusal } from '../src/lib/publish';
 import { loadReview } from '../src/lib/review';
-import { storyboardFingerprint } from '../src/lib/release';
-import {
-  type EvidencePackage,
-  FILES,
-  type Release,
-  type Script,
-  type ScriptValidation,
-  scriptDir,
-} from '../src/lib/script';
-import type { Storyboard } from '../src/lib/storyboard';
+import { type EvidencePackage, FILES, type Script, type ScriptValidation, scriptDir } from '../src/lib/script';
 import { loadTopic } from '../src/lib/topics';
 
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
@@ -106,21 +96,15 @@ function run() {
     case 'lock': {
       const { a, v } = releasable();
       const prev = loadArticleRelease(topic, storyId);
-      const figures = releaseFigures(a, figureData(topic, storyId));
-      const locked = readJson<Release>(p(FILES.release));
-      const sb = readJson<Storyboard>(p(FILES.storyboard));
-      const r = lockArticle(prev, a, v, flag('--approved-by') ?? '', today, figures, {
-        live: !!storyOutputs(topic, storyId).video,
-        storyboardLocked: !!locked && !!sb && locked.fingerprints.storyboard === storyboardFingerprint(sb),
-      });
+      const r = lockArticle(
+        prev,
+        a,
+        v,
+        flag('--approved-by') ?? '',
+        today,
+        releaseFigures(a, figureData(topic, storyId)),
+      );
       if (r === prev) return console.log(`${rel(p(ARTICLE_FILES.release))} unchanged: revision ${r.revision}`);
-      if (prev) {
-        // a release from before figure snapshots: the snapshot added, nothing else (approver, history, recordSeen)
-        writeArtifact(dir, ARTICLE_FILES.release, toJson(r));
-        return console.log(
-          `${rel(p(ARTICLE_FILES.release))}: figure snapshot added (${Object.keys(figures).join(', ') || 'no figures'}); revision ${r.revision}, approval and history unchanged, no public-record revision`,
-        );
-      }
       // the revisions it has seen: any appended later makes it stale, the same day too
       writeArtifact(dir, ARTICLE_FILES.release, toJson({ ...r, recordSeen: loadPublicRecord(topic).revisions.length }));
       console.log(`released ${rel(p(ARTICLE_FILES.release))}: revision ${r.revision}, approved by ${r.approvedBy}`);

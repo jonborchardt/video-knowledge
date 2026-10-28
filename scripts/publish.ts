@@ -54,7 +54,6 @@ import {
 } from '../src/lib/publish';
 import { scriptDir, shortOf, storySlug } from '../src/lib/script';
 import { goLive, push, sync, upload, verify } from '../src/lib/uploader';
-import { METADATA_CHECKS } from '../src/lib/verify';
 import { TOKEN_FILE, YouTubeError, authorize, loadCredentials, youtubeClient } from '../src/lib/youtube';
 
 if (existsSync(join(ROOT, '.env'))) process.loadEnvFile(join(ROOT, '.env')); // keys only; never committed
@@ -256,7 +255,7 @@ async function main() {
         chapters: [remote?.description, v.expected.chapters.map((c) => `${c.stamp} ${c.title}`).join('\n')],
       };
       for (const k of v.checks)
-        if (k.result === 'fail' && METADATA_CHECKS.includes(k.name) && pairs[k.name])
+        if (k.result === 'fail' && pairs[k.name])
           console.log(
             `    youtube:  ${JSON.stringify(pairs[k.name][0] ?? null)}\n    composed: ${JSON.stringify(pairs[k.name][1])}`,
           );

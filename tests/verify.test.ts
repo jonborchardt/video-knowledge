@@ -47,11 +47,10 @@ const ok: RemoteVideo = {
   ytRating: undefined,
   regionRestriction: undefined,
   hasCustomThumbnail: true,
-  fileName: 'x.mp4',
   fileSize: 1024,
   fileAvailability: 'available',
 };
-const track: RemoteCaption = { id: 'c', language: 'en', name: 'English', trackKind: 'standard', status: 'serving' };
+const track: RemoteCaption = { id: 'c', language: 'en', trackKind: 'standard', status: 'serving' };
 const check = (c: ReturnType<typeof verificationChecks>, name: string) => c.find((k) => k.name === name)!;
 
 describe('verificationChecks', () => {

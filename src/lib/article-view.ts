@@ -41,7 +41,7 @@ export function releaseFigureDraws(r: ArticleRelease, docNames: Record<string, s
     const d = r.figures?.[b.ref];
     if (!d)
       throw new Error(
-        `figure ${b.ref}: the release has no snapshot of its data; run npm run article -- lock ${r.topic} ${r.story} (before its video is live) or npm run article -- correct ${r.topic} ${r.story}`,
+        `figure ${b.ref}: the release has no snapshot of its data; run npm run article -- correct ${r.topic} ${r.story} --note "<why>"`,
       );
     const chart = 'chart' in d ? d.chart : datasetChart(d.table);
     const problems = chart ? chartProblems(chart) : [];

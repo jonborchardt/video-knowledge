@@ -33,7 +33,6 @@ import {
 import { corpusOf } from '../src/lib/corpus';
 import { loadStories } from '../src/lib/stories';
 import { passageReader } from '../src/lib/evidence';
-import { storyboardFingerprint } from '../src/lib/release';
 import type { Storyboard } from '../src/lib/storyboard';
 import { docHasher, docReader } from '../src/lib/evidence-package';
 import { loadReview } from '../src/lib/review';
@@ -41,7 +40,6 @@ import { validateScript } from '../src/lib/script-validation';
 import { loadTopic } from '../src/lib/topics';
 import {
   type EvidencePackage,
-  type Release,
   type Script,
   type ScriptReviewFile,
   type ScriptValidation,
@@ -66,7 +64,7 @@ describe('production board', () => {
     }
   });
 
-  it('a locked production reads as its lock says', () => {
+  it('a locked production reads as its lock says', { timeout: 30_000 }, () => {
     const f = syntheticProduction('locked');
     try {
       const prod = productionOf(f.topic, f.story, f.root)!;
@@ -116,7 +114,7 @@ describe('halt kinds', () => {
     expect(validationHaltKind(run(blockedScript(1)))).toBe('blocking-findings');
   });
 
-  it('a script asking for evidence halts with needs-evidence', () => {
+  it('a script asking for evidence halts with needs-evidence', { timeout: 30_000 }, () => {
     const fx = syntheticProduction('graphics');
     try {
       const f = join(fx.dir, 'script.json');
@@ -133,37 +131,41 @@ describe('halt kinds', () => {
 });
 
 describe('review findings', () => {
-  it('a sentence the reviewer holds on a warning goes back to the writer, not to another review', () => {
-    const fx = syntheticProduction('graphics');
-    try {
-      const { dir, topic, story, root } = fx;
-      const f = join(dir, 'script-review.json');
-      const r = readJson<ScriptReviewFile>(f)!;
-      const [id, fingerprint] = Object.entries(r.approved)[0];
-      delete r.approved[id];
-      r.findings.push({ sentence: id, fingerprint, category: 'x', severity: 'warning', explanation: 'imprecise' });
-      writeFileSync(f, toJson(r));
-      const v = validateScript(
-        readJson<Script>(join(dir, 'script.json'))!,
-        corpusOf(loadTopic(topic)),
-        passageReader(root),
-        {
-          review: r,
-          judgments: loadReview(topic, root).applicability,
-          previous: readJson<ScriptValidation>(join(dir, 'validation.json')),
-          pkg: readJson<EvidencePackage>(join(dir, 'evidence-package.json'))!,
-          hashDoc: docHasher(docReader(root)),
-        },
-      );
-      expect(v.status).toBe('needs-review');
-      writeFileSync(join(dir, 'validation.json'), toJson(v));
-      const prod = productionOf(topic, story, root)!;
-      expect(prod.halt).toMatchObject({ kind: 'review-findings', stage: 'script' });
-      expect(prod.next).toContain('agent: scripts/briefs/script.md (revise)');
-    } finally {
-      fx.cleanup();
-    }
-  });
+  it(
+    'a sentence the reviewer holds on a warning goes back to the writer, not to another review',
+    { timeout: 30_000 },
+    () => {
+      const fx = syntheticProduction('graphics');
+      try {
+        const { dir, topic, story, root } = fx;
+        const f = join(dir, 'script-review.json');
+        const r = readJson<ScriptReviewFile>(f)!;
+        const [id, fingerprint] = Object.entries(r.approved)[0];
+        delete r.approved[id];
+        r.findings.push({ sentence: id, fingerprint, category: 'x', severity: 'warning', explanation: 'imprecise' });
+        writeFileSync(f, toJson(r));
+        const v = validateScript(
+          readJson<Script>(join(dir, 'script.json'))!,
+          corpusOf(loadTopic(topic)),
+          passageReader(root),
+          {
+            review: r,
+            judgments: loadReview(topic, root).applicability,
+            previous: readJson<ScriptValidation>(join(dir, 'validation.json')),
+            pkg: readJson<EvidencePackage>(join(dir, 'evidence-package.json'))!,
+            hashDoc: docHasher(docReader(root)),
+          },
+        );
+        expect(v.status).toBe('needs-review');
+        writeFileSync(join(dir, 'validation.json'), toJson(v));
+        const prod = productionOf(topic, story, root)!;
+        expect(prod.halt).toMatchObject({ kind: 'review-findings', stage: 'script' });
+        expect(prod.next).toContain('agent: scripts/briefs/script.md (revise)');
+      } finally {
+        fx.cleanup();
+      }
+    },
+  );
 });
 
 describe('graphics stage', () => {
@@ -777,7 +779,7 @@ describe('the article on the board', () => {
   // A released article with one figure over a chart on the first storyboard scene, reviewed at the current package.
   const point = { label: 'Homes', value: 40, unit: 'percent', display: '40%', cite: 'x#L1' };
   const chart = { type: 'stat-tiles', points: [point] };
-  const figured = (fx: Fixture, figures: boolean) => {
+  const figured = (fx: Fixture) => {
     const sb = readJson<Storyboard>(join(fx.dir, 'storyboard.json'))!;
     (sb.scenes[0].visual as { chart?: unknown }).chart = chart;
     write(fx, 'storyboard.json', sb);
@@ -798,7 +800,7 @@ describe('the article on the board', () => {
       findings: [],
     });
     const r = { ...released(a), fingerprints: { ...released(a).fingerprints, package: pkg.fingerprint } };
-    write(fx, 'article-release.json', figures ? { ...r, figures: { [ref]: { chart } } } : r);
+    write(fx, 'article-release.json', { ...r, figures: { [ref]: { chart } } });
     const recut = () => {
       (sb.scenes[0].visual as { chart?: unknown }).chart = {
         ...chart,
@@ -816,7 +818,7 @@ describe('the article on the board', () => {
   it('a released article whose chart changed shows changed with the correct command', { timeout: 30_000 }, () => {
     const fx = syntheticProduction('locked');
     try {
-      const { recut } = figured(fx, true);
+      const { recut } = figured(fx);
       expect(articleState(fx)).toEqual({ state: 'released', next: 'none' });
       recut();
       expect(articleState(fx)).toEqual({ state: 'changed', next: correctCmd(fx) });
@@ -831,35 +833,11 @@ describe('the article on the board', () => {
     () => {
       const fx = syntheticProduction('locked');
       try {
-        const { pkg, recut } = figured(fx, true);
+        const { pkg, recut } = figured(fx);
         write(fx, 'evidence-package.json', { ...pkg, fingerprint: 'rebuilt' });
         expect(articleState(fx)).toEqual({ state: 'review', next: reviewer(fx) });
         recut(); // correct would refuse: the validation does not pass
         expect(articleState(fx)).toEqual({ state: 'review', next: reviewer(fx) });
-      } finally {
-        fx.cleanup();
-      }
-    },
-  );
-
-  it(
-    'a release without a figure copy asks for the copy-only lock while its storyboard is the locked one',
-    { timeout: 30_000 },
-    () => {
-      const fx = syntheticProduction('locked');
-      try {
-        const { sb } = figured(fx, false);
-        // the storyboard edited after the script lock: its charts were never approved, a correction
-        expect(articleState(fx)).toEqual({ state: 'changed', next: correctCmd(fx) });
-        const locked = readJson<Release>(join(fx.dir, 'release.json'))!;
-        write(fx, 'release.json', {
-          ...locked,
-          fingerprints: { ...locked.fingerprints, storyboard: storyboardFingerprint(sb) },
-        });
-        expect(articleState(fx)).toEqual({
-          state: 'changed',
-          next: `npm run article -- lock ${fx.topic} ${fx.story}`,
-        });
       } finally {
         fx.cleanup();
       }

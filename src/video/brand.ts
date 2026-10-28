@@ -7,8 +7,6 @@ import { ROOT } from '../lib/io';
 import { brandKey, kitPaletteOf } from '../lib/look';
 import type { KitPalette } from './types';
 
-export { brandKey } from '../lib/look';
-
 export function stageBrand(topic: string, publicDir: string): string {
   const key = brandKey(topic);
   const from = join(ROOT, 'brand', key);

@@ -89,7 +89,6 @@ const jsonLd = [
   }),
   ...(outputs.video && !first ? [videoJsonLd(outputs.video, s.question, image)] : []),
   breadcrumbJsonLd([
-    { name: site.name, path: '/' },
     { name: commission.name, path: `/commissions/${commissionKey(commission)}/` },
     { name: t.label, path: `/${t.name}/` },
     { name: s.title, path },

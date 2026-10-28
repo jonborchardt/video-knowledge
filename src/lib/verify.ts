@@ -9,16 +9,14 @@ import { lf, readJson } from './io';
 import {
   type CheckResult,
   type LedgerCheck,
-  METADATA_CHECKS,
   type Verdict,
   type Visibility,
-  nestedSource,
   type openOutput,
+  videoDirOf,
 } from './publish';
 import { CATEGORY_DEFAULT } from './uploader';
 import type { RemoteCaption, RemoteVideo } from './youtube';
 
-export { METADATA_CHECKS };
 export const CHECKS = [
   'exists',
   'upload',
@@ -64,9 +62,8 @@ export function expectedOf(o: ReturnType<typeof openOutput>): Expected | null {
     o.state.status === 'scheduled'
       ? (o.out.events.findLast((e) => e.type === 'scheduled' && e.id === id)?.publishAt ?? null)
       : null;
-  const nested = nestedSource(o.root, o.out);
   const review = readJson<{ chapters?: { stamp: string; title: string }[] }>(
-    join(nested ? join(o.root, nested) : o.dir, 'video', 'review', 'review.json'),
+    join(videoDirOf(o), 'review', 'review.json'),
   );
   const file = m.file ? join(o.root, m.file) : null;
   return {
@@ -77,7 +74,10 @@ export function expectedOf(o: ReturnType<typeof openOutput>): Expected | null {
     tags: m.tags,
     category: m.category ?? CATEGORY_DEFAULT,
     language: m.language ?? 'en',
-    chapters: (review?.chapters ?? []).map((c) => ({ stamp: c.stamp, title: c.title })),
+    // a hand-written description (the ledger's override) carries its own chapter lines, if any
+    chapters: o.out.metadata.description
+      ? chapterLines(m.description)
+      : (review?.chapters ?? []).map((c) => ({ stamp: c.stamp, title: c.title })),
     captionsLanguage: m.captions?.language ?? null,
     thumbnail: m.thumbnail !== null,
     syntheticMedia: o.out.metadata.containsSyntheticMedia ?? false,

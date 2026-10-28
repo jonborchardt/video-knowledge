@@ -39,10 +39,7 @@ const description = `Every public inquiry of ${site.name}, under the institution
   description={description}
   jsonLd={[
     collectionJsonLd(`Public inquiries of ${site.name}`, description, '/inquiries/'),
-    breadcrumbJsonLd([
-      { name: site.name, path: '/' },
-      { name: 'Inquiries', path: '/inquiries/' },
-    ]),
+    breadcrumbJsonLd([{ name: 'Inquiries', path: '/inquiries/' }]),
   ]}
 >
   <SourceIcons />

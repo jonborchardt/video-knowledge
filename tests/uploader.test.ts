@@ -704,6 +704,44 @@ describe('verify', () => {
       .filter((c) => c.method === 'updateVideo')
       .map((c) => (c.args[1] as { status?: object }).status);
     expect(status).toContainEqual(expect.objectContaining({ embeddable: true, privacyStatus: 'private' }));
+    // the status resend is recorded, so the next push does not send it again
+    expect(events(f).at(-1)).toMatchObject({ type: 'updated', fields: expect.arrayContaining(['status']) });
+    expect((await push(f.topic, f.story, ctx(f, client))).existing).toBe(true);
+  });
+
+  it('a status resend keeps the visibility YouTube holds now, and age restrictions are not resent', async () => {
+    const f = fresh();
+    const client = fakeClient({ getVideo: matching(f, { embeddable: false }), listCaptions: serving });
+    await upload(f.topic, f.story, ctx(f, client));
+    await verify(f.topic, f.story, ctx(f, client, { anonymous }));
+    // a schedule went public on YouTube since the ledger last looked
+    client.getVideo = matching(f, { embeddable: false, privacyStatus: 'public' });
+    await push(f.topic, f.story, ctx(f, client));
+    const sent = client.calls
+      .filter((c) => c.method === 'updateVideo')
+      .map((c) => (c.args[1] as { status?: object }).status);
+    expect(sent).toContainEqual(expect.objectContaining({ privacyStatus: 'public' }));
+
+    const g = fresh();
+    const aged = fakeClient({ getVideo: matching(g, { ytRating: 'ytAgeRestricted' }), listCaptions: serving });
+    await upload(g.topic, g.story, ctx(g, aged));
+    await verify(g.topic, g.story, ctx(g, aged, { anonymous }));
+    expect((await push(g.topic, g.story, ctx(g, aged))).existing).toBe(true);
+  });
+
+  it('a captions send that failed is sent again on the next push', async () => {
+    const f = fresh();
+    const client = fakeClient({ getVideo: matching(f) });
+    await upload(f.topic, f.story, ctx(f, client));
+    await verify(f.topic, f.story, ctx(f, client, { anonymous })); // no track serving
+    client.insertCaptions = async () => {
+      throw new YouTubeError('quota', 403, 'quotaExceeded', true);
+    };
+    await push(f.topic, f.story, ctx(f, client));
+    expect(events(f).at(-1)).toMatchObject({ type: 'failed', step: 'captions' });
+    client.insertCaptions = async () => {};
+    const p = await push(f.topic, f.story, ctx(f, client));
+    expect(p.event).toMatchObject({ type: 'updated', captions: expect.any(String) });
   });
 
   it('verifies a Short against its own package', async () => {

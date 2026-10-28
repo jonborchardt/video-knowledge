@@ -38,10 +38,7 @@ const body = commissionBody(c);
   image={`/og/${Astro.params.id}.jpg`}
   jsonLd={[
     collectionJsonLd(c.ceremonialName, c.remit, `/commissions/${Astro.params.id}/`),
-    breadcrumbJsonLd([
-      { name: site.name, path: '/' },
-      { name: c.name, path: `/commissions/${Astro.params.id}/` },
-    ]),
+    breadcrumbJsonLd([{ name: c.name, path: `/commissions/${Astro.params.id}/` }]),
   ]}
 >
   <SourceIcons />

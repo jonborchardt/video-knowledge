@@ -24,6 +24,8 @@ import {
   recordUpdated,
   recordUploaded,
   recordVerified,
+  captionsDue,
+  FIXABLE_RESTRICTION,
   failedSince,
   lastCaptions,
   lastSent,
@@ -214,8 +216,8 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
   if (!o.metadata) throw new Refusal('no review package; the metadata cannot be composed');
   // what a verification since the last send found missing is sent again, whatever the shas say
   const captionsCurrent =
-    !o.metadata.captions || (o.metadata.captions.sha === lastCaptions(o.out) && !failedSince(o.out, ['captions']));
-  const restricted = failedSince(o.out, ['restrictions']);
+    !o.metadata.captions || (o.metadata.captions.sha === lastCaptions(o.out) && !captionsDue(o.out));
+  const restricted = failedSince(o.out, ['restrictions'], FIXABLE_RESTRICTION);
   if (
     lastSent(o.out)?.metadata === o.metadata.sha &&
     !failedSince(o.out, METADATA_CHECKS) &&
@@ -244,26 +246,25 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
     }
   };
   if (thumbnail) await asset('thumbnail', () => c.client.setThumbnail(id, thumbnail));
-  // a verification found a restriction (embedding off): send the status again, keeping its visibility and schedule
-  if (restricted) {
-    const publishAt = o.state.live
-      ? undefined
-      : o.out.events.findLast((e) => e.type === 'scheduled' && e.id === id)?.publishAt;
-    await asset('status', () =>
-      c.client.updateVideo(id, {
+  // a verification found a restriction (embedding off): send the status again, keeping the visibility and schedule
+  // YouTube holds now (a schedule may have gone public since the ledger last looked)
+  if (restricted)
+    await asset('status', async () => {
+      const now = await c.client.getVideo(id);
+      if (!now) throw new YouTubeError(`video ${id} not found`, 404, 'videoNotFound', false);
+      await c.client.updateVideo(id, {
         status: {
           ...statusOf(o.out),
-          privacyStatus: o.state.live ? 'public' : 'private',
-          ...(publishAt ? { publishAt } : {}),
+          privacyStatus: now.privacyStatus as VideoStatus['privacyStatus'],
+          ...(now.privacyStatus === 'private' && now.publishAt ? { publishAt: now.publishAt } : {}),
         },
-      }),
-    );
-  }
+      });
+    });
   if (captions)
     await asset('captions', async () => {
       // a verification found no serving track: replace the ones not serving rather than pile up another
       // (captions.list and captions.delete, 50 units each, only on this path)
-      if (failedSince(o.out, ['captions']))
+      if (captionsDue(o.out))
         for (const t of await c.client.listCaptions(id))
           if (t.trackKind.toLowerCase() === 'standard' && t.language === captions.language && t.status !== 'serving')
             await c.client.deleteCaptions(t.id);

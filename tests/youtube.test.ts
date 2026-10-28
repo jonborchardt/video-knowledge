@@ -486,7 +486,7 @@ describe('thumbnail, captions, update, list', () => {
     ]);
     const tracks = await youtubeClient(creds(), f.fn).listCaptions('vid00000001');
     expect(f.calls.at(-1)!.url).toContain('captions?part=snippet&videoId=vid00000001');
-    expect(tracks).toEqual([{ id: 'c1', language: 'en', name: 'English', trackKind: 'standard', status: 'serving' }]);
+    expect(tracks).toEqual([{ id: 'c1', language: 'en', trackKind: 'standard', status: 'serving' }]);
   });
 
   it('deleteCaptions deletes the track by id', async () => {

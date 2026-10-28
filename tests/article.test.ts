@@ -477,7 +477,6 @@ describe('article release', () => {
     const figs: Record<string, FigureData> = { [ref]: { chart } };
     const fa = withBlock({ kind: 'figure', ref, caption: 'Outcomes' });
     const fv = check(fa, { review: approveArticle(fa), figures: new Set([ref]) });
-    const ok = { live: false, storyboardLocked: true };
     it('the fixture passes', () => expect(fv.status).toBe('passed'));
     it('the release snapshots the figures it names', () => {
       expect(lockArticle(null, fa, fv, 'Jon', '2026-11-01', figs).figures).toEqual(figs);
@@ -499,34 +498,6 @@ describe('article release', () => {
       const r1 = lockArticle(null, fa, fv, 'Jon', 'd', figs);
       expect(() => correctArticle(r1, fa, fv, 'Jon', 'n', 'd2', figs)).toThrow(/unchanged/);
     });
-    it('lock adds the missing snapshot to an unchanged legacy release without a revision', () => {
-      const legacy = { ...lockArticle(null, fa, fv, 'automated: x started by Jon', 'd', figs), figures: undefined };
-      // no approval is given: the release keeps its own approver, revision and history
-      const x = lockArticle(legacy, fa, fv, '', '2026-11-09', figs, ok);
-      expect(x).toEqual({ ...legacy, figures: figs });
-      expect([x.revision, x.history, x.approvedBy, x.date]).toEqual([
-        legacy.revision,
-        legacy.history,
-        legacy.approvedBy,
-        legacy.date,
-      ]);
-      // a name given is never recorded, but a placeholder is refused
-      expect(lockArticle(legacy, fa, fv, 'Someone Else', 'd2', figs, ok).approvedBy).toBe(legacy.approvedBy);
-      expect(() => lockArticle(legacy, fa, fv, '<name>', 'd2', figs, ok)).toThrow(Refusal);
-    });
-    it('the copy-only lock refuses data its release did not cover', () => {
-      const legacy = { ...lockArticle(null, fa, fv, 'Jon', 'd', figs), figures: undefined };
-      // a validation that does not pass: e.g. the review is bound to an older package
-      expect(() => lockArticle(legacy, fa, check(fa), '', 'd2', figs, ok)).toThrow(/not passed/);
-      // the package moved since the release
-      const moved = { ...legacy, fingerprints: { ...legacy.fingerprints, package: 'older' } };
-      expect(() => lockArticle(moved, fa, fv, '', 'd2', figs, ok)).toThrow(/package moved/);
-      // the storyboard is not the one the script lock approved
-      expect(() => lockArticle(legacy, fa, fv, '', 'd2', figs, { live: false, storyboardLocked: false })).toThrow(
-        /storyboard/,
-      );
-      expect(() => lockArticle(legacy, fa, fv, '', 'd2', figs)).toThrow(/storyboard/);
-    });
     it('articleDrift names a moved package and a changed figure, and nothing when both match', () => {
       const r1 = lockArticle(null, fa, fv, 'Jon', 'd', figs);
       const pkgNow = r1.fingerprints.package;
@@ -539,10 +510,6 @@ describe('article release', () => {
       expect(
         articleDrift({ ...r1, figures: undefined }, { package: pkgNow, figures: new Map([[ref, figs[ref]]]) }),
       ).toEqual([`figure ${ref}`]);
-    });
-    it('lock refuses to add a snapshot to a live story', () => {
-      const legacy = { ...lockArticle(null, fa, fv, 'Jon', 'd', figs), figures: undefined };
-      expect(() => lockArticle(legacy, fa, fv, 'Jon', 'd2', figs, { ...ok, live: true })).toThrow(/live.*correct/);
     });
   });
   it('the markdown shows headings, sentence states and open issues', () => {

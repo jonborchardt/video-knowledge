@@ -1097,14 +1097,15 @@ describe('verification events', () => {
     expect(failedSince(loadLedger(f.topic, f.story, f.root)!.outputs.youtube, ['title'])).toBe(true);
   });
 
-  it('a verification does not hide a failure and is shown on the state', () => {
+  it('a verification does not hide a failure and is recorded', () => {
     const f = fresh();
     recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
     recordFailed(f.topic, f.story, { ...a(f), step: 'thumbnail', error: 'forbidden', retryable: false });
     recordVerified(f.topic, f.story, { ...a(f), result: 'passed', checks: [{ name: 'title', result: 'pass' }] });
-    const s = openOutput(f.topic, f.story, { root: f.root }).state;
+    const o = openOutput(f.topic, f.story, { root: f.root });
+    const s = o.state;
     expect(s.failed?.step).toBe('thumbnail');
-    expect(s.verification?.result).toBe('passed');
+    expect(o.out.events.at(-1)?.result).toBe('passed');
     expect(s.status).toBe('uploaded');
   });
 
