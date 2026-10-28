@@ -218,6 +218,7 @@ export interface VideoStatus {
   publishAt?: string;
   selfDeclaredMadeForKids?: boolean;
   containsSyntheticMedia?: boolean;
+  embeddable?: boolean;
 }
 export interface RemoteVideo {
   id: string;

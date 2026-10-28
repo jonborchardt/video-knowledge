@@ -149,6 +149,7 @@ describe('upload', { timeout: 30_000 }, () => {
       privacyStatus: 'private',
       selfDeclaredMadeForKids: false,
       containsSyntheticMedia: false,
+      embeddable: true,
     });
     expect(a.snippet.categoryId).toBe(CATEGORY_DEFAULT);
     expect(a.session).toBeNull();
@@ -438,6 +439,7 @@ describe('goLive', () => {
             publishAt: at,
             selfDeclaredMadeForKids: false,
             containsSyntheticMedia: false,
+            embeddable: true,
           },
         },
       ],
@@ -466,7 +468,14 @@ describe('goLive', () => {
       method: 'updateVideo',
       args: [
         'vid00000001',
-        { status: { privacyStatus: 'public', selfDeclaredMadeForKids: false, containsSyntheticMedia: false } },
+        {
+          status: {
+            privacyStatus: 'public',
+            selfDeclaredMadeForKids: false,
+            containsSyntheticMedia: false,
+            embeddable: true,
+          },
+        },
       ],
     });
   });
@@ -679,6 +688,22 @@ describe('verify', () => {
     await push(f.topic, f.story, ctx(f, client));
     expect(client.calls.filter((c) => c.method === 'deleteCaptions').map((c) => c.args[0])).toEqual(['old1']);
     expect(client.calls.filter((c) => c.method === 'insertCaptions')).toHaveLength(2);
+  });
+
+  it('every status write keeps embedding on, and push turns it back on when verify found it off', async () => {
+    const f = fresh();
+    const client = fakeClient({ getVideo: matching(f, { embeddable: false }), listCaptions: serving });
+    await upload(f.topic, f.story, ctx(f, client));
+    expect(client.calls.find((c) => c.method === 'insertVideo')!.args[0]).toMatchObject({
+      status: { embeddable: true },
+    });
+    const r = await verify(f.topic, f.story, ctx(f, client, { anonymous }));
+    expect(r.checks.find((k) => k.name === 'restrictions')!.detail).toContain('embedding off');
+    await push(f.topic, f.story, ctx(f, client));
+    const status = client.calls
+      .filter((c) => c.method === 'updateVideo')
+      .map((c) => (c.args[1] as { status?: object }).status);
+    expect(status).toContainEqual(expect.objectContaining({ embeddable: true, privacyStatus: 'private' }));
   });
 
   it('verifies a Short against its own package', async () => {

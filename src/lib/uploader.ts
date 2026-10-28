@@ -82,12 +82,14 @@ const snippetOf = (m: UploadMetadata): Snippet => ({
   categoryId: m.category ?? CATEGORY_DEFAULT,
   defaultLanguage: m.language ?? LANGUAGE_DEFAULT,
 });
-/** Every status write carries the declarations: videos.update replaces the whole part it names, so a status with
- *  only privacyStatus would reset selfDeclaredMadeForKids and containsSyntheticMedia. */
+/** Every status write carries the declarations and embedding: videos.update replaces the whole part it names, so a
+ *  status with only privacyStatus would reset selfDeclaredMadeForKids, containsSyntheticMedia and embeddable (the
+ *  matter page plays the video embedded). */
 const statusOf = (out: Output): VideoStatus => ({
   privacyStatus: 'private',
   selfDeclaredMadeForKids: false,
   containsSyntheticMedia: out.metadata.containsSyntheticMedia ?? false,
+  embeddable: true,
 });
 const urlOf = (id: string) => `https://youtu.be/${id}`;
 
@@ -213,7 +215,13 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
   // what a verification since the last send found missing is sent again, whatever the shas say
   const captionsCurrent =
     !o.metadata.captions || (o.metadata.captions.sha === lastCaptions(o.out) && !failedSince(o.out, ['captions']));
-  if (lastSent(o.out)?.metadata === o.metadata.sha && !failedSince(o.out, METADATA_CHECKS) && captionsCurrent)
+  const restricted = failedSince(o.out, ['restrictions']);
+  if (
+    lastSent(o.out)?.metadata === o.metadata.sha &&
+    !failedSince(o.out, METADATA_CHECKS) &&
+    captionsCurrent &&
+    !restricted
+  )
     return { event: null, existing: true, message: `the metadata on YouTube is current (${o.metadata.sha})` };
   const problem = uploadProblem(o.metadata);
   if (problem) throw new Refusal(problem);
@@ -236,6 +244,21 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
     }
   };
   if (thumbnail) await asset('thumbnail', () => c.client.setThumbnail(id, thumbnail));
+  // a verification found a restriction (embedding off): send the status again, keeping its visibility and schedule
+  if (restricted) {
+    const publishAt = o.state.live
+      ? undefined
+      : o.out.events.findLast((e) => e.type === 'scheduled' && e.id === id)?.publishAt;
+    await asset('status', () =>
+      c.client.updateVideo(id, {
+        status: {
+          ...statusOf(o.out),
+          privacyStatus: o.state.live ? 'public' : 'private',
+          ...(publishAt ? { publishAt } : {}),
+        },
+      }),
+    );
+  }
   if (captions)
     await asset('captions', async () => {
       // a verification found no serving track: replace the ones not serving rather than pile up another
