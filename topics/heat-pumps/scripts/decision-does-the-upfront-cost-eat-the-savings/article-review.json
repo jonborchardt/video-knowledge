@@ -1,0 +1,209 @@
+{
+  "reviewer": "scripts/briefs/article-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-27",
+  "revision": 2,
+  "packageFingerprint": "191975032e",
+  "approved": {
+    "meta.headline": "eb3aad4624",
+    "meta.seoTitle": "dbf22c1a60",
+    "meta.dek": "0724a29d09",
+    "meta.description": "0de56e0230",
+    "heading:hook": "8fa6e05d77",
+    "s01": "93b8ff9fae",
+    "s02": "147c1cd26e",
+    "s03": "57768e322c",
+    "heading:question-1": "bb3dd3ff89",
+    "s04": "abba6c9aa3",
+    "s05": "95130a21fc",
+    "s06": "50b6504668",
+    "s07": "1030e968a6",
+    "s08": "c959b3a62c",
+    "s09": "75132815ca",
+    "s10": "7a197a81eb",
+    "t1": "c238be6d5f",
+    "s11": "4601dbfcb0",
+    "decision-does-the-upfront-cost-eat-the-savings/sc10": "012cbf44da",
+    "s12": "e87ecfee19",
+    "s13": "d0648daa94",
+    "s14": "5484cb7a57",
+    "s15": "5a6d9216f2",
+    "s16": "27dda5513b",
+    "decision-does-the-upfront-cost-eat-the-savings/sc13": "53bbc421b8",
+    "s19": "b31f8a3ad2",
+    "s20": "2dedca621b",
+    "s21": "e096af2c0d",
+    "s22": "7f1c66663f",
+    "t2": "e4082cfefa",
+    "s23": "54725f9f0a",
+    "s24": "28515792a6",
+    "s26": "ac7beb6116",
+    "s27": "315d4bf93b",
+    "s28": "5d8a599d26",
+    "heading:question-2": "88b7c2ca67",
+    "s29": "fe1a863b94",
+    "s30": "b092a00af9",
+    "s31": "bd694378f3",
+    "s32": "c5ed96d41a",
+    "s33": "6a6fc4b49b",
+    "s34": "0ccf14c450",
+    "s35": "eb99cfc587",
+    "s36": "5f6b959dfa",
+    "s37": "24355cd943",
+    "s38": "9fdcfa67e7",
+    "s39": "67b6d8b400",
+    "t3": "c873519bf6",
+    "s40": "fe39008645",
+    "t4": "60af6958ff",
+    "s41": "36f08f752e",
+    "s42": "9ca9f6dc36",
+    "s43": "855a3bb35d",
+    "s44": "48011398e5",
+    "heading:close": "40cdef4a0a",
+    "s45": "3f7af3eca7",
+    "s46": "1d4e7297a4",
+    "s17": "7447301527",
+    "s18": "21968b7469",
+    "s25": "9c7c6906f6",
+    "s47": "1d5a402617"
+  },
+  "findings": [
+    {
+      "sentence": "s17",
+      "assertion": "s17.a",
+      "fingerprint": "c76238c20b",
+      "revision": 1,
+      "category": "incompatible-comparison",
+      "severity": "blocking",
+      "explanation": "'Installed prices tell a different story' sets the national medians against s16's figures as if s16's were not installed prices. Both come from the same source: Edwards' medians are drawn from the National Residential Efficiency Measures Database (Figure 7.1, 'Data from the National Residential Efficiency Measures Database'), and the CEE report quoting that database calls its figures installed costs ('Heat pumps have installed costs very similar to that of traditional split system air conditions with the same SEER value'). The contrast is between two database comparisons (efficient 19 SEER models in a 2017 report, medians in a 2024 study), not between database and installed prices.",
+      "refs": [
+        "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L1838-L1854",
+        "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1360-L1391"
+      ],
+      "suggestion": "Drop the database-versus-installed contrast, e.g. 'A 2024 study's medians from the same database tell a different story: there a heat pump cost about 32 percent more than a central air conditioner alone.'"
+    },
+    {
+      "sentence": "s18",
+      "assertion": "s18.a",
+      "fingerprint": "2bf4b34cc2",
+      "revision": 1,
+      "category": "incompatible-comparison",
+      "severity": "blocking",
+      "explanation": "'but only on wholesale and database figures; installed prices carry a larger premium' repeats s17's error: the CEE database figures are installed-cost estimates and the 32 percent premium comes from medians of the same database. A reader is told the small premium disappears once real installation is counted, which the evidence does not establish (gap 0: no study decides heat pump against AC).",
+      "refs": [
+        "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1360-L1391",
+        "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L1838-L1854",
+        "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L185-L191"
+      ],
+      "suggestion": "Keep the Wilson condition and state the disagreement without the false contrast, e.g. 'adds heating for little extra on wholesale prices and in one report's database costs, but a 2024 study's medians put the premium at about 32 percent, and a heat pump sized to heat the whole home can cost more than an air conditioner plus gas furnace.'"
+    },
+    {
+      "sentence": "s25",
+      "assertion": "s25.a",
+      "fingerprint": "6f6620fdd5",
+      "revision": 1,
+      "category": "misattribution",
+      "severity": "warning",
+      "explanation": "'That national-laboratory analysis' follows s24's 'the laboratory's report' (Less 2021, LBNL), so a reader takes the $2,000 to $30,000 range and the 50 to 60 percent panel figure as coming from that report. They come from Wilson 2024 (NREL and LBNL), introduced in s13. The figures are right; the source a reader would credit is not.",
+      "refs": [
+        "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L849-L859"
+      ],
+      "suggestion": "Name it: 'The NREL and LBNL analysis puts panel, service-wire, ...'."
+    },
+    {
+      "sentence": "s47",
+      "assertion": "s47.a",
+      "fingerprint": "fdd431173f",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "warning",
+      "explanation": "'How far the rollout has got since then' follows Owen Marsh's June count, and 'were still only conditionally approved' reads as a status later than June. The tracker's state entries were last updated on 6 February 2026, before that June count, so the article implies a later status for Alabama, Alaska and Arkansas than the evidence shows.",
+      "refs": [
+        "heat-pumps/sources/nht-2026-home-energy-rebates-state-tracker.txt#L98-L126"
+      ],
+      "suggestion": "Drop 'since then' and 'still', e.g. 'How far the rollout has got is not settled here: the tracker is an earlier snapshot in which Alabama, Alaska and Arkansas were only conditionally approved, and it gives no national count of launched programs.' (The tracker's date sits at L96/L128, outside the cited lines; only a person can add it.)"
+    },
+    {
+      "sentence": "s41",
+      "assertion": "s41.a",
+      "fingerprint": "36f08f752e",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "info",
+      "explanation": "The verdict note for this passage adds that some Canadian programs cover the full cost for low-income households; that exception sits in Table 2 (L2040), outside the cited lines, so the writer cannot cite it. The sentence matches its passage and is approved; a person may add the passage if the exception should be said.",
+      "refs": [
+        "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1482-L1488"
+      ],
+      "suggestion": "None needed for this revision."
+    },
+    {
+      "sentence": "s14",
+      "assertion": "s14.a",
+      "fingerprint": "5484cb7a57",
+      "revision": 1,
+      "category": "omission",
+      "severity": "info",
+      "explanation": "The callout does not itself name the Canadian model that contradicts parity; s12, two sentences above, does, so the reader has it. Approved.",
+      "refs": [
+        "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L842-L846"
+      ],
+      "suggestion": "Optional: add 'and a Canadian model finds heat pumps dearer upfront' if the callout should stand alone."
+    },
+    {
+      "sentence": "s44",
+      "assertion": "s44.b",
+      "fingerprint": "48011398e5",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "info",
+      "explanation": "DOE's change dates from 29 May 2026 and North Carolina had to implement it by 1 September 2026 (s37, s38), so a heat pump installed early in 2026 could still have been paid for under the old rules. Read as of the article's date the clause is accurate. Approved.",
+      "refs": [
+        "heat-pumps/sources/nc-2026-energy-saver-program-changes.txt#L4-L16"
+      ],
+      "suggestion": "Optional: 'for a heat pump installed now'."
+    },
+    {
+      "sentence": "s17",
+      "assertion": "s17.a",
+      "fingerprint": "7447301527",
+      "revision": 2,
+      "category": "missing-qualification",
+      "severity": "info",
+      "explanation": "The revision drops the false database-versus-installed contrast. 'From the same database' is right (Edwards Figure 7.1, whose medians Table 7.1 gives, is captioned 'Data from the National Residential Efficiency Measures Database', L1819-L1820, and the CEE table is from that database), but that line sits just outside the cited lines. The two figures still compare different things (CEE's efficient 19 SEER models against all-efficiency medians), which s19 frames as unresolved. Approved.",
+      "refs": [
+        "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L1838-L1854",
+        "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1360-L1391"
+      ],
+      "suggestion": "None needed."
+    },
+    {
+      "sentence": "s18",
+      "assertion": "s18.a",
+      "fingerprint": "21968b7469",
+      "revision": 2,
+      "category": "unsupported",
+      "severity": "info",
+      "explanation": "The callout now states all three verdict notes on the claim (CEE $370, Wilson wholesale and whole-home sizing, Edwards higher medians), no wider and no narrower. Its 'one report's database costs' and 'a later study's medians' clauses carry no assertion of their own; they summarise s16 and s17 directly above, which assert and cite them, so a reader is not misled. Approved.",
+      "refs": [
+        "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L185-L191",
+        "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1360-L1391",
+        "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L1838-L1854"
+      ],
+      "suggestion": "Optional: add assertions on s18 citing the CEE and Edwards passages for the two summary clauses."
+    },
+    {
+      "sentence": "s19",
+      "assertion": "s19.b",
+      "fingerprint": "b31f8a3ad2",
+      "revision": 2,
+      "category": "repetition",
+      "severity": "info",
+      "explanation": "With s17 now giving the 32 percent premium and s18 saying the medians put it higher, s19 is the third mention in three sentences. Each has its own role (the finding, the claim's qualification, the gap), so it is not blocking; an editor may trim.",
+      "refs": [
+        "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L1838-L1854"
+      ],
+      "suggestion": "Optional: s19 could say 'while a later study's medians put the heat pump well above' without repeating the figure."
+    }
+  ],
+  "dispositions": {}
+}
