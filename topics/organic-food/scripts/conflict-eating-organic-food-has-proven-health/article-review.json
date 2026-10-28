@@ -1,0 +1,209 @@
+{
+  "reviewer": "scripts/briefs/article-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-27",
+  "revision": 2,
+  "packageFingerprint": "ce1d8b6558",
+  "approved": {
+    "meta.headline": "61cdec15f5",
+    "meta.seoTitle": "2588f1cdf3",
+    "meta.dek": "8146529add",
+    "meta.description": "cf80dfa10b",
+    "heading:hook": "4ea95bb938",
+    "heading:question-1": "af4169a37e",
+    "heading:question-2": "89726658b6",
+    "heading:close": "1f3daa5ab8",
+    "conflict-eating-organic-food-has-proven-health/sc12": "44207464a0",
+    "conflict-eating-organic-food-has-proven-health/sc20": "9b89fc53e3",
+    "s01": "51f0e12eb4",
+    "s02": "eb2ae76414",
+    "s03": "1f1f383a0d",
+    "s04": "5216040ea0",
+    "s05": "820dc3dd4a",
+    "s06": "e6f378f320",
+    "s07": "e286a76de3",
+    "s08": "b4c0c08dda",
+    "s09": "da56bbb611",
+    "s10": "85af1530af",
+    "s11": "68adca5e78",
+    "s12": "b9435cddec",
+    "s13": "c2a0f0bece",
+    "s14": "6399bad848",
+    "s17": "9e0bc93e7a",
+    "s20": "58867db926",
+    "s21": "91dceaf78f",
+    "s22": "65da145a69",
+    "s23": "3192d97631",
+    "s24": "9861a76915",
+    "s25": "80b7289a3c",
+    "s26": "71bb960475",
+    "s27": "9ba84c87b9",
+    "s29": "f1eb514838",
+    "s30": "2407437c01",
+    "s31": "cb711d4384",
+    "s32": "b209baef4d",
+    "s33": "1a043d09d4",
+    "s34": "caec765f73",
+    "s35": "5c4bc0f2d5",
+    "s36": "4fd6fee109",
+    "s37": "70f2d9c6da",
+    "s38": "3077584f00",
+    "s39": "83050feb53",
+    "s40": "9a68ce7303",
+    "s41": "5e3d76d546",
+    "s42": "afdf78a656",
+    "s15": "1dec6b1933",
+    "s16": "f5d3214562",
+    "s18": "67d76bb84c",
+    "s19": "86f1c9d189",
+    "s28": "0f41722a83",
+    "t1": "271c8058b9"
+  },
+  "findings": [
+    {
+      "sentence": "s28",
+      "assertion": "s28.a",
+      "fingerprint": "38d0463020",
+      "revision": 1,
+      "category": "numbers",
+      "severity": "blocking",
+      "explanation": "The organic-food analysis of the Million Women Study covered 623,080 women followed 9.3 years (Bradbury abstract, the same document s28.b cites, and the verdict note). The 1.3 million in the Vigar passage is the whole cohort's recruitment, not the population that reported organic intake, so 'about 1.3 million women' overstates the study the result comes from by about double. 'Far larger' stays true at 623,080 against 68,946.",
+      "refs": [
+        "organic-food/sources/bradbury-2014-million-women.txt#L12-L12",
+        "organic-food/sources/vigar-2019-review.txt#L87-L87"
+      ],
+      "suggestion": "Drop the 1.3 million (and the 9-year figure taken with it) or give the analysed population; 623,080 and 9.3 years sit on line 12 of the Bradbury abstract, outside the cited L14-L18, so using them needs a person to extend the cite through record-sources. Otherwise say 'far larger' without a count."
+    },
+    {
+      "sentence": "s28",
+      "fingerprint": "38d0463020",
+      "revision": 1,
+      "category": "incompatible-comparison",
+      "severity": "blocking",
+      "explanation": "Table t1 (placed here, the sentence directly before it, because the section's first sentence s22 is an attributed quotation that will not change when the table is fixed). Its 'Result' column sets NutriNet-Santé's absolute risk reduction in cancer (0.6%) against the share of Million Women participants who usually or always ate organic (7%): two different measures in one column, and a reader scanning the table reads 7% as the British cohort's cancer result, the opposite of its finding (RR 1.03, no reduction). The Million Women 'Participants' cell repeats the 1.3 million in s28, which is the full cohort, not the 623,080 women analysed for organic food.",
+      "refs": [
+        "organic-food/sources/bradbury-2014-million-women.txt#L14-L18",
+        "organic-food/sources/baudry-2018-nutrinet.txt#L183-L185"
+      ],
+      "suggestion": "Make the third column one measure for both rows (the overall cancer estimate: HR 0.75 for NutriNet-Santé, RR 1.03 for usually/always vs never in the Million Women Study, both in the cited passages), or drop it; move the 7% to its own clearly labelled column or leave it out; fix the participant count as in the s28 finding."
+    },
+    {
+      "sentence": "s19",
+      "assertion": "s19.a",
+      "fingerprint": "6effcd9e2d",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "blocking",
+      "explanation": "'None of them reports a demonstrated health benefit in the people who eat organic' speaks for all seven reviews but cites two (the milk meta-analysis and Mie), and it contradicts the Vigar conclusion the article leans on elsewhere: Vigar writes of 'observational research linking demonstrable health benefits to levels of organic food consumption' and 'significant positive outcomes from observational studies' (s07 reports them). What the reviews share is that none establishes the food as the cause, or allows a definitive statement of benefit.",
+      "refs": [
+        "organic-food/sources/vigar-2019-review.txt#L131-L135",
+        "organic-food/sources/mie-2017-health.txt#L217-L217",
+        "organic-food/sources/aap-2012-organic.txt#L27-L30"
+      ],
+      "suggestion": "Say what they share in their own terms: e.g. 'and none of them concludes that eating organic has been shown to cause a health benefit', with assertions citing Vigar (no definitive statement), Mie (causal role cannot be determined) and AAP (no well-powered study directly demonstrates one)."
+    },
+    {
+      "sentence": "s16",
+      "assertion": "s16.a",
+      "fingerprint": "af15ecf8d6",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "warning",
+      "explanation": "Winter and Katz modelled pesticide-residue exposure only, and wrote that their findings 'do not indicate' a measurable benefit from the swap. The sentence says the model 'concluded that swapping ... would not lead to any measurable health benefit', which turns absence of evidence into a finding of no benefit and drops the pesticide-only scope the verdict note states ('other pathways not assessed').",
+      "refs": [
+        "organic-food/sources/winter-katz-2011.txt#L27-L29"
+      ],
+      "suggestion": "'a risk model of pesticide residues on the Dirty Dozen produce found nothing to indicate that swapping the conventional forms for organic ones would bring a measurable health benefit'."
+    },
+    {
+      "sentence": "s15",
+      "assertion": "s15.b",
+      "fingerprint": "d8f415fc14",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "warning",
+      "explanation": "'Meta-analyses of organic milk and meat found the food itself differs in composition': the milk passage carries the composition finding, but the meat cite (L1575-L1577) says only that no cohort study links organic meat to health outcomes; no assertion covers a composition difference in meat.",
+      "refs": [
+        "organic-food/sources/srednicka-tober-2016-milk.txt#L1814-L1823",
+        "organic-food/sources/srednicka-tober-2016-meat.txt#L1575-L1577"
+      ],
+      "suggestion": "Attach the composition clause to milk only ('A meta-analysis of organic milk found it differs in composition, ...; a companion analysis of meat adds that no cohort study yet links ...'). The meat composition lines are outside every verdict's cite; only a person can add them."
+    },
+    {
+      "sentence": "s18",
+      "assertion": "s18.a",
+      "fingerprint": "4bae7ead2e",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "warning",
+      "explanation": "Vigar says the trials 'measured largely surrogate markers'; s18 says they 'have measured markers, not disease', dropping 'largely' (s11 keeps it as 'mostly'). Small, but it is the sentence that states the callout's condition, so it should not be stronger than the passage.",
+      "refs": [
+        "organic-food/sources/vigar-2019-review.txt#L132-L132"
+      ],
+      "suggestion": "'... have been short and have mostly measured markers rather than disease'."
+    },
+    {
+      "sentence": "s21",
+      "fingerprint": "91dceaf78f",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "info",
+      "explanation": "'the outcome where the boldest claims are made' is a comparative no evidence covers (the OTA claim in s05 about birth defects, diabetes and ADHD is at least as bold). Harmless as a transition; an editor may prefer 'where the most specific claims are made' or plain 'That brings us to cancer.'",
+      "refs": []
+    },
+    {
+      "sentence": "s35",
+      "fingerprint": "5c4bc0f2d5",
+      "revision": 1,
+      "category": "omission",
+      "severity": "info",
+      "explanation": "Gap 2 (the Baudry note) also names the short follow-up and that the French authors acknowledge residual confounding themselves; the callout gives confounding through the US authors' argument and s25 gives 4.6 years without calling it short. Not wrong; a clause such as 'which the French team itself lists as a limitation' would match the note more closely.",
+      "refs": [
+        "organic-food/sources/sandoval-insausti-2021-cancer.txt#L265-L278"
+      ]
+    },
+    {
+      "sentence": "s34",
+      "fingerprint": "caec765f73",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "info",
+      "explanation": "The verdict note adds that organic intake itself was not measured in the US analysis; the sentence implies it by naming low-residue produce, and calls it one reading, so it is approved as is.",
+      "refs": [
+        "organic-food/sources/sandoval-insausti-2021-cancer.txt#L244-L248"
+      ]
+    },
+    {
+      "sentence": "s28",
+      "fingerprint": "0f41722a83",
+      "revision": 2,
+      "category": "unsupported",
+      "severity": "info",
+      "explanation": "The 1.3 million is gone, as asked. 'Far larger' has no assertion of its own, but the cited Bradbury passage counts 53,769 cancer cases (L16), close to the French cohort's 68,946 participants, and the Vigar passage s25 cites (L87-L88) sets 1.3 million women beside 68,946; the comparison holds at the 623,080 analysed. Approved.",
+      "refs": [
+        "organic-food/sources/bradbury-2014-million-women.txt#L14-L18",
+        "organic-food/sources/vigar-2019-review.txt#L87-L88"
+      ]
+    },
+    {
+      "sentence": "s28",
+      "fingerprint": "0f41722a83",
+      "revision": 2,
+      "category": "numbers",
+      "severity": "info",
+      "explanation": "Table t1 now holds one measure in its column (HR 0.75 top vs bottom quarter; RR 1.03 usually/always vs never), both overall cancer, row populations and years match the passages, caption claims no more than the cells. The comparison in each cell lives in the cell label, which the page does not render, so a reader sees a bare 0.75 and 1.03 under 'Overall cancer estimate'; 1.03 is not given in the prose. Not wrong, approved.",
+      "refs": [
+        "organic-food/sources/baudry-2018-nutrinet.txt#L183-L185",
+        "organic-food/sources/bradbury-2014-million-women.txt#L14-L18"
+      ],
+      "suggestion": "Name the measure in the column header, e.g. 'Relative risk of any cancer, highest vs lowest organic intake (1 = no difference)'."
+    }
+  ],
+  "dispositions": {
+    "s05.a": {
+      "fingerprint": "820dc3dd4a",
+      "category": "speaker-missing",
+      "reason": "the sentence names the speaker: the Organic Trade Association's site (statement source ota.com)"
+    }
+  }
+}
