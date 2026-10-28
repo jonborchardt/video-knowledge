@@ -1,0 +1,693 @@
+{
+  "topic": "inflation-2026",
+  "story": "decision:do-tariffs-raise-prices",
+  "revision": 1,
+  "generation": {
+    "model": "claude-opus-5-5",
+    "brief": "scripts/briefs/article.md",
+    "date": "2026-10-27",
+    "wordsPerMinute": 150,
+    "evidencePackage": "5dff8d800b"
+  },
+  "meta": {
+    "headline": "Who pays for tariffs? What the New York Fed found about the 2025 tariffs",
+    "seoTitle": "Who pays for tariffs, and do they raise prices?",
+    "dek": {
+      "id": "meta.dek",
+      "text": "New York Fed estimates put most of the cost of the 2025 tariffs on American importers, and about 26 percent of a tariff increase reached consumer prices, partly through goods made at home.",
+      "type": "factual",
+      "assertions": [
+        {
+          "id": "meta.dek.a",
+          "text": "U.S. firms and consumers bore the bulk of the economic burden of the high tariffs imposed in 2025; foreign exporters bore a small share.",
+          "kind": "fact",
+          "claims": [
+            { "id": "inflation-2026/tariffs-paid-importing-country-consumers-businesses", "stance": "asserts" },
+            { "id": "inflation-2026/foreign-exporters-absorb-most-cost-import", "stance": "denies" }
+          ],
+          "evidence": [
+            { "kind": "study", "claim": "inflation-2026/tariffs-paid-importing-country-consumers-businesses", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L34-L35" },
+            { "kind": "study", "claim": "inflation-2026/foreign-exporters-absorb-most-cost-import", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L29-L35" }
+          ]
+        },
+        {
+          "id": "meta.dek.b",
+          "text": "Studying the 2025 U.S. tariffs, about 26 percent of the tariff increase passes through to consumer prices, 36 percent of it indirectly through domestic producers.",
+          "kind": "fact",
+          "claims": [
+            { "id": "inflation-2026/tariffs-not-raise-consumer-prices", "stance": "denies" },
+            { "id": "inflation-2026/tariffs-raise-prices-domestically-produced-goods", "stance": "asserts" }
+          ],
+          "evidence": [
+            { "kind": "study", "claim": "inflation-2026/tariffs-raise-prices-domestically-produced-goods", "cite": "inflation-2026/sources/nyfed-sr1201-tariff-passthrough.txt#L15-L24" },
+            { "kind": "study", "claim": "inflation-2026/tariffs-not-raise-consumer-prices", "cite": "inflation-2026/sources/nyfed-sr1201-tariff-passthrough.txt#L1064-L1074" }
+          ],
+          "qualifications": ["The investigation section says the estimate is relative to less-exposed goods, and the answer section what it leaves out."]
+        }
+      ]
+    },
+    "description": {
+      "id": "meta.description",
+      "text": "US importers, not foreign sellers, bore most of the 2025 tariffs, and part of the cost reached shop prices, New York Fed research finds.",
+      "type": "factual",
+      "assertions": [
+        {
+          "id": "meta.description.a",
+          "text": "U.S. firms and consumers bore the bulk of the economic burden of the high tariffs imposed in 2025; foreign exporters bore a small share.",
+          "kind": "fact",
+          "claims": [
+            { "id": "inflation-2026/tariffs-paid-importing-country-consumers-businesses", "stance": "asserts" },
+            { "id": "inflation-2026/foreign-exporters-absorb-most-cost-import", "stance": "denies" }
+          ],
+          "evidence": [
+            { "kind": "study", "claim": "inflation-2026/tariffs-paid-importing-country-consumers-businesses", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L34-L35" },
+            { "kind": "study", "claim": "inflation-2026/foreign-exporters-absorb-most-cost-import", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L29-L35" }
+          ]
+        },
+        {
+          "id": "meta.description.b",
+          "text": "The tariffs had economically and statistically significant effects on consumer prices.",
+          "kind": "fact",
+          "claims": [{ "id": "inflation-2026/tariffs-not-raise-consumer-prices", "stance": "denies" }],
+          "evidence": [
+            { "kind": "study", "claim": "inflation-2026/tariffs-not-raise-consumer-prices", "cite": "inflation-2026/sources/nyfed-sr1201-tariff-passthrough.txt#L1064-L1074" }
+          ]
+        }
+      ]
+    }
+  },
+  "sections": [
+    {
+      "name": "hook",
+      "heading": "Who pays for a tariff?",
+      "blocks": [
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s01",
+              "text": "At a rally in Kalispell, Montana, this October, President Trump told supporters that \"tariffs don't cause inflation\".",
+              "type": "attributed",
+              "assertions": [
+                {
+                  "id": "s01.a",
+                  "text": "Trump said at his Kalispell, Montana rally that tariffs don't cause inflation.",
+                  "kind": "attribution",
+                  "claims": [{ "id": "inflation-2026/tariffs-not-raise-consumer-prices", "stance": "asserts" }],
+                  "evidence": [{ "kind": "statement", "claim": "inflation-2026/tariffs-not-raise-consumer-prices", "source": "WRRBagciJEM" }],
+                  "quote": { "text": "tariffs don't cause inflation", "source": "WRRBagciJEM", "speaker": "Trump" }
+                }
+              ]
+            },
+            {
+              "id": "s02",
+              "text": "If that holds, a tariff costs American shoppers nothing; if it does not, someone in the United States is paying it.",
+              "type": "rhetorical"
+            },
+            {
+              "id": "s03",
+              "text": "Research at the New York Fed on the 2025 tariffs points the other way: most of the cost stayed in America, and part of it reached the prices shoppers pay.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s03.a",
+                  "text": "U.S. firms and consumers bore the bulk of the economic burden of the high tariffs imposed in 2025.",
+                  "kind": "fact",
+                  "claims": [
+                    { "id": "inflation-2026/tariffs-paid-importing-country-consumers-businesses", "stance": "asserts" },
+                    { "id": "inflation-2026/foreign-exporters-absorb-most-cost-import", "stance": "denies" }
+                  ],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/tariffs-paid-importing-country-consumers-businesses", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L34-L35" },
+                    { "kind": "study", "claim": "inflation-2026/foreign-exporters-absorb-most-cost-import", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L29-L35" }
+                  ]
+                },
+                {
+                  "id": "s03.b",
+                  "text": "The tariffs had economically and statistically significant effects on consumer prices.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/tariffs-not-raise-consumer-prices", "stance": "denies" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/tariffs-not-raise-consumer-prices", "cite": "inflation-2026/sources/nyfed-sr1201-tariff-passthrough.txt#L1064-L1074" }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "setup",
+      "heading": "Foreign sellers or American buyers: what each side says",
+      "blocks": [
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s04",
+              "text": "In his State of the Union address, Trump described the countries he had tariffed as \"now paying us hundreds of billions of dollars\".",
+              "type": "attributed",
+              "assertions": [
+                {
+                  "id": "s04.a",
+                  "text": "In the State of the Union, Trump said countries are now paying the US hundreds of billions of dollars.",
+                  "kind": "attribution",
+                  "claims": [{ "id": "inflation-2026/foreign-exporters-absorb-most-cost-import", "stance": "asserts" }],
+                  "evidence": [{ "kind": "statement", "claim": "inflation-2026/foreign-exporters-absorb-most-cost-import", "source": "v4rlxuTCfNA" }],
+                  "quote": { "text": "now paying us hundreds of billions of dollars", "source": "v4rlxuTCfNA", "speaker": "Trump" }
+                }
+              ]
+            },
+            {
+              "id": "s05",
+              "text": "Interviewed on BlazeTV, Jim Rickards argued the same way, concluding that \"tariffs don't cause inflation\".",
+              "type": "attributed",
+              "assertions": [
+                {
+                  "id": "s05.a",
+                  "text": "Jim Rickards said on BlazeTV that tariffs don't cause inflation.",
+                  "kind": "attribution",
+                  "claims": [{ "id": "inflation-2026/tariffs-not-raise-consumer-prices", "stance": "asserts" }],
+                  "evidence": [{ "kind": "statement", "claim": "inflation-2026/tariffs-not-raise-consumer-prices", "source": "HzpteVuKE5k" }],
+                  "quote": { "text": "tariffs don't cause inflation", "source": "HzpteVuKE5k", "speaker": "Jim Rickards" }
+                }
+              ]
+            },
+            {
+              "id": "s06",
+              "text": "On PBS's Firing Line, Scott Lincicome answered the opposite: \"in most cases, it is actually the American consumer, companies or individuals, paying it.\"",
+              "type": "attributed",
+              "assertions": [
+                {
+                  "id": "s06.a",
+                  "text": "Scott Lincicome said on Firing Line that it is usually the American consumer, companies or individuals, paying the tariff.",
+                  "kind": "attribution",
+                  "claims": [{ "id": "inflation-2026/foreign-exporters-absorb-most-cost-import", "stance": "denies" }],
+                  "evidence": [{ "kind": "statement", "claim": "inflation-2026/foreign-exporters-absorb-most-cost-import", "source": "IngOOXDJmVQ" }],
+                  "quote": {
+                    "text": "in most cases, it is actually the American consumer, companies or individuals, paying it.",
+                    "source": "IngOOXDJmVQ",
+                    "speaker": "Scott Lincicome"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "s07",
+              "text": "These views make different predictions about something measurable: the prices foreign sellers charge before the tariff is added.",
+              "type": "transitional"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "investigation",
+      "heading": "Where the cost of the 2025 tariffs landed",
+      "blocks": [
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s08",
+              "text": "New York Fed economists tested exactly that, relating each product's import price with the tariff taken out, which is the foreign seller's price, to the change in its tariff, using monthly trade data by product and country.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s08.a",
+                  "text": "The NY Fed regressions take as the dependent variable import prices exclusive of tariffs, that is, foreign export prices, on monthly data at the HTS10-country level, to estimate how much of the tariff incidence foreign exporters bore.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/foreign-exporters-absorb-most-cost-import", "stance": "denies" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/foreign-exporters-absorb-most-cost-import", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L29-L35" }
+                  ],
+                  "qualifications": ["s08 says the method; import prices are proxied by unit values (table t1's caption)."]
+                }
+              ]
+            },
+            {
+              "id": "s09",
+              "text": "For the first eight months of 2025 they put 6 percent of the tariff's incidence on foreign sellers and 94 percent on the United States: a 10 percent tariff lowered foreign export prices by only 0.6 percentage points.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s09.a",
+                  "text": "In January-August 2025 foreign exporters bore 6 percent of the incidence; in the first eight months of 2025, a 10 percent tariff caused only a 0.6 percentage point decline in foreign export prices.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/foreign-exporters-absorb-most-cost-import", "stance": "denies" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/foreign-exporters-absorb-most-cost-import", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L29-L35" }
+                  ]
+                },
+                {
+                  "id": "s09.b",
+                  "text": "94 percent of the tariff incidence was borne by the U.S. in the first eight months of 2025.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/tariffs-paid-importing-country-consumers-businesses", "stance": "asserts" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/tariffs-paid-importing-country-consumers-businesses", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L34-L35" }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s10",
+              "text": "Foreign sellers gave more ground late in the year: in November a 10 percent tariff came with a 1.4 percent fall in their prices, which still left 86 percent of the incidence in the United States.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s10.a",
+                  "text": "In November, a 10 percent tariff was associated with a 1.4 percent decline in foreign export prices, suggesting an 86 percent pass-through to U.S. import prices; a larger share was borne by foreign exporters by the end of the year.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/foreign-exporters-absorb-most-cost-import", "stance": "denies" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/foreign-exporters-absorb-most-cost-import", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L29-L35" }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "table",
+          "id": "t1",
+          "caption": "Who bore the 2025 tariffs, by period: share of the tariff incidence (New York Fed regressions; import prices proxied by unit values)",
+          "columns": ["Foreign exporters", "United States"],
+          "rows": [
+            {
+              "label": "January to August 2025",
+              "cells": [
+                { "label": "Foreign exporters", "value": 6, "unit": "percent", "display": "6 percent", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L29-L35" },
+                { "label": "United States", "value": 94, "unit": "percent", "display": "94 percent", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L29-L35" }
+              ]
+            },
+            {
+              "label": "September to October 2025",
+              "cells": [
+                { "label": "Foreign exporters", "value": 8, "unit": "percent", "display": "8 percent", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L29-L35" },
+                { "label": "United States", "value": 92, "unit": "percent", "display": "92 percent", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L29-L35" }
+              ]
+            },
+            {
+              "label": "November 2025",
+              "cells": [
+                { "label": "Foreign exporters", "value": 14, "unit": "percent", "display": "14 percent", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L29-L35" },
+                { "label": "United States", "value": 86, "unit": "percent", "display": "86 percent", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L29-L35" }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s11",
+              "text": "The authors' conclusion is that American firms and consumers \"continue to bear the bulk of the economic burden\" of the tariffs.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s11.a",
+                  "text": "U.S. firms and consumers continue to bear the bulk of the economic burden of the high tariffs imposed in 2025.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/tariffs-paid-importing-country-consumers-businesses", "stance": "asserts" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/tariffs-paid-importing-country-consumers-businesses", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L34-L35" }
+                  ],
+                  "quote": {
+                    "text": "continue to bear the bulk of the economic burden",
+                    "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L34-L35"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "s12",
+              "text": "A bill paid at the border, though, is not yet a higher price on a shop shelf.",
+              "type": "transitional"
+            },
+            {
+              "id": "s13",
+              "text": "A New York Fed staff report follows the cost that far: for the 2025 tariffs it estimates that about 26 percent of a tariff increase passes through to consumer prices, measured against goods less exposed to the tariffs.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s13.a",
+                  "text": "Studying the 2025 U.S. tariffs, the staff report finds about 26 percent of the tariff increase passes through to consumer prices, measured relative to less-exposed goods with aggregate conditions held fixed.",
+                  "kind": "fact",
+                  "claims": [
+                    { "id": "inflation-2026/tariffs-not-raise-consumer-prices", "stance": "denies" },
+                    { "id": "inflation-2026/tariffs-raise-prices-domestically-produced-goods", "stance": "asserts" }
+                  ],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/tariffs-raise-prices-domestically-produced-goods", "cite": "inflation-2026/sources/nyfed-sr1201-tariff-passthrough.txt#L15-L24" },
+                    { "kind": "study", "claim": "inflation-2026/tariffs-not-raise-consumer-prices", "cite": "inflation-2026/sources/nyfed-sr1201-tariff-passthrough.txt#L1064-L1074" }
+                  ],
+                  "qualifications": ["The sentence says it is measured against less-exposed goods; s29 says what that leaves out."]
+                }
+              ]
+            },
+            {
+              "id": "s14",
+              "text": "Of that rise, 64 percent comes directly from imported goods costing more and 36 percent from goods made in the United States, whose producers pay more for imported inputs and raise their markups when competing imports get dearer.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s14.a",
+                  "text": "The direct effect accounts for 64 percent of the consumer price increase; the remaining 36 percent arises indirectly: tariffs raise the cost of imported inputs used by U.S. producers, and domestic producers raise their markups because they face less competition from higher-priced imports.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/tariffs-raise-prices-domestically-produced-goods", "stance": "asserts" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/tariffs-raise-prices-domestically-produced-goods", "cite": "inflation-2026/sources/nyfed-sr1201-tariff-passthrough.txt#L15-L24" }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "figure",
+          "ref": "decision-do-tariffs-raise-prices/sc11",
+          "caption": "Where the consumer price rise from the tariffs comes from: imported goods directly, and goods made at home indirectly."
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s15",
+              "text": "These parts move at different speeds: tariffs lift import prices almost at once, but the part that runs through domestic producers takes nine to twelve months to work through supply chains.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s15.a",
+                  "text": "The direct effect passes through quickly, since tariffs raise import prices almost immediately, but the indirect effect takes nine to twelve months to work its way through supply chains.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/tariffs-raise-prices-domestically-produced-goods", "stance": "asserts" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/tariffs-raise-prices-domestically-produced-goods", "cite": "inflation-2026/sources/nyfed-sr1201-tariff-passthrough.txt#L15-L24" }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s16",
+              "text": "Even the direct part does not reach shoppers the day a tariff is announced: by the Fed's estimates about half of it is in consumer prices after three months and all of it after six, as retailers take a few months to pass on higher costs.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s16.a",
+                  "text": "The direct effect of higher import prices: about half is in place after three months and all of it by six months, as retailers take a few months to pass on higher costs.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/retailers-raise-prices-soon-tariff-announced", "stance": "denies" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/retailers-raise-prices-soon-tariff-announced", "cite": "inflation-2026/sources/nyfed-lse-2026-10-tariff-passthrough.txt#L17-L17" }
+                  ],
+                  "qualifications": ["The sentence says by the Fed's estimates: the timing is modelled, and s17 adds what surveyed firms reported."]
+                }
+              ]
+            },
+            {
+              "id": "s17",
+              "text": "Firms in the New York Fed's business surveys described why: some sell under fixed-price contracts they cannot raise until the contracts expire, and some take a trickle-up approach, raising prices gradually so as not to shock customers.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s17.a",
+                  "text": "In NY Fed business surveys, some businesses cited fixed-price contracts they cannot raise until expiry, and some a 'trickle up' approach of gradual increases to avoid shocking customers.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/retailers-raise-prices-soon-tariff-announced", "stance": "denies" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/retailers-raise-prices-soon-tariff-announced", "cite": "inflation-2026/sources/nyfed-lse-2026-07-passthrough-pipeline.txt#L17-L18" }
+                  ],
+                  "qualifications": ["These are model estimates and survey answers, not a count of shop prices on announcement day; s16 says by the Fed's estimates and s17 that firms described it."]
+                }
+              ]
+            },
+            {
+              "id": "s18",
+              "text": "That leaves the question of how long the higher prices last.",
+              "type": "transitional"
+            },
+            {
+              "id": "s19",
+              "text": "A later New York Fed analysis estimates that the tariffs' effect on the consumer goods price level peaked near 3 percent in February 2026, and forecasts it easing to about 2 percent by August 2026, after a Supreme Court ruling replaced the emergency-power tariffs with a lower 10 percent surcharge, then edging up again, mainly because of tariffs on Canadian goods.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s19.a",
+                  "text": "The tariff effect on the consumer goods price level peaked near 3 percent in February 2026; the forecast has it easing to about 2 percent by August 2026, reflecting a U.S. Supreme Court ruling that ended the emergency-power tariffs and a lower 10 percent surcharge that replaced them, and edging up again after August 2026 mainly because of the tariffs on Canadian goods.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/tariffs-push-prices-once-raising-price", "stance": "asserts" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/tariffs-push-prices-once-raising-price", "cite": "inflation-2026/sources/nyfed-lse-2026-10-tariff-passthrough.txt#L29-L31" }
+                  ],
+                  "qualifications": ["The unresolved callout (s23, s24) carries the survey finding that the one-time adjustment is drawn out in practice."]
+                }
+              ]
+            },
+            {
+              "id": "s20",
+              "text": "The tariffs' contribution to the twelve-month change in consumer goods prices also peaked that February, at 2.9 percentage points, and is forecast to fall to around zero by August 2026, then below zero as the 2025 increases drop out of the comparison.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s20.a",
+                  "text": "The contribution of tariffs to twelve-month changes in consumer goods prices peaked in February 2026 at 2.9 percentage points and is forecast to fall to around zero by August 2026, then turn negative as the large tariff increases of 2025 drop out of the twelve-month comparison.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/tariffs-push-prices-once-raising-price", "stance": "asserts" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/tariffs-push-prices-once-raising-price", "cite": "inflation-2026/sources/nyfed-lse-2026-10-tariff-passthrough.txt#L29-L31" }
+                  ],
+                  "qualifications": ["The unresolved callout (s23, s24) carries the survey finding that the one-time adjustment is drawn out in practice."]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "table",
+          "id": "t2",
+          "caption": "Tariff effect on consumer goods prices: the price level against the twelve-month rate (New York Fed estimates; August is a forecast)",
+          "columns": ["Effect"],
+          "rows": [
+            {
+              "label": "Effect on the price level, peak, February 2026",
+              "cells": [
+                { "label": "Effect", "value": 3, "unit": "percent", "qualifier": "about", "display": "3 percent", "cite": "inflation-2026/sources/nyfed-lse-2026-10-tariff-passthrough.txt#L29-L31" }
+              ]
+            },
+            {
+              "label": "Effect on the price level, forecast, August 2026",
+              "cells": [
+                { "label": "Effect", "value": 2, "unit": "percent", "qualifier": "about", "display": "2 percent", "cite": "inflation-2026/sources/nyfed-lse-2026-10-tariff-passthrough.txt#L29-L31" }
+              ]
+            },
+            {
+              "label": "Contribution to the twelve-month change, peak, February 2026",
+              "cells": [
+                { "label": "Effect", "value": 2.9, "unit": "percent", "display": "2.9 percentage points", "cite": "inflation-2026/sources/nyfed-lse-2026-10-tariff-passthrough.txt#L29-L31" }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s21",
+              "text": "In the authors' words, tariffs \"have left consumer goods price levels higher, while their effect on inflation fades.\"",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s21.a",
+                  "text": "Tariffs have left consumer goods price levels higher, while their effect on inflation fades.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/tariffs-push-prices-once-raising-price", "stance": "asserts" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/tariffs-push-prices-once-raising-price", "cite": "inflation-2026/sources/nyfed-lse-2026-10-tariff-passthrough.txt#L29-L31" }
+                  ],
+                  "quote": {
+                    "text": "have left consumer goods price levels higher, while their effect on inflation fades.",
+                    "cite": "inflation-2026/sources/nyfed-lse-2026-10-tariff-passthrough.txt#L29-L31"
+                  },
+                  "qualifications": ["The unresolved callout (s23, s24) carries the survey finding that the one-time adjustment is drawn out in practice."]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "callout": "unresolved",
+          "claim": "inflation-2026/tariffs-push-prices-once-raising-price",
+          "sentences": [
+            {
+              "id": "s23",
+              "text": "Whether tariffs amount to a single step in prices is not settled by this evidence: the Fed's survey researchers write that a one-time price-level adjustment \"may be a drawn-out affair, especially when the tariffs change frequently\".",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s23.a",
+                  "text": "NY Fed survey researchers write that what one-time means in practice for a price-level adjustment may be a drawn-out affair, especially when the tariffs change frequently.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/tariffs-push-prices-once-raising-price", "stance": "asserts" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/tariffs-push-prices-once-raising-price", "cite": "inflation-2026/sources/nyfed-lse-2026-07-passthrough-pipeline.txt#L19-L20" }
+                  ],
+                  "quote": {
+                    "text": "may be a drawn-out affair, especially when the tariffs change frequently",
+                    "cite": "inflation-2026/sources/nyfed-lse-2026-07-passthrough-pipeline.txt#L19-L20"
+                  },
+                  "qualifications": ["This is the limitation itself."]
+                }
+              ]
+            },
+            {
+              "id": "s24",
+              "text": "Their surveys find many firms spreading price increases across extended periods, so the price pressure from tariffs may last for some time.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s24.a",
+                  "text": "Business surveys suggest many firms are spreading price increases across extended periods, meaning inflationary pressures due to tariffs may well last for some time to come.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/tariffs-push-prices-once-raising-price", "stance": "asserts" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/tariffs-push-prices-once-raising-price", "cite": "inflation-2026/sources/nyfed-lse-2026-07-passthrough-pipeline.txt#L19-L20" }
+                  ],
+                  "qualifications": ["This is the limitation itself."]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "answer",
+      "heading": "So who pays, and do tariffs raise prices?",
+      "blocks": [
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s25",
+              "text": "By these estimates, foreign sellers absorbed only a small share of the 2025 tariffs; American importers paid most of the cost, and part of it reached consumer prices, including the prices of goods made at home.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s25.a",
+                  "text": "U.S. firms and consumers bore the bulk of the economic burden of the high tariffs imposed in 2025; foreign exporters bore a small share.",
+                  "kind": "fact",
+                  "claims": [
+                    { "id": "inflation-2026/tariffs-paid-importing-country-consumers-businesses", "stance": "asserts" },
+                    { "id": "inflation-2026/foreign-exporters-absorb-most-cost-import", "stance": "denies" }
+                  ],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/tariffs-paid-importing-country-consumers-businesses", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L34-L35" },
+                    { "kind": "study", "claim": "inflation-2026/foreign-exporters-absorb-most-cost-import", "cite": "inflation-2026/sources/nyfed-lse-2026-02-who-pays-tariffs.txt#L29-L35" }
+                  ]
+                },
+                {
+                  "id": "s25.b",
+                  "text": "Tariffs raise the prices of goods made at home, not just the imports they tax.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/tariffs-raise-prices-domestically-produced-goods", "stance": "asserts" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/tariffs-raise-prices-domestically-produced-goods", "cite": "inflation-2026/sources/nyfed-sr1201-tariff-passthrough.txt#L15-L24" }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s26",
+              "text": "The claim that tariffs do not raise consumer prices does not survive this evidence: the staff report concludes that the tariffs had \"economically and statistically significant effects on consumer prices\".",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s26.a",
+                  "text": "The tariffs had economically and statistically significant effects on consumer prices.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/tariffs-not-raise-consumer-prices", "stance": "denies" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/tariffs-not-raise-consumer-prices", "cite": "inflation-2026/sources/nyfed-sr1201-tariff-passthrough.txt#L1064-L1074" }
+                  ],
+                  "quote": {
+                    "text": "economically and statistically significant effects on consumer prices",
+                    "cite": "inflation-2026/sources/nyfed-sr1201-tariff-passthrough.txt#L1064-L1074"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "s27",
+              "text": "What it cannot say is how much tariffs added to inflation across the whole economy: it compares goods by how exposed they were to tariffs, and leaves out effects through the exchange rate, the monetary-policy response and other economy-wide forces.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s27.a",
+                  "text": "Because the results rest on differences in tariff exposure across goods, they capture relative price effects rather than the economy-wide component of inflation, and do not account for the tariff impact on the exchange rate, the monetary-policy response, and other general equilibrium forces.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/tariffs-not-raise-consumer-prices", "stance": "denies" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/tariffs-not-raise-consumer-prices", "cite": "inflation-2026/sources/nyfed-sr1201-tariff-passthrough.txt#L1064-L1074" }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s28",
+              "text": "Within those limits, the tariffs look more like a raised level of prices than lasting inflation, though firms are taking that step slowly.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s28.a",
+                  "text": "Tariffs have left consumer goods price levels higher while their effect on inflation fades; in practice many firms spread the increases across extended periods.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/tariffs-push-prices-once-raising-price", "stance": "asserts" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/tariffs-push-prices-once-raising-price", "cite": "inflation-2026/sources/nyfed-lse-2026-10-tariff-passthrough.txt#L29-L31" },
+                    { "kind": "study", "claim": "inflation-2026/tariffs-push-prices-once-raising-price", "cite": "inflation-2026/sources/nyfed-lse-2026-07-passthrough-pipeline.txt#L19-L20" }
+                  ],
+                  "qualifications": ["The sentence carries the survey limitation: firms are taking the step slowly; the callout s23, s24 states it in full."]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "takeaway",
+      "heading": "How to read the next claim about tariffs",
+      "blocks": [
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s29",
+              "text": "When someone says another country pays a tariff, ask whether that country's sellers cut their prices.",
+              "type": "rhetorical"
+            },
+            {
+              "id": "s30",
+              "text": "And judge a tariff's effect on prices over the months that follow it, not the week after: the goods made at home are the last to catch up.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s30.a",
+                  "text": "The indirect effect through domestically produced goods takes longer than the direct effect to work its way through supply chains.",
+                  "kind": "fact",
+                  "claims": [{ "id": "inflation-2026/tariffs-raise-prices-domestically-produced-goods", "stance": "asserts" }],
+                  "evidence": [
+                    { "kind": "study", "claim": "inflation-2026/tariffs-raise-prices-domestically-produced-goods", "cite": "inflation-2026/sources/nyfed-sr1201-tariff-passthrough.txt#L15-L24" }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
