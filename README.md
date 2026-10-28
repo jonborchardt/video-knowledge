@@ -412,7 +412,10 @@ Once, by a person (Google's console; nothing here can do it):
    tokens that expire after 7 days), scope `https://www.googleapis.com/auth/youtube.force-ssl`. In production
    without OAuth verification, Google shows the unverified-app warning at consent and caps the project at 100 users
    over its lifetime, which one owner never reaches; accept the warning once. Run `auth` again after switching from
-   Testing, so the stored token is one without the 7-day expiry.
+   Testing, so the stored token is one without the 7-day expiry. Branding: homepage
+   `https://commonwealthofreason.com/publishing/`, privacy policy `https://commonwealthofreason.com/privacy/`
+   (with the trailing slash: the slashless URL redirects, and Google refuses a homepage that redirects), authorized
+   domain `commonwealthofreason.com`.
 3. Create an OAuth client of type **Desktop app** and download its JSON. Save it as `.secrets/youtube-oauth.json`
    (`.secrets/` is gitignored) and point `.env` at it: `YOUTUBE_OAUTH_CREDENTIALS_PATH=./.secrets/youtube-oauth.json`.
    (`YOUTUBE_CLIENT_ID` and `YOUTUBE_CLIENT_SECRET` in `.env` work too.)

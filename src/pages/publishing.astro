@@ -1,0 +1,68 @@
+---
+// The OAuth application's homepage for Google's verification: what the publishing tool (src/lib/youtube.ts,
+// src/lib/uploader.ts, `npm run publish`) is and does. Out of character, like /privacy/. Every statement must stay true
+// of the code; it is linked from /privacy/ only, not from the nav.
+import Base from '../layouts/Base.astro';
+import { author, site } from '../config/site';
+import { breadcrumbJsonLd } from '../lib/seo';
+import { href } from '../lib/url';
+
+const h2 = 'mt-10 mb-3 text-featured font-bold';
+const p = 'mt-3 max-w-prose';
+const list = 'mt-3 grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
+---
+
+<Base
+  title={`Publishing tool · ${site.name}`}
+  description="The private software the publisher uses to upload and publish Commonwealth of Reason videos through the YouTube Data API."
+  jsonLd={[breadcrumbJsonLd([{ name: 'Publishing tool', path: '/publishing/' }])]}
+>
+  <header class="grid gap-4 border-y-4 border-double py-5">
+    <div class="eyebrow text-muted-foreground">
+      <a class="text-muted-foreground no-underline hover:underline" href={href('/')}>{site.name}</a> · {
+        site.publicRecord
+      }
+    </div>
+    <h1 class="text-display font-bold">{site.name} Publishing Tool</h1>
+    <p class={`${p} text-muted-foreground`}>
+      Private video production and publishing software. {site.name} uses it to publish its videos on its own YouTube channels.
+    </p>
+  </header>
+
+  <h2 class={h2} id="what">What it does</h2>
+  <p class={p}>The tool uses the YouTube Data API v3 to:</p>
+  <ul class={list}>
+    <li>upload finished videos, always as private, to the publication's channels;</li>
+    <li>set their titles, descriptions, tags, thumbnails and captions;</li>
+    <li>schedule or publish them once the publisher approves each one;</li>
+    <li>read back their processing and publication status and check it against what was approved;</li>
+    <li>keep a record of each step and its result.</li>
+  </ul>
+
+  <h2 class={h2} id="who">Who uses it</h2>
+  <p class={p}>
+    Only the publisher, {author.name}, runs it, on the publisher's own computer, to manage the {site.name} channels. It is
+    not a public service. Visitors to this website never sign in, and the website never asks for access to anyone's YouTube
+    or Google account.
+  </p>
+
+  <h2 class={h2} id="access">Google account access</h2>
+  <p class={p}>
+    The tool asks for one permission, through Google's own consent screen: YouTube's scope for managing videos and
+    captions (<code>youtube.force-ssl</code>), which uploading, editing and captioning need. It is granted only for the
+    channels the publisher connects. The authorization is kept by the tool on the publisher's computer, never by this
+    website, and can be revoked on the
+    <a href="https://security.google.com/settings/security/permissions">Google security settings page</a>.
+  </p>
+
+  <h2 class={h2} id="terms">Terms and privacy</h2>
+  <p class={p}>
+    The tool uses YouTube API Services. By using it, you agree to be bound by the
+    <a href="https://www.youtube.com/t/terms">YouTube Terms of Service</a>. How it handles data is set out in the
+    <a href={href('/privacy/')}>privacy policy</a>, and Google's in the
+    <a href="http://www.google.com/policies/privacy">Google Privacy Policy</a>.
+  </p>
+
+  <h2 class={h2} id="source">Source code</h2>
+  <p class={p}>The tool is open source: <a href={site.repo}>{site.repo.replace('https://', '')}</a>.</p>
+</Base>

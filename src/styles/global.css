@@ -2,10 +2,44 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* The brand faces (OFL), latin subsets, the same files scripts/brand.ts draws with. */
+@font-face {
+  font-family: 'Libre Baskerville';
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('../../brand/fonts/LibreBaskerville.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Libre Baskerville';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../../brand/fonts/LibreBaskerville-Italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('../../brand/fonts/IBMPlexSans.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../../brand/fonts/IBMPlexSans-Italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-weight: 400;
+  font-display: swap;
+  src: url('../../brand/fonts/IBMPlexMono-400.woff2') format('woff2');
+}
+
 /*
  * Design tokens. The look is the Commonwealth's Treasury Navy (brand/design.md): navy, archival gold, paper and slate,
- * Libre Baskerville for headings and IBM Plex Sans for everything that has to be read quickly (fonts linked in
- * Base.astro). The semantic variable names (background, foreground, primary, muted, ...) are kept so the pages did not
+ * Libre Baskerville for headings and IBM Plex Sans for everything that has to be read quickly (self-hosted from
+ * brand/fonts below, so a page asks no third party for them). The semantic variable names (background, foreground, primary, muted, ...) are kept so the pages did not
  * change. Verdict colours stay semantic, not brand: success (right), warning (partly), destructive (wrong);
  * unknown/untestable use muted-foreground.
  */

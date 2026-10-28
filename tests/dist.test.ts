@@ -111,7 +111,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       (d) => d.isDirectory() && !['_astro', 'og', 'stamps'].includes(d.name),
     );
     expect(dirs.map((d) => d.name).sort()).toEqual(
-      ['about', 'commissions', 'inquiries', 'institutions', 'privacy', ...liveTopics].sort(),
+      ['about', 'commissions', 'inquiries', 'institutions', 'privacy', 'publishing', ...liveTopics].sort(),
     );
     for (const n of topicNames()) {
       expect(existsSync(join(DIST, n, 'stories')), `${n}/stories`).toBe(false);
@@ -379,12 +379,25 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       'http://www.google.com/policies/privacy',
       'https://security.google.com/settings/security/permissions',
       'https://www.youtube.com/t/terms',
-      'youtube.force-ssl',
       'id="contact"',
+      `href="${BASE}publishing/"`,
     ])
       expect(html).toContain(s);
     expect(html).not.toContain('mailto:');
     expect(readFileSync(join(DIST, 'index.html'), 'utf8')).toContain(`href="${BASE}privacy/"`);
+  });
+
+  it('publishing, the OAuth homepage, names the API, its scope and the terms, and links the privacy policy', () => {
+    const html = readFileSync(join(DIST, 'publishing/index.html'), 'utf8');
+    for (const s of [
+      'YouTube Data API v3',
+      'youtube.force-ssl',
+      'https://www.youtube.com/t/terms',
+      'agree to be bound by',
+      `href="${BASE}privacy/"`,
+    ])
+      expect(html).toContain(s);
+    expect(readFileSync(join(DIST, 'index.html'), 'utf8')).not.toContain(`href="${BASE}publishing/"`);
   });
 
   it('about page marks its nav link as current', () => {

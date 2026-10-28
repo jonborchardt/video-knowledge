@@ -20,7 +20,7 @@ const WCAG = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select, textarea, summary, [tabindex]:not([tabindex="-1"])';
 const isTopic = (p: string) =>
-  /^[^/]+\/index\.html$/.test(p) && !/^(about|commissions|inquiries|institutions|privacy)\//.test(p);
+  /^[^/]+\/index\.html$/.test(p) && !/^(about|commissions|inquiries|institutions|privacy|publishing)\//.test(p);
 /** A matter (story) page: <topic>/<slug>/index.html, not a commission or an inquiry's data page. */
 const isMatter = (p: string) => /^[^/]+\/[^/]+\/index\.html$/.test(p) && !/^commissions\/|^[^/]+\/data\//.test(p);
 
@@ -63,11 +63,12 @@ it('has the built site to check (npm run build), one page per template', () => {
   expect(pages.length, 'no pages in dist/: run npm run build').toBeGreaterThan(0);
   if (process.env.WEB_QUALITY_FULL !== '1')
     expect(pages, 'representativePages() lost a template').toHaveLength(
-      // 7 fixed templates (home, about, privacy, directory, inquiries, a commission, 404); a topic, a story and an article page
+      // 8 fixed templates (home, about, privacy, publishing, directory, inquiries, a commission, 404); a topic, a story and an article page
       // exist only once a story is live.
-      7 +
+      8 +
         (pages.some(
-          (p) => p.split('/').length === 2 && !/^(about|commissions|inquiries|institutions|privacy)\//.test(p),
+          (p) =>
+            p.split('/').length === 2 && !/^(about|commissions|inquiries|institutions|privacy|publishing)\//.test(p),
         )
           ? 1
           : 0) +
