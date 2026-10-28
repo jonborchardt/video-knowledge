@@ -1,31 +1,30 @@
-# RELEASE BUILD: What Really Happens to a Heat Pump at 0°F
+# PRIVATE REVIEW BUILD: What Really Happens to a Heat Pump at 0°F
 
-Upload `decision-what-happens-when-it-gets-cold.mp4` to YouTube as a **public** video: the build report says narration and music are cleared, and the person who ran the final build approved it (see its command line).
+Upload `decision-what-happens-when-it-gets-cold-review-private.mp4` to YouTube as a **private** video for review. Do not publish. Public release is blocked: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final heat-pumps decision:what-happens-when-it-gets-cold --approved-by <name>" re-narrates it for release.
 
-- Title: What Really Happens to a Heat Pump at 0°F
-- Duration: 7:30 (450.3s), 1920x1080 @ 30 fps
-- MP4 sha: bcabccdfc5; build report 1e80391578; QA 36/36
+- Working title: [PRIVATE REVIEW] What Really Happens to a Heat Pump at 0°F
+- Duration: 7:47 (467.5s), 1920x1080 @ 30 fps
+- MP4 sha: 02ad6fb732; build report 8aab1db6fd; QA 36/36
 - Description: `description.txt` (paste as is; chapters are measured from the timeline)
 - Checklist: `checklist.md`; build report: `build-report.md`; thumbnail: `thumbnail.png` (the title card); captions: `captions.en.srt`
 
 ## Chapters
 
 - 0:00 Hook (sc01)
-- 0:16 Setup (sc03)
-- 0:38 Investigation (sc06)
+- 0:17 Setup (sc03)
+- 0:39 Investigation (sc06)
 - 6:14 Answer (sc29)
-- 7:07 Takeaway (sc33)
+- 7:08 Takeaway (sc33)
 
 ## Provenance
 
-- Narration: azure / en-US-AndrewMultilingualNeural (rate +0%), 438.95s of speech, $0.1 (estimated from characters). Licence: commercial: Azure AI Speech terms allow the generated audio in published media. Publishable.
+- Narration: edge / en-US-AndrewMultilingualNeural (rate +0%), 439.82s of speech, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only.**
 - Music: Undertow (undertow), strudel-bench f63f2c5 (songs/undertow.strudel not yet committed) at https://github.com/jonborchardt/strudel-bench, source songs/undertow.strudel c7fbeafb07, 84 bpm D:minor. Cleared; no samples. original composition; every voice is a built-in oscillator or synth patch, no sample pack and no soundfont, so no third-party sound is in the render.
-- Mix: 4 cues, music -20.1 dB under the voice while it speaks, peak -1.4 dB.
-- Clearance: narration yes, music yes. Cleared for public release.
+- Mix: 4 cues, music -20.1 dB under the voice while it speaks, peak -1.1 dB.
+- Clearance: narration no, music yes. Not cleared for public release.
 
-## After the upload
+## After the review
 
-1. Record it: `npm run publish -- uploaded heat-pumps decision:what-happens-when-it-gets-cold --id <youtube id> --visibility private` (or `public` once approved).
-2. Watch the upload with the checklist, then approve this build: `npm run publish -- approve heat-pumps decision:what-happens-when-it-gets-cold --by "<name>"`.
-3. Set it public or schedule it on YouTube, then `npm run publish -- published heat-pumps decision:what-happens-when-it-gets-cold` (or `scheduled --at <ISO>`).
-4. Any later edit renders a draft again; a live video is never replaced: a re-release is a new output (`npm run publish -- add`).
+1. Record the private upload: `npm run publish -- uploaded heat-pumps decision:what-happens-when-it-gets-cold --id <youtube id> --visibility private`.
+2. Fix what the checklist found; a re-render keeps every cached scene the fix does not touch.
+3. Public release needs, besides approval: `npm run video -- final <topic> <story-id> --approved-by "<name>"` (the commercial voice), which packages the release build.

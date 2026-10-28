@@ -1,0 +1,278 @@
+{
+  "reviewer": "scripts/briefs/article-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-27",
+  "revision": 2,
+  "packageFingerprint": "8cb301861b",
+  "approved": {
+    "meta.headline": "d70f7b8f5d",
+    "meta.seoTitle": "88df965905",
+    "meta.description": "69bb7c7fec",
+    "heading:hook": "304a9ab117",
+    "s01": "b75604349b",
+    "s02": "8d24ffe230",
+    "s03": "299fb4b146",
+    "heading:setup": "84a62b63f2",
+    "s04": "fb090d7645",
+    "s05": "5c47a0a658",
+    "s06": "c940e6617c",
+    "s07": "b98ad947c2",
+    "s08": "87077bd358",
+    "s09": "472d51b340",
+    "heading:investigation": "6bc493c688",
+    "s10": "5b229b1c23",
+    "s11": "46d3c99c45",
+    "s12": "80b3c74ace",
+    "s13": "365e3867da",
+    "s14": "916b6b3927",
+    "s15": "4fdfc6a462",
+    "s16": "df396edf07",
+    "t1": "f62bfe6576",
+    "s17": "7af5b36da7",
+    "s18": "1b79339177",
+    "s19": "30cdaa517d",
+    "s20": "4d6ec904ec",
+    "s21": "bad5a9cb43",
+    "decision-what-happens-when-it-gets-cold/sc14": "aa65e99b74",
+    "s23": "551787141e",
+    "s24": "96e75fd5aa",
+    "s25": "d9b27ccf47",
+    "s26": "ae4e3c7f3b",
+    "s27": "5ae419917e",
+    "s28": "8a3e4e44a4",
+    "s29": "ee025c48f2",
+    "s30": "3051019c3f",
+    "s31": "9a3c3795d7",
+    "s32": "f42cccae34",
+    "s33": "3ac8d7ea05",
+    "decision-what-happens-when-it-gets-cold/sc19": "f06227f545",
+    "s35": "a62e3f69a4",
+    "s36": "ecf73ea711",
+    "s37": "c54e3d7ed5",
+    "s38": "4980217057",
+    "s39": "b5d1b603c5",
+    "s40": "dcbfb5d460",
+    "s42": "69310d46aa",
+    "s44": "2feb1237a7",
+    "s45": "a565760351",
+    "heading:answer": "6d96ec7d40",
+    "s49": "e545942f0a",
+    "s50": "399dcbb5d3",
+    "s53": "6520eabd72",
+    "s54": "4924b907a9",
+    "heading:takeaway": "a1bab18ae9",
+    "s55": "0eb08b718d",
+    "s56": "c9b1a8f728",
+    "s57": "2ee61392e3",
+    "meta.dek": "a506907acf",
+    "s22": "90acc97653",
+    "s34": "f334517212",
+    "s41": "e57ad0a8b4",
+    "s43": "925677d9f8",
+    "s46": "cd7b961689",
+    "s47": "b7a05da017",
+    "s48": "2cabc2cb97",
+    "s51": "6ae9c82bdb",
+    "s52": "077939df3a",
+    "t2": "45e726f02d",
+    "t3": "26cbcd5d23",
+    "t4": "3038299eb0"
+  },
+  "findings": [
+    {
+      "sentence": "s22",
+      "fingerprint": "9e8fe620ec",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "The first clause, that efficiency and output falling with temperature is 'consistent across these studies', has no assertion; s22.a covers only the single ductless unit. For output, the only field measurement in the article is that one CEE 2018 unit, so 'consistent across these studies' does not hold for output as worded.",
+      "refs": [
+        "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L478-L489"
+      ],
+      "suggestion": "Add an assertion for the efficiency fall citing passages the package already holds for this claim (Maine L1911-L1918, CEE 2017 L1143-L1157), and say the efficiency fall is consistent while the field output reading is one unit."
+    },
+    {
+      "sentence": "s34",
+      "fingerprint": "02fd4926eb",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "'Sizing matters as much as the weather' compares the size of two effects. The Wilson passage only gives the Minnesota sizing result ($182 saved vs $96 more a year); nothing in the package weighs sizing against weather.",
+      "refs": [
+        "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L942-L946"
+      ],
+      "suggestion": "Drop the comparison: 'Sizing matters too: one study estimated ...'"
+    },
+    {
+      "sentence": "s52",
+      "fingerprint": "be48810801",
+      "revision": 1,
+      "category": "repetition",
+      "severity": "blocking",
+      "explanation": "The callout restates s25 (median defrost share small, one site far more time in defrost) and adds nothing. The defrost claim's audit is 'supported' with no limitation, so an unresolved callout here has no open condition to state.",
+      "refs": [
+        "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1249-L1310"
+      ],
+      "suggestion": "Cut the callout, or give it something s25 does not say (the PNNL caveat that defrost energy is not a perfect indicator of the defrost penalty)."
+    },
+    {
+      "sentence": "meta.dek",
+      "assertion": "meta.dek.b",
+      "fingerprint": "417c9e8c92",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "warning",
+      "explanation": "'most metered heat pumps kept heating below 0 °F at lower efficiency and output' puts the output fall on most metered units in the field tests. The only measured output in the cold in the article is one ductless unit (CEE 2018). That output falls is well supported, but by lab and manufacturer curves, not field meters on most units.",
+      "refs": [
+        "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L478-L489"
+      ],
+      "suggestion": "Keep the efficiency and backup points and drop or rescope output, e.g. 'at lower efficiency (and, in the one unit measured, lower output)', or cite a capacity passage the package holds (Cadmus L3120-L3127, Wilson L1097-L1100) without calling it field-measured."
+    },
+    {
+      "sentence": "s46",
+      "assertion": "s46.b",
+      "fingerprint": "6a1e657bbd",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "warning",
+      "explanation": "Same as the dek: 'In these field tests most units kept heating ... with ... less output' generalises one unit's measured output to most units in the field tests.",
+      "refs": [
+        "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L478-L489"
+      ],
+      "suggestion": "Rescope output to the one measured unit, or attribute the general output fall to rating and lab curves the package holds."
+    },
+    {
+      "sentence": "s41",
+      "fingerprint": "1f2a58ede9",
+      "revision": 1,
+      "category": "omission",
+      "severity": "warning",
+      "explanation": "The evaluators state a limit of their own break-even analysis in the same passage: it does not account for zonal savings, and a homeowner heating 30% less of the home would drop the gas balance point to 50 °F. Leaving that out makes 70 °F read as the only result.",
+      "refs": [
+        "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3436-L3459"
+      ],
+      "suggestion": "Add that the analysis excludes zonal savings, which would lower the break-even (to 50 °F in their example)."
+    },
+    {
+      "sentence": "s43",
+      "fingerprint": "bbe0e426ac",
+      "revision": 1,
+      "category": "incompatible-comparison",
+      "severity": "warning",
+      "explanation": "'leans the same way' follows s41-s42, where gas beat the mini-splits. In Toronto the Canadian model found heat pumps with gas backup were the lowest-cost option for nearly all households, so it does not lean toward gas. Only the dependence on place and prices is shared. The model also counts lifetime cost, not running cost.",
+      "refs": [
+        "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1142-L1150"
+      ],
+      "suggestion": "Say what is shared: 'A Canadian model that counts equipment as well as energy finds the answer turns on place too: ...'"
+    },
+    {
+      "sentence": "s47",
+      "fingerprint": "dbbee304bf",
+      "revision": 1,
+      "category": "repetition",
+      "severity": "warning",
+      "explanation": "Repeats s36 almost word for word (backup tied to the cold, to sizing and to controls). Only 'the cost risk' is new.",
+      "refs": [],
+      "suggestion": "Keep the cost-risk framing and drop the repeated triad, or cut s36."
+    },
+    {
+      "sentence": "s48",
+      "assertion": "s48.b",
+      "fingerprint": "84ef7d4763",
+      "revision": 1,
+      "category": "incompatible-comparison",
+      "severity": "warning",
+      "explanation": "'On running costs ... against gas the answer turns on ... the climate': the climate dependence comes from the Canadian model, which s45 says counts lifetime costs including equipment, not running costs. The running-cost evidence against gas (Cadmus) shows dependence on the unit and the prices.",
+      "refs": [
+        "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1142-L1150",
+        "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3436-L3459"
+      ],
+      "suggestion": "Separate the measures: on running costs it turns on the unit and prices; a lifetime-cost model adds the climate."
+    },
+    {
+      "sentence": "s51",
+      "fingerprint": "739f734db0",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "warning",
+      "explanation": "The claim's limitation is that ordinary single-stage units can fall to about COP 1, no better than resistance (Edwards assumption; the Cadmus note says some non-cold-climate units approached COP 1.0 in very cold hours, though those hours were few). The callout says only that ordinary models ran 'less efficiently' than cold-climate ones, which drops how far they fall.",
+      "refs": [
+        "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L1649-L1659",
+        "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L2997-L3002"
+      ],
+      "suggestion": "State the condition: ordinary single-stage units may get close to resistance-heat efficiency in deep cold, citing the Edwards passage the package already holds for this claim."
+    },
+    {
+      "sentence": "s10",
+      "fingerprint": "5b229b1c23",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "warning",
+      "explanation": "Table t2: the row label '(prototype field test, 22 sites)' gives the 25% figure the whole 22-site sample, but the passage says only 8 and 11 of 22 sites had data in the two coldest bins. One 'Value' column also mixes percent of time with dollars, and $182 and $96 have no period (per year).",
+      "refs": [
+        "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1169-L1193",
+        "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L942-L946"
+      ],
+      "suggestion": "Label the row '8 and 11 of 22 sites with data', put the bill rows in their own column or table, and say 'a year'."
+    },
+    {
+      "sentence": "s10",
+      "fingerprint": "5b229b1c23",
+      "revision": 1,
+      "category": "numbers",
+      "severity": "warning",
+      "explanation": "Table t3: the source gives the gas balance point for measured cold-climate units as 'above 58 °F', but the cell displays 58°F under a caption reading 'temperature above which ... cost less', so it implies they cost less above 58 °F, which is not established. The caption also calls all rows 'the New England mini-splits', but the last two rows are the rating curve of an HSPF-13 unit, not a measured unit. The analysis excludes zonal savings (see s41).",
+      "refs": [
+        "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3436-L3459"
+      ],
+      "suggestion": "Show 'above 58 °F' and 'above 70 °F', and narrow the caption to say the last two rows are a rated unit, not measured."
+    },
+    {
+      "sentence": "s28",
+      "fingerprint": "8a3e4e44a4",
+      "revision": 1,
+      "category": "context",
+      "severity": "info",
+      "explanation": "'Below that it was another matter' sets aux-only operation (minimal above 0 °F) against the share of time any auxiliary stage was engaged in supplemental mode. The 25% is supplemental, not backup-only. The figure is correct; the contrast is slightly loose.",
+      "refs": [
+        "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1169-L1193"
+      ],
+      "suggestion": "Optionally say 'backup elements were on alongside the heat pump'."
+    },
+    {
+      "sentence": "s31",
+      "fingerprint": "128c61c3d3",
+      "revision": 1,
+      "category": "omission",
+      "severity": "info",
+      "explanation": "The researchers add that they expect the controls issue to be fixed before the prototype units are commercialized. That is worth giving, since s36 and s47 cite controls as a cost risk.",
+      "refs": [
+        "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1249-L1310"
+      ],
+      "suggestion": "Optionally add 'which the researchers expect to be fixed before the units go on sale'."
+    },
+    {
+      "sentence": "s32",
+      "fingerprint": "1bb9d18010",
+      "revision": 1,
+      "category": "modality",
+      "severity": "info",
+      "explanation": "The source says 'likely due to', and the sentence says 'most likely'. This is a small strengthening.",
+      "refs": [
+        "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L1946-L1951"
+      ],
+      "suggestion": "Say 'likely'."
+    },
+    {
+      "sentence": "s49",
+      "fingerprint": "e545942f0a",
+      "revision": 1,
+      "category": "selective",
+      "severity": "info",
+      "explanation": "The 'small samples' list leaves out the larger Maine study (78 homes, 166 metered units), which also bears on the answer. The conclusion still holds.",
+      "refs": [],
+      "suggestion": "Optionally acknowledge the Maine sample."
+    }
+  ],
+  "dispositions": {}
+}

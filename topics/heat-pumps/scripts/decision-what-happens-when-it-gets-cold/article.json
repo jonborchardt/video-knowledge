@@ -1,0 +1,2190 @@
+{
+  "topic": "heat-pumps",
+  "story": "decision:what-happens-when-it-gets-cold",
+  "revision": 2,
+  "generation": {
+    "model": "claude-opus-5-5",
+    "brief": "scripts/briefs/article.md",
+    "date": "2026-10-27",
+    "wordsPerMinute": 150,
+    "evidencePackage": "8cb301861b"
+  },
+  "meta": {
+    "headline": "What happens to a heat pump when it gets really cold",
+    "seoTitle": "Do heat pumps work in extreme cold? The field data",
+    "dek": {
+      "id": "meta.dek",
+      "text": "In field tests in cold-climate homes, most metered heat pumps kept heating below 0 °F, though less efficiently, and the cost risk was backup heat, which ran more as it got colder.",
+      "type": "factual",
+      "assertions": [
+        {
+          "id": "meta.dek.a",
+          "text": "Most metered mini-splits kept heating at -10 to 0 °F, and a ductless cold-climate unit kept operating down to -25 °F; not every unit did (one field site's compressor did not run below 0 °F).",
+          "kind": "fact",
+          "claims": [
+            {
+              "id": "heat-pumps/heat-pumps-not-work-cold-climates",
+              "stance": "denies"
+            },
+            {
+              "id": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+              "stance": "asserts"
+            }
+          ],
+          "evidence": [
+            {
+              "kind": "study",
+              "claim": "heat-pumps/heat-pumps-not-work-cold-climates",
+              "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L2926-L2935"
+            },
+            {
+              "kind": "study",
+              "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+              "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L478-L489"
+            },
+            {
+              "kind": "study",
+              "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+              "cite": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L1946-L1951"
+            }
+          ],
+          "qualifications": [
+            "The answer section gives the site whose compressor stopped below 0 °F and the small samples, in its unresolved callouts."
+          ]
+        },
+        {
+          "id": "meta.dek.b",
+          "text": "Their efficiency fell as it got colder.",
+          "kind": "fact",
+          "claims": [
+            {
+              "id": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+              "stance": "asserts"
+            }
+          ],
+          "evidence": [
+            {
+              "kind": "study",
+              "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+              "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1143-L1157"
+            },
+            {
+              "kind": "study",
+              "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+              "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L478-L489"
+            }
+          ]
+        },
+        {
+          "id": "meta.dek.c",
+          "text": "Auxiliary heater usage generally increased at colder temperature bins.",
+          "kind": "fact",
+          "claims": [
+            {
+              "id": "heat-pumps/cold-climate-heat-pumps-often-rely",
+              "stance": "asserts"
+            }
+          ],
+          "evidence": [
+            {
+              "kind": "study",
+              "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+              "cite": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L2150-L2157"
+            },
+            {
+              "kind": "study",
+              "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+              "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1169-L1193"
+            }
+          ],
+          "qualifications": [
+            "The backup section qualifies how much backup ran and why, in its qualification callout."
+          ]
+        }
+      ]
+    },
+    "description": {
+      "id": "meta.description",
+      "text": "What metered field tests show about heat pump efficiency, output and backup heat below 0 °F, and why gas can still be cheaper to run.",
+      "type": "factual",
+      "assertions": [
+        {
+          "id": "meta.description.a",
+          "text": "Most metered mini-splits kept heating at -10 to 0 °F, and a ductless cold-climate unit kept operating down to -25 °F; not every unit did (one field site's compressor did not run below 0 °F).",
+          "kind": "fact",
+          "claims": [
+            {
+              "id": "heat-pumps/heat-pumps-not-work-cold-climates",
+              "stance": "denies"
+            },
+            {
+              "id": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+              "stance": "asserts"
+            }
+          ],
+          "evidence": [
+            {
+              "kind": "study",
+              "claim": "heat-pumps/heat-pumps-not-work-cold-climates",
+              "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L2926-L2935"
+            },
+            {
+              "kind": "study",
+              "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+              "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L478-L489"
+            },
+            {
+              "kind": "study",
+              "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+              "cite": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L1946-L1951"
+            }
+          ]
+        },
+        {
+          "id": "meta.description.b",
+          "text": "Their efficiency and output fell as it got colder.",
+          "kind": "fact",
+          "claims": [
+            {
+              "id": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+              "stance": "asserts"
+            }
+          ],
+          "evidence": [
+            {
+              "kind": "study",
+              "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+              "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1143-L1157"
+            },
+            {
+              "kind": "study",
+              "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+              "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L478-L489"
+            }
+          ]
+        },
+        {
+          "id": "meta.description.c",
+          "text": "Against gas, the result varied with the unit (measured units vs a rated cold-climate unit), the climate and gas prices (Toronto vs Edmonton), and for the measured mini-splits gas was cheaper below 70 °F.",
+          "kind": "fact",
+          "claims": [
+            {
+              "id": "heat-pumps/dual-fuel-system-heat-pump-gas",
+              "stance": "asserts"
+            }
+          ],
+          "evidence": [
+            {
+              "kind": "study",
+              "claim": "heat-pumps/dual-fuel-system-heat-pump-gas",
+              "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3436-L3459"
+            },
+            {
+              "kind": "study",
+              "claim": "heat-pumps/dual-fuel-system-heat-pump-gas",
+              "cite": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1142-L1150"
+            }
+          ],
+          "qualifications": [
+            "The gas comparison ties the result to the unit and to the prices of those winters."
+          ]
+        }
+      ]
+    }
+  },
+  "sections": [
+    {
+      "name": "hook",
+      "heading": "Does a heat pump still heat the house on the coldest nights?",
+      "blocks": [
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s01",
+              "text": "Picture a heat pump in a northern backyard on the coldest night of the winter, frost on the windows and its fan still turning.",
+              "type": "hypothetical"
+            },
+            {
+              "id": "s02",
+              "text": "Is it still warming the house, or has it quietly handed the job to an expensive electric heater?",
+              "type": "rhetorical"
+            },
+            {
+              "id": "s03",
+              "text": "Field studies that put meters on heat pumps in lived-in homes can answer that, and they also show which part of a cold winter matters most for the bill.",
+              "type": "transitional"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "setup",
+      "heading": "Who says heat pumps fail in the cold, and who says they do not",
+      "blocks": [
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s04",
+              "text": "An NH Patch headline in New Hampshire framed the doubt as \"Taxpayers On The Hook For Tech That Falls Flat In The Cold\".",
+              "type": "attributed",
+              "assertions": [
+                {
+                  "id": "s04.a",
+                  "text": "An NH Patch headline said heat pumps are tech that falls flat in the cold.",
+                  "kind": "attribution",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "statement",
+                      "claim": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "source": "patch-heat-pump-hustle-taxpayers-hook-tech-falls-flat-cold"
+                    }
+                  ],
+                  "quote": {
+                    "text": "Taxpayers On The Hook For Tech That Falls Flat In The Cold",
+                    "source": "patch-heat-pump-hustle-taxpayers-hook-tech-falls-flat-cold",
+                    "speaker": "NH Patch"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "s05",
+              "text": "Massachusetts' Mass Save program says the opposite of heat pumps, that \"many provide efficient heat at outdoor temperatures as low as -15 °F\".",
+              "type": "attributed",
+              "assertions": [
+                {
+                  "id": "s05.a",
+                  "text": "Mass Save says of heat pumps: \"many provide efficient heat at outdoor temperatures as low as -15 °F\".",
+                  "kind": "attribution",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "statement",
+                      "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "source": "masssave-heat-pumps"
+                    }
+                  ],
+                  "quote": {
+                    "text": "many provide efficient heat at outdoor temperatures as low as -15 °F",
+                    "source": "masssave-heat-pumps",
+                    "speaker": "Mass Save"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "s06",
+              "text": "Between those views, the channel Technology Connections names what actually changes: \"along with getting less efficient, their actual heat output also drops.\"",
+              "type": "attributed",
+              "assertions": [
+                {
+                  "id": "s06.a",
+                  "text": "Technology Connections said that along with getting less efficient, heat pumps' actual heat output also drops.",
+                  "kind": "attribution",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "statement",
+                      "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+                      "source": "56DSH8tKUvo"
+                    }
+                  ],
+                  "quote": {
+                    "text": "along with getting less efficient, their actual heat output also drops.",
+                    "source": "56DSH8tKUvo",
+                    "speaker": "Technology Connections"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "s07",
+              "text": "And Jordan Dearden warns of the electric backup strips that take over when the heat pump cannot keep up: \"They'll also absolutely destroy your electric bill.\"",
+              "type": "attributed",
+              "assertions": [
+                {
+                  "id": "s07.a",
+                  "text": "Jordan Dearden said electric backup heat strips will absolutely destroy your electric bill.",
+                  "kind": "attribution",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "statement",
+                      "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "source": "f0PBF-kE-H0"
+                    }
+                  ],
+                  "quote": {
+                    "text": "They'll also absolutely destroy your electric bill.",
+                    "source": "f0PBF-kE-H0",
+                    "speaker": "Jordan Dearden"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "s08",
+              "text": "Which of these claims do the meters bear out?",
+              "type": "rhetorical"
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "callout": "unresolved",
+          "gap": 0,
+          "sentences": [
+            {
+              "id": "s09",
+              "text": "A building-economics report from the Rocky Mountain Institute is sometimes cited on this point, but its line on how cold today's models can operate rests on product ratings, not on tests of units in the cold, so it cannot settle the question.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s09.a",
+                  "text": "Today many models can operate efficiently in cold temperatures, according to rated performance, though the report did not test cold-weather operation.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L356-L358"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence says the report cites ratings and cannot decide the claim."
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "investigation",
+      "heading": "What the meters show below freezing",
+      "blocks": [
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s10",
+              "text": "Heating efficiency is scored as a coefficient of performance, or COP, and plain electric resistance heat scores 1.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s10.a",
+                  "text": "Electric resistance heat operates at a COP of 1, less efficient than a heat pump.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L425-L435"
+                    }
+                  ],
+                  "qualifications": [
+                    "The table of measured COPs and the unresolved callouts say how far COP falls in the cold and that ordinary models did worse."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s11",
+              "text": "A New England evaluation metered the heat delivered by dozens of ductless mini-splits over back-to-back winters, and in the later winter they averaged a COP of 1.5 between -10 and 0 °F.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s11.a",
+                  "text": "An evaluation metered delivered heat from dozens of ductless mini-splits over winter 2015 and winter 2016; in the 2016 winter their COPs averaged 1.5 at -10 to 0 °F.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "stance": "denies"
+                    },
+                    {
+                      "id": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L2926-L2935"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L2926-L2935"
+                    }
+                  ],
+                  "qualifications": [
+                    "s12 gives the weaker earlier winter; s13 says the sample included non-cold-climate models."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s12",
+              "text": "The evaluators called that far superior to resistance heat, with heating efficiency 50 percent higher; in the earlier winter, with deep snow and ice around the outdoor units, the same units ran less efficiently.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s12.a",
+                  "text": "At a COP of 1.5 the mini-splits gave effective heating efficiencies 50% higher than electric resistance heating, which the evaluators called far superior.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L2926-L2935"
+                    }
+                  ]
+                },
+                {
+                  "id": "s12.b",
+                  "text": "The units operated less efficiently in winter 2015, which had prolonged deep snow and cold, with snow and ice around outdoor units, than in winter 2016.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L2926-L2935"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s13",
+              "text": "Even the ordinary models in that evaluation, not built for cold climates, kept running below 0 °F, though less efficiently than the cold-climate ones.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s13.a",
+                  "text": "In the evaluation, observed non-cold-climate models operated at outdoor temperatures below 0 °F, at lower efficiency than cold-climate models.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L2997-L3002"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence says they ran less efficiently than the cold-climate models."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s14",
+              "text": "In a federal field test of prototype cold-climate heat pumps in occupied homes, the median COP between 0 and 5 °F was 1.9, counting only the periods when neither backup heat nor defrost was running.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s14.a",
+                  "text": "Excluding periods with auxiliary heat or defrost, the prototype cold-climate heat pumps in the field had a median COP of 1.9 in the 0 to 5 °F bin.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "stance": "denies"
+                    },
+                    {
+                      "id": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L180-L189"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L180-L189"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence says the figure excludes backup and defrost periods and that the units were prototypes; s15 compares lab and field."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s15",
+              "text": "Most of those units cleared 1.75, the COP Energy Star requires of a cold-climate heat pump at 5 °F, although the prototypes had done significantly better in the lab.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s15.a",
+                  "text": "The prototypes' laboratory performance was significantly more efficient, but most units' observed field COP was above 1.75, the EPA Energy Star requirement for cold-climate heat pumps at 5 °F.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L180-L189"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence says most units, not all, and that the lab did better."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s16",
+              "text": "A study of whole-home systems in Maine found the metered COP across 166 indoor units averaged 2 at -10 °F, which it describes as twice as efficient as electric resistance even at those temperatures.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s16.a",
+                  "text": "Metered COP across all 166 metered heat pump indoor units averaged 2 at -10 °F, falling as the outdoor temperature fell.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+                      "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1911-L1918"
+                    }
+                  ]
+                },
+                {
+                  "id": "s16.b",
+                  "text": "Even at these very cold temperatures the heat pumps were twice as efficient as electric resistance.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1913-L1916"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "table",
+          "id": "t1",
+          "caption": "Heating COP measured in cold weather, by study, against electric resistance heat",
+          "columns": [
+            "COP"
+          ],
+          "rows": [
+            {
+              "label": "Ductless mini-splits, New England, -10 to 0 °F, average in the later winter (2016)",
+              "cells": [
+                {
+                  "label": "COP",
+                  "value": 1.5,
+                  "unit": "count",
+                  "display": "1.5",
+                  "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L2926-L2935"
+                }
+              ]
+            },
+            {
+              "label": "Prototype cold-climate heat pumps, 0 to 5 °F, median, backup and defrost excluded (federal field test, 2025 report)",
+              "cells": [
+                {
+                  "label": "COP",
+                  "value": 1.9,
+                  "unit": "count",
+                  "display": "1.9",
+                  "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L180-L189"
+                }
+              ]
+            },
+            {
+              "label": "Energy Star requirement for a cold-climate heat pump at 5 °F",
+              "cells": [
+                {
+                  "label": "COP",
+                  "value": 1.75,
+                  "unit": "count",
+                  "display": "1.75",
+                  "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L180-L189",
+                  "qualifier": "gt"
+                }
+              ]
+            },
+            {
+              "label": "Whole-home heat pumps in Maine, -10 °F, average across 166 indoor units (2026 study)",
+              "cells": [
+                {
+                  "label": "COP",
+                  "value": 2,
+                  "unit": "count",
+                  "display": "2",
+                  "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1911-L1918"
+                }
+              ]
+            },
+            {
+              "label": "Heat-pump-only cycles in Minnesota, 10 °F (2017 study)",
+              "cells": [
+                {
+                  "label": "COP",
+                  "value": 1.3,
+                  "unit": "count",
+                  "display": "1.3",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1143-L1157",
+                  "qualifier": "about"
+                }
+              ]
+            },
+            {
+              "label": "Electric resistance heat",
+              "cells": [
+                {
+                  "label": "COP",
+                  "value": 1,
+                  "unit": "count",
+                  "display": "1",
+                  "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L425-L435"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s17",
+              "text": "So the heat keeps coming at lower efficiency, and how much heat a unit can still deliver is a separate question.",
+              "type": "transitional"
+            },
+            {
+              "id": "s18",
+              "text": "In northern Minnesota, researchers logged one small ductless unit holding a steady median output from 10 °F down to -15 °F.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s18.a",
+                  "text": "One 1-ton ductless heat pump in Northern Minnesota delivered a consistent median capacity from 10 °F to -15 °F.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L478-L489"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence says it was one unit; s19 and s20 give its reduced output and the researchers' advice on backup."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s19",
+              "text": "Below that it kept running at reduced output, and between -20 and -25 °F it delivered about 20 percent of its rated output at 5 °F.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s19.a",
+                  "text": "The unit continued to operate from -15 °F to -25 °F at reduced capacity; between -20 and -25 °F its median delivered capacity was approximately 20% of its rated capacity at 5 °F.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+                      "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L478-L489"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s20",
+              "text": "The researchers concluded that units like it should not be used without backup below -15 °F.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s20.a",
+                  "text": "The researchers concluded the reduction in capacity shows these units should not be used without backup at extreme temperatures below -15 °F.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L478-L489"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s21",
+              "text": "Efficiency falls the same way: in an earlier Minnesota study, outdoor temperature had the largest effect on COP, and heat-pump-only cycles managed around 1.3 at 10 °F against around 3.0 to 4.5 on mild days of 50 to 60 °F.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s21.a",
+                  "text": "In the Minnesota study, outdoor air temperature had the largest impact on COP; heat-pump-only heating events had COPs around 1.3 at 10 °F, rising to around 3.0 to 4.5 in the shoulder heating seasons (around 50 to 60 °F), so 1.3 is less than half of the mild-weather figure.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+                      "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1143-L1157"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "figure",
+          "ref": "decision-what-happens-when-it-gets-cold/sc14",
+          "caption": "Heat-pump-only COP in the Minnesota study, at the colder change point and on mild shoulder-season days."
+        },
+        {
+          "kind": "prose",
+          "callout": "unresolved",
+          "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+          "sentences": [
+            {
+              "id": "s22",
+              "text": "In both the Maine and the Minnesota studies efficiency fell as the temperature fell, but the field output readings at the coldest temperatures come from a single ductless unit, so how much capacity a given model keeps is not settled by this evidence.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s22.a",
+                  "text": "The coldest capacity readings come from one ductless heat pump in Northern Minnesota, which held its median capacity to -15 °F and then delivered a reduced capacity.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+                      "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L478-L489"
+                    }
+                  ]
+                },
+                {
+                  "id": "s22.b",
+                  "text": "In Maine the metered heating COP decreased with decreasing outdoor temperature, and in Minnesota outdoor air temperature had the largest impact on COP.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+                      "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1911-L1918"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+                      "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1143-L1157"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s23",
+              "text": "Then there is frost.",
+              "type": "transitional"
+            },
+            {
+              "id": "s24",
+              "text": "In cold, humid air, frost builds on the outdoor coil and cuts its heat exchange; to clear it, the heat pump reverses and draws heat from the house, which can cool the air coming out of the vents.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s24.a",
+                  "text": "In cold, humid conditions frost accumulates on the outdoor coil and cuts heat exchange; defrost reverses the refrigerant flow so the heat pump rejects heat from the conditioned space to melt the frost, which can drop the supply air temperature.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/defrost-cycles-reduce-heat-pump-output",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/defrost-cycles-reduce-heat-pump-output",
+                      "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1249-L1310"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s25",
+              "text": "In the federal field test, defrost took a median of 5 to 8 percent of the energy at 5 to 35 °F, where it cost most, but one site spent 16 percent of its time in defrost below 40 °F against an average of 5 percent.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s25.a",
+                  "text": "Defrost was most energy intensive at 5 to 35 °F, where the median share of energy expended was between 5% and 8%, a small portion; one site spent 16% of its time in defrost under 40 °F against an overall average of 5%.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/defrost-cycles-reduce-heat-pump-output",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/defrost-cycles-reduce-heat-pump-output",
+                      "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1249-L1310"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence gives the outlying site beside the median."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s26",
+              "text": "Which leaves backup heat.",
+              "type": "transitional"
+            },
+            {
+              "id": "s27",
+              "text": "In the same field test the units ran mostly on the heat pump alone, even at the lowest temperatures, and backup-only operation was minimal above 0 °F.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s27.a",
+                  "text": "The units primarily operated in heat-pump-only mode even at the lowest outdoor temperatures, and auxiliary-only operation was minimal above 0 °F.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1238-L1247"
+                    }
+                  ],
+                  "qualifications": [
+                    "s28 gives how often backup ran below 0 °F."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s28",
+              "text": "Below that it was another matter: in the coldest range with enough data, -10 to 0 °F, backup elements were on 25 percent of the time, though only 8 and 11 of the 22 sites had data in the two coldest ranges.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s28.a",
+                  "text": "In the coldest outdoor temperature bins with sufficient data (-10 to 0 °F), auxiliary elements were engaged 25% of the time across sites; the two coldest bins had a sample of 8 and 11 of the 22 sites.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1169-L1193"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence gives the site counts; s29 says those sites may lean toward backup; the qualification callout gives the Maine result."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s29",
+              "text": "The researchers caution that three out of the four sites with data at the very coldest temperatures used more backup heat at every temperature than the rest, so those readings may overstate a typical home.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s29.a",
+                  "text": "Three out of the four sites with data in the two lowest outdoor temperature bins had higher auxiliary energy use across all temperature bins than the remaining sites, so the sites with data at the coldest temperatures may be biased to use more auxiliary heat than the average site.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1169-L1193"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s30",
+              "text": "Some of the backup use came from the thermostat: switchover to backup was seen at around 30 to 35 °F, and the researchers expect it would start much lower without homeowners changing setpoints, or with better setpoint controls.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s30.a",
+                  "text": "Switchover to supplemental heat was observed around 30 to 35 °F; the researchers say a typical switchover temperature without homeowner setpoint interference, or with better setpoint controls, would likely be much lower.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1238-L1247"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s31",
+              "text": "Some came from faults: two sites fired higher stages of backup heat during defrost, at least one did so in normal heating too, and the manufacturer called that a controls problem, which the researchers expect to be fixed before the units go on sale.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s31.a",
+                  "text": "Two sites engaged higher stages of auxiliary heat during defrost; at least one did so in normal operation too, which the manufacturer team said was a controls problem and not intended operation. The research team anticipates that this issue will be resolved before the units are commercialized.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/defrost-cycles-reduce-heat-pump-output",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/defrost-cycles-reduce-heat-pump-output",
+                      "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1249-L1310"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s32",
+              "text": "In another field study, one site's compressor would not run below 0 °F at all, even with its lockout disabled, likely because of an on-board control setting that cannot be adjusted in the field.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s32.a",
+                  "text": "At Site 10 the compressor did not run below 0 °F although its lockout temperature was disabled, likely due to an on-board control setting that cannot be adjusted in the field.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "cite": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L1946-L1951"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s33",
+              "text": "Backup does not have to erase the gain: in a Minnesota all-electric system, resistance booster heat joined in below 30 °F, but because the heat pump ran first, the system COP stayed above 1.0 even at the coldest reading, around -7 °F.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s33.a",
+                  "text": "In the all-electric system, events with electric resistance booster heat occurred below 30 °F, but because the heat pump was prioritized, system COPs were greater than 1.0 even at the coldest outdoor temperature, around -7 °F.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "stance": "asserts"
+                    },
+                    {
+                      "id": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L425-L435"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L425-L435"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s34",
+              "text": "Sizing matters too: one study estimated that in Minnesota a high-efficiency heat pump sized for the full heating load cut median bills by $182 a year, while one sized for the cooling load raised them by $96, because it used more electric resistance backup.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s34.a",
+                  "text": "In Minnesota, median bill savings were $182/year for high-efficiency ASHPs sized for the heating load, while median bills rose $96/year when they were sized for the cooling load, because of higher use of electric resistance backup.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L942-L946"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence says these are estimates and that the bill rise comes from sizing."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "table",
+          "id": "t2",
+          "caption": "Backup heat and defrost in the federal prototype field test",
+          "columns": [
+            "Share of time"
+          ],
+          "rows": [
+            {
+              "label": "Time with backup elements on, -10 to 0 °F (8 and 11 of the 22 sites had data in the two coldest ranges)",
+              "cells": [
+                {
+                  "label": "Share of time",
+                  "value": 25,
+                  "unit": "percent",
+                  "display": "25%",
+                  "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1169-L1193"
+                }
+              ]
+            },
+            {
+              "label": "One site's time in defrost below 40 °F (same field test)",
+              "cells": [
+                {
+                  "label": "Share of time",
+                  "value": 16,
+                  "unit": "percent",
+                  "display": "16%",
+                  "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1249-L1310"
+                }
+              ]
+            },
+            {
+              "label": "Overall average time in defrost (same field test)",
+              "cells": [
+                {
+                  "label": "Share of time",
+                  "value": 5,
+                  "unit": "percent",
+                  "display": "5%",
+                  "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1249-L1310"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "table",
+          "id": "t4",
+          "caption": "Modelled change in median yearly bills in Minnesota, by how the heat pump is sized",
+          "columns": [
+            "Change in median bill a year"
+          ],
+          "rows": [
+            {
+              "label": "Saving, heat pump sized for the heating load (Minnesota, modelled)",
+              "cells": [
+                {
+                  "label": "Change in median bill a year",
+                  "value": 182,
+                  "unit": "usd",
+                  "display": "$182",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L942-L946"
+                }
+              ]
+            },
+            {
+              "label": "Increase, heat pump sized for the cooling load (Minnesota, modelled)",
+              "cells": [
+                {
+                  "label": "Change in median bill a year",
+                  "value": 96,
+                  "unit": "usd",
+                  "display": "$96",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L942-L946"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "figure",
+          "ref": "decision-what-happens-when-it-gets-cold/sc19",
+          "caption": "Backup heat in the prototype field test: the share of time backup elements were on in the coldest range, and the number of sites."
+        },
+        {
+          "kind": "prose",
+          "callout": "qualification",
+          "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+          "sentences": [
+            {
+              "id": "s35",
+              "text": "How much a heat pump leans on electric backup depends on the installation: in the Maine whole-home study, the extra heat that rose below 10 °F came mostly from fossil fuel, and although 13 percent of homes had some electric resistance heat, only one home regularly used it.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s35.a",
+                  "text": "Fossil fuel use rose below 10 °F; although 13% of homes had some form of electric resistance heating, only one home regularly used it.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1714-L1726"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s36",
+              "text": "Across these studies, backup ran more as it got colder, where a unit was sized for cooling, and where controls misbehaved.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s36.a",
+                  "text": "Auxiliary heater usage generally increased at colder temperature bins.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "cite": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L2150-L2157"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1169-L1193"
+                    }
+                  ]
+                },
+                {
+                  "id": "s36.b",
+                  "text": "A heat pump sized for the cooling load used more electric resistance backup.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L942-L946"
+                    }
+                  ]
+                },
+                {
+                  "id": "s36.c",
+                  "text": "A controls problem made at least one site engage higher stages of auxiliary heat.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/defrost-cycles-reduce-heat-pump-output",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/defrost-cycles-reduce-heat-pump-output",
+                      "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1249-L1310"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s37",
+              "text": "What does all of that do to the heating bill?",
+              "type": "transitional"
+            },
+            {
+              "id": "s38",
+              "text": "For Minnesota homes that had heated with propane or electricity, researchers combined performance maps, heating loads and typical weather to estimate cost savings of 30 to 56 percent.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s38.a",
+                  "text": "For Minnesota homes replacing propane furnaces or electric heating, performance maps, home heating loads and normalized Minnesota weather were used to estimate homeowner cost savings of 30% to 56%.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L495-L518"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence names the baseline and says the savings are estimated; s39 gives the retrofit payback."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s39",
+              "text": "Those are running costs: for a retrofit, the same researchers expect paybacks longer than 10 years unless the old equipment needs replacing anyway.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s39.a",
+                  "text": "For retrofits, paybacks will typically be longer than 10 years, unless equipment replacement is necessary.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L495-L518"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s40",
+              "text": "Against propane, the New England mini-splits were cheaper to run at every temperature.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s40.a",
+                  "text": "The balance point for propane was -15 °F in both winters, meaning the mini-split was always less expensive than propane.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/dual-fuel-system-heat-pump-gas",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/dual-fuel-system-heat-pump-gas",
+                      "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3436-L3459"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s41",
+              "text": "Against gas they were not: at the energy prices of those winters, they beat an 80 percent efficient gas system only above 70 °F, and the evaluators said they were no direct replacement for gas, though that analysis leaves out zonal savings, and heating 30 percent less of the home would bring the break-even down to 50 °F.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s41.a",
+                  "text": "For natural gas, the cost breakpoint was above 70 °F in either winter, so the mini-splits only operated cost-effectively above 70 °F compared with an 80% efficient heating system, and the evaluators said they do not provide a viable direct replacement for a gas-fired system at those energy prices. This analysis does not account for zonal savings: if a homeowner heated 30% less of the home, the balance point would drop to 50 °F.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/dual-fuel-system-heat-pump-gas",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/dual-fuel-system-heat-pump-gas",
+                      "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3436-L3459"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence ties the result to the prices of those winters and gives the zonal-savings limit."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s42",
+              "text": "The units listed as cold-climate models broke even with gas only above 58 °F; on paper, the rating curve of a then-current cold-climate model lowered that to 40 °F in the earlier winter and 28 °F in the later one.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s42.a",
+                  "text": "For the measured units listed as cold climate units, gas balance points were above 58 °F for both winters; based on the rating curve of a current cold-climate unit with an HSPF of 13, the natural gas balance point dropped to 40 °F for 2015 and 28 °F for 2016.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/dual-fuel-system-heat-pump-gas",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/dual-fuel-system-heat-pump-gas",
+                      "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3436-L3459"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence gives the measured result first and says the lower break-even comes from a rating curve."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "table",
+          "id": "t3",
+          "caption": "Outdoor temperature at which a New England mini-split breaks even with gas, at the prices of those winters (the last two rows are the rating curve of a cold-climate unit, not measured units)",
+          "columns": [
+            "Break-even temperature"
+          ],
+          "rows": [
+            {
+              "label": "Measured mini-splits, against an 80% efficient gas system (both winters)",
+              "cells": [
+                {
+                  "label": "Break-even temperature",
+                  "value": 70,
+                  "unit": "count",
+                  "display": "above 70°F",
+                  "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3436-L3459",
+                  "qualifier": "gt"
+                }
+              ]
+            },
+            {
+              "label": "Measured units listed as cold-climate (both winters)",
+              "cells": [
+                {
+                  "label": "Break-even temperature",
+                  "value": 58,
+                  "unit": "count",
+                  "display": "above 58°F",
+                  "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3436-L3459",
+                  "qualifier": "gt"
+                }
+              ]
+            },
+            {
+              "label": "Rating curve of a then-current cold-climate unit, winter 2015",
+              "cells": [
+                {
+                  "label": "Break-even temperature",
+                  "value": 40,
+                  "unit": "count",
+                  "display": "40°F",
+                  "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3436-L3459"
+                }
+              ]
+            },
+            {
+              "label": "Rating curve of a then-current cold-climate unit, winter 2016",
+              "cells": [
+                {
+                  "label": "Break-even temperature",
+                  "value": 28,
+                  "unit": "count",
+                  "display": "28°F",
+                  "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3436-L3459"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s43",
+              "text": "A Canadian cost model that counts equipment as well as energy also finds that the answer turns on place: in Toronto, standard heat pumps with gas backup were the lowest-cost option for nearly all households, but in Edmonton only for some house types, and gas with air conditioning won the rest.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s43.a",
+                  "text": "In Toronto, standard heat pumps with gas backup are the lowest-cost option for nearly all households under mid-range assumptions; in Edmonton they are the lowest-cost option for single family homes and townhouses built in 1940 or 1980, and in other cases gas and air conditioning is the most cost-competitive option.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/dual-fuel-system-heat-pump-gas",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/dual-fuel-system-heat-pump-gas",
+                      "cite": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1142-L1150"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence says the model counts equipment as well as energy and limits the result to the two cities."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s44",
+              "text": "The model put Edmonton's result down to cheap gas and the cold itself, which makes heat pumps less efficient and calls on the backup more.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s44.a",
+                  "text": "Edmonton's result was due to low gas prices and climate conditions; the cold climate makes heat pumps relatively less efficient and results in greater use of the backup heating system.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/dual-fuel-system-heat-pump-gas",
+                      "stance": "asserts"
+                    },
+                    {
+                      "id": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/dual-fuel-system-heat-pump-gas",
+                      "cite": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1142-L1150"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "cite": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1153-L1158"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "callout": "unresolved",
+          "gap": 1,
+          "sentences": [
+            {
+              "id": "s45",
+              "text": "Whether a heat pump with a gas furnace as backup is cheaper to run than either alone is not decided by any study here: the New England evaluation found gas cheaper below 70 °F for the units it measured, and the Canadian model counts lifetime costs, equipment included, not running costs alone.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s45.a",
+                  "text": "Against gas, the result varied with the unit (measured units vs a rated cold-climate unit), the climate and gas prices (Toronto vs Edmonton), and for the measured mini-splits gas was cheaper below 70 °F.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/dual-fuel-system-heat-pump-gas",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/dual-fuel-system-heat-pump-gas",
+                      "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3436-L3459"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/dual-fuel-system-heat-pump-gas",
+                      "cite": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1142-L1150"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence says no study decides the claim and gives the limits of both."
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "answer",
+      "heading": "So, do heat pumps still work, and still save money, in real cold?",
+      "blocks": [
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s46",
+              "text": "In these field tests most units kept heating below 0 °F, less efficiently than in mild weather, with less output in the single unit whose output was measured that cold, and still got more heat from each unit of electricity than resistance heat would.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s46.a",
+                  "text": "Most metered mini-splits kept heating at -10 to 0 °F, and a ductless cold-climate unit kept operating down to -25 °F; not every unit did (one field site's compressor did not run below 0 °F).",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "stance": "denies"
+                    },
+                    {
+                      "id": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L2926-L2935"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L478-L489"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "cite": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L1946-L1951"
+                    }
+                  ],
+                  "qualifications": [
+                    "The unresolved callouts below give the site whose compressor stopped and the size of the samples."
+                  ]
+                },
+                {
+                  "id": "s46.b",
+                  "text": "Their efficiency fell as it got colder, and the ductless unit measured in Northern Minnesota delivered reduced capacity at the coldest temperatures.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+                      "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1143-L1157"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+                      "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L478-L489"
+                    }
+                  ]
+                },
+                {
+                  "id": "s46.c",
+                  "text": "Their COP stayed above that of electric resistance heat in the cold.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L2926-L2935"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L425-L435"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s47",
+              "text": "The cost risk is the backup heat described above.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s47.a",
+                  "text": "Auxiliary heater usage generally increased at colder temperature bins.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "cite": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L2150-L2157"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1169-L1193"
+                    }
+                  ]
+                },
+                {
+                  "id": "s47.b",
+                  "text": "A heat pump sized for the cooling load used more electric resistance backup.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L942-L946"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s48",
+              "text": "On running costs, the studies here favour a heat pump over propane or electric heat, though retrofit paybacks are long; against gas the running-cost answer turned on the unit and local prices, and for the mini-splits measured in New England gas won, while a lifetime-cost model that counts equipment finds the answer differs from city to city.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s48.a",
+                  "text": "Against propane furnaces or electric heating, the Minnesota study estimated cost savings, though for retrofits paybacks will typically be longer than 10 years unless equipment replacement is necessary; and the mini-splits were always cheaper than propane.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "stance": "denies"
+                    },
+                    {
+                      "id": "heat-pumps/dual-fuel-system-heat-pump-gas",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L495-L518"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/dual-fuel-system-heat-pump-gas",
+                      "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3436-L3459"
+                    }
+                  ],
+                  "qualifications": [
+                    "s39 gives the retrofit payback."
+                  ]
+                },
+                {
+                  "id": "s48.b",
+                  "text": "Against gas, running-cost results varied with the unit (measured units vs a rated cold-climate unit) and with prices, and for the measured mini-splits gas was cheaper below 70 °F; the Canadian lifetime-cost model, which includes equipment, found the result differs between Toronto and Edmonton.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/dual-fuel-system-heat-pump-gas",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/dual-fuel-system-heat-pump-gas",
+                      "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3436-L3459"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/dual-fuel-system-heat-pump-gas",
+                      "cite": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1142-L1150"
+                    }
+                  ],
+                  "qualifications": [
+                    "The gas table ties the measured result to the prices of those winters."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "callout": "unresolved",
+          "claim": "heat-pumps/heat-pumps-not-work-cold-climates",
+          "sentences": [
+            {
+              "id": "s49",
+              "text": "That answer rests on small samples, dozens of metered mini-splits, 22 prototype sites and a single ductless unit for the coldest readings, so it shows what heat pumps can do in the cold, not what every installation will.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s49.a",
+                  "text": "The field tests followed limited samples: dozens of metered mini-splits, 22 prototype sites, and one ductless unit for the coldest readings.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "stance": "denies"
+                    },
+                    {
+                      "id": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "stance": "asserts"
+                    },
+                    {
+                      "id": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L2926-L2935"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+                      "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1169-L1193"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L478-L489"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "callout": "unresolved",
+          "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+          "sentences": [
+            {
+              "id": "s50",
+              "text": "Whether modern cold-climate units keep heating efficiently well below 0 °F is not settled either: the prototypes mostly ran on the heat pump alone, but one ducted site's compressor stopped below 0 °F, and the Minnesota researchers wanted backup below -15 °F.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s50.a",
+                  "text": "The units primarily operated in heat-pump-only mode even at the lowest outdoor temperatures, and auxiliary-only operation was minimal above 0 °F.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1238-L1247"
+                    }
+                  ]
+                },
+                {
+                  "id": "s50.b",
+                  "text": "At Site 10 the compressor did not run below 0 °F although its lockout temperature was disabled, likely due to an on-board control setting that cannot be adjusted in the field.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "cite": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L1946-L1951"
+                    }
+                  ]
+                },
+                {
+                  "id": "s50.c",
+                  "text": "The researchers concluded the reduction in capacity shows these units should not be used without backup at extreme temperatures below -15 °F.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L478-L489"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "callout": "unresolved",
+          "claim": "heat-pumps/heat-pump-still-uses-less-energy",
+          "sentences": [
+            {
+              "id": "s51",
+              "text": "Nor do the studies show that every heat pump beats resistance heat by a wide margin in deep cold: the ordinary models in the New England evaluation ran less efficiently there than the cold-climate ones, and a study of bill savings notes that a single-stage unit’s COP commonly falls to 1 below 5 °F, no better than resistance heat.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s51.a",
+                  "text": "In the evaluation, observed non-cold-climate models operated at outdoor temperatures below 0 °F, at lower efficiency than cold-climate models.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+                      "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L2997-L3002"
+                    }
+                  ]
+                },
+                {
+                  "id": "s51.b",
+                  "text": "For a single-stage heat pump, it is common for the COP to fall rapidly to 1 below 5 °F, equivalent to operating as an electric resistance heater; a cold-climate heat pump can maintain a higher COP.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-still-uses-less-energy",
+                      "cite": "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L1649-L1659"
+                    }
+                  ],
+                  "qualifications": [
+                    "The callout states that single-stage units can fall to resistance-heat efficiency in deep cold."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "callout": "unresolved",
+          "claim": "heat-pumps/defrost-cycles-reduce-heat-pump-output",
+          "sentences": [
+            {
+              "id": "s52",
+              "text": "What defrost really costs is not measured here: the field test counted the energy used during defrost, which its authors say is not a perfect indicator of the penalty, because a unit that runs backup heat during defrost can lower the heating needed just after it, while one that does not leaves an extra load they could not separate from ordinary heating.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s52.a",
+                  "text": "Energy used during defrost is not a perfect indicator of the energy penalty caused by defrost: a unit using auxiliary heat during defrost may reduce the heating demand directly after it, while one that does not has an additional heat burden that is difficult to separate from the regular heating load, so the study cannot give a perfect indicator.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/defrost-cycles-reduce-heat-pump-output",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/defrost-cycles-reduce-heat-pump-output",
+                      "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1249-L1310"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "callout": "unresolved",
+          "gap": 2,
+          "sentences": [
+            {
+              "id": "s53",
+              "text": "Many sources point to Scandinavia as proof that heat pumps cope with cold; Simon Clark tells doubters to \"just ask Scandinavians in Norway Finland and Sweden\".",
+              "type": "attributed",
+              "assertions": [
+                {
+                  "id": "s53.a",
+                  "text": "Simon Clark said to just ask Scandinavians in Norway, Finland and Sweden about heat pumps in the cold.",
+                  "kind": "attribution",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pumps-used-successfully-cold-countries",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "statement",
+                      "claim": "heat-pumps/heat-pumps-used-successfully-cold-countries",
+                      "source": "eMd6obMwtOk"
+                    }
+                  ],
+                  "quote": {
+                    "text": "just ask Scandinavians in Norway Finland and Sweden",
+                    "source": "eMd6obMwtOk",
+                    "speaker": "Simon Clark"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "s54",
+              "text": "A Canadian report adds that Norway, with average temperatures like Canada's, leads the world in heat pump use and cites studies of their real-world performance, but no study in this evidence measured those homes, so it cannot decide how well heat pumps serve cold countries.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s54.a",
+                  "text": "Norway, with similar average temperatures to Canada, leads the world in heat pump penetration, and multiple studies have confirmed high real-world performance there.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pumps-not-work-cold-climates",
+                      "cite": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L528-L541"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence says the evidence cannot decide the cold-countries claim."
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "takeaway",
+      "heading": "What to ask before buying a heat pump for a cold climate",
+      "blocks": [
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s55",
+              "text": "Ask whether the unit on the quote is a cold-climate model, and whether it is sized to carry your heating load rather than only your summer cooling.",
+              "type": "rhetorical"
+            },
+            {
+              "id": "s56",
+              "text": "Find out at what outdoor temperature the backup is set to come on, leave the thermostat alone once it is set, and keep an eye on how often the backup runs through the winter.",
+              "type": "rhetorical"
+            },
+            {
+              "id": "s57",
+              "text": "If you already heat with gas, work out the break-even temperature at your own gas and electricity prices before deciding what the furnace should still do.",
+              "type": "rhetorical"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

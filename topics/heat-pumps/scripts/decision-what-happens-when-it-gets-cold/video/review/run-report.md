@@ -1,5 +1,16 @@
 # Run report: heat-pumps decision:what-happens-when-it-gets-cold
 
+## 2026-10-27 run (article, re-render in the institution kit)
+
+- Review mp4: `video/review/decision-what-happens-when-it-gets-cold-review-private.mp4`; checklist `video/review/checklist.md`.
+- Wall-clock: about 65 min (19:42 to 20:48; approver Jon Borchardt). Branch: main (another person's agent shares the checkout).
+- Evidence added: none. Script: unchanged (r3, release.json revision 3).
+- Article: r1 (59 sentences, 3 tables, 2 figures from sc14 and sc19). Review held 12 units, 3 blocking: s22 claimed the efficiency and output drop was consistent across studies with no assertion (output measured on one unit); s34 compared sizing with the weather, which no evidence does; s52 repeated s25. Warnings: dek and s46 overstated output loss; s41 missed the zonal-savings limit on the break-even; s43 misread the Toronto model; s48 counted a lifetime-cost model as running cost; s47 repeated s36; s51 left out the fall to COP 1; t2 said 22 sites for the 25% figure (8 and 11 had data); t3 flattened "above 58 F". r2 fixed all of them (new table t4 for the bill rows). Re-review approved every unit: validation `RESULT: PASSED` (0 blocking, 64/64 assertions verified, 56 needs-qualification warnings retired by the reviewer). Locked `article-release.json` revision 1, approved by `automated: /produce run started by Jon Borchardt`.
+- Re-render: the build predated the branding merge (board halt `look-stale`). `npm run video -- spike` re-rendered all 34 scenes (33 storyboard + the kit's `end` close card) in the institution kit: 467.5 s, 2052 s render. Two edge-tts clips came back truncated (s03, s28); the cached clip was deleted and the step retried. Music unchanged: Undertow, 4 cues, -20.1 dB under the voice, peak -1.1 dB.
+- QA: `RESULT: PASSED` (36 of 36 checks).
+- Release blocker: the re-render is narrated with edge (draft), so the 2026-10-22 Azure release build is now a draft again. A person accepts the draft and runs `npm run video -- final heat-pumps decision:what-happens-when-it-gets-cold --approved-by <name>` to re-narrate with Azure. Music: cleared.
+- `npm run validate`: typecheck, lint, format and build passed; 16 unit tests timed out at 5 s under load (production, publish, review-action, uploader, tools, video tests), none in files this run changed.
+
 ## 2026-10-26 re-run (stale evidence package)
 
 - Release mp4: `video/review/decision-what-happens-when-it-gets-cold.mp4` (release build from 2026-10-22, azure narration); checklist `video/review/checklist.md`.
