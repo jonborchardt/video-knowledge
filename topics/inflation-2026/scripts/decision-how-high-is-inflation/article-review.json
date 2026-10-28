@@ -1,0 +1,202 @@
+{
+  "reviewer": "scripts/briefs/article-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-27",
+  "revision": 2,
+  "packageFingerprint": "9f5baa962a",
+  "approved": {
+    "meta.headline": "723496be4e",
+    "meta.seoTitle": "d76cebbe73",
+    "meta.dek": "ffcb4de9fc",
+    "meta.description": "f7cc474b30",
+    "heading:hook": "93dc1874c3",
+    "s01": "10fa036a54",
+    "s02": "f470e064ae",
+    "s03": "1848ad0ebc",
+    "s04": "acad57d29c",
+    "heading:question-1": "469bb9ae2e",
+    "s05": "b64b522897",
+    "s06": "a24d083e10",
+    "t1": "35deaf1439",
+    "s07": "8818d2acad",
+    "s08": "d06e9cee1e",
+    "s10": "e0eee3b8ce",
+    "s11": "ce9de4c11a",
+    "s13": "b4ba69dbfa",
+    "s14": "d88d162fa5",
+    "s15": "9c0fcdad19",
+    "s16": "17b0ac2489",
+    "s17": "c04a198782",
+    "decision-how-high-is-inflation/sc13": "64d3276ec8",
+    "s18": "36d74e46a7",
+    "s19": "72a682e5db",
+    "s20": "088b61f20f",
+    "s22": "70571ff53f",
+    "s23": "8530e894b9",
+    "s24": "0f650c3f49",
+    "heading:question-2": "d5fdc85850",
+    "s25": "84628a1f49",
+    "t2": "5f9345fadf",
+    "s26": "a014654206",
+    "s27": "4ae92ae892",
+    "decision-how-high-is-inflation/sc24": "c022f3a47e",
+    "s29": "2d7151f563",
+    "t3": "955ef114ea",
+    "s30": "cf98f0174b",
+    "s31": "a521ae645c",
+    "s33": "5f762be9e8",
+    "s34": "83a8518795",
+    "s36": "54d1b716d9",
+    "s37": "f6cf889278",
+    "heading:close": "683e12f554",
+    "s39": "162e6e3bd3",
+    "s40": "9f8e97a0c7",
+    "s41": "aae63a3202",
+    "s09": "aba94757d4",
+    "s12": "eba6cbafa3",
+    "s21": "56b370a244",
+    "s28": "23d01b484e",
+    "s32": "21692d4a48",
+    "s35": "46ff1542dd"
+  },
+  "findings": [
+    {
+      "sentence": "s12",
+      "assertion": "s12.a",
+      "fingerprint": "ea4e1d624f",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "'Less certain than the others in this article' is a claim no assertion covers, and the package contradicts it: this verdict is held at 0.7, the same as the broadening claim (0.7), and the tariff claim in this article is held at only 0.55.",
+      "refs": [],
+      "suggestion": "Drop the comparison, or say only that the verdict rests on a short span (2020-2026) and is held with moderate confidence."
+    },
+    {
+      "sentence": "s35",
+      "assertion": "s35.a",
+      "fingerprint": "40e3a59bbf",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "blocking",
+      "explanation": "'Housing is the exception that runs hot' tells the reader shelter is the one category running above core. The cited release lists other yearly increases above core in the very next lines: airline fares +22.4 percent and education +3.8 percent.",
+      "refs": [
+        "inflation-2026/sources/bls-cpi-2026-09.txt#L185-L187"
+      ],
+      "suggestion": "Say 'Housing still runs hot:' (or 'Shelter, the largest service, still runs hot'), without 'the exception'."
+    },
+    {
+      "sentence": "s38",
+      "assertion": "s38.a",
+      "fingerprint": "a7b22ca9c3",
+      "revision": 1,
+      "category": "repetition",
+      "severity": "blocking",
+      "explanation": "A restatement that adds nothing: gasoline over half of the monthly rise is already in s29 (and the dek), core at 2.6 percent in s32 and s35, and shelter at 3.2 percent faster than core in s35, two sentences earlier.",
+      "refs": [],
+      "suggestion": "Cut it, or replace it with a sentence that draws something new from the section (within the evidence), not a recap."
+    },
+    {
+      "sentence": "s21",
+      "assertion": "s21.a",
+      "fingerprint": "7ec0dc3077",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "warning",
+      "explanation": "Set beside the Fed's 'above target' quote, the CPI floor of 2.3 percent reads as proof of five years above the 2 percent target. The verdict note for this claim says the target is on PCE, which runs somewhat below CPI, so the lowest CPI readings (2.3 percent in April 2025) leave only a small margin. The sentence does not say so.",
+      "refs": [
+        "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L33-L99"
+      ],
+      "suggestion": "Add that the Fed's target is on PCE, which usually runs a little below CPI, so the months near 2.3 percent leave little margin."
+    },
+    {
+      "sentence": "s28",
+      "assertion": "s28.a",
+      "fingerprint": "1bae81bcca",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "warning",
+      "explanation": "'Gasoline is the line that moved most' is a comparison with every other CPI component; the cited passage holds only the gasoline index, so nothing in the evidence ranks it against the others.",
+      "refs": [
+        "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L476-L483"
+      ],
+      "suggestion": "Say 'Gasoline moved sharply:' or 'Gasoline jumped:' without the ranking."
+    },
+    {
+      "sentence": "s32",
+      "assertion": "s32.a",
+      "fingerprint": "94dfb62241",
+      "revision": 1,
+      "category": "selective",
+      "severity": "warning",
+      "explanation": "'Without the core rate speeding up' holds for the monthly rate only; the same passage says the yearly core rate rose to 2.6 percent from 2.4 percent in August, which the verdict note counts as core edging up. Giving the yearly 2.6 alone, after 'not speeding up', leaves that out.",
+      "refs": [
+        "inflation-2026/sources/bls-cpi-2026-09.txt#L20-L27"
+      ],
+      "suggestion": "Say 'without the monthly core rate speeding up, though the yearly core rate edged up from 2.4 to 2.6 percent'."
+    },
+    {
+      "sentence": "s09",
+      "assertion": "s09.a",
+      "fingerprint": "356e2aa35e",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "warning",
+      "explanation": "'In January' dates the statement, but the January 2026 reading was not published until February and the package gives no date for the video. The quote is about January's reading, not necessarily said in January.",
+      "refs": [],
+      "suggestion": "Say 'Of January's reading, the YouTube channel The Right-Wing Populist said it was \"the lowest we've had in five years\"'."
+    },
+    {
+      "sentence": "s37",
+      "assertion": "s37.a",
+      "fingerprint": "f6cf889278",
+      "revision": 1,
+      "category": "other",
+      "severity": "info",
+      "explanation": "The assertion's qualification note says it qualifies 's35'; it qualifies s36 (the tariff estimate). The sentence itself is correct and matches the callout's verdict note.",
+      "refs": [
+        "inflation-2026/sources/nyfed-sr1201-tariff-passthrough.txt#L1031-L1038"
+      ],
+      "suggestion": "Fix the note to name s36."
+    },
+    {
+      "sentence": "s11",
+      "assertion": "s11.a",
+      "fingerprint": "ce9de4c11a",
+      "revision": 1,
+      "category": "numbers",
+      "severity": "info",
+      "explanation": "The source file runs from January 2019; it is the yearly-rate column that starts in January 2020. 'Begins in 2020' is right for the yearly rate the article uses.",
+      "refs": [
+        "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L1-L20"
+      ],
+      "suggestion": "Optionally say 'its yearly rates begin in 2020'."
+    },
+    {
+      "sentence": "s34",
+      "assertion": "s34.a",
+      "fingerprint": "83a8518795",
+      "revision": 1,
+      "category": "omission",
+      "severity": "info",
+      "explanation": "The verdict note also says core services ran 2.9-3.4 percent in 2026, closer to Strain's 'around 3%'; the article judges him against core CPI only. That passage is not among the cites, so nothing to add here without a person recording it.",
+      "refs": [
+        "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L277-L291"
+      ],
+      "suggestion": "None required; an editor may want the services figure recorded."
+    },
+    {
+      "sentence": "s31",
+      "assertion": "s31.a",
+      "fingerprint": "a521ae645c",
+      "revision": 2,
+      "category": "other",
+      "severity": "info",
+      "explanation": "The assertion qualification note says \"s31 says core rose 0.3 percent on the month\"; that is s32, the next sentence. The callout itself states the verdict note condition (modest broadening, monthly core rate unchanged, yearly core up to 2.6).",
+      "refs": [
+        "inflation-2026/sources/bls-cpi-2026-09.txt#L20-L27"
+      ],
+      "suggestion": "Fix the note to name s32."
+    }
+  ],
+  "dispositions": {}
+}

@@ -39,3 +39,12 @@ Undertow (cleared): opening sc01-sc03, evidence sc04-sc33, ending sc34-sc36. Mus
 ## Release build
 
 - 2026-10-22: `npm run video -- final inflation-2026 decision:how-high-is-inflation --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.
+
+## 2026-10-27: article and re-render in the institution kit
+
+One /produce run (approver Jon Borchardt), about 50 min wall-clock (render 25.6 min).
+
+- Evidence added: none. Script unchanged (no script revisions).
+- Article: r1 written (chain: hook, question-1, question-2, close; tables t1-t3; figures sc13, sc24). Review held it: blocking s12 (called its verdict "less certain than the others", but others sit at 0.7 and 0.55), s35 (housing "the exception that runs hot"; airline fares and education also beat core), s38 (repeated recap); warnings s09 (dated the YouTube remark to January), s21 (CPI floor read against a PCE target), s28 (gasoline "moved most", unranked), s32 (omitted yearly core rising 2.4 to 2.6). r2 fixed all eight and cut s38; re-review passed 42 of 42 (41/41 assertions verified). 13 needs-qualification warnings left open without dispositions. Locked as `automated: /produce run started by Jon Borchardt` (`article-release.json`). Info left: a note under s31 names s31 where it means s32.
+- Re-render: the 2026-10-22 build predated the kit merge (board: look-stale). `npm run video -- spike` re-rendered all 37 scenes (36 storyboard + `end` close card) in the institution kit: 10808 frames, 360.27 s, `RESULT: PASSED` (36 of 36 checks). Music Undertow, -20.6 dB under the voice, peak -1.3 dB. Packaged to `video/review/decision-how-high-is-inflation-review-private.mp4`.
+- Release blocker: this re-render is edge-tts draft narration, so the Azure release build from 2026-10-22 is now a private review build again. Once the draft is accepted, `npm run video -- final inflation-2026 decision:how-high-is-inflation --approved-by <name>` re-narrates it for release.
