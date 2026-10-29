@@ -109,3 +109,112 @@ export function walk(dirs: string[], root: string): string[] {
   for (const d of dirs) visit(d);
   return out;
 }
+
+export type Edge = { from: string; to: string };
+export type Violation = Edge & { rule: string };
+export type BoundariesConfig = {
+  capabilities: Record<string, string>;
+  browserSafe: string[];
+  layoutOwner: string;
+  readApi: Record<string, string[]>;
+  edges: Edge[];
+};
+type FileRecord = { path: string; imports: string[]; source?: string };
+type Ctx = { f: FileRecord; to: string; cfg: BoundariesConfig; fromCap?: string; toCap?: string };
+
+// ponytail: a resolved import is a repo file when it has a source extension; a package like 'x.js' would be misread.
+const isRepoFile = (to: string) => EXTS.some((e) => to.endsWith(e)) && !to.startsWith('@');
+const moduleIndex = (to: string) => /^src\/modules\/[^/]+\/index\.ts$/.test(to);
+
+// The names this file imports from the module `to` (the statement whose specifier resolves to it).
+function namesImported(f: FileRecord, to: string): string[] | '*' | undefined {
+  const spec = importsOf(f.path, f.source ?? '').find((s) => resolveSpecifier(f.path, s, (p) => p === to) === to);
+  return spec === undefined ? undefined : importedNames(f.source ?? '', spec);
+}
+
+// An import of a read-API module index that names only exported read-API names.
+function readApiOk({ f, to, cfg }: Ctx): boolean {
+  if (!moduleIndex(to)) return false;
+  const allowed = cfg.readApi[to.split('/')[2]];
+  const names = allowed && namesImported(f, to);
+  return Array.isArray(names) && names.length > 0 && names.every((n) => allowed.includes(n));
+}
+
+function crossCapability(c: Ctx): Violation | null {
+  const { f, to, fromCap, toCap } = c;
+  if (!isRepoFile(to) || !fromCap || !toCap || fromCap === toCap) return null;
+  if (fromCap === 'shared' || toCap === 'shared' || fromCap === 'orchestration') return null;
+  if (fromCap === 'website' && moduleIndex(to)) return null;
+  if (readApiOk(c)) return null;
+  return { from: f.path, to, rule: 'cross-capability' };
+}
+
+function sharedImportsModule({ f, to, fromCap, toCap }: Ctx): Violation | null {
+  return fromCap === 'shared' && isRepoFile(to) && toCap && toCap !== 'shared'
+    ? { from: f.path, to, rule: 'shared-imports-module' }
+    : null;
+}
+
+function orchestrationImportsInternal({ f, to, fromCap, toCap }: Ctx): Violation | null {
+  if (fromCap !== 'orchestration') return null;
+  const internal = to.startsWith('src/modules/')
+    ? !moduleIndex(to)
+    : /^src\/(lib|video)\//.test(to) && toCap !== 'shared' && toCap !== 'orchestration';
+  return internal ? { from: f.path, to, rule: 'orchestration-imports-internal' } : null;
+}
+
+function browserSafe({ f, to, cfg }: Ctx): Violation | null {
+  const safe = (p: string) => cfg.browserSafe.some((b) => p.startsWith(b));
+  if (!safe(f.path)) return null;
+  const bad = isNodeBuiltin(to) || (isRepoFile(to) && !safe(to));
+  return bad ? { from: f.path, to, rule: 'browser-safe' } : null;
+}
+
+function unmappedTarget({ f, to, toCap }: Ctx): Violation | null {
+  return isRepoFile(to) && !toCap ? { from: f.path, to, rule: 'unmapped' } : null;
+}
+
+// Once per file: TOPICS imported from the layout owner, or a join(..., 'topics', ...).
+function layout(f: FileRecord, cfg: BoundariesConfig): Violation | null {
+  if (f.path === cfg.layoutOwner) return null;
+  const source = f.source ?? '';
+  const names = f.imports.includes(cfg.layoutOwner) ? namesImported(f, cfg.layoutOwner) : undefined;
+  const uses = (Array.isArray(names) && names.includes('TOPICS')) || /\bjoin\([^)]*'topics'/.test(source);
+  return uses ? { from: f.path, to: cfg.layoutOwner, rule: 'layout' } : null;
+}
+
+export function violations(files: FileRecord[], cfg: BoundariesConfig): Violation[] {
+  const out: Violation[] = [];
+  const readApiEdges: Edge[] = [];
+  for (const f of files) {
+    const fromCap = capabilityOf(f.path, cfg.capabilities);
+    if (!fromCap) {
+      out.push({ from: f.path, to: f.path, rule: 'unmapped' });
+      continue;
+    }
+    for (const to of f.imports) {
+      const c: Ctx = { f, to, cfg, fromCap, toCap: capabilityOf(to, cfg.capabilities) };
+      const hits = [unmappedTarget, crossCapability, sharedImportsModule, orchestrationImportsInternal, browserSafe]
+        .map((rule) => rule(c))
+        .filter((v): v is Violation => v !== null);
+      out.push(...hits);
+      if (c.toCap && c.toCap !== fromCap && fromCap !== 'orchestration' && readApiOk(c)) {
+        readApiEdges.push({ from: fromCap, to: c.toCap });
+      }
+    }
+    const l = layout(f, cfg);
+    if (l) out.push(l);
+  }
+  for (const [from, to] of cycles(readApiEdges)) out.push({ from, to, rule: 'read-api-cycle' });
+  return out;
+}
+
+const NEVER_ALLOWED = ['unmapped', 'read-api-cycle'];
+
+export function check(found: Violation[], allow: Edge[]): { unexpected: Violation[]; stale: Edge[] } {
+  const listed = (v: Violation) => allow.some((a) => a.from === v.from && a.to === v.to);
+  return {
+    unexpected: found.filter((v) => NEVER_ALLOWED.includes(v.rule) || !listed(v)),
+    stale: allow.filter((a) => !found.some((v) => v.from === a.from && v.to === a.to)),
+  };
+}
