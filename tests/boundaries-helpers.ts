@@ -205,7 +205,8 @@ export function violations(files: FileRecord[], cfg: BoundariesConfig): Violatio
     const l = layout(f, cfg);
     if (l) out.push(l);
   }
-  for (const [from, to] of cycles(readApiEdges)) out.push({ from, to, rule: 'read-api-cycle' });
+  for (const [from, to] of cycles([...new Map(readApiEdges.map((e) => [`${e.from}->${e.to}`, e])).values()]))
+    out.push({ from, to, rule: 'read-api-cycle' });
   return out;
 }
 

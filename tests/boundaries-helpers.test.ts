@@ -141,10 +141,26 @@ describe('violations', () => {
     );
     expect(v.map((x) => `${x.to}:${x.rule}`)).toEqual(['node:fs:browser-safe', 'src/video/render.ts:browser-safe']);
   });
-  it('flags TOPICS and a topics join outside the layout owner', () => {
-    const src = `import { TOPICS } from './io';\nconst p = join(root, 'topics', t);`;
+  it('flags an imported TOPICS outside the layout owner', () => {
+    const v = violations([file('src/lib/article.ts', ['src/lib/io.ts'], `import { TOPICS } from './io';`)], cfg);
+    expect(v.filter((x) => x.rule === 'layout')).toHaveLength(1);
+  });
+  it('flags a topics join outside the layout owner', () => {
+    const src = `import { sha } from './io';
+const p = join(root, 'topics', t);`;
     const v = violations([file('src/lib/article.ts', ['src/lib/io.ts'], src)], cfg);
     expect(v.filter((x) => x.rule === 'layout')).toHaveLength(1);
+  });
+  it('leaves an io import without TOPICS or a join alone', () => {
+    const v = violations([file('src/lib/article.ts', ['src/lib/io.ts'], `import { sha } from './io';`)], cfg);
+    expect(v.filter((x) => x.rule === 'layout')).toHaveLength(0);
+  });
+  it('reports a read-API cycle once however many files make the edge', () => {
+    const a1 = file('src/modules/a/x.ts', ['src/modules/b/index.ts'], `import { fb } from '../b/index';`);
+    const a2 = file('src/modules/a/z.ts', ['src/modules/b/index.ts'], `import { fb } from '../b/index';`);
+    const b = file('src/modules/b/y.ts', ['src/modules/a/index.ts'], `import { fa } from '../a/index';`);
+    const v = violations([a1, a2, b], { ...cfg, readApi: { a: ['fa'], b: ['fb'] } });
+    expect(v.filter((x) => x.rule === 'read-api-cycle')).toHaveLength(1);
   });
   it('flags an unmapped file', () => {
     const v = violations([file('src/lib/new-thing.ts', [])], cfg);
