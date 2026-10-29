@@ -51,6 +51,7 @@ describe('resolveSpecifier', () => {
     expect(resolveSpecifier('src/video/render.ts', './remotion', exists)).toBe('src/video/remotion/index.ts'));
   it('walks up', () =>
     expect(resolveSpecifier('src/pages/a/b.astro', '../../config/site', exists)).toBe('src/config/site.ts'));
+  it('ignores a ?query', () => expect(resolveSpecifier('src/lib/x.ts', './io?raw', exists)).toBe('src/lib/io.ts'));
   it('returns null for a package', () => expect(resolveSpecifier('src/lib/io.ts', 'vitest', exists)).toBeNull());
 });
 

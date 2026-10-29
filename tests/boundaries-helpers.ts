@@ -78,7 +78,7 @@ export function resolveSpecifier(
   exists: (p: string) => boolean,
 ): string | null {
   if (!specifier.startsWith('.')) return null;
-  const base = posix.join(posix.dirname(fromRepoPath), specifier);
+  const base = posix.join(posix.dirname(fromRepoPath), specifier.replace(/\?.*$/, ''));
   const candidates = [base, ...EXTS.map((e) => base + e), `${base}/index.ts`];
   return candidates.find(exists) ?? null;
 }
