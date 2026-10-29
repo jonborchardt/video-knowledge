@@ -167,6 +167,26 @@ const p = join(root, 'topics', t);`;
     const v = violations([file('src/lib/new-thing.ts', [])], cfg);
     expect(v[0]).toMatchObject({ from: 'src/lib/new-thing.ts', rule: 'unmapped' });
   });
+
+  it('lets a browser-safe file import a listed shared contract, and nothing else from shared', () => {
+    const c = { ...cfg, browserSafe: [...cfg.browserSafe, 'src/shared/types.ts'] };
+    const ok = [file('src/video/types.ts', ['src/shared/types.ts'], `import type { Script } from '../shared/types';`)];
+    expect(violations(ok, c)).toEqual([]);
+    const bad = [file('src/video/types.ts', ['src/shared/io.ts'], `import { readJson } from '../shared/io';`)];
+    expect(violations(bad, c).map((v) => v.rule)).toEqual(['browser-safe']);
+  });
+  it('rejects a listed shared contract that itself imports node', () => {
+    const c = { ...cfg, browserSafe: [...cfg.browserSafe, 'src/shared/types.ts'] };
+    const v = violations([file('src/shared/types.ts', ['node:fs'], `import fs from 'node:fs';`)], c);
+    expect(v.map((x) => `${x.from}:${x.rule}`)).toEqual(['src/shared/types.ts:browser-safe']);
+  });
+  it('rejects a transitively unsafe import through an unlisted repo file', () => {
+    const v = violations(
+      [file('src/video/remotion/Video.tsx', ['src/video/render.ts'], `import { x } from '../render';`)],
+      cfg,
+    );
+    expect(v.map((x) => x.rule)).toEqual(['browser-safe']);
+  });
 });
 
 describe('check', () => {
