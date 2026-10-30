@@ -25,10 +25,12 @@ import type {
   StoriesFile,
   ReviewFile,
   StoryReview,
+  ClaimView,
+  Topic,
 } from '../shared/types';
 import { PRIOR_CAP, docKey, studyVerdicts, validate } from '../shared/evidence-gate';
 import { MAX_CHAIN_CLAIMS, MAX_QUESTIONS } from './review';
-import { type ClaimView, type Topic, topicNames, VAL } from './topics';
+import { topicNames, VAL } from './topics';
 
 export type StoryInput = Pick<Topic, 'name' | 'label' | 'claims' | 'recap'> & { sameStudy?: Record<string, string> };
 

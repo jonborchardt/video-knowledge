@@ -4,14 +4,33 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { readJson, topicDir, TOPICS, ROOT } from '../shared/io';
 import { commissionOf } from '../config/site';
-import { type ClaimRevision, isClaimRevision, loadPublicRecord } from '../shared/public-record';
-import type { RecordedApplicability, Verdict } from '../shared/types';
+import { isClaimRevision, loadPublicRecord } from '../shared/public-record';
+import type {
+  ClaimSourceView,
+  ClaimVerdictView,
+  ClaimView,
+  RecordedApplicability,
+  SourceClaimView,
+  SourceView,
+  SurpriseView,
+  Topic,
+  Verdict,
+} from '../shared/types';
 import { applicabilityKey, checkApplicabilityFile } from './batches';
 
 /** Each study verdict's recorded applicability, beside the store; written only by scripts/record-sources.mjs. */
 export const APPLICABILITY_FILE = 'applicability.json';
 
 export type { Verdict };
+export type {
+  ClaimView,
+  ClaimSourceView,
+  ClaimVerdictView,
+  SourceClaimView,
+  SourceView,
+  SurpriseView,
+  Topic,
+} from '../shared/types';
 const JUDGED: Verdict[] = ['right', 'wrong', 'partly'];
 
 // The slice of `watcher report --json` this site reads.
@@ -78,104 +97,6 @@ interface SiteConfig {
   recap?: { bottomLine?: string; groups?: { title: string; claims: string[] }[] };
   docs?: Record<string, string>;
   sameStudy?: Record<string, string>; // '<summary file>.txt' -> '<primary file>.txt' when two documents report one study
-}
-
-export interface ClaimView {
-  id: string;
-  text: string;
-  asserted: number;
-  denied: number;
-  verdict: Verdict | null;
-  confidence: number | null;
-  note: string;
-  decidedBy: string | null; // a study's display name, or null when the AI guess decides
-  studies: number; // documents with a verdict on this claim
-  lean: string | null; // from topics/<topic>/lean.json: pro | pro-hype | calibrating | skeptic | neutral
-  sources: ClaimSourceView[]; // every source that asserts or denies it, with its quote
-  verdicts: ClaimVerdictView[]; // every recorded judgment: the AI guess and each study
-  revisions: ClaimRevision[]; // public changes of its label or verdict, oldest first (public-record.json)
-}
-export interface ClaimSourceView {
-  id: string;
-  title: string;
-  channel: string;
-  kind: 'video' | 'post';
-  href: string;
-  stance: 'asserts' | 'denies';
-  quote: string;
-}
-export interface ClaimVerdictView {
-  by: string; // 'AI guess' or the study's display name
-  verdict: Verdict;
-  confidence: number | null;
-  note: string;
-  cite: string | null; // '<topic>/sources/<file>.txt#L10-L24', a path in the repo
-  date: string | null; // YYYY-MM-DD the verdict was recorded; a later record on the same document supersedes
-  applicability?: RecordedApplicability; // from applicability.json, keyed <claim>|<cite>; absent when unrecorded
-}
-export interface SourceClaimView {
-  id: string;
-  text: string;
-  quote: string;
-  stance: 'asserts' | 'denies';
-  verdict: Verdict; // for this source: denying a wrong claim is right
-  confidence: number | null; // of the claim-level verdict
-  share: number; // sources taking the same stance, this one included
-  novel: boolean; // right and few others say it
-}
-export interface SourceView {
-  id: string;
-  title: string;
-  channel: string;
-  kind: 'video' | 'post';
-  href: string;
-  summary: string;
-  score: number | null;
-  novelty: number;
-  worthWatching: string;
-  superseded: boolean;
-  exhibit: number | null; // its number in the inquiry (public-record.json), never renumbered
-  claims: SourceClaimView[]; // novel first, rarest first
-}
-export interface SurpriseView {
-  text: string;
-  saidBy: number;
-  prior: Verdict;
-  evidence: Verdict;
-  priorConfidence: number | null;
-  evidenceConfidence: number | null;
-  note: string;
-  study: string;
-}
-export interface Topic {
-  name: string;
-  label: string;
-  claims: ClaimView[];
-  sources: SourceView[];
-  counted: number;
-  videos: number;
-  posts: number;
-  channels: number; // distinct channels and authors among counted sources
-  hours: number; // total runtime of counted videos
-  medianMinutes: number;
-  noCaptions: number;
-  studies: number;
-  decided: number;
-  hero: { title?: string; lede?: string };
-  glyph: string | null; // <topic>/glyph.svg, inlined on the home card
-  bottomLine: string | null;
-  recap: { title: string; claims: ClaimView[] }[];
-  top: SourceView[];
-  next: SourceView[];
-  changed: SurpriseView[];
-  held: SurpriseView[];
-  superseded: { title: string; by: string }[];
-  wrong: ClaimView[];
-  contested: ClaimView[];
-  docNames: Record<string, string>; // '<file>.txt' -> display name
-  sameStudy: Record<string, string>; // '<file>.txt' -> the file of the primary report of the same study
-  revisions: ClaimRevision[]; // every public change of a finding in this inquiry, oldest first
-  revised: string | null; // the latest revision's date
 }
 
 export const VAL: Record<string, number> = { right: 1, partly: 0.5, wrong: -1 };
