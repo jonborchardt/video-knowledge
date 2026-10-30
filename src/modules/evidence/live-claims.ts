@@ -7,9 +7,12 @@ import type { StoriesFile } from '../../shared/types';
 
 export function liveClaimIds(topic: string, root = ROOT): Set<string> {
   const claims = new Set<string>();
-  for (const s of readJson<StoriesFile>(join(topicDir(topic, root), 'stories.json'))?.stories ?? []) {
+  const stories = readJson<StoriesFile>(join(topicDir(topic, root), 'stories.json'))?.stories ?? [];
+  for (const s of stories) {
     const rootId = s.partOf ? s.id.replace(/[^/]+$/, s.partOf) : s.id;
-    if (storyOutputs(topic, rootId, root).video) for (const c of s.claims) claims.add(c);
+    // A chain whose root is not itself a story has no video node in the graph: never live.
+    if (stories.some((x) => x.id === rootId) && storyOutputs(topic, rootId, root).video)
+      for (const c of s.claims) claims.add(c);
   }
   return claims;
 }

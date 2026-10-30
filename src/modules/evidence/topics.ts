@@ -2,7 +2,7 @@
 // The report already decides each claim's verdict; nothing here re-judges.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { readJson, topicDir, TOPICS, ROOT } from '../../shared/io';
+import { readJson, topicDir, topicsDir } from '../../shared/io';
 import { commissionOf } from '../../config/site';
 import { isClaimRevision, loadPublicRecord } from '../../shared/public-record';
 import type {
@@ -103,7 +103,7 @@ export const VAL: Record<string, number> = { right: 1, partly: 0.5, wrong: -1 };
 
 /** Topic folders that have a report with claims. */
 export function topicNames(): string[] {
-  return readdirSync(join(ROOT, TOPICS), { withFileTypes: true })
+  return readdirSync(topicsDir(), { withFileTypes: true })
     .filter((d) => d.isDirectory() && !d.name.startsWith('.') && existsSync(join(topicDir(d.name), 'report.json')))
     .map((d) => d.name)
     .filter((n) => (readJson<Report>(join(topicDir(n), 'report.json'))?.topics[0]?.claims.length ?? 0) > 0);

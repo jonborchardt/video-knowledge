@@ -21,13 +21,12 @@ import {
 } from './article';
 import { articleStale } from './view';
 import { figureData, validateArticleIn } from './validation';
-import { corpusOf } from '../evidence';
+import { corpusOf, loadTopic } from '../evidence';
 import { passageReader, readJson, toJson, writeArtifact, ROOT, FILES, scriptDir } from '../../shared/io';
 import { loadPublicRecord, publicRecordPath, withArticleRevision } from '../../shared/public-record';
 import { Refusal } from '../../shared/refusal';
 import { loadReview } from '../stories';
 import type { EvidencePackage, Script, ScriptValidation } from '../../shared/types';
-import { loadTopic } from '../evidence';
 
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
 const flag = (name: string) => {

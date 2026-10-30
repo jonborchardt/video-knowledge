@@ -22,6 +22,34 @@ describe('live claims equivalence', () => {
     });
   }
 
+  it('a chain naming a missing root is never live, on both sides', () => {
+    const T = 'heat-pumps';
+    root = mkdtempSync(join(tmpdir(), 'live-claims-'));
+    mkdirSync(topicDir(T, root), { recursive: true });
+    const story = {
+      id: 'decision:b',
+      title: 'b',
+      question: 'b?',
+      readiness: 'ready',
+      scores: { overall: 0.5 },
+      claims: ['c2'],
+      partOf: 'decision:gone',
+    };
+    writeFileSync(join(topicDir(T, root), 'stories.json'), toJson({ topic: T, stories: [story] }));
+    mkdirSync(scriptDir(T, 'decision:gone', root), { recursive: true });
+    saveLedger(
+      publishPath(T, 'decision:gone', root),
+      appendEvent(emptyLedger(`${T}/decision:gone`), 'youtube', {
+        at: '2026-10-01T00:00:00Z',
+        type: 'published',
+        by: 'Jon',
+        id: 'vid00000002',
+      }).ledger,
+    );
+    expect(sorted(liveClaimIds(T, root))).toEqual([]);
+    expect(sorted(liveClaims(contentGraph(root, [T]), T))).toEqual([]);
+  });
+
   it('a chain whose first question is live makes its follow-up live; an unpublished story is not', () => {
     const T = 'heat-pumps';
     root = mkdtempSync(join(tmpdir(), 'live-claims-'));

@@ -14,7 +14,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 
 import { join } from 'node:path';
 import { checkStudyVerdicts, isStored, withApplicability } from './batches.ts';
 import { citedPairs, replacedCited } from './cited.ts';
-import { ROOT, TOPICS, topicDir, watcher } from './watcher.mjs';
+import { ROOT, relTo, topicDir, watcher } from './watcher.mjs';
 
 const args = process.argv.slice(2);
 const replaceCited = args.includes('--replace-cited');
@@ -23,7 +23,7 @@ if (!topic || !files.length) {
   console.error('usage: node src/modules/evidence/record-sources.mjs <topic> <verdicts.json> [...] [--replace-cited]');
   process.exit(1);
 }
-const store = join(TOPICS, topic, 'store'),
+const store = relTo(join(topicDir(topic), 'store')),
   vdir = join(ROOT, store, 'videos');
 const first = {},
   records = {};

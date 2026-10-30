@@ -16,10 +16,10 @@ import {
   type PublicRecord,
 } from '../../shared/public-record';
 import { liveClaimIds } from './live-claims';
-import { ROOT, toJson, TOPICS, topicDir } from '../../shared/io';
+import { toJson, topicDir, topicsDir } from '../../shared/io';
 import { claimStates, ledgerClaims } from './finding-label';
 import { loadTopic, topicNames } from './topics';
-import { watcher } from './watcher.mjs';
+import { relTo, watcher } from './watcher.mjs';
 
 const [cmd, ...args] = process.argv.slice(2);
 const today = new Date().toISOString().slice(0, 10);
@@ -38,7 +38,7 @@ if (cmd === 'note') {
   }
   try {
     save(topic, noteRevision(loadPublicRecord(topic), claim, note.trim()));
-    console.log(`noted ${claim} in ${TOPICS}/${topic}/public-record.json`);
+    console.log(`noted ${claim} in ${relTo(publicRecordPath(topic))}`);
   } catch (e) {
     console.error((e as Error).message);
     process.exit(2);
@@ -46,19 +46,19 @@ if (cmd === 'note') {
 } else if (cmd === 'seed') {
   for (const topic of args[0] ? [args[0]] : topicNames()) {
     keep(topic, null);
-    console.log('seeded', `${TOPICS}/${topic}/public-record.json`);
+    console.log('seeded', relTo(publicRecordPath(topic)));
   }
 } else if (cmd) {
   console.error(`unknown command ${cmd}: (none), seed [topic], note <topic> <claim> "<note>"`);
   process.exit(1);
 } else {
   const reported = new Set(topicNames());
-  for (const d of readdirSync(join(ROOT, TOPICS), { withFileTypes: true })) {
+  for (const d of readdirSync(topicsDir(), { withFileTypes: true })) {
     if (!d.isDirectory() || !existsSync(join(topicDir(d.name), 'store', 'topics.json'))) continue;
     const before = reported.has(d.name) ? claimStates(loadTopic(d.name)) : null;
     const path = join(topicDir(d.name), 'report.json');
     const old = existsSync(path) ? readFileSync(path, 'utf8') : null;
-    writeFileSync(path, watcher(['report', '--json', '--store', join(TOPICS, d.name, 'store')]));
+    writeFileSync(path, watcher(['report', '--json', '--store', relTo(join(topicDir(d.name), 'store'))]));
     // The old report is the only record of the claims' previous states: if the new one cannot be applied, put it back,
     // so the next run still sees the change. ponytail: a kill between the two writes still loses it; diff against
     // states kept in public-record.json if that ever happens.
@@ -69,7 +69,7 @@ if (cmd === 'note') {
       else writeFileSync(path, old);
       throw e;
     }
-    console.log('wrote', `${TOPICS}/${d.name}/report.json`);
+    console.log('wrote', relTo(path));
     const open = loadPublicRecord(d.name).revisions.filter((r) => !r.note.trim());
     if (open.length) {
       console.log(`${d.name}: ${open.length} revisions need a note:`);

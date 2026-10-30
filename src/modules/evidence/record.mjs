@@ -12,7 +12,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { checkBatches } from './batches.ts';
-import { ROOT, TOPICS, topicDir, watcher } from './watcher.mjs';
+import { ROOT, relTo, topicDir, watcher } from './watcher.mjs';
 
 const [topic, file, ...rest] = process.argv.slice(2);
 const opt = (k) => {
@@ -25,7 +25,7 @@ if (!topic || !file) {
   );
   process.exit(1);
 }
-const store = join(TOPICS, topic, 'store');
+const store = relTo(join(topicDir(topic), 'store'));
 const cli = (args) => watcher([...args, '--store', store]);
 const claimsNow = () =>
   JSON.parse(readFileSync(join(ROOT, store, 'topics.json'), 'utf8')).topics.find((t) => t.id === topic)?.claims ?? [];
