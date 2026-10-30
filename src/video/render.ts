@@ -54,8 +54,32 @@ export function deepImports(entries: string[]): Set<string> {
 export function rendererVersion(kind: TimelineScene['kind']): string {
   return componentVersion(ALL_KINDS[kind].component);
 }
-/** The code that draws one component: its file, everything it imports, and the shared Remotion files. */
-export function componentVersion(name: string): string {
+/** A source as it draws: CRLF -> LF and every `import type { ... } from '...';` or `export type { ... } from '...';`
+ *  statement removed (types never change pixels), so moving the tree or a type's home never moves a key. */
+export const normalise = (text: string) =>
+  text.replace(/\r\n?/g, '\n').replace(/^(?:import|export) type \{[^}]*\} from '[^']*';[ \t]*\n?/gm, '');
+
+/** The code that draws one component: the shared Remotion files, its file and its value-import closure, each
+ *  normalised (a file reached only through `import type` contributes nothing). Pure over the two directories. */
+export function componentVersionIn(remotionDir: string, srcDir: string, name: string): string {
+  const component = join(remotionDir, 'scenes', `${name}.tsx`);
+  const direct = importsOf(component, true);
+  const deep = deepImports(direct);
+  const files = [
+    ...SHARED.map((f) => join(remotionDir, f)),
+    ...SHARED_LIB.map((f) => join(srcDir, f)),
+    component,
+    ...direct,
+    ...[...deep].sort(), // after the direct imports, so a key only moves when a deeper file is new or edited
+  ];
+  return sha([...new Set(files)].map((f) => normalise(readFileSync(f, 'utf8'))).join('\n---\n'));
+}
+/** The code that draws one component, from this tree. */
+export const componentVersion = (name: string): string => componentVersionIn(REMOTION_DIR, SRC_DIR, name);
+
+/** The pre-normalisation key, kept only for `npm run video -- migrate-keys` (the one-time approval key migration).
+ *  Delete it, and the verb's use of it, in the video section once its proof is done. */
+export function componentVersionLegacy(name: string): string {
   const component = join(REMOTION_DIR, 'scenes', `${name}.tsx`);
   const direct = importsOf(component);
   const deep = deepImports(direct);

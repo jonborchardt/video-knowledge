@@ -191,8 +191,9 @@ the output, cost estimated in the manifest). The timeline tiles the scenes by th
 every cue to the frame its word is spoken on, and reads each cited excerpt from the corpus. The composition is
 Remotion (React components in `src/video/remotion/scenes/`; the closed kind records in `src/video/kinds.ts`, with
 each video's bespoke kinds registered in `src/video/bespoke/`). Scenes render one at a time into cached chunks
-(`video/scenes/`, keyed by the scene and the code that draws it: the component and every helper it imports, however
-deep), the chunks are concatenated without re-encoding (`src/video/assemble.ts`), and the narration is laid down as one
+(`video/scenes/`, keyed by the scene and the code that draws it: the component and every helper it imports by value, however
+deep, each normalised with its type-only imports removed; that normalisation moved every chunk key once, a cache
+re-render, never an approval), the chunks are concatenated without re-encoding (`src/video/assemble.ts`), and the narration is laid down as one
 loudness-normalised track; ffmpeg comes with Remotion, nothing else is installed. Rendering needs Chrome (downloaded
 on first run). A scene without a renderer is reported, never substituted.
 
