@@ -15,9 +15,36 @@ import {
 } from './article';
 import { figureData, validateArticleIn } from './article-validation';
 import { articleStale } from './article-view';
-import { type Corpus, corpusOf } from './corpus';
-import { type PassageReader, passageReader } from './evidence';
-import { fileSha, lf, readJson, sha, toJson, topicDir, ROOT } from '../shared/io';
+import type {
+  Corpus,
+  PassageReader,
+  ReviewFile,
+  EvidencePackage,
+  Release,
+  ReviewFinding,
+  Script,
+  ScriptReviewFile,
+  ScriptValidation,
+  Story,
+} from '../shared/types';
+import { corpusOf } from './corpus';
+import {
+  passageReader,
+  fileSha,
+  lf,
+  readJson,
+  sha,
+  toJson,
+  topicDir,
+  ROOT,
+  docHasher,
+  docReader,
+  FILES,
+  scriptDir,
+  shortId,
+  shortOf,
+  storySlug,
+} from '../shared/io';
 import {
   RENDER_CHECK,
   type RenderCheckSummary,
@@ -41,21 +68,11 @@ import {
   publishPath,
   uploadMetadataOf,
 } from './publish';
-import { type ReviewFile, loadReview, reviewPath } from './review';
-import { buildPackage, docHasher, docReader } from './evidence-package';
+import { loadReview, reviewPath } from './review';
+import { buildPackage } from './evidence-package';
 import { loadPublicRecord } from './public-record';
 import { releaseCheck, storyboardFingerprint, validationFingerprint } from './release';
-import { FILES, scriptDir, shortId, shortOf, storySlug } from '../shared/io';
-import type {
-  EvidencePackage,
-  Release,
-  ReviewFinding,
-  Script,
-  ScriptReviewFile,
-  ScriptValidation,
-  Story,
-} from '../shared/types';
-import { validateScript } from './script-validation';
+import { validateScript } from '../shared/sentence-validation';
 import {
   type ShortsFile,
   buildShortPackage,

@@ -3,10 +3,8 @@
     "src/shared/": "shared",
     "src/config/": "shared",
     "src/lib/url.ts": "shared",
-    "src/lib/numbers.ts": "shared",
     "src/lib/topics.ts": "evidence",
     "src/lib/corpus.ts": "evidence",
-    "src/lib/evidence.ts": "evidence",
     "src/lib/batches.ts": "evidence",
     "src/lib/finding-label.ts": "evidence",
     "src/lib/verdict-label.ts": "evidence",
@@ -21,9 +19,7 @@
     "src/lib/stories.ts": "stories",
     "src/lib/review.ts": "stories",
     "scripts/stories.ts": "stories",
-    "src/lib/script.ts": "script",
     "src/lib/evidence-package.ts": "script",
-    "src/lib/script-validation.ts": "script",
     "src/lib/script-md.ts": "script",
     "src/lib/release.ts": "script",
     "scripts/script.ts": "script",
@@ -99,11 +95,6 @@
     },
     {
       "from": "scripts/article.ts",
-      "to": "src/lib/evidence.ts",
-      "until": "article"
-    },
-    {
-      "from": "scripts/article.ts",
       "to": "src/lib/public-record.ts",
       "until": "article"
     },
@@ -174,11 +165,6 @@
     },
     {
       "from": "scripts/script.ts",
-      "to": "src/lib/evidence.ts",
-      "until": "script"
-    },
-    {
-      "from": "scripts/script.ts",
       "to": "src/lib/render-check.ts",
       "until": "script"
     },
@@ -213,29 +199,9 @@
       "until": "script"
     },
     {
-      "from": "scripts/shorts.ts",
-      "to": "src/lib/evidence.ts",
-      "until": "shorts"
-    },
-    {
-      "from": "scripts/shorts.ts",
-      "to": "src/lib/script.ts",
-      "until": "shorts"
-    },
-    {
-      "from": "scripts/stories.ts",
-      "to": "src/lib/evidence.ts",
-      "until": "stories"
-    },
-    {
       "from": "scripts/stories.ts",
       "to": "src/lib/topics.ts",
       "until": "stories"
-    },
-    {
-      "from": "scripts/video.ts",
-      "to": "src/lib/evidence.ts",
-      "until": "evidence"
     },
     {
       "from": "scripts/video.ts",
@@ -326,11 +292,6 @@
       "from": "src/admin/review.astro",
       "to": "src/lib/publish.ts",
       "until": "publishing"
-    },
-    {
-      "from": "src/admin/script.astro",
-      "to": "src/lib/evidence.ts",
-      "until": "evidence"
     },
     {
       "from": "src/admin/script.astro",
@@ -459,32 +420,12 @@
     },
     {
       "from": "src/lib/article-validation.ts",
-      "to": "src/lib/corpus.ts",
-      "until": "article"
-    },
-    {
-      "from": "src/lib/article-validation.ts",
       "to": "src/lib/datasets.ts",
       "until": "article"
     },
     {
       "from": "src/lib/article-validation.ts",
-      "to": "src/lib/evidence.ts",
-      "until": "article"
-    },
-    {
-      "from": "src/lib/article-validation.ts",
       "to": "src/lib/finding-label.ts",
-      "until": "article"
-    },
-    {
-      "from": "src/lib/article-validation.ts",
-      "to": "src/lib/script-validation.ts",
-      "until": "article"
-    },
-    {
-      "from": "src/lib/article-validation.ts",
-      "to": "src/lib/script.ts",
       "until": "article"
     },
     {
@@ -539,11 +480,6 @@
     },
     {
       "from": "src/lib/article.ts",
-      "to": "src/lib/script.ts",
-      "until": "article"
-    },
-    {
-      "from": "src/lib/article.ts",
       "to": "src/lib/storyboard.ts",
       "until": "article"
     },
@@ -593,39 +529,14 @@
       "until": "script"
     },
     {
-      "from": "src/lib/cta.ts",
-      "to": "src/lib/script.ts",
-      "until": "script"
-    },
-    {
       "from": "src/lib/datasets.ts",
       "to": "src/lib/storyboard.ts",
       "until": "evidence"
     },
     {
       "from": "src/lib/evidence-package.ts",
-      "to": "src/lib/corpus.ts",
-      "until": "script"
-    },
-    {
-      "from": "src/lib/evidence-package.ts",
-      "to": "src/lib/evidence.ts",
-      "until": "script"
-    },
-    {
-      "from": "src/lib/evidence-package.ts",
-      "to": "src/shared/io.ts",
-      "until": "shared"
-    },
-    {
-      "from": "src/lib/evidence-package.ts",
       "to": "src/lib/review.ts",
       "until": "script"
-    },
-    {
-      "from": "src/lib/evidence.ts",
-      "to": "src/shared/io.ts",
-      "until": "shared"
     },
     {
       "from": "src/lib/production.ts",
@@ -659,11 +570,6 @@
     },
     {
       "from": "src/lib/production.ts",
-      "to": "src/lib/evidence.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/lib/production.ts",
       "to": "src/lib/look.ts",
       "until": "video"
     },
@@ -691,11 +597,6 @@
       "from": "src/lib/production.ts",
       "to": "src/lib/review.ts",
       "until": "stories"
-    },
-    {
-      "from": "src/lib/production.ts",
-      "to": "src/lib/script-validation.ts",
-      "until": "script"
     },
     {
       "from": "src/lib/production.ts",
@@ -788,31 +689,6 @@
       "until": "stories"
     },
     {
-      "from": "src/lib/review.ts",
-      "to": "src/lib/evidence.ts",
-      "until": "stories"
-    },
-    {
-      "from": "src/lib/script-md.ts",
-      "to": "src/lib/evidence.ts",
-      "until": "script"
-    },
-    {
-      "from": "src/lib/script-validation.ts",
-      "to": "src/lib/corpus.ts",
-      "until": "script"
-    },
-    {
-      "from": "src/lib/script-validation.ts",
-      "to": "src/lib/evidence.ts",
-      "until": "script"
-    },
-    {
-      "from": "src/lib/script-validation.ts",
-      "to": "src/lib/review.ts",
-      "until": "script"
-    },
-    {
       "from": "src/lib/seo.ts",
       "to": "src/lib/outputs.ts",
       "until": "publishing"
@@ -820,11 +696,6 @@
     {
       "from": "src/lib/shorts.ts",
       "to": "src/lib/release.ts",
-      "until": "shorts"
-    },
-    {
-      "from": "src/lib/shorts.ts",
-      "to": "src/lib/script.ts",
       "until": "shorts"
     },
     {
@@ -839,23 +710,8 @@
     },
     {
       "from": "src/lib/stories.ts",
-      "to": "src/lib/evidence.ts",
-      "until": "stories"
-    },
-    {
-      "from": "src/lib/stories.ts",
       "to": "src/lib/topics.ts",
       "until": "stories"
-    },
-    {
-      "from": "src/lib/storyboard.ts",
-      "to": "src/lib/evidence.ts",
-      "until": "storyboard"
-    },
-    {
-      "from": "src/lib/storyboard.ts",
-      "to": "src/lib/script.ts",
-      "until": "storyboard"
     },
     {
       "from": "src/lib/topics.ts",
@@ -1004,11 +860,6 @@
     },
     {
       "from": "src/video/init.ts",
-      "to": "src/lib/script.ts",
-      "until": "script"
-    },
-    {
-      "from": "src/video/init.ts",
       "to": "src/lib/storyboard.ts",
       "until": "storyboard"
     },
@@ -1035,11 +886,6 @@
     {
       "from": "src/video/package.ts",
       "to": "src/lib/publish.ts",
-      "until": "packaging"
-    },
-    {
-      "from": "src/video/package.ts",
-      "to": "src/lib/script.ts",
       "until": "packaging"
     },
     {
@@ -1073,29 +919,14 @@
       "until": "packaging"
     },
     {
-      "from": "src/video/qa.ts",
-      "to": "src/lib/script.ts",
-      "until": "script"
-    },
-    {
       "from": "src/video/select.ts",
       "to": "src/lib/release.ts",
       "until": "script"
     },
     {
       "from": "src/video/select.ts",
-      "to": "src/lib/script.ts",
-      "until": "script"
-    },
-    {
-      "from": "src/video/select.ts",
       "to": "src/lib/storyboard.ts",
       "until": "storyboard"
-    },
-    {
-      "from": "src/video/timeline.ts",
-      "to": "src/lib/evidence.ts",
-      "until": "evidence"
     },
     {
       "from": "src/video/types.ts",

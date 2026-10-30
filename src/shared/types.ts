@@ -252,7 +252,7 @@ export interface ScriptValidation {
   packageFingerprint: string | null;
   wordsPerMinute: number;
   words: number;
-  spokenWords: number; // numeral-aware count (src/lib/numbers.ts); the runtime estimate uses it
+  spokenWords: number; // numeral-aware count (src/shared/numbers.ts); the runtime estimate uses it
   minutes: number;
   counts: {
     sentences: number;
@@ -297,7 +297,7 @@ export interface Assertion {
   /** The canonical claims the sentence rests on, and whether it affirms or negates each. */
   claims: { id: string; stance: Stance }[];
   evidence: EvidenceRef[];
-  /** Figures the caller has established by a recorded calculation from cited inputs (see src/lib/script.ts). */
+  /** Figures the caller has established by a recorded calculation from cited inputs (see src/shared/sentences.ts). */
   derived?: string[];
 }
 export type Status = 'supported' | 'qualified' | 'disputed' | 'unsupported' | 'unverified';
@@ -393,3 +393,89 @@ export type Verdict = 'right' | 'wrong' | 'partly' | 'untestable' | 'unknown';
 /** How far a study verdict's passage reaches its claim. contextual is listed but never decides any sentence. */
 export const APPLICABILITY = ['direct', 'partial', 'contextual'] as const;
 export type ApplicabilityLevel = (typeof APPLICABILITY)[number];
+
+// ---- research corpus and review shapes (from corpus.ts, batches.ts, review.ts, evidence.ts) ----
+
+/** One entry of topics/<topic>/applicability.json, keyed applicabilityKey(claim, cite); written only by record-sources. */
+export interface RecordedApplicability {
+  level: ApplicabilityLevel;
+  reason: string;
+}
+
+export interface CorpusVerdict {
+  by: string; // 'AI guess' or the study's display name
+  verdict: Verdict;
+  confidence: number | null;
+  note: string;
+  cite: string | null; // '<topic>/sources/<file>.txt#L10-L24', a path in the repo
+  date: string | null; // YYYY-MM-DD the verdict was recorded; a later record on the same document supersedes
+  applicability?: RecordedApplicability; // recorded with the verdict (applicability.json); a ceiling, absent means none
+}
+export interface CorpusSource {
+  id: string;
+  title: string;
+  channel: string;
+  kind: 'video' | 'post';
+  href: string;
+  stance: 'asserts' | 'denies';
+  quote: string;
+}
+export interface CorpusClaim {
+  id: string;
+  text: string;
+  verdict: Verdict | null;
+  confidence: number | null;
+  decidedBy: string | null; // a study's display name, or null when the AI guess decides
+  lean: string | null;
+  sources: CorpusSource[]; // every source that asserts or denies it, with its quote
+  verdicts: CorpusVerdict[]; // every recorded judgment: the AI guess and each study
+}
+export interface Corpus {
+  name: string;
+  claims: CorpusClaim[];
+  sameStudy?: Record<string, string>; // '<summary file>.txt' -> '<primary file>.txt' when two documents report one study
+  docNames?: Record<string, string>; // '<file>.txt' -> display name
+}
+
+export interface StoryReview {
+  /** Drop the candidate with this reason (incoherent, redundant, not a story). */
+  reject?: string;
+  /** 0 to 1: do the claims form one argument or investigation? Below 0.5 rejects. */
+  coherence?: { score: number; reason: string };
+  /** The final claim list (ids), replacing the candidate's: prune tangents, add what the question needs. */
+  claims?: string[];
+  question?: string;
+  title?: string;
+  alternates?: string[];
+  whyWatch?: string;
+  tension?: string;
+  evidenceNeeded?: string;
+  premise?: string;
+  arc?: Partial<Record<'hook' | 'conflict' | 'evidence' | 'resolution' | 'takeaway', string>>;
+  /** The premise and arc carry every qualification the audit raised, so qualified findings no longer hold the story at needs-review. */
+  qualificationsAccepted?: boolean;
+  /** Hold the story at needs-research for this reason, whatever the audit says (an essential gap the code cannot see). */
+  research?: string;
+  /** Who the script is written for; the evidence package carries it to the writer (a stated default otherwise). */
+  audience?: string;
+  /** Follow-up stories this story's video goes on to answer, in order: each answer raises the next question. Each
+   *  keeps its own audit; the video is ready only when every one is. Chains do not nest. */
+  chain?: string[];
+  /** Why each answer leads to the next question (required with a chain). */
+  chainWhy?: string;
+}
+
+export interface ReviewFile {
+  /** `${claim}|${stance}|${cite}` -> does that verdict decide a sentence taking that stance on the claim? */
+  applicability?: Judgments;
+  stories?: Record<string, StoryReview>;
+}
+
+export interface Judgment {
+  level: Applicability;
+  reason: string;
+}
+/** Reviewer judgments keyed `${claim}|${stance}|${cite}`: does that verdict decide a sentence with that stance? */
+export type Judgments = Record<string, Judgment>;
+
+export type PassageReader = (cite: string) => string | null;

@@ -2,23 +2,18 @@
 // audio, cue resolution, chart timing, excerpt extraction, the render cache key, assembly contiguity, the ffmpeg
 // wrapper and the providers. Every test runs on the synthetic fixture (tests/video-helpers.ts) and needs no TTS.
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
-import { ROOT } from '../src/shared/io';
+import { ROOT, scriptDir } from '../src/shared/io';
 import { LOOK_SLOTS, lookFingerprint } from '../src/lib/look';
 import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { scriptFingerprint } from '../src/lib/script';
-import { scriptDir } from '../src/shared/io';
-import type { Storyboard } from '../src/lib/storyboard';
+import { scriptFingerprint, sentences } from '../src/shared/sentences';
+import { type Storyboard, buildStoryboard } from '../src/lib/storyboard';
 import { type VisualReview, graphicKey, renderCheck } from '../src/video/check';
 import { draftRenderConfig, initVideo } from '../src/video/init';
-import type { KindRegistry, SceneKind } from '../src/video/kinds';
-import { pointFrames } from '../src/video/chart';
-import { cue, lineFrames, spokenAt } from '../src/video/cues';
-import { excerptWindow, flowPassage } from '../src/video/excerpt';
-import { type Probe, audioStats, probe } from '../src/video/ffmpeg';
-import { BESPOKE } from '../src/video/bespoke';
 import {
+  type KindRegistry,
+  type SceneKind,
   ALL_KINDS,
   GENERIC,
   SHORT_GENERIC,
@@ -27,12 +22,15 @@ import {
   unsupportedAssets,
   unsupportedWhy,
 } from '../src/video/kinds';
+import { pointFrames } from '../src/video/chart';
+import { cue, lineFrames, spokenAt } from '../src/video/cues';
+import { excerptWindow, flowPassage } from '../src/video/excerpt';
+import { type Probe, audioStats, probe } from '../src/video/ffmpeg';
+import { BESPOKE } from '../src/video/bespoke';
 import { citationTop } from '../src/video/remotion/Citation';
 import { captionCards } from '../src/video/remotion/Portrait';
-import { sentences } from '../src/lib/script';
 import { SHORT_MAX_SECONDS, type Script, type ShortBlock } from '../src/shared/types';
-import { buildStoryboard } from '../src/lib/storyboard';
-import { approveAll, good, plan, run } from './script-helpers';
+import { approveAll, good, plan, run, DOC_D, pkg, read, scene } from './script-helpers';
 import { COMPONENTS } from '../src/video/remotion/scenes';
 import { headlineNumber, segmentColors } from '../src/video/remotion/scenes/StackedBar';
 import { countUp, setTheme, theme, themeOf } from '../src/video/remotion/theme';
@@ -57,7 +55,6 @@ import { openaiProvider, speedOf } from '../src/video/tts/openai';
 import { type Speak, azureProvider } from '../src/video/tts/azure';
 import { PORTRAIT, SHORT_LAYOUT, type TimelineScene } from '../src/video/types';
 import { alignLine, findWord, tokens } from '../src/video/words';
-import { DOC_D, pkg, read, scene } from './script-helpers';
 import { POINTS, inputs, manifest, scenes } from './video-helpers';
 
 describe('segment selection', () => {

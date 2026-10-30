@@ -7,7 +7,8 @@ import {
   datasetProblems,
   loadDatasets,
 } from '../src/lib/datasets';
-import { type PassageReader, passageReader } from '../src/lib/evidence';
+import { type PassageReader } from '../src/shared/types';
+import { passageReader } from '../src/shared/io';
 import { publicTopicNames } from '../src/lib/topics';
 import { TOOLS } from '../src/tools';
 

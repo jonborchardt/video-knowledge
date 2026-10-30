@@ -1,6 +1,5 @@
 // A small synthetic corpus in the shape loadTopic() produces, for the evidence and story tests.
-import type { Corpus } from '../src/lib/corpus';
-import type { PassageReader } from '../src/lib/evidence';
+import type { Corpus, PassageReader } from '../src/shared/types';
 import type { StoryInput } from '../src/lib/stories';
 import type { ClaimSourceView, ClaimVerdictView, ClaimView, Verdict } from '../src/lib/topics';
 

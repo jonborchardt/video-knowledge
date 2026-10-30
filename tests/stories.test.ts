@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { ReviewFile } from '../src/lib/review';
+import type { ReviewFile } from '../src/shared/types';
 import { discover, loadStories, staleReviewIds, storyTopicNames } from '../src/lib/stories';
 import { loadTopic } from '../src/lib/topics';
 import { loadReview } from '../src/lib/review';

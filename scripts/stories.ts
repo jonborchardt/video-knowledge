@@ -5,11 +5,11 @@
 //   validate <topic> <assertions.json> [--json]   run the evidence gate on your own assertions (exit 2 if any is blocked)
 // Reads topics/<topic>/report.json and topics/<topic>/store/ through src/lib/topics.ts; no watcher checkout needed.
 import { readFileSync, writeFileSync } from 'node:fs';
-import { passageReader, validate } from '../src/lib/evidence';
+import { passageReader, toJson } from '../src/shared/io';
+import { validate } from '../src/shared/evidence-gate';
 import type { Assertion, Validation, Story } from '../src/shared/types';
 import { loadReview } from '../src/lib/review';
 import { discover, loadStories, storiesPath } from '../src/lib/stories';
-import { toJson } from '../src/shared/io';
 import { loadTopic } from '../src/lib/topics';
 
 const [cmd, topic, ...rest] = process.argv.slice(2);

@@ -1,6 +1,6 @@
 // The four public finding labels (plan D3): what a visitor reads on every claim. Derived from the verdict the report
 // already decided; no judgment happens here, and an AI guess can only ever be a reported claim.
-import { STRONG } from './evidence';
+import { STRONG } from '../shared/evidence-gate';
 import type { ClaimView } from './topics';
 
 export const FINDING_LABELS = ['verified', 'qualification', 'unresolved', 'reported'] as const;

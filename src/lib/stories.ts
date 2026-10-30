@@ -2,7 +2,7 @@
 //
 // Stage 1 drafts candidates from the corpus (deterministic): a popular claim a study contradicts, studies or sources
 // that disagree, a study that overturned the AI guess, a widely repeated claim nobody checked, and the decision
-// groups in site.json. Stage 2 evaluates each: the evidence audit (src/lib/evidence.ts), coherence, depth,
+// groups in site.json. Stage 2 evaluates each: the evidence audit (src/shared/evidence-gate.ts), coherence, depth,
 // the ranking dimensions, and readiness with explicit blocking reasons. The reviewer's file (src/lib/review.ts)
 // supplies what code cannot judge: whether a verdict decides a sentence, whether claims answer one question, and the
 // viewer-facing framing. Without it, multi-claim stories cap at needs-review and titles are plain questions.
@@ -11,8 +11,8 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { readJson, topicDir, ROOT } from '../shared/io';
-import { type PassageReader, PRIOR_CAP, docKey, studyVerdicts, validate } from './evidence';
 import type {
+  PassageReader,
   Assertion,
   EvidenceItem,
   EvidenceRef,
@@ -22,8 +22,11 @@ import type {
   Arc,
   Finding,
   Story,
+  ReviewFile,
+  StoryReview,
 } from '../shared/types';
-import { MAX_CHAIN_CLAIMS, MAX_QUESTIONS, type ReviewFile, type StoryReview } from './review';
+import { PRIOR_CAP, docKey, studyVerdicts, validate } from '../shared/evidence-gate';
+import { MAX_CHAIN_CLAIMS, MAX_QUESTIONS } from './review';
 import { type ClaimView, type Topic, topicNames, VAL } from './topics';
 
 export type StoryInput = Pick<Topic, 'name' | 'label' | 'claims' | 'recap'> & { sameStudy?: Record<string, string> };

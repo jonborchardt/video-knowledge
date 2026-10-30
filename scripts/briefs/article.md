@@ -106,7 +106,7 @@ Prose sentences are typed and asserted exactly as in the script brief (`scripts/
   with `statement` evidence passes. The sentence `type` itself is the reviewer's to check.
 - **An assertion's `stance` agrees with the claim's verdict.** Asserting a claim the evidence judged wrong (or
   denying one judged right) blocks as `contradicted`; state it with `"stance": "denies"`, or attribute it.
-- **Number words are figures** (`src/lib/numbers.ts`): "two", "one in", "fourteen percent" are checked like
+- **Number words are figures** (`src/shared/numbers.ts`): "two", "one in", "fourteen percent" are checked like
   digits. Keep them out of `hypothetical`, `rhetorical` and `transitional` sentences, which carry no figure.
 - **A quotation is one unbroken run:** `quote.text` must appear in the sentence word for word, not split around
   an inserted clause.

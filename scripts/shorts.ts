@@ -5,10 +5,8 @@
 // A Short is then produced as <story-id>/shorts/<slug> through the same CLIs as a video (npm run board -- next, /produce).
 import { readFileSync, writeFileSync } from 'node:fs';
 import { relative } from 'node:path';
-import { passageReader } from '../src/lib/evidence';
-import { toJson, ROOT } from '../src/shared/io';
-import { sentences } from '../src/lib/script';
-import { shortId, shortOf } from '../src/shared/io';
+import { passageReader, toJson, ROOT, shortId, shortOf } from '../src/shared/io';
+import { sentences } from '../src/shared/sentences';
 import {
   type ShortCandidate,
   discoverShorts,

@@ -2,7 +2,7 @@
 // investigation sentence asserts a fact with figures, storyboarded into three scenes (tests/video-helpers.ts).
 import { describe, expect, it } from 'vitest';
 import { toJson } from '../src/shared/io';
-import { scriptFingerprint, sectionsFor, sentenceFingerprint, sentences } from '../src/lib/script';
+import { scriptFingerprint, sectionsFor, sentenceFingerprint, sentences } from '../src/shared/sentences';
 import type { EvidencePackage, Script } from '../src/shared/types';
 import { storyboardFingerprint, validationFingerprint } from '../src/lib/release';
 import { buildStoryboard } from '../src/lib/storyboard';

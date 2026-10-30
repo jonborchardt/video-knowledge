@@ -1,11 +1,17 @@
 // Fixtures shared by tests/script.test.ts and tests/adversarial.test.ts: a two-claim topic, a survey passage with
 // figures, and builders for scripts, assertions, reviews and storyboard plans.
-import type { PassageReader } from '../src/lib/evidence';
-import type { ReviewFile } from '../src/lib/review';
+import type {
+  PassageReader,
+  ReviewFile,
+  EvidencePackage,
+  Script,
+  ScriptAssertion,
+  ScriptReviewFile,
+  Sentence,
+} from '../src/shared/types';
 import { buildPackage } from '../src/lib/evidence-package';
-import { scriptFingerprint, sentenceFingerprint, sentences } from '../src/lib/script';
-import type { EvidencePackage, Script, ScriptAssertion, ScriptReviewFile, Sentence } from '../src/shared/types';
-import { validateScript } from '../src/lib/script-validation';
+import { scriptFingerprint, sentenceFingerprint, sentences } from '../src/shared/sentences';
+import { validateScript } from '../src/shared/sentence-validation';
 import { discover } from '../src/lib/stories';
 import type { StoryboardPlan } from '../src/lib/storyboard';
 import type { Topic } from '../src/lib/topics';

@@ -22,12 +22,10 @@
 import { spawnSync } from 'node:child_process';
 import { appendFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { passageReader } from '../src/lib/evidence';
-import { readJson, sha, toJson, ROOT } from '../src/shared/io';
+import { passageReader, readJson, sha, toJson, ROOT, scriptDir, shortOf } from '../src/shared/io';
 import { boardNext } from '../src/lib/production';
 import { addOutputTo, currentBuild, recordApproved } from '../src/lib/publish';
 import { approverProblem } from '../src/lib/release';
-import { scriptDir, shortOf } from '../src/shared/io';
 import { extractFrame, probe } from '../src/video/ffmpeg';
 import { writeRenderCheck } from '../src/video/check';
 import { initVideo } from '../src/video/init';

@@ -10,7 +10,7 @@ import { contentGraph, matterPath, storyNode } from '../lib/content-graph';
 import { type CtaType, ctaPath, loadCta, resolveCtas } from '../lib/cta';
 import { fileSha, readJson, ROOT, sha, toJson, topicDir } from '../shared/io';
 import { loadLedger, mainOutput } from '../lib/publish';
-import { sectionTitle } from '../lib/script';
+import { sectionTitle } from '../shared/sentences';
 import { uploadProblem } from '../lib/uploader';
 import { absoluteUrl } from '../lib/url';
 import { renderSrt } from './captions';

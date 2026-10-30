@@ -7,17 +7,27 @@ import { ARTICLE_FILES } from '../src/lib/article';
 import type { BuildSummary } from '../src/lib/build-report';
 import { article } from './article-helpers';
 import { corpusOf } from '../src/lib/corpus';
-import { passageReader } from '../src/lib/evidence';
-import { buildPackage, docHasher, docReader } from '../src/lib/evidence-package';
-import { fileSha, readJson, sha, toJson, topicDir } from '../src/shared/io';
+import {
+  passageReader,
+  docHasher,
+  docReader,
+  fileSha,
+  readJson,
+  sha,
+  toJson,
+  topicDir,
+  FILES,
+  scriptDir,
+  shortId,
+} from '../src/shared/io';
+import { buildPackage } from '../src/lib/evidence-package';
 import { lookFingerprint } from '../src/lib/look';
 import { storyboardFingerprint, validationFingerprint } from '../src/lib/release';
 import { renderCheckProblems } from '../src/lib/render-check';
 import { loadReview, reviewPath } from '../src/lib/review';
-import { scriptFingerprint, sentenceFingerprint, sentences } from '../src/lib/script';
-import { FILES, scriptDir, shortId } from '../src/shared/io';
+import { scriptFingerprint, sentenceFingerprint, sentences } from '../src/shared/sentences';
 import type { Release, Script, ScriptReviewFile, SectionName, SentenceType } from '../src/shared/types';
-import { validateScript } from '../src/lib/script-validation';
+import { validateScript } from '../src/shared/sentence-validation';
 import {
   type ShortsReviewFile,
   buildShortPackage,

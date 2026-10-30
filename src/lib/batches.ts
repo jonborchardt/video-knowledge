@@ -1,4 +1,4 @@
-import { APPLICABILITY, type ApplicabilityLevel } from '../shared/types.ts';
+import { APPLICABILITY, type ApplicabilityLevel, type RecordedApplicability } from '../shared/types.ts';
 // The two files agents write for the research stage, typed and checked before anything is recorded:
 //   extraction batches, h*.json (scripts/briefs/extract.md), recorded by scripts/record.mjs
 //   study verdicts, sv_*.json (scripts/briefs/sources.md), recorded by scripts/record-sources.mjs
@@ -36,11 +36,6 @@ export interface ExtractionBatch {
   video: string;
   sum?: string;
   as: BatchAssertion[];
-}
-/** One entry of topics/<topic>/applicability.json, keyed applicabilityKey(claim, cite); written only by record-sources. */
-export interface RecordedApplicability {
-  level: ApplicabilityLevel;
-  reason: string;
 }
 export const applicabilityKey = (claim: string, cite: string) => `${claim}|${cite}`;
 export interface StudyVerdict {

@@ -5,12 +5,12 @@ import { join } from 'node:path';
 import { readJson, topicDir, TOPICS, ROOT } from '../shared/io';
 import { commissionOf } from '../config/site';
 import { type ClaimRevision, isClaimRevision, loadPublicRecord } from './public-record';
-import { type RecordedApplicability, applicabilityKey, checkApplicabilityFile } from './batches';
+import type { RecordedApplicability, Verdict } from '../shared/types';
+import { applicabilityKey, checkApplicabilityFile } from './batches';
 
 /** Each study verdict's recorded applicability, beside the store; written only by scripts/record-sources.mjs. */
 export const APPLICABILITY_FILE = 'applicability.json';
 
-import type { Verdict } from '../shared/types';
 export type { Verdict };
 const JUDGED: Verdict[] = ['right', 'wrong', 'partly'];
 

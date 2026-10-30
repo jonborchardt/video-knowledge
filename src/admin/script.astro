@@ -4,9 +4,7 @@
 import { join } from 'node:path';
 import Base from '../layouts/Base.astro';
 import { site } from '../config/site';
-import { passageReader } from '../lib/evidence';
-import { readJson } from '../shared/io';
-import { FILES, scriptDirs } from '../shared/io';
+import { passageReader, readJson, FILES, scriptDirs } from '../shared/io';
 import type { EvidencePackage, Issue, Script, ScriptValidation } from '../shared/types';
 import type { Storyboard } from '../lib/storyboard';
 import { citeHref as repoCite, href } from '../lib/url';

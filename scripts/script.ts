@@ -10,19 +10,28 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { corpusOf } from '../src/lib/corpus';
-import { passageReader } from '../src/lib/evidence';
-import { fileSha, readJson, toJson, writeArtifact, topicDir, ROOT } from '../src/shared/io';
+import {
+  passageReader,
+  fileSha,
+  readJson,
+  toJson,
+  writeArtifact,
+  topicDir,
+  ROOT,
+  FILES,
+  scriptDir,
+  shortOf,
+} from '../src/shared/io';
 import { loadReview, reviewPath } from '../src/lib/review';
 import { buildPackage, transcriptReader } from '../src/lib/evidence-package';
 import { approverProblem, releaseCheck, storyboardFingerprint, validationFingerprint } from '../src/lib/release';
 import { renderCheckProblems } from '../src/lib/render-check';
 import { writeRenderCheck } from '../src/video/check';
-import { sentenceFingerprint, sentences } from '../src/lib/script';
-import { FILES, scriptDir, shortOf } from '../src/shared/io';
+import { sentenceFingerprint, sentences } from '../src/shared/sentences';
 import type { EvidencePackage, Release, Script, ScriptReviewFile, ScriptValidation } from '../src/shared/types';
 import { renderReviewMd, renderScriptMd } from '../src/lib/script-md';
 import { buildShortPackage, loadShorts, shortsPath } from '../src/lib/shorts';
-import { validateScript } from '../src/lib/script-validation';
+import { validateScript } from '../src/shared/sentence-validation';
 import { chainOf, loadStories, storiesPath } from '../src/lib/stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard, renderStoryboardMd } from '../src/lib/storyboard';
 import { loadTopic } from '../src/lib/topics';

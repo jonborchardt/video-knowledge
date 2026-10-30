@@ -1,14 +1,5 @@
-// Script stage: one reviewed story -> evidence package -> narration script with sentence-level provenance -> validation.
-//
-// Artifacts live in topics/<topic>/scripts/<story slug>/ (scriptDir). The code is deterministic; the writing and the semantic
-// review are agent work driven by scripts/briefs/script.md and scripts/briefs/script-review.md:
-//   evidence-package.json  built from stories.json, the report and the store (evidence-package.ts, buildPackage)
-//   script.json            written by the writer agent (Script)
-//   script-review.json     written by an independent reviewer agent (ScriptReviewFile)
-//   validation.json        deterministic checks merged with the review (script-validation.ts, validateScript)
-//   script.md, review.md   rendered by script-md.ts
-//   release.json           the approved fingerprints (release.ts)
-// This file holds the shared types, fingerprints and folder conventions; each stage's code lives in its own module.
+// Pure text helpers of a script: counts, fingerprints, sentence lists and the cite helpers; the script and article
+// stages both use them. The types live in types.ts.
 import {
   type EvidenceRef,
   SECTIONS,
@@ -18,8 +9,8 @@ import {
   type Sentence,
   type Section,
   type Script,
-} from '../shared/types';
-import { sha } from '../shared/io';
+} from './types';
+import { sha } from './io';
 
 /** The sections a script written from this package has, in order. */
 export const sectionsFor = (pkg: Pick<EvidencePackage, 'questions' | 'short'> | null): readonly SectionName[] =>
@@ -66,5 +57,3 @@ export const norm = (s: string) =>
     .replace(/�/g, '')
     .replace(/\s+/g, ' ')
     .trim();
-
-// ---- files -------------------------------------------------------------------------------------------------------

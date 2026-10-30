@@ -7,11 +7,10 @@ import { join } from 'node:path';
 import { toolOf } from '../tools';
 import { loadArticleRelease } from './article';
 import { absoluteOf, chainRoot, type Graph, matterPath } from './content-graph';
-import { readJson, ROOT } from '../shared/io';
+import { readJson, ROOT, FILES, scriptDir } from '../shared/io';
 import { absoluteUrl } from './url';
 import { approverProblem } from './release';
-import { sentences } from './script';
-import { FILES, scriptDir } from '../shared/io';
+import { sentences } from '../shared/sentences';
 import type { Script } from '../shared/types';
 
 export const CTA_TYPES = [

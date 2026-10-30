@@ -4,7 +4,17 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { ROOT, readJson, toJson } from '../src/shared/io';
+import {
+  ROOT,
+  readJson,
+  toJson,
+  passageReader,
+  docHasher,
+  docReader,
+  scriptDir,
+  shortId,
+  storySlug,
+} from '../src/shared/io';
 import type { RenderCheckSummary } from '../src/lib/render-check';
 import { writeRenderCheck } from '../src/video/check';
 import {
@@ -32,14 +42,11 @@ import {
 } from '../src/lib/article';
 import { corpusOf } from '../src/lib/corpus';
 import { loadStories } from '../src/lib/stories';
-import { passageReader } from '../src/lib/evidence';
 import type { Storyboard } from '../src/lib/storyboard';
-import { docHasher, docReader } from '../src/lib/evidence-package';
 import { loadReview } from '../src/lib/review';
-import { validateScript } from '../src/lib/script-validation';
+import { validateScript } from '../src/shared/sentence-validation';
 import { loadTopic } from '../src/lib/topics';
-import { sentenceFingerprint } from '../src/lib/script';
-import { scriptDir, shortId, storySlug } from '../src/shared/io';
+import { sentenceFingerprint } from '../src/shared/sentences';
 import type { EvidencePackage, Script, ScriptReviewFile, ScriptValidation } from '../src/shared/types';
 import { addOutputTo, recordApproved, recordPublished, recordUploaded, setThumbnail } from '../src/lib/publish';
 import { type Fixture, copyTopic, setLook, syntheticProduction, syntheticShort } from './production-helpers';

@@ -2,10 +2,9 @@
 // topics/<topic>/scripts/<slug>/storyboard.json with scenes that reference sentence ids and describe visuals; this module fills
 // in the narration from script.json (so the storyboard cannot reword it), computes timing from the narration speed,
 // and checks that every chart figure and on-screen citation comes from a passage in the evidence package.
-import { type PassageReader } from './evidence';
-import { hasFigure, nums, spokenWords } from './numbers';
-import { scriptFingerprint, sentences, words } from './script';
-import type { EvidencePackage, Issue, Script, ScriptValidation, Severity } from '../shared/types';
+import type { PassageReader, EvidencePackage, Issue, Script, ScriptValidation, Severity } from '../shared/types';
+import { hasFigure, nums, spokenWords } from '../shared/numbers';
+import { scriptFingerprint, sentences, words } from '../shared/sentences';
 
 export const VISUALS = [
   'data-chart',
@@ -80,7 +79,7 @@ export interface Scene extends Omit<ScenePlan, 'narration'> {
   order: number;
   narration: string;
   words: number;
-  spokenWords: number; // numeral-aware (src/lib/numbers.ts spokenWords); what the timing is computed from
+  spokenWords: number; // numeral-aware (src/shared/numbers.ts spokenWords); what the timing is computed from
   timing: SentenceTiming[]; // one entry per sentence in scene order; the scene's pause follows the last
   start: number; // seconds
   duration: number; // sum of the sentence durations plus pauseSeconds

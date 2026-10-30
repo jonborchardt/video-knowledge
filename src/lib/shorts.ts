@@ -5,11 +5,10 @@
 // judge: whether the finding stands alone, the hook, the format, and how each qualification the parent carried
 // elsewhere is said inside the Short. A candidate is never ready without it.
 import { join } from 'node:path';
-import { readJson, sha, toJson, ROOT } from '../shared/io';
-import { nums } from './numbers';
+import { readJson, sha, toJson, ROOT, FILES, scriptDir } from '../shared/io';
+import { nums } from '../shared/numbers';
 import { releaseCheck, storyboardFingerprint, validationFingerprint } from './release';
-import { isStudyRef, sentences } from './script';
-import { FILES, scriptDir } from '../shared/io';
+import { isStudyRef, sentences } from '../shared/sentences';
 import {
   type EvidencePackage,
   MAX_SHORTS,

@@ -2,33 +2,26 @@
 // Pure apart from its readers: passages, documents and transcripts are injected, so it runs on an in-memory corpus.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { Corpus } from './corpus';
-import { type PassageReader, applicabilityFor } from './evidence';
-import type { Stance, EvidencePackage, PackageClaim, PackageDoc, PackageEvidence, Story } from '../shared/types';
-import { lf, sha, topicDir, TOPICS, ROOT } from '../shared/io';
-import { MAX_QUESTIONS, type ReviewFile } from './review';
-import { docOf, isStudyRef, norm } from './script';
+import type {
+  Corpus,
+  PassageReader,
+  Stance,
+  EvidencePackage,
+  PackageClaim,
+  PackageDoc,
+  PackageEvidence,
+  Story,
+  ReviewFile,
+} from '../shared/types';
+import { applicabilityFor } from '../shared/evidence-gate';
+import { docReader, sha, topicDir, ROOT, type DocReader } from '../shared/io';
+import { MAX_QUESTIONS } from './review';
+import { docOf, isStudyRef, norm } from '../shared/sentences';
 
 const DEFAULT_AUDIENCE =
   'General YouTube audience with no prior knowledge of MLM pay plans or research methods (default; set audience in story-review.json to change).';
 const fileOf = (cite: string) => docOf(cite).split('/').pop()!;
 
-/** Reads a document by its cite path (`<topic>/sources/<file>.txt`, under topics/) with normalised line endings; null when it is gone. */
-export type DocReader = (file: string) => string | null;
-export function docReader(root = ROOT): DocReader {
-  return (file) => {
-    const p = join(root, TOPICS, file);
-    return existsSync(p) ? lf(readFileSync(p, 'utf8')) : null;
-  };
-}
-export type DocHasher = (file: string) => string | null;
-/** The sha the package records for a document; null when the reader has no such file. */
-export function docHasher(r: DocReader = docReader()): DocHasher {
-  return (file) => {
-    const text = r(file);
-    return text === null ? null : sha(text);
-  };
-}
 export type TranscriptReader = (sourceId: string) => string | null;
 /** Reads `<root>/topics/<topic>/store/transcripts/<source id>.txt` (a gitignored cache); null when it is not there. */
 export function transcriptReader(topic: string, root = ROOT): TranscriptReader {

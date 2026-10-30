@@ -1,7 +1,7 @@
 // Evidence datasets: tables of cited chart points (topics/<topic>/data/*.json), checked like the storyboard's.
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import type { PassageReader } from './evidence';
+import type { PassageReader } from '../shared/types';
 import { ROOT, readJson, topicDir } from '../shared/io';
 import { type ChartPoint, pointProblems } from './storyboard';
 

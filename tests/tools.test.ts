@@ -2,8 +2,7 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadDatasets } from '../src/lib/datasets';
-import { ROOT } from '../src/shared/io';
-import { passageReader } from '../src/lib/evidence';
+import { ROOT, passageReader } from '../src/shared/io';
 import { loadStories } from '../src/lib/stories';
 import { TOOLS, toolOf } from '../src/tools';
 import {

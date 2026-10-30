@@ -1,6 +1,5 @@
-import { type Article } from '../src/lib/article';
-import { articleReviewUnits, articleSentences } from '../src/lib/article';
-import { sentenceFingerprint } from '../src/lib/script';
+import { type Article, articleReviewUnits, articleSentences } from '../src/lib/article';
+import { sentenceFingerprint } from '../src/shared/sentences';
 import type { ScriptReviewFile } from '../src/shared/types';
 import { TOPIC } from './corpus';
 import { MLM, fact, pkg, sentence } from './script-helpers';

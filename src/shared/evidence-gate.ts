@@ -13,12 +13,14 @@
 // Evidence hierarchy (README "How verdicts work"): a study verdict with a passage is evidence; an AI guess is context,
 // never verification; a source's statement proves only what the source said. Support must be cited, but
 // contradictions and qualifications are pulled from every study verdict on the claim, so none can be hidden.
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { lf, TOPICS, ROOT } from '../shared/io';
 import { hasFigure, nums } from './numbers';
-import type { Corpus, CorpusClaim, CorpusVerdict } from './corpus';
 import type {
+  Corpus,
+  PassageReader,
+  CorpusClaim,
+  CorpusVerdict,
+  Judgment,
+  Judgments,
   Verdict,
   Stance,
   EvidenceRef,
@@ -31,31 +33,9 @@ import type {
   EvidenceItem,
   Basis,
   Validation,
-} from '../shared/types';
+} from './types';
 
-export interface Judgment {
-  level: Applicability;
-  reason: string;
-}
-/** Reviewer judgments keyed `${claim}|${stance}|${cite}`: does that verdict decide a sentence with that stance? */
-export type Judgments = Record<string, Judgment>;
 export const judgmentKey = (claim: string, stance: Stance, cite: string) => `${claim}|${stance}|${cite}`;
-
-export type PassageReader = (cite: string) => string | null;
-
-/** Reads `<topic>/sources/<file>.txt#L10-L24` from topics/; null when the file or the lines do not exist. */
-export function passageReader(root = ROOT): PassageReader {
-  return (cite) => {
-    const m = cite.match(/^([^#]+\.txt)#L(\d+)(?:-L(\d+))?$/);
-    if (!m) return null;
-    const file = join(root, TOPICS, m[1]);
-    if (!existsSync(file)) return null;
-    const lines = lf(readFileSync(file, 'utf8')).split('\n');
-    const [from, to] = [Number(m[2]), Number(m[3] ?? m[2])];
-    if (from < 1 || to < from || to > lines.length) return null;
-    return lines.slice(from - 1, to).join('\n');
-  };
-}
 
 export const PRIOR_CAP = 0.5; // mirrors the watcher: a study weaker than this cannot override an AI guess
 export const STRONG = 0.75;

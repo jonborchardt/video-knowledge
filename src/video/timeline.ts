@@ -2,7 +2,7 @@
 // Deterministic given the segment, the manifest, render.json and the cited passages. Every cue resolves to the frame
 // its word is spoken on, and every excerpt to its passage, or the build fails.
 import { commissionKey, commissionOf, site } from '../config/site';
-import type { PassageReader } from '../lib/evidence';
+import type { PassageReader } from '../shared/types';
 import { sha } from '../shared/io';
 import { lookFingerprint } from '../lib/look';
 import { kitPalette } from './brand';

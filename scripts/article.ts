@@ -22,12 +22,10 @@ import {
 import { articleStale } from '../src/lib/article-view';
 import { figureData, validateArticleIn } from '../src/lib/article-validation';
 import { corpusOf } from '../src/lib/corpus';
-import { passageReader } from '../src/lib/evidence';
-import { readJson, toJson, writeArtifact, ROOT } from '../src/shared/io';
+import { passageReader, readJson, toJson, writeArtifact, ROOT, FILES, scriptDir } from '../src/shared/io';
 import { loadPublicRecord, publicRecordPath, withArticleRevision } from '../src/lib/public-record';
 import { Refusal } from '../src/lib/publish';
 import { loadReview } from '../src/lib/review';
-import { FILES, scriptDir } from '../src/shared/io';
 import type { EvidencePackage, Script, ScriptValidation } from '../src/shared/types';
 import { loadTopic } from '../src/lib/topics';
 

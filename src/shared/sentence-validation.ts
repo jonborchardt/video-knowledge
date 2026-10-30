@@ -3,11 +3,9 @@
 // in the passage, a calculation that does not reproduce, or a reference that does not resolve blocks.
 // Approval needs both layers: no blocking issue, and a reviewer's approval of the sentence's current fingerprint.
 // A changed sentence changes its fingerprint, so a revision never inherits an approval.
-import type { Corpus } from './corpus';
-import { type PassageReader, validate } from './evidence';
-import { type DocHasher, docHasher } from './evidence-package';
+import { validate } from './evidence-gate';
+import { type DocHasher, docHasher } from './io';
 import { hasFigure, nums, spokenWords, wordsToDigits } from './numbers';
-import type { ReviewFile } from './review';
 import {
   revisionsInPass,
   sectionsFor,
@@ -19,9 +17,13 @@ import {
   sentenceFingerprint,
   sentences,
   words,
-} from './script';
+} from './sentences';
 import {
   type AssertionResult,
+  type Corpus,
+  type CorpusClaim,
+  type PassageReader,
+  type ReviewFile,
   type Calc,
   type EvidencePackage,
   type Issue,
@@ -36,8 +38,7 @@ import {
   type SentenceResult,
   type Severity,
   WPM_DEFAULT,
-} from '../shared/types';
-import type { CorpusClaim } from './corpus';
+} from './types';
 
 const NUMBERISH = /\d|\$|\bper ?cent\b|\bpercent\b/i;
 

@@ -12,8 +12,8 @@ import {
   articleSentences,
   proseOf,
 } from './article';
-import type { Corpus } from './corpus';
 import {
+  type Corpus,
   type Verdict,
   type EvidencePackage,
   type Issue,
@@ -22,14 +22,13 @@ import {
   type ScriptReviewFile,
   type ScriptValidation,
   type Severity,
+  type PassageReader,
 } from '../shared/types';
 import { dataRef, loadDatasets } from './datasets';
-import type { PassageReader } from './evidence';
 import { findingLabel } from './finding-label';
-import { readJson, ROOT } from '../shared/io';
-import { norm, revisionsInPass, sentenceFingerprint, sentences } from './script';
-import { FILES, scriptDir, storySlug } from '../shared/io';
-import { type ValidateOptions, validateScript } from './script-validation';
+import { readJson, ROOT, FILES, scriptDir, storySlug } from '../shared/io';
+import { norm, revisionsInPass, sentenceFingerprint, sentences } from '../shared/sentences';
+import { type ValidateOptions, validateScript } from '../shared/sentence-validation';
 import { pointProblems, type StoryboardPlan } from './storyboard';
 
 export const LIMITS = { headline: 90, seoTitle: 60, description: 155 } as const;

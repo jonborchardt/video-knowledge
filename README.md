@@ -71,7 +71,7 @@ npm run stories -- validate <topic> <file.json>  # run the evidence gate on your
 
 Three layers, kept apart:
 
-- **Deterministic** (`src/lib/stories.ts` drafting, `src/lib/evidence.ts` checks): five kinds of candidate are drafted
+- **Deterministic** (`src/lib/stories.ts` drafting, `src/shared/evidence-gate.ts` checks): five kinds of candidate are drafted
   (a popular claim a study contradicts, studies or sources that disagree, a study that overturned the AI guess, a widely
   repeated claim nobody checked, and the recap groups in `site.json` as decision stories), and every reference is
   verified. Ids are `<kind>:<claim slug>`, so a rerun is byte-identical and ids survive corpus changes.
@@ -102,7 +102,7 @@ at `needs-review`. Its evidence package carries every question's own premise, te
 story outside a chain (ready stories sharing no claims, nearest in wording); the reviewer decides. A review entry for an
 id discovery no longer drafts fails a test (`staleReviewIds`).
 
-The validator (`src/lib/evidence.ts`) takes an assertion (`fact`, `attribution` or `disagreement`), the canonical
+The validator (`src/shared/evidence-gate.ts`) takes an assertion (`fact`, `attribution` or `disagreement`), the canonical
 claims it rests on and its evidence references, and returns a status (`supported`, `qualified`, `disputed`,
 `unsupported`, `unverified`), a publication decision (`approved`, `qualify`, `blocked`), whether a human must review
 it, and the supporting, contradicting and qualifying evidence with passages. It is deterministic and fails closed: a

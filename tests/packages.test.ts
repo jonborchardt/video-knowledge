@@ -4,15 +4,13 @@
 // matches the files. Skipped where no package is checked out.
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { passageReader } from '../src/lib/evidence';
+import { passageReader, docHasher, FILES, scriptDirs, readJson, toJson } from '../src/shared/io';
 import { loadReview } from '../src/lib/review';
-import { buildPackage, docHasher } from '../src/lib/evidence-package';
+import { buildPackage } from '../src/lib/evidence-package';
 import { releaseCheck } from '../src/lib/release';
-import { sentences } from '../src/lib/script';
-import { FILES, scriptDirs } from '../src/shared/io';
+import { sentences } from '../src/shared/sentences';
 import type { EvidencePackage, Release, Script, ScriptReviewFile } from '../src/shared/types';
-import { validateScript } from '../src/lib/script-validation';
-import { readJson, toJson } from '../src/shared/io';
+import { validateScript } from '../src/shared/sentence-validation';
 import { chainOf, loadStories } from '../src/lib/stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from '../src/lib/storyboard';
 import { loadTopic } from '../src/lib/topics';

@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import type { PassageReader } from './types';
 
 /** The repo root: the nearest folder at or above the working directory whose package.json is this repo's, else
  *  (launched from outside the repo) the folder this file lives in. Every module that reads the repo takes its root
@@ -76,4 +77,35 @@ export function scriptDirs(root = ROOT): { topic: string; slug: string; dir: str
       .filter((d) => d.isDirectory() && existsSync(join(base, d.name, FILES.script)))
       .map((d) => ({ topic, slug: d.name, dir: join(base, d.name) }));
   });
+}
+
+/** Reads `<topic>/sources/<file>.txt#L10-L24` from topics/; null when the file or the lines do not exist. */
+export function passageReader(root = ROOT): PassageReader {
+  return (cite) => {
+    const m = cite.match(/^([^#]+\.txt)#L(\d+)(?:-L(\d+))?$/);
+    if (!m) return null;
+    const file = join(root, TOPICS, m[1]);
+    if (!existsSync(file)) return null;
+    const lines = lf(readFileSync(file, 'utf8')).split('\n');
+    const [from, to] = [Number(m[2]), Number(m[3] ?? m[2])];
+    if (from < 1 || to < from || to > lines.length) return null;
+    return lines.slice(from - 1, to).join('\n');
+  };
+}
+
+/** Reads a document by its cite path (`<topic>/sources/<file>.txt`, under topics/) with normalised line endings; null when it is gone. */
+export type DocReader = (file: string) => string | null;
+export function docReader(root = ROOT): DocReader {
+  return (file) => {
+    const p = join(root, TOPICS, file);
+    return existsSync(p) ? lf(readFileSync(p, 'utf8')) : null;
+  };
+}
+export type DocHasher = (file: string) => string | null;
+/** The sha the package records for a document; null when the reader has no such file. */
+export function docHasher(r: DocReader = docReader()): DocHasher {
+  return (file) => {
+    const text = r(file);
+    return text === null ? null : sha(text);
+  };
 }

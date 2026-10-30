@@ -4,7 +4,7 @@
 // extractInspectionFrames is the only part that writes to disk, and the caller decides whether to run it.
 import { existsSync, mkdirSync, readdirSync, unlinkSync } from 'node:fs';
 import { join } from 'node:path';
-import { sentences } from '../lib/script';
+import { sentences } from '../shared/sentences';
 import { excerptWindow } from './excerpt';
 import { type AudioStats, type Probe, audioStats, extractFrame, lumaSamples, probe } from './ffmpeg';
 import { ALL_KINDS, unsupportedAssets } from './kinds';

@@ -2,7 +2,8 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { docKey, passageReader, studyVerdicts, validate } from '../src/lib/evidence';
+import { docKey, studyVerdicts, validate } from '../src/shared/evidence-gate';
+import { passageReader } from '../src/shared/io';
 import type { Assertion } from '../src/shared/types';
 import { DOC_A, DOC_B, DOC_C, claim, corpus, guess, reader, sources, study } from './corpus';
 
