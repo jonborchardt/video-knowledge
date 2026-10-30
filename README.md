@@ -134,7 +134,7 @@ endorsing X.
 
 A `ready` story becomes a narration script and a storyboard in `topics/<topic>/scripts/<story slug>/`. The code builds
 the evidence package, checks the script and fills in the storyboard; three agent briefs do the writing and the
-judging (`src/modules/script/briefs/script.md`, `script-review.md`, `storyboard.md`). Every stage persists its output, so a
+judging (`src/modules/script/briefs/script.md`, `script-review.md`; `scripts/briefs/storyboard.md`). Every stage persists its output, so a
 rejected script is revised and rechecked without touching research or story discovery.
 
 ```
