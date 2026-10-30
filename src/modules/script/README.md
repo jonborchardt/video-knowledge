@@ -8,5 +8,5 @@ Script turns a reviewed story into the evidence package the writer may cite, val
 - CLI: `npm run script -- package|validate|show|lock|storyboard|run <topic> <story-id>` (`cli.ts`).
 - Inspect: no; the board derives the script stage from the artifacts' fingerprints and validation status through shared types.
 - Public API (`index.ts`): `buildPackage`. Read API: none.
-- Consumes: shorts' read API (`buildShortPackage`, `loadShorts`, `shortsPath`); evidence's and stories' (`corpusOf`, `loadTopic`, `loadReview`, `loadStories`) and storyboard's (`buildStoryboard`) code until they are modules; video's `render-check` reader; the lock spawns `npm run video -- check`.
+- Consumes: shorts' read API (`buildShortPackage`, `loadShorts`, `shortsPath`); evidence's and stories' (`corpusOf`, `loadTopic`, `loadReview`, `loadStories`) until they are modules, and storyboard's read API (`buildStoryboard`, `renderStoryboardMd`); video's `render-check` reader; the lock spawns `npm run video -- check`.
 - Rules: the writer and the reviewer are different agents; approvals are by fingerprint, so a changed sentence is re-reviewed; the lock needs a passed validation, an ok storyboard and a render check with every bespoke graphic approved.
