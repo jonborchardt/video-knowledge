@@ -29,8 +29,17 @@ export function importedNames(source: string, specifier: string): string[] | '*'
   );
   const names: string[] = [];
   let all = false;
-  ts.forEachChild(sf, (node) => {
+  const visit = (node: ts.Node): void => {
     if (
+      ts.isCallExpression(node) &&
+      (node.expression.kind === ts.SyntaxKind.ImportKeyword ||
+        (ts.isIdentifier(node.expression) && node.expression.text === 'require')) &&
+      node.arguments[0] &&
+      ts.isStringLiteralLike(node.arguments[0]) &&
+      node.arguments[0].text === specifier
+    ) {
+      all = true;
+    } else if (
       ts.isImportDeclaration(node) &&
       ts.isStringLiteral(node.moduleSpecifier) &&
       node.moduleSpecifier.text === specifier
@@ -51,7 +60,9 @@ export function importedNames(source: string, specifier: string): string[] | '*'
       if (ec && ts.isNamedExports(ec)) for (const el of ec.elements) names.push((el.propertyName ?? el.name).text);
       else all = true;
     }
-  });
+    ts.forEachChild(node, visit);
+  };
+  visit(sf);
   return all ? '*' : names;
 }
 
@@ -128,8 +139,10 @@ const moduleIndex = (to: string) => /^src\/modules\/[^/]+\/index\.ts$/.test(to);
 
 // The names this file imports from the module `to` (the statement whose specifier resolves to it).
 function namesImported(f: FileRecord, to: string): string[] | '*' | undefined {
-  const spec = importsOf(f.path, f.source ?? '').find((s) => resolveSpecifier(f.path, s, (p) => p === to) === to);
-  return spec === undefined ? undefined : importedNames(f.source ?? '', spec);
+  const specs = importsOf(f.path, f.source ?? '').filter((s) => resolveSpecifier(f.path, s, (p) => p === to) === to);
+  if (!specs.length) return undefined;
+  const all = specs.map((s) => importedNames(f.source ?? '', s));
+  return all.includes('*') ? '*' : all.flat();
 }
 
 // An import of a read-API module index that names only exported read-API names.
@@ -156,10 +169,8 @@ function sharedImportsModule({ f, to, fromCap, toCap }: Ctx): Violation | null {
 }
 
 function orchestrationImportsInternal({ f, to, fromCap, toCap }: Ctx): Violation | null {
-  if (fromCap !== 'orchestration') return null;
-  const internal = to.startsWith('src/modules/')
-    ? !moduleIndex(to)
-    : /^src\/(lib|video)\//.test(to) && toCap !== 'shared' && toCap !== 'orchestration';
+  if (fromCap !== 'orchestration' || !isRepoFile(to) || !toCap) return null;
+  const internal = toCap !== 'shared' && toCap !== 'orchestration' && !moduleIndex(to);
   return internal ? { from: f.path, to, rule: 'orchestration-imports-internal' } : null;
 }
 

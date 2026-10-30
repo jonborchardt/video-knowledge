@@ -52,6 +52,7 @@
     "scripts/publish.ts": "publishing",
     "scripts/brand/": "brand",
     "scripts/brand.ts": "brand",
+    "astro.config.mjs": "website",
     "src/lib/content-graph.ts": "website",
     "src/lib/site-graph.ts": "website",
     "src/lib/seo.ts": "website",
@@ -86,6 +87,11 @@
   "layoutOwner": "src/lib/io.ts",
   "readApi": {},
   "edges": [
+    {
+      "from": "astro.config.mjs",
+      "to": "src/lib/topics.ts",
+      "until": "evidence"
+    },
     {
       "from": "scripts/article.ts",
       "to": "src/lib/corpus.ts",

@@ -8,7 +8,8 @@ const config = JSON.parse(readFileSync(join(ROOT, 'tests/boundaries.json'), 'utf
 const exists = (p: string) => existsSync(join(ROOT, p));
 
 describe('module boundaries (docs/superpowers/specs/2026-10-29-module-architecture.md)', () => {
-  const files = walk(['src', 'scripts'], ROOT).map((path) => {
+  const paths = [...walk(['src', 'scripts'], ROOT), ...(exists('astro.config.mjs') ? ['astro.config.mjs'] : [])];
+  const files = paths.map((path) => {
     const source = readFileSync(join(ROOT, path), 'utf8');
     const specs = importsOf(path, source);
     const imports = specs.map((s) => resolveSpecifier(path, s, exists) ?? s);
@@ -29,6 +30,13 @@ describe('module boundaries (docs/superpowers/specs/2026-10-29-module-architectu
   });
   it('gives every allowlisted edge an until', () => {
     expect(config.edges.filter((e: { until?: string }) => !e.until)).toEqual([]);
+  });
+  it('names a known capability in every until', () => {
+    const caps = new Set<string>([
+      'shared',
+      ...Object.values<string>(config.capabilities).filter((c) => c !== '@folder'),
+    ]);
+    expect(config.edges.filter((e: { until: string }) => !caps.has(e.until))).toEqual([]);
   });
   it('resolves every relative import, so no edge is dropped', () => {
     const misses = files.flatMap((f) =>

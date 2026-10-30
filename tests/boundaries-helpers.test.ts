@@ -189,6 +189,44 @@ const p = join(root, 'topics', t);`;
   });
 });
 
+describe('read-API name check', () => {
+  const api = { ...cfg, readApi: { website: ['urlOf'] } };
+  const to = ['src/modules/website/index.ts'];
+  const at = 'src/modules/packaging/package.ts';
+  it('sees a dynamic import or require beside a named import', () => {
+    for (const extra of [`await import('../website/index');`, `require('../website/index');`]) {
+      const src = `import { urlOf } from '../website/index';\n${extra}`;
+      expect(violations([file(at, to, src)], api).map((x) => x.rule)).toEqual(['cross-capability']);
+    }
+  });
+  it('checks every statement that resolves to the index', () => {
+    const src = `import { urlOf } from '../website';\nimport * as w from '../website/index';`;
+    expect(violations([file(at, to, src)], api).map((x) => x.rule)).toEqual(['cross-capability']);
+    const src2 = `import { urlOf } from '../website';\nimport { contentGraph } from '../website/index';`;
+    expect(violations([file(at, to, src2)], api).map((x) => x.rule)).toEqual(['cross-capability']);
+  });
+});
+
+describe('more rules', () => {
+  it('orchestration importing a non-shared lib internal is flagged', () => {
+    const v = violations([file('src/lib/production.ts', ['src/lib/article.ts'])], cfg);
+    expect(v.map((x) => x.rule)).toEqual(['orchestration-imports-internal']);
+  });
+  it('orchestration importing a script or admin target is flagged', () => {
+    const c = { ...cfg, capabilities: { ...cfg.capabilities, 'scripts/': 'video', 'src/admin/': 'website' } };
+    const v = violations([file('src/lib/production.ts', ['scripts/video.ts', 'src/admin/Board.astro'])], c);
+    expect(v.map((x) => x.rule)).toEqual(['orchestration-imports-internal', 'orchestration-imports-internal']);
+  });
+  it('lets website import a module index', () => {
+    const c = { ...cfg, capabilities: { ...cfg.capabilities, 'src/pages/': 'website' } };
+    expect(violations([file('src/pages/a.astro', ['src/modules/article/index.ts'])], c)).toEqual([]);
+  });
+  it('flags an unmapped target', () => {
+    const v = violations([file('src/lib/article.ts', ['src/lib/mystery.ts'])], cfg);
+    expect(v).toEqual([{ from: 'src/lib/article.ts', to: 'src/lib/mystery.ts', rule: 'unmapped' }]);
+  });
+});
+
 describe('check', () => {
   const v = [{ from: 'a', to: 'b', rule: 'cross-capability' }];
   it('separates unexpected and stale', () => {
@@ -199,5 +237,9 @@ describe('check', () => {
   it('never allowlists unmapped', () => {
     const u = [{ from: 'x', to: 'x', rule: 'unmapped' }];
     expect(check(u, [{ from: 'x', to: 'x' }]).unexpected).toEqual(u);
+  });
+  it('never allowlists read-api-cycle', () => {
+    const u = [{ from: 'a', to: 'b', rule: 'read-api-cycle' }];
+    expect(check(u, [{ from: 'a', to: 'b' }]).unexpected).toEqual(u);
   });
 });
