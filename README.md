@@ -588,7 +588,7 @@ Rehearsing a go-live: the public build shows only stories with a live video, so 
 
 ### Refreshing a dataset
 
-A dataset (`topics/<topic>/data/<id>.json`) needs a refresh when `tests/datasets.test.ts` fails with "refresh it", which it does once the dataset's `retrieved` date is older than `DATASET_MAX_AGE_DAYS` (`src/lib/datasets.ts`), or when EIA publishes a newer full year of prices (the Electric Power Annual and the Natural Gas Annual).
+A dataset (`topics/<topic>/data/<id>.json`) needs a refresh when `src/modules/evidence/tests/datasets.test.ts` fails with "refresh it", which it does once the dataset's `retrieved` date is older than `DATASET_MAX_AGE_DAYS` (`src/modules/evidence/datasets.ts`), or when EIA publishes a newer full year of prices (the Electric Power Annual and the Natural Gas Annual).
 
 The new figures come in as a new source document. A source agent (`src/modules/evidence/briefs/sources.md`) writes `topics/<topic>/sources/eia-<year>-state-residential-energy-prices.txt` in the same layout as the current one: line 1 names the tables and ends `(retrieved YYYY-MM-DD)`, Parts 1 and 2 hold the raw prices, and the derived section shows its method. It never edits the old file, whose cites stay valid for everything that already cites it.
 
