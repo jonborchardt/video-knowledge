@@ -25,7 +25,6 @@ import { spawnSync } from 'node:child_process';
 import { appendFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { passageReader, readJson, sha, toJson, ROOT, REVIEW_DIR, scriptDir } from '../../shared/io';
-import { boardNext } from '../../lib/production';
 import { currentBuild, recordApproved } from '../publishing';
 import { approverProblem } from '../../shared/approver';
 import { extractFrame, probe } from '../../shared/ffmpeg';
@@ -40,6 +39,7 @@ import { ENTRY, renderContactSheet, renderScenes } from './render';
 import { buildReport, renderReportMd } from './report';
 import { VIDEO_FILES, videoDir } from './files';
 import { checkSegment, loadInputs, loadSegment } from './select';
+import { finalRefusal } from './final';
 import { buildTimeline } from './timeline';
 import type { NarrationManifest, Timeline } from './types';
 
@@ -337,9 +337,8 @@ try {
       // The release build: a person accepted the draft package, so the same words go through the commercial voice.
       const problem = approverProblem(flag('--approved-by'));
       if (problem) throw new Error(problem);
-      const n = boardNext(topic, storyId);
-      if (n.halt?.kind === 'published') throw new Error(`final never rebuilds a live video; the board says: ${n.next}`);
-      if (n.stage !== 'packaged') throw new Error(`final needs a packaged story; the board says ${n.stage}: ${n.next}`);
+      const refusal = finalRefusal(topic, storyId, ROOT); // the board, asked through its CLI
+      if (refusal) throw new Error(refusal);
       const draft = currentBuild(scriptDir(topic, storyId)); // the build this run accepts, before the release build replaces it
       const { seg, m } = await stageNarrate(provider('azure'));
       const { tl } = stageTimeline(seg, m);
