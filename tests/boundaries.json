@@ -68,7 +68,9 @@
     "src/shared/types.ts"
   ],
   "layoutOwner": "src/shared/io.ts",
-  "readApi": {},
+  "readApi": {
+    "publishing": ["loadLedger", "mainOutput", "uploadProblem"]
+  },
   "edges": [
     {
       "from": "astro.config.mjs",
@@ -613,7 +615,7 @@
     {
       "from": "src/video/captions.ts",
       "to": "src/video/types.ts",
-      "until": "packaging"
+      "until": "video"
     },
     {
       "from": "src/video/check.ts",
@@ -638,32 +640,32 @@
     {
       "from": "src/video/package.ts",
       "to": "src/lib/content-graph.ts",
-      "until": "packaging"
+      "until": "website"
     },
     {
       "from": "src/video/package.ts",
       "to": "src/lib/cta.ts",
-      "until": "packaging"
+      "until": "website"
     },
     {
       "from": "src/video/package.ts",
       "to": "src/video/files.ts",
-      "until": "packaging"
+      "until": "video"
     },
     {
       "from": "src/video/package.ts",
       "to": "src/video/report.ts",
-      "until": "packaging"
+      "until": "video"
     },
     {
       "from": "src/video/package.ts",
       "to": "src/video/select.ts",
-      "until": "packaging"
+      "until": "video"
     },
     {
       "from": "src/video/package.ts",
       "to": "src/video/types.ts",
-      "until": "packaging"
+      "until": "video"
     },
     {
       "from": "src/video/select.ts",
@@ -679,11 +681,6 @@
       "from": "src/video/types.ts",
       "to": "src/lib/storyboard.ts",
       "until": "video"
-    },
-    {
-      "from": "src/video/package.ts",
-      "to": "src/modules/publishing/index.ts",
-      "until": "packaging"
     },
     {
       "from": "scripts/video.ts",

@@ -54,6 +54,8 @@ export const scriptDir = (topic: string, storyId: string, root = ROOT) => {
     ? join(topicDir(topic, root), 'scripts', storySlug(s.parent), 'shorts', s.slug)
     : join(topicDir(topic, root), 'scripts', storySlug(storyId));
 };
+/** The folder under video/ that holds the review package. */
+export const REVIEW_DIR = 'review';
 export const FILES = {
   pkg: 'evidence-package.json',
   script: 'script.json',

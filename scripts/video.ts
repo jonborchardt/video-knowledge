@@ -22,7 +22,7 @@
 import { spawnSync } from 'node:child_process';
 import { appendFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { passageReader, readJson, sha, toJson, ROOT, scriptDir, shortOf } from '../src/shared/io';
+import { passageReader, readJson, sha, toJson, ROOT, REVIEW_DIR, scriptDir, shortOf } from '../src/shared/io';
 import { boardNext } from '../src/lib/production';
 import { addOutputTo, currentBuild, recordApproved } from '../src/modules/publishing';
 import { approverProblem } from '../src/shared/approver';
@@ -32,7 +32,7 @@ import { initVideo } from '../src/video/init';
 import { MIX_FILE, type MixReport, loadMusicConfig, resolveCues } from '../src/video/music';
 import { narrate } from '../src/video/narration';
 import { type TtsProvider, provider } from '../src/video/tts';
-import { REVIEW_DIR, buildReviewPackage } from '../src/video/package';
+import { buildReviewPackage } from '../src/video/package';
 import { DECODABLE, type QaResult, extractInspectionFrames, qaSegment } from '../src/video/qa';
 import { assemble } from '../src/video/assemble';
 import { ENTRY, renderContactSheet, renderScenes } from '../src/video/render';

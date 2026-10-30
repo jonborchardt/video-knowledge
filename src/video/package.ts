@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import { commissionKey, commissionOf, site } from '../config/site';
 import { contentGraph, matterPath, storyNode } from '../lib/content-graph';
 import { type CtaType, ctaPath, loadCta, resolveCtas } from '../lib/cta';
-import { fileSha, readJson, ROOT, sha, toJson, topicDir } from '../shared/io';
+import { fileSha, readJson, REVIEW_DIR, ROOT, sha, toJson, topicDir } from '../shared/io';
 import { loadLedger, mainOutput, uploadProblem } from '../modules/publishing';
 import { sectionTitle } from '../shared/sentences';
 import { absoluteUrl } from '../lib/url';
@@ -19,7 +19,6 @@ import { VIDEO_FILES } from './files';
 import type { Segment } from './select';
 import type { Timeline } from './types';
 
-export const REVIEW_DIR = 'review';
 export const REVIEW_FILES = {
   json: 'review.json',
   readme: 'README.md',
