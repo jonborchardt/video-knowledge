@@ -4,6 +4,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
+import { planKeyMigration } from '../src/video/check';
 import { componentVersionIn, normalise } from '../src/video/render';
 
 const SHARED = [
@@ -71,4 +72,16 @@ describe('componentVersion', () => {
     expect(tree(fresh(), { theme: 'export const theme = 2;\n' })).not.toBe(k);
     expect(tree(fresh(), { video: 'export const Video = 2;\n' })).not.toBe(k);
   });
+});
+
+describe('the one-time key migration', () => {
+  it('classifies every visual review record, and a migrated one only at its recorded key', () => {
+    const plan = planKeyMigration();
+    const records = plan.reduce((n, x) => n + Object.keys(x.review.scenes).length, 0);
+    const rows = plan.flatMap((x) => x.rows);
+    expect(records).toBeGreaterThan(0);
+    expect(rows.filter((r) => r.class === 'migrated' || r.class === 'stale')).toHaveLength(records);
+    for (const x of plan)
+      for (const r of x.rows.filter((r) => r.class === 'migrated')) expect(r.oldKey).toBe(x.review.scenes[r.scene].key);
+  }, 30000);
 });

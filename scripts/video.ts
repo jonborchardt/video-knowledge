@@ -13,6 +13,8 @@
 //   init <topic> <story-id> [--force]                draft video/render.json from the storyboard (kept unless --force); lists the scenes needing a graphic
 //   check <topic> <story-id>                         renderability and graphics approval before the lock: writes video/render-check.json
 //   frames <topic> <story-id> --scene <id>           render one scene on its own and write video/frames/<id>-start, -mid, -end.png
+//   migrate-keys [--write]                           the one-time graphic approval key migration: a table of every visual review record
+//                                                    (old key, new key, migrated | stale); --write moves the migrated ones, writes video/key-migration.json
 //   final <topic> <story-id> --approved-by "<name>"  the release build of a packaged story: the same words through Azure Speech
 //                                                    (commercial terms; AZURE_SPEECH_KEY and AZURE_SPEECH_REGION from .env), then
 //                                                    timeline, render, qa and package again in place; the approver is in the report's command
@@ -27,7 +29,7 @@ import { boardNext } from '../src/lib/production';
 import { currentBuild, recordApproved } from '../src/modules/publishing';
 import { approverProblem } from '../src/shared/approver';
 import { extractFrame, probe } from '../src/shared/ffmpeg';
-import { writeRenderCheck } from '../src/video/check';
+import { planKeyMigration, writeKeyMigration, writeRenderCheck } from '../src/video/check';
 import { initVideo } from '../src/video/init';
 import { MIX_FILE, type MixReport, loadMusicConfig, resolveCues } from '../src/video/music';
 import { narrate } from '../src/video/narration';
@@ -51,12 +53,24 @@ const usage = () => {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 21)
+      .slice(0, 23)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
   process.exit(1);
 };
+if (cmd === 'migrate-keys') {
+  // no topic or story: it walks every visual review (kept until the video section's proof; that section deletes it)
+  const plan = planKeyMigration();
+  const rows = plan.flatMap((x) => x.rows);
+  for (const r of rows)
+    console.log([r.topic, r.story, r.scene, r.kind ?? '-', r.oldKey ?? '-', r.newKey ?? '-', r.class].join(' '));
+  const migrated = rows.filter((r) => r.class === 'migrated').length;
+  console.log(`${rows.length} records: ${migrated} migrated, ${rows.length - migrated} stale`);
+  if (process.argv.slice(3).includes('--write'))
+    for (const w of writeKeyMigration(plan, new Date().toISOString().slice(0, 10))) console.log(`wrote ${w}`);
+  process.exit(0);
+}
 if (!cmd || !topic || !storyId) usage();
 const dir = videoDir(topic, storyId);
 const p = (name: string) => join(dir, name);
