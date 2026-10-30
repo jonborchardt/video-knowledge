@@ -1,7 +1,7 @@
 /* global window, document */
 // The brand kit's drawings: one design per slot in brand/slots.json, the same for the Commonwealth and every institution,
 // drawn from the brand's kit.json (palette, emblem, slogan) and its names in src/config/site.ts. Runs in the browser
-// that scripts/brand.ts opens, so text is measured in the real fonts (fitText) before the SVGs are saved.
+// that src/modules/brand/cli.ts opens, so text is measured in the real fonts (fitText) before the SVGs are saved.
 // window.BrandKit.assets(brand) -> [{ slot, key, w, h, svg }]; key is the ground or form of a slot that ships several.
 (() => {
   const RED = '#9b2f2a'; // stamp ink for the official acts (recorded, amended)

@@ -1,6 +1,6 @@
 // npm run brand
 //   Renders every brand's kit into brand/<brand>/ (brand/README.md): the Commonwealth (`cor`) and each commission in
-//   src/config/site.ts, every slot in brand/slots.json except templates, drawn by scripts/brand/draw.js from the brand's
+//   src/config/site.ts, every slot in brand/slots.json except templates, drawn by src/modules/brand/draw/draw.js from the brand's
 //   kit.json (palette, emblem, slogan). Text is fitted in the real fonts (brand/fonts) inside Remotion's headless Chrome,
 //   then each SVG is saved (committed) and rasterized to the PNG or JPG its slot names (gitignored, for uploads). Writes
 //   each kit's `assets` and the site's copies: share cards public/og/, seals public/commissions/, stamps public/stamps/,
@@ -12,11 +12,11 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import sharp from 'sharp';
-import { commissionBody, commissionKey, commissionOf, commissions, site } from '../src/config/site';
-import { contentGraph, storyNode } from '../src/modules/website';
-import { ROOT, readJson } from '../src/shared/io';
-import { loadStories, storyUrlSlug } from '../src/modules/stories';
-import { publicTopicNames } from '../src/modules/evidence';
+import { commissionBody, commissionKey, commissionOf, commissions, site } from '../../config/site';
+import { contentGraph, storyNode } from '../website';
+import { ROOT, readJson } from '../../shared/io';
+import { loadStories, storyUrlSlug } from '../stories';
+import { publicTopicNames } from '../evidence';
 
 interface Slot {
   id: string;
@@ -126,7 +126,7 @@ const keysOf = (s: Pick<Slot, 'grounds' | 'forms'>) =>
 const fileOf = (a: Asset) => `${a.slot}${a.key ? '-' + a.key : ''}`;
 const tmp = join(tmpdir(), `brand-kit-${process.pid}`); // per run: another checkout may be drawing too
 mkdirSync(tmp, { recursive: true });
-const draw = readFileSync(join(ROOT, 'scripts/brand/draw.js'), 'utf8');
+const draw = readFileSync(join(ROOT, 'src/modules/brand/draw/draw.js'), 'utf8');
 
 /** Draws `list` (a BrandKit expression) in a page, fits its text in the real fonts and reads the fitted SVGs back. */
 async function drawn<T extends { svg: string }>(name: string, list: string): Promise<T[]> {
