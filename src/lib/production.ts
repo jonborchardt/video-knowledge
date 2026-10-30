@@ -80,7 +80,7 @@ import {
   loadShorts,
   loadShortsReview,
   shortsPath,
-} from './shorts';
+} from '../modules/shorts';
 import { chainOf, discover, loadStories, storiesPath } from './stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from './storyboard';
 import { loadTopic, topicNames, type Topic } from './topics';
@@ -1390,7 +1390,7 @@ function shortRows(
         ? `npm run script -- package ${topic} ${id}`
         : c.reviewed
           ? `stop: candidate ${c.key} is ${c.readiness}: ${c.blocking.join('; ')}`
-          : `agent: scripts/briefs/shorts.md -> ${reviewFile}`;
+          : `agent: src/modules/shorts/briefs/shorts.md -> ${reviewFile}`;
     return {
       key: c.key,
       id,

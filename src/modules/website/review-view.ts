@@ -11,7 +11,7 @@ import { lookStale } from '../../shared/look';
 import { type OutputState, type OutputStatus, type PublishEvent, type ReviewNote, openOutput } from '../publishing';
 import { FILES, scriptDir, shortId, shortOf, storySlug, topicDir } from '../../shared/io';
 import type { ScriptValidation } from '../../shared/types';
-import { loadShorts } from '../../lib/shorts';
+import { loadShorts } from '../shorts';
 import { loadStories } from '../../lib/stories';
 import { href } from '../../lib/url';
 

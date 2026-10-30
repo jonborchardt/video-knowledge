@@ -27,8 +27,6 @@
     "src/lib/render-check.ts": "video",
     "scripts/video.ts": "video",
     "scripts/music.ts": "video",
-    "src/lib/shorts.ts": "shorts",
-    "scripts/shorts.ts": "shorts",
     "scripts/brand/": "brand",
     "scripts/brand.ts": "brand",
     "astro.config.mjs": "website",
@@ -57,7 +55,8 @@
   "layoutOwner": "src/shared/io.ts",
   "readApi": {
     "publishing": ["loadLedger", "mainOutput", "uploadProblem"],
-    "website": ["contentGraph", "ctaPath", "loadCta", "matterPath", "resolveCtas", "storyNode", "CtaType"]
+    "website": ["contentGraph", "ctaPath", "loadCta", "matterPath", "resolveCtas", "storyNode", "CtaType"],
+    "shorts": ["buildShortPackage", "loadShorts", "shortsPath"]
   },
   "edges": [
     {
@@ -123,11 +122,6 @@
     {
       "from": "scripts/script.ts",
       "to": "src/lib/review.ts",
-      "until": "script"
-    },
-    {
-      "from": "scripts/script.ts",
-      "to": "src/lib/shorts.ts",
       "until": "script"
     },
     {
@@ -407,11 +401,6 @@
     },
     {
       "from": "src/lib/production.ts",
-      "to": "src/lib/shorts.ts",
-      "until": "shorts"
-    },
-    {
-      "from": "src/lib/production.ts",
       "to": "src/lib/stories.ts",
       "until": "stories"
     },
@@ -429,11 +418,6 @@
       "from": "src/modules/website/rehearsal.ts",
       "to": "src/lib/stories.ts",
       "until": "stories"
-    },
-    {
-      "from": "src/modules/website/review-view.ts",
-      "to": "src/lib/shorts.ts",
-      "until": "shorts"
     },
     {
       "from": "src/modules/website/review-view.ts",

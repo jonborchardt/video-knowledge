@@ -32,7 +32,7 @@ import { writeRenderCheck } from '../src/video/check';
 import { sentenceFingerprint, sentences } from '../src/shared/sentences';
 import type { EvidencePackage, Release, Script, ScriptReviewFile, ScriptValidation } from '../src/shared/types';
 import { renderReviewMd, renderScriptMd } from '../src/lib/script-md';
-import { buildShortPackage, loadShorts, shortsPath } from '../src/lib/shorts';
+import { buildShortPackage, loadShorts, shortsPath } from '../src/modules/shorts';
 import { validateScript } from '../src/shared/sentence-validation';
 import { chainOf, loadStories, storiesPath } from '../src/lib/stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard, renderStoryboardMd } from '../src/lib/storyboard';
@@ -64,7 +64,7 @@ const rel = (f: string) =>
     .replace(ROOT + '/', '')
     .replaceAll('\\', '/');
 
-/** A Short's package is a filter of its parent's (src/lib/shorts.ts), never built from the story. */
+/** A Short's package is a filter of its parent's (src/modules/shorts/shorts.ts), never built from the story. */
 function stageShortPackage(short: { parent: string; slug: string }): EvidencePackage {
   const shorts = loadShorts(topic, short.parent);
   if (!shorts)

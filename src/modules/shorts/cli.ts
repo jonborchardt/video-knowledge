@@ -1,12 +1,12 @@
 // npm run shorts -- <command> <topic> <story-id> [...]
 //   discover <topic> <story-id>        candidates for Shorts from the parent's validated script and storyboard; writes
-//                                      topics/<topic>/scripts/<slug>/shorts.json (merges shorts-review.json; see scripts/briefs/shorts.md)
+//                                      topics/<topic>/scripts/<slug>/shorts.json (merges shorts-review.json; see src/modules/shorts/briefs/shorts.md)
 //   show <topic> <story-id> [key]      the candidates, or one with its sentences, qualifications and cited passages
 // A Short is then produced as <story-id>/shorts/<slug> through the same CLIs as a video (npm run board -- next, /produce).
 import { readFileSync, writeFileSync } from 'node:fs';
 import { relative } from 'node:path';
-import { passageReader, toJson, ROOT, shortId, shortOf } from '../src/shared/io';
-import { sentences } from '../src/shared/sentences';
+import { passageReader, toJson, ROOT, shortId, shortOf } from '../../shared/io';
+import { sentences } from '../../shared/sentences';
 import {
   type ShortCandidate,
   discoverShorts,
@@ -15,7 +15,7 @@ import {
   loadShortsReview,
   shortsPath,
   staleShortReviewKeys,
-} from '../src/lib/shorts';
+} from './shorts';
 
 const [cmd, topic, storyId, key] = process.argv.slice(2);
 const usage = () => {

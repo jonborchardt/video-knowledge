@@ -302,7 +302,7 @@ captions (`brand/design.md` 2.6). A Short is a nested production, `<story-id>/sh
 
 ```
 npm run shorts -- discover <topic> <story-id>     # shorts.json: one candidate per finding scene of the produced video
-# an agent writes shorts-review.json from scripts/briefs/shorts.md (keep, slug, format, hook, carries), then discover again
+# an agent writes shorts-review.json from src/modules/shorts/briefs/shorts.md (keep, slug, format, hook, carries), then discover again
 npm run shorts -- show <topic> <story-id> [key]   # a candidate with its sentences, qualifications and passages
 /produce <topic> <story-id>/shorts/<slug>         # package, writer, reviewer, storyboard, lock, render, qa, package: the same loop
 ```

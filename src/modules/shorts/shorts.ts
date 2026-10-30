@@ -1,15 +1,15 @@
 // Short discovery: which findings of a produced video can stand on their own as a vertical Short, and the Short's
 // evidence package. Deterministic: candidates come from the parent's validated script and storyboard (one per scene in
 // a finding section whose sentences are all verified and approved and that asserts a fact), and a rerun of discover
-// is byte-identical. The reviewer's file (shorts-review.json, scripts/briefs/shorts.md) supplies what code cannot
+// is byte-identical. The reviewer's file (shorts-review.json, src/modules/shorts/briefs/shorts.md) supplies what code cannot
 // judge: whether the finding stands alone, the hook, the format, and how each qualification the parent carried
 // elsewhere is said inside the Short. A candidate is never ready without it.
 import { join } from 'node:path';
-import { readJson, sha, toJson, ROOT, FILES, scriptDir } from '../shared/io';
-import { nums } from '../shared/numbers';
-import { releaseCheck, storyboardFingerprint } from '../shared/release-check';
-import { validationFingerprint } from '../shared/sentence-validation';
-import { isStudyRef, sentences } from '../shared/sentences';
+import { readJson, sha, toJson, ROOT, FILES, scriptDir } from '../../shared/io';
+import { nums } from '../../shared/numbers';
+import { releaseCheck, storyboardFingerprint } from '../../shared/release-check';
+import { validationFingerprint } from '../../shared/sentence-validation';
+import { isStudyRef, sentences } from '../../shared/sentences';
 import {
   type ChartSpec,
   type EvidencePackage,
@@ -22,7 +22,7 @@ import {
   type SectionName,
   type ShortFormat,
   type Storyboard,
-} from '../shared/types';
+} from '../../shared/types';
 
 export const SHORTS_FILE = 'shorts.json';
 export const SHORTS_REVIEW_FILE = 'shorts-review.json';
@@ -140,7 +140,7 @@ export function discoverShorts(parent: ShortParent, review: ShortsReviewFile | n
     );
     const blocking: string[] = [];
     const carries = (r?.carries ?? []).filter((c) => c.trim());
-    if (!r) blocking.push('no entry in shorts-review.json (scripts/briefs/shorts.md)');
+    if (!r) blocking.push('no entry in shorts-review.json (src/modules/shorts/briefs/shorts.md)');
     else {
       if (r.keep !== true) blocking.push('not kept by the review');
       if (!r.slug || !SLUG.test(r.slug)) blocking.push('the review gives no slug (lowercase words joined by -)');

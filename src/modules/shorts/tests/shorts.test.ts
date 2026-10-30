@@ -1,19 +1,19 @@
 // Short discovery and the Short's evidence package, on the synthetic script fixture: a three-sentence parent whose
 // investigation sentence asserts a fact with figures, storyboarded into three scenes (tests/video-helpers.ts).
 import { describe, expect, it } from 'vitest';
-import { toJson } from '../src/shared/io';
-import { scriptFingerprint, sectionsFor, sentenceFingerprint, sentences } from '../src/shared/sentences';
-import type { EvidencePackage, Script } from '../src/shared/types';
-import { storyboardFingerprint } from '../src/shared/release-check';
-import { validationFingerprint } from '../src/shared/sentence-validation';
-import { buildStoryboard } from '../src/lib/storyboard';
+import { toJson } from '../../../shared/io';
+import { scriptFingerprint, sectionsFor, sentenceFingerprint, sentences } from '../../../shared/sentences';
+import type { EvidencePackage, Script } from '../../../shared/types';
+import { storyboardFingerprint } from '../../../shared/release-check';
+import { validationFingerprint } from '../../../shared/sentence-validation';
+import { buildStoryboard } from '../../../lib/storyboard';
 import {
   type ShortParent,
   type ShortsReviewFile,
   buildShortPackage,
   discoverShorts,
   staleShortReviewKeys,
-} from '../src/lib/shorts';
+} from '../shorts';
 import {
   DOC_D,
   MLM,
@@ -28,8 +28,8 @@ import {
   run,
   scene,
   sentence,
-} from './script-helpers';
-import { scenes } from './video-helpers';
+} from '../../../../tests/script-helpers';
+import { scenes } from '../../../../tests/video-helpers';
 
 /** The fixture script with its sentences in finding sections, and a qualification on the fact. */
 function parentScript(over: { qualifications?: string[] } = {}): Script {

@@ -36,7 +36,7 @@ import {
   loadShortParent,
   shortsPath,
   shortsReviewPath,
-} from '../src/lib/shorts';
+} from '../src/modules/shorts';
 import { chainOf, loadStories, storiesPath } from '../src/lib/stories';
 import { type StoryboardPlan, buildStoryboard } from '../src/lib/storyboard';
 import { loadTopic } from '../src/lib/topics';

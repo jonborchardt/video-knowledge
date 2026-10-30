@@ -113,7 +113,7 @@ export interface EvidencePackage {
     arc: Story['arc'];
   }[];
 }
-/** What makes a package a Short's (src/lib/shorts.ts builds it): the parent, the candidate it came from, what the
+/** What makes a package a Short's (src/modules/shorts/shorts.ts builds it): the parent, the candidate it came from, what the
  *  writer must open from and carry, the cap, and the parent fingerprints it is bound to. */
 export interface ShortBlock {
   parent: string; // the parent story id
