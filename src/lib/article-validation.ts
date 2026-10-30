@@ -2,12 +2,15 @@
 // only an article needs: every qualified or unresolved claim carried, metadata within its limits, no URL in the
 // prose, table cells that state their cited values, figures that name a chart the story has, and prose that is not
 // the narration read back.
-import { join } from 'node:path';
+import { join, relative, sep } from 'node:path';
 import {
   ARTICLE_FILES,
   type Article,
   type FigureData,
   articleAsScript,
+  articleDrift,
+  articleFingerprint,
+  loadArticleRelease,
   articleReviewUnits,
   articleSentences,
   proseOf,
@@ -30,6 +33,9 @@ import { readJson, ROOT, FILES, scriptDir, storySlug } from '../shared/io';
 import { norm, revisionsInPass, sentenceFingerprint, sentences } from '../shared/sentences';
 import { type ValidateOptions, validateScript } from '../shared/sentence-validation';
 import { pointProblems, type StoryboardPlan } from './storyboard';
+import { articleStale } from './article-view';
+import { loadPublicRecord } from '../shared/public-record';
+import type { Inspection } from '../shared/inspect';
 
 export const LIMITS = { headline: 90, seoTitle: 60, description: 155 } as const;
 export const OVERLAP = { n: 8, share: 0.3 } as const;
@@ -256,3 +262,64 @@ export function figureData(topic: string, storyId: string, root = ROOT): Map<str
 
 export const figuresOf = (topic: string, storyId: string, root = ROOT): Set<string> =>
   new Set(figureData(topic, storyId, root).keys());
+
+/** The sentences `inspectArticle` reports; a consumer that maps them to a workflow (the board) compares against these. */
+export const ARTICLE_FINDINGS = {
+  missing: 'there is no article.json yet',
+  needsEvidence: 'the writer needs passages the corpus does not have',
+  noPackage: 'there is no evidence package to check the article against',
+  revisionLimit: 'the revision limit is reached with blocking findings',
+  blocking: 'the validation has blocking findings',
+  unapproved: 'units are not yet approved by the independent review',
+  passed: 'validation passed and every unit is approved',
+  changed: 'the text differs from the release and passes; it is a correction',
+} as const;
+
+/** What the story's article stands at, from its files: missing, invalid (a pending step, named), stale (a revised
+ *  finding under the release) or ready. Says nothing of what runs next. `validate` re-runs the validation of a text
+ *  against the package (the caller owns the corpus it needs); without it the stored article-validation.json speaks. */
+export function inspectArticle(
+  topic: string,
+  storyId: string,
+  root = ROOT,
+  validate?: (a: Article, pkg: EvidencePackage) => ScriptValidation,
+): Inspection {
+  const dir = scriptDir(topic, storyId, root);
+  const p = (f: string) => join(dir, f);
+  const rel = (f: string) => relative(root, p(f)).split(sep).join('/');
+  const a = readJson<Article>(p(ARTICLE_FILES.article));
+  const out = loadArticleRelease(topic, storyId, root);
+  const pkg = readJson<EvidencePackage>(p(FILES.pkg));
+  const bad = (f: string, findings: string[]): Inspection => ({ status: 'invalid', findings, output: rel(f) });
+  let text = a;
+  let corrects = !!out; // after a release, a passing validation asks for a correction unless nothing a reader sees moved
+  if (out && (!a || articleFingerprint(out.article) === articleFingerprint(a))) {
+    const stale = articleStale(out, loadPublicRecord(topic, root));
+    if (stale)
+      return {
+        status: 'stale',
+        findings: [`${stale.id} was revised on ${stale.at}: ${stale.note}`],
+        output: rel(ARTICLE_FILES.release),
+      };
+    const drift = articleDrift(out, { package: pkg?.fingerprint ?? '', figures: figureData(topic, storyId, root) });
+    if (!drift.length) return { status: 'ready', findings: [], output: rel(ARTICLE_FILES.release) };
+    text = a ?? out.article;
+    corrects = drift.some((d) => d.startsWith('figure '));
+  }
+  const released = !!out;
+  if (!text) return { status: 'missing', findings: [ARTICLE_FINDINGS.missing] };
+  if (text.generation?.needsEvidence?.length) return bad(ARTICLE_FILES.article, [ARTICLE_FINDINGS.needsEvidence]);
+  if (!pkg) return bad(ARTICLE_FILES.article, [ARTICLE_FINDINGS.noPackage]);
+  const live = validate
+    ? validate(text, pkg)
+    : (readJson<ScriptValidation>(p(ARTICLE_FILES.validation)) ?? ({ status: 'needs-review' } as ScriptValidation));
+  if (live.status === 'blocked')
+    return bad(ARTICLE_FILES.article, [
+      live.revisionLimitReached ? ARTICLE_FINDINGS.revisionLimit : ARTICLE_FINDINGS.blocking,
+    ]);
+  if (live.status === 'passed') {
+    if (released && !corrects) return { status: 'ready', findings: [], output: rel(ARTICLE_FILES.release) };
+    return bad(ARTICLE_FILES.article, [released ? ARTICLE_FINDINGS.changed : ARTICLE_FINDINGS.passed]);
+  }
+  return bad(ARTICLE_FILES.article, [ARTICLE_FINDINGS.unapproved]);
+}

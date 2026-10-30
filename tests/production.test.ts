@@ -40,6 +40,7 @@ import {
   articleReviewUnits,
   articleSentences,
 } from '../src/lib/article';
+import { inspectArticle } from '../src/lib/article-validation';
 import { corpusOf } from '../src/lib/corpus';
 import { loadStories } from '../src/lib/stories';
 import type { Storyboard } from '../src/lib/storyboard';
@@ -735,6 +736,19 @@ describe('the article on the board', () => {
         ]),
       });
       expect(articleState(fx)?.state).toBe('changed');
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  it('maps the article inspection to a halt without the module naming one', { timeout: 30_000 }, () => {
+    const fx = syntheticProduction('locked');
+    try {
+      write(fx, 'article.json', articleOf(fx));
+      const inspection = inspectArticle(fx.topic, fx.story, fx.root);
+      expect(inspection).toMatchObject({ status: 'invalid' });
+      expect(Object.keys(inspection)).not.toContain('kind');
+      expect(articleState(fx)).toMatchObject({ state: 'review', kind: 'review-pending' });
     } finally {
       fx.cleanup();
     }
