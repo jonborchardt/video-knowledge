@@ -3,47 +3,23 @@
 // number as a gap); revisions are append-only, one per public change of a claim's label or verdict or per correction
 // of a released article, each explained by a person's note.
 import { join } from 'node:path';
-import { findingLabel, FINDING_LABELS, type FindingLabel } from './finding-label';
-import { readJson, ROOT, topicDir } from '../shared/io';
-import type { Topic, Verdict } from './topics';
+import { readJson, ROOT, topicDir } from './io';
+import { FINDING_LABELS, type ClaimRevision, type ClaimState, type PublicRecord, type Revision } from './types';
 
-export interface ClaimState {
-  label: FindingLabel;
-  verdict: Verdict | null;
-}
-export type Revision =
-  | {
-      at: string; // YYYY-MM-DD
-      kind: 'claim';
-      id: string;
-      from: ClaimState | null;
-      to: ClaimState | null; // null: the claim left the report (merged away)
-      note: string;
-    }
-  | {
-      at: string;
-      kind: 'article';
-      id: string; // the story id
-      from: null;
-      to: null;
-      sentences: string[]; // the corrected sentence ids
-      note: string;
-      release?: number; // the article release this correction made (absent on revisions recorded before it was kept)
-    };
-export type ClaimRevision = Extract<Revision, { kind: 'claim' }>;
+export type { ClaimRevision, ClaimState, PublicRecord, Revision } from './types';
+
 export const isClaimRevision = (r: Revision): r is ClaimRevision => r.kind === 'claim';
-export interface PublicRecord {
-  exhibits: Record<string, number>;
-  revisions: Revision[];
-}
-
 export const publicRecordPath = (topic: string, root = ROOT) => join(topicDir(topic, root), 'public-record.json');
 
 export const loadPublicRecord = (topic: string, root = ROOT): PublicRecord =>
   readJson<PublicRecord>(publicRecordPath(topic, root)) ?? { exhibits: {}, revisions: [] };
 
-export const claimStates = (t: Pick<Topic, 'claims'>): Record<string, ClaimState> =>
-  Object.fromEntries(t.claims.map((c) => [c.id, { label: findingLabel(c), verdict: c.verdict }]));
+/** A claim as the ledger sees it: its sources and its state, the label already decided by the caller. */
+export interface LedgerClaim {
+  id: string;
+  sources: { id: string }[];
+  state: ClaimState;
+}
 
 const same = (a: ClaimState | null, b: ClaimState | null) => a?.label === b?.label && a?.verdict === b?.verdict;
 
@@ -53,18 +29,17 @@ const same = (a: ClaimState | null, b: ClaimState | null) => a?.label === b?.lab
 export function nextPublicRecord(
   prev: PublicRecord,
   before: Record<string, ClaimState> | null,
-  after: Pick<Topic, 'claims' | 'sources'>,
+  after: LedgerClaim[],
   today: string,
   live: Set<string>,
 ): PublicRecord {
   const exhibits = { ...prev.exhibits };
   let n = Math.max(0, ...Object.values(exhibits));
-  const liveAfter = { claims: after.claims.filter((c) => live.has(c.id)) };
-  for (const id of [...new Set(liveAfter.claims.flatMap((c) => c.sources.map((s) => s.id)))].sort())
-    exhibits[id] ??= ++n;
+  const liveAfter = after.filter((c) => live.has(c.id));
+  for (const id of [...new Set(liveAfter.flatMap((c) => c.sources.map((s) => s.id)))].sort()) exhibits[id] ??= ++n;
   const revisions = [...prev.revisions];
   if (before) {
-    const now = claimStates(liveAfter);
+    const now = Object.fromEntries(liveAfter.map((c) => [c.id, c.state]));
     for (const id of [...new Set([...Object.keys(before), ...Object.keys(now)])].sort()) {
       if (!live.has(id)) continue;
       const from = before[id] ?? null;

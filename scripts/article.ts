@@ -23,7 +23,7 @@ import { articleStale } from '../src/lib/article-view';
 import { figureData, validateArticleIn } from '../src/lib/article-validation';
 import { corpusOf } from '../src/lib/corpus';
 import { passageReader, readJson, toJson, writeArtifact, ROOT, FILES, scriptDir } from '../src/shared/io';
-import { loadPublicRecord, publicRecordPath, withArticleRevision } from '../src/lib/public-record';
+import { loadPublicRecord, publicRecordPath, withArticleRevision } from '../src/shared/public-record';
 import { Refusal } from '../src/lib/publish';
 import { loadReview } from '../src/lib/review';
 import type { EvidencePackage, Script, ScriptValidation } from '../src/shared/types';

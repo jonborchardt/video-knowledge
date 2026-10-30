@@ -1,10 +1,10 @@
 // The four public finding labels (plan D3): what a visitor reads on every claim. Derived from the verdict the report
 // already decided; no judgment happens here, and an AI guess can only ever be a reported claim.
 import { STRONG } from '../shared/evidence-gate';
+import { FINDING_LABELS, type ClaimState, type FindingLabel } from '../shared/types';
 import type { ClaimView } from './topics';
 
-export const FINDING_LABELS = ['verified', 'qualification', 'unresolved', 'reported'] as const;
-export type FindingLabel = (typeof FINDING_LABELS)[number];
+export { FINDING_LABELS, type FindingLabel };
 
 export const FINDING_TEXT: Record<FindingLabel, { name: string; meaning: string }> = {
   verified: { name: 'Verified claim', meaning: 'A study decides it, either way.' },
@@ -27,3 +27,14 @@ export function labelCounts(claims: Judged[]): Record<FindingLabel, number> {
   for (const c of claims) n[findingLabel(c)]++;
   return n;
 }
+
+/** The ledger's view of a topic's claims (`nextPublicRecord`): labels are decided here, never in the ledger. */
+export const ledgerClaims = (t: { claims: ClaimView[] }) =>
+  t.claims.map((c) => ({
+    id: c.id,
+    sources: c.sources,
+    state: { label: findingLabel(c), verdict: c.verdict } as ClaimState,
+  }));
+
+export const claimStates = (t: { claims: ClaimView[] }): Record<string, ClaimState> =>
+  Object.fromEntries(ledgerClaims(t).map((c) => [c.id, c.state]));

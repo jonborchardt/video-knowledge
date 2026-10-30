@@ -70,7 +70,7 @@ import {
 } from './publish';
 import { loadReview, reviewPath } from './review';
 import { buildPackage } from './evidence-package';
-import { loadPublicRecord } from './public-record';
+import { loadPublicRecord } from '../shared/public-record';
 import { releaseCheck, storyboardFingerprint, validationFingerprint } from './release';
 import { validateScript } from '../shared/sentence-validation';
 import {

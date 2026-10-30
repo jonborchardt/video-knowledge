@@ -19,7 +19,7 @@ import {
 } from '../src/lib/article';
 import type { ChartSpec } from '../src/lib/storyboard';
 import { Refusal } from '../src/lib/publish';
-import { publicRecordProblems, withArticleRevision } from '../src/lib/public-record';
+import { publicRecordProblems, withArticleRevision } from '../src/shared/public-record';
 import { LIMITS, figureData, figuresOf, validateArticle } from '../src/lib/article-validation';
 import { buildPackage } from '../src/lib/evidence-package';
 import { scriptDir } from '../src/shared/io';

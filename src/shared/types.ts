@@ -479,3 +479,36 @@ export interface Judgment {
 export type Judgments = Record<string, Judgment>;
 
 export type PassageReader = (cite: string) => string | null;
+
+// The public record (topics/<topic>/public-record.json): written only by `npm run report` and `npm run article -- correct`.
+export const FINDING_LABELS = ['verified', 'qualification', 'unresolved', 'reported'] as const;
+export type FindingLabel = (typeof FINDING_LABELS)[number];
+
+export interface ClaimState {
+  label: FindingLabel;
+  verdict: Verdict | null;
+}
+export type Revision =
+  | {
+      at: string; // YYYY-MM-DD
+      kind: 'claim';
+      id: string;
+      from: ClaimState | null;
+      to: ClaimState | null; // null: the claim left the report (merged away)
+      note: string;
+    }
+  | {
+      at: string;
+      kind: 'article';
+      id: string; // the story id
+      from: null;
+      to: null;
+      sentences: string[]; // the corrected sentence ids
+      note: string;
+      release?: number; // the article release this correction made (absent on revisions recorded before it was kept)
+    };
+export type ClaimRevision = Extract<Revision, { kind: 'claim' }>;
+export interface PublicRecord {
+  exhibits: Record<string, number>;
+  revisions: Revision[];
+}

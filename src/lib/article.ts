@@ -1,7 +1,7 @@
 // The companion article: prose blocks over the script's sentences, so the script validator judges it unchanged.
 import { join } from 'node:path';
 import { readJson, ROOT, sha, scriptDir } from '../shared/io';
-import type { Revision } from './public-record';
+import type { Revision } from '../shared/public-record';
 import { Refusal } from './publish';
 import { approverProblem, validationFingerprint } from './release';
 import { sentenceFingerprint } from '../shared/sentences';

@@ -4,7 +4,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { readJson, topicDir, TOPICS, ROOT } from '../shared/io';
 import { commissionOf } from '../config/site';
-import { type ClaimRevision, isClaimRevision, loadPublicRecord } from './public-record';
+import { type ClaimRevision, isClaimRevision, loadPublicRecord } from '../shared/public-record';
 import type { RecordedApplicability, Verdict } from '../shared/types';
 import { applicabilityKey, checkApplicabilityFile } from './batches';
 

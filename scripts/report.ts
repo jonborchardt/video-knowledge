@@ -9,15 +9,15 @@ import { existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'no
 import { join } from 'node:path';
 import {
   type ClaimState,
-  claimStates,
   loadPublicRecord,
   nextPublicRecord,
   noteRevision,
   publicRecordPath,
   type PublicRecord,
-} from '../src/lib/public-record';
+} from '../src/shared/public-record';
 import { contentGraph, liveClaims } from '../src/lib/content-graph';
 import { ROOT, toJson, TOPICS, topicDir } from '../src/shared/io';
+import { claimStates, ledgerClaims } from '../src/lib/finding-label';
 import { loadTopic, topicNames } from '../src/lib/topics';
 import { watcher } from './watcher.mjs';
 
@@ -30,7 +30,7 @@ const keep = (topic: string, before: Record<string, ClaimState> | null) =>
     nextPublicRecord(
       loadPublicRecord(topic),
       before,
-      loadTopic(topic),
+      ledgerClaims(loadTopic(topic)),
       today,
       liveClaims(contentGraph(ROOT, [topic]), topic),
     ),

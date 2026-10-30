@@ -19,7 +19,7 @@ import { dataRef, loadDatasets } from '../src/lib/datasets';
 import { ROOT, readJson, topicDir } from '../src/shared/io';
 import type { Storyboard } from '../src/lib/storyboard';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';
-import { loadPublicRecord } from '../src/lib/public-record';
+import { loadPublicRecord } from '../src/shared/public-record';
 import { loadTopic, publicTopicNames, topicNames } from '../src/lib/topics';
 
 const DIST = join(ROOT, 'dist');
