@@ -9,7 +9,7 @@ import { passageReader, validate } from '../src/lib/evidence';
 import type { Assertion, Validation, Story } from '../src/shared/types';
 import { loadReview } from '../src/lib/review';
 import { discover, loadStories, storiesPath } from '../src/lib/stories';
-import { toJson } from '../src/lib/io';
+import { toJson } from '../src/shared/io';
 import { loadTopic } from '../src/lib/topics';
 
 const [cmd, topic, ...rest] = process.argv.slice(2);

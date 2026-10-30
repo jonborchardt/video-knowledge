@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { ROOT, TOPICS, topicDir } from '../src/lib/io.ts'; // one definition of the repo root, shared with the TypeScript stages
+import { ROOT, TOPICS, topicDir } from '../src/shared/io.ts'; // one definition of the repo root, shared with the TypeScript stages
 
 export { ROOT, TOPICS, topicDir };
 const CLI = join(process.env.WATCHER_DIR ?? join(ROOT, '..', 'retire-sim', 'watcher'), 'src', 'cli.ts');

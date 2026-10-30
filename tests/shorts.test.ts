@@ -1,7 +1,7 @@
 // Short discovery and the Short's evidence package, on the synthetic script fixture: a three-sentence parent whose
 // investigation sentence asserts a fact with figures, storyboarded into three scenes (tests/video-helpers.ts).
 import { describe, expect, it } from 'vitest';
-import { toJson } from '../src/lib/io';
+import { toJson } from '../src/shared/io';
 import { scriptFingerprint, sectionsFor, sentenceFingerprint, sentences } from '../src/lib/script';
 import type { EvidencePackage, Script } from '../src/shared/types';
 import { storyboardFingerprint, validationFingerprint } from '../src/lib/release';

@@ -2,7 +2,7 @@
 // splits findings into new ones (fail) and approved ones, and flags exceptions nothing matches any more (fail).
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import { ROOT } from '../src/lib/io';
+import { ROOT } from '../src/shared/io';
 
 export const DIST = join(ROOT, 'dist');
 

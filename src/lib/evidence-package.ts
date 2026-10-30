@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import type { Corpus } from './corpus';
 import { type PassageReader, applicabilityFor } from './evidence';
 import type { Stance, EvidencePackage, PackageClaim, PackageDoc, PackageEvidence, Story } from '../shared/types';
-import { lf, sha, topicDir, TOPICS, ROOT } from './io';
+import { lf, sha, topicDir, TOPICS, ROOT } from '../shared/io';
 import { MAX_QUESTIONS, type ReviewFile } from './review';
 import { docOf, isStudyRef, norm } from './script';
 

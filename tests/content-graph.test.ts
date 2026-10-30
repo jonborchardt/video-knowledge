@@ -14,9 +14,9 @@ import {
   type View,
 } from '../src/lib/content-graph';
 import { movedRedirects } from '../src/lib/content-graph';
-import { toJson, topicDir } from '../src/lib/io';
+import { toJson, topicDir } from '../src/shared/io';
 import { addOutput, appendEvent, emptyLedger, type Ledger, publishPath, saveLedger } from '../src/lib/publish';
-import { scriptDir } from '../src/lib/script';
+import { scriptDir } from '../src/shared/io';
 import { copyTopic } from './production-helpers';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';
 import type { Story } from '../src/shared/types';

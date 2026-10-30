@@ -10,7 +10,7 @@
 // Every score is an editorial heuristic from corpus counts and the audit, labelled as such. Nothing is audience data.
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { readJson, topicDir, ROOT } from './io';
+import { readJson, topicDir, ROOT } from '../shared/io';
 import { type PassageReader, PRIOR_CAP, docKey, studyVerdicts, validate } from './evidence';
 import type {
   Assertion,

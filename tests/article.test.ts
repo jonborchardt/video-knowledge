@@ -22,7 +22,7 @@ import { Refusal } from '../src/lib/publish';
 import { publicRecordProblems, withArticleRevision } from '../src/lib/public-record';
 import { LIMITS, figureData, figuresOf, validateArticle } from '../src/lib/article-validation';
 import { buildPackage } from '../src/lib/evidence-package';
-import { scriptDir } from '../src/lib/script';
+import { scriptDir } from '../src/shared/io';
 import type { EvidencePackage, Sentence } from '../src/shared/types';
 import { approveArticle, article } from './article-helpers';
 import { claim, guess, sources } from './corpus';

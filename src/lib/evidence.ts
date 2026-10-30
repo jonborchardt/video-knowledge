@@ -15,7 +15,7 @@
 // contradictions and qualifications are pulled from every study verdict on the claim, so none can be hidden.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { lf, TOPICS, ROOT } from './io';
+import { lf, TOPICS, ROOT } from '../shared/io';
 import { hasFigure, nums } from './numbers';
 import type { Corpus, CorpusClaim, CorpusVerdict } from './corpus';
 import type {

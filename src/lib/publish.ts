@@ -6,10 +6,10 @@
 import { existsSync, readFileSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve } from 'node:path';
 import type { BuildSummary } from './build-report';
-import { lf, readJson, ROOT, sha, toJson } from './io';
+import { lf, readJson, ROOT, sha, toJson } from '../shared/io';
 import { lookStale } from './look';
 import { approverProblem } from './release';
-import { scriptDir, shortId, shortOf, storySlug } from './script';
+import { scriptDir, shortId, shortOf, storySlug } from '../shared/io';
 import { loadStories } from './stories';
 
 const PUBLISH_FILE = 'publish.json';

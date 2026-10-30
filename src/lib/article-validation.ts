@@ -26,8 +26,9 @@ import {
 import { dataRef, loadDatasets } from './datasets';
 import type { PassageReader } from './evidence';
 import { findingLabel } from './finding-label';
-import { readJson, ROOT } from './io';
-import { norm, revisionsInPass, FILES, scriptDir, sentenceFingerprint, sentences, storySlug } from './script';
+import { readJson, ROOT } from '../shared/io';
+import { norm, revisionsInPass, sentenceFingerprint, sentences } from './script';
+import { FILES, scriptDir, storySlug } from '../shared/io';
 import { type ValidateOptions, validateScript } from './script-validation';
 import { pointProblems, type StoryboardPlan } from './storyboard';
 

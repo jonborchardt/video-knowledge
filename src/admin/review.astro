@@ -11,7 +11,7 @@ import Base from '../layouts/Base.astro';
 import { noteLine, stampOf } from '../lib/publish';
 import { jobStatus } from '../lib/review-job';
 import { type Finding, reviewMediaHref, reviewView, storyIdOfPath } from '../lib/review-view';
-import { scriptDir, storySlug } from '../lib/script';
+import { scriptDir, storySlug } from '../shared/io';
 import { href } from '../lib/url';
 
 const { topic = '', path = '' } = Astro.params;

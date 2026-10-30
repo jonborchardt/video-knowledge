@@ -5,7 +5,7 @@
 // corpus, the evidence gate or src/video/.
 import { existsSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { lf, readJson } from './io';
+import { lf, readJson } from '../shared/io';
 import {
   type CheckResult,
   type LedgerCheck,

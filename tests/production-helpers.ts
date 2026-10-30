@@ -9,12 +9,13 @@ import { article } from './article-helpers';
 import { corpusOf } from '../src/lib/corpus';
 import { passageReader } from '../src/lib/evidence';
 import { buildPackage, docHasher, docReader } from '../src/lib/evidence-package';
-import { fileSha, readJson, sha, toJson, topicDir } from '../src/lib/io';
+import { fileSha, readJson, sha, toJson, topicDir } from '../src/shared/io';
 import { lookFingerprint } from '../src/lib/look';
 import { storyboardFingerprint, validationFingerprint } from '../src/lib/release';
 import { renderCheckProblems } from '../src/lib/render-check';
 import { loadReview, reviewPath } from '../src/lib/review';
-import { FILES, scriptDir, scriptFingerprint, sentenceFingerprint, sentences, shortId } from '../src/lib/script';
+import { scriptFingerprint, sentenceFingerprint, sentences } from '../src/lib/script';
+import { FILES, scriptDir, shortId } from '../src/shared/io';
 import type { Release, Script, ScriptReviewFile, SectionName, SentenceType } from '../src/shared/types';
 import { validateScript } from '../src/lib/script-validation';
 import {

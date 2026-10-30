@@ -4,7 +4,7 @@
 // src/video/music.ts. Only a full render passes a soundtrack, so a scene or range render is narration only.
 import { existsSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { toJson } from '../lib/io';
+import { toJson } from '../shared/io';
 import { concatVideo, mux, narrationTrack } from './ffmpeg';
 import { CHANNELS, RATE, type Span, decodePcm, encodeAac, mixDown, placeCue, rmsDb } from './mix';
 import { MIX_FILE, type MixReport, type MusicConfig, type ResolvedCue, musicFingerprint, speechSpans } from './music';

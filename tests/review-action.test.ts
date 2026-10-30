@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { addOutputTo, loadLedger, recordApproved, recordUploaded } from '../src/lib/publish';
 import { JOB_FILE, jobStatus, startJob } from '../src/lib/review-job';
 import { handle, sameOrigin } from '../src/admin/review-action';
-import { storySlug } from '../src/lib/script';
+import { storySlug } from '../src/shared/io';
 import { type Fixture, syntheticProduction, syntheticShort } from './production-helpers';
 
 const ORIGIN = 'http://localhost:4321';

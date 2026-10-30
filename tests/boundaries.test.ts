@@ -1,7 +1,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { ROOT } from '../src/lib/io';
+import { ROOT } from '../src/shared/io';
 import { capabilityOf, check, importsOf, resolveSpecifier, violations, walk } from './boundaries-helpers';
 
 const config = JSON.parse(readFileSync(join(ROOT, 'tests/boundaries.json'), 'utf8'));

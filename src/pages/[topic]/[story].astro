@@ -21,7 +21,7 @@ import { articleModified, loadArticleRelease } from '../../lib/article';
 import { articleView, releaseFigureDraws } from '../../lib/article-view';
 import { loadDatasets } from '../../lib/datasets';
 import { reviewMediaHref } from '../../lib/review-view';
-import { storySlug } from '../../lib/script';
+import { storySlug } from '../../shared/io';
 import { storyOutputs } from '../../lib/outputs';
 import { articleJsonLd, breadcrumbJsonLd, videoJsonLd } from '../../lib/seo';
 import { loadPublicRecord, revisionLine } from '../../lib/public-record';
@@ -33,7 +33,7 @@ import { commissionBody, commissionKey, commissionOf, site } from '../../config/
 import { loadStories, storyUrlSlug } from '../../lib/stories';
 import type { Story } from '../../shared/types';
 import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
-import { ROOT } from '../../lib/io';
+import { ROOT } from '../../shared/io';
 import { href } from '../../lib/url';
 
 export function getStaticPaths() {

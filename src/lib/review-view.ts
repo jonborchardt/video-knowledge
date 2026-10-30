@@ -5,7 +5,7 @@
 import { existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import type { BuildSummary } from './build-report';
-import { ROOT, readJson } from './io';
+import { ROOT, readJson } from '../shared/io';
 import { lookStale } from './look';
 import {
   type OutputState,
@@ -15,7 +15,7 @@ import {
   Refusal,
   openOutput,
 } from './publish';
-import { FILES, scriptDir, shortId, shortOf, storySlug } from './script';
+import { FILES, scriptDir, shortId, shortOf, storySlug } from '../shared/io';
 import type { ScriptValidation } from '../shared/types';
 import { loadShorts } from './shorts';
 import { loadStories } from './stories';

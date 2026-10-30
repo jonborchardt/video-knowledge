@@ -2,7 +2,6 @@
   "capabilities": {
     "src/shared/": "shared",
     "src/config/": "shared",
-    "src/lib/io.ts": "shared",
     "src/lib/url.ts": "shared",
     "src/lib/numbers.ts": "shared",
     "src/lib/topics.ts": "evidence",
@@ -85,7 +84,7 @@
     "src/video/excerpt.ts",
     "src/shared/types.ts"
   ],
-  "layoutOwner": "src/lib/io.ts",
+  "layoutOwner": "src/shared/io.ts",
   "readApi": {},
   "edges": [
     {
@@ -120,11 +119,6 @@
     },
     {
       "from": "scripts/article.ts",
-      "to": "src/lib/script.ts",
-      "until": "article"
-    },
-    {
-      "from": "scripts/article.ts",
       "to": "src/lib/topics.ts",
       "until": "article"
     },
@@ -145,23 +139,13 @@
     },
     {
       "from": "scripts/links.ts",
-      "to": "src/lib/io.ts",
+      "to": "src/shared/io.ts",
       "until": "shared"
-    },
-    {
-      "from": "scripts/music.ts",
-      "to": "src/lib/script.ts",
-      "until": "script"
     },
     {
       "from": "scripts/music.ts",
       "to": "src/lib/storyboard.ts",
       "until": "storyboard"
-    },
-    {
-      "from": "scripts/publish.ts",
-      "to": "src/lib/script.ts",
-      "until": "publishing"
     },
     {
       "from": "scripts/rehearse.ts",
@@ -180,7 +164,7 @@
     },
     {
       "from": "scripts/report.ts",
-      "to": "src/lib/io.ts",
+      "to": "src/shared/io.ts",
       "until": "shared"
     },
     {
@@ -270,17 +254,12 @@
     },
     {
       "from": "scripts/video.ts",
-      "to": "src/lib/script.ts",
-      "until": "script"
-    },
-    {
-      "from": "scripts/video.ts",
       "to": "src/video/package.ts",
       "until": "packaging"
     },
     {
       "from": "scripts/watcher.mjs",
-      "to": "src/lib/io.ts",
+      "to": "src/shared/io.ts",
       "until": "shared"
     },
     {
@@ -292,11 +271,6 @@
       "from": "src/admin/Board.astro",
       "to": "src/lib/publish.ts",
       "until": "publishing"
-    },
-    {
-      "from": "src/admin/Board.astro",
-      "to": "src/lib/script.ts",
-      "until": "script"
     },
     {
       "from": "src/admin/PathDiagram.astro",
@@ -315,18 +289,8 @@
     },
     {
       "from": "src/admin/SiteMapDiagram.astro",
-      "to": "src/lib/script.ts",
-      "until": "script"
-    },
-    {
-      "from": "src/admin/SiteMapDiagram.astro",
       "to": "src/lib/topics.ts",
       "until": "evidence"
-    },
-    {
-      "from": "src/admin/media.ts",
-      "to": "src/lib/script.ts",
-      "until": "script"
     },
     {
       "from": "src/admin/register.astro",
@@ -359,19 +323,9 @@
       "until": "script"
     },
     {
-      "from": "src/admin/review-action.ts",
-      "to": "src/lib/script.ts",
-      "until": "script"
-    },
-    {
       "from": "src/admin/review.astro",
       "to": "src/lib/publish.ts",
       "until": "publishing"
-    },
-    {
-      "from": "src/admin/review.astro",
-      "to": "src/lib/script.ts",
-      "until": "script"
     },
     {
       "from": "src/admin/script.astro",
@@ -380,18 +334,8 @@
     },
     {
       "from": "src/admin/script.astro",
-      "to": "src/lib/script.ts",
-      "until": "script"
-    },
-    {
-      "from": "src/admin/script.astro",
       "to": "src/lib/storyboard.ts",
       "until": "storyboard"
-    },
-    {
-      "from": "src/admin/stories.astro",
-      "to": "src/lib/script.ts",
-      "until": "script"
     },
     {
       "from": "src/admin/stories.astro",
@@ -630,11 +574,6 @@
     },
     {
       "from": "src/lib/content-graph.ts",
-      "to": "src/lib/script.ts",
-      "until": "script"
-    },
-    {
-      "from": "src/lib/content-graph.ts",
       "to": "src/lib/stories.ts",
       "until": "stories"
     },
@@ -675,7 +614,7 @@
     },
     {
       "from": "src/lib/evidence-package.ts",
-      "to": "src/lib/io.ts",
+      "to": "src/shared/io.ts",
       "until": "shared"
     },
     {
@@ -685,13 +624,8 @@
     },
     {
       "from": "src/lib/evidence.ts",
-      "to": "src/lib/io.ts",
+      "to": "src/shared/io.ts",
       "until": "shared"
-    },
-    {
-      "from": "src/lib/outputs.ts",
-      "to": "src/lib/script.ts",
-      "until": "publishing"
     },
     {
       "from": "src/lib/production.ts",
@@ -765,11 +699,6 @@
     },
     {
       "from": "src/lib/production.ts",
-      "to": "src/lib/script.ts",
-      "until": "script"
-    },
-    {
-      "from": "src/lib/production.ts",
       "to": "src/lib/shorts.ts",
       "until": "shorts"
     },
@@ -805,11 +734,6 @@
     },
     {
       "from": "src/lib/publish.ts",
-      "to": "src/lib/script.ts",
-      "until": "publishing"
-    },
-    {
-      "from": "src/lib/publish.ts",
       "to": "src/lib/stories.ts",
       "until": "publishing"
     },
@@ -822,11 +746,6 @@
       "from": "src/lib/rehearsal.ts",
       "to": "src/lib/publish.ts",
       "until": "publishing"
-    },
-    {
-      "from": "src/lib/rehearsal.ts",
-      "to": "src/lib/script.ts",
-      "until": "script"
     },
     {
       "from": "src/lib/rehearsal.ts",
@@ -845,7 +764,7 @@
     },
     {
       "from": "src/lib/review-view.ts",
-      "to": "src/lib/io.ts",
+      "to": "src/shared/io.ts",
       "until": "shared"
     },
     {
@@ -857,11 +776,6 @@
       "from": "src/lib/review-view.ts",
       "to": "src/lib/publish.ts",
       "until": "publishing"
-    },
-    {
-      "from": "src/lib/review-view.ts",
-      "to": "src/lib/script.ts",
-      "until": "script"
     },
     {
       "from": "src/lib/review-view.ts",
@@ -897,11 +811,6 @@
       "from": "src/lib/script-validation.ts",
       "to": "src/lib/review.ts",
       "until": "script"
-    },
-    {
-      "from": "src/lib/script.ts",
-      "to": "src/lib/io.ts",
-      "until": "shared"
     },
     {
       "from": "src/lib/seo.ts",
@@ -950,7 +859,7 @@
     },
     {
       "from": "src/lib/topics.ts",
-      "to": "src/lib/io.ts",
+      "to": "src/shared/io.ts",
       "until": "shared"
     },
     {
@@ -982,11 +891,6 @@
       "from": "src/pages/[topic]/[story].astro",
       "to": "src/lib/public-record.ts",
       "until": "evidence"
-    },
-    {
-      "from": "src/pages/[topic]/[story].astro",
-      "to": "src/lib/script.ts",
-      "until": "script"
     },
     {
       "from": "src/pages/[topic]/[story].astro",
@@ -1095,18 +999,8 @@
     },
     {
       "from": "src/video/check.ts",
-      "to": "src/lib/script.ts",
-      "until": "script"
-    },
-    {
-      "from": "src/video/check.ts",
       "to": "src/lib/storyboard.ts",
       "until": "storyboard"
-    },
-    {
-      "from": "src/video/files.ts",
-      "to": "src/lib/script.ts",
-      "until": "script"
     },
     {
       "from": "src/video/init.ts",

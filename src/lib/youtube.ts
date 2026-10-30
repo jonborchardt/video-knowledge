@@ -6,7 +6,7 @@
 import { mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { dirname, extname, join, resolve } from 'node:path';
-import { ROOT, readJson } from './io';
+import { ROOT, readJson } from '../shared/io';
 
 export const SCOPE = 'https://www.googleapis.com/auth/youtube.force-ssl';
 export const TOKEN_FILE = '.youtube-token.json'; // the token store when YOUTUBE_OAUTH_CREDENTIALS_PATH is not set

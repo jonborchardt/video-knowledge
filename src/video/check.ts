@@ -4,9 +4,9 @@
 // (the scene plus the code that draws it), so editing either asks for a new visual review.
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { readJson, sha, toJson, ROOT } from '../lib/io';
+import { readJson, sha, toJson, ROOT } from '../shared/io';
 import { RENDER_CHECK, type RenderCheckSummary, renderConfigSha } from '../lib/render-check';
-import { scriptDir, storySlug } from '../lib/script';
+import { scriptDir, storySlug } from '../shared/io';
 import type { Scene } from '../lib/storyboard';
 import { VIDEO_FILES, videoDir } from './files';
 import { type KindRegistry, type SceneKind, bespokeFor } from './kinds';

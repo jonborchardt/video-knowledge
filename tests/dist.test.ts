@@ -16,7 +16,7 @@ import {
 } from '../src/lib/content-graph';
 import { datasetChart } from '../src/lib/chart-geometry';
 import { dataRef, loadDatasets } from '../src/lib/datasets';
-import { ROOT, readJson, topicDir } from '../src/lib/io';
+import { ROOT, readJson, topicDir } from '../src/shared/io';
 import type { Storyboard } from '../src/lib/storyboard';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';
 import { loadPublicRecord } from '../src/lib/public-record';

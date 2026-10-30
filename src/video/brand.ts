@@ -3,7 +3,7 @@
 // .jpg; slot names in brand/slots.json). A topic no institution claims uses the Commonwealth's kit.
 import { copyFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { ROOT } from '../lib/io';
+import { ROOT } from '../shared/io';
 import { brandKey, kitPaletteOf } from '../lib/look';
 import type { KitPalette } from './types';
 

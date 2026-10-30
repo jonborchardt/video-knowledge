@@ -4,7 +4,7 @@
 // answers one question, and how to frame the question for a viewer. The file is committed and keeps runs reproducible.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { topicDir, ROOT } from './io';
+import { topicDir, ROOT } from '../shared/io';
 import type { Judgments } from './evidence';
 
 export interface StoryReview {

@@ -17,7 +17,7 @@ import {
   type PublicRecord,
 } from '../src/lib/public-record';
 import { contentGraph, liveClaims } from '../src/lib/content-graph';
-import { ROOT, toJson, TOPICS, topicDir } from '../src/lib/io';
+import { ROOT, toJson, TOPICS, topicDir } from '../src/shared/io';
 import { loadTopic, topicNames } from '../src/lib/topics';
 import { watcher } from './watcher.mjs';
 

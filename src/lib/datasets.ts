@@ -2,7 +2,7 @@
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import type { PassageReader } from './evidence';
-import { ROOT, readJson, topicDir } from './io';
+import { ROOT, readJson, topicDir } from '../shared/io';
 import { type ChartPoint, pointProblems } from './storyboard';
 
 export interface DataTable {

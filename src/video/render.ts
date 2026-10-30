@@ -7,7 +7,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { bundle } from '@remotion/bundler';
 import { openBrowser, renderMedia, renderStill, selectComposition } from '@remotion/renderer';
-import { ROOT, sha } from '../lib/io';
+import { ROOT, sha } from '../shared/io';
 import { stageBrand } from './brand';
 import { brandKey } from '../lib/look';
 import { ALL_KINDS } from './kinds';

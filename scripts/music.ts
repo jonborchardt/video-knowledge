@@ -12,9 +12,9 @@
 import { spawnSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
-import { readJson, sha, toJson, ROOT } from '../src/lib/io';
+import { readJson, sha, toJson, ROOT } from '../src/shared/io';
 import { probe } from '../src/video/ffmpeg';
-import { FILES, scriptDir } from '../src/lib/script';
+import { FILES, scriptDir } from '../src/shared/io';
 import type { Script } from '../src/shared/types';
 import type { Storyboard } from '../src/lib/storyboard';
 import { COMPOSITION_FILE, type Composition, MUSIC_DIR, type Variation, loadComposition } from '../src/video/music';

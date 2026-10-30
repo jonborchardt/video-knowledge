@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { toJson } from '../src/lib/io';
+import { toJson } from '../src/shared/io';
 import { seekUrl, storyOutputs } from '../src/lib/outputs';
 import {
   addOutput,
@@ -13,7 +13,7 @@ import {
   publishPath,
   saveLedger,
 } from '../src/lib/publish';
-import { scriptDir } from '../src/lib/script';
+import { scriptDir } from '../src/shared/io';
 
 // A bare temp root: the ledger and the committed review package are all storyOutputs reads.
 const TOPIC = 'heat-pumps';

@@ -6,7 +6,7 @@
 import { join } from 'node:path';
 import { commissionKey, commissionOf } from '../config/site';
 import type { BuildSummary } from './build-report';
-import { fileSha, readJson, ROOT, sha } from './io';
+import { fileSha, readJson, ROOT, sha } from '../shared/io';
 
 /** The kit folder a topic's videos draw from: its institution's, or the Commonwealth's when none claims it. */
 export const brandKey = (topic: string): string => {

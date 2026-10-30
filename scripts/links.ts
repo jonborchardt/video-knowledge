@@ -9,7 +9,7 @@ import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { contentGraph, distPages, related, storyNode } from '../src/lib/content-graph';
 import { type Cta, loadCta, resolveCtas } from '../src/lib/cta';
-import { ROOT } from '../src/lib/io';
+import { ROOT } from '../src/shared/io';
 import { textUrls } from '../src/lib/url';
 
 const DIST = join(ROOT, 'dist');

@@ -29,7 +29,7 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { ROOT, toJson } from '../src/lib/io';
+import { ROOT, toJson } from '../src/shared/io';
 import {
   Refusal,
   type VerbResult,
@@ -52,7 +52,7 @@ import {
   setThumbnail,
   uploadMetadataOf,
 } from '../src/lib/publish';
-import { scriptDir, shortOf, storySlug } from '../src/lib/script';
+import { scriptDir, shortOf, storySlug } from '../src/shared/io';
 import { goLive, push, sync, upload, verify } from '../src/lib/uploader';
 import { TOKEN_FILE, YouTubeError, authorize, loadCredentials, youtubeClient } from '../src/lib/youtube';
 

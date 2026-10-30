@@ -6,8 +6,9 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { relative } from 'node:path';
 import { passageReader } from '../src/lib/evidence';
-import { toJson, ROOT } from '../src/lib/io';
-import { sentences, shortId, shortOf } from '../src/lib/script';
+import { toJson, ROOT } from '../src/shared/io';
+import { sentences } from '../src/lib/script';
+import { shortId, shortOf } from '../src/shared/io';
 import {
   type ShortCandidate,
   discoverShorts,

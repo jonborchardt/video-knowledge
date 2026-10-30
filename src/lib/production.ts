@@ -17,7 +17,7 @@ import { figureData, validateArticleIn } from './article-validation';
 import { articleStale } from './article-view';
 import { type Corpus, corpusOf } from './corpus';
 import { type PassageReader, passageReader } from './evidence';
-import { fileSha, lf, readJson, sha, toJson, topicDir, ROOT } from './io';
+import { fileSha, lf, readJson, sha, toJson, topicDir, ROOT } from '../shared/io';
 import {
   RENDER_CHECK,
   type RenderCheckSummary,
@@ -45,7 +45,7 @@ import { type ReviewFile, loadReview, reviewPath } from './review';
 import { buildPackage, docHasher, docReader } from './evidence-package';
 import { loadPublicRecord } from './public-record';
 import { releaseCheck, storyboardFingerprint, validationFingerprint } from './release';
-import { FILES, scriptDir, shortId, shortOf, storySlug } from './script';
+import { FILES, scriptDir, shortId, shortOf, storySlug } from '../shared/io';
 import type {
   EvidencePackage,
   Release,

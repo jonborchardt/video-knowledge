@@ -2,9 +2,9 @@
 // committed review package. The only site-side reader of publishing state; it never imports the store. A video is
 // public only after a person's go-live is in the ledger: the site never decides what is public.
 import { join } from 'node:path';
-import { readJson, ROOT } from './io';
+import { readJson, ROOT } from '../shared/io';
 import { loadLedger, nestedSource, type Output } from './publish';
-import { scriptDir } from './script';
+import { scriptDir } from '../shared/io';
 
 export interface PublicVideo {
   output: string;

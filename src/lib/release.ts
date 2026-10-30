@@ -1,5 +1,5 @@
 // Release: the fingerprints a person approved with `npm run script -- lock`, and the check that they still hold.
-import { sha, toJson } from './io';
+import { sha, toJson } from '../shared/io';
 import type { Issue, Release, ScriptValidation } from '../shared/types';
 import type { Storyboard } from './storyboard';
 

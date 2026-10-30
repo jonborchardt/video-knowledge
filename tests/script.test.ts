@@ -5,21 +5,12 @@ import { describe, expect, it } from 'vitest';
 import { buildPackage, docHasher, docReader } from '../src/lib/evidence-package';
 import { approverProblem, releaseCheck, storyboardFingerprint, validationFingerprint } from '../src/lib/release';
 import { type RenderCheckSummary, renderCheckProblems } from '../src/lib/render-check';
-import {
-  revisionsInPass,
-  sectionsFor,
-  scriptDir,
-  shortId,
-  shortOf,
-  storySlug,
-  sentenceFingerprint,
-  sentences,
-  words,
-} from '../src/lib/script';
+import { revisionsInPass, sectionsFor, sentenceFingerprint, sentences, words } from '../src/lib/script';
+import { scriptDir, shortId, shortOf, storySlug } from '../src/shared/io';
 import type { EvidencePackage, Release, Script, Section, Sentence } from '../src/shared/types';
 import { evalExpr, repetitions, validateScript } from '../src/lib/script-validation';
 import type { PassageReader } from '../src/lib/evidence';
-import { sha } from '../src/lib/io';
+import { sha } from '../src/shared/io';
 import { spokenWords } from '../src/lib/numbers';
 import {
   type ChartPoint,

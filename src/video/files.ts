@@ -1,8 +1,8 @@
 // The video stage's folder conventions and the fingerprints that bind its files together. Every video module reads its
 // paths from here, so no stage imports another stage's module for a constant.
 import { join } from 'node:path';
-import { sha } from '../lib/io';
-import { scriptDir } from '../lib/script';
+import { sha } from '../shared/io';
+import { scriptDir } from '../shared/io';
 import type { NarrationManifest, RenderConfig } from './types';
 
 export const VIDEO_DIR = 'video';

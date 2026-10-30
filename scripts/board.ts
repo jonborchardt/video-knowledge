@@ -2,7 +2,7 @@
 //   next <topic> <story-id> [--json]   the board's stage and next step for one story (src/lib/production.ts, boardNext);
 //                                      with --json the whole answer (stage, next, steps, halt, done), else "<stage>: <next>"
 import { readFileSync } from 'node:fs';
-import { toJson } from '../src/lib/io';
+import { toJson } from '../src/shared/io';
 import { boardNext } from '../src/lib/production';
 
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);

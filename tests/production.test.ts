@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { ROOT, readJson, toJson } from '../src/lib/io';
+import { ROOT, readJson, toJson } from '../src/shared/io';
 import type { RenderCheckSummary } from '../src/lib/render-check';
 import { writeRenderCheck } from '../src/video/check';
 import {
@@ -38,7 +38,8 @@ import { docHasher, docReader } from '../src/lib/evidence-package';
 import { loadReview } from '../src/lib/review';
 import { validateScript } from '../src/lib/script-validation';
 import { loadTopic } from '../src/lib/topics';
-import { scriptDir, sentenceFingerprint, shortId, storySlug } from '../src/lib/script';
+import { sentenceFingerprint } from '../src/lib/script';
+import { scriptDir, shortId, storySlug } from '../src/shared/io';
 import type { EvidencePackage, Script, ScriptReviewFile, ScriptValidation } from '../src/shared/types';
 import { addOutputTo, recordApproved, recordPublished, recordUploaded, setThumbnail } from '../src/lib/publish';
 import { type Fixture, copyTopic, setLook, syntheticProduction, syntheticShort } from './production-helpers';

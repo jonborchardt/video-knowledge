@@ -7,7 +7,7 @@
 import { spawnSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
 import { dirname, isAbsolute, join, relative } from 'node:path';
-import { ROOT, toJson } from '../src/lib/io';
+import { ROOT, toJson } from '../src/shared/io';
 import { publishPath } from '../src/lib/publish';
 import { rehearsalDir, rehearsalLedger, rehearsalRefusal, rehearsalSteps, removeRehearsal } from '../src/lib/rehearsal';
 import { storyUrlSlug } from '../src/lib/stories';

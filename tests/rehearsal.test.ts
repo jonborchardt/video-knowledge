@@ -3,11 +3,11 @@ import { tmpdir } from 'node:os';
 import { isAbsolute, join, relative } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { contentGraph } from '../src/lib/content-graph';
-import { ROOT, toJson, topicDir } from '../src/lib/io';
+import { ROOT, toJson, topicDir } from '../src/shared/io';
 import { storyOutputs } from '../src/lib/outputs';
 import { appendEvent, emptyLedger, ledgerProblems, publishPath, saveLedger } from '../src/lib/publish';
 import { rehearsalDir, rehearsalLedger, rehearsalRefusal, rehearsalSteps, removeRehearsal } from '../src/lib/rehearsal';
-import { scriptDir } from '../src/lib/script';
+import { scriptDir } from '../src/shared/io';
 
 const T = 'heat-pumps';
 const AT = '2026-10-27T12:00:00.000Z';

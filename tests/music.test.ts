@@ -7,7 +7,7 @@ import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { readJson, sha, ROOT } from '../src/lib/io';
+import { readJson, sha, ROOT } from '../src/shared/io';
 import { draftCueSheet, pickComposition } from '../src/video/music-draft';
 import { probe } from '../src/video/ffmpeg';
 import {

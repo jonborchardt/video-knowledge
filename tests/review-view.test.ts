@@ -3,7 +3,7 @@
 import { writeFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { readJson } from '../src/lib/io';
+import { readJson } from '../src/shared/io';
 import {
   type Ledger,
   addOutputTo,

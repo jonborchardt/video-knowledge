@@ -5,10 +5,10 @@
 import { existsSync, rmSync, unlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { ROOT } from './io';
+import { ROOT } from '../shared/io';
 import { storyOutputs } from './outputs';
 import { emptyLedger, type Ledger } from './publish';
-import { scriptDir, storySlug } from './script';
+import { scriptDir, storySlug } from '../shared/io';
 import { loadStories } from './stories';
 
 export const REHEARSAL_VIDEO_ID = 'REHEARSAL00';

@@ -4,7 +4,7 @@
 // quietest texture under the evidence, the pulse again to close.
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { ROOT } from '../lib/io';
+import { ROOT } from '../shared/io';
 import type { Script, SectionName } from '../shared/types';
 import type { Storyboard } from '../lib/storyboard';
 import {

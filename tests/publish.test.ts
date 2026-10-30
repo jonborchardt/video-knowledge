@@ -5,8 +5,8 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { readJson, sha } from '../src/lib/io';
-import { storySlug } from '../src/lib/script';
+import { readJson, sha } from '../src/shared/io';
+import { storySlug } from '../src/shared/io';
 import {
   type Ledger,
   type Output,

@@ -3,7 +3,7 @@
 // its word is spoken on, and every excerpt to its passage, or the build fails.
 import { commissionKey, commissionOf, site } from '../config/site';
 import type { PassageReader } from '../lib/evidence';
-import { sha } from '../lib/io';
+import { sha } from '../shared/io';
 import { lookFingerprint } from '../lib/look';
 import { kitPalette } from './brand';
 import { narrationFingerprint } from './files';

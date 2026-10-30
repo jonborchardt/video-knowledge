@@ -3,7 +3,7 @@
 import { readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { sha } from '../src/lib/io';
+import { sha } from '../src/shared/io';
 import { openOutput, recordUploaded } from '../src/lib/publish';
 import { CHECKS, type Expected, chapterLines, expectedOf, verdictOf, verificationChecks } from '../src/lib/verify';
 import type { RemoteCaption, RemoteVideo } from '../src/lib/youtube';

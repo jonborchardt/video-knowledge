@@ -1,7 +1,7 @@
 // The graph every public page builds from. The dev server sees the preview view (packaged stories too); a build sees
 // only what has a live video. Tests use `contentGraph()` (live) directly, since vitest runs with DEV true.
 import { contentGraph, type View } from './content-graph';
-import { ROOT } from './io';
+import { ROOT } from '../shared/io';
 import { publicTopicNames } from './topics';
 
 export const siteView: View = import.meta.env.DEV ? 'preview' : 'live';

@@ -5,9 +5,9 @@ import { createReadStream, existsSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { Readable } from 'node:stream';
 import type { APIRoute } from 'astro';
-import { readJson } from '../lib/io';
+import { readJson } from '../shared/io';
 import { storyIdOfPath } from '../lib/review-view';
-import { scriptDir } from '../lib/script';
+import { scriptDir } from '../shared/io';
 
 /** The byte range a Range header asks for (end inclusive, clamped to the file), null for the whole file, or 'invalid'
  *  for one this server cannot satisfy (several ranges, a start past the end, a malformed header). */

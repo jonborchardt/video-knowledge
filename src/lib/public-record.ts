@@ -4,7 +4,7 @@
 // of a released article, each explained by a person's note.
 import { join } from 'node:path';
 import { findingLabel, FINDING_LABELS, type FindingLabel } from './finding-label';
-import { readJson, ROOT, topicDir } from './io';
+import { readJson, ROOT, topicDir } from '../shared/io';
 import type { Topic, Verdict } from './topics';
 
 export interface ClaimState {

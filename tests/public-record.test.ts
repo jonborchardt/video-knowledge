@@ -22,7 +22,7 @@ import {
   revisionLine,
 } from '../src/lib/public-record';
 import { contentGraph, liveClaims } from '../src/lib/content-graph';
-import { ROOT, toJson, topicDir } from '../src/lib/io';
+import { ROOT, toJson, topicDir } from '../src/shared/io';
 import { type ClaimView, loadTopic, publicTopicNames, type SourceView, type Verdict } from '../src/lib/topics';
 
 const claim = (id: string, verdict: Verdict | null, confidence: number | null, decidedBy: string | null = 'S') =>

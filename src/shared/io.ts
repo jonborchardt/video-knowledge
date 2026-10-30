@@ -1,7 +1,7 @@
 // Repo-wide file helpers: content hashes, line endings and JSON artifacts. Every stage imports them from here, so no
 // stage depends on another stage's module for a utility.
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -34,4 +34,46 @@ export const toJson = (x: unknown) => JSON.stringify(x, (k, v) => (k === 'passag
 export function writeArtifact(dir: string, name: string, content: string) {
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, name), content);
+}
+
+// ---- script folders ----
+
+export const storySlug = (storyId: string) => storyId.replace(/[^a-z0-9]+/gi, '-').replace(/(^-|-$)/g, '');
+/** A Short's id is `<story-id>/shorts/<slug>`: the parent and the slug, or null for a story. */
+export function shortOf(storyId: string): { parent: string; slug: string } | null {
+  const m = /^(.+)\/shorts\/([a-z0-9]+(?:-[a-z0-9]+)*)$/.exec(storyId);
+  return m ? { parent: m[1], slug: m[2] } : null;
+}
+export const shortId = (parent: string, slug: string) => `${parent}/shorts/${slug}`;
+/** A story's folder, or a Short's nested in its parent's: the id carries the nesting, so every CLI keyed by
+ *  (topic, storyId) works on a Short unchanged. */
+export const scriptDir = (topic: string, storyId: string, root = ROOT) => {
+  const s = shortOf(storyId);
+  return s
+    ? join(topicDir(topic, root), 'scripts', storySlug(s.parent), 'shorts', s.slug)
+    : join(topicDir(topic, root), 'scripts', storySlug(storyId));
+};
+export const FILES = {
+  pkg: 'evidence-package.json',
+  script: 'script.json',
+  review: 'script-review.json',
+  validation: 'validation.json',
+  scriptMd: 'script.md',
+  storyboard: 'storyboard.json',
+  storyboardMd: 'storyboard.md',
+  reviewMd: 'review.md',
+  release: 'release.json',
+} as const;
+/** Every topics/<topic>/scripts/<slug> with a script.json, for the site and the tests. */
+export function scriptDirs(root = ROOT): { topic: string; slug: string; dir: string }[] {
+  const topics = readdirSync(join(root, TOPICS), { withFileTypes: true }).filter(
+    (d) => d.isDirectory() && !d.name.startsWith('.'),
+  );
+  return topics.flatMap(({ name: topic }) => {
+    const base = join(topicDir(topic, root), 'scripts');
+    if (!existsSync(base)) return [];
+    return readdirSync(base, { withFileTypes: true })
+      .filter((d) => d.isDirectory() && existsSync(join(base, d.name, FILES.script)))
+      .map((d) => ({ topic, slug: d.name, dir: join(base, d.name) }));
+  });
 }

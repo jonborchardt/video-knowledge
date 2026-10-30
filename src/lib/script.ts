@@ -9,8 +9,6 @@
 //   script.md, review.md   rendered by script-md.ts
 //   release.json           the approved fingerprints (release.ts)
 // This file holds the shared types, fingerprints and folder conventions; each stage's code lives in its own module.
-import { existsSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
 import {
   type EvidenceRef,
   SECTIONS,
@@ -21,7 +19,7 @@ import {
   type Section,
   type Script,
 } from '../shared/types';
-import { sha, topicDir, TOPICS, ROOT } from './io';
+import { sha } from '../shared/io';
 
 /** The sections a script written from this package has, in order. */
 export const sectionsFor = (pkg: Pick<EvidencePackage, 'questions' | 'short'> | null): readonly SectionName[] =>
@@ -70,43 +68,3 @@ export const norm = (s: string) =>
     .trim();
 
 // ---- files -------------------------------------------------------------------------------------------------------
-
-export const storySlug = (storyId: string) => storyId.replace(/[^a-z0-9]+/gi, '-').replace(/(^-|-$)/g, '');
-/** A Short's id is `<story-id>/shorts/<slug>`: the parent and the slug, or null for a story. */
-export function shortOf(storyId: string): { parent: string; slug: string } | null {
-  const m = /^(.+)\/shorts\/([a-z0-9]+(?:-[a-z0-9]+)*)$/.exec(storyId);
-  return m ? { parent: m[1], slug: m[2] } : null;
-}
-export const shortId = (parent: string, slug: string) => `${parent}/shorts/${slug}`;
-/** A story's folder, or a Short's nested in its parent's: the id carries the nesting, so every CLI keyed by
- *  (topic, storyId) works on a Short unchanged. */
-export const scriptDir = (topic: string, storyId: string, root = ROOT) => {
-  const s = shortOf(storyId);
-  return s
-    ? join(topicDir(topic, root), 'scripts', storySlug(s.parent), 'shorts', s.slug)
-    : join(topicDir(topic, root), 'scripts', storySlug(storyId));
-};
-export const FILES = {
-  pkg: 'evidence-package.json',
-  script: 'script.json',
-  review: 'script-review.json',
-  validation: 'validation.json',
-  scriptMd: 'script.md',
-  storyboard: 'storyboard.json',
-  storyboardMd: 'storyboard.md',
-  reviewMd: 'review.md',
-  release: 'release.json',
-} as const;
-/** Every topics/<topic>/scripts/<slug> with a script.json, for the site and the tests. */
-export function scriptDirs(root = ROOT): { topic: string; slug: string; dir: string }[] {
-  const topics = readdirSync(join(root, TOPICS), { withFileTypes: true }).filter(
-    (d) => d.isDirectory() && !d.name.startsWith('.'),
-  );
-  return topics.flatMap(({ name: topic }) => {
-    const base = join(topicDir(topic, root), 'scripts');
-    if (!existsSync(base)) return [];
-    return readdirSync(base, { withFileTypes: true })
-      .filter((d) => d.isDirectory() && existsSync(join(base, d.name, FILES.script)))
-      .map((d) => ({ topic, slug: d.name, dir: join(base, d.name) }));
-  });
-}

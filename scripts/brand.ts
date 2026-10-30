@@ -14,7 +14,7 @@ import { pathToFileURL } from 'node:url';
 import sharp from 'sharp';
 import { commissionBody, commissionKey, commissionOf, commissions, site } from '../src/config/site';
 import { contentGraph, storyNode } from '../src/lib/content-graph';
-import { ROOT, readJson } from '../src/lib/io';
+import { ROOT, readJson } from '../src/shared/io';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';
 import { publicTopicNames } from '../src/lib/topics';
 

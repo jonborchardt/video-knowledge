@@ -3,7 +3,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { readJson, sha, toJson } from '../src/lib/io';
+import { readJson, sha, toJson } from '../src/shared/io';
 import {
   type Ledger,
   addOutputTo,
@@ -15,7 +15,7 @@ import {
   publishPath,
 } from '../src/lib/publish';
 import { Refusal } from '../src/lib/publish';
-import { storySlug } from '../src/lib/script';
+import { storySlug } from '../src/shared/io';
 import {
   CATEGORY_DEFAULT,
   MIN_SCHEDULE_LEAD_MS,

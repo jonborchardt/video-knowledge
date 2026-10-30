@@ -2,7 +2,7 @@
 // The report already decides each claim's verdict; nothing here re-judges.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { readJson, topicDir, TOPICS, ROOT } from './io';
+import { readJson, topicDir, TOPICS, ROOT } from '../shared/io';
 import { commissionOf } from '../config/site';
 import { type ClaimRevision, isClaimRevision, loadPublicRecord } from './public-record';
 import { type RecordedApplicability, applicabilityKey, checkApplicabilityFile } from './batches';

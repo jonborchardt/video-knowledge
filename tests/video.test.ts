@@ -2,12 +2,13 @@
 // audio, cue resolution, chart timing, excerpt extraction, the render cache key, assembly contiguity, the ffmpeg
 // wrapper and the providers. Every test runs on the synthetic fixture (tests/video-helpers.ts) and needs no TTS.
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
-import { ROOT } from '../src/lib/io';
+import { ROOT } from '../src/shared/io';
 import { LOOK_SLOTS, lookFingerprint } from '../src/lib/look';
 import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { scriptDir, scriptFingerprint } from '../src/lib/script';
+import { scriptFingerprint } from '../src/lib/script';
+import { scriptDir } from '../src/shared/io';
 import type { Storyboard } from '../src/lib/storyboard';
 import { type VisualReview, graphicKey, renderCheck } from '../src/video/check';
 import { draftRenderConfig, initVideo } from '../src/video/init';

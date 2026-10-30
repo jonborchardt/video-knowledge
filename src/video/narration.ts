@@ -3,7 +3,7 @@
 // sentence, the voice or the rate regenerates only that sentence.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { readJson, sha, toJson } from '../lib/io';
+import { readJson, sha, toJson } from '../shared/io';
 import { probe } from './ffmpeg';
 import type { Segment } from './select';
 import { NARRATION_DIR, VIDEO_FILES, narrationKey } from './files';

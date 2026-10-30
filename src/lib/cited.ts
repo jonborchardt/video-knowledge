@@ -4,7 +4,7 @@
 // through node's type stripping.
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { readJson, topicDir, ROOT } from './io.ts';
+import { readJson, topicDir, ROOT } from '../shared/io.ts';
 
 interface CitingScript {
   sections: { sentences: { assertions?: { evidence: { kind: string; claim?: string; cite?: string }[] }[] }[] }[];
