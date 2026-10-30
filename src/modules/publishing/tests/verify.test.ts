@@ -3,11 +3,11 @@
 import { readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { sha } from '../src/shared/io';
-import { openOutput, recordUploaded } from '../src/lib/publish';
-import { CHECKS, type Expected, chapterLines, expectedOf, verdictOf, verificationChecks } from '../src/lib/verify';
-import type { RemoteCaption, RemoteVideo } from '../src/lib/youtube';
-import { type Fixture, syntheticProduction } from './production-helpers';
+import { sha } from '../../../shared/io';
+import { openOutput, recordUploaded } from '../publish';
+import { CHECKS, type Expected, chapterLines, expectedOf, verdictOf, verificationChecks } from '../verify';
+import type { RemoteCaption, RemoteVideo } from '../youtube';
+import { type Fixture, syntheticProduction } from '../../../../tests/production-helpers';
 
 const now = new Date('2026-10-27T12:00:00Z');
 const x: Expected = {

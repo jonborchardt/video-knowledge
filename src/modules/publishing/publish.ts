@@ -1,17 +1,17 @@
 // The publishing ledger: topics/<topic>/scripts/<slug>/publish.json, the one record of what publishing adds and no
 // artifact records. Per output (the YouTube video, a short, a blog post, ...) an append-only event log and a person's
-// metadata choices. Events are written only by `npm run publish` (scripts/publish.ts); `metadata` may be hand-edited.
+// metadata choices. Events are written only by `npm run publish` (src/modules/publishing/cli.ts); `metadata` may be hand-edited.
 // Builds are named by the mp4 sha the QA checked, upload metadata by the sha of the composed text and thumbnail sha, so
 // nothing new is versioned here. Library layer: it reads video/review/review.json by path and never imports src/video/.
 import { existsSync, readFileSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve } from 'node:path';
-import type { BuildSummary } from '../shared/build-report';
-import { lf, readJson, ROOT, sha, toJson } from '../shared/io';
-import { lookStale } from '../shared/look';
-import { approverProblem } from '../shared/approver';
-import { scriptDir, shortId, shortOf, storySlug, topicDir } from '../shared/io';
-import { Refusal } from '../shared/refusal';
-import type { StoriesFile } from '../shared/types';
+import type { BuildSummary } from '../../shared/build-report';
+import { lf, readJson, ROOT, sha, toJson } from '../../shared/io';
+import { lookStale } from '../../shared/look';
+import { approverProblem } from '../../shared/approver';
+import { scriptDir, shortId, shortOf, storySlug, topicDir } from '../../shared/io';
+import { Refusal } from '../../shared/refusal';
+import type { StoriesFile } from '../../shared/types';
 
 const PUBLISH_FILE = 'publish.json';
 export const EVENT_TYPES = [

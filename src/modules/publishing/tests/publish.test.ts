@@ -5,9 +5,9 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { readJson, sha } from '../src/shared/io';
-import { Refusal } from '../src/shared/refusal';
-import { storySlug } from '../src/shared/io';
+import { readJson, sha } from '../../../shared/io';
+import { Refusal } from '../../../shared/refusal';
+import { storySlug } from '../../../shared/io';
 import {
   type Ledger,
   type Output,
@@ -43,8 +43,8 @@ import {
   openOutput,
   publishPath,
   recordChangesRequested,
-} from '../src/lib/publish';
-import { type Fixture, setLook, syntheticProduction, syntheticShort } from './production-helpers';
+} from '../publish';
+import { type Fixture, setLook, syntheticProduction, syntheticShort } from '../../../../tests/production-helpers';
 
 const tmp = mkdtempSync(join(tmpdir(), 'vk-publish-'));
 afterAll(() => rmSync(tmp, { recursive: true, force: true }));

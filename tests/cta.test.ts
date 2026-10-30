@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { absoluteOf, contentGraph, storyNode } from '../src/lib/content-graph';
 import { type Cta, loadCta, resolveCtas } from '../src/lib/cta';
 import { toJson, topicDir } from '../src/shared/io';
-import { appendEvent, emptyLedger, type Ledger, publishPath, saveLedger } from '../src/lib/publish';
+import { appendEvent, emptyLedger, type Ledger, publishPath, saveLedger } from '../src/modules/publishing/publish';
 import { FILES, scriptDir } from '../src/shared/io';
 import { loadStories } from '../src/lib/stories';
 import type { Story } from '../src/shared/types';

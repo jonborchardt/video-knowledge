@@ -49,7 +49,13 @@ import { validateScript } from '../src/shared/sentence-validation';
 import { loadTopic } from '../src/lib/topics';
 import { sentenceFingerprint } from '../src/shared/sentences';
 import type { EvidencePackage, Script, ScriptReviewFile, ScriptValidation } from '../src/shared/types';
-import { addOutputTo, recordApproved, recordPublished, recordUploaded, setThumbnail } from '../src/lib/publish';
+import {
+  addOutputTo,
+  recordApproved,
+  recordPublished,
+  recordUploaded,
+  setThumbnail,
+} from '../src/modules/publishing/publish';
 import { type Fixture, copyTopic, setLook, syntheticProduction, syntheticShort } from './production-helpers';
 import { blockedScript, run } from './script-helpers';
 

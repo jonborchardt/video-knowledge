@@ -15,7 +15,14 @@ import {
 } from '../src/lib/content-graph';
 import { movedRedirects } from '../src/lib/content-graph';
 import { toJson, topicDir } from '../src/shared/io';
-import { addOutput, appendEvent, emptyLedger, type Ledger, publishPath, saveLedger } from '../src/lib/publish';
+import {
+  addOutput,
+  appendEvent,
+  emptyLedger,
+  type Ledger,
+  publishPath,
+  saveLedger,
+} from '../src/modules/publishing/publish';
 import { scriptDir } from '../src/shared/io';
 import { copyTopic } from './production-helpers';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';

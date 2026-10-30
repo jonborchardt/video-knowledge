@@ -66,7 +66,7 @@ import {
   parentUrlOf,
   publishPath,
   uploadMetadataOf,
-} from './publish';
+} from '../modules/publishing';
 import { loadReview, reviewPath } from './review';
 import { buildPackage } from './evidence-package';
 import { releaseCheck, storyboardFingerprint } from './release';

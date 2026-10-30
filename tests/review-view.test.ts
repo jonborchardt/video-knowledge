@@ -13,7 +13,7 @@ import {
   recordChangesRequested,
   recordUploaded,
   saveLedger,
-} from '../src/lib/publish';
+} from '../src/modules/publishing/publish';
 import { parseNotes, reviewMediaHref, reviewView } from '../src/lib/review-view';
 import { href } from '../src/lib/url';
 import { type Fixture, setLook, syntheticProduction, syntheticShort } from './production-helpers';

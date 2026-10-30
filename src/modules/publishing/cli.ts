@@ -29,8 +29,8 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { ROOT, toJson } from '../src/shared/io';
-import { Refusal } from '../src/shared/refusal';
+import { ROOT, toJson } from '../../shared/io';
+import { Refusal } from '../../shared/refusal';
 import {
   type VerbResult,
   type Visibility,
@@ -51,10 +51,10 @@ import {
   recordUploaded,
   setThumbnail,
   uploadMetadataOf,
-} from '../src/lib/publish';
-import { scriptDir, shortOf, storySlug } from '../src/shared/io';
-import { goLive, push, sync, upload, verify } from '../src/lib/uploader';
-import { TOKEN_FILE, YouTubeError, authorize, loadCredentials, youtubeClient } from '../src/lib/youtube';
+} from './publish';
+import { scriptDir, shortOf, storySlug } from '../../shared/io';
+import { goLive, push, sync, upload, verify } from './uploader';
+import { TOKEN_FILE, YouTubeError, authorize, loadCredentials, youtubeClient } from './youtube';
 
 if (existsSync(join(ROOT, '.env'))) process.loadEnvFile(join(ROOT, '.env')); // keys only; never committed
 

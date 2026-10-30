@@ -6,8 +6,7 @@ import { existsSync, rmSync, unlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { ROOT } from '../shared/io';
-import { storyOutputs } from './outputs';
-import { emptyLedger, type Ledger } from './publish';
+import { emptyLedger, type Ledger, storyOutputs } from '../modules/publishing';
 import { scriptDir, storySlug } from '../shared/io';
 import { loadStories } from './stories';
 

@@ -3,7 +3,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { readJson, sha, toJson } from '../src/shared/io';
+import { readJson, sha, toJson } from '../../../shared/io';
 import {
   type Ledger,
   addOutputTo,
@@ -13,9 +13,9 @@ import {
   recordUploaded,
   saveLedger,
   publishPath,
-} from '../src/lib/publish';
-import { Refusal } from '../src/shared/refusal';
-import { storySlug } from '../src/shared/io';
+} from '../publish';
+import { Refusal } from '../../../shared/refusal';
+import { storySlug } from '../../../shared/io';
 import {
   CATEGORY_DEFAULT,
   MIN_SCHEDULE_LEAD_MS,
@@ -28,9 +28,9 @@ import {
   upload,
   uploadProblem,
   verify,
-} from '../src/lib/uploader';
-import { type RemoteVideo, type YouTubeClient, YouTubeError } from '../src/lib/youtube';
-import { type Fixture, setLook, syntheticProduction, syntheticShort } from './production-helpers';
+} from '../uploader';
+import { type RemoteVideo, type YouTubeClient, YouTubeError } from '../youtube';
+import { type Fixture, setLook, syntheticProduction, syntheticShort } from '../../../../tests/production-helpers';
 
 /** The packaged fixture has no media; give it an mp4 the review.json describes and the thumbnail it names. */
 function withMedia(f: Fixture): Fixture {

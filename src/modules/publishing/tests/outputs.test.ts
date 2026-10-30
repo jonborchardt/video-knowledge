@@ -2,8 +2,8 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { toJson } from '../src/shared/io';
-import { seekUrl, storyOutputs } from '../src/lib/outputs';
+import { toJson } from '../../../shared/io';
+import { seekUrl, storyOutputs } from '../outputs';
 import {
   addOutput,
   appendEvent,
@@ -12,8 +12,8 @@ import {
   type PublishEvent,
   publishPath,
   saveLedger,
-} from '../src/lib/publish';
-import { scriptDir } from '../src/shared/io';
+} from '../publish';
+import { scriptDir } from '../../../shared/io';
 
 // A bare temp root: the ledger and the committed review package are all storyOutputs reads.
 const TOPIC = 'heat-pumps';

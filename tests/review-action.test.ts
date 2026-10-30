@@ -3,7 +3,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { addOutputTo, loadLedger, recordApproved, recordUploaded } from '../src/lib/publish';
+import { addOutputTo, loadLedger, recordApproved, recordUploaded } from '../src/modules/publishing/publish';
 import { JOB_FILE, jobStatus, startJob } from '../src/lib/review-job';
 import { handle, sameOrigin } from '../src/admin/review-action';
 import { storySlug } from '../src/shared/io';

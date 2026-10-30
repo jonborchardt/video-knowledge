@@ -24,7 +24,7 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeF
 import { join } from 'node:path';
 import { passageReader, readJson, sha, toJson, ROOT, scriptDir, shortOf } from '../src/shared/io';
 import { boardNext } from '../src/lib/production';
-import { addOutputTo, currentBuild, recordApproved } from '../src/lib/publish';
+import { addOutputTo, currentBuild, recordApproved } from '../src/modules/publishing';
 import { approverProblem } from '../src/shared/approver';
 import { extractFrame, probe } from '../src/shared/ffmpeg';
 import { writeRenderCheck } from '../src/video/check';

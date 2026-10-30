@@ -4,8 +4,8 @@ import { isAbsolute, join, relative } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { contentGraph } from '../src/lib/content-graph';
 import { ROOT, toJson, topicDir } from '../src/shared/io';
-import { storyOutputs } from '../src/lib/outputs';
-import { appendEvent, emptyLedger, ledgerProblems, publishPath, saveLedger } from '../src/lib/publish';
+import { storyOutputs } from '../src/modules/publishing/outputs';
+import { appendEvent, emptyLedger, ledgerProblems, publishPath, saveLedger } from '../src/modules/publishing/publish';
 import { rehearsalDir, rehearsalLedger, rehearsalRefusal, rehearsalSteps, removeRehearsal } from '../src/lib/rehearsal';
 import { scriptDir } from '../src/shared/io';
 

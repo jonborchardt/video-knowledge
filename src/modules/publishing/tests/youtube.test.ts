@@ -15,7 +15,7 @@ import {
   loadCredentials,
   oembedStatus,
   youtubeClient,
-} from '../src/lib/youtube';
+} from '../youtube';
 
 const tmp = mkdtempSync(join(tmpdir(), 'vk-youtube-'));
 afterAll(() => rmSync(tmp, { recursive: true, force: true }));

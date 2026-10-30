@@ -8,7 +8,13 @@ import type { BuildSummary } from '../shared/build-report';
 import { ROOT, readJson } from '../shared/io';
 import { Refusal } from '../shared/refusal';
 import { lookStale } from '../shared/look';
-import { type OutputState, type OutputStatus, type PublishEvent, type ReviewNote, openOutput } from './publish';
+import {
+  type OutputState,
+  type OutputStatus,
+  type PublishEvent,
+  type ReviewNote,
+  openOutput,
+} from '../modules/publishing';
 import { FILES, scriptDir, shortId, shortOf, storySlug } from '../shared/io';
 import type { ScriptValidation } from '../shared/types';
 import { loadShorts } from './shorts';

@@ -8,7 +8,7 @@ import { readJson, toJson, topicDir } from '../src/shared/io';
 import { loadStories } from '../src/lib/stories';
 import { publicTopicNames } from '../src/lib/topics';
 import { scriptDir } from '../src/shared/io';
-import { uploadProblem } from '../src/lib/uploader';
+import { uploadProblem } from '../src/modules/publishing/uploader';
 import {
   assertWithinLimits,
   descriptionLinks,

@@ -8,7 +8,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import Base from '../layouts/Base.astro';
-import { noteLine, stampOf } from '../lib/publish';
+import { noteLine, stampOf } from '../modules/publishing';
 import { jobStatus } from '../lib/review-job';
 import { type Finding, reviewMediaHref, reviewView, storyIdOfPath } from '../lib/review-view';
 import { scriptDir, storySlug } from '../shared/io';
