@@ -10,6 +10,7 @@
     "src/lib/verdict-label.ts": "evidence",
     "src/lib/cited.ts": "evidence",
     "src/lib/datasets.ts": "evidence",
+    "src/lib/live-claims.ts": "evidence",
     "scripts/report.ts": "evidence",
     "scripts/record.mjs": "evidence",
     "scripts/record-sources.mjs": "evidence",
@@ -48,7 +49,7 @@
   ],
   "layoutOwner": "src/shared/io.ts",
   "readApi": {
-    "publishing": ["loadLedger", "mainOutput", "uploadProblem"],
+    "publishing": ["loadLedger", "mainOutput", "uploadProblem", "storyOutputs"],
     "website": ["contentGraph", "ctaPath", "loadCta", "matterPath", "resolveCtas", "storyNode", "CtaType"],
     "shorts": ["buildShortPackage", "loadShorts", "shortsPath"],
     "storyboard": ["pointProblems", "chartProblems", "datasetChart", "buildStoryboard", "renderStoryboardMd"],
@@ -74,11 +75,6 @@
       "from": "scripts/brand.ts",
       "to": "src/lib/topics.ts",
       "until": "brand"
-    },
-    {
-      "from": "scripts/report.ts",
-      "to": "src/modules/website/index.ts",
-      "until": "evidence"
     },
     {
       "from": "scripts/report.ts",

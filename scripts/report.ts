@@ -15,7 +15,7 @@ import {
   publicRecordPath,
   type PublicRecord,
 } from '../src/shared/public-record';
-import { contentGraph, liveClaims } from '../src/modules/website';
+import { liveClaimIds } from '../src/lib/live-claims';
 import { ROOT, toJson, TOPICS, topicDir } from '../src/shared/io';
 import { claimStates, ledgerClaims } from '../src/lib/finding-label';
 import { loadTopic, topicNames } from '../src/lib/topics';
@@ -27,13 +27,7 @@ const save = (topic: string, rec: PublicRecord) => writeFileSync(publicRecordPat
 const keep = (topic: string, before: Record<string, ClaimState> | null) =>
   save(
     topic,
-    nextPublicRecord(
-      loadPublicRecord(topic),
-      before,
-      ledgerClaims(loadTopic(topic)),
-      today,
-      liveClaims(contentGraph(ROOT, [topic]), topic),
-    ),
+    nextPublicRecord(loadPublicRecord(topic), before, ledgerClaims(loadTopic(topic)), today, liveClaimIds(topic)),
   );
 
 if (cmd === 'note') {
