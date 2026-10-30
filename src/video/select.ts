@@ -7,8 +7,7 @@ import { storyboardFingerprint } from '../shared/release-check';
 import { validationFingerprint } from '../shared/sentence-validation';
 import { scriptFingerprint, sentenceFingerprint, sentences } from '../shared/sentences';
 import { FILES, scriptDir, storySlug, readJson, ROOT } from '../shared/io';
-import type { EvidencePackage, Release, Script, ScriptValidation } from '../shared/types';
-import type { Scene, Storyboard } from '../lib/storyboard';
+import type { EvidencePackage, Release, Scene, Script, ScriptValidation, Storyboard } from '../shared/types';
 import {
   type KindRegistry,
   type SceneKind,

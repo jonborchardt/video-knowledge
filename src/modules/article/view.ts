@@ -3,9 +3,7 @@
 import { type ArticleRelease, type Callout, articleSentences } from './article';
 import { chartProblems, datasetChart } from '../../lib/chart-geometry';
 import { type PublicRecord, type Revision, isClaimRevision } from '../../shared/public-record';
-import type { Sentence } from '../../shared/types';
-import type { DataTable } from '../../lib/datasets';
-import type { ChartSpec } from '../../lib/storyboard';
+import type { ChartSpec, DataTable, Sentence } from '../../shared/types';
 import type { Topic } from '../../lib/topics';
 import { citeHref, citeLabel, datasetSource } from '../../lib/url';
 

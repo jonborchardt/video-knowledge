@@ -17,13 +17,12 @@ import {
   releaseFigures,
   renderArticleMd,
 } from '../article';
-import type { ChartSpec } from '../../../lib/storyboard';
+import type { ChartSpec, EvidencePackage, Sentence } from '../../../shared/types';
 import { Refusal } from '../../../shared/refusal';
 import { publicRecordProblems, withArticleRevision } from '../../../shared/public-record';
 import { LIMITS, figureData, figuresOf, validateArticle } from '../validation';
 import { buildPackage } from '../../script';
 import { scriptDir } from '../../../shared/io';
-import type { EvidencePackage, Sentence } from '../../../shared/types';
 import { approveArticle, article } from './article-helpers';
 import { claim, guess, sources } from '../../../../tests/corpus';
 import {

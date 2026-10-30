@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { readJson, sha, toJson, ROOT } from '../shared/io';
 import { RENDER_CHECK, type RenderCheckSummary, renderConfigSha } from '../lib/render-check';
 import { scriptDir, storySlug } from '../shared/io';
-import type { Scene } from '../lib/storyboard';
+import type { Scene } from '../shared/types';
 import { VIDEO_FILES, videoDir } from './files';
 import { type KindRegistry, type SceneKind, bespokeFor } from './kinds';
 import { componentVersion } from './render';

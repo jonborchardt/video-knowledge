@@ -6,9 +6,15 @@ import { Refusal } from '../../shared/refusal';
 import { approverProblem } from '../../shared/approver';
 import { validationFingerprint } from '../../shared/sentence-validation';
 import { sentenceFingerprint } from '../../shared/sentences';
-import type { Script, ScriptValidation, SectionName, Sentence } from '../../shared/types';
-import type { DataTable } from '../../lib/datasets';
-import type { ChartPoint, ChartSpec } from '../../lib/storyboard';
+import type {
+  ChartPoint,
+  ChartSpec,
+  DataTable,
+  Script,
+  ScriptValidation,
+  SectionName,
+  Sentence,
+} from '../../shared/types';
 
 /** What a figure draws, as released: a storyboard chart or an evidence dataset, copied so a later edit of either never
  *  reaches the page unapproved. */

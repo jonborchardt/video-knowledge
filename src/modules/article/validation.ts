@@ -19,6 +19,7 @@ import {
   type Corpus,
   type Verdict,
   type EvidencePackage,
+  type StoryboardPlan,
   type Issue,
   MAX_REVISIONS,
   type Script,
@@ -32,7 +33,7 @@ import { findingLabel } from '../../lib/finding-label';
 import { readJson, ROOT, FILES, scriptDir, storySlug } from '../../shared/io';
 import { norm, revisionsInPass, sentenceFingerprint, sentences } from '../../shared/sentences';
 import { type ValidateOptions, validateScript } from '../../shared/sentence-validation';
-import { pointProblems, type StoryboardPlan } from '../../lib/storyboard';
+import { pointProblems } from '../../lib/storyboard';
 import { articleStale } from './view';
 import { loadPublicRecord } from '../../shared/public-record';
 import type { Inspection } from '../../shared/inspect';

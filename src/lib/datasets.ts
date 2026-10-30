@@ -1,19 +1,11 @@
 // Evidence datasets: tables of cited chart points (topics/<topic>/data/*.json), checked like the storyboard's.
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import type { PassageReader } from '../shared/types';
+import type { DataTable, PassageReader } from '../shared/types';
 import { ROOT, readJson, topicDir } from '../shared/io';
-import { type ChartPoint, pointProblems } from './storyboard';
+import { pointProblems } from './storyboard';
 
-export interface DataTable {
-  id: string;
-  title: string;
-  asOf: string; // the period the source reports, e.g. "2024 annual"
-  retrieved: string; // YYYY-MM-DD: when the source's figures were fetched, as line 1 of each cited document states
-  note?: string;
-  columns: { key: string; label: string }[];
-  rows: { label: string; cells: ChartPoint[] }[]; // one cell per column, in order
-}
+export type { DataTable } from '../shared/types';
 
 export const dataRef = (topic: string, id: string) => `data:${topic}/${id}`;
 

@@ -617,3 +617,13 @@ export interface Storyboard {
   issues: Issue[];
   scenes: Scene[];
 }
+
+export interface DataTable {
+  id: string;
+  title: string;
+  asOf: string; // the period the source reports, e.g. "2024 annual"
+  retrieved: string; // YYYY-MM-DD: when the source's figures were fetched, as line 1 of each cited document states
+  note?: string;
+  columns: { key: string; label: string }[];
+  rows: { label: string; cells: ChartPoint[] }[]; // one cell per column, in order
+}

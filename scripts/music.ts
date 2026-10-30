@@ -15,8 +15,7 @@ import { basename, join, resolve } from 'node:path';
 import { readJson, sha, toJson, ROOT } from '../src/shared/io';
 import { probe } from '../src/shared/ffmpeg';
 import { FILES, scriptDir } from '../src/shared/io';
-import type { Script } from '../src/shared/types';
-import type { Storyboard } from '../src/lib/storyboard';
+import type { Script, Storyboard } from '../src/shared/types';
 import { COMPOSITION_FILE, type Composition, MUSIC_DIR, type Variation, loadComposition } from '../src/video/music';
 import { compositions, draftCueSheet, pickComposition } from '../src/video/music-draft';
 
