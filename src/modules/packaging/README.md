@@ -8,5 +8,5 @@ Packaging owns the review package of a rendered video: titles, descriptions, cap
 - Inspect: no; the board reads the package through publishing's `currentBuild`.
 - Public API (`index.ts`): `buildReviewPackage`, `REVIEW_FILES`, `descriptionLinks`, `renderDescription`, `keywordsOf`, `assertWithinLimits`, `renderSrt`, `MAX_CUE_LINE` and their types.
 - Read API: none.
-- Consumes: publishing's read API (`loadLedger`, `mainOutput`, `uploadProblem`); website's `contentGraph`, `matterPath`, `storyNode`, `loadCta`, `resolveCtas`, `ctaPath` (allowlisted edges until website is a module); video's `loadSegment` and the `Timeline`, `BuildReport` and `VIDEO_FILES` types and paths (allowlisted edges until video is a module).
+- Consumes: publishing's read API (`loadLedger`, `mainOutput`, `uploadProblem`); website's read API (`contentGraph`, `matterPath`, `storyNode`, `loadCta`, `resolveCtas`, `ctaPath`); video's `loadSegment` and the `Timeline`, `BuildReport` and `VIDEO_FILES` types and paths (allowlisted edges until video is a module).
 - Shared: `REVIEW_DIR` (the folder name under `video/`) lives in `src/shared/io.ts`.
