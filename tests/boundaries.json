@@ -20,7 +20,6 @@
     "scripts/stories.ts": "stories",
     "src/lib/evidence-package.ts": "script",
     "src/lib/script-md.ts": "script",
-    "src/lib/release.ts": "script",
     "scripts/script.ts": "script",
     "src/lib/storyboard.ts": "storyboard",
     "src/lib/chart-geometry.ts": "storyboard",
@@ -398,11 +397,6 @@
     },
     {
       "from": "src/lib/production.ts",
-      "to": "src/lib/release.ts",
-      "until": "script"
-    },
-    {
-      "from": "src/lib/production.ts",
       "to": "src/lib/render-check.ts",
       "until": "video"
     },
@@ -437,11 +431,6 @@
       "until": "stories"
     },
     {
-      "from": "src/lib/release.ts",
-      "to": "src/lib/storyboard.ts",
-      "until": "script"
-    },
-    {
       "from": "src/modules/website/review-view.ts",
       "to": "src/lib/shorts.ts",
       "until": "shorts"
@@ -450,16 +439,6 @@
       "from": "src/modules/website/review-view.ts",
       "to": "src/lib/stories.ts",
       "until": "stories"
-    },
-    {
-      "from": "src/lib/shorts.ts",
-      "to": "src/lib/release.ts",
-      "until": "shorts"
-    },
-    {
-      "from": "src/lib/shorts.ts",
-      "to": "src/lib/storyboard.ts",
-      "until": "shorts"
     },
     {
       "from": "src/modules/website/site-graph.ts",
@@ -625,11 +604,6 @@
       "from": "src/modules/packaging/package.ts",
       "to": "src/video/types.ts",
       "until": "video"
-    },
-    {
-      "from": "src/video/select.ts",
-      "to": "src/lib/release.ts",
-      "until": "script"
     },
     {
       "from": "src/video/select.ts",

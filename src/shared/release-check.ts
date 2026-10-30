@@ -1,8 +1,8 @@
-// Release: the fingerprints a person approved with `npm run script -- lock`, and the check that they still hold.
-import { sha, toJson } from '../shared/io';
-import { validationFingerprint } from '../shared/sentence-validation';
-import type { Issue, Release, ScriptValidation } from '../shared/types';
-import type { Storyboard } from './storyboard';
+// Release checks: pure checks of a lock against the current artifacts (fingerprints only); shared because script,
+// shorts and the board all ask them. The lock itself is written by `npm run script -- lock`.
+import { sha, toJson } from './io';
+import { validationFingerprint } from './sentence-validation';
+import type { Issue, Release, ScriptValidation, Storyboard } from './types';
 
 /** The filled storyboard minus its issue list (release warnings are written into it). */
 export const storyboardFingerprint = (sb: Storyboard) => {

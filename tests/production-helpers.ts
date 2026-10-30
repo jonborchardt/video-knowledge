@@ -22,7 +22,7 @@ import {
 } from '../src/shared/io';
 import { buildPackage } from '../src/lib/evidence-package';
 import { lookFingerprint } from '../src/shared/look';
-import { storyboardFingerprint } from '../src/lib/release';
+import { storyboardFingerprint } from '../src/shared/release-check';
 import { validationFingerprint } from '../src/shared/sentence-validation';
 import { renderCheckProblems } from '../src/lib/render-check';
 import { loadReview, reviewPath } from '../src/lib/review';

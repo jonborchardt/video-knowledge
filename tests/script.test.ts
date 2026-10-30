@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { buildPackage } from '../src/lib/evidence-package';
 import { docHasher, docReader, scriptDir, shortId, shortOf, storySlug, sha } from '../src/shared/io';
-import { releaseCheck, storyboardFingerprint } from '../src/lib/release';
+import { releaseCheck, storyboardFingerprint } from '../src/shared/release-check';
 import { approverProblem } from '../src/shared/approver';
 import { validationFingerprint } from '../src/shared/sentence-validation';
 import { type RenderCheckSummary, renderCheckProblems } from '../src/lib/render-check';

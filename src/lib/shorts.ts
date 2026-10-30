@@ -7,10 +7,11 @@
 import { join } from 'node:path';
 import { readJson, sha, toJson, ROOT, FILES, scriptDir } from '../shared/io';
 import { nums } from '../shared/numbers';
-import { releaseCheck, storyboardFingerprint } from './release';
+import { releaseCheck, storyboardFingerprint } from '../shared/release-check';
 import { validationFingerprint } from '../shared/sentence-validation';
 import { isStudyRef, sentences } from '../shared/sentences';
 import {
+  type ChartSpec,
   type EvidencePackage,
   MAX_SHORTS,
   type Release,
@@ -20,8 +21,8 @@ import {
   type ScriptValidation,
   type SectionName,
   type ShortFormat,
+  type Storyboard,
 } from '../shared/types';
-import type { ChartSpec, Storyboard } from './storyboard';
 
 export const SHORTS_FILE = 'shorts.json';
 export const SHORTS_REVIEW_FILE = 'shorts-review.json';

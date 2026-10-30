@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { toJson } from '../src/shared/io';
 import { scriptFingerprint, sectionsFor, sentenceFingerprint, sentences } from '../src/shared/sentences';
 import type { EvidencePackage, Script } from '../src/shared/types';
-import { storyboardFingerprint } from '../src/lib/release';
+import { storyboardFingerprint } from '../src/shared/release-check';
 import { validationFingerprint } from '../src/shared/sentence-validation';
 import { buildStoryboard } from '../src/lib/storyboard';
 import {

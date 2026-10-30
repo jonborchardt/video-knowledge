@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest';
 import { passageReader, docHasher, FILES, scriptDirs, readJson, toJson } from '../src/shared/io';
 import { loadReview } from '../src/lib/review';
 import { buildPackage } from '../src/lib/evidence-package';
-import { releaseCheck } from '../src/lib/release';
+import { releaseCheck } from '../src/shared/release-check';
 import { sentences } from '../src/shared/sentences';
 import type { EvidencePackage, Release, Script, ScriptReviewFile } from '../src/shared/types';
 import { validateScript } from '../src/shared/sentence-validation';

@@ -518,3 +518,98 @@ export interface PublicRecord {
   exhibits: Record<string, number>;
   revisions: Revision[];
 }
+
+// Storyboard vocabulary (the planner agent writes it, src/lib/storyboard.ts fills and checks it).
+export const VISUALS = [
+  'data-chart',
+  'diagram',
+  'animation',
+  'typography',
+  'document-excerpt',
+  'image',
+  'footage',
+  'transition',
+] as const;
+export type VisualCategory = (typeof VISUALS)[number];
+
+// What a renderer can draw without reading English: a closed set of chart types and numeric points.
+export const CHART_TYPES = ['bar', 'stacked-bar', 'dot-plot', 'waffle', 'table', 'stat-tiles'] as const;
+export type ChartType = (typeof CHART_TYPES)[number];
+export const UNITS = ['percent', 'usd', 'gbp', 'count', 'ratio'] as const;
+export type Unit = (typeof UNITS)[number];
+export interface ChartPoint {
+  label: string;
+  value: number; // the number to draw; for 'ratio' the denominator ("1 in 238" -> 238)
+  unit: Unit;
+  display: string; // as the passage states it ("$1,000 or less", "fourteen percent"); its figures must be in the passage
+  qualifier?: 'lt' | 'lte' | 'gt' | 'gte' | 'about'; // "less than $84" -> lt
+  cite: string; // the passage in the evidence package the point comes from
+}
+export interface ChartSpec {
+  type: ChartType;
+  title?: string;
+  points: ChartPoint[];
+  note?: string; // what the chart must not imply (e.g. "no distribution below $1,000 is known")
+}
+export interface ScenePlan {
+  id: string;
+  sentences: string[]; // sentence ids, in script order
+  purpose: string;
+  visual: {
+    category: VisualCategory;
+    description: string; // concrete enough to build without redesigning the narrative
+    onScreenText?: string[];
+    chart?: ChartSpec;
+    excerpt?: { cite: string; highlight?: string }; // document-excerpt: the passage to show and the words to mark
+    assetIds?: string[]; // ids in StoryboardPlan.assets: what has to be made or found for this scene
+  };
+  citations?: { label: string; cite?: string; source?: string }[]; // shown on screen, tied to this scene's claim
+  direction?: string; // transition, animation, timing guidance
+  pauseSeconds?: number; // intentional silence added to the narration time
+  narration?: string; // optional: if present it must equal the script's words exactly
+}
+// Required assets, registered once and referenced by id, kept apart from the prose guidance in visual.description.
+export type AssetKind = 'component' | 'animation' | 'image' | 'document-render';
+export interface Asset {
+  kind: AssetKind;
+  description: string;
+}
+export interface StoryboardPlan {
+  topic: string;
+  story: string;
+  scriptFingerprint: string; // of the script the scenes were planned against
+  generation: { model: string; brief: string; date: string; notes?: string };
+  assets: Record<string, Asset>;
+  scenes: ScenePlan[];
+}
+/** One narration sentence on the timeline, in absolute seconds from the start of the video. */
+export interface SentenceTiming {
+  id: string;
+  start: number;
+  duration: number;
+  end: number;
+}
+export interface Scene extends Omit<ScenePlan, 'narration'> {
+  order: number;
+  narration: string;
+  words: number;
+  spokenWords: number; // numeral-aware (src/shared/numbers.ts spokenWords); what the timing is computed from
+  timing: SentenceTiming[]; // one entry per sentence in scene order; the scene's pause follows the last
+  start: number; // seconds
+  duration: number; // sum of the sentence durations plus pauseSeconds
+  end: number;
+}
+export interface Storyboard {
+  topic: string;
+  story: string;
+  title: string;
+  scriptFingerprint: string;
+  scriptStatus: string;
+  wordsPerMinute: number;
+  runtime: number; // seconds, including pauses
+  generation: StoryboardPlan['generation'];
+  assets: Record<string, Asset>;
+  status: 'ok' | 'blocked';
+  issues: Issue[];
+  scenes: Scene[];
+}
