@@ -3,14 +3,14 @@
 //   validate <topic> <story-id> [--wpm N]   check script.json (+ script-review.json); writes validation.json, script.md, review.md
 //   show <topic> <story-id> [sentence-id]   the reviewer's sheet: each sentence, its assertions, fingerprints and passages
 //   storyboard <topic> <story-id>           fill and check storyboard.json against the script; writes storyboard.md, review.md
-//   run <topic> <story-id> [--wpm N]        every stage whose inputs exist, then the next agent step (see scripts/briefs/)
+//   run <topic> <story-id> [--wpm N]        every stage whose inputs exist, then the next agent step (see the briefs)
 //   lock <topic> <story-id> --approved-by "<name>"   write release.json (the approved fingerprints) when validation passed, the storyboard is ok
 //                                                    and the render check (re-run) is ok with every graphic approved; a real name or "automated: ..."
 // Stages are independent and persisted; a rejected script never touches research or story discovery.
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { corpusOf } from '../src/lib/corpus';
+import { corpusOf } from '../../lib/corpus';
 import {
   passageReader,
   fileSha,
@@ -22,21 +22,21 @@ import {
   FILES,
   scriptDir,
   shortOf,
-} from '../src/shared/io';
-import { loadReview, reviewPath } from '../src/lib/review';
-import { buildPackage, transcriptReader } from '../src/lib/evidence-package';
-import { releaseCheck, storyboardFingerprint } from '../src/shared/release-check';
-import { approverProblem } from '../src/shared/approver';
-import { validationFingerprint } from '../src/shared/sentence-validation';
-import { RENDER_CHECK, type RenderCheckSummary, renderCheckProblems } from '../src/lib/render-check';
-import { sentenceFingerprint, sentences } from '../src/shared/sentences';
-import type { EvidencePackage, Release, Script, ScriptReviewFile, ScriptValidation } from '../src/shared/types';
-import { renderReviewMd, renderScriptMd } from '../src/lib/script-md';
-import { buildShortPackage, loadShorts, shortsPath } from '../src/modules/shorts';
-import { validateScript } from '../src/shared/sentence-validation';
-import { chainOf, loadStories, storiesPath } from '../src/lib/stories';
-import { type Storyboard, type StoryboardPlan, buildStoryboard, renderStoryboardMd } from '../src/lib/storyboard';
-import { loadTopic } from '../src/lib/topics';
+} from '../../shared/io';
+import { loadReview, reviewPath } from '../../lib/review';
+import { buildPackage, transcriptReader } from './evidence-package';
+import { releaseCheck, storyboardFingerprint } from '../../shared/release-check';
+import { approverProblem } from '../../shared/approver';
+import { validationFingerprint } from '../../shared/sentence-validation';
+import { RENDER_CHECK, type RenderCheckSummary, renderCheckProblems } from '../../lib/render-check';
+import { sentenceFingerprint, sentences } from '../../shared/sentences';
+import type { EvidencePackage, Release, Script, ScriptReviewFile, ScriptValidation } from '../../shared/types';
+import { renderReviewMd, renderScriptMd } from './script-md';
+import { buildShortPackage, loadShorts, shortsPath } from '../shorts';
+import { validateScript } from '../../shared/sentence-validation';
+import { chainOf, loadStories, storiesPath } from '../../lib/stories';
+import { type Storyboard, type StoryboardPlan, buildStoryboard, renderStoryboardMd } from '../../lib/storyboard';
+import { loadTopic } from '../../lib/topics';
 
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
 const flag = (name: string) => {
@@ -125,7 +125,7 @@ function stagePackage(): EvidencePackage {
 
 function stageValidate(): { script: Script; v: ScriptValidation; pkg: EvidencePackage | null } {
   const script = readJson<Script>(p(FILES.script));
-  if (!script) throw new Error(`no ${rel(p(FILES.script))}; give an agent scripts/briefs/script.md`);
+  if (!script) throw new Error(`no ${rel(p(FILES.script))}; give an agent src/modules/script/briefs/script.md`);
   const wpm = Number(flag('--wpm'));
   if (wpm) script.generation = { ...script.generation, wordsPerMinute: wpm };
   const pkg = readJson<EvidencePackage>(p(FILES.pkg));
@@ -353,7 +353,9 @@ switch (cmd) {
   case 'run': {
     stagePackage();
     if (!existsSync(p(FILES.script))) {
-      console.log(`next: an agent writes ${rel(p(FILES.script))} following scripts/briefs/script.md, then rerun`);
+      console.log(
+        `next: an agent writes ${rel(p(FILES.script))} following src/modules/script/briefs/script.md, then rerun`,
+      );
       break;
     }
     const { v } = stageValidate();
@@ -366,7 +368,7 @@ switch (cmd) {
     }
     if (!existsSync(p(FILES.review)) || v.counts.unreviewed)
       console.log(
-        `next: an independent agent writes ${rel(p(FILES.review))} following scripts/briefs/script-review.md (npm run script -- show ${topic} ${storyId} prints the sheet), then rerun`,
+        `next: an independent agent writes ${rel(p(FILES.review))} following src/modules/script/briefs/script-review.md (npm run script -- show ${topic} ${storyId} prints the sheet), then rerun`,
       );
     if (!existsSync(p(FILES.storyboard))) {
       console.log(

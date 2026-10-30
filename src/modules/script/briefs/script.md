@@ -4,7 +4,7 @@ Give an agent this file plus the topic id and story id. The agent reads
 `topics/<topic>/scripts/<slug>/evidence-package.json` (run `npm run script -- package <topic> <story-id>`
 first) and the passages it cites in `topics/<topic>/sources/`, writes `topics/<topic>/scripts/<slug>/script.json`,
 and runs `npm run script -- validate <topic> <story-id>` until the deterministic checks pass. An
-independent reviewer (`scripts/briefs/script-review.md`) then judges the wording; the writer revises
+independent reviewer (`src/modules/script/briefs/script-review.md`) then judges the wording; the writer revises
 against both. Nothing here adds evidence: if the package cannot support a sentence, the sentence
 changes, not the evidence.
 
@@ -106,7 +106,7 @@ no figure the evidence does not; an invented typical income is not.
   "revision": 1,
   "generation": {
     "model": "<model id>",
-    "brief": "scripts/briefs/script.md",
+    "brief": "src/modules/script/briefs/script.md",
     "date": "<ISO date>",
     "wordsPerMinute": 150,
     "evidencePackage": "<package fingerprint>"

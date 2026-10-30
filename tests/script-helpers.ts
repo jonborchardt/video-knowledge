@@ -9,7 +9,7 @@ import type {
   ScriptReviewFile,
   Sentence,
 } from '../src/shared/types';
-import { buildPackage } from '../src/lib/evidence-package';
+import { buildPackage } from '../src/modules/script';
 import { scriptFingerprint, sentenceFingerprint, sentences } from '../src/shared/sentences';
 import { validateScript } from '../src/shared/sentence-validation';
 import { discover } from '../src/lib/stories';

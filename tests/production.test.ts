@@ -167,7 +167,7 @@ describe('review findings', () => {
         writeFileSync(join(dir, 'validation.json'), toJson(v));
         const prod = productionOf(topic, story, root)!;
         expect(prod.halt).toMatchObject({ kind: 'review-findings', stage: 'script' });
-        expect(prod.next).toContain('agent: scripts/briefs/script.md (revise)');
+        expect(prod.next).toContain('agent: src/modules/script/briefs/script.md (revise)');
       } finally {
         fx.cleanup();
       }
@@ -265,12 +265,12 @@ describe('board next', () => {
 describe('next steps', () => {
   it('splits a next line into commands, agent prompts and manual steps', () => {
     const steps = stepsOf(
-      'agent: scripts/briefs/script-review.md (re-review), then npm run script -- validate t s; public release is blocked: draft voice',
+      'agent: src/modules/script/briefs/script-review.md (re-review), then npm run script -- validate t s; public release is blocked: draft voice',
       't',
       's',
     );
     expect(steps.map((x) => x.kind)).toEqual(['prompt', 'run', 'do']);
-    expect(steps[0].text).toContain('Read scripts/briefs/script-review.md');
+    expect(steps[0].text).toContain('Read src/modules/script/briefs/script-review.md');
     expect(steps[0].text).toContain('Story: s');
     expect(steps[0].text).toContain('re-review');
     expect(steps[1].text).toBe('npm run script -- validate t s');
@@ -296,8 +296,10 @@ describe('next steps', () => {
       kind: 'prompt',
       text: expect.stringContaining('Read src/modules/article/briefs/article.md and follow it.'),
     });
-    expect(stepsOf('agent: scripts/briefs/script.md (notes)', 't', 's')[0].text).toContain('send-back pass');
-    expect(stepsOf('agent: scripts/briefs/script.md (corrective)', 't', 's')[0].text).toContain('corrective pass');
+    expect(stepsOf('agent: src/modules/script/briefs/script.md (notes)', 't', 's')[0].text).toContain('send-back pass');
+    expect(stepsOf('agent: src/modules/script/briefs/script.md (corrective)', 't', 's')[0].text).toContain(
+      'corrective pass',
+    );
   });
 
   it('gives every board item at least one step', () => {

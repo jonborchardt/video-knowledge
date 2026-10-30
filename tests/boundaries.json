@@ -18,9 +18,6 @@
     "src/lib/stories.ts": "stories",
     "src/lib/review.ts": "stories",
     "scripts/stories.ts": "stories",
-    "src/lib/evidence-package.ts": "script",
-    "src/lib/script-md.ts": "script",
-    "scripts/script.ts": "script",
     "src/lib/storyboard.ts": "storyboard",
     "src/lib/chart-geometry.ts": "storyboard",
     "src/video/": "video",
@@ -110,32 +107,32 @@
       "until": "shared"
     },
     {
-      "from": "scripts/script.ts",
+      "from": "src/modules/script/cli.ts",
       "to": "src/lib/corpus.ts",
       "until": "evidence"
     },
     {
-      "from": "scripts/script.ts",
+      "from": "src/modules/script/cli.ts",
       "to": "src/lib/render-check.ts",
       "until": "video"
     },
     {
-      "from": "scripts/script.ts",
+      "from": "src/modules/script/cli.ts",
       "to": "src/lib/review.ts",
       "until": "stories"
     },
     {
-      "from": "scripts/script.ts",
+      "from": "src/modules/script/cli.ts",
       "to": "src/lib/stories.ts",
       "until": "stories"
     },
     {
-      "from": "scripts/script.ts",
+      "from": "src/modules/script/cli.ts",
       "to": "src/lib/storyboard.ts",
       "until": "storyboard"
     },
     {
-      "from": "scripts/script.ts",
+      "from": "src/modules/script/cli.ts",
       "to": "src/lib/topics.ts",
       "until": "evidence"
     },
@@ -373,11 +370,6 @@
       "from": "src/lib/production.ts",
       "to": "src/lib/corpus.ts",
       "until": "evidence"
-    },
-    {
-      "from": "src/lib/production.ts",
-      "to": "src/lib/evidence-package.ts",
-      "until": "script"
     },
     {
       "from": "src/lib/production.ts",

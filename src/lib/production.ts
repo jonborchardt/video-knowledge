@@ -68,7 +68,7 @@ import {
   uploadMetadataOf,
 } from '../modules/publishing';
 import { loadReview, reviewPath } from './review';
-import { buildPackage } from './evidence-package';
+import { buildPackage } from '../modules/script';
 import { releaseCheck, storyboardFingerprint } from '../shared/release-check';
 import { validationFingerprint } from '../shared/sentence-validation';
 import { validateScript } from '../shared/sentence-validation';
@@ -428,7 +428,7 @@ const scriptStage: BoardStage = ({ r, pkg, script }) => {
         stage: 'script',
         kind: 'missing',
         why: 'no script.json',
-        cmd: `agent: scripts/briefs/script.md -> ${r(FILES.script)}`,
+        cmd: `agent: src/modules/script/briefs/script.md -> ${r(FILES.script)}`,
       },
     };
   const bound = !pkg || script.generation?.evidencePackage === pkg.fingerprint;
@@ -448,7 +448,7 @@ const scriptStage: BoardStage = ({ r, pkg, script }) => {
           stage: 'script',
           kind: 'stale',
           why: 'the script was written against an older evidence package',
-          cmd: `agent: scripts/briefs/script.md (revise)`,
+          cmd: `agent: src/modules/script/briefs/script.md (revise)`,
         }
       : wants.length
         ? {
@@ -507,7 +507,7 @@ const validationStage: BoardStage = ({ topic, storyId, root, r, read, t, review,
               .join(', ')}`,
             cmd: live.revisionLimitReached
               ? 'stop: revision limit reached with blocking findings'
-              : `agent: scripts/briefs/script.md (revise), then ${cmd}`,
+              : `agent: src/modules/script/briefs/script.md (revise), then ${cmd}`,
           }
         : undefined;
   return { checks: [check], halt, live };
@@ -538,7 +538,7 @@ const reviewStage: BoardStage = ({ topic, storyId, r, pkg, script, sreview, live
         stage: 'review',
         kind: 'missing',
         why: 'no script-review.json',
-        cmd: `agent: scripts/briefs/script-review.md -> ${r(FILES.review)}`,
+        cmd: `agent: src/modules/script/briefs/script-review.md -> ${r(FILES.review)}`,
       },
     };
   const bound = sreview.packageFingerprint === pkg.fingerprint;
@@ -567,13 +567,13 @@ const reviewStage: BoardStage = ({ topic, storyId, r, pkg, script, sreview, live
               stage: 'script',
               kind: 'review-findings',
               why: `the reviewer holds ${held.join(', ')} on findings`,
-              cmd: `agent: scripts/briefs/script.md (revise), then npm run script -- validate ${topic} ${storyId}`,
+              cmd: `agent: src/modules/script/briefs/script.md (revise), then npm run script -- validate ${topic} ${storyId}`,
             }
           : {
               stage: 'review',
               kind: 'review-pending',
               why: 'the review does not cover the current script',
-              cmd: `agent: scripts/briefs/script-review.md (re-review), then npm run script -- validate ${topic} ${storyId}`,
+              cmd: `agent: src/modules/script/briefs/script-review.md (re-review), then npm run script -- validate ${topic} ${storyId}`,
             },
   };
 };

@@ -45,7 +45,7 @@ const NUMBERISH = /\d|\$|\bper ?cent\b|\bpercent\b/i;
 // A numbers recap: a sentence that re-reads two or more figures from documents the viewer already heard them from.
 // The next sentence or two may unpack a figure; past that it is a repeat. One figure reused as context ("of the 70
 // statements"), counts up to ten ("five years") and years stay quiet. ponytail: figures only; a restated point
-// without numbers is the reviewer's to find (scripts/briefs/script-review.md, repetition).
+// without numbers is the reviewer's to find (src/modules/script/briefs/script-review.md, repetition).
 const NEAR = 2;
 const YEAR = /^(1[6-9]|20)\d\d$/;
 /** The figures a viewer would notice: not counts up to ten, not years (a bare 1600-2099; "$1,950" and "2,000 people"
@@ -647,7 +647,7 @@ export function validateScript(
       review,
     ),
   );
-  // Runtime is reported, never targeted: a script is as long as its story needs (scripts/briefs/script.md).
+  // Runtime is reported, never targeted: a script is as long as its story needs (src/modules/script/briefs/script.md).
   const w = results.reduce((n, s) => n + s.words, 0);
   const sw = results.reduce((n, s) => n + spokenWords(s.text), 0);
   const mins = minutes(sw, wpm);

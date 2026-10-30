@@ -94,7 +94,7 @@ send-back prompt, each `[m:ss scene sentence]` placed; treat them like any other
 Route each note to the artifact that owns it, then run the Loop:
 
 - wording, cuts, order: set `passStartRevision` in `script.json` to its current `revision` (the pass
-  gets its own three revisions), then a fresh writer with `agent: scripts/briefs/script.md (notes)`
+  gets its own three revisions), then a fresh writer with `agent: src/modules/script/briefs/script.md (notes)`
   and the notes; the board then asks for the re-review, storyboard, render check and lock again.
 - a graphic: a fresh `graphics.md` agent for that scene with the note, then `visual-review.md`. A component edit
   does not change any fingerprint the build is bound to, so after the graphic is approved run

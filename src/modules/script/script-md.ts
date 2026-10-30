@@ -6,8 +6,8 @@ import {
   MAX_REVISIONS,
   type Script,
   type ScriptValidation,
-} from '../shared/types';
-import { revisionsInPass, sectionTitle } from '../shared/sentences';
+} from '../../shared/types';
+import { revisionsInPass, sectionTitle } from '../../shared/sentences';
 
 const MARK: Record<string, string> = { verified: 'ok', 'needs-review': 'review', blocked: 'BLOCKED' };
 const mmss = (sec: number) => `${Math.floor(sec / 60)}:${String(Math.round(sec % 60)).padStart(2, '0')}`;

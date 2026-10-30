@@ -92,7 +92,7 @@ never summarised as settled, and a Reported one is what sources say, not what is
 
 ## Sentences
 
-Prose sentences are typed and asserted exactly as in the script brief (`scripts/briefs/script.md`, "The file"):
+Prose sentences are typed and asserted exactly as in the script brief (`src/modules/script/briefs/script.md`, "The file"):
 
 - `type`: `factual` (offered as true), `attributed` (reports what a source said), `hypothetical`, `rhetorical`,
   `transitional`. A factual or attributed sentence needs at least one assertion; the other three carry no figure

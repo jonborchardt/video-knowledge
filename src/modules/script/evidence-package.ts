@@ -12,11 +12,11 @@ import type {
   PackageEvidence,
   Story,
   ReviewFile,
-} from '../shared/types';
-import { applicabilityFor } from '../shared/evidence-gate';
-import { docReader, sha, topicDir, ROOT, type DocReader } from '../shared/io';
-import { MAX_QUESTIONS } from '../shared/types';
-import { docOf, isStudyRef, norm } from '../shared/sentences';
+} from '../../shared/types';
+import { applicabilityFor } from '../../shared/evidence-gate';
+import { docReader, sha, topicDir, ROOT, type DocReader } from '../../shared/io';
+import { MAX_QUESTIONS } from '../../shared/types';
+import { docOf, isStudyRef, norm } from '../../shared/sentences';
 
 const DEFAULT_AUDIENCE =
   'General YouTube audience with no prior knowledge of MLM pay plans or research methods (default; set audience in story-review.json to change).';

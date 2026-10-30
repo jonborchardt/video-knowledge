@@ -2,16 +2,16 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { buildPackage } from '../src/lib/evidence-package';
-import { docHasher, docReader, scriptDir, shortId, shortOf, storySlug, sha } from '../src/shared/io';
-import { releaseCheck, storyboardFingerprint } from '../src/shared/release-check';
-import { approverProblem } from '../src/shared/approver';
-import { validationFingerprint } from '../src/shared/sentence-validation';
-import { type RenderCheckSummary, renderCheckProblems } from '../src/lib/render-check';
-import { revisionsInPass, sectionsFor, sentenceFingerprint, sentences, words } from '../src/shared/sentences';
-import type { EvidencePackage, Release, Script, Section, Sentence, PassageReader } from '../src/shared/types';
-import { evalExpr, repetitions, validateScript } from '../src/shared/sentence-validation';
-import { spokenWords } from '../src/shared/numbers';
+import { buildPackage } from '../evidence-package';
+import { docHasher, docReader, scriptDir, shortId, shortOf, storySlug, sha } from '../../../shared/io';
+import { releaseCheck, storyboardFingerprint } from '../../../shared/release-check';
+import { approverProblem } from '../../../shared/approver';
+import { validationFingerprint } from '../../../shared/sentence-validation';
+import { type RenderCheckSummary, renderCheckProblems } from '../../../lib/render-check';
+import { revisionsInPass, sectionsFor, sentenceFingerprint, sentences, words } from '../../../shared/sentences';
+import type { EvidencePackage, Release, Script, Section, Sentence, PassageReader } from '../../../shared/types';
+import { evalExpr, repetitions, validateScript } from '../../../shared/sentence-validation';
+import { spokenWords } from '../../../shared/numbers';
 import {
   type ChartPoint,
   type ChartSpec,
@@ -20,8 +20,8 @@ import {
   type Unit,
   buildStoryboard,
   pointProblems,
-} from '../src/lib/storyboard';
-import { TOPIC, claim, study } from './corpus';
+} from '../../../lib/storyboard';
+import { TOPIC, claim, study } from '../../../../tests/corpus';
 import {
   DOC_D,
   MLM,
@@ -45,7 +45,7 @@ import {
   sentence,
   story,
   t,
-} from './script-helpers';
+} from '../../../../tests/script-helpers';
 
 describe('evidence package', () => {
   it('carries the reviewed claim list, not the recap group, and no stale gaps', () => {

@@ -21,7 +21,7 @@ import type { ChartSpec } from '../../../lib/storyboard';
 import { Refusal } from '../../../shared/refusal';
 import { publicRecordProblems, withArticleRevision } from '../../../shared/public-record';
 import { LIMITS, figureData, figuresOf, validateArticle } from '../validation';
-import { buildPackage } from '../../../lib/evidence-package';
+import { buildPackage } from '../../script';
 import { scriptDir } from '../../../shared/io';
 import type { EvidencePackage, Sentence } from '../../../shared/types';
 import { approveArticle, article } from './article-helpers';

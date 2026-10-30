@@ -20,7 +20,7 @@ import {
   scriptDir,
   shortId,
 } from '../src/shared/io';
-import { buildPackage } from '../src/lib/evidence-package';
+import { buildPackage } from '../src/modules/script';
 import { lookFingerprint } from '../src/shared/look';
 import { storyboardFingerprint } from '../src/shared/release-check';
 import { validationFingerprint } from '../src/shared/sentence-validation';
@@ -133,7 +133,7 @@ export function syntheticProduction(upTo: FixtureStage, opts: { release?: boolea
     revision: 1,
     generation: {
       model: 'fixture',
-      brief: 'scripts/briefs/script.md',
+      brief: 'src/modules/script/briefs/script.md',
       date: '2026-01-01',
       wordsPerMinute: 150,
       evidencePackage: pkg.fingerprint,
@@ -337,7 +337,7 @@ export function syntheticShort(upTo: 'reviewed' | 'packaged', opts: { release?: 
     revision: 1,
     generation: {
       model: 'fixture',
-      brief: 'scripts/briefs/script.md',
+      brief: 'src/modules/script/briefs/script.md',
       date: '2026-01-01',
       wordsPerMinute: 150,
       evidencePackage: pkg.fingerprint,

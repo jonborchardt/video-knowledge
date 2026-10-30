@@ -59,7 +59,7 @@ the sheet prints; a later edit changes it and the approval lapses.
 
 ```json
 {
-  "reviewer": "scripts/briefs/script-review.md",
+  "reviewer": "src/modules/script/briefs/script-review.md",
   "model": "<model id>",
   "date": "<ISO date>",
   "revision": 1,
