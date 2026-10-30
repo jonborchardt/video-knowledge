@@ -15,7 +15,7 @@ import {
   type ReviewNote,
   openOutput,
 } from '../modules/publishing';
-import { FILES, scriptDir, shortId, shortOf, storySlug } from '../shared/io';
+import { FILES, scriptDir, shortId, shortOf, storySlug, topicDir } from '../shared/io';
 import type { ScriptValidation } from '../shared/types';
 import { loadShorts } from './shorts';
 import { loadStories } from './stories';
@@ -86,7 +86,7 @@ const RANK = { blocking: 0, warning: 1, info: 2 } as const;
 
 const packageOf = (dir: string) => readJson<ReviewJsonLite>(join(dir, 'video', 'review', 'review.json'));
 const pathOf = (topic: string, storyId: string, root: string) =>
-  relative(join(root, 'topics', topic, 'scripts'), scriptDir(topic, storyId, root))
+  relative(join(topicDir(topic, root), 'scripts'), scriptDir(topic, storyId, root))
     .split(/[\\/]/)
     .join('/');
 /** The output's ledger view, or null when it has none yet (a Short before its package records it). */

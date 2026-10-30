@@ -24,6 +24,8 @@ export const ROOT = (() => {
  *  the store, reports and approved scripts keep the same cite text wherever the folder sits. */
 export const TOPICS = 'topics';
 export const topicDir = (topic: string, root = ROOT) => join(root, TOPICS, topic);
+// the folder every topic lives in; the layout owner's, so no other file names 'topics'
+export const topicsDir = (root = ROOT) => join(root, TOPICS);
 
 export const sha = (s: string | Buffer) => createHash('sha1').update(s).digest('hex').slice(0, 10);
 export const lf = (s: string) => s.replace(/\r\n?/g, '\n');

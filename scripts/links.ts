@@ -9,7 +9,7 @@ import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { contentGraph, distPages, related, storyNode } from '../src/lib/content-graph';
 import { type Cta, loadCta, resolveCtas } from '../src/lib/cta';
-import { ROOT } from '../src/shared/io';
+import { ROOT, topicsDir } from '../src/shared/io';
 import { textUrls } from '../src/lib/url';
 
 const DIST = join(ROOT, 'dist');
@@ -27,7 +27,7 @@ if (cmd === 'freeze') {
   const urls = new Set<string>();
   for (const html of files(DIST, '.html'))
     for (const [, u] of html.matchAll(/href="(https?:\/\/[^"]+)"/g)) urls.add(u.replaceAll('&amp;', '&'));
-  for (const d of files(join(ROOT, 'topics'), 'description.txt')) for (const u of textUrls(d)) urls.add(u);
+  for (const d of files(topicsDir(ROOT), 'description.txt')) for (const u of textUrls(d)) urls.add(u);
   const failures: string[] = [];
   const ok = async (u: string) => {
     for (const method of ['HEAD', 'GET']) {
