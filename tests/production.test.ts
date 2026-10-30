@@ -286,6 +286,10 @@ describe('next steps', () => {
   });
 
   it('promptOf carries the notes and corrective modes', () => {
+    expect(stepsOf('agent: src/modules/article/briefs/article.md -> a.json', 't', 's')[0]).toMatchObject({
+      kind: 'prompt',
+      text: expect.stringContaining('Read src/modules/article/briefs/article.md and follow it.'),
+    });
     expect(stepsOf('agent: scripts/briefs/script.md (notes)', 't', 's')[0].text).toContain('send-back pass');
     expect(stepsOf('agent: scripts/briefs/script.md (corrective)', 't', 's')[0].text).toContain('corrective pass');
   });

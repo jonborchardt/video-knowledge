@@ -1523,9 +1523,17 @@ const MODES: Record<string, string> = {
   corrective: 'This is a corrective pass: change only the sentences listed in generation.corrective for this revision.',
 };
 
-const promptOf = (brief: string, topic: string, story?: string, mode?: string, out?: string, point?: string) =>
+const promptOf = (
+  brief: string,
+  topic: string,
+  story?: string,
+  mode?: string,
+  out?: string,
+  point?: string,
+  dir = 'scripts/briefs',
+) =>
   [
-    `Read scripts/briefs/${brief} and follow it.`,
+    `Read ${dir}/${brief} and follow it.`,
     `Topic: ${topic}`,
     story && `Story: ${story}`,
     mode && /^sc\d+(,sc\d+)*$/.test(mode) && `Scenes: ${mode}`,
@@ -1541,14 +1549,16 @@ const promptOf = (brief: string, topic: string, story?: string, mode?: string, o
     .join('\n');
 
 /** Splits a board `next` line into steps. It reads the conventions the stages above write: `npm run ...`,
- *  `agent: scripts/briefs/<brief> (<mode>) -> <file>`, `settle in story-review.json: ...`, a check detail with its
+ *  `agent: <briefs dir>/<brief> (<mode>) -> <file>` (`scripts/briefs` or a module's `briefs`), `settle in story-review.json: ...`, a check detail with its
  *  fix in parentheses, steps joined by "then", and the clearance suffix. Anything else is a manual step. */
 export function stepsOf(next: string, topic: string, story?: string): Step[] {
   const [main, blocked] = next.split('; public release is blocked: ');
   const steps = main.split(/,? then /).flatMap((part): Step[] => {
     if (part.startsWith('npm run ')) return [{ kind: 'run', text: part }];
-    const agent = /^agent: scripts\/briefs\/(\S+?\.md)(?: \(([\w,-]+)\))?(?: -> (\S+))?$/.exec(part);
-    if (agent) return [{ kind: 'prompt', text: promptOf(agent[1], topic, story, agent[2], agent[3]) }];
+    const agent =
+      /^agent: (scripts\/briefs|src\/modules\/[\w-]+\/briefs)\/(\S+?\.md)(?: \(([\w,-]+)\))?(?: -> (\S+))?$/.exec(part);
+    if (agent)
+      return [{ kind: 'prompt', text: promptOf(agent[2], topic, story, agent[3], agent[4], undefined, agent[1]) }];
     const settle = /^settle in story-review\.json: (.*)$/s.exec(part);
     if (settle)
       return [
