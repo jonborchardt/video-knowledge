@@ -496,7 +496,7 @@ It asks for:
 - **Evidence (720p or larger, address bar visible, one file under 10 MB each):** the privacy page showing its YouTube
   sections, the Google Privacy Policy link and what is kept; the home page showing the footer's Privacy link beside the
   channel links; the terms; the consent screen, scopes and revocation; for uploading, the upload script
-  (`src/lib/uploader.ts` with `scripts/publish.ts`, public in this repository) or a screencast.
+  (`src/modules/publishing/uploader.ts` with `src/modules/publishing/cli.ts`, public in this repository) or a screencast.
 - **Attestations:** the YouTube API Services Terms of Service, the Google Privacy Policy, the Developer Policies,
   termination and accuracy.
 

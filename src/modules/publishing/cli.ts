@@ -24,7 +24,7 @@
 //                                                             file size, visibility, restrictions) and record it; exit 1 on a failed check
 // Every verb is idempotent: a key already in the ledger prints the existing event and exits 0. A refusal prints one line and
 // exits 2 without writing. --by defaults to $PUBLISH_BY, else git's user.name; approve needs it explicitly.
-// The ledger is topics/<topic>/scripts/<slug>/publish.json (src/lib/publish.ts); events are written only here, metadata may
+// The ledger is topics/<topic>/scripts/<slug>/publish.json (src/modules/publishing/publish.ts); events are written only here, metadata may
 // be hand-edited.
 import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
