@@ -18,8 +18,7 @@
     "src/lib/stories.ts": "stories",
     "src/lib/review.ts": "stories",
     "scripts/stories.ts": "stories",
-    "src/lib/storyboard.ts": "storyboard",
-    "src/lib/chart-geometry.ts": "storyboard",
+    "src/lib/storyboard.ts": "shared",
     "src/video/": "video",
     "src/lib/render-check.ts": "video",
     "scripts/video.ts": "video",
@@ -47,13 +46,15 @@
     "src/video/chart.ts",
     "src/video/cues.ts",
     "src/video/excerpt.ts",
-    "src/shared/types.ts"
+    "src/shared/types.ts",
+    "src/lib/storyboard.ts"
   ],
   "layoutOwner": "src/shared/io.ts",
   "readApi": {
     "publishing": ["loadLedger", "mainOutput", "uploadProblem"],
     "website": ["contentGraph", "ctaPath", "loadCta", "matterPath", "resolveCtas", "storyNode", "CtaType"],
-    "shorts": ["buildShortPackage", "loadShorts", "shortsPath"]
+    "shorts": ["buildShortPackage", "loadShorts", "shortsPath"],
+    "storyboard": ["pointProblems", "chartProblems", "datasetChart", "buildStoryboard", "renderStoryboardMd"]
   },
   "edges": [
     {
@@ -120,11 +121,6 @@
       "from": "src/modules/script/cli.ts",
       "to": "src/lib/stories.ts",
       "until": "stories"
-    },
-    {
-      "from": "src/modules/script/cli.ts",
-      "to": "src/lib/storyboard.ts",
-      "until": "storyboard"
     },
     {
       "from": "src/modules/script/cli.ts",
@@ -200,11 +196,6 @@
       "from": "src/components/ArticleBody.astro",
       "to": "src/lib/finding-label.ts",
       "until": "evidence"
-    },
-    {
-      "from": "src/components/Chart.astro",
-      "to": "src/lib/chart-geometry.ts",
-      "until": "storyboard"
     },
     {
       "from": "src/components/ClaimCard.astro",
@@ -292,16 +283,6 @@
       "until": "evidence"
     },
     {
-      "from": "src/modules/article/validation.ts",
-      "to": "src/lib/storyboard.ts",
-      "until": "storyboard"
-    },
-    {
-      "from": "src/modules/article/view.ts",
-      "to": "src/lib/chart-geometry.ts",
-      "until": "storyboard"
-    },
-    {
       "from": "src/modules/article/view.ts",
       "to": "src/lib/topics.ts",
       "until": "evidence"
@@ -319,11 +300,6 @@
     {
       "from": "src/modules/website/content-graph.ts",
       "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/lib/datasets.ts",
-      "to": "src/lib/storyboard.ts",
       "until": "evidence"
     },
     {
@@ -345,11 +321,6 @@
       "from": "src/lib/production.ts",
       "to": "src/lib/stories.ts",
       "until": "stories"
-    },
-    {
-      "from": "src/lib/production.ts",
-      "to": "src/lib/storyboard.ts",
-      "until": "storyboard"
     },
     {
       "from": "src/lib/production.ts",
@@ -423,11 +394,6 @@
     },
     {
       "from": "src/pages/[topic]/data/index.astro",
-      "to": "src/lib/chart-geometry.ts",
-      "until": "storyboard"
-    },
-    {
-      "from": "src/pages/[topic]/data/index.astro",
       "to": "src/lib/datasets.ts",
       "until": "evidence"
     },
@@ -492,11 +458,6 @@
       "until": "video"
     },
     {
-      "from": "src/video/kinds.ts",
-      "to": "src/lib/storyboard.ts",
-      "until": "video"
-    },
-    {
       "from": "src/modules/packaging/package.ts",
       "to": "src/video/files.ts",
       "until": "video"
@@ -514,11 +475,6 @@
     {
       "from": "src/modules/packaging/package.ts",
       "to": "src/video/types.ts",
-      "until": "video"
-    },
-    {
-      "from": "src/video/types.ts",
-      "to": "src/lib/storyboard.ts",
       "until": "video"
     },
     {

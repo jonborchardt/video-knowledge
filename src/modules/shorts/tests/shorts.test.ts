@@ -6,7 +6,7 @@ import { scriptFingerprint, sectionsFor, sentenceFingerprint, sentences } from '
 import type { EvidencePackage, Script } from '../../../shared/types';
 import { storyboardFingerprint } from '../../../shared/release-check';
 import { validationFingerprint } from '../../../shared/sentence-validation';
-import { buildStoryboard } from '../../../lib/storyboard';
+import { buildStoryboard } from '../../storyboard';
 import {
   type ShortParent,
   type ShortsReviewFile,

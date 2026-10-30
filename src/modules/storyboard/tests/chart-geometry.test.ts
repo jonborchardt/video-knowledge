@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { barGeometry, chartProblems, datasetChart } from '../src/lib/chart-geometry';
-import type { DataTable } from '../src/lib/datasets';
-import type { ChartPoint, Unit } from '../src/lib/storyboard';
+import { barGeometry, chartProblems, datasetChart } from '../chart-geometry';
+import type { ChartPoint, DataTable, Unit } from '../../../shared/types';
 
 const pt = (label: string, value: number, unit: Unit = 'count'): ChartPoint => ({
   label,

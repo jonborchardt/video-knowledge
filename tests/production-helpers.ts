@@ -38,7 +38,8 @@ import {
   shortsReviewPath,
 } from '../src/modules/shorts';
 import { chainOf, loadStories, storiesPath } from '../src/lib/stories';
-import { type StoryboardPlan, buildStoryboard } from '../src/lib/storyboard';
+import { buildStoryboard } from '../src/modules/storyboard';
+import type { StoryboardPlan } from '../src/shared/types';
 import { loadTopic } from '../src/lib/topics';
 import { writeRenderCheck } from '../src/video/check';
 import { initVideo } from '../src/video/init';
@@ -167,7 +168,7 @@ export function syntheticProduction(upTo: FixtureStage, opts: { release?: boolea
     topic: TOPIC,
     story: story.id,
     scriptFingerprint: scriptFingerprint(script),
-    generation: { model: 'fixture', brief: 'scripts/briefs/storyboard.md', date: '2026-01-01' },
+    generation: { model: 'fixture', brief: 'src/modules/storyboard/briefs/storyboard.md', date: '2026-01-01' },
     assets: {},
     scenes: sentences(script).map((s, i) => ({
       id: `sc${i + 1}`,
@@ -377,7 +378,7 @@ export function syntheticShort(upTo: 'reviewed' | 'packaged', opts: { release?: 
     topic: TOPIC,
     story: short,
     scriptFingerprint: scriptFingerprint(script),
-    generation: { model: 'fixture', brief: 'scripts/briefs/storyboard.md', date: '2026-01-01' },
+    generation: { model: 'fixture', brief: 'src/modules/storyboard/briefs/storyboard.md', date: '2026-01-01' },
     assets: {},
     scenes: sentences(script).map((s, i) => ({
       id: `sc${i + 1}`,

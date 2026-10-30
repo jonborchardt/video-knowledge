@@ -82,7 +82,8 @@ import {
   shortsPath,
 } from '../modules/shorts';
 import { chainOf, discover, loadStories, storiesPath } from './stories';
-import { type Storyboard, type StoryboardPlan, buildStoryboard } from './storyboard';
+import { buildStoryboard } from '../modules/storyboard';
+import type { Storyboard, StoryboardPlan } from '../shared/types';
 import { loadTopic, topicNames, type Topic } from './topics';
 import type { BuildSummary, Clearance } from '../shared/build-report';
 import { lookFingerprint, lookStale } from '../shared/look';
@@ -588,7 +589,7 @@ const storyboardStage: BoardStage = ({ topic, storyId, r, read, pkg, script, pla
         stage: 'storyboard',
         kind: 'missing',
         why: 'no storyboard.json',
-        cmd: `agent: scripts/briefs/storyboard.md -> ${r(FILES.storyboard)}`,
+        cmd: `agent: src/modules/storyboard/briefs/storyboard.md -> ${r(FILES.storyboard)}`,
       },
     };
   const sb = buildStoryboard(plan, script, live, pkg, read);
@@ -620,7 +621,7 @@ const storyboardStage: BoardStage = ({ topic, storyId, r, read, pkg, script, pla
             stage: 'storyboard',
             kind: 'storyboard-blocked',
             why: 'the storyboard has blocking issues',
-            cmd: `agent: scripts/briefs/storyboard.md (revise), then ${cmd}`,
+            cmd: `agent: src/modules/storyboard/briefs/storyboard.md (revise), then ${cmd}`,
           }
         : !same
           ? { stage: 'storyboard', kind: 'stale', why: 'storyboard.json is not current', cmd }

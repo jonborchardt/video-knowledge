@@ -1,7 +1,7 @@
 // The released article as the matter page shows it: the release's snapshot (never article.json), each sentence's
 // source marks numbered in first-use order, the noted corrections and a revised finding it relies on.
 import { type ArticleRelease, type Callout, articleSentences } from './article';
-import { chartProblems, datasetChart } from '../../lib/chart-geometry';
+import { chartProblems, datasetChart } from '../storyboard';
 import { type PublicRecord, type Revision, isClaimRevision } from '../../shared/public-record';
 import type { ChartSpec, DataTable, Sentence } from '../../shared/types';
 import type { Topic } from '../../lib/topics';

@@ -8,7 +8,8 @@ import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { scriptFingerprint, sentences } from '../src/shared/sentences';
-import { type Storyboard, buildStoryboard } from '../src/lib/storyboard';
+import { buildStoryboard } from '../src/modules/storyboard';
+import type { Storyboard } from '../src/shared/types';
 import { type VisualReview, graphicKey, renderCheck } from '../src/video/check';
 import { draftRenderConfig, initVideo } from '../src/video/init';
 import {

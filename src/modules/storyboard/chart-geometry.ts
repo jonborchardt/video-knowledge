@@ -1,5 +1,5 @@
 // Static charts for the site: the problems that make a chart misleading, and the bars a horizontal chart draws.
-import type { ChartPoint, ChartSpec, DataTable } from '../shared/types';
+import type { ChartPoint, ChartSpec, DataTable } from '../../shared/types';
 
 export type Bar = ChartPoint & { y: number; w: number; h: number };
 

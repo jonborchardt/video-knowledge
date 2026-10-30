@@ -134,7 +134,7 @@ endorsing X.
 
 A `ready` story becomes a narration script and a storyboard in `topics/<topic>/scripts/<story slug>/`. The code builds
 the evidence package, checks the script and fills in the storyboard; three agent briefs do the writing and the
-judging (`src/modules/script/briefs/script.md`, `script-review.md`; `scripts/briefs/storyboard.md`). Every stage persists its output, so a
+judging (`src/modules/script/briefs/script.md`, `script-review.md`; `src/modules/storyboard/briefs/storyboard.md`). Every stage persists its output, so a
 rejected script is revised and rechecked without touching research or story discovery.
 
 ```
@@ -143,7 +143,7 @@ npm run script -- package <topic> <story-id>      # evidence-package.json: the s
 npm run script -- validate <topic> <story-id>     # validation.json, script.md, review.md (exit 2 when blocked)
 npm run script -- show <topic> <story-id> [s12]   # the reviewer's sheet: sentences, assertions, fingerprints, passages
 # an independent agent writes script-review.json from src/modules/script/briefs/script-review.md, then validate again
-# an agent writes storyboard.json from scripts/briefs/storyboard.md
+# an agent writes storyboard.json from src/modules/storyboard/briefs/storyboard.md
 npm run script -- storyboard <topic> <story-id>   # fills narration and timing, checks charts and citations; storyboard.md
 npm run script -- run <topic> <story-id>          # every stage whose inputs exist, then the next agent step
 npm run script -- lock <topic> <story-id> --approved-by "<name>"   # release.json: the approved fingerprints (passed + ok only)

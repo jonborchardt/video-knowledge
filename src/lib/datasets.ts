@@ -3,7 +3,7 @@ import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import type { DataTable, PassageReader } from '../shared/types';
 import { ROOT, readJson, topicDir } from '../shared/io';
-import { pointProblems } from './storyboard';
+import { pointProblems } from '../modules/storyboard';
 
 export type { DataTable } from '../shared/types';
 

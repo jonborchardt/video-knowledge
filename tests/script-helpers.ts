@@ -13,7 +13,7 @@ import { buildPackage } from '../src/modules/script';
 import { scriptFingerprint, sentenceFingerprint, sentences } from '../src/shared/sentences';
 import { validateScript } from '../src/shared/sentence-validation';
 import { discover } from '../src/lib/stories';
-import type { StoryboardPlan } from '../src/lib/storyboard';
+import type { StoryboardPlan } from '../src/shared/types';
 import type { Topic } from '../src/lib/topics';
 import { TOPIC, claim, passages, sources, study, topic } from './corpus';
 

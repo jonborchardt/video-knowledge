@@ -12,7 +12,8 @@ import { sentences } from '../../../shared/sentences';
 import type { EvidencePackage, Release, Script, ScriptReviewFile } from '../../../shared/types';
 import { validateScript } from '../../../shared/sentence-validation';
 import { chainOf, loadStories } from '../../../lib/stories';
-import { type Storyboard, type StoryboardPlan, buildStoryboard } from '../../../lib/storyboard';
+import { buildStoryboard } from '../../storyboard';
+import type { Storyboard, StoryboardPlan } from '../../../shared/types';
 import { loadTopic } from '../../../lib/topics';
 
 const dirs = scriptDirs();

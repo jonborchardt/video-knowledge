@@ -35,7 +35,8 @@ import { renderReviewMd, renderScriptMd } from './script-md';
 import { buildShortPackage, loadShorts, shortsPath } from '../shorts';
 import { validateScript } from '../../shared/sentence-validation';
 import { chainOf, loadStories, storiesPath } from '../../lib/stories';
-import { type Storyboard, type StoryboardPlan, buildStoryboard, renderStoryboardMd } from '../../lib/storyboard';
+import { buildStoryboard, renderStoryboardMd } from '../storyboard';
+import type { Storyboard, StoryboardPlan } from '../../shared/types';
 import { loadTopic } from '../../lib/topics';
 
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
@@ -252,7 +253,8 @@ function stageStoryboard() {
   const pkg = readJson<EvidencePackage>(p(FILES.pkg));
   const plan = readJson<StoryboardPlan>(p(FILES.storyboard));
   if (!script || !v || !pkg) throw new Error('run package and validate first');
-  if (!plan) throw new Error(`no ${rel(p(FILES.storyboard))}; give an agent scripts/briefs/storyboard.md`);
+  if (!plan)
+    throw new Error(`no ${rel(p(FILES.storyboard))}; give an agent src/modules/storyboard/briefs/storyboard.md`);
   const sb = buildStoryboard(plan, script, v, pkg, read);
   sb.issues.unshift(...releaseCheck(readJson<Release>(p(FILES.release)), v, sb));
   writeArtifact(dir, FILES.storyboard, toJson(sb)); // the plan, filled in: narration, timing, status (idempotent)
@@ -375,7 +377,7 @@ switch (cmd) {
       );
     if (!existsSync(p(FILES.storyboard))) {
       console.log(
-        `next: an agent writes ${rel(p(FILES.storyboard))} following scripts/briefs/storyboard.md, then rerun`,
+        `next: an agent writes ${rel(p(FILES.storyboard))} following src/modules/storyboard/briefs/storyboard.md, then rerun`,
       );
       break;
     }

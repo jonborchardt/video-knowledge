@@ -98,7 +98,7 @@ never says needs its own beat in `direction`.
   "topic": "<topic>",
   "story": "<story id>",
   "scriptFingerprint": "<validation.json scriptFingerprint>",
-  "generation": { "model": "<model id>", "brief": "scripts/briefs/storyboard.md", "date": "<ISO date>" },
+  "generation": { "model": "<model id>", "brief": "src/modules/storyboard/briefs/storyboard.md", "date": "<ISO date>" },
   "assets": { "<id>": { "kind": "component", "description": "..." } },
   "scenes": [ ... ]
 }

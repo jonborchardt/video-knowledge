@@ -14,10 +14,10 @@ import {
   loadMoved,
   manifestProblems,
 } from '../src/modules/website';
-import { datasetChart } from '../src/lib/chart-geometry';
+import { datasetChart } from '../src/modules/storyboard';
 import { dataRef, loadDatasets } from '../src/lib/datasets';
 import { ROOT, readJson, topicDir } from '../src/shared/io';
-import type { Storyboard } from '../src/lib/storyboard';
+import type { Storyboard } from '../src/shared/types';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';
 import { loadPublicRecord } from '../src/shared/public-record';
 import { loadTopic, publicTopicNames, topicNames } from '../src/lib/topics';
