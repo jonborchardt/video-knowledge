@@ -24,7 +24,7 @@ import { buildPackage } from '../src/modules/script';
 import { lookFingerprint } from '../src/shared/look';
 import { storyboardFingerprint } from '../src/shared/release-check';
 import { validationFingerprint } from '../src/shared/sentence-validation';
-import { renderCheckProblems } from '../src/lib/render-check';
+import { renderCheckProblems } from '../src/video/render-check';
 import { scriptFingerprint, sentenceFingerprint, sentences } from '../src/shared/sentences';
 import type { Release, Script, ScriptReviewFile, SectionName, SentenceType } from '../src/shared/types';
 import { validateScript } from '../src/shared/sentence-validation';

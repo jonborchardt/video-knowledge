@@ -15,7 +15,7 @@ import {
   shortId,
   storySlug,
 } from '../src/shared/io';
-import type { RenderCheckSummary } from '../src/lib/render-check';
+import type { RenderCheckSummary } from '../src/video/render-check';
 import { writeRenderCheck } from '../src/video/check';
 import {
   type StoryRow,

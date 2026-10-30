@@ -5,7 +5,7 @@
 import { existsSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { readJson, sha, toJson, ROOT, topicDir, topicsDir } from '../shared/io';
-import { RENDER_CHECK, type RenderCheckSummary, renderConfigSha } from '../lib/render-check';
+import { RENDER_CHECK, type RenderCheckSummary, renderConfigSha } from './render-check';
 import { scriptDir, storySlug } from '../shared/io';
 import type { Scene } from '../shared/types';
 import { VIDEO_FILES, videoDir } from './files';

@@ -5,7 +5,6 @@
     "src/lib/url.ts": "shared",
     "src/lib/storyboard.ts": "shared",
     "src/video/": "video",
-    "src/lib/render-check.ts": "video",
     "scripts/video.ts": "video",
     "scripts/music.ts": "video",
     "astro.config.mjs": "website",
@@ -45,7 +44,7 @@
       "dataRef",
       "findingLabel"
     ],
-    "publishing": ["loadLedger", "mainOutput", "uploadProblem", "storyOutputs"],
+    "publishing": ["loadLedger", "mainOutput", "uploadProblem", "storyOutputs", "currentBuild"],
     "website": ["contentGraph", "ctaPath", "loadCta", "matterPath", "resolveCtas", "storyNode", "CtaType"],
     "shorts": ["buildShortPackage", "loadShorts", "shortsPath"],
     "storyboard": ["pointProblems", "chartProblems", "datasetChart", "buildStoryboard", "renderStoryboardMd"],
@@ -54,7 +53,7 @@
   "edges": [
     {
       "from": "src/modules/script/cli.ts",
-      "to": "src/lib/render-check.ts",
+      "to": "src/video/render-check.ts",
       "until": "video"
     },
     {
@@ -74,7 +73,7 @@
     },
     {
       "from": "src/lib/production.ts",
-      "to": "src/lib/render-check.ts",
+      "to": "src/video/render-check.ts",
       "until": "video"
     },
     {

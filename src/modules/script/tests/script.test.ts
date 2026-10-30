@@ -7,7 +7,7 @@ import { docHasher, docReader, scriptDir, shortId, shortOf, storySlug, sha } fro
 import { releaseCheck, storyboardFingerprint } from '../../../shared/release-check';
 import { approverProblem } from '../../../shared/approver';
 import { validationFingerprint } from '../../../shared/sentence-validation';
-import { type RenderCheckSummary, renderCheckProblems } from '../../../lib/render-check';
+import { type RenderCheckSummary, renderCheckProblems } from '../../../video/render-check';
 import { revisionsInPass, sectionsFor, sentenceFingerprint, sentences } from '../../../shared/sentences';
 import type { EvidencePackage, Release, Script, Section, Sentence } from '../../../shared/types';
 import { evalExpr, repetitions, validateScript } from '../../../shared/sentence-validation';

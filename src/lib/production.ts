@@ -50,7 +50,7 @@ import {
   renderCheckProblems,
   renderCheckStale,
   renderConfigSha,
-} from './render-check';
+} from '../video/render-check';
 import {
   type Build,
   type Ledger,
