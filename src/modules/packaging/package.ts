@@ -5,19 +5,19 @@
 // which of the two it is: a draft build carries the private banners and the draft-voice check, a release build carries none.
 import { copyFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { commissionKey, commissionOf, site } from '../config/site';
-import { contentGraph, matterPath, storyNode } from '../lib/content-graph';
-import { type CtaType, ctaPath, loadCta, resolveCtas } from '../lib/cta';
-import { fileSha, readJson, REVIEW_DIR, ROOT, sha, toJson, topicDir } from '../shared/io';
-import { loadLedger, mainOutput, uploadProblem } from '../modules/publishing';
-import { sectionTitle } from '../shared/sentences';
-import { absoluteUrl } from '../lib/url';
+import { commissionKey, commissionOf, site } from '../../config/site';
+import { contentGraph, matterPath, storyNode } from '../../lib/content-graph';
+import { type CtaType, ctaPath, loadCta, resolveCtas } from '../../lib/cta';
+import { fileSha, readJson, REVIEW_DIR, ROOT, sha, toJson, topicDir } from '../../shared/io';
+import { loadLedger, mainOutput, uploadProblem } from '../publishing';
+import { sectionTitle } from '../../shared/sentences';
+import { absoluteUrl } from '../../lib/url';
 import { renderSrt } from './captions';
-import { extractFrame } from '../shared/ffmpeg';
-import type { BuildReport } from './report';
-import { VIDEO_FILES } from './files';
-import type { Segment } from './select';
-import type { Timeline } from './types';
+import { extractFrame } from '../../shared/ffmpeg';
+import type { BuildReport } from '../../video/report';
+import { VIDEO_FILES } from '../../video/files';
+import type { Segment } from '../../video/select';
+import type { Timeline } from '../../video/types';
 
 export const REVIEW_FILES = {
   json: 'review.json',
@@ -26,7 +26,7 @@ export const REVIEW_FILES = {
   checklist: 'checklist.md',
   report: 'build-report.md',
   thumbnail: 'thumbnail.png',
-  captions: 'captions.en.srt', // one cue per sentence from the measured timeline (src/video/captions.ts)
+  captions: 'captions.en.srt', // one cue per sentence from the measured timeline (captions.ts)
   links: 'links.json', // every destination in the description's Links block (DescriptionLinks)
 } as const;
 

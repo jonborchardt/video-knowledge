@@ -24,8 +24,6 @@
     "scripts/script.ts": "script",
     "src/lib/storyboard.ts": "storyboard",
     "src/lib/chart-geometry.ts": "storyboard",
-    "src/video/package.ts": "packaging",
-    "src/video/captions.ts": "packaging",
     "src/video/": "video",
     "src/lib/render-check.ts": "video",
     "scripts/video.ts": "video",
@@ -181,11 +179,6 @@
       "from": "scripts/video.ts",
       "to": "src/lib/production.ts",
       "until": "orchestration"
-    },
-    {
-      "from": "scripts/video.ts",
-      "to": "src/video/package.ts",
-      "until": "packaging"
     },
     {
       "from": "scripts/watcher.mjs",
@@ -613,7 +606,7 @@
       "until": "evidence"
     },
     {
-      "from": "src/video/captions.ts",
+      "from": "src/modules/packaging/captions.ts",
       "to": "src/video/types.ts",
       "until": "video"
     },
@@ -638,32 +631,32 @@
       "until": "storyboard"
     },
     {
-      "from": "src/video/package.ts",
+      "from": "src/modules/packaging/package.ts",
       "to": "src/lib/content-graph.ts",
       "until": "website"
     },
     {
-      "from": "src/video/package.ts",
+      "from": "src/modules/packaging/package.ts",
       "to": "src/lib/cta.ts",
       "until": "website"
     },
     {
-      "from": "src/video/package.ts",
+      "from": "src/modules/packaging/package.ts",
       "to": "src/video/files.ts",
       "until": "video"
     },
     {
-      "from": "src/video/package.ts",
+      "from": "src/modules/packaging/package.ts",
       "to": "src/video/report.ts",
       "until": "video"
     },
     {
-      "from": "src/video/package.ts",
+      "from": "src/modules/packaging/package.ts",
       "to": "src/video/select.ts",
       "until": "video"
     },
     {
-      "from": "src/video/package.ts",
+      "from": "src/modules/packaging/package.ts",
       "to": "src/video/types.ts",
       "until": "video"
     },
@@ -685,6 +678,26 @@
     {
       "from": "scripts/video.ts",
       "to": "src/modules/publishing/index.ts",
+      "until": "video"
+    },
+    {
+      "from": "src/modules/packaging/cli.ts",
+      "to": "src/video/files.ts",
+      "until": "video"
+    },
+    {
+      "from": "src/modules/packaging/cli.ts",
+      "to": "src/video/report.ts",
+      "until": "video"
+    },
+    {
+      "from": "src/modules/packaging/cli.ts",
+      "to": "src/video/select.ts",
+      "until": "video"
+    },
+    {
+      "from": "src/modules/packaging/cli.ts",
+      "to": "src/video/types.ts",
       "until": "video"
     }
   ]

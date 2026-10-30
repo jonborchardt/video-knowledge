@@ -22,9 +22,9 @@
 import { spawnSync } from 'node:child_process';
 import { appendFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { passageReader, readJson, sha, toJson, ROOT, REVIEW_DIR, scriptDir, shortOf } from '../src/shared/io';
+import { passageReader, readJson, sha, toJson, ROOT, REVIEW_DIR, scriptDir } from '../src/shared/io';
 import { boardNext } from '../src/lib/production';
-import { addOutputTo, currentBuild, recordApproved } from '../src/modules/publishing';
+import { currentBuild, recordApproved } from '../src/modules/publishing';
 import { approverProblem } from '../src/shared/approver';
 import { extractFrame, probe } from '../src/shared/ffmpeg';
 import { writeRenderCheck } from '../src/video/check';
@@ -32,11 +32,10 @@ import { initVideo } from '../src/video/init';
 import { MIX_FILE, type MixReport, loadMusicConfig, resolveCues } from '../src/video/music';
 import { narrate } from '../src/video/narration';
 import { type TtsProvider, provider } from '../src/video/tts';
-import { buildReviewPackage } from '../src/video/package';
 import { DECODABLE, type QaResult, extractInspectionFrames, qaSegment } from '../src/video/qa';
 import { assemble } from '../src/video/assemble';
 import { ENTRY, renderContactSheet, renderScenes } from '../src/video/render';
-import { type BuildReport, buildReport, renderReportMd } from '../src/video/report';
+import { buildReport, renderReportMd } from '../src/video/report';
 import { VIDEO_FILES, videoDir } from '../src/video/files';
 import { checkSegment, loadInputs, loadSegment } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';
@@ -211,34 +210,20 @@ async function stageQa(
   return qa;
 }
 
-function stagePackage() {
-  const seg = loadSegment(topic, storyId);
-  const tl = readJson<Timeline>(p(VIDEO_FILES.timeline));
-  const report = readJson<BuildReport>(p(VIDEO_FILES.report));
-  if (!tl || !report) throw new Error('run render and qa first');
-  if (
-    report.fingerprints.script !== seg.fingerprints.script ||
-    report.fingerprints.storyboard !== seg.fingerprints.storyboard
-  )
-    throw new Error('the build report is from another script or storyboard; run qa again');
-  const r = buildReviewPackage(seg, tl, report, dir, (l) => console.log(`  ${l}`));
-  console.log(
-    `wrote ${rel(p(REVIEW_DIR))}: ${r.title}, ${r.chapters.length} chapters, ${r.sources.studies.length} studies, ${r.sources.sources.length} sources; ${r.provenance.clearance.publishable ? 'cleared' : 'public release BLOCKED: ' + r.provenance.clearance.why.join('; ')}`,
+/** The review package is packaging's: its own CLI, run as a child so this script never imports it. */
+function runPackage(): number {
+  const r = spawnSync(
+    process.execPath,
+    [
+      join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs'),
+      join('src', 'modules', 'packaging', 'cli.ts'),
+      'package',
+      topic,
+      storyId,
+    ],
+    { cwd: ROOT, stdio: 'inherit' },
   );
-  // A Short is an output of its parent's ledger (short:<slug>, derived from the main video, its folder the source).
-  const short = shortOf(storyId);
-  if (short) {
-    const id = `short:${short.slug}`;
-    try {
-      addOutputTo(topic, short.parent, id, 'youtube-short', {
-        derivedFrom: 'youtube',
-        source: rel(scriptDir(topic, storyId)),
-      });
-      console.log(`recorded ${id} in ${short.parent}'s publish.json`);
-    } catch (e) {
-      if (!/exists/.test(e instanceof Error ? e.message : String(e))) throw e;
-    }
-  }
+  return r.status ?? 1;
 }
 
 function stageInit() {
@@ -332,7 +317,7 @@ try {
       break;
     }
     case 'package':
-      stagePackage();
+      process.exitCode = runPackage();
       break;
     case 'final': {
       // The release build: a person accepted the draft package, so the same words go through the commercial voice.
@@ -347,7 +332,7 @@ try {
       const { seconds } = await stageRender(tl, m);
       const qa = await stageQa(seg, m, tl, seconds);
       if (!qa.ok) throw new Error('QA failed; the draft package stands');
-      stagePackage();
+      if (runPackage() !== 0) throw new Error('package failed');
       // the acceptance goes into the publishing ledger too, so the audit trail shows who accepted which draft
       if (draft?.status === 'draft')
         recordApproved(topic, storyId, {

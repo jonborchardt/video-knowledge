@@ -8,7 +8,7 @@ import { readJson, toJson, topicDir } from '../src/shared/io';
 import { loadStories } from '../src/lib/stories';
 import { publicTopicNames } from '../src/lib/topics';
 import { scriptDir } from '../src/shared/io';
-import { uploadProblem } from '../src/modules/publishing/uploader';
+import { uploadProblem } from '../src/modules/publishing';
 import {
   assertWithinLimits,
   descriptionLinks,
@@ -16,7 +16,7 @@ import {
   keywordsOf,
   renderDescription,
   type ReviewPackage,
-} from '../src/video/package';
+} from '../src/modules/packaging';
 import type { BuildReport } from '../src/video/report';
 import type { Segment } from '../src/video/select';
 import type { Timeline } from '../src/video/types';
