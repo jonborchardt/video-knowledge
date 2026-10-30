@@ -5,9 +5,10 @@
 //   validate <topic> <assertions.json> [--json]   run the evidence gate on your own assertions (exit 2 if any is blocked)
 // Reads topics/<topic>/report.json and topics/<topic>/store/ through src/lib/topics.ts; no watcher checkout needed.
 import { readFileSync, writeFileSync } from 'node:fs';
-import { type Assertion, passageReader, validate, type Validation } from '../src/lib/evidence';
+import { passageReader, validate } from '../src/lib/evidence';
+import type { Assertion, Validation, Story } from '../src/shared/types';
 import { loadReview } from '../src/lib/review';
-import { discover, loadStories, storiesPath, type Story } from '../src/lib/stories';
+import { discover, loadStories, storiesPath } from '../src/lib/stories';
 import { toJson } from '../src/lib/io';
 import { loadTopic } from '../src/lib/topics';
 

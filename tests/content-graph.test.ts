@@ -18,7 +18,8 @@ import { toJson, topicDir } from '../src/lib/io';
 import { addOutput, appendEvent, emptyLedger, type Ledger, publishPath, saveLedger } from '../src/lib/publish';
 import { scriptDir } from '../src/lib/script';
 import { copyTopic } from './production-helpers';
-import { loadStories, type Story, storyUrlSlug } from '../src/lib/stories';
+import { loadStories, storyUrlSlug } from '../src/lib/stories';
+import type { Story } from '../src/shared/types';
 import { publicTopicNames } from '../src/lib/topics';
 
 // Small temp roots: a stories.json of bare stories and, where a test needs one, a publishing ledger.

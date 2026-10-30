@@ -8,15 +8,8 @@ import { passageReader } from '../src/lib/evidence';
 import { loadReview } from '../src/lib/review';
 import { buildPackage, docHasher } from '../src/lib/evidence-package';
 import { releaseCheck } from '../src/lib/release';
-import {
-  type EvidencePackage,
-  FILES,
-  type Release,
-  type Script,
-  type ScriptReviewFile,
-  scriptDirs,
-  sentences,
-} from '../src/lib/script';
+import { FILES, scriptDirs, sentences } from '../src/lib/script';
+import type { EvidencePackage, Release, Script, ScriptReviewFile } from '../src/shared/types';
 import { validateScript } from '../src/lib/script-validation';
 import { readJson, toJson } from '../src/lib/io';
 import { chainOf, loadStories } from '../src/lib/stories';

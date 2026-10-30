@@ -4,14 +4,8 @@ import { readJson, ROOT, sha } from './io';
 import type { Revision } from './public-record';
 import { Refusal } from './publish';
 import { approverProblem, validationFingerprint } from './release';
-import {
-  type Script,
-  type ScriptValidation,
-  type SectionName,
-  type Sentence,
-  scriptDir,
-  sentenceFingerprint,
-} from './script';
+import { scriptDir, sentenceFingerprint } from './script';
+import type { Script, ScriptValidation, SectionName, Sentence } from '../shared/types';
 import type { DataTable } from './datasets';
 import type { ChartPoint, ChartSpec } from './storyboard';
 

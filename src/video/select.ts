@@ -4,18 +4,8 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { storyboardFingerprint, validationFingerprint } from '../lib/release';
-import {
-  type EvidencePackage,
-  FILES,
-  type Release,
-  type Script,
-  type ScriptValidation,
-  scriptDir,
-  scriptFingerprint,
-  sentenceFingerprint,
-  sentences,
-  storySlug,
-} from '../lib/script';
+import { FILES, scriptDir, scriptFingerprint, sentenceFingerprint, sentences, storySlug } from '../lib/script';
+import type { EvidencePackage, Release, Script, ScriptValidation } from '../shared/types';
 import { readJson, ROOT } from '../lib/io';
 import type { Scene, Storyboard } from '../lib/storyboard';
 import {

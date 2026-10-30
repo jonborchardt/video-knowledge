@@ -10,7 +10,7 @@ import { type RecordedApplicability, applicabilityKey, checkApplicabilityFile } 
 /** Each study verdict's recorded applicability, beside the store; written only by scripts/record-sources.mjs. */
 export const APPLICABILITY_FILE = 'applicability.json';
 
-import type { Verdict } from './corpus';
+import type { Verdict } from '../shared/types';
 export type { Verdict };
 const JUDGED: Verdict[] = ['right', 'wrong', 'partly'];
 

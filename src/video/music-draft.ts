@@ -5,7 +5,7 @@
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT } from '../lib/io';
-import type { Script, SectionName } from '../lib/script';
+import type { Script, SectionName } from '../shared/types';
 import type { Storyboard } from '../lib/storyboard';
 import {
   COMPOSITION_FILE,

@@ -3,7 +3,7 @@
 import type { Topic } from './topics';
 import type { RecordedApplicability } from './batches';
 
-export type Verdict = 'right' | 'wrong' | 'partly' | 'untestable' | 'unknown';
+import type { Verdict } from '../shared/types';
 export interface CorpusVerdict {
   by: string; // 'AI guess' or the study's display name
   verdict: Verdict;

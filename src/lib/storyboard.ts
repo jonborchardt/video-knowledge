@@ -4,16 +4,8 @@
 // and checks that every chart figure and on-screen citation comes from a passage in the evidence package.
 import { type PassageReader } from './evidence';
 import { hasFigure, nums, spokenWords } from './numbers';
-import {
-  type EvidencePackage,
-  type Issue,
-  type Script,
-  type ScriptValidation,
-  type Severity,
-  scriptFingerprint,
-  sentences,
-  words,
-} from './script';
+import { scriptFingerprint, sentences, words } from './script';
+import type { EvidencePackage, Issue, Script, ScriptValidation, Severity } from '../shared/types';
 
 export const VISUALS = [
   'data-chart',

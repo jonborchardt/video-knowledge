@@ -17,18 +17,8 @@ import { buildPackage, transcriptReader } from '../src/lib/evidence-package';
 import { approverProblem, releaseCheck, storyboardFingerprint, validationFingerprint } from '../src/lib/release';
 import { renderCheckProblems } from '../src/lib/render-check';
 import { writeRenderCheck } from '../src/video/check';
-import {
-  type EvidencePackage,
-  FILES,
-  type Release,
-  type Script,
-  type ScriptReviewFile,
-  type ScriptValidation,
-  scriptDir,
-  sentenceFingerprint,
-  sentences,
-  shortOf,
-} from '../src/lib/script';
+import { FILES, scriptDir, sentenceFingerprint, sentences, shortOf } from '../src/lib/script';
+import type { EvidencePackage, Release, Script, ScriptReviewFile, ScriptValidation } from '../src/shared/types';
 import { renderReviewMd, renderScriptMd } from '../src/lib/script-md';
 import { buildShortPackage, loadShorts, shortsPath } from '../src/lib/shorts';
 import { validateScript } from '../src/lib/script-validation';

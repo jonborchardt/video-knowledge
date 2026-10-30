@@ -3,7 +3,7 @@
 import { type ArticleRelease, type Callout, articleSentences } from './article';
 import { chartProblems, datasetChart } from './chart-geometry';
 import { type PublicRecord, type Revision, isClaimRevision } from './public-record';
-import type { Sentence } from './script';
+import type { Sentence } from '../shared/types';
 import type { DataTable } from './datasets';
 import type { ChartSpec } from './storyboard';
 import type { Topic } from './topics';

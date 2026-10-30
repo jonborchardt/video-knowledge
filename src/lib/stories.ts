@@ -11,69 +11,23 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { readJson, topicDir, ROOT } from './io';
-import {
-  type Assertion,
-  type EvidenceItem,
-  type EvidenceRef,
-  type PassageReader,
-  PRIOR_CAP,
-  type Validation,
-  docKey,
-  studyVerdicts,
-  validate,
-} from './evidence';
+import { type PassageReader, PRIOR_CAP, docKey, studyVerdicts, validate } from './evidence';
+import type {
+  Assertion,
+  EvidenceItem,
+  EvidenceRef,
+  Validation,
+  StoryKind,
+  Readiness,
+  Arc,
+  Finding,
+  Story,
+} from '../shared/types';
 import { MAX_CHAIN_CLAIMS, MAX_QUESTIONS, type ReviewFile, type StoryReview } from './review';
 import { type ClaimView, type Topic, topicNames, VAL } from './topics';
 
-export type StoryKind = 'contradicted' | 'conflict' | 'surprise' | 'gap' | 'decision';
-export type Readiness = 'ready' | 'needs-review' | 'needs-research' | 'rejected';
 export type StoryInput = Pick<Topic, 'name' | 'label' | 'claims' | 'recap'> & { sameStudy?: Record<string, string> };
-export type Arc = Record<'hook' | 'conflict' | 'evidence' | 'resolution' | 'takeaway', string>;
 
-export interface Finding {
-  role: 'belief' | 'evidence'; // belief: what the sources say (attribution); evidence: a fact the studies decide
-  validation: Validation;
-}
-export interface Story {
-  id: string; // '<kind>:<primary claim slug>' or 'decision:<group slug>', stable across runs
-  kind: StoryKind; // classification metadata, never shown in a title
-  title: string;
-  alternates: string[];
-  question: string;
-  whyWatch: string;
-  tension: string;
-  evidenceNeeded: string;
-  evidenceAvailable: string[];
-  gaps: string[];
-  premise: string;
-  claims: string[]; // the key claims, every one of which answers the question
-  related: string[]; // nearby claims left out of the narrative, by wording overlap
-  arc: Arc;
-  coherence: { score: number; basis: 'review' | 'heuristic'; explanation: string };
-  scores: {
-    coherence: number;
-    relevance: number;
-    curiosity: number;
-    stakes: number;
-    depth: number;
-    originality: number;
-    evidence: number; // strength and applicability of the studies behind the central conclusion
-    editorial: number; // mean of coherence, relevance, curiosity, stakes, depth
-    overall: number;
-    explanation: string;
-  };
-  readiness: Readiness;
-  readinessWhy: string;
-  blocking: string[]; // what keeps it from ready
-  reviewed: boolean;
-  audit: { central: Validation; findings: Finding[] };
-  /** The follow-up questions the same video answers (story-review.json `chain`); absent for a one-question video. */
-  chain?: { id: string; question: string }[];
-  /** The story whose video answers this one as a follow-up: it is never produced on its own. */
-  partOf?: string;
-  /** Suggested follow-ups for the reviewer (ready, no shared claims, nearest wording); never applied by code. */
-  chainCandidates?: string[];
-}
 export interface StoriesFile {
   topic: string;
   basis: { claims: number; sources: number; studies: number; candidates: number };

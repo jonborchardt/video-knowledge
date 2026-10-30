@@ -1,3 +1,4 @@
+import { APPLICABILITY, type ApplicabilityLevel } from '../shared/types';
 // The two files agents write for the research stage, typed and checked before anything is recorded:
 //   extraction batches, h*.json (scripts/briefs/extract.md), recorded by scripts/record.mjs
 //   study verdicts, sv_*.json (scripts/briefs/sources.md), recorded by scripts/record-sources.mjs
@@ -36,9 +37,6 @@ export interface ExtractionBatch {
   sum?: string;
   as: BatchAssertion[];
 }
-/** How far a study verdict's passage reaches its claim. contextual is listed but never decides any sentence. */
-export const APPLICABILITY = ['direct', 'partial', 'contextual'] as const;
-export type ApplicabilityLevel = (typeof APPLICABILITY)[number];
 /** One entry of topics/<topic>/applicability.json, keyed applicabilityKey(claim, cite); written only by record-sources. */
 export interface RecordedApplicability {
   level: ApplicabilityLevel;

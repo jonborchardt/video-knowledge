@@ -45,19 +45,16 @@ import { type ReviewFile, loadReview, reviewPath } from './review';
 import { buildPackage, docHasher, docReader } from './evidence-package';
 import { loadPublicRecord } from './public-record';
 import { releaseCheck, storyboardFingerprint, validationFingerprint } from './release';
-import {
-  type EvidencePackage,
-  FILES,
-  type Release,
-  type ReviewFinding,
-  type Script,
-  type ScriptReviewFile,
-  type ScriptValidation,
-  scriptDir,
-  shortId,
-  shortOf,
-  storySlug,
-} from './script';
+import { FILES, scriptDir, shortId, shortOf, storySlug } from './script';
+import type {
+  EvidencePackage,
+  Release,
+  ReviewFinding,
+  Script,
+  ScriptReviewFile,
+  ScriptValidation,
+  Story,
+} from '../shared/types';
 import { validateScript } from './script-validation';
 import {
   type ShortsFile,
@@ -68,7 +65,7 @@ import {
   loadShortsReview,
   shortsPath,
 } from './shorts';
-import { chainOf, discover, loadStories, storiesPath, type Story } from './stories';
+import { chainOf, discover, loadStories, storiesPath } from './stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from './storyboard';
 import { loadTopic, topicNames, type Topic } from './topics';
 import type { BuildSummary, Clearance } from './build-report';

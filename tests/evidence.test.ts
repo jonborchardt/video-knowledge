@@ -2,7 +2,8 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { type Assertion, docKey, passageReader, studyVerdicts, validate } from '../src/lib/evidence';
+import { docKey, passageReader, studyVerdicts, validate } from '../src/lib/evidence';
+import type { Assertion } from '../src/shared/types';
 import { DOC_A, DOC_B, DOC_C, claim, corpus, guess, reader, sources, study } from './corpus';
 
 const FASTER = 'AI tools make experienced developers faster';

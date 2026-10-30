@@ -3,19 +3,11 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Corpus } from './corpus';
-import { type PassageReader, type Stance, applicabilityFor } from './evidence';
+import { type PassageReader, applicabilityFor } from './evidence';
+import type { Stance, EvidencePackage, PackageClaim, PackageDoc, PackageEvidence, Story } from '../shared/types';
 import { lf, sha, topicDir, TOPICS, ROOT } from './io';
 import { MAX_QUESTIONS, type ReviewFile } from './review';
-import {
-  type EvidencePackage,
-  type PackageClaim,
-  type PackageDoc,
-  type PackageEvidence,
-  docOf,
-  isStudyRef,
-  norm,
-} from './script';
-import type { Story } from './stories';
+import { docOf, isStudyRef, norm } from './script';
 
 const DEFAULT_AUDIENCE =
   'General YouTube audience with no prior knowledge of MLM pay plans or research methods (default; set audience in story-review.json to change).';

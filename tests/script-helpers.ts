@@ -3,16 +3,8 @@
 import type { PassageReader } from '../src/lib/evidence';
 import type { ReviewFile } from '../src/lib/review';
 import { buildPackage } from '../src/lib/evidence-package';
-import {
-  type EvidencePackage,
-  type Script,
-  type ScriptAssertion,
-  type ScriptReviewFile,
-  type Sentence,
-  scriptFingerprint,
-  sentenceFingerprint,
-  sentences,
-} from '../src/lib/script';
+import { scriptFingerprint, sentenceFingerprint, sentences } from '../src/lib/script';
+import type { EvidencePackage, Script, ScriptAssertion, ScriptReviewFile, Sentence } from '../src/shared/types';
 import { validateScript } from '../src/lib/script-validation';
 import { discover } from '../src/lib/stories';
 import type { StoryboardPlan } from '../src/lib/storyboard';

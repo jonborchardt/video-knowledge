@@ -14,7 +14,8 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from
 import { basename, join, resolve } from 'node:path';
 import { readJson, sha, toJson, ROOT } from '../src/lib/io';
 import { probe } from '../src/video/ffmpeg';
-import { FILES, type Script, scriptDir } from '../src/lib/script';
+import { FILES, scriptDir } from '../src/lib/script';
+import type { Script } from '../src/shared/types';
 import type { Storyboard } from '../src/lib/storyboard';
 import { COMPOSITION_FILE, type Composition, MUSIC_DIR, type Variation, loadComposition } from '../src/video/music';
 import { compositions, draftCueSheet, pickComposition } from '../src/video/music-draft';

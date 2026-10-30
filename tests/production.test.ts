@@ -38,16 +38,8 @@ import { docHasher, docReader } from '../src/lib/evidence-package';
 import { loadReview } from '../src/lib/review';
 import { validateScript } from '../src/lib/script-validation';
 import { loadTopic } from '../src/lib/topics';
-import {
-  type EvidencePackage,
-  type Script,
-  type ScriptReviewFile,
-  type ScriptValidation,
-  scriptDir,
-  sentenceFingerprint,
-  shortId,
-  storySlug,
-} from '../src/lib/script';
+import { scriptDir, sentenceFingerprint, shortId, storySlug } from '../src/lib/script';
+import type { EvidencePackage, Script, ScriptReviewFile, ScriptValidation } from '../src/shared/types';
 import { addOutputTo, recordApproved, recordPublished, recordUploaded, setThumbnail } from '../src/lib/publish';
 import { type Fixture, copyTopic, setLook, syntheticProduction, syntheticShort } from './production-helpers';
 import { blockedScript, run } from './script-helpers';

@@ -14,19 +14,8 @@ import { lookFingerprint } from '../src/lib/look';
 import { storyboardFingerprint, validationFingerprint } from '../src/lib/release';
 import { renderCheckProblems } from '../src/lib/render-check';
 import { loadReview, reviewPath } from '../src/lib/review';
-import {
-  FILES,
-  type Release,
-  type Script,
-  type ScriptReviewFile,
-  type SectionName,
-  type SentenceType,
-  scriptDir,
-  scriptFingerprint,
-  sentenceFingerprint,
-  sentences,
-  shortId,
-} from '../src/lib/script';
+import { FILES, scriptDir, scriptFingerprint, sentenceFingerprint, sentences, shortId } from '../src/lib/script';
+import type { Release, Script, ScriptReviewFile, SectionName, SentenceType } from '../src/shared/types';
 import { validateScript } from '../src/lib/script-validation';
 import {
   type ShortsReviewFile,

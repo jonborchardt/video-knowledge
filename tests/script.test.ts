@@ -6,11 +6,6 @@ import { buildPackage, docHasher, docReader } from '../src/lib/evidence-package'
 import { approverProblem, releaseCheck, storyboardFingerprint, validationFingerprint } from '../src/lib/release';
 import { type RenderCheckSummary, renderCheckProblems } from '../src/lib/render-check';
 import {
-  type EvidencePackage,
-  type Release,
-  type Script,
-  type Section,
-  type Sentence,
   revisionsInPass,
   sectionsFor,
   scriptDir,
@@ -21,6 +16,7 @@ import {
   sentences,
   words,
 } from '../src/lib/script';
+import type { EvidencePackage, Release, Script, Section, Sentence } from '../src/shared/types';
 import { evalExpr, repetitions, validateScript } from '../src/lib/script-validation';
 import type { PassageReader } from '../src/lib/evidence';
 import { sha } from '../src/lib/io';

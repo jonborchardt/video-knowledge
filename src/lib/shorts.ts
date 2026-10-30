@@ -8,9 +8,9 @@ import { join } from 'node:path';
 import { readJson, sha, toJson, ROOT } from './io';
 import { nums } from './numbers';
 import { releaseCheck, storyboardFingerprint, validationFingerprint } from './release';
+import { FILES, isStudyRef, scriptDir, sentences } from './script';
 import {
   type EvidencePackage,
-  FILES,
   MAX_SHORTS,
   type Release,
   SHORT_FORMATS,
@@ -19,10 +19,7 @@ import {
   type ScriptValidation,
   type SectionName,
   type ShortFormat,
-  isStudyRef,
-  scriptDir,
-  sentences,
-} from './script';
+} from '../shared/types';
 import type { ChartSpec, Storyboard } from './storyboard';
 
 export const SHORTS_FILE = 'shorts.json';

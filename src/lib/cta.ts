@@ -10,7 +10,8 @@ import { absoluteOf, chainRoot, type Graph, matterPath } from './content-graph';
 import { readJson, ROOT } from './io';
 import { absoluteUrl } from './url';
 import { approverProblem } from './release';
-import { FILES, type Script, scriptDir, sentences } from './script';
+import { FILES, scriptDir, sentences } from './script';
+import type { Script } from '../shared/types';
 
 export const CTA_TYPES = [
   'tool',

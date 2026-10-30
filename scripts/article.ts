@@ -27,7 +27,8 @@ import { readJson, toJson, writeArtifact, ROOT } from '../src/lib/io';
 import { loadPublicRecord, publicRecordPath, withArticleRevision } from '../src/lib/public-record';
 import { Refusal } from '../src/lib/publish';
 import { loadReview } from '../src/lib/review';
-import { type EvidencePackage, FILES, type Script, type ScriptValidation, scriptDir } from '../src/lib/script';
+import { FILES, scriptDir } from '../src/lib/script';
+import type { EvidencePackage, Script, ScriptValidation } from '../src/shared/types';
 import { loadTopic } from '../src/lib/topics';
 
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);

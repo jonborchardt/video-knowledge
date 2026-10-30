@@ -12,27 +12,22 @@ import {
   articleSentences,
   proseOf,
 } from './article';
-import type { Corpus, Verdict } from './corpus';
-import { dataRef, loadDatasets } from './datasets';
-import type { PassageReader } from './evidence';
-import { findingLabel } from './finding-label';
-import { readJson, ROOT } from './io';
+import type { Corpus } from './corpus';
 import {
+  type Verdict,
   type EvidencePackage,
   type Issue,
   MAX_REVISIONS,
-  norm,
-  revisionsInPass,
   type Script,
   type ScriptReviewFile,
   type ScriptValidation,
   type Severity,
-  FILES,
-  scriptDir,
-  sentenceFingerprint,
-  sentences,
-  storySlug,
-} from './script';
+} from '../shared/types';
+import { dataRef, loadDatasets } from './datasets';
+import type { PassageReader } from './evidence';
+import { findingLabel } from './finding-label';
+import { readJson, ROOT } from './io';
+import { norm, revisionsInPass, FILES, scriptDir, sentenceFingerprint, sentences, storySlug } from './script';
 import { type ValidateOptions, validateScript } from './script-validation';
 import { pointProblems, type StoryboardPlan } from './storyboard';
 

@@ -28,7 +28,8 @@ import {
 } from '../src/video/kinds';
 import { citationTop } from '../src/video/remotion/Citation';
 import { captionCards } from '../src/video/remotion/Portrait';
-import { SHORT_MAX_SECONDS, type Script, type ShortBlock, sentences } from '../src/lib/script';
+import { sentences } from '../src/lib/script';
+import { SHORT_MAX_SECONDS, type Script, type ShortBlock } from '../src/shared/types';
 import { buildStoryboard } from '../src/lib/storyboard';
 import { approveAll, good, plan, run } from './script-helpers';
 import { COMPONENTS } from '../src/video/remotion/scenes';

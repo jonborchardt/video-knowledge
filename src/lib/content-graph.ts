@@ -11,7 +11,8 @@ import { readJson, ROOT, topicDir } from './io';
 import { storyOutputs } from './outputs';
 import { loadLedger } from './publish';
 import { scriptDir } from './script';
-import { loadStories, type Story, storyUrlSlug } from './stories';
+import { loadStories, storyUrlSlug } from './stories';
+import type { Story } from '../shared/types';
 import { publicTopicNames } from './topics';
 import { absoluteUrl } from './url';
 

@@ -17,35 +17,21 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { lf, TOPICS, ROOT } from './io';
 import { hasFigure, nums } from './numbers';
-import type { Corpus, CorpusClaim, CorpusVerdict, Verdict } from './corpus';
-import type { ApplicabilityLevel } from './batches';
-
-export type Stance = 'asserts' | 'denies';
-
-export type EvidenceRef =
-  | { kind: 'study'; claim: string; cite: string } // a recorded study verdict, cite = '<topic>/sources/<file>.txt#L10-L24'
-  | { kind: 'statement'; claim: string; source: string } // a video or post that takes a stance on the claim
-  | { kind: 'guess'; claim: string }; // the AI guess on the claim: context only
-
-export interface Assertion {
-  id: string;
-  text: string;
-  /** fact: the sentence is offered as true. attribution: it reports what sources say. disagreement: it reports that studies disagree. */
-  kind: 'fact' | 'attribution' | 'disagreement';
-  /** The canonical claims the sentence rests on, and whether it affirms or negates each. */
-  claims: { id: string; stance: Stance }[];
-  evidence: EvidenceRef[];
-  /** Figures the caller has established by a recorded calculation from cited inputs (see src/lib/script.ts). */
-  derived?: string[];
-}
-
-export type Status = 'supported' | 'qualified' | 'disputed' | 'unsupported' | 'unverified';
-export type Decision = 'approved' | 'qualify' | 'blocked';
-export type Role =
-  'supports' | 'contradicts' | 'qualifies' | 'context' | 'inconclusive' | 'statement' | 'guess' | 'broken';
-export type Applicability = ApplicabilityLevel;
-/** What the sentence claims: can/some (an outcome is possible), most/usually (typical), always/reliably (universal). */
-export type Modality = 'possibility' | 'typical' | 'universal' | 'plain';
+import type { Corpus, CorpusClaim, CorpusVerdict } from './corpus';
+import type {
+  Verdict,
+  Stance,
+  EvidenceRef,
+  Assertion,
+  Status,
+  Decision,
+  Role,
+  Applicability,
+  Modality,
+  EvidenceItem,
+  Basis,
+  Validation,
+} from '../shared/types';
 
 export interface Judgment {
   level: Applicability;
@@ -54,42 +40,6 @@ export interface Judgment {
 /** Reviewer judgments keyed `${claim}|${stance}|${cite}`: does that verdict decide a sentence with that stance? */
 export type Judgments = Record<string, Judgment>;
 export const judgmentKey = (claim: string, stance: Stance, cite: string) => `${claim}|${stance}|${cite}`;
-
-export interface EvidenceItem {
-  ref: EvidenceRef;
-  role: Role;
-  cited: boolean; // false: found on the claim but not in the assertion's own references
-  by: string | null; // study display name, source title, or 'AI guess'
-  verdict: Verdict | null;
-  confidence: number | null;
-  note: string;
-  applicability?: Applicability; // study verdicts only
-  basis?: Basis; // where the applicability came from
-  why?: string; // the applicability reason
-  passage?: string; // the cited lines, when the reader could fetch them (not persisted)
-  problem?: string;
-}
-
-export interface Validation {
-  id: string;
-  text: string;
-  kind: Assertion['kind'];
-  modality: Modality;
-  status: Status;
-  decision: Decision;
-  review: boolean; // a human (or a semantic check) must confirm before publication
-  verbatim: boolean; // the sentence contains the canonical claim wording, so no semantic check is needed
-  strength: number; // max confidence among cited, directly applicable supporting study verdicts (0 when none)
-  independent: number; // distinct documents among them
-  supporting: EvidenceItem[];
-  contradicting: EvidenceItem[];
-  qualifying: EvidenceItem[]; // partly verdicts and partially applicable ones
-  context: EvidenceItem[]; // contextual verdicts, statements, guesses, inconclusive verdicts, broken references
-  problems: string[]; // reference-integrity failures; any one blocks
-  limitations: string[];
-  suggestions: string[];
-  explanation: string;
-}
 
 export type PassageReader = (cite: string) => string | null;
 
@@ -181,7 +131,6 @@ export function applicabilityOf(modality: Modality, verdict: Verdict | null, not
   return { level: 'direct', reason: 'the verdict bears on the claim as worded' };
 }
 
-export type Basis = 'recorded' | 'review' | 'heuristic';
 const RANK: Record<Applicability, number> = { contextual: 0, partial: 1, direct: 2 };
 /** The one precedence: the reviewer's judgment, else the wording heuristic, capped by the level recorded with the
  *  verdict (applicability.json). A reviewer may narrow anything and widen the heuristic up to the recorded level, never

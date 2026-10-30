@@ -9,23 +9,8 @@ import { type DocHasher, docHasher } from './evidence-package';
 import { hasFigure, nums, spokenWords, wordsToDigits } from './numbers';
 import type { ReviewFile } from './review';
 import {
-  type AssertionResult,
-  type Calc,
-  type EvidencePackage,
-  type Issue,
-  type Quote,
-  MAX_REVISIONS,
   revisionsInPass,
-  type ReviewFinding,
-  type Script,
-  type ScriptAssertion,
-  type ScriptReviewFile,
-  type ScriptStatus,
-  type ScriptValidation,
   sectionsFor,
-  type SentenceResult,
-  type Severity,
-  WPM_DEFAULT,
   docOf,
   isStudyRef,
   minutes,
@@ -35,6 +20,23 @@ import {
   sentences,
   words,
 } from './script';
+import {
+  type AssertionResult,
+  type Calc,
+  type EvidencePackage,
+  type Issue,
+  type Quote,
+  MAX_REVISIONS,
+  type ReviewFinding,
+  type Script,
+  type ScriptAssertion,
+  type ScriptReviewFile,
+  type ScriptStatus,
+  type ScriptValidation,
+  type SentenceResult,
+  type Severity,
+  WPM_DEFAULT,
+} from '../shared/types';
 import type { CorpusClaim } from './corpus';
 
 const NUMBERISH = /\d|\$|\bper ?cent\b|\bpercent\b/i;

@@ -15,7 +15,8 @@ import {
   Refusal,
   openOutput,
 } from './publish';
-import { FILES, type ScriptValidation, scriptDir, shortId, shortOf, storySlug } from './script';
+import { FILES, scriptDir, shortId, shortOf, storySlug } from './script';
+import type { ScriptValidation } from '../shared/types';
 import { loadShorts } from './shorts';
 import { loadStories } from './stories';
 import { href } from './url';

@@ -5,7 +5,8 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { readJson, toJson, ROOT } from '../lib/io';
-import { type EvidencePackage, FILES, type Script, scriptDir, sectionTitle, sentences, storySlug } from '../lib/script';
+import { FILES, scriptDir, sectionTitle, sentences, storySlug } from '../lib/script';
+import type { EvidencePackage, Script } from '../shared/types';
 import type { Storyboard } from '../lib/storyboard';
 import { VIDEO_DIR, VIDEO_FILES } from './files';
 import { GENERIC, type KindRegistry, type SceneKind, bespokeFor, kindOf, registryFor } from './kinds';
