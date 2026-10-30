@@ -7,7 +7,8 @@
 import { join } from 'node:path';
 import { readJson, sha, toJson, ROOT, FILES, scriptDir } from '../shared/io';
 import { nums } from '../shared/numbers';
-import { releaseCheck, storyboardFingerprint, validationFingerprint } from './release';
+import { releaseCheck, storyboardFingerprint } from './release';
+import { validationFingerprint } from '../shared/sentence-validation';
 import { isStudyRef, sentences } from '../shared/sentences';
 import {
   type EvidencePackage,

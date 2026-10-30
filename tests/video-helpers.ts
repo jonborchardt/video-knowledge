@@ -1,6 +1,7 @@
 // The video stage's synthetic fixture: a three-scene storyboard over the script helpers' passing script, a render
 // config and a narration manifest with 0.3 s per word, so the timeline, cache, mixing and report tests need no TTS.
-import { storyboardFingerprint, validationFingerprint } from '../src/lib/release';
+import { storyboardFingerprint } from '../src/lib/release';
+import { validationFingerprint } from '../src/shared/sentence-validation';
 import { scriptFingerprint } from '../src/shared/sentences';
 import type { Release } from '../src/shared/types';
 import { type StoryboardPlan, buildStoryboard } from '../src/lib/storyboard';

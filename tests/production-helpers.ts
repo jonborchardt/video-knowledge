@@ -22,7 +22,8 @@ import {
 } from '../src/shared/io';
 import { buildPackage } from '../src/lib/evidence-package';
 import { lookFingerprint } from '../src/shared/look';
-import { storyboardFingerprint, validationFingerprint } from '../src/lib/release';
+import { storyboardFingerprint } from '../src/lib/release';
+import { validationFingerprint } from '../src/shared/sentence-validation';
 import { renderCheckProblems } from '../src/lib/render-check';
 import { loadReview, reviewPath } from '../src/lib/review';
 import { scriptFingerprint, sentenceFingerprint, sentences } from '../src/shared/sentences';

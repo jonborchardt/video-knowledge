@@ -8,7 +8,7 @@ import { isAbsolute, join, relative, resolve } from 'node:path';
 import type { BuildSummary } from '../shared/build-report';
 import { lf, readJson, ROOT, sha, toJson } from '../shared/io';
 import { lookStale } from '../shared/look';
-import { approverProblem } from './release';
+import { approverProblem } from '../shared/approver';
 import { scriptDir, shortId, shortOf, storySlug } from '../shared/io';
 import { loadStories } from './stories';
 

@@ -63,7 +63,8 @@ import {
 } from './publish';
 import { loadReview, reviewPath } from './review';
 import { buildPackage } from './evidence-package';
-import { releaseCheck, storyboardFingerprint, validationFingerprint } from './release';
+import { releaseCheck, storyboardFingerprint } from './release';
+import { validationFingerprint } from '../shared/sentence-validation';
 import { validateScript } from '../shared/sentence-validation';
 import {
   type ShortsFile,

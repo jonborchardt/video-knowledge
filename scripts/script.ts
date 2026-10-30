@@ -24,7 +24,9 @@ import {
 } from '../src/shared/io';
 import { loadReview, reviewPath } from '../src/lib/review';
 import { buildPackage, transcriptReader } from '../src/lib/evidence-package';
-import { approverProblem, releaseCheck, storyboardFingerprint, validationFingerprint } from '../src/lib/release';
+import { releaseCheck, storyboardFingerprint } from '../src/lib/release';
+import { approverProblem } from '../src/shared/approver';
+import { validationFingerprint } from '../src/shared/sentence-validation';
 import { renderCheckProblems } from '../src/lib/render-check';
 import { writeRenderCheck } from '../src/video/check';
 import { sentenceFingerprint, sentences } from '../src/shared/sentences';

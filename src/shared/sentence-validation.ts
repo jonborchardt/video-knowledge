@@ -4,7 +4,7 @@
 // Approval needs both layers: no blocking issue, and a reviewer's approval of the sentence's current fingerprint.
 // A changed sentence changes its fingerprint, so a revision never inherits an approval.
 import { validate } from './evidence-gate';
-import { type DocHasher, docHasher } from './io';
+import { type DocHasher, docHasher, sha, toJson } from './io';
 import { hasFigure, nums, spokenWords, wordsToDigits } from './numbers';
 import {
   revisionsInPass,
@@ -696,3 +696,11 @@ export function validateScript(
     history,
   };
 }
+
+/** The validation minus its timestamps, its carried history (resolved findings, revisions) and release warnings, so a
+ *  re-run on the same script, package, review and sources has the same print with or without a previous run. */
+export const validationFingerprint = (v: ScriptValidation) => {
+  const { date: _d, history: _h, resolved: _r, issues, ...rest } = v;
+  void [_d, _h, _r];
+  return sha(toJson({ ...rest, issues: issues.filter((i) => i.category !== 'release-stale') }));
+};

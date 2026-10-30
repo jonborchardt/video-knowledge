@@ -1,28 +1,15 @@
 // Release: the fingerprints a person approved with `npm run script -- lock`, and the check that they still hold.
 import { sha, toJson } from '../shared/io';
+import { validationFingerprint } from '../shared/sentence-validation';
 import type { Issue, Release, ScriptValidation } from '../shared/types';
 import type { Storyboard } from './storyboard';
 
-/** The validation minus its timestamps, its carried history (resolved findings, revisions) and release warnings, so a
- *  re-run on the same script, package, review and sources has the same print with or without a previous run. */
-export const validationFingerprint = (v: ScriptValidation) => {
-  const { date: _d, history: _h, resolved: _r, issues, ...rest } = v;
-  void [_d, _h, _r];
-  return sha(toJson({ ...rest, issues: issues.filter((i) => i.category !== 'release-stale') }));
-};
 /** The filled storyboard minus its issue list (release warnings are written into it). */
 export const storyboardFingerprint = (sb: Storyboard) => {
   const { issues: _i, status: _s, ...rest } = sb;
   void [_i, _s];
   return sha(toJson(rest));
 };
-/** Why a lock's --approved-by is not a real approver: missing, blank, or a placeholder copied from help text. */
-export function approverProblem(name: string | undefined): string | null {
-  const n = name?.trim() ?? '';
-  return !n || n === 'automated:' || /<[^>]*>/.test(n)
-    ? '--approved-by needs a real name (a person, or "automated: ...")'
-    : null;
-}
 
 /** One warning per locked fingerprint the current script, package, validation or storyboard no longer matches. */
 export function releaseCheck(release: Release | null, v: ScriptValidation, sb: Storyboard | null): Issue[] {

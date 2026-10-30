@@ -3,7 +3,8 @@
 // validation did not approve, or a chart the renderer cannot draw faithfully is a problem, never a substitution.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { storyboardFingerprint, validationFingerprint } from '../lib/release';
+import { storyboardFingerprint } from '../lib/release';
+import { validationFingerprint } from '../shared/sentence-validation';
 import { scriptFingerprint, sentenceFingerprint, sentences } from '../shared/sentences';
 import { FILES, scriptDir, storySlug, readJson, ROOT } from '../shared/io';
 import type { EvidencePackage, Release, Script, ScriptValidation } from '../shared/types';

@@ -9,7 +9,7 @@ import { loadArticleRelease } from './article';
 import { absoluteOf, chainRoot, type Graph, matterPath } from './content-graph';
 import { readJson, ROOT, FILES, scriptDir } from '../shared/io';
 import { absoluteUrl } from './url';
-import { approverProblem } from './release';
+import { approverProblem } from '../shared/approver';
 import { sentences } from '../shared/sentences';
 import type { Script } from '../shared/types';
 

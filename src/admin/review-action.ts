@@ -5,7 +5,7 @@
 // CLI as a job (src/lib/review-job.ts). What a person may do is reviewView's `can`, the same reasons the page shows.
 import type { APIRoute } from 'astro';
 import { ROOT } from '../shared/io';
-import { approverProblem } from '../lib/release';
+import { approverProblem } from '../shared/approver';
 import { Refusal, recordApproved, recordChangesRequested } from '../lib/publish';
 import { startJob } from '../lib/review-job';
 import { type ReviewView, parseNotes, reviewView, storyIdOfPath } from '../lib/review-view';

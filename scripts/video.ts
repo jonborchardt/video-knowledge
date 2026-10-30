@@ -25,7 +25,7 @@ import { join } from 'node:path';
 import { passageReader, readJson, sha, toJson, ROOT, scriptDir, shortOf } from '../src/shared/io';
 import { boardNext } from '../src/lib/production';
 import { addOutputTo, currentBuild, recordApproved } from '../src/lib/publish';
-import { approverProblem } from '../src/lib/release';
+import { approverProblem } from '../src/shared/approver';
 import { extractFrame, probe } from '../src/shared/ffmpeg';
 import { writeRenderCheck } from '../src/video/check';
 import { initVideo } from '../src/video/init';
