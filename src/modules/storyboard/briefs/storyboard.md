@@ -70,7 +70,7 @@ Each scene:
 
 ## What the renderer draws
 
-The video stage maps each scene to a renderer (`src/video/kinds.ts`, `GENERIC`); a scene nothing
+The video stage maps each scene to a renderer (`src/modules/video/kinds.ts`, `GENERIC`); a scene nothing
 draws fails the build. Plan within this vocabulary:
 
 - `typography`: one line is a `title`, one line ending in `?` a `question` (typed on), every line

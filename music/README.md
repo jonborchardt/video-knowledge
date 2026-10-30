@@ -24,7 +24,7 @@ music/<composition>/
   fades, looping and optional ducking. Cues never hold seconds: `"from": "sc12"` is the measured start of sc12,
   `"to": "sc20"` the measured end of sc20, `"sc12:end-2"` and `"sc07+1.5"` offset from an edge. When narration
   re-times a scene, the music moves with it and no asset is regenerated.
-- The **mixer** (`src/video/mix.ts`, driven by `src/video/assemble.ts` against the contract in `src/video/music.ts`) decodes the assets, loops, fades, ducks and sums them on
+- The **mixer** (`src/modules/video/mix.ts`, driven by `src/modules/video/assemble.ts` against the contract in `src/modules/video/music.ts`) decodes the assets, loops, fades, ducks and sums them on
   PCM, mixes the bus under the loudness-normalised narration, turns the music (never the voice) down if the sum
   would pass -1 dBFS, and writes `video/mix.json`: the fingerprint of the cue sheet and asset bytes, the level of
   each cue, and how far the music sits under the voice while it speaks. QA fails when the mix on disk is not the

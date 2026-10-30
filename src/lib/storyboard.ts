@@ -1,5 +1,5 @@
-// Kept at this path until the video section: src/video/types.ts and kinds.ts import these types from here and are
-// fingerprint-hashed, so their import lines never change. Nothing else imports this file.
+// Kept at this path for src/modules/video/types.ts and kinds.ts, which import these types from here (their only edit in
+// the move was this specifier; the fingerprint strips type imports). Nothing else imports this file.
 export { VISUALS, CHART_TYPES, UNITS } from '../shared/types';
 export type {
   VisualCategory,

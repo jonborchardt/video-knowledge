@@ -2,7 +2,7 @@
 // what YouTube answers, as named checks, each pass, fail, pending (run it again later) or skip. Pure: the uploader reads
 // YouTube and records the checks. A check's detail is our own sentence, never a value read from the API (the ledger is
 // public and API data may not be kept), except the enum reason codes. Library layer: never imports the store, the
-// corpus, the evidence gate or src/video/.
+// corpus, the evidence gate or the video module.
 import { existsSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { lf, readJson } from '../../shared/io';

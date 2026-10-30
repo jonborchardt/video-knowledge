@@ -14,7 +14,7 @@ export const brandKey = (topic: string): string => {
   return c ? commissionKey(c) : 'cor';
 };
 
-/** Every kit slot a scene can draw (kitSlots in src/video/render.ts; a test keeps the two in step). */
+/** Every kit slot a scene can draw (kitSlots in src/modules/video/render.ts; a test keeps the two in step). */
 export const LOOK_SLOTS = ['close-card', 'endscreen-subscribe', 'seal', 'lockup-horizontal-ground'] as const;
 export const THEME_FILE = 'src/modules/video/remotion/theme.ts';
 

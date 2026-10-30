@@ -1,0 +1,13 @@
+# video
+
+Video owns the media of a story: narration, the timeline, the Remotion render (scene chunks, the end card), the soundtrack mix, QA and the render check of its bespoke graphics. Packaging owns the review package made from it; publishing owns the ledger.
+
+- Inputs: `video/render.json` (scenes, voice, cues, kinds, options), `storyboard.json`, `script.json` and `release.json` through `loadSegment`, the narration cache `video/narration/`, `video/music.json` over `music/<composition>/`, the institution's kit from `brand/` (staged into `video/brand/`), `video/visual-review.json`.
+- Outputs: `video/narration.json`, `timeline.json`, `segment.mp4` (and the chunks in `scenes/`), `build-report.json`, `build-report.md`, `mix.json`, `render-check.json`, `frames/`, `contact-sheet.png`. Media is never committed.
+- Briefs: `briefs/graphics.md` (a bespoke graphic), `briefs/visual-review.md` (its independent review), `briefs/video-fix.md` (a render check or QA failure), `briefs/strudel-bench.md` (the soundtrack handoff).
+- CLI: `npm run video -- init|check|frames|narrate|timeline|render|qa|spike|package|final|preview` (`cli.ts`; `package` spawns packaging's CLI), `npm run music -- cues|import|render|show` (`cli-music.ts`).
+- Inspect: no; the board reads `BuildSummary` (`src/shared/build-report.ts`) and `render-check.json` through the read API.
+- Read API (`index.ts`, read-only, nothing written; listed under `video` in `tests/boundaries.json`): `loadSegment(topic, storyId)` reads the script, storyboard, release and render.json into a `Segment`; `RENDER_CHECK` (the file name), `RenderCheckSummary`, `renderCheckProblems` and `renderCheckStale` (pure checks over a read render check), `renderConfigSha(scriptDir)` (the sha of render.json); `VIDEO_FILES` and `videoDir` (paths); the types `Timeline`, `Segment` and `BuildReport`.
+- Consumes: publishing's `currentBuild` (read API) and `recordApproved` (the one allowlisted edge: `final` records the draft it accepted, pending the owner's ruling); the board through its CLI (`final` runs `npm run -s board -- next <topic> <story> --json`, `final.ts`).
+- Fingerprint: `componentVersion` (`render.ts`) hashes normalised sources (type-only imports dropped, value imports followed), so a move of the tree or of a type's home never moves a graphic key or a chunk key. The one-time key migration of 2026-10-30 is recorded in `video/key-migration.json` beside each visual review; the verb and the legacy function that produced it are deleted.
+- Browser-safe (no node imports): `remotion/`, `bespoke/`, `types.ts`, `kinds.ts`, `words.ts`, `chart.ts`, `cues.ts`, `excerpt.ts`.

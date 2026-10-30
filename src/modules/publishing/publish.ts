@@ -2,7 +2,7 @@
 // artifact records. Per output (the YouTube video, a short, a blog post, ...) an append-only event log and a person's
 // metadata choices. Events are written only by `npm run publish` (src/modules/publishing/cli.ts); `metadata` may be hand-edited.
 // Builds are named by the mp4 sha the QA checked, upload metadata by the sha of the composed text and thumbnail sha, so
-// nothing new is versioned here. Library layer: it reads video/review/review.json by path and never imports src/video/.
+// nothing new is versioned here. Library layer: it reads video/review/review.json by path and never imports the video module.
 import { existsSync, readFileSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve } from 'node:path';
 import type { BuildSummary } from '../../shared/build-report';

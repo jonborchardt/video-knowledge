@@ -189,11 +189,11 @@ voice, rate and text, with the measured duration and word boundaries in `narrati
 accepted draft with it) and `openai` (commercial terms; `OPENAI_API_KEY`, word timestamps from its transcription of
 the output, cost estimated in the manifest). The timeline tiles the scenes by the measured audio, never by the word-count estimate, resolves
 every cue to the frame its word is spoken on, and reads each cited excerpt from the corpus. The composition is
-Remotion (React components in `src/video/remotion/scenes/`; the closed kind records in `src/video/kinds.ts`, with
-each video's bespoke kinds registered in `src/video/bespoke/`). Scenes render one at a time into cached chunks
+Remotion (React components in `src/modules/video/remotion/scenes/`; the closed kind records in `src/modules/video/kinds.ts`, with
+each video's bespoke kinds registered in `src/modules/video/bespoke/`). Scenes render one at a time into cached chunks
 (`video/scenes/`, keyed by the scene and the code that draws it: the component and every helper it imports by value, however
 deep, each normalised with its type-only imports removed; that normalisation moved every chunk key once, a cache
-re-render, never an approval), the chunks are concatenated without re-encoding (`src/video/assemble.ts`), and the narration is laid down as one
+re-render, never an approval), the chunks are concatenated without re-encoding (`src/modules/video/assemble.ts`), and the narration is laid down as one
 loudness-normalised track; ffmpeg comes with Remotion, nothing else is installed. Rendering needs Chrome (downloaded
 on first run). A scene without a renderer is reported, never substituted.
 
@@ -548,7 +548,7 @@ A fresh checkout plus these makes a story's `topics/<topic>/scripts/<slug>/video
   are the ones in Remotion's compositor package; `FFMPEG_DIR` overrides the directory.
 - **Python 3 with `pip install edge-tts`** for the draft voice (`VK_PYTHON` names the interpreter, default
   `python`). The release voice needs `AZURE_SPEECH_KEY=...` and `AZURE_SPEECH_REGION=...` in `.env` at the repo root
-  (gitignored; `scripts/video.ts` loads it); only `npm run video -- final` uses it.
+  (gitignored; `src/modules/video/cli.ts` loads it); only `npm run video -- final` uses it.
 - **The music assets**: `music/undertow/*.wav` are not committed. Either copy `music/undertow/source.strudel` into a
   strudel-bench checkout as `songs/undertow.strudel`, run `npm run headless -- songs/undertow.strudel` there, and
   `STRUDEL_BENCH=<dir> npm run music -- render undertow` here; or delete `video/music.json` to build without music.

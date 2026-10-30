@@ -1,5 +1,5 @@
-// Rendering: the Remotion composition in src/video/remotion, bundled once, rendered scene by scene into cached
-// video-only chunks (assembled with the narration and soundtrack by src/video/assemble.ts). A chunk's cache key is the scene with its absolute frames removed plus
+// Rendering: the Remotion composition in src/modules/video/remotion, bundled once, rendered scene by scene into cached
+// video-only chunks (assembled with the narration and soundtrack by src/modules/video/assemble.ts). A chunk's cache key is the scene with its absolute frames removed plus
 // the version of the code that draws it, so a change to one scene or one component re-renders only what it touches.
 // The studio preview (npm run video -- preview) uses the same entry point and timeline.json.
 import { existsSync, mkdirSync, readFileSync, readdirSync, unlinkSync } from 'node:fs';
@@ -76,22 +76,6 @@ export function componentVersionIn(remotionDir: string, srcDir: string, name: st
 }
 /** The code that draws one component, from this tree. */
 export const componentVersion = (name: string): string => componentVersionIn(REMOTION_DIR, SRC_DIR, name);
-
-/** The pre-normalisation key, kept only for `npm run video -- migrate-keys` (the one-time approval key migration).
- *  Delete it, and the verb's use of it, in the video section once its proof is done. */
-export function componentVersionLegacy(name: string): string {
-  const component = join(REMOTION_DIR, 'scenes', `${name}.tsx`);
-  const direct = importsOf(component);
-  const deep = deepImports(direct);
-  const files = [
-    ...SHARED.map((f) => join(REMOTION_DIR, f)),
-    ...SHARED_LIB.map((f) => join(SRC_DIR, f)),
-    component,
-    ...direct,
-    ...[...deep].sort(), // after the direct imports, so a key only moves when a deeper file is new or edited
-  ];
-  return sha([...new Set(files)].map((f) => readFileSync(f, 'utf8').replace(/\r\n?/g, '\n')).join('\n---\n'));
-}
 
 /** The scene with its absolute frames made relative to its start: moving a scene does not change its pixels. */
 export function relativeScene(s: TimelineScene): TimelineScene {

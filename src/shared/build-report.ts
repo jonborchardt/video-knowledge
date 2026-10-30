@@ -1,5 +1,5 @@
 // The contract of video/build-report.json as the library layer sees it: the fields the production board reads. The
-// video layer's BuildReport (src/video/report.ts) extends it, so the compiler keeps the two in step and the board never
+// video layer's BuildReport (src/modules/video/report.ts) extends it, so the compiler keeps the two in step and the board never
 // imports from the video layer.
 
 /** Technical completion is not clearance: both must hold before a public release. */

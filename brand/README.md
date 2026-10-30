@@ -52,9 +52,9 @@ Where the kit is used:
   commission, topic and story pages; its stamps (`public/stamps/<key>/`, `src/components/Stamp.astro`, paper ink
   swapped for ground ink in dark mode) close a topic page and a ready story page (record), mark the topic's finding,
   and mark a story still under examination.
-- **Video**: every render copies the story's institution's kit into the video folder's `brand/` (`src/video/brand.ts`,
+- **Video**: every render copies the story's institution's kit into the video folder's `brand/` (`src/modules/video/brand.ts`,
   gitignored), so a scene loads a slot with `staticFile('brand/<slot>.png')`. A landscape video of a published topic ends on
-  an unnarrated scene `end` (kind `close-card`, appended by `src/video/timeline.ts`): the kit's `close-card` for 4 s,
+  an unnarrated scene `end` (kind `close-card`, appended by `src/modules/video/timeline.ts`): the kit's `close-card` for 4 s,
   then its `endscreen-subscribe` for the 12 s YouTube's end-screen elements sit on. A music cue that runs to the end of the last
   narrated scene plays on under it. Its render cache key includes
   those two SVGs, so a redrawn kit re-renders it. The channel's avatar, banner and

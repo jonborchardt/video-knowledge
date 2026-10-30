@@ -1,7 +1,7 @@
 # Design system and production standard
 
 Version 1.0, consolidated 2026-10-23. Where the site implements a token, the file is named; the site's stylesheet is
-`src/styles/global.css`, the video look is `src/video/remotion/theme.ts`.
+`src/styles/global.css`, the video look is `src/modules/video/remotion/theme.ts`.
 
 ## 1. Shared visual design system
 

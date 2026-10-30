@@ -1,6 +1,6 @@
 // Azure AI Speech: the official API behind the same neural voices edge-tts drafts with, under commercial terms, with
 // word boundaries reported by the synthesis itself (the same clock the audio was made on). Needs AZURE_SPEECH_KEY and
-// AZURE_SPEECH_REGION, from the environment or the repo's .env (loaded by scripts/video.ts). The same voice name and
+// AZURE_SPEECH_REGION, from the environment or the repo's .env (loaded by src/modules/video/cli.ts). The same voice name and
 // rate as the edge draft give the same reading, so the final render moves cues by a frame or two, not seconds.
 // Cost is Azure's list price for neural voices (2026): $15 per million characters; the report labels it an estimate.
 import { writeFileSync } from 'node:fs';

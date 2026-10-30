@@ -1,6 +1,6 @@
-// The contract of video/render-check.json as the library layer sees it. `npm run video -- check` writes it (the video
-// layer's renderCheck, src/video/check.ts, returns this type), so the lock and the board can require a renderable
-// storyboard with approved graphics without importing from src/video/.
+// The contract of video/render-check.json. `npm run video -- check` writes it (renderCheck in check.ts returns this
+// type); the lock and the board read it through the video module's read API (index.ts), so they can require a
+// renderable storyboard with approved graphics without importing the renderer.
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileSha } from '../../shared/io';

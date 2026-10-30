@@ -1,7 +1,7 @@
 // Audio assembly: the rendered scene chunks concatenated without re-encoding, the narration laid on one continuous
-// track from the sentence files, the soundtrack mixed under it (PCM, src/video/mix.ts), and the two muxed. Rendering
-// pictures is src/video/render.ts; the soundtrack contract (cue sheet, anchors, fingerprint, mix.json) is
-// src/video/music.ts. Only a full render passes a soundtrack, so a scene or range render is narration only.
+// track from the sentence files, the soundtrack mixed under it (PCM, src/modules/video/mix.ts), and the two muxed. Rendering
+// pictures is src/modules/video/render.ts; the soundtrack contract (cue sheet, anchors, fingerprint, mix.json) is
+// src/modules/video/music.ts. Only a full render passes a soundtrack, so a scene or range render is narration only.
 import { existsSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { toJson } from '../../shared/io';

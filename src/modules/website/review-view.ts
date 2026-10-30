@@ -1,7 +1,7 @@
 // The review page's model (src/admin/review.astro): one output's packaged build (the video, or one of its Shorts), the
 // findings placed at the moment they occur, the ledger's decisions per build, and what a person can do next (or why not).
 // Read-only: the decisions are written by the publish verbs. Library layer: the timeline is read through a local shape,
-// never src/video/.
+// never the video module.
 import { existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import type { BuildSummary } from '../../shared/build-report';

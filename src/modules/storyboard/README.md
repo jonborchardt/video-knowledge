@@ -10,5 +10,5 @@ Storyboard fills the planner's scenes with the script's own narration, times the
 - Public API (`index.ts`): `buildStoryboard`, `renderStoryboardMd`, `pointProblems`, `chartProblems`, `barGeometry`, `datasetChart`.
 - Read API (listed under `storyboard` in `tests/boundaries.json`): `pointProblems`, `chartProblems`, `datasetChart`, `buildStoryboard`, `renderStoryboardMd`; each is pure (values in, problems, a chart spec, a storyboard or markdown out; nothing read or written).
 - Consumes: shared only (`src/shared/types`, numbers, sentences).
-- Shim: `src/lib/storyboard.ts` re-exports the storyboard vocabulary and types only; `src/video/types.ts` and `kinds.ts` import them from there and are fingerprint-hashed, so it stays until the video section moves them.
+- Shim: `src/lib/storyboard.ts` re-exports the storyboard vocabulary and types only; `src/modules/video/types.ts` and `kinds.ts` import them from there (type-only imports, which the fingerprint ignores); it stays until they are repointed to `src/shared/types.ts`.
 - Rules: the storyboard never carries narration of its own; chart data is numeric points with a unit and a cite; required assets are registered by id; timing is per sentence.
