@@ -132,7 +132,7 @@ export type Timeline = {
   width: number;
   height: number;
   durationInFrames: number;
-  fingerprints: { script: string; storyboard: string; narration: string; config: string; look: string }; // look: lookFingerprint (src/shared/look.ts)
+  fingerprints: { script: string; storyboard: string; narration: string; config: string; look: string }; // look: lookFingerprint (src/lib/look.ts)
   narration: { provider: string; voice: string; rate: string; licence: string };
   palette: KitPalette;
   /** A Short: the format eyebrow, the institution that publishes it (and its key for the seal), the parent story and
