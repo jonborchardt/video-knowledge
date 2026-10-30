@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { findingLabel, labelCounts } from '../src/lib/finding-label';
-import { loadTopic, publicTopicNames, type Verdict } from '../src/lib/topics';
+import { findingLabel, labelCounts } from '../finding-label';
+import { loadTopic, publicTopicNames, type Verdict } from '../topics';
 
 const c = (decidedBy: string | null, verdict: Verdict | null, confidence: number | null) => ({
   decidedBy,

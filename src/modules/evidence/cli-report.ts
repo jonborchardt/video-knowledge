@@ -14,11 +14,11 @@ import {
   noteRevision,
   publicRecordPath,
   type PublicRecord,
-} from '../src/shared/public-record';
-import { liveClaimIds } from '../src/lib/live-claims';
-import { ROOT, toJson, TOPICS, topicDir } from '../src/shared/io';
-import { claimStates, ledgerClaims } from '../src/lib/finding-label';
-import { loadTopic, topicNames } from '../src/lib/topics';
+} from '../../shared/public-record';
+import { liveClaimIds } from './live-claims';
+import { ROOT, toJson, TOPICS, topicDir } from '../../shared/io';
+import { claimStates, ledgerClaims } from './finding-label';
+import { loadTopic, topicNames } from './topics';
 import { watcher } from './watcher.mjs';
 
 const [cmd, ...args] = process.argv.slice(2);

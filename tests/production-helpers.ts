@@ -6,7 +6,7 @@ import { join, relative } from 'node:path';
 import { ARTICLE_FILES } from '../src/modules/article';
 import type { BuildSummary } from '../src/shared/build-report';
 import { article } from '../src/modules/article/tests/article-helpers';
-import { corpusOf } from '../src/lib/corpus';
+import { corpusOf } from '../src/modules/evidence';
 import {
   passageReader,
   docHasher,
@@ -39,7 +39,7 @@ import {
 import { chainOf, loadReview, loadStories, reviewPath, storiesPath } from '../src/modules/stories';
 import { buildStoryboard } from '../src/modules/storyboard';
 import type { StoryboardPlan } from '../src/shared/types';
-import { loadTopic } from '../src/lib/topics';
+import { loadTopic } from '../src/modules/evidence';
 import { writeRenderCheck } from '../src/video/check';
 import { initVideo } from '../src/video/init';
 

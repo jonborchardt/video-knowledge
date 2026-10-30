@@ -1,4 +1,4 @@
-// node scripts/merge-claims.mjs <merges.json> <batches.json> [...more]
+// node src/modules/evidence/merge-claims.mjs <merges.json> <batches.json> [...more]
 // Parallel extraction agents can each create the same new claim. Before recording, rewrite those duplicates in place:
 //   merges.json: { "<new claim text as written>": "<existing-slug>" | "=<canonical new claim text>" }
 // A slug turns the claim into a reuse of that existing claim. "=text" points it at another new claim created earlier
@@ -7,7 +7,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 
 const [mergeFile, ...files] = process.argv.slice(2);
 if (!mergeFile || !files.length) {
-  console.error('usage: node scripts/merge-claims.mjs <merges.json> <batches.json> [...]');
+  console.error('usage: node src/modules/evidence/merge-claims.mjs <merges.json> <batches.json> [...]');
   process.exit(1);
 }
 const merges = JSON.parse(readFileSync(mergeFile, 'utf8'));

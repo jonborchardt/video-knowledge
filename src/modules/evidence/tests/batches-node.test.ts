@@ -1,10 +1,10 @@
 import { spawnSync } from 'node:child_process';
 import { describe, expect, it } from 'vitest';
-import { ROOT } from '../src/shared/io';
+import { ROOT } from '../../../shared/io';
 
 // The .mjs scripts load these files through plain node (type stripping): every import must resolve without a loader.
 describe('files the .mjs scripts load by .ts path', () => {
-  for (const f of ['lib/batches', 'shared/io', 'lib/cited']) {
+  for (const f of ['modules/evidence/batches', 'shared/io', 'modules/evidence/cited']) {
     it(`src/${f}.ts loads in plain node`, () => {
       const r = spawnSync(
         process.execPath,

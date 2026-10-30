@@ -7,10 +7,10 @@ import DataTableView from '../../../components/DataTableView.astro';
 import ReportHeader from '../../../components/ReportHeader.astro';
 import { commissionKey, commissionOf, site } from '../../../config/site';
 import { chartProblems, datasetChart } from '../../../modules/storyboard';
-import { dataRef, loadDatasets, type DataTable } from '../../../lib/datasets';
+import { dataRef, loadDatasets, type DataTable } from '../../../modules/evidence';
 import { breadcrumbJsonLd } from '../../../modules/website';
 import { siteGraph } from '../../../modules/website/site-graph';
-import { loadTopic, publicTopicNames, type Topic } from '../../../lib/topics';
+import { loadTopic, publicTopicNames, type Topic } from '../../../modules/evidence';
 import { citeHref, citeLabel, datasetSource, href } from '../../../lib/url';
 
 export function getStaticPaths() {

@@ -36,14 +36,14 @@ The agent does the reading and judging; the scripts do the bookkeeping. Steps 3â
 
 1. **Lists.** Create `topics/<topic>/videos.txt` (and `blogs.txt` if any). Mark later additions with a `# --- Batch N, <how they were found>` line so it's clear which sources came from where.
 2. **Fetch.** `npm run watcher -- fetch topics/<topic>/videos.txt --store topics/<topic>/store`, then the same for `blogs.txt`. Videos without captions are reported and skipped. An article that comes out as junk can be attached by hand: `npm run watcher -- fetch --text <file> <id> --title "<t>" --url <u> --store topics/<topic>/store`.
-3. **Extract.** Write the claims list (`npm run watcher -- claims list --topic <topic> --store topics/<topic>/store > topics/<topic>/work/claims.txt`), split the `extract` entries from `npm run watcher -- next --json --store topics/<topic>/store` into `topics/<topic>/work/grpN.txt` files (about 400k characters each), and give each group to an agent with `scripts/briefs/extract.md`. Each writes `topics/<topic>/work/hN.json` with its claims, AI guesses and lean tags (the format is typed and checked in `src/lib/batches.ts`; `record` refuses a malformed file before writing anything).
+3. **Extract.** Write the claims list (`npm run watcher -- claims list --topic <topic> --store topics/<topic>/store > topics/<topic>/work/claims.txt`), split the `extract` entries from `npm run watcher -- next --json --store topics/<topic>/store` into `topics/<topic>/work/grpN.txt` files (about 400k characters each), and give each group to an agent with `src/modules/evidence/briefs/extract.md`. Each writes `topics/<topic>/work/hN.json` with its claims, AI guesses and lean tags (the format is typed and checked in `src/lib/batches.ts`; `record` refuses a malformed file before writing anything).
 4. **Merge and record.** Agents working in parallel can each create the same new claim. List those in a merges file (`{"<duplicate text>": "<existing-slug>" | "=<canonical new text>"}`), then:
    ```
    npm run merge-claims -- topics/<topic>/work/merges.json topics/<topic>/work/h*.json
    npm run record -- <topic> topics/<topic>/work/h1.json --label "<Topic label>"   # --label only on the very first batch
    npm run record -- <topic> topics/<topic>/work/h2.json                            # â€¦and so on; --from <id> resumes
    ```
-5. **Studies.** Put papers in `topics/<topic>/sources/` and convert them (`pdftotext -layout x.pdf x.txt`). Give each agent `scripts/briefs/sources.md`, a few documents and the claims list. Each writes `topics/<topic>/work/sv_G.json`. Then `npm run record-sources -- <topic> topics/<topic>/work/sv_*.json`. When you add claims or documents later, only the new pairs need checking: new claims against all documents, and new documents against all claims.
+5. **Studies.** Put papers in `topics/<topic>/sources/` and convert them (`pdftotext -layout x.pdf x.txt`). Give each agent `src/modules/evidence/briefs/sources.md`, a few documents and the claims list. Each writes `topics/<topic>/work/sv_G.json`. Then `npm run record-sources -- <topic> topics/<topic>/work/sv_*.json`. When you add claims or documents later, only the new pairs need checking: new claims against all documents, and new documents against all claims.
 6. **Changed minds.** If a speaker reverses an earlier position in a later source, run `npm run watcher -- supersede <old-id> <new-id> --store topics/<topic>/store`. The old source stays listed but stops counting.
 7. **Institution.** Claim the topic in `commissions` (`src/config/site.ts`): an existing institution, or a new one whose channel a person has created (never an invented handle); a similar subject can be a second topic under another institution. Then `npm run brand`.
 8. **Publish.** Optionally add `topics/<topic>/site.json` (copy `topics/ai-coding/site.json`: recap groups, bottom line, study display names). Then `npm run report && npm run validate`, check the page with `npm run dev`, and commit and push.
@@ -530,7 +530,7 @@ renders, drafts the cue sheet (`npm run music -- cues`), mixes, runs QA and make
 It ends one of two ways: **packaged** (committed after `npm run validate`, never pushed, with
 `video/review/run-report.md` listing every judgment call: evidence added, revisions, graphics, music, the QA result),
 or **stopped** (nothing committed; the stage, the open problem and what would unblock it). A missing passage goes to
-an evidence agent (`scripts/briefs/evidence.md`) rather than a weaker sentence; a writer pass that spends its three
+an evidence agent (`src/modules/evidence/briefs/evidence.md`) rather than a weaker sentence; a writer pass that spends its three
 revisions with blocking findings open stops the run.
 
 On a `packaged` story the popover offers the send-back prompt instead, ending in `Notes:`; each note goes to the
@@ -590,7 +590,7 @@ Rehearsing a go-live: the public build shows only stories with a live video, so 
 
 A dataset (`topics/<topic>/data/<id>.json`) needs a refresh when `tests/datasets.test.ts` fails with "refresh it", which it does once the dataset's `retrieved` date is older than `DATASET_MAX_AGE_DAYS` (`src/lib/datasets.ts`), or when EIA publishes a newer full year of prices (the Electric Power Annual and the Natural Gas Annual).
 
-The new figures come in as a new source document. A source agent (`scripts/briefs/sources.md`) writes `topics/<topic>/sources/eia-<year>-state-residential-energy-prices.txt` in the same layout as the current one: line 1 names the tables and ends `(retrieved YYYY-MM-DD)`, Parts 1 and 2 hold the raw prices, and the derived section shows its method. It never edits the old file, whose cites stay valid for everything that already cites it.
+The new figures come in as a new source document. A source agent (`src/modules/evidence/briefs/sources.md`) writes `topics/<topic>/sources/eia-<year>-state-residential-energy-prices.txt` in the same layout as the current one: line 1 names the tables and ends `(retrieved YYYY-MM-DD)`, Parts 1 and 2 hold the raw prices, and the derived section shows its method. It never edits the old file, whose cites stay valid for everything that already cites it.
 
 The document enters the corpus through `npm run record-sources -- <topic> topics/<topic>/work/sv_*.json`, with a verdict on `heat-pumps/whether-heat-pump-cheaper-run-gas` that cites the method lines, as `topics/heat-pumps/work/sv_A.json` does for the current file. The store is never hand-edited. Then run `npm run report`; if the claim's finding changes, it prints the revision that needs a `note`.
 

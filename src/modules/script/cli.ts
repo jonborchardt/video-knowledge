@@ -10,7 +10,7 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { corpusOf } from '../../lib/corpus';
+import { corpusOf } from '../evidence';
 import {
   passageReader,
   fileSha,
@@ -37,7 +37,7 @@ import { validateScript } from '../../shared/sentence-validation';
 import { chainOf, loadStories, storiesPath } from '../stories';
 import { buildStoryboard, renderStoryboardMd } from '../storyboard';
 import type { Storyboard, StoryboardPlan } from '../../shared/types';
-import { loadTopic } from '../../lib/topics';
+import { loadTopic } from '../evidence';
 
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
 const flag = (name: string) => {

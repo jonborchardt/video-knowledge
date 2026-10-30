@@ -30,7 +30,7 @@ import type {
 } from '../../shared/types';
 import { PRIOR_CAP, docKey, studyVerdicts, validate } from '../../shared/evidence-gate';
 import { MAX_CHAIN_CLAIMS, MAX_QUESTIONS } from './review';
-import { topicNames, VAL } from '../../lib/topics';
+import { topicNames, VAL } from '../evidence';
 
 export type StoryInput = Pick<Topic, 'name' | 'label' | 'claims' | 'recap'> & { sameStudy?: Record<string, string> };
 

@@ -3,14 +3,8 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import {
-  checkApplicabilityFile,
-  checkBatches,
-  checkStudyVerdicts,
-  isStored,
-  withApplicability,
-} from '../src/lib/batches';
-import { citedPairs, replacedCited } from '../src/lib/cited';
+import { checkApplicabilityFile, checkBatches, checkStudyVerdicts, isStored, withApplicability } from '../batches';
+import { citedPairs, replacedCited } from '../cited';
 
 const claims = [{ id: 'demo/old-claim', text: 'An old claim.' }];
 

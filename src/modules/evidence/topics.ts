@@ -2,9 +2,9 @@
 // The report already decides each claim's verdict; nothing here re-judges.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { readJson, topicDir, TOPICS, ROOT } from '../shared/io';
-import { commissionOf } from '../config/site';
-import { isClaimRevision, loadPublicRecord } from '../shared/public-record';
+import { readJson, topicDir, TOPICS, ROOT } from '../../shared/io';
+import { commissionOf } from '../../config/site';
+import { isClaimRevision, loadPublicRecord } from '../../shared/public-record';
 import type {
   ClaimSourceView,
   ClaimVerdictView,
@@ -15,10 +15,10 @@ import type {
   SurpriseView,
   Topic,
   Verdict,
-} from '../shared/types';
+} from '../../shared/types';
 import { applicabilityKey, checkApplicabilityFile } from './batches';
 
-/** Each study verdict's recorded applicability, beside the store; written only by scripts/record-sources.mjs. */
+/** Each study verdict's recorded applicability, beside the store; written only by src/modules/evidence/record-sources.mjs. */
 export const APPLICABILITY_FILE = 'applicability.json';
 
 export type { Verdict };
@@ -30,7 +30,7 @@ export type {
   SourceView,
   SurpriseView,
   Topic,
-} from '../shared/types';
+} from '../../shared/types';
 const JUDGED: Verdict[] = ['right', 'wrong', 'partly'];
 
 // The slice of `watcher report --json` this site reads.

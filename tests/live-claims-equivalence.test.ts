@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from 'node
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { liveClaimIds } from '../src/lib/live-claims';
+import { liveClaimIds } from '../src/modules/evidence/live-claims';
 import { contentGraph, liveClaims } from '../src/modules/website/content-graph';
 import { appendEvent, emptyLedger, publishPath, saveLedger } from '../src/modules/publishing/publish';
 import { ROOT, scriptDir, toJson, TOPICS, topicDir } from '../src/shared/io';

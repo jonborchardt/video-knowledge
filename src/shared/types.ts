@@ -628,7 +628,7 @@ export interface DataTable {
   rows: { label: string; cells: ChartPoint[] }[]; // one cell per column, in order
 }
 
-// Topic views (built by loadTopic in src/lib/topics.ts from report.json and the store).
+// Topic views (built by loadTopic in src/modules/evidence/topics.ts from report.json and the store).
 export interface ClaimView {
   id: string;
   text: string;

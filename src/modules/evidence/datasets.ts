@@ -1,11 +1,11 @@
 // Evidence datasets: tables of cited chart points (topics/<topic>/data/*.json), checked like the storyboard's.
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import type { DataTable, PassageReader } from '../shared/types';
-import { ROOT, readJson, topicDir } from '../shared/io';
-import { pointProblems } from '../modules/storyboard';
+import type { DataTable, PassageReader } from '../../shared/types';
+import { ROOT, readJson, topicDir } from '../../shared/io';
+import { pointProblems } from '../storyboard';
 
-export type { DataTable } from '../shared/types';
+export type { DataTable } from '../../shared/types';
 
 export const dataRef = (topic: string, id: string) => `data:${topic}/${id}`;
 

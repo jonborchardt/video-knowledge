@@ -3,7 +3,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { author, commissionKey, commissionOf, commissions, site } from '../src/config/site';
-import { FINDING_LABELS, FINDING_TEXT } from '../src/lib/finding-label';
+import { FINDING_LABELS, FINDING_TEXT } from '../src/modules/evidence';
 import { loadArticleRelease } from '../src/modules/article';
 import {
   contentGraph,
@@ -15,12 +15,12 @@ import {
   manifestProblems,
 } from '../src/modules/website';
 import { datasetChart } from '../src/modules/storyboard';
-import { dataRef, loadDatasets } from '../src/lib/datasets';
+import { dataRef, loadDatasets } from '../src/modules/evidence';
 import { ROOT, readJson, topicDir } from '../src/shared/io';
 import type { Storyboard } from '../src/shared/types';
 import { loadStories, storyUrlSlug } from '../src/modules/stories';
 import { loadPublicRecord } from '../src/shared/public-record';
-import { loadTopic, publicTopicNames, topicNames } from '../src/lib/topics';
+import { loadTopic, publicTopicNames, topicNames } from '../src/modules/evidence';
 
 const DIST = join(ROOT, 'dist');
 // Same switch as astro.config.mjs: the GitHub Pages mirror under a base path, else the root site.

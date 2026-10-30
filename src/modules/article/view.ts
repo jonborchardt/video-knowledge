@@ -4,7 +4,7 @@ import { type ArticleRelease, type Callout, articleSentences } from './article';
 import { chartProblems, datasetChart } from '../storyboard';
 import { type PublicRecord, type Revision, isClaimRevision } from '../../shared/public-record';
 import type { ChartSpec, DataTable, Sentence } from '../../shared/types';
-import type { Topic } from '../../lib/topics';
+import type { Topic } from '../evidence';
 import { citeHref, citeLabel, datasetSource } from '../../lib/url';
 
 /** What a figure draws: a storyboard chart or an evidence dataset, with the source line its caption carries. */

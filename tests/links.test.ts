@@ -6,7 +6,7 @@ import { loadMoved, manifestProblems } from '../src/modules/website';
 import { site } from '../src/config/site';
 import { readJson, toJson, topicDir } from '../src/shared/io';
 import { loadStories } from '../src/modules/stories';
-import { publicTopicNames } from '../src/lib/topics';
+import { publicTopicNames } from '../src/modules/evidence';
 import { scriptDir } from '../src/shared/io';
 import { uploadProblem } from '../src/modules/publishing';
 import {

@@ -2,10 +2,10 @@
 import Base from '../layouts/Base.astro';
 import VerdictBadge from '../components/VerdictBadge.astro';
 import FindingLabel from '../components/FindingLabel.astro';
-import { FINDING_LABELS, FINDING_TEXT } from '../lib/finding-label';
+import { FINDING_LABELS, FINDING_TEXT } from '../modules/evidence';
 import { author, commissionKey, commissions, site } from '../config/site';
 import { siteTopics } from '../modules/website/site-graph';
-import { loadTopic } from '../lib/topics';
+import { loadTopic } from '../modules/evidence';
 import { href } from '../lib/url';
 
 const h2 = 'mt-10 mb-3 text-featured font-bold';

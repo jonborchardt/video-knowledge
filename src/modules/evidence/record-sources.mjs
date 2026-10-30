@@ -1,26 +1,26 @@
-// node scripts/record-sources.mjs <topic> <verdicts.json> [...more]
-// Record study verdicts written by the source-pass agents (see scripts/briefs/sources.md; typed and checked in
-// src/lib/batches.ts, so a malformed file stops the run before anything is written):
+// node src/modules/evidence/record-sources.mjs <topic> <verdicts.json> [...more]
+// Record study verdicts written by the source-pass agents (see src/modules/evidence/briefs/sources.md; typed and checked in
+// src/modules/evidence/batches.ts, so a malformed file stops the run before anything is written):
 //   [{ "claim": "<topic>/<slug>", "verdict": "partly", "confidence": 0.6, "note": "...",
 //      "source": "<topic>/sources/<file>.txt#L10-L24", "applicability": "partial", "why": "lab task, not production work" }]
 // Evidence belongs to the claim, so each verdict is recorded once, on the first source (by id) that makes the claim.
 // To retract a verdict, record the same claim + document again with verdict "unknown" (the latest per document wins).
 // A verdict that would replace one a script cites (same claim and document, another range) is refused unless
-// --replace-cited is passed (src/lib/cited.ts).
+// --replace-cited is passed (src/modules/evidence/cited.ts).
 // "applicability" (direct | partial | contextual) and "why" never reach the watcher: they go to
 // topics/<topic>/applicability.json, keyed <claim>|<cite>, which only this script writes. An entry identical to a
 // stored verdict (same source, verdict, note, confidence) is applicability-only: it updates that file and nothing else.
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { checkStudyVerdicts, isStored, withApplicability } from '../src/lib/batches.ts';
-import { citedPairs, replacedCited } from '../src/lib/cited.ts';
+import { checkStudyVerdicts, isStored, withApplicability } from './batches.ts';
+import { citedPairs, replacedCited } from './cited.ts';
 import { ROOT, TOPICS, topicDir, watcher } from './watcher.mjs';
 
 const args = process.argv.slice(2);
 const replaceCited = args.includes('--replace-cited');
 const [topic, ...files] = args.filter((a) => a !== '--replace-cited');
 if (!topic || !files.length) {
-  console.error('usage: node scripts/record-sources.mjs <topic> <verdicts.json> [...] [--replace-cited]');
+  console.error('usage: node src/modules/evidence/record-sources.mjs <topic> <verdicts.json> [...] [--replace-cited]');
   process.exit(1);
 }
 const store = join(TOPICS, topic, 'store'),

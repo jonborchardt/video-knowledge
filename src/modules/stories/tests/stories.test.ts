@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { ReviewFile } from '../../../shared/types';
 import { discover, loadStories, staleReviewIds, storyTopicNames } from '../stories';
-import { loadTopic } from '../../../lib/topics';
+import { loadTopic } from '../../evidence';
 import { loadReview } from '../review';
 import { DOC_A, DOC_B, DOC_C, claim, guess, reader, sources, study, topic } from '../../../../tests/corpus';
 

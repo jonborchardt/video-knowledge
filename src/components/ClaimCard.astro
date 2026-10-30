@@ -1,12 +1,12 @@
 ---
 // One claim, expandable to the sources behind its asserted/denied counts and every verdict recorded on it.
 // The chip filter is CSS only (the style block below); the stat-line shortcuts are the script below.
-import type { ClaimView } from '../lib/topics';
+import type { ClaimView } from '../modules/evidence';
 import { site } from '../config/site';
 import SourceLink from './SourceLink.astro';
 import VerdictBadge from './VerdictBadge.astro';
 import FindingLabel from './FindingLabel.astro';
-import { findingLabel } from '../lib/finding-label';
+import { findingLabel } from '../modules/evidence';
 import { revisionLine } from '../shared/public-record';
 import { citeHref, citeLines } from '../lib/url';
 

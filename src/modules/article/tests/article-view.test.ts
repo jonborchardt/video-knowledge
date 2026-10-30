@@ -7,7 +7,7 @@ import { articleStale, articleView, releaseFigureDraws } from '../view';
 import type { PublicRecord, Revision } from '../../../shared/public-record';
 import { readJson } from '../../../shared/io';
 import { scriptDir, scriptDirs } from '../../../shared/io';
-import type { SourceView } from '../../../lib/topics';
+import type { SourceView } from '../../evidence';
 import { article } from './article-helpers';
 import { DOC_D, MLM, fact, sentence } from '../../../../tests/script-helpers';
 

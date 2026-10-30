@@ -9,7 +9,7 @@ import { appendEvent, emptyLedger, type Ledger, publishPath, saveLedger } from '
 import { FILES, scriptDir } from '../../../shared/io';
 import { loadStories } from '../../stories';
 import type { Story } from '../../../shared/types';
-import { publicTopicNames } from '../../../lib/topics';
+import { publicTopicNames } from '../../evidence';
 
 const T = 'heat-pumps';
 const TOOL_STORY = storyNode(T, 'decision:is-it-cheaper-to-run-than-gas');

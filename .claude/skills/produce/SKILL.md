@@ -60,7 +60,7 @@ What each halt kind means for you:
 | `halt.kind` | do |
 |---|---|
 | `missing`, `stale`, `review-pending`, `review-findings`, `storyboard-blocked`, `blocking-findings`, `lock` | follow the steps (`review-findings`: the reviewer holds sentences on warnings; the writer revises them, then the steps ask for a re-review) |
-| `needs-evidence` | the steps hand `scripts/briefs/evidence.md` to a fresh agent; if it records nothing for a gap, Stop |
+| `needs-evidence` | the steps hand `src/modules/evidence/briefs/evidence.md` to a fresh agent; if it records nothing for a gap, Stop |
 | `needs-graphics` | one fresh `graphics.md` agent per listed scene (`Scenes: <id>`), then the check |
 | `graphics-review` | a fresh `visual-review.md` agent that built none of them; a `revise` verdict goes back to a graphics agent with the notes |
 | `render-check`, `qa-failed` | a fresh `video-fix.md` agent, then the command |

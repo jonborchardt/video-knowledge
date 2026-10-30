@@ -14,7 +14,7 @@ import { scriptFingerprint, sentenceFingerprint, sentences } from '../src/shared
 import { validateScript } from '../src/shared/sentence-validation';
 import { discover } from '../src/modules/stories';
 import type { StoryboardPlan } from '../src/shared/types';
-import type { Topic } from '../src/lib/topics';
+import type { Topic } from '../src/modules/evidence';
 import { TOPIC, claim, passages, sources, study, topic } from './corpus';
 
 // A passage with figures, in the shape of a survey result.

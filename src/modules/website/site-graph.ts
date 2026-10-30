@@ -2,7 +2,7 @@
 // only what has a live video. Tests use `contentGraph()` (live) directly, since vitest runs with DEV true.
 import { contentGraph, type View } from './content-graph';
 import { ROOT } from '../../shared/io';
-import { publicTopicNames } from '../../lib/topics';
+import { publicTopicNames } from '../evidence';
 
 export const siteView: View = import.meta.env.DEV ? 'preview' : 'live';
 

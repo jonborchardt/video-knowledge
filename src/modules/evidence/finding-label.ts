@@ -1,7 +1,7 @@
 // The four public finding labels (plan D3): what a visitor reads on every claim. Derived from the verdict the report
 // already decided; no judgment happens here, and an AI guess can only ever be a reported claim.
-import { STRONG } from '../shared/evidence-gate';
-import { FINDING_LABELS, type ClaimState, type FindingLabel } from '../shared/types';
+import { STRONG } from '../../shared/evidence-gate';
+import { FINDING_LABELS, type ClaimState, type FindingLabel } from '../../shared/types';
 import type { ClaimView } from './topics';
 
 export { FINDING_LABELS, type FindingLabel };

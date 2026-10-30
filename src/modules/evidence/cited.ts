@@ -1,10 +1,10 @@
 // The study verdicts the topic's scripts cite. The store keeps one verdict per (claim, document), latest wins, so
 // record-sources checks here before a new verdict silently replaces a passage a script rests on.
-// Only erasable syntax and only io.ts (which imports nothing relative): scripts/record-sources.mjs loads this file
+// Only erasable syntax and only io.ts (which imports nothing relative): src/modules/evidence/record-sources.mjs loads this file
 // through node's type stripping.
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { readJson, topicDir, ROOT } from '../shared/io.ts';
+import { readJson, topicDir, ROOT } from '../../shared/io.ts';
 
 interface CitingScript {
   sections: { sentences: { assertions?: { evidence: { kind: string; claim?: string; cite?: string }[] }[] }[] }[];

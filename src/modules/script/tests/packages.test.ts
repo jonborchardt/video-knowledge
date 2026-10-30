@@ -14,7 +14,7 @@ import { validateScript } from '../../../shared/sentence-validation';
 import { chainOf, loadStories } from '../../stories';
 import { buildStoryboard } from '../../storyboard';
 import type { Storyboard, StoryboardPlan } from '../../../shared/types';
-import { loadTopic } from '../../../lib/topics';
+import { loadTopic } from '../../evidence';
 
 const dirs = scriptDirs();
 

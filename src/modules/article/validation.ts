@@ -28,8 +28,8 @@ import {
   type Severity,
   type PassageReader,
 } from '../../shared/types';
-import { dataRef, loadDatasets } from '../../lib/datasets';
-import { findingLabel } from '../../lib/finding-label';
+import { dataRef, loadDatasets } from '../evidence';
+import { findingLabel } from '../evidence';
 import { readJson, ROOT, FILES, scriptDir, storySlug } from '../../shared/io';
 import { norm, revisionsInPass, sentenceFingerprint, sentences } from '../../shared/sentences';
 import { type ValidateOptions, validateScript } from '../../shared/sentence-validation';

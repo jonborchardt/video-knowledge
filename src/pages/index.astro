@@ -5,14 +5,14 @@
 import Base from '../layouts/Base.astro';
 import LabelStrip from '../components/LabelStrip.astro';
 import { commissionKey, commissions, site } from '../config/site';
-import { labelCounts } from '../lib/finding-label';
+import { labelCounts } from '../modules/evidence';
 import { ROOT } from '../shared/io';
 import { hasVideo, matterOrder, matterPath } from '../modules/website';
 import { siteGraph } from '../modules/website/site-graph';
 import KindIcon from '../components/KindIcon.astro';
 import SourceIcons from '../components/SourceIcons.astro';
 import { storyUrlSlug } from '../modules/stories';
-import { loadTopic } from '../lib/topics';
+import { loadTopic } from '../modules/evidence';
 import { href } from '../lib/url';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';

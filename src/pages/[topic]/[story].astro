@@ -29,18 +29,18 @@ import {
 import { siteGraph } from '../../modules/website/site-graph';
 import { toolOf } from '../../tools';
 import { articleModified, articleView, loadArticleRelease, releaseFigureDraws } from '../../modules/article';
-import { loadDatasets } from '../../lib/datasets';
+import { loadDatasets } from '../../modules/evidence';
 import { storySlug } from '../../shared/io';
 import { storyOutputs } from '../../modules/publishing';
 import { loadPublicRecord, revisionLine } from '../../shared/public-record';
-import { FINDING_LABELS, FINDING_TEXT, findingLabel, labelCounts } from '../../lib/finding-label';
+import { FINDING_LABELS, FINDING_TEXT, findingLabel, labelCounts } from '../../modules/evidence';
 import SourceIcons from '../../components/SourceIcons.astro';
 import SourceLink from '../../components/SourceLink.astro';
 import Stamp from '../../components/Stamp.astro';
 import { commissionBody, commissionKey, commissionOf, site } from '../../config/site';
 import { loadStories, storyUrlSlug } from '../../modules/stories';
 import type { Story } from '../../shared/types';
-import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
+import { loadTopic, publicTopicNames, type Topic } from '../../modules/evidence';
 import { ROOT } from '../../shared/io';
 import { href } from '../../lib/url';
 

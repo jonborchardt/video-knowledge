@@ -1,7 +1,7 @@
-import { APPLICABILITY, type ApplicabilityLevel, type RecordedApplicability } from '../shared/types.ts';
+import { APPLICABILITY, type ApplicabilityLevel, type RecordedApplicability } from '../../shared/types.ts';
 // The two files agents write for the research stage, typed and checked before anything is recorded:
-//   extraction batches, h*.json (scripts/briefs/extract.md), recorded by scripts/record.mjs
-//   study verdicts, sv_*.json (scripts/briefs/sources.md), recorded by scripts/record-sources.mjs
+//   extraction batches, h*.json (src/modules/evidence/briefs/extract.md), recorded by src/modules/evidence/record.mjs
+//   study verdicts, sv_*.json (src/modules/evidence/briefs/sources.md), recorded by src/modules/evidence/record-sources.mjs
 // The checks are pure and list every problem, so a malformed file stops the run before the first write.
 // Imports only ../shared/types.ts (with its extension) and uses only erasable syntax: the .mjs scripts load this file through node's type stripping.
 

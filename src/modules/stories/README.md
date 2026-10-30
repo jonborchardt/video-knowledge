@@ -9,5 +9,5 @@ Stories turns a topic's judged claims into ranked candidate videos, each with it
 - Inspect: no; the board reads the readiness field of `stories.json`.
 - Public API (`index.ts`): `discover`, `loadStories`, `storiesPath`, `chainOf`, `storyUrlSlug`, `groupSlug`, `staleReviewIds`, `storyTopicNames`, `loadReview`, `reviewPath`, types `StoryInput`, `StoriesFile`.
 - Read API (listed under `stories` in `tests/boundaries.json`): `loadStories`, `storiesPath`, `chainOf`, `storyUrlSlug`, `loadReview`, `reviewPath`; each only reads `stories.json` or `story-review.json`, builds a path, or selects over a loaded file. `discover` is not in it: only the orchestrator runs it.
-- Consumes: evidence's `loadTopic`, `topicNames` and `VAL` (`src/lib/topics.ts`, edges until evidence is a module); the topic view types are in `src/shared/types.ts`.
+- Consumes: evidence's `loadTopic`, `topicNames` and `VAL` (`src/modules/evidence/topics.ts`, edges until evidence is a module); the topic view types are in `src/shared/types.ts`.
 - Rules: `stories.json` is derived and holds references only (never passage text); semantic judgment lives only in `story-review.json`, keyed by stable ids; a story with more than one claim is never `ready` without a review; a video may chain up to three questions (`MAX_CHAIN_CLAIMS` 14), chains do not nest and a chained story is `partOf` the first.

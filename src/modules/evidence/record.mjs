@@ -1,6 +1,6 @@
-// node scripts/record.mjs <topic> <batches.json> [--label "<Topic label>"] [--from <video-id>]
-// Record extraction batches in the compact format the agents write (see scripts/briefs/extract.md; typed and checked
-// in src/lib/batches.ts, so a malformed file stops the run before anything is written):
+// node src/modules/evidence/record.mjs <topic> <batches.json> [--label "<Topic label>"] [--from <video-id>]
+// Record extraction batches in the compact format the agents write (see src/modules/evidence/briefs/extract.md; typed and checked
+// in src/modules/evidence/batches.ts, so a malformed file stops the run before anything is written):
 //   [{ "video": "<id>", "sum": "one line", "as": [
 //       { "c": "<existing slug>", "s": "d"?, "q": "quote" },                  reuse a claim (s:"d" = the source denies it)
 //       { "n": "New claim text", "q": "...", "v": [verdict, conf, note], "l": "pro" },   create a claim + its AI guess
@@ -11,7 +11,7 @@
 // --label creates the topic on the first batch of an empty store. --from skips batches before that video (resume).
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { checkBatches } from '../src/lib/batches.ts';
+import { checkBatches } from './batches.ts';
 import { ROOT, TOPICS, topicDir, watcher } from './watcher.mjs';
 
 const [topic, file, ...rest] = process.argv.slice(2);
@@ -20,7 +20,9 @@ const opt = (k) => {
   return i >= 0 ? rest[i + 1] : undefined;
 };
 if (!topic || !file) {
-  console.error('usage: node scripts/record.mjs <topic> <batches.json> [--label "<label>"] [--from <video-id>]');
+  console.error(
+    'usage: node src/modules/evidence/record.mjs <topic> <batches.json> [--label "<label>"] [--from <video-id>]',
+  );
   process.exit(1);
 }
 const store = join(TOPICS, topic, 'store');

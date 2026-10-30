@@ -6,11 +6,11 @@ import {
   datasetAgeDays,
   datasetProblems,
   loadDatasets,
-} from '../src/lib/datasets';
-import { type PassageReader } from '../src/shared/types';
-import { passageReader } from '../src/shared/io';
-import { publicTopicNames } from '../src/lib/topics';
-import { TOOLS } from '../src/tools';
+} from '../datasets';
+import { type PassageReader } from '../../../shared/types';
+import { passageReader } from '../../../shared/io';
+import { publicTopicNames } from '../topics';
+import { TOOLS } from '../../../tools';
 
 const CITE = 'x/sources/prices.txt#L2';
 const HEAD = 'x/sources/prices.txt#L1';

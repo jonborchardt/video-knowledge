@@ -13,9 +13,9 @@ import SourceLink from '../components/SourceLink.astro';
 import SurpriseItem from '../components/SurpriseItem.astro';
 import VerdictBadge from '../components/VerdictBadge.astro';
 import { groupSlug, loadStories, storyUrlSlug } from '../modules/stories';
-import { loadTopic, publicTopicNames, type Topic } from '../lib/topics';
+import { loadTopic, publicTopicNames, type Topic } from '../modules/evidence';
 import { commissionBody, commissionKey, commissionOf, site } from '../config/site';
-import { loadDatasets } from '../lib/datasets';
+import { loadDatasets } from '../modules/evidence';
 import { href } from '../lib/url';
 
 export function getStaticPaths() {

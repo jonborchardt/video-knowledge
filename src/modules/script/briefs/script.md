@@ -29,7 +29,7 @@ entry to `generation.needsEvidence` and stop:
 ]
 ```
 
-A separate evidence agent (`scripts/briefs/evidence.md`) records what decides it and rebuilds the
+A separate evidence agent (`src/modules/evidence/briefs/evidence.md`) records what decides it and rebuilds the
 package. When you revise against the rebuilt package, clear `needsEvidence` (remove the field).
 If the gap could not be closed, say in the sentence that the evidence cannot answer.
 

@@ -20,7 +20,7 @@ import { scriptDir } from '../../../shared/io';
 import { copyTopic } from '../../../../tests/production-helpers';
 import { loadStories, storyUrlSlug } from '../../stories';
 import type { Story } from '../../../shared/types';
-import { publicTopicNames } from '../../../lib/topics';
+import { publicTopicNames } from '../../evidence';
 
 // Small temp roots: a stories.json of bare stories and, where a test needs one, a publishing ledger.
 const T = 'heat-pumps';

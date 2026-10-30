@@ -26,7 +26,7 @@ import type {
   ScriptValidation,
   Story,
 } from '../shared/types';
-import { corpusOf } from './corpus';
+import { corpusOf } from '../modules/evidence';
 import {
   passageReader,
   fileSha,
@@ -83,7 +83,7 @@ import {
 import { chainOf, discover, loadReview, loadStories, reviewPath, storiesPath } from '../modules/stories';
 import { buildStoryboard } from '../modules/storyboard';
 import type { Storyboard, StoryboardPlan } from '../shared/types';
-import { loadTopic, topicNames, type Topic } from './topics';
+import { loadTopic, topicNames, type Topic } from '../modules/evidence';
 import type { BuildSummary, Clearance } from '../shared/build-report';
 import { lookFingerprint, lookStale } from '../shared/look';
 import { type Commission, commissionOf } from '../config/site';
@@ -455,7 +455,7 @@ const scriptStage: BoardStage = ({ r, pkg, script }) => {
             stage: 'script',
             kind: 'needs-evidence',
             why: `the writer needs evidence: ${wants.map((w) => `${w.claim} (${w.why})`).join('; ')}`,
-            cmd: 'agent: scripts/briefs/evidence.md',
+            cmd: 'agent: src/modules/evidence/briefs/evidence.md',
           }
         : undefined,
   };
@@ -965,7 +965,7 @@ function articleOf({
       case 'missing':
         return `agent: src/modules/article/briefs/article.md -> ${r(ARTICLE_FILES.article)}`;
       case 'invalid':
-        if (code === 'needs-evidence') return 'agent: scripts/briefs/evidence.md';
+        if (code === 'needs-evidence') return 'agent: src/modules/evidence/briefs/evidence.md';
         if (code === 'no-package') return `npm run script -- package ${topic} ${storyId}`;
         if (code === 'revision-limit') return 'stop: revision limit reached with blocking findings';
         if (code === 'blocking') return writer;
@@ -1277,7 +1277,7 @@ export function topicBoard(
   checks.push({
     name: 'claims',
     health: raw.length ? 'pending' : 'current',
-    detail: `${topic.claims.length} claims from ${recs.length - raw.length - noCaptions} sources${raw.length ? `; ${raw.length} fetched but not extracted (scripts/briefs/extract.md)` : ''}${noCaptions ? `; ${noCaptions} without captions` : ''}`,
+    detail: `${topic.claims.length} claims from ${recs.length - raw.length - noCaptions} sources${raw.length ? `; ${raw.length} fetched but not extracted (src/modules/evidence/briefs/extract.md)` : ''}${noCaptions ? `; ${noCaptions} without captions` : ''}`,
     file: `topics/${name}/store/topics.json`,
   });
   const docs = existsSync(join(dir, 'sources'))
@@ -1287,7 +1287,7 @@ export function topicBoard(
   checks.push({
     name: 'studies',
     health: docs ? (unjudged > 0 ? 'pending' : 'current') : 'missing',
-    detail: `${docs} documents, ${topic.studies} with verdicts, ${topic.decided}/${topic.claims.length} claims decided by a study${unjudged > 0 ? `; ${unjudged} documents without a recorded verdict (scripts/briefs/sources.md)` : ''}`,
+    detail: `${docs} documents, ${topic.studies} with verdicts, ${topic.decided}/${topic.claims.length} claims decided by a study${unjudged > 0 ? `; ${unjudged} documents without a recorded verdict (src/modules/evidence/briefs/sources.md)` : ''}`,
     file: `topics/${name}/sources/`,
   });
   const storeClaims = (
@@ -1575,7 +1575,7 @@ export function stepsOf(next: string, topic: string, story?: string): Step[] {
           text: [
             `Find studies or public data that would decide this gap in topic ${topic}${story ? `, story ${story}` : ''}:`,
             research[1],
-            `Save each document to topics/${topic}/sources/ as text (pdftotext -layout for PDFs), then follow scripts/briefs/sources.md for the new documents against every claim and record with npm run record-sources -- ${topic} topics/${topic}/work/sv_*.json.`,
+            `Save each document to topics/${topic}/sources/ as text (pdftotext -layout for PDFs), then follow src/modules/evidence/briefs/sources.md for the new documents against every claim and record with npm run record-sources -- ${topic} topics/${topic}/work/sv_*.json.`,
             `Then run npm run report and npm run stories -- discover ${topic}. If nothing decides it, say so and stop.`,
           ].join('\n'),
         },

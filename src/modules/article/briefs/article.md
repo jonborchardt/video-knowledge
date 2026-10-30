@@ -145,7 +145,7 @@ A section is `{ "name", "heading", "blocks": [...] }`. Three kinds of block:
   `unresolved` callout names either a claim (`claim`) or a gap by its zero-based index in the package's
   `gaps` list (`gap`). The callout's sentences state the condition from the verdict note: under what conditions
   the claim holds, or what is not known and why. The callout type follows the claim's label (`findingLabel` in
-  `src/lib/finding-label.ts`): `qualification` for a Qualified claim (verdict `partly`), `unresolved` for an
+  `src/modules/evidence/finding-label.ts`): `qualification` for a Qualified claim (verdict `partly`), `unresolved` for an
   Unresolved claim (decided by a study, but not `right` or `wrong` at verified confidence). The coverage check
   accepts either type, so getting it right is yours. A factual sentence in a gap callout cites a study passage
   that bears on the gap, never a context-only one, unless the gap is about that passage (the package marks it

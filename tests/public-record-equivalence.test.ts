@@ -3,10 +3,10 @@
 // same bytes.
 import { readFileSync, readdirSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { ledgerClaims, claimStates } from '../src/lib/finding-label';
+import { ledgerClaims, claimStates } from '../src/modules/evidence';
 import { noteRevision, nextPublicRecord, publicRecordProblems } from '../src/shared/public-record';
 import { toJson } from '../src/shared/io';
-import type { ClaimView } from '../src/lib/topics';
+import type { ClaimView } from '../src/modules/evidence';
 
 const DIR = 'tests/fixtures/public-record';
 const fixture = (name: string) => readFileSync(`${DIR}/${name}.json`, 'utf8');

@@ -21,10 +21,10 @@ import {
   publicRecordProblems,
   revisionLine,
 } from '../src/shared/public-record';
-import { claimStates, ledgerClaims } from '../src/lib/finding-label';
+import { claimStates, ledgerClaims } from '../src/modules/evidence';
 import { contentGraph, liveClaims } from '../src/modules/website';
 import { ROOT, toJson, topicDir } from '../src/shared/io';
-import { type ClaimView, loadTopic, publicTopicNames, type SourceView, type Verdict } from '../src/lib/topics';
+import { type ClaimView, loadTopic, publicTopicNames, type SourceView, type Verdict } from '../src/modules/evidence';
 
 const next = (
   prev: PublicRecord,
@@ -190,11 +190,15 @@ describe('public record', () => {
       const watcher = join(root, 'fake-watcher');
       mkdirSync(join(watcher, 'src'), { recursive: true });
       writeFileSync(join(watcher, 'src', 'cli.ts'), "process.stdout.write('{ not json');\n");
-      const r = spawnSync(process.execPath, ['--import', 'tsx', join(ROOT, 'scripts', 'report.ts')], {
-        cwd: root,
-        env: { ...process.env, WATCHER_DIR: watcher },
-        encoding: 'utf8',
-      });
+      const r = spawnSync(
+        process.execPath,
+        ['--import', 'tsx', join(ROOT, 'src', 'modules', 'evidence', 'cli-report.ts')],
+        {
+          cwd: root,
+          env: { ...process.env, WATCHER_DIR: watcher },
+          encoding: 'utf8',
+        },
+      );
       expect(r.stderr).toMatch(/JSON/); // it got as far as reading the new report
       expect(r.status).not.toBe(0);
       expect(readFileSync(join(dir, 'report.json'), 'utf8')).toBe(old);

@@ -6,13 +6,13 @@ import { join } from 'node:path';
 import { commissionKey, commissionOf } from '../../config/site';
 import { toolOf } from '../../tools';
 import { loadArticleRelease } from '../article';
-import { dataRef, loadDatasets } from '../../lib/datasets';
+import { dataRef, loadDatasets } from '../evidence';
 import { readJson, ROOT, topicDir } from '../../shared/io';
 import { loadLedger, storyOutputs } from '../publishing';
 import { scriptDir } from '../../shared/io';
 import { loadStories, storyUrlSlug } from '../stories';
 import type { Story } from '../../shared/types';
-import { publicTopicNames } from '../../lib/topics';
+import { publicTopicNames } from '../evidence';
 import { absoluteUrl } from '../../lib/url';
 
 export type NodeKind =

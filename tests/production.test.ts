@@ -41,11 +41,11 @@ import {
   articleSentences,
 } from '../src/modules/article/article';
 import { inspectArticle } from '../src/modules/article';
-import { corpusOf } from '../src/lib/corpus';
+import { corpusOf } from '../src/modules/evidence';
 import { loadReview, loadStories } from '../src/modules/stories';
 import type { Storyboard } from '../src/shared/types';
 import { validateScript } from '../src/shared/sentence-validation';
-import { loadTopic } from '../src/lib/topics';
+import { loadTopic } from '../src/modules/evidence';
 import { sentenceFingerprint } from '../src/shared/sentences';
 import type { EvidencePackage, Script, ScriptReviewFile, ScriptValidation } from '../src/shared/types';
 import {
@@ -129,7 +129,7 @@ describe('halt kinds', () => {
       writeFileSync(f, toJson(s));
       const prod = productionOf(fx.topic, fx.story, fx.root)!;
       expect(prod.halt).toMatchObject({ kind: 'needs-evidence', stage: 'script' });
-      expect(prod.next.startsWith('agent: scripts/briefs/evidence.md')).toBe(true);
+      expect(prod.next.startsWith('agent: src/modules/evidence/briefs/evidence.md')).toBe(true);
     } finally {
       fx.cleanup();
     }
@@ -977,7 +977,7 @@ describe('the article on the board', () => {
       write(fx, 'article.json', a);
       expect(articleState(fx)).toEqual({
         state: 'writing',
-        next: 'agent: scripts/briefs/evidence.md',
+        next: 'agent: src/modules/evidence/briefs/evidence.md',
         kind: 'needs-evidence',
       });
     } finally {

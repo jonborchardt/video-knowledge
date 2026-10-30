@@ -1,9 +1,9 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { topicDir } from '../src/shared/io';
-import { checkApplicabilityFile } from '../src/lib/batches';
-import { APPLICABILITY_FILE, loadTopic, publicTopicNames, topicNames } from '../src/lib/topics';
+import { topicDir } from '../../../shared/io';
+import { checkApplicabilityFile } from '../batches';
+import { APPLICABILITY_FILE, loadTopic, publicTopicNames, topicNames } from '../topics';
 
 describe('topics', () => {
   const names = topicNames();

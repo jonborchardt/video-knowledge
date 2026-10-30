@@ -16,7 +16,7 @@ import { commissionBody, commissionKey, commissionOf, commissions, site } from '
 import { contentGraph, storyNode } from '../src/modules/website';
 import { ROOT, readJson } from '../src/shared/io';
 import { loadStories, storyUrlSlug } from '../src/modules/stories';
-import { publicTopicNames } from '../src/lib/topics';
+import { publicTopicNames } from '../src/modules/evidence';
 
 interface Slot {
   id: string;

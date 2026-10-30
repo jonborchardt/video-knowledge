@@ -3,19 +3,6 @@
     "src/shared/": "shared",
     "src/config/": "shared",
     "src/lib/url.ts": "shared",
-    "src/lib/topics.ts": "evidence",
-    "src/lib/corpus.ts": "evidence",
-    "src/lib/batches.ts": "evidence",
-    "src/lib/finding-label.ts": "evidence",
-    "src/lib/verdict-label.ts": "evidence",
-    "src/lib/cited.ts": "evidence",
-    "src/lib/datasets.ts": "evidence",
-    "src/lib/live-claims.ts": "evidence",
-    "scripts/report.ts": "evidence",
-    "scripts/record.mjs": "evidence",
-    "scripts/record-sources.mjs": "evidence",
-    "scripts/watcher.mjs": "evidence",
-    "scripts/merge-claims.mjs": "evidence",
     "src/lib/storyboard.ts": "shared",
     "src/video/": "video",
     "src/lib/render-check.ts": "video",
@@ -49,6 +36,17 @@
   ],
   "layoutOwner": "src/shared/io.ts",
   "readApi": {
+    "evidence": [
+      "loadTopic",
+      "topicNames",
+      "publicTopicNames",
+      "VAL",
+      "Topic",
+      "corpusOf",
+      "loadDatasets",
+      "dataRef",
+      "findingLabel"
+    ],
     "publishing": ["loadLedger", "mainOutput", "uploadProblem", "storyOutputs"],
     "website": ["contentGraph", "ctaPath", "loadCta", "matterPath", "resolveCtas", "storyNode", "CtaType"],
     "shorts": ["buildShortPackage", "loadShorts", "shortsPath"],
@@ -57,34 +55,9 @@
   },
   "edges": [
     {
-      "from": "astro.config.mjs",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/modules/article/cli.ts",
-      "to": "src/lib/corpus.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/modules/article/cli.ts",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "scripts/brand.ts",
-      "to": "src/lib/topics.ts",
-      "until": "brand"
-    },
-    {
-      "from": "scripts/report.ts",
+      "from": "src/modules/evidence/cli-report.ts",
       "to": "src/shared/io.ts",
       "until": "shared"
-    },
-    {
-      "from": "src/modules/script/cli.ts",
-      "to": "src/lib/corpus.ts",
-      "until": "evidence"
     },
     {
       "from": "src/modules/script/cli.ts",
@@ -92,22 +65,12 @@
       "until": "video"
     },
     {
-      "from": "src/modules/script/cli.ts",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/modules/stories/cli.ts",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
       "from": "scripts/video.ts",
       "to": "src/lib/production.ts",
       "until": "orchestration"
     },
     {
-      "from": "scripts/watcher.mjs",
+      "from": "src/modules/evidence/watcher.mjs",
       "to": "src/shared/io.ts",
       "until": "shared"
     },
@@ -117,144 +80,9 @@
       "until": "orchestration"
     },
     {
-      "from": "src/admin/PathDiagram.astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/admin/SiteMapDiagram.astro",
-      "to": "src/lib/datasets.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/admin/SiteMapDiagram.astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/admin/register.astro",
-      "to": "src/lib/datasets.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/admin/register.astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/admin/stories.astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/components/ArticleBody.astro",
-      "to": "src/lib/finding-label.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/components/ClaimCard.astro",
-      "to": "src/lib/finding-label.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/components/ClaimCard.astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/components/DataTableView.astro",
-      "to": "src/lib/datasets.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/components/FindingLabel.astro",
-      "to": "src/lib/finding-label.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/components/InstitutionCard.astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/components/LabelStrip.astro",
-      "to": "src/lib/finding-label.ts",
-      "until": "evidence"
-    },
-    {
       "from": "src/components/NextStep.astro",
       "to": "src/lib/production.ts",
       "until": "orchestration"
-    },
-    {
-      "from": "src/components/SourceDetails.astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/components/SourceLink.astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/components/SurpriseItem.astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/components/VerdictBadge.astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/components/VerdictBadge.astro",
-      "to": "src/lib/verdict-label.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/components/tools/HeatingCost.astro",
-      "to": "src/lib/datasets.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/components/tools/HeatingCost.astro",
-      "to": "src/lib/finding-label.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/components/tools/HeatingCost.astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/modules/article/validation.ts",
-      "to": "src/lib/datasets.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/modules/article/validation.ts",
-      "to": "src/lib/finding-label.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/modules/article/view.ts",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/modules/website/content-graph.ts",
-      "to": "src/lib/datasets.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/modules/website/content-graph.ts",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/lib/production.ts",
-      "to": "src/lib/corpus.ts",
-      "until": "evidence"
     },
     {
       "from": "src/lib/production.ts",
@@ -262,114 +90,9 @@
       "until": "video"
     },
     {
-      "from": "src/lib/production.ts",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/modules/website/site-graph.ts",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/modules/stories/stories.ts",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/lib/topics.ts",
+      "from": "src/modules/evidence/topics.ts",
       "to": "src/shared/io.ts",
       "until": "shared"
-    },
-    {
-      "from": "src/pages/[topic]/[story].astro",
-      "to": "src/lib/datasets.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/pages/[topic]/[story].astro",
-      "to": "src/lib/finding-label.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/pages/[topic]/[story].astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/pages/[topic]/data/[id].csv.ts",
-      "to": "src/lib/datasets.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/pages/[topic]/data/[id].csv.ts",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/pages/[topic]/data/[id].json.ts",
-      "to": "src/lib/datasets.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/pages/[topic]/data/[id].json.ts",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/pages/[topic]/data/index.astro",
-      "to": "src/lib/datasets.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/pages/[topic]/data/index.astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/pages/[topic]/index.astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/pages/about.astro",
-      "to": "src/lib/finding-label.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/pages/about.astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/pages/commissions/[id].astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/pages/index.astro",
-      "to": "src/lib/finding-label.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/pages/index.astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/pages/inquiries.astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/pages/institutions.astro",
-      "to": "src/lib/topics.ts",
-      "until": "evidence"
-    },
-    {
-      "from": "src/tools/heating-cost/spec.ts",
-      "to": "src/lib/datasets.ts",
-      "until": "evidence"
     },
     {
       "from": "src/modules/packaging/captions.ts",
