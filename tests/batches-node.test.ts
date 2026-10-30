@@ -9,10 +9,11 @@ describe('files the .mjs scripts load by .ts path', () => {
       const r = spawnSync(
         process.execPath,
         ['-e', `import('./src/${f}.ts').then(() => process.exit(0), (e) => { console.error(e); process.exit(1) })`],
-        { cwd: ROOT, encoding: 'utf8' },
+        { cwd: ROOT, encoding: 'utf8', timeout: 20_000 },
       );
-      expect(r.stderr).toBe('');
-      expect(r.status).toBe(0);
+      // Node 22 may print an ExperimentalWarning for type stripping; only an error fails.
+      expect(r.status, r.stderr).toBe(0);
+      expect(r.stderr, r.stderr).not.toMatch(/Error|ERR_/);
     });
   }
 });
