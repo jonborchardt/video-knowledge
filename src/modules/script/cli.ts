@@ -167,9 +167,12 @@ function runRenderCheck(): RenderCheckSummary {
     [join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs'), join('scripts', 'video.ts'), 'check', topic, storyId],
     { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'], encoding: 'utf8' },
   );
-  // exit 2 with nothing on stderr is a check that wrote its file and is not ok: the lock reports its problems below
-  if (r.status !== 0 && (r.status !== 2 || r.stderr.trim())) throw new Error(r.stderr.trim() || 'video check failed');
-  return readJson<RenderCheckSummary>(p(RENDER_CHECK))!;
+  // exit 2 is a check that wrote its file and is not ok (whatever node warned on stderr): the lock reports its
+  // problems below; any other failure, or a check that left no file, stops the lock as a thrown error did before
+  if (r.status !== 0 && r.status !== 2) throw new Error(r.stderr.trim() || 'video check failed');
+  const rc = readJson<RenderCheckSummary>(p(RENDER_CHECK));
+  if (!rc) throw new Error(r.stderr.trim() || `video check wrote no ${RENDER_CHECK}`);
+  return rc;
 }
 
 function stageLock() {
