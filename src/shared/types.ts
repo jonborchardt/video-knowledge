@@ -15,6 +15,10 @@ export const SHORT_SECTIONS = ['hook', 'finding', 'close'] as const;
 export const SHORT_MAX_SECONDS = 60;
 /** Ready Short candidates per video; the reviewer picks by leaving the rest unkept. */
 export const MAX_SHORTS = 3;
+/** Questions one video may answer: the story's own plus its chain. */
+export const MAX_QUESTIONS = 3;
+/** Claims one chained video may carry across its questions: past this it is too long to stay short. */
+export const MAX_CHAIN_CLAIMS = 14;
 /** The Short formats the brand allows as an eyebrow line (brand/design.md 2.6). */
 export const SHORT_FORMATS = [
   'ONE FIGURE FROM THE RECORD',

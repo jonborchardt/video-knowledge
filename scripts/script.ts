@@ -7,6 +7,7 @@
 //   lock <topic> <story-id> --approved-by "<name>"   write release.json (the approved fingerprints) when validation passed, the storyboard is ok
 //                                                    and the render check (re-run) is ok with every graphic approved; a real name or "automated: ..."
 // Stages are independent and persisted; a rejected script never touches research or story discovery.
+import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { corpusOf } from '../src/lib/corpus';
@@ -27,8 +28,7 @@ import { buildPackage, transcriptReader } from '../src/lib/evidence-package';
 import { releaseCheck, storyboardFingerprint } from '../src/shared/release-check';
 import { approverProblem } from '../src/shared/approver';
 import { validationFingerprint } from '../src/shared/sentence-validation';
-import { renderCheckProblems } from '../src/lib/render-check';
-import { writeRenderCheck } from '../src/video/check';
+import { RENDER_CHECK, type RenderCheckSummary, renderCheckProblems } from '../src/lib/render-check';
 import { sentenceFingerprint, sentences } from '../src/shared/sentences';
 import type { EvidencePackage, Release, Script, ScriptReviewFile, ScriptValidation } from '../src/shared/types';
 import { renderReviewMd, renderScriptMd } from '../src/lib/script-md';
@@ -160,6 +160,18 @@ function withRelease(v: ScriptValidation, sb: Storyboard | null) {
   v.issues.unshift(...extra); // listed, not counted: the counts describe the script, and lock re-validates in memory
 }
 
+/** The render check is video's: its own CLI (npm run video -- check), run as a child so this script never imports it. */
+function runRenderCheck(): RenderCheckSummary {
+  const r = spawnSync(
+    process.execPath,
+    [join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs'), join('scripts', 'video.ts'), 'check', topic, storyId],
+    { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'], encoding: 'utf8' },
+  );
+  // exit 2 with nothing on stderr is a check that wrote its file and is not ok: the lock reports its problems below
+  if (r.status !== 0 && (r.status !== 2 || r.stderr.trim())) throw new Error(r.stderr.trim() || 'video check failed');
+  return readJson<RenderCheckSummary>(p(RENDER_CHECK))!;
+}
+
 function stageLock() {
   const approvedBy = flag('--approved-by');
   const v = readJson<ScriptValidation>(p(FILES.validation));
@@ -170,7 +182,7 @@ function stageLock() {
   };
   if (!v || !sb) return refuse('run validate and storyboard first');
   // the check is re-run here, not read from video/render-check.json: an edited component changes a graphic's key
-  const rc = existsSync(p('video/render.json')) ? writeRenderCheck(topic, storyId) : null;
+  const rc = existsSync(p('video/render.json')) ? runRenderCheck() : null;
   const reasons = [
     approverProblem(approvedBy),
     ...(rc

@@ -7,10 +7,7 @@ import { join } from 'node:path';
 import { topicDir, ROOT } from '../shared/io';
 import type { ReviewFile } from '../shared/types';
 
-/** Questions one video may answer: the story's own plus its chain. */
-export const MAX_QUESTIONS = 3;
-/** Claims one chained video may carry across its questions: past this it is too long to stay short. */
-export const MAX_CHAIN_CLAIMS = 14;
+export { MAX_QUESTIONS, MAX_CHAIN_CLAIMS } from '../shared/types';
 
 export const reviewPath = (topic: string, root = ROOT) => join(topicDir(topic, root), 'story-review.json');
 export function loadReview(topic: string, root = ROOT): ReviewFile {

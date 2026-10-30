@@ -15,7 +15,7 @@ import type {
 } from '../shared/types';
 import { applicabilityFor } from '../shared/evidence-gate';
 import { docReader, sha, topicDir, ROOT, type DocReader } from '../shared/io';
-import { MAX_QUESTIONS } from './review';
+import { MAX_QUESTIONS } from '../shared/types';
 import { docOf, isStudyRef, norm } from '../shared/sentences';
 
 const DEFAULT_AUDIENCE =
