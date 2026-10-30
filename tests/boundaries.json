@@ -27,8 +27,6 @@
     "src/video/package.ts": "packaging",
     "src/video/captions.ts": "packaging",
     "src/video/": "video",
-    "src/lib/look.ts": "video",
-    "src/lib/build-report.ts": "video",
     "src/lib/render-check.ts": "video",
     "scripts/video.ts": "video",
     "scripts/music.ts": "video",
@@ -529,11 +527,6 @@
     },
     {
       "from": "src/lib/production.ts",
-      "to": "src/lib/build-report.ts",
-      "until": "video"
-    },
-    {
-      "from": "src/lib/production.ts",
       "to": "src/lib/corpus.ts",
       "until": "evidence"
     },
@@ -541,11 +534,6 @@
       "from": "src/lib/production.ts",
       "to": "src/lib/evidence-package.ts",
       "until": "script"
-    },
-    {
-      "from": "src/lib/production.ts",
-      "to": "src/lib/look.ts",
-      "until": "video"
     },
     {
       "from": "src/lib/production.ts",
@@ -589,16 +577,6 @@
     },
     {
       "from": "src/lib/publish.ts",
-      "to": "src/lib/build-report.ts",
-      "until": "publishing"
-    },
-    {
-      "from": "src/lib/publish.ts",
-      "to": "src/lib/look.ts",
-      "until": "publishing"
-    },
-    {
-      "from": "src/lib/publish.ts",
       "to": "src/lib/release.ts",
       "until": "publishing"
     },
@@ -629,18 +607,8 @@
     },
     {
       "from": "src/lib/review-view.ts",
-      "to": "src/lib/build-report.ts",
-      "until": "video"
-    },
-    {
-      "from": "src/lib/review-view.ts",
       "to": "src/shared/io.ts",
       "until": "shared"
-    },
-    {
-      "from": "src/lib/review-view.ts",
-      "to": "src/lib/look.ts",
-      "until": "video"
     },
     {
       "from": "src/lib/review-view.ts",

@@ -16,7 +16,7 @@ export interface BuildSummary {
   narration: { provider: string; voice: string; publishable: boolean };
   music: { compositions: { title: string }[] } | null;
   clearance: Clearance;
-  // config: sha of the parsed render.json; look: lookFingerprint (src/lib/look.ts), absent from older reports
+  // config: sha of the parsed render.json; look: lookFingerprint (src/shared/look.ts), absent from older reports
   fingerprints: { script: string; storyboard: string; config: string; look?: string };
   qa: { ok: boolean; checks: { name: string; ok: boolean; detail?: string; scene?: string; sentence?: string }[] };
 }

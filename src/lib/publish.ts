@@ -5,9 +5,9 @@
 // nothing new is versioned here. Library layer: it reads video/review/review.json by path and never imports src/video/.
 import { existsSync, readFileSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve } from 'node:path';
-import type { BuildSummary } from './build-report';
+import type { BuildSummary } from '../shared/build-report';
 import { lf, readJson, ROOT, sha, toJson } from '../shared/io';
-import { lookStale } from './look';
+import { lookStale } from '../shared/look';
 import { approverProblem } from './release';
 import { scriptDir, shortId, shortOf, storySlug } from '../shared/io';
 import { loadStories } from './stories';
@@ -774,7 +774,7 @@ export const videoDirOf = (o: ReturnType<typeof openOutput>) => {
   const nested = nestedSource(o.root, o.out);
   return join(nested ? join(o.root, nested) : o.dir, 'video');
 };
-/** Why the output's build on disk is not drawn with the current look (src/lib/look.ts), with the step that draws it
+/** Why the output's build on disk is not drawn with the current look (src/shared/look.ts), with the step that draws it
  *  again; null when it is, or for an output without a build report (a generic one). */
 export function lookProblem(o: ReturnType<typeof openOutput>): string | null {
   const why = lookStale(readJson<BuildSummary>(join(videoDirOf(o), 'build-report.json')), o.topic, o.root);

@@ -1,6 +1,6 @@
 // The build report: what was rendered from what, with what, and how the QA went. video/build-report.json and .md.
-// The production board reads it through BuildSummary (src/lib/build-report.ts), which BuildReport extends.
-import type { BuildSummary, Clearance } from '../lib/build-report';
+// The production board reads it through BuildSummary (src/shared/build-report.ts), which BuildReport extends.
+import type { BuildSummary, Clearance } from '../shared/build-report';
 import type { Probe } from './ffmpeg';
 import type { MixReport } from './music';
 import type { QaResult } from './qa';

@@ -1,10 +1,10 @@
-// The look a build is drawn with (src/lib/look.ts): what moves its fingerprint, what never does, and how a build
+// The look a build is drawn with (src/shared/look.ts): what moves its fingerprint, what never does, and how a build
 // report without one reads.
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { brandKey, kitPaletteOf, LOOK_SLOTS, lookFingerprint, lookStale } from '../src/lib/look';
+import { brandKey, kitPaletteOf, LOOK_SLOTS, lookFingerprint, lookStale } from '../src/shared/look';
 
 const PALETTE = { ground: '#172A45', accent: '#C5A46A', paper: '#F2EBDD', ink: '#444E59' };
 let root = '';

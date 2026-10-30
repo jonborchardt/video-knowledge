@@ -4,7 +4,7 @@
 import { copyFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT } from '../shared/io';
-import { brandKey, kitPaletteOf } from '../lib/look';
+import { brandKey, kitPaletteOf } from '../shared/look';
 import type { KitPalette } from './types';
 
 export function stageBrand(topic: string, publicDir: string): string {

@@ -85,8 +85,8 @@ import {
 import { chainOf, discover, loadStories, storiesPath } from './stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from './storyboard';
 import { loadTopic, topicNames, type Topic } from './topics';
-import type { BuildSummary, Clearance } from './build-report';
-import { lookFingerprint, lookStale } from './look';
+import type { BuildSummary, Clearance } from '../shared/build-report';
+import { lookFingerprint, lookStale } from '../shared/look';
 import { type Commission, commissionOf } from '../config/site';
 
 /** Why a stage halted, for a loop that decides what to do next without parsing prose. */
@@ -870,7 +870,7 @@ const reviewPackageStage: BoardStage = (c, s) => {
   };
 };
 
-// 10b. Look: a packaged build drawn with an older kit palette, kit cards or theme (src/lib/look.ts) is drawn again with
+// 10b. Look: a packaged build drawn with an older kit palette, kit cards or theme (src/shared/look.ts) is drawn again with
 // video final before anyone approves it. The stage stays packaged, so /produce (done) never re-renders it; a live or
 // scheduled video is never replaced, so it does not halt.
 const lookStage: BoardStage = (c, s) => {

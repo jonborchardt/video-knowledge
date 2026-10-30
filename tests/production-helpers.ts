@@ -4,7 +4,7 @@ import { cpSync, existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } fro
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import { ARTICLE_FILES } from '../src/lib/article';
-import type { BuildSummary } from '../src/lib/build-report';
+import type { BuildSummary } from '../src/shared/build-report';
 import { article } from './article-helpers';
 import { corpusOf } from '../src/lib/corpus';
 import {
@@ -21,7 +21,7 @@ import {
   shortId,
 } from '../src/shared/io';
 import { buildPackage } from '../src/lib/evidence-package';
-import { lookFingerprint } from '../src/lib/look';
+import { lookFingerprint } from '../src/shared/look';
 import { storyboardFingerprint, validationFingerprint } from '../src/lib/release';
 import { renderCheckProblems } from '../src/lib/render-check';
 import { loadReview, reviewPath } from '../src/lib/review';

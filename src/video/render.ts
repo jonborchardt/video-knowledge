@@ -9,7 +9,7 @@ import { bundle } from '@remotion/bundler';
 import { openBrowser, renderMedia, renderStill, selectComposition } from '@remotion/renderer';
 import { ROOT, sha } from '../shared/io';
 import { stageBrand } from './brand';
-import { brandKey } from '../lib/look';
+import { brandKey } from '../shared/look';
 import { ALL_KINDS } from './kinds';
 import { COMPOSITION, CONTACT } from './remotion/Root';
 import type { Timeline, TimelineScene } from './types';

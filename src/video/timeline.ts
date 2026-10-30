@@ -4,7 +4,7 @@
 import { commissionKey, commissionOf, site } from '../config/site';
 import type { PassageReader } from '../shared/types';
 import { sha } from '../shared/io';
-import { lookFingerprint } from '../lib/look';
+import { lookFingerprint } from '../shared/look';
 import { kitPalette } from './brand';
 import { narrationFingerprint } from './files';
 import { ALL_KINDS } from './kinds';

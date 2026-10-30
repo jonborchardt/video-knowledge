@@ -4,9 +4,9 @@
 // never src/video/.
 import { existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import type { BuildSummary } from './build-report';
+import type { BuildSummary } from '../shared/build-report';
 import { ROOT, readJson } from '../shared/io';
-import { lookStale } from './look';
+import { lookStale } from '../shared/look';
 import {
   type OutputState,
   type OutputStatus,
