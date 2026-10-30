@@ -14,7 +14,7 @@ import { sectionTitle } from '../shared/sentences';
 import { uploadProblem } from '../lib/uploader';
 import { absoluteUrl } from '../lib/url';
 import { renderSrt } from './captions';
-import { extractFrame } from './ffmpeg';
+import { extractFrame } from '../shared/ffmpeg';
 import type { BuildReport } from './report';
 import { VIDEO_FILES } from './files';
 import type { Segment } from './select';

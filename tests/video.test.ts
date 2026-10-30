@@ -25,7 +25,8 @@ import {
 import { pointFrames } from '../src/video/chart';
 import { cue, lineFrames, spokenAt } from '../src/video/cues';
 import { excerptWindow, flowPassage } from '../src/video/excerpt';
-import { type Probe, audioStats, probe } from '../src/video/ffmpeg';
+import { type Probe, probe } from '../src/shared/ffmpeg';
+import { audioStats } from '../src/video/ffmpeg';
 import { BESPOKE } from '../src/video/bespoke';
 import { citationTop } from '../src/video/remotion/Citation';
 import { captionCards } from '../src/video/remotion/Portrait';

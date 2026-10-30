@@ -13,7 +13,7 @@ import { spawnSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { readJson, sha, toJson, ROOT } from '../src/shared/io';
-import { probe } from '../src/video/ffmpeg';
+import { probe } from '../src/shared/ffmpeg';
 import { FILES, scriptDir } from '../src/shared/io';
 import type { Script } from '../src/shared/types';
 import type { Storyboard } from '../src/lib/storyboard';
