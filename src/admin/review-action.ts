@@ -2,7 +2,7 @@
 // get). Dev server only (astro.config.mjs injects it when command === 'dev'). Every action names the build the person
 // judged and is refused unless it is still the current one; a POST from any other origin is refused outright, since a
 // web page could otherwise post to localhost and publish. Decisions go through the publish verbs; the long verbs run the
-// CLI as a job (src/lib/review-job.ts). What a person may do is reviewView's `can`, the same reasons the page shows.
+// CLI as a job (src/modules/website/review-job.ts). What a person may do is reviewView's `can`, the same reasons the page shows.
 import type { APIRoute } from 'astro';
 import { ROOT } from '../shared/io';
 import { approverProblem } from '../shared/approver';

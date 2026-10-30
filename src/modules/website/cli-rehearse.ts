@@ -1,5 +1,5 @@
 // npm run rehearse -- <topic> <story-id> [--keep]
-// A go-live rehearsal (src/lib/rehearsal.ts): copies the working tree (tracked and untracked, not gitignored) into a
+// A go-live rehearsal (src/modules/website/rehearsal.ts): copies the working tree (tracked and untracked, not gitignored) into a
 // temp folder outside the repo, writes a fixture `published` event into the copy's ledger, and runs the CLAUDE.md
 // post-go-live sequence there with WEB_QUALITY_FULL=1 (every page). The real checkout is never written. DEPLOY_TARGET
 // passes through, so `DEPLOY_TARGET=pages npm run rehearse -- ...` rehearses the mirror. --keep leaves the copy to
