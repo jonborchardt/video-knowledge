@@ -3,11 +3,11 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { addOutputTo, loadLedger, recordApproved, recordUploaded } from '../src/modules/publishing/publish';
-import { JOB_FILE, jobStatus, startJob } from '../src/lib/review-job';
-import { handle, sameOrigin } from '../src/admin/review-action';
-import { storySlug } from '../src/shared/io';
-import { type Fixture, syntheticProduction, syntheticShort } from './production-helpers';
+import { addOutputTo, loadLedger, recordApproved, recordUploaded } from '../../publishing/publish';
+import { JOB_FILE, jobStatus, startJob } from '../review-job';
+import { handle, sameOrigin } from '../../../admin/review-action';
+import { storySlug } from '../../../shared/io';
+import { type Fixture, syntheticProduction, syntheticShort } from '../../../../tests/production-helpers';
 
 const ORIGIN = 'http://localhost:4321';
 const post = (path: string, fields: Record<string, string> | [string, string][], origin: string | null = ORIGIN) => {

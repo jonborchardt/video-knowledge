@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { commissionKey, commissionOf } from '../src/config/site';
+import { commissionKey, commissionOf } from '../../../config/site';
 import {
   contentGraph,
   inquiryMatters,
@@ -12,22 +12,15 @@ import {
   related,
   urlOf,
   type View,
-} from '../src/lib/content-graph';
-import { movedRedirects } from '../src/lib/content-graph';
-import { toJson, topicDir } from '../src/shared/io';
-import {
-  addOutput,
-  appendEvent,
-  emptyLedger,
-  type Ledger,
-  publishPath,
-  saveLedger,
-} from '../src/modules/publishing/publish';
-import { scriptDir } from '../src/shared/io';
-import { copyTopic } from './production-helpers';
-import { loadStories, storyUrlSlug } from '../src/lib/stories';
-import type { Story } from '../src/shared/types';
-import { publicTopicNames } from '../src/lib/topics';
+} from '../content-graph';
+import { movedRedirects } from '../content-graph';
+import { toJson, topicDir } from '../../../shared/io';
+import { addOutput, appendEvent, emptyLedger, type Ledger, publishPath, saveLedger } from '../../publishing/publish';
+import { scriptDir } from '../../../shared/io';
+import { copyTopic } from '../../../../tests/production-helpers';
+import { loadStories, storyUrlSlug } from '../../../lib/stories';
+import type { Story } from '../../../shared/types';
+import { publicTopicNames } from '../../../lib/topics';
 
 // Small temp roots: a stories.json of bare stories and, where a test needs one, a publishing ledger.
 const T = 'heat-pumps';

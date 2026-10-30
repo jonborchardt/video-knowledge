@@ -6,7 +6,7 @@ import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { commissions, site } from '../src/config/site';
-import { contentGraph, storyNode } from '../src/lib/content-graph';
+import { contentGraph, storyNode } from '../src/modules/website';
 import { readJson, ROOT } from '../src/shared/io';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';
 import { publicTopicNames } from '../src/lib/topics';

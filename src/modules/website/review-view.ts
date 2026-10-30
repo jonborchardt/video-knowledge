@@ -4,22 +4,16 @@
 // never src/video/.
 import { existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import type { BuildSummary } from '../shared/build-report';
-import { ROOT, readJson } from '../shared/io';
-import { Refusal } from '../shared/refusal';
-import { lookStale } from '../shared/look';
-import {
-  type OutputState,
-  type OutputStatus,
-  type PublishEvent,
-  type ReviewNote,
-  openOutput,
-} from '../modules/publishing';
-import { FILES, scriptDir, shortId, shortOf, storySlug, topicDir } from '../shared/io';
-import type { ScriptValidation } from '../shared/types';
-import { loadShorts } from './shorts';
-import { loadStories } from './stories';
-import { href } from './url';
+import type { BuildSummary } from '../../shared/build-report';
+import { ROOT, readJson } from '../../shared/io';
+import { Refusal } from '../../shared/refusal';
+import { lookStale } from '../../shared/look';
+import { type OutputState, type OutputStatus, type PublishEvent, type ReviewNote, openOutput } from '../publishing';
+import { FILES, scriptDir, shortId, shortOf, storySlug, topicDir } from '../../shared/io';
+import type { ScriptValidation } from '../../shared/types';
+import { loadShorts } from '../../lib/shorts';
+import { loadStories } from '../../lib/stories';
+import { href } from '../../lib/url';
 
 /** The packaged file of a story folder, streamed from disk by the dev server's review-media route. */
 export const reviewMediaHref = (topic: string, path: string, file = 'review.mp4') =>

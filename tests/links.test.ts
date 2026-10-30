@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync 
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { loadMoved, manifestProblems } from '../src/lib/content-graph';
+import { loadMoved, manifestProblems } from '../src/modules/website';
 import { site } from '../src/config/site';
 import { readJson, toJson, topicDir } from '../src/shared/io';
 import { loadStories } from '../src/lib/stories';

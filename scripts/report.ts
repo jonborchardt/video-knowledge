@@ -15,7 +15,7 @@ import {
   publicRecordPath,
   type PublicRecord,
 } from '../src/shared/public-record';
-import { contentGraph, liveClaims } from '../src/lib/content-graph';
+import { contentGraph, liveClaims } from '../src/modules/website';
 import { ROOT, toJson, TOPICS, topicDir } from '../src/shared/io';
 import { claimStates, ledgerClaims } from '../src/lib/finding-label';
 import { loadTopic, topicNames } from '../src/lib/topics';

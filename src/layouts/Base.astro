@@ -4,9 +4,8 @@ import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { author, site } from '../config/site';
 import { absoluteUrl, href, sitePath } from '../lib/url';
-import { websiteJsonLd, type PageMeta } from '../lib/seo';
-import { isPreview, urlOf } from '../lib/content-graph';
-import { siteGraph } from '../lib/site-graph';
+import { websiteJsonLd, type PageMeta, isPreview, urlOf } from '../modules/website';
+import { siteGraph } from '../modules/website/site-graph';
 
 type Props = PageMeta;
 const {

@@ -7,10 +7,10 @@
 import { spawnSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
 import { dirname, isAbsolute, join, relative } from 'node:path';
-import { ROOT, toJson } from '../src/shared/io';
-import { publishPath } from '../src/modules/publishing';
-import { rehearsalDir, rehearsalLedger, rehearsalRefusal, rehearsalSteps, removeRehearsal } from '../src/lib/rehearsal';
-import { storyUrlSlug } from '../src/lib/stories';
+import { ROOT, toJson } from '../../shared/io';
+import { publishPath } from '../publishing';
+import { rehearsalDir, rehearsalLedger, rehearsalRefusal, rehearsalSteps, removeRehearsal } from './rehearsal';
+import { storyUrlSlug } from '../../lib/stories';
 
 const args = process.argv.slice(2);
 const keep = args.includes('--keep');

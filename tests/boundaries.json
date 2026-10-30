@@ -33,21 +33,11 @@
     "scripts/brand/": "brand",
     "scripts/brand.ts": "brand",
     "astro.config.mjs": "website",
-    "src/lib/content-graph.ts": "website",
-    "src/lib/site-graph.ts": "website",
-    "src/lib/seo.ts": "website",
-    "src/lib/cta.ts": "website",
-    "src/lib/review-view.ts": "website",
-    "src/lib/review-job.ts": "website",
-    "src/lib/rehearsal.ts": "website",
     "src/pages/": "website",
     "src/components/": "website",
     "src/layouts/": "website",
     "src/admin/": "website",
     "src/tools/": "website",
-    "scripts/links.ts": "website",
-    "scripts/quality.ts": "website",
-    "scripts/rehearse.ts": "website",
     "src/lib/production.ts": "orchestration",
     "scripts/board.ts": "orchestration",
     "src/modules/": "@folder",
@@ -67,7 +57,8 @@
   ],
   "layoutOwner": "src/shared/io.ts",
   "readApi": {
-    "publishing": ["loadLedger", "mainOutput", "uploadProblem"]
+    "publishing": ["loadLedger", "mainOutput", "uploadProblem"],
+    "website": ["contentGraph", "ctaPath", "loadCta", "matterPath", "resolveCtas", "storyNode", "CtaType"]
   },
   "edges": [
     {
@@ -92,11 +83,6 @@
     },
     {
       "from": "scripts/brand.ts",
-      "to": "src/lib/content-graph.ts",
-      "until": "brand"
-    },
-    {
-      "from": "scripts/brand.ts",
       "to": "src/lib/stories.ts",
       "until": "brand"
     },
@@ -111,13 +97,13 @@
       "until": "storyboard"
     },
     {
-      "from": "scripts/rehearse.ts",
+      "from": "src/modules/website/cli-rehearse.ts",
       "to": "src/lib/stories.ts",
       "until": "stories"
     },
     {
       "from": "scripts/report.ts",
-      "to": "src/lib/content-graph.ts",
+      "to": "src/modules/website/index.ts",
       "until": "evidence"
     },
     {
@@ -376,17 +362,17 @@
       "until": "storyboard"
     },
     {
-      "from": "src/lib/content-graph.ts",
+      "from": "src/modules/website/content-graph.ts",
       "to": "src/lib/datasets.ts",
       "until": "evidence"
     },
     {
-      "from": "src/lib/content-graph.ts",
+      "from": "src/modules/website/content-graph.ts",
       "to": "src/lib/stories.ts",
       "until": "stories"
     },
     {
-      "from": "src/lib/content-graph.ts",
+      "from": "src/modules/website/content-graph.ts",
       "to": "src/lib/topics.ts",
       "until": "evidence"
     },
@@ -446,7 +432,7 @@
       "until": "evidence"
     },
     {
-      "from": "src/lib/rehearsal.ts",
+      "from": "src/modules/website/rehearsal.ts",
       "to": "src/lib/stories.ts",
       "until": "stories"
     },
@@ -456,12 +442,12 @@
       "until": "script"
     },
     {
-      "from": "src/lib/review-view.ts",
+      "from": "src/modules/website/review-view.ts",
       "to": "src/lib/shorts.ts",
       "until": "shorts"
     },
     {
-      "from": "src/lib/review-view.ts",
+      "from": "src/modules/website/review-view.ts",
       "to": "src/lib/stories.ts",
       "until": "stories"
     },
@@ -476,7 +462,7 @@
       "until": "shorts"
     },
     {
-      "from": "src/lib/site-graph.ts",
+      "from": "src/modules/website/site-graph.ts",
       "to": "src/lib/topics.ts",
       "until": "evidence"
     },
@@ -619,16 +605,6 @@
       "from": "src/video/music-draft.ts",
       "to": "src/lib/storyboard.ts",
       "until": "storyboard"
-    },
-    {
-      "from": "src/modules/packaging/package.ts",
-      "to": "src/lib/content-graph.ts",
-      "until": "website"
-    },
-    {
-      "from": "src/modules/packaging/package.ts",
-      "to": "src/lib/cta.ts",
-      "until": "website"
     },
     {
       "from": "src/modules/packaging/package.ts",

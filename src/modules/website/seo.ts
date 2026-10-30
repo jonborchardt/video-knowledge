@@ -1,6 +1,6 @@
-import { author, site } from '../config/site';
-import { absoluteUrl } from './url';
-import type { PublicVideo } from '../modules/publishing';
+import { author, site } from '../../config/site';
+import { absoluteUrl } from '../../lib/url';
+import type { PublicVideo } from '../publishing';
 
 /** Everything a page needs to emit <head> metadata. Pages pass it as Base's props. */
 export interface PageMeta {

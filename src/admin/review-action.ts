@@ -8,8 +8,7 @@ import { ROOT } from '../shared/io';
 import { approverProblem } from '../shared/approver';
 import { Refusal } from '../shared/refusal';
 import { recordApproved, recordChangesRequested } from '../modules/publishing';
-import { startJob } from '../lib/review-job';
-import { type ReviewView, parseNotes, reviewView, storyIdOfPath } from '../lib/review-view';
+import { startJob, type ReviewView, parseNotes, reviewView, storyIdOfPath } from '../modules/website';
 import { scriptDir } from '../shared/io';
 import { href } from '../lib/url';
 

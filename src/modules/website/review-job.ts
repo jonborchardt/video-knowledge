@@ -5,7 +5,7 @@
 import { closeSync, existsSync, openSync, readFileSync, writeFileSync } from 'node:fs';
 import { spawn } from 'node:child_process';
 import { join } from 'node:path';
-import { ROOT, readJson, toJson } from '../shared/io';
+import { ROOT, readJson, toJson } from '../../shared/io';
 
 export const JOB_FILE = 'review-job.json';
 const JOB_LOG = 'review-job.log';

@@ -13,7 +13,7 @@ import {
   hasVideo,
   loadMoved,
   manifestProblems,
-} from '../src/lib/content-graph';
+} from '../src/modules/website';
 import { datasetChart } from '../src/lib/chart-geometry';
 import { dataRef, loadDatasets } from '../src/lib/datasets';
 import { ROOT, readJson, topicDir } from '../src/shared/io';

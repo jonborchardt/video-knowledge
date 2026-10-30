@@ -6,7 +6,7 @@
 import { spawnSync } from 'node:child_process';
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { ROOT } from '../src/shared/io';
+import { ROOT } from '../../shared/io';
 
 const args = process.argv.slice(2);
 const audit = args.includes('--audit');

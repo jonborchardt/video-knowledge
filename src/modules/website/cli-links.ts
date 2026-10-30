@@ -7,10 +7,10 @@
 // The build test fails when a URL in public-urls.json disappears without a topics/<topic>/moved.json entry.
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { contentGraph, distPages, related, storyNode } from '../src/lib/content-graph';
-import { type Cta, loadCta, resolveCtas } from '../src/lib/cta';
-import { ROOT, topicsDir } from '../src/shared/io';
-import { textUrls } from '../src/lib/url';
+import { contentGraph, distPages, related, storyNode } from './content-graph';
+import { type Cta, loadCta, resolveCtas } from './cta';
+import { ROOT, topicsDir } from '../../shared/io';
+import { textUrls } from '../../lib/url';
 
 const DIST = join(ROOT, 'dist');
 const cmd = process.argv[2];

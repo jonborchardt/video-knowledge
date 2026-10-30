@@ -1,17 +1,17 @@
 // Calls to action (plan 4, D4 and D6): an agent's editorial choice per story (`cta.json` in its script folder, from
-// scripts/briefs/cta.md), each a typed destination checked against the content graph. A call to action whose value
+// src/modules/website/briefs/cta.md), each a typed destination checked against the content graph. A call to action whose value
 // check fails is dropped and reported, never shown; a file error fails the build. Commercial links are fenced off: a
 // disclosure, a person's approval, and never primary over a tool or the evidence. No script, storyboard or render
 // carries one; the description and the matter page do.
 import { join } from 'node:path';
-import { toolOf } from '../tools';
-import { loadArticleRelease } from '../modules/article';
+import { toolOf } from '../../tools';
+import { loadArticleRelease } from '../article';
 import { absoluteOf, chainRoot, type Graph, matterPath } from './content-graph';
-import { readJson, ROOT, FILES, scriptDir } from '../shared/io';
-import { absoluteUrl } from './url';
-import { approverProblem } from '../shared/approver';
-import { sentences } from '../shared/sentences';
-import type { Script } from '../shared/types';
+import { readJson, ROOT, FILES, scriptDir } from '../../shared/io';
+import { absoluteUrl } from '../../lib/url';
+import { approverProblem } from '../../shared/approver';
+import { sentences } from '../../shared/sentences';
+import type { Script } from '../../shared/types';
 
 export const CTA_TYPES = [
   'tool',

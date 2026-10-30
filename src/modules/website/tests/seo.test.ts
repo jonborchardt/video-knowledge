@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { author, site } from '../src/config/site';
-import { articleJsonLd, breadcrumbJsonLd, isoDuration, websiteJsonLd } from '../src/lib/seo';
+import { author, site } from '../../../config/site';
+import { articleJsonLd, breadcrumbJsonLd, isoDuration, websiteJsonLd } from '../seo';
 
 describe('seo', () => {
   it('isoDuration', () => {

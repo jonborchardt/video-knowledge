@@ -13,16 +13,25 @@ import ArticleBody from '../../components/ArticleBody.astro';
 import HeatingCost from '../../components/tools/HeatingCost.astro';
 import MatterList from '../../components/MatterList.astro';
 import NextSteps from '../../components/NextSteps.astro';
-import { loadCta, resolveCtas } from '../../lib/cta';
-import { isPreview, matterItem, matterPath, related, storyNode } from '../../lib/content-graph';
-import { siteGraph } from '../../lib/site-graph';
+import {
+  loadCta,
+  resolveCtas,
+  isPreview,
+  matterItem,
+  matterPath,
+  related,
+  storyNode,
+  reviewMediaHref,
+  articleJsonLd,
+  breadcrumbJsonLd,
+  videoJsonLd,
+} from '../../modules/website';
+import { siteGraph } from '../../modules/website/site-graph';
 import { toolOf } from '../../tools';
 import { articleModified, articleView, loadArticleRelease, releaseFigureDraws } from '../../modules/article';
 import { loadDatasets } from '../../lib/datasets';
-import { reviewMediaHref } from '../../lib/review-view';
 import { storySlug } from '../../shared/io';
 import { storyOutputs } from '../../modules/publishing';
-import { articleJsonLd, breadcrumbJsonLd, videoJsonLd } from '../../lib/seo';
 import { loadPublicRecord, revisionLine } from '../../shared/public-record';
 import { FINDING_LABELS, FINDING_TEXT, findingLabel, labelCounts } from '../../lib/finding-label';
 import SourceIcons from '../../components/SourceIcons.astro';

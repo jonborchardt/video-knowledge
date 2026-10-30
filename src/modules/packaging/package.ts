@@ -6,8 +6,7 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { commissionKey, commissionOf, site } from '../../config/site';
-import { contentGraph, matterPath, storyNode } from '../../lib/content-graph';
-import { type CtaType, ctaPath, loadCta, resolveCtas } from '../../lib/cta';
+import { contentGraph, matterPath, storyNode, type CtaType, ctaPath, loadCta, resolveCtas } from '../website';
 import { fileSha, readJson, REVIEW_DIR, ROOT, sha, toJson, topicDir } from '../../shared/io';
 import { loadLedger, mainOutput, uploadProblem } from '../publishing';
 import { sectionTitle } from '../../shared/sentences';

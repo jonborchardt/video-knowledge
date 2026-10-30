@@ -3,17 +3,17 @@
 // the one way a page, description or package builds a link to a node (D2); a URL comes from an id, never a title.
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { commissionKey, commissionOf } from '../config/site';
-import { toolOf } from '../tools';
-import { loadArticleRelease } from '../modules/article';
-import { dataRef, loadDatasets } from './datasets';
-import { readJson, ROOT, topicDir } from '../shared/io';
-import { loadLedger, storyOutputs } from '../modules/publishing';
-import { scriptDir } from '../shared/io';
-import { loadStories, storyUrlSlug } from './stories';
-import type { Story } from '../shared/types';
-import { publicTopicNames } from './topics';
-import { absoluteUrl } from './url';
+import { commissionKey, commissionOf } from '../../config/site';
+import { toolOf } from '../../tools';
+import { loadArticleRelease } from '../article';
+import { dataRef, loadDatasets } from '../../lib/datasets';
+import { readJson, ROOT, topicDir } from '../../shared/io';
+import { loadLedger, storyOutputs } from '../publishing';
+import { scriptDir } from '../../shared/io';
+import { loadStories, storyUrlSlug } from '../../lib/stories';
+import type { Story } from '../../shared/types';
+import { publicTopicNames } from '../../lib/topics';
+import { absoluteUrl } from '../../lib/url';
 
 export type NodeKind =
   'institution' | 'inquiry' | 'story' | 'video' | 'short' | 'article' | 'chart' | 'dataset' | 'tool';

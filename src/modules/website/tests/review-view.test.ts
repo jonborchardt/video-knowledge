@@ -3,7 +3,7 @@
 import { writeFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { readJson } from '../src/shared/io';
+import { readJson } from '../../../shared/io';
 import {
   type Ledger,
   addOutputTo,
@@ -13,10 +13,10 @@ import {
   recordChangesRequested,
   recordUploaded,
   saveLedger,
-} from '../src/modules/publishing/publish';
-import { parseNotes, reviewMediaHref, reviewView } from '../src/lib/review-view';
-import { href } from '../src/lib/url';
-import { type Fixture, setLook, syntheticProduction, syntheticShort } from './production-helpers';
+} from '../../publishing/publish';
+import { parseNotes, reviewMediaHref, reviewView } from '../review-view';
+import { href } from '../../../lib/url';
+import { type Fixture, setLook, syntheticProduction, syntheticShort } from '../../../../tests/production-helpers';
 
 const now = new Date('2026-10-26T00:00:00Z');
 const timeline = {

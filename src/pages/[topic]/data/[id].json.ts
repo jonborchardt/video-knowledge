@@ -1,5 +1,5 @@
 import { dataRef, loadDatasets } from '../../../lib/datasets';
-import { siteGraph } from '../../../lib/site-graph';
+import { siteGraph } from '../../../modules/website/site-graph';
 import { publicTopicNames } from '../../../lib/topics';
 
 export function getStaticPaths() {

@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
-import { contentGraph, movedRedirects } from './src/lib/content-graph.ts';
+import { contentGraph, movedRedirects } from './src/modules/website/content-graph.ts';
 import { publicTopicNames } from './src/lib/topics.ts';
 
 // Two deploy targets while both run: Cloudflare serves https://commonwealthofreason.com/ at the root (the default,

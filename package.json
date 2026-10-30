@@ -13,7 +13,7 @@
     "format:check": "prettier --check .",
     "test": "vitest run --project unit",
     "test:browser": "vitest run --project browser",
-    "quality": "tsx scripts/quality.ts",
+    "quality": "tsx src/modules/website/cli-quality.ts",
     "validate": "npm run typecheck && npm run lint && npm run format:check && npm run build && npm run test",
     "watcher": "node scripts/watcher.mjs",
     "report": "tsx scripts/report.ts",
@@ -21,7 +21,7 @@
     "record-sources": "node scripts/record-sources.mjs",
     "merge-claims": "node scripts/merge-claims.mjs",
     "stories": "tsx scripts/stories.ts",
-    "links": "tsx scripts/links.ts",
+    "links": "tsx src/modules/website/cli-links.ts",
     "shorts": "tsx scripts/shorts.ts",
     "script": "tsx scripts/script.ts",
     "article": "tsx src/modules/article/cli.ts",
@@ -30,7 +30,7 @@
     "brand": "tsx scripts/brand.ts",
     "board": "tsx scripts/board.ts",
     "publish": "tsx src/modules/publishing/cli.ts",
-    "rehearse": "tsx scripts/rehearse.ts"
+    "rehearse": "tsx src/modules/website/cli-rehearse.ts"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",

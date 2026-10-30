@@ -22,7 +22,7 @@ import {
   revisionLine,
 } from '../src/shared/public-record';
 import { claimStates, ledgerClaims } from '../src/lib/finding-label';
-import { contentGraph, liveClaims } from '../src/lib/content-graph';
+import { contentGraph, liveClaims } from '../src/modules/website';
 import { ROOT, toJson, topicDir } from '../src/shared/io';
 import { type ClaimView, loadTopic, publicTopicNames, type SourceView, type Verdict } from '../src/lib/topics';
 

@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { Readable } from 'node:stream';
 import type { APIRoute } from 'astro';
 import { readJson } from '../shared/io';
-import { storyIdOfPath } from '../lib/review-view';
+import { storyIdOfPath } from '../modules/website';
 import { scriptDir } from '../shared/io';
 
 /** The byte range a Range header asks for (end inclusive, clamped to the file), null for the whole file, or 'invalid'
