@@ -349,6 +349,12 @@ export interface Finding {
   role: 'belief' | 'evidence'; // belief: what the sources say (attribution); evidence: a fact the studies decide
   validation: Validation;
 }
+export interface StoriesFile {
+  topic: string;
+  basis: { claims: number; sources: number; studies: number; candidates: number };
+  stories: Story[];
+  rejected: { id: string; title: string; reason: string }[];
+}
 export interface Story {
   id: string; // '<kind>:<primary claim slug>' or 'decision:<group slug>', stable across runs
   kind: StoryKind; // classification metadata, never shown in a title

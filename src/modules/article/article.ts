@@ -2,7 +2,7 @@
 import { join } from 'node:path';
 import { readJson, ROOT, sha, scriptDir } from '../../shared/io';
 import type { Revision } from '../../shared/public-record';
-import { Refusal } from '../../lib/publish';
+import { Refusal } from '../../shared/refusal';
 import { approverProblem } from '../../shared/approver';
 import { validationFingerprint } from '../../shared/sentence-validation';
 import { sentenceFingerprint } from '../../shared/sentences';

@@ -18,7 +18,7 @@ import {
   renderArticleMd,
 } from '../article';
 import type { ChartSpec } from '../../../lib/storyboard';
-import { Refusal } from '../../../lib/publish';
+import { Refusal } from '../../../shared/refusal';
 import { publicRecordProblems, withArticleRevision } from '../../../shared/public-record';
 import { LIMITS, figureData, figuresOf, validateArticle } from '../validation';
 import { buildPackage } from '../../../lib/evidence-package';

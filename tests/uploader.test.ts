@@ -14,7 +14,7 @@ import {
   saveLedger,
   publishPath,
 } from '../src/lib/publish';
-import { Refusal } from '../src/lib/publish';
+import { Refusal } from '../src/shared/refusal';
 import { storySlug } from '../src/shared/io';
 import {
   CATEGORY_DEFAULT,

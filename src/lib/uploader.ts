@@ -7,12 +7,12 @@
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT, readJson, sha, toJson } from '../shared/io';
+import { Refusal } from '../shared/refusal';
 import {
   type LedgerCheck,
   METADATA_CHECKS,
   type Output,
   type PublishEvent,
-  Refusal,
   goLiveProblem,
   openOutput,
   type UploadMetadata,

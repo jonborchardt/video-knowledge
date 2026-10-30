@@ -6,12 +6,12 @@ import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { readJson, sha } from '../src/shared/io';
+import { Refusal } from '../src/shared/refusal';
 import { storySlug } from '../src/shared/io';
 import {
   type Ledger,
   type Output,
   type PublishEvent,
-  Refusal,
   addOutput,
   addOutputTo,
   appendEvent,

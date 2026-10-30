@@ -22,6 +22,7 @@ import type {
   Arc,
   Finding,
   Story,
+  StoriesFile,
   ReviewFile,
   StoryReview,
 } from '../shared/types';
@@ -31,12 +32,7 @@ import { type ClaimView, type Topic, topicNames, VAL } from './topics';
 
 export type StoryInput = Pick<Topic, 'name' | 'label' | 'claims' | 'recap'> & { sameStudy?: Record<string, string> };
 
-export interface StoriesFile {
-  topic: string;
-  basis: { claims: number; sources: number; studies: number; candidates: number };
-  stories: Story[];
-  rejected: { id: string; title: string; reason: string }[];
-}
+export type { StoriesFile };
 
 const CURIOSITY: Record<StoryKind, number> = { contradicted: 1, conflict: 1, surprise: 0.8, decision: 0.5, gap: 0.5 };
 const STAKES: Record<string, number> = { 'pro-hype': 1, pro: 0.7, skeptic: 0.5, calibrating: 0.4 };

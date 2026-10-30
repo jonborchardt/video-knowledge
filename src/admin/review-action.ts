@@ -6,7 +6,8 @@
 import type { APIRoute } from 'astro';
 import { ROOT } from '../shared/io';
 import { approverProblem } from '../shared/approver';
-import { Refusal, recordApproved, recordChangesRequested } from '../lib/publish';
+import { Refusal } from '../shared/refusal';
+import { recordApproved, recordChangesRequested } from '../lib/publish';
 import { startJob } from '../lib/review-job';
 import { type ReviewView, parseNotes, reviewView, storyIdOfPath } from '../lib/review-view';
 import { scriptDir } from '../shared/io';

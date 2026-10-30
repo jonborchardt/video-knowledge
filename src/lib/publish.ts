@@ -9,8 +9,9 @@ import type { BuildSummary } from '../shared/build-report';
 import { lf, readJson, ROOT, sha, toJson } from '../shared/io';
 import { lookStale } from '../shared/look';
 import { approverProblem } from '../shared/approver';
-import { scriptDir, shortId, shortOf, storySlug } from '../shared/io';
-import { loadStories } from './stories';
+import { scriptDir, shortId, shortOf, storySlug, topicDir } from '../shared/io';
+import { Refusal } from '../shared/refusal';
+import type { StoriesFile } from '../shared/types';
 
 const PUBLISH_FILE = 'publish.json';
 export const EVENT_TYPES = [
@@ -611,8 +612,6 @@ export function uploadMetadataOf(
 
 // ---- verbs (what `npm run publish` does) ------------------------------------------------------------------------
 
-/** A verb the files do not support; the CLI prints the message and exits 2 without writing. */
-export class Refusal extends Error {}
 export interface VerbResult {
   event: PublishEvent | null;
   existing: boolean; // the key was already in the ledger: nothing written
@@ -635,7 +634,9 @@ export function openOutput(topic: string, storyId: string, a: { output?: string;
     storyId = short.parent;
     a = { ...a, output: a.output ?? `short:${short.slug}` };
   }
-  const story = loadStories(topic, root)?.stories.find((s) => s.id === storyId);
+  const story = readJson<StoriesFile>(join(topicDir(topic, root), 'stories.json'))?.stories.find(
+    (s) => s.id === storyId,
+  );
   if (story?.partOf)
     throw new Refusal(`${storyId} is a follow-up in ${story.partOf}; its video is that story's, record it there`);
   const dir = scriptDir(topic, storyId, root);
