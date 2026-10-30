@@ -90,7 +90,10 @@ export function resolveSpecifier(
 ): string | null {
   if (!specifier.startsWith('.')) return null;
   const base = posix.join(posix.dirname(fromRepoPath), specifier.replace(/\?.*$/, ''));
-  const candidates = [base, ...EXTS.map((e) => base + e), `${base}/index.ts`];
+  // The bare specifier is a candidate only when it names a file itself ('./types.ts', '../styles/global.css'): a
+  // folder import ('../modules/publishing') must resolve to its index.ts, never to the folder, or no rule would see it.
+  const bare = posix.extname(base) ? [base] : [];
+  const candidates = [...bare, ...EXTS.map((e) => base + e), `${base}/index.ts`];
   return candidates.find(exists) ?? null;
 }
 

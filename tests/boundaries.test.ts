@@ -7,7 +7,7 @@ import { capabilityOf, check, importsOf, resolveSpecifier, violations, walk } fr
 const config = JSON.parse(readFileSync(join(ROOT, 'tests/boundaries.json'), 'utf8'));
 const exists = (p: string) => existsSync(join(ROOT, p));
 
-describe('module boundaries (docs/superpowers/specs/2026-10-29-module-architecture.md)', () => {
+describe('module boundaries (CLAUDE.md: Module boundaries)', () => {
   const paths = [...walk(['src', 'scripts'], ROOT), ...(exists('astro.config.mjs') ? ['astro.config.mjs'] : [])];
   const files = paths.map((path) => {
     const source = readFileSync(join(ROOT, path), 'utf8');
@@ -38,6 +38,17 @@ describe('module boundaries (docs/superpowers/specs/2026-10-29-module-architectu
     ]);
     expect(config.edges.filter((e: { until: string }) => !caps.has(e.until))).toEqual([]);
   });
+  it('resolves a folder import to its index.ts, never to the folder', () => {
+    // existsSync is true for a folder too; a folder is not a file the rules can judge, so an import of a module
+    // index written as '../modules/x' must land on src/modules/x/index.ts.
+    const fs = new Set(['src/modules/x/index.ts', 'src/lib/y.ts', 'scripts/w.mjs']);
+    const has = (p: string) => fs.has(p) || p === 'src/modules/x' || p === 'src/lib';
+    expect(resolveSpecifier('src/lib/a.ts', '../modules/x', has)).toBe('src/modules/x/index.ts');
+    expect(resolveSpecifier('src/lib/a.ts', './y', has)).toBe('src/lib/y.ts');
+    expect(resolveSpecifier('scripts/v.ts', './w.mjs', has)).toBe('scripts/w.mjs');
+    expect(resolveSpecifier('src/lib/a.ts', '.', has)).toBeNull();
+  });
+
   it('resolves every relative import, so no edge is dropped', () => {
     const misses = files.flatMap((f) =>
       f.specs
