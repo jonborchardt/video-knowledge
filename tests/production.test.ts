@@ -15,8 +15,8 @@ import {
   shortId,
   storySlug,
 } from '../src/shared/io';
-import type { RenderCheckSummary } from '../src/video/render-check';
-import { writeRenderCheck } from '../src/video/check';
+import type { RenderCheckSummary } from '../src/modules/video/render-check';
+import { writeRenderCheck } from '../src/modules/video/check';
 import {
   type StoryRow,
   board,
@@ -191,11 +191,11 @@ describe('graphics stage', () => {
       writeCheck(fx, { ok: false, needsGraphics: ['sc3'] });
       const p1 = productionOf(topic, story, root)!;
       expect(p1.halt?.kind).toBe('needs-graphics');
-      expect(p1.next).toContain('agent: scripts/briefs/graphics.md (sc3)');
+      expect(p1.next).toContain('agent: src/modules/video/briefs/graphics.md (sc3)');
       writeCheck(fx, { graphics: [{ scene: 'sc3', kind: 'hp-labels', key: 'k', approved: false }] });
       const p2 = productionOf(topic, story, root)!;
       expect(p2.halt?.kind).toBe('graphics-review');
-      expect(p2.next).toContain('agent: scripts/briefs/visual-review.md (sc3)');
+      expect(p2.next).toContain('agent: src/modules/video/briefs/visual-review.md (sc3)');
       writeCheck(fx, { graphics: [{ scene: 'sc3', kind: 'hp-labels', key: 'k', approved: true }] });
       const p3 = productionOf(topic, story, root)!;
       expect(p3.stage).toBe('lock');
@@ -224,7 +224,9 @@ describe('graphics stage', () => {
   });
 
   it('stepsOf passes a scene list to the graphics brief', () => {
-    expect(stepsOf('agent: scripts/briefs/graphics.md (sc18,sc20)', 't', 's')[0].text).toContain('Scenes: sc18,sc20');
+    expect(stepsOf('agent: src/modules/video/briefs/graphics.md (sc18,sc20)', 't', 's')[0].text).toContain(
+      'Scenes: sc18,sc20',
+    );
   });
 });
 

@@ -24,7 +24,7 @@ import { buildPackage } from '../src/modules/script';
 import { lookFingerprint } from '../src/shared/look';
 import { storyboardFingerprint } from '../src/shared/release-check';
 import { validationFingerprint } from '../src/shared/sentence-validation';
-import { renderCheckProblems } from '../src/video/render-check';
+import { renderCheckProblems } from '../src/modules/video/render-check';
 import { scriptFingerprint, sentenceFingerprint, sentences } from '../src/shared/sentences';
 import type { Release, Script, ScriptReviewFile, SectionName, SentenceType } from '../src/shared/types';
 import { validateScript } from '../src/shared/sentence-validation';
@@ -40,8 +40,8 @@ import { chainOf, loadReview, loadStories, reviewPath, storiesPath } from '../sr
 import { buildStoryboard } from '../src/modules/storyboard';
 import type { StoryboardPlan } from '../src/shared/types';
 import { loadTopic } from '../src/modules/evidence';
-import { writeRenderCheck } from '../src/video/check';
-import { initVideo } from '../src/video/init';
+import { writeRenderCheck } from '../src/modules/video/check';
+import { initVideo } from '../src/modules/video/init';
 
 // Matched against the path inside the topic, never the checkout's own path (CI checks out under .../work/...).
 const SKIP = ['/store/transcripts', '/work', '/video/scenes', '/video/narration', '/video/frames', '/publish.json'];

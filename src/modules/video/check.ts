@@ -4,16 +4,16 @@
 // (the scene plus the code that draws it), so editing either asks for a new visual review.
 import { existsSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { readJson, sha, toJson, ROOT, topicDir, topicsDir } from '../shared/io';
+import { readJson, sha, toJson, ROOT, topicDir, topicsDir } from '../../shared/io';
 import { RENDER_CHECK, type RenderCheckSummary, renderConfigSha } from './render-check';
-import { scriptDir, storySlug } from '../shared/io';
-import type { Scene } from '../shared/types';
+import { scriptDir, storySlug } from '../../shared/io';
+import type { Scene } from '../../shared/types';
 import { VIDEO_FILES, videoDir } from './files';
 import { type KindRegistry, type SceneKind, bespokeFor } from './kinds';
 import { componentVersion, componentVersionLegacy } from './render';
 import { type Segment, checkSegment, loadInputs } from './select';
 
-/** video/visual-review.json: written by the visual reviewer (scripts/briefs/visual-review.md). */
+/** video/visual-review.json: written by the visual reviewer (src/modules/video/briefs/visual-review.md). */
 export interface VisualReview {
   scenes: Record<
     string,

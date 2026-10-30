@@ -4,9 +4,9 @@
 // script's sections. Diagrams and animations are listed, not guessed: they become the run's graphics step.
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { readJson, toJson, ROOT, FILES, scriptDir, storySlug } from '../shared/io';
-import { sectionTitle, sentences } from '../shared/sentences';
-import type { EvidencePackage, Script, Storyboard } from '../shared/types';
+import { readJson, toJson, ROOT, FILES, scriptDir, storySlug } from '../../shared/io';
+import { sectionTitle, sentences } from '../../shared/sentences';
+import type { EvidencePackage, Script, Storyboard } from '../../shared/types';
 import { VIDEO_DIR, VIDEO_FILES } from './files';
 import { GENERIC, type KindRegistry, type SceneKind, bespokeFor, kindOf, registryFor } from './kinds';
 import type { RenderConfig } from './types';

@@ -2,7 +2,7 @@
 import { mkdtempSync, readFileSync, readdirSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { run } from '../shared/ffmpeg';
+import { run } from '../../shared/ffmpeg';
 
 export interface AudioStats {
   maxVolumeDb: number;

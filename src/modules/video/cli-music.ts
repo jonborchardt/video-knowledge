@@ -12,12 +12,12 @@
 import { spawnSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
-import { readJson, sha, toJson, ROOT } from '../src/shared/io';
-import { probe } from '../src/shared/ffmpeg';
-import { FILES, scriptDir } from '../src/shared/io';
-import type { Script, Storyboard } from '../src/shared/types';
-import { COMPOSITION_FILE, type Composition, MUSIC_DIR, type Variation, loadComposition } from '../src/video/music';
-import { compositions, draftCueSheet, pickComposition } from '../src/video/music-draft';
+import { readJson, sha, toJson, ROOT } from '../../shared/io';
+import { probe } from '../../shared/ffmpeg';
+import { FILES, scriptDir } from '../../shared/io';
+import type { Script, Storyboard } from '../../shared/types';
+import { COMPOSITION_FILE, type Composition, MUSIC_DIR, type Variation, loadComposition } from './music';
+import { compositions, draftCueSheet, pickComposition } from './music-draft';
 
 const [cmd, id, ...rest] = process.argv.slice(2);
 const flag = (name: string) => {

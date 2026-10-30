@@ -1,17 +1,17 @@
 // The video stage: segment selection against the validated script, narration caching, the timeline from measured
 // audio, cue resolution, chart timing, excerpt extraction, the render cache key, assembly contiguity, the ffmpeg
-// wrapper and the providers. Every test runs on the synthetic fixture (tests/video-helpers.ts) and needs no TTS.
+// wrapper and the providers. Every test runs on the synthetic fixture (src/modules/video/tests/video-helpers.ts) and needs no TTS.
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
-import { ROOT, scriptDir } from '../src/shared/io';
-import { LOOK_SLOTS, lookFingerprint } from '../src/shared/look';
+import { ROOT, scriptDir } from '../../../shared/io';
+import { LOOK_SLOTS, lookFingerprint } from '../../../shared/look';
 import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { scriptFingerprint, sentences } from '../src/shared/sentences';
-import { buildStoryboard } from '../src/modules/storyboard';
-import type { Storyboard } from '../src/shared/types';
-import { type VisualReview, graphicKey, renderCheck } from '../src/video/check';
-import { draftRenderConfig, initVideo } from '../src/video/init';
+import { scriptFingerprint, sentences } from '../../../shared/sentences';
+import { buildStoryboard } from '../../storyboard';
+import type { Storyboard } from '../../../shared/types';
+import { type VisualReview, graphicKey, renderCheck } from '../check';
+import { draftRenderConfig, initVideo } from '../init';
 import {
   type KindRegistry,
   type SceneKind,
@@ -22,41 +22,33 @@ import {
   registryFor,
   unsupportedAssets,
   unsupportedWhy,
-} from '../src/video/kinds';
-import { pointFrames } from '../src/video/chart';
-import { cue, lineFrames, spokenAt } from '../src/video/cues';
-import { excerptWindow, flowPassage } from '../src/video/excerpt';
-import { type Probe, probe } from '../src/shared/ffmpeg';
-import { audioStats } from '../src/video/ffmpeg';
-import { BESPOKE } from '../src/video/bespoke';
-import { citationTop } from '../src/video/remotion/Citation';
-import { captionCards } from '../src/video/remotion/Portrait';
-import { SHORT_MAX_SECONDS, type Script, type ShortBlock } from '../src/shared/types';
-import { approveAll, good, plan, run, DOC_D, pkg, read, scene } from './script-helpers';
-import { COMPONENTS } from '../src/video/remotion/scenes';
-import { headlineNumber, segmentColors } from '../src/video/remotion/scenes/StackedBar';
-import { countUp, setTheme, theme, themeOf } from '../src/video/remotion/theme';
-import { narrate } from '../src/video/narration';
-import {
-  TOLERANCE,
-  audioChecks,
-  blankChecks,
-  contentChecks,
-  shortChecks,
-  soundtrackChecks,
-  syncChecks,
-} from '../src/video/qa';
-import { assemble } from '../src/video/assemble';
-import { kitPalette } from '../src/video/brand';
-import { deepImports, kitSlots, relativeScene, sceneKey } from '../src/video/render';
-import { checkSegment, citationDetail } from '../src/video/select';
-import { buildTimeline } from '../src/video/timeline';
-import { type TtsProvider, provider, providerLimitations } from '../src/video/tts';
-import { RENDERER_LIMITATIONS } from '../src/video/remotion/limitations';
-import { openaiProvider, speedOf } from '../src/video/tts/openai';
-import { type Speak, azureProvider } from '../src/video/tts/azure';
-import { PORTRAIT, SHORT_LAYOUT, type TimelineScene } from '../src/video/types';
-import { alignLine, findWord, tokens } from '../src/video/words';
+} from '../kinds';
+import { pointFrames } from '../chart';
+import { cue, lineFrames, spokenAt } from '../cues';
+import { excerptWindow, flowPassage } from '../excerpt';
+import { type Probe, probe } from '../../../shared/ffmpeg';
+import { audioStats } from '../ffmpeg';
+import { BESPOKE } from '../bespoke';
+import { citationTop } from '../remotion/Citation';
+import { captionCards } from '../remotion/Portrait';
+import { SHORT_MAX_SECONDS, type Script, type ShortBlock } from '../../../shared/types';
+import { approveAll, good, plan, run, DOC_D, pkg, read, scene } from '../../../../tests/script-helpers';
+import { COMPONENTS } from '../remotion/scenes';
+import { headlineNumber, segmentColors } from '../remotion/scenes/StackedBar';
+import { countUp, setTheme, theme, themeOf } from '../remotion/theme';
+import { narrate } from '../narration';
+import { TOLERANCE, audioChecks, blankChecks, contentChecks, shortChecks, soundtrackChecks, syncChecks } from '../qa';
+import { assemble } from '../assemble';
+import { kitPalette } from '../brand';
+import { deepImports, kitSlots, relativeScene, sceneKey } from '../render';
+import { checkSegment, citationDetail } from '../select';
+import { buildTimeline } from '../timeline';
+import { type TtsProvider, provider, providerLimitations } from '../tts';
+import { RENDERER_LIMITATIONS } from '../remotion/limitations';
+import { openaiProvider, speedOf } from '../tts/openai';
+import { type Speak, azureProvider } from '../tts/azure';
+import { PORTRAIT, SHORT_LAYOUT, type TimelineScene } from '../types';
+import { alignLine, findWord, tokens } from '../words';
 import { POINTS, inputs, manifest, scenes } from './video-helpers';
 
 describe('segment selection', () => {
@@ -1077,7 +1069,7 @@ function contrast(a: string, b: string): number {
 // `${c}${hot ? 'AA' : '44'}`): a tint is alpha()
 const LITERAL_COLOUR = /#[0-9A-Fa-f]{3,8}\b|rgba?\(|\}[0-9A-Fa-f]{2}\b|\}\$\{[^}]*'[0-9A-Fa-f]{2}'/;
 function filesWithLiteralColours(): string[] {
-  const dirs = ['src/video/remotion', 'src/video/bespoke'].map((d) => join(ROOT, d));
+  const dirs = ['src/modules/video/remotion', 'src/modules/video/bespoke'].map((d) => join(ROOT, d));
   const files = dirs.flatMap((d) =>
     readdirSync(d, { recursive: true, encoding: 'utf8' })
       .filter((f) => /\.tsx?$/.test(f) && basename(f) !== 'theme.ts')

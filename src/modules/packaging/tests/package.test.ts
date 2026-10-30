@@ -2,11 +2,11 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { ShortBlock } from '../../../shared/types';
 import { site } from '../../../config/site';
-import { type BuildReport, buildReport } from '../../../video/report';
-import { checkSegment } from '../../../video/select';
-import { buildTimeline } from '../../../video/timeline';
-import type { Timeline } from '../../../video/types';
-import { inputs, manifest } from '../../../../tests/video-helpers';
+import { type BuildReport, buildReport } from '../../video/report';
+import { checkSegment } from '../../video/select';
+import { buildTimeline } from '../../video/timeline';
+import type { Timeline } from '../../video/types';
+import { inputs, manifest } from '../../video/tests/video-helpers';
 import {
   CHECKLIST,
   DRAFT_CHECK,

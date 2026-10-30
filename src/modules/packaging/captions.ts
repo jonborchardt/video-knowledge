@@ -1,7 +1,7 @@
 // Captions for the upload, rendered from the measured timeline: one SRT cue per sentence, starting where its audio
 // starts and ending with its audio or where the next sentence starts, whichever comes first (YouTube rejects
 // overlapping cues). The package writes it next to the mp4 (captions.en.srt) and the uploader sends it as is.
-import type { Timeline } from '../../video/types';
+import type { Timeline } from '../video';
 
 export const MAX_CUE_LINE = 42; // characters on one line; longer sentences become two balanced lines
 

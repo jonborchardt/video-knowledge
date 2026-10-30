@@ -50,7 +50,7 @@ import {
   renderCheckProblems,
   renderCheckStale,
   renderConfigSha,
-} from '../video/render-check';
+} from '../modules/video';
 import {
   type Build,
   type Ledger,
@@ -662,21 +662,21 @@ const graphicsStage: BoardStage = ({ topic, storyId, root, p, r, live, sb }, s) 
             stage: 'graphics',
             kind: 'needs-graphics',
             why: `${rc.needsGraphics.join(', ')} need a graphic`,
-            cmd: `agent: scripts/briefs/graphics.md (${rc.needsGraphics.join(',')}), then ${check}`,
+            cmd: `agent: src/modules/video/briefs/graphics.md (${rc.needsGraphics.join(',')}), then ${check}`,
           }
         : unapproved.length
           ? {
               stage: 'graphics',
               kind: 'graphics-review',
               why: `${unapproved.join(', ')} not approved by the visual review`,
-              cmd: `agent: scripts/briefs/visual-review.md (${unapproved.join(',')}), then ${check}`,
+              cmd: `agent: src/modules/video/briefs/visual-review.md (${unapproved.join(',')}), then ${check}`,
             }
           : problems.length
             ? {
                 stage: 'graphics',
                 kind: 'render-check',
                 why: problems.slice(0, 3).join('; '),
-                cmd: `agent: scripts/briefs/video-fix.md, then ${check}`,
+                cmd: `agent: src/modules/video/briefs/video-fix.md, then ${check}`,
               }
             : undefined;
   return {
@@ -771,7 +771,7 @@ const videoStage: BoardStage = ({ topic, storyId, p, r, release, vr, sb }, s) =>
         stage: 'video',
         kind: 'qa-failed',
         why: `video QA failed: ${failed.map((c) => c.name).join(', ')}`,
-        cmd: `agent: scripts/briefs/video-fix.md, then ${cmd}`,
+        cmd: `agent: src/modules/video/briefs/video-fix.md, then ${cmd}`,
       },
     };
   return {

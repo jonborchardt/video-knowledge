@@ -1,10 +1,10 @@
 // Timeline: the measured narration durations tile the scenes; the storyboard's word-count estimates are not used.
 // Deterministic given the segment, the manifest, render.json and the cited passages. Every cue resolves to the frame
 // its word is spoken on, and every excerpt to its passage, or the build fails.
-import { commissionKey, commissionOf, site } from '../config/site';
-import type { PassageReader } from '../shared/types';
-import { sha } from '../shared/io';
-import { lookFingerprint } from '../shared/look';
+import { commissionKey, commissionOf, site } from '../../config/site';
+import type { PassageReader } from '../../shared/types';
+import { sha } from '../../shared/io';
+import { lookFingerprint } from '../../shared/look';
 import { kitPalette } from './brand';
 import { narrationFingerprint } from './files';
 import { ALL_KINDS } from './kinds';

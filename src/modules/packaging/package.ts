@@ -13,10 +13,7 @@ import { sectionTitle } from '../../shared/sentences';
 import { absoluteUrl } from '../../lib/url';
 import { renderSrt } from './captions';
 import { extractFrame } from '../../shared/ffmpeg';
-import type { BuildReport } from '../../video/report';
-import { VIDEO_FILES } from '../../video/files';
-import type { Segment } from '../../video/select';
-import type { Timeline } from '../../video/types';
+import { type BuildReport, type Segment, type Timeline, VIDEO_FILES } from '../video';
 
 export const REVIEW_FILES = {
   json: 'review.json',

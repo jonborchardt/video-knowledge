@@ -2,27 +2,16 @@
 // contract (anchors, cue sheet validation against the compositions on disk, fingerprints), the mix under a narration
 // track end to end (synthetic WAVs, no TTS, no strudel-bench), what it does not touch (the chunk cache), the report's
 // clearance and the production board's reading of it. The MLM cue sheet is checked against its committed timeline.
-import type { Script } from '../src/shared/types';
+import type { Script } from '../../../shared/types';
 import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { readJson, sha, ROOT } from '../src/shared/io';
-import { draftCueSheet, pickComposition } from '../src/video/music-draft';
-import { probe } from '../src/shared/ffmpeg';
-import {
-  CHANNELS,
-  type Placement,
-  RATE,
-  dbToGain,
-  decodePcm,
-  duckAt,
-  mixDown,
-  peak,
-  placeCue,
-  rmsDb,
-} from '../src/video/mix';
-import { mixSoundtrack } from '../src/video/assemble';
+import { readJson, sha, ROOT } from '../../../shared/io';
+import { draftCueSheet, pickComposition } from '../music-draft';
+import { probe } from '../../../shared/ffmpeg';
+import { CHANNELS, type Placement, RATE, dbToGain, decodePcm, duckAt, mixDown, peak, placeCue, rmsDb } from '../mix';
+import { mixSoundtrack } from '../assemble';
 import {
   type Composition,
   MIX_FILE,
@@ -34,13 +23,13 @@ import {
   parseAnchor,
   resolveCues,
   speechSpans,
-} from '../src/video/music';
-import { MUSIC_TOLERANCE } from '../src/video/qa';
-import { sceneKey } from '../src/video/render';
-import { buildReport } from '../src/video/report';
-import { checkSegment } from '../src/video/select';
-import { buildTimeline } from '../src/video/timeline';
-import type { Timeline } from '../src/video/types';
+} from '../music';
+import { MUSIC_TOLERANCE } from '../qa';
+import { sceneKey } from '../render';
+import { buildReport } from '../report';
+import { checkSegment } from '../select';
+import { buildTimeline } from '../timeline';
+import type { Timeline } from '../types';
 import { inputs, manifest } from './video-helpers';
 
 const sec = (s: number) => Math.round(s * RATE);

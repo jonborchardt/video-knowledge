@@ -1,7 +1,7 @@
 // Captions for the upload: one SRT cue per sentence from the measured timeline, never past the next sentence.
 import { describe, expect, it } from 'vitest';
 import { MAX_CUE_LINE, renderSrt } from '../captions';
-import type { Timeline, TimelineSentence } from '../../../video/types';
+import type { Timeline, TimelineSentence } from '../../video/types';
 
 const sentence = (id: string, text: string, start: number, audioSeconds: number): TimelineSentence => ({
   id,

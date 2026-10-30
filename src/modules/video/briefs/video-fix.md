@@ -15,7 +15,7 @@ frames named there are in `video/frames/`), or the render check's `problems` in
    - `video/render.json`: `cues` (`line:<n>`, `type`, `point:<label>`, on words the narration
      speaks), `options` (layout only, never a figure), `kinds` (a kind that draws the scene's
      category and units: dollars go in `stat-tiles`, not `bar`);
-   - or a scene component in `src/video/remotion/scenes/` (browser-safe; a change there asks for a
+   - or a scene component in `src/modules/video/remotion/scenes/` (browser-safe; a change there asks for a
      new visual review of every bespoke scene drawn with it).
      Never edit derived files (`timeline.json`, `narration.json`, the build report, `mix.json`), the
      storyboard's words or the script. If the fix needs the storyboard or the script to change, stop

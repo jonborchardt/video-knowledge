@@ -16,7 +16,7 @@ export const brandKey = (topic: string): string => {
 
 /** Every kit slot a scene can draw (kitSlots in src/video/render.ts; a test keeps the two in step). */
 export const LOOK_SLOTS = ['close-card', 'endscreen-subscribe', 'seal', 'lockup-horizontal-ground'] as const;
-export const THEME_FILE = 'src/video/remotion/theme.ts';
+export const THEME_FILE = 'src/modules/video/remotion/theme.ts';
 
 export interface LookPalette {
   ground: string;

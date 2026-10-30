@@ -4,11 +4,11 @@ import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSy
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { ROOT, scriptDir, sha, toJson } from '../src/shared/io';
-import { KEY_MIGRATION, type VisualReview, graphicKey, planKeyMigration, writeKeyMigration } from '../src/video/check';
-import { bespokeFor } from '../src/video/kinds';
-import { componentVersionIn, componentVersionLegacy, normalise } from '../src/video/render';
-import { checkSegment, loadInputs } from '../src/video/select';
+import { ROOT, scriptDir, sha, toJson } from '../../../shared/io';
+import { KEY_MIGRATION, type VisualReview, graphicKey, planKeyMigration, writeKeyMigration } from '../check';
+import { bespokeFor } from '../kinds';
+import { componentVersionIn, componentVersionLegacy, normalise } from '../render';
+import { checkSegment, loadInputs } from '../select';
 
 const SHARED = [
   'Root.tsx',

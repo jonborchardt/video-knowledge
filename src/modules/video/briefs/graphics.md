@@ -11,7 +11,7 @@ still fails its visual review after three revisions; say so in your reply when y
 1. Read the scene: `visual.description` (what is on screen, what moves, in what order),
    `visual.onScreenText`, `visual.chart.points`, `citations`, `direction`, and its sentences in
    `script.json` (the narration the graphic sits under).
-2. Reuse an existing component in `src/video/remotion/scenes/` only when it draws what the
+2. Reuse an existing component in `src/modules/video/remotion/scenes/` only when it draws what the
    description says. Otherwise write a new one there, in the style of its neighbours (theme colours
    and type from `../theme`, `GUTTER`, `ramp`/`easeOut`, `cue()` and `lineFrames()` from `../../cues`).
    - Colours and marks come from the owning institution's kit through `theme` (roles such as
@@ -24,14 +24,14 @@ still fails its visual review after three revisions; say so in your reply when y
      (`"line:2": { "sentence": "s29", "word": "meters" }`); the timeline fails if the word is not
      spoken. Nothing on screen waits long for words spoken late.
    - Browser-safe: no node imports.
-3. Add the component to `COMPONENTS` in `src/video/remotion/scenes/index.ts` (keyed by its file name).
+3. Add the component to `COMPONENTS` in `src/modules/video/remotion/scenes/index.ts` (keyed by its file name).
 4. Before drawing, check git history: the purged videos' one-off graphics (courtroom, gold-fringe flag, District
    tiers, UCC ticket signature, courts evidence, toolkit cards, protest strip, MLM pyramid, branch closing) are at
-   commit `d692140` under `src/video/remotion/scenes/` and `src/video/bespoke/`; restore one rather than redraw it, then port it: those files predate the one theme, so resolve every
+   commit `d692140` under `src/video/remotion/scenes/` and `src/video/bespoke/` (today `src/modules/video/`); restore one rather than redraw it, then port it: those files predate the one theme, so resolve every
    `theme.motion ? A : B` to `A`, drop `background: theme.field` (the field is the backdrop now), and register its kind
    under a name no generic kind uses (`fine-print` and `waterfall` are generic now).
-   Register a bespoke kind in `src/video/bespoke/<story slug>.ts` (create it, and add it to
-   `src/video/bespoke/index.ts` under `<topic>/<story slug>`): `{ component, accepts: [<category>] }`.
+   Register a bespoke kind in `src/modules/video/bespoke/<story slug>.ts` (create it, and add it to
+   `src/modules/video/bespoke/index.ts` under `<topic>/<story slug>`): `{ component, accepts: [<category>] }`.
    Kind names are unique across videos: prefix them (`hp-`, `mlm-`).
 5. Name the kind for the scene in `video/render.json` `kinds`.
 6. `npm run video -- frames <topic> <story-id> --scene <id>` and look at

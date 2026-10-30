@@ -7,10 +7,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { buildReviewPackage } from './package';
 import { readJson, REVIEW_DIR, ROOT, scriptDir, shortOf } from '../../shared/io';
-import { VIDEO_FILES, videoDir } from '../../video/files';
-import type { BuildReport } from '../../video/report';
-import { loadSegment } from '../../video/select';
-import type { Timeline } from '../../video/types';
+import { type BuildReport, type Timeline, VIDEO_FILES, loadSegment, videoDir } from '../video';
 
 const [cmd, topic, storyId] = process.argv.slice(2);
 if (cmd !== 'package' || !topic || !storyId) {

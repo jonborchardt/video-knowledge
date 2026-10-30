@@ -524,8 +524,8 @@ Paste it into a Claude Code session in this repo (fill in your name) and leave. 
 `npm run board -- next <topic> <story-id> --json`: it runs each command the board names and hands each brief to a
 fresh agent (the writer and reviewer, the graphics builder and visual reviewer, are never the same agent). Between
 `storyboard` and `lock` the board's `graphics` stage drafts `video/render.json` (`npm run video -- init`), has a
-bespoke component built for each diagram or animation (`scripts/briefs/graphics.md`), judged from its frames by
-another agent (`scripts/briefs/visual-review.md`), and requires a current `npm run video -- check`. After the lock it
+bespoke component built for each diagram or animation (`src/modules/video/briefs/graphics.md`), judged from its frames by
+another agent (`src/modules/video/briefs/visual-review.md`), and requires a current `npm run video -- check`. After the lock it
 renders, drafts the cue sheet (`npm run music -- cues`), mixes, runs QA and makes the review package.
 
 It ends one of two ways: **packaged** (committed after `npm run validate`, never pushed, with

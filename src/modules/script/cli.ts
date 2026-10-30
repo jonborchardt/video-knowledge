@@ -28,7 +28,7 @@ import { buildPackage, transcriptReader } from './evidence-package';
 import { releaseCheck, storyboardFingerprint } from '../../shared/release-check';
 import { approverProblem } from '../../shared/approver';
 import { validationFingerprint } from '../../shared/sentence-validation';
-import { RENDER_CHECK, type RenderCheckSummary, renderCheckProblems } from '../../video/render-check';
+import { RENDER_CHECK, type RenderCheckSummary, renderCheckProblems } from '../video';
 import { sentenceFingerprint, sentences } from '../../shared/sentences';
 import type { EvidencePackage, Release, Script, ScriptReviewFile, ScriptValidation } from '../../shared/types';
 import { renderReviewMd, renderScriptMd } from './script-md';

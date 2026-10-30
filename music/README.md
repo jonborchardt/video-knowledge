@@ -57,7 +57,7 @@ npm run music -- show <id>
 
 `render` needs the song in a temporary strudel-bench checkout's `songs/`: copy `music/<id>/source.strudel` to
 `<strudel-bench>/songs/<name>.strudel` first (the manifest records the sha). Commit nothing in strudel-bench; how to
-write a new song there is in `scripts/briefs/strudel-bench.md`.
+write a new song there is in `src/modules/video/briefs/strudel-bench.md`.
 
 ## What a song must be
 

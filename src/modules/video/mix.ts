@@ -5,7 +5,7 @@
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { run } from '../shared/ffmpeg';
+import { run } from '../../shared/ffmpeg';
 
 export const RATE = 48000;
 export const CHANNELS = 2;

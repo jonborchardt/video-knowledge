@@ -3,8 +3,8 @@
 // sentence, the voice or the rate regenerates only that sentence.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { readJson, sha, toJson } from '../shared/io';
-import { probe } from '../shared/ffmpeg';
+import { readJson, sha, toJson } from '../../shared/io';
+import { probe } from '../../shared/ffmpeg';
 import type { Segment } from './select';
 import { NARRATION_DIR, VIDEO_FILES, narrationKey } from './files';
 import { type TtsProvider, provider as defaultProvider } from './tts';

@@ -6,7 +6,7 @@
 // One record per kind says everything about it: the component that draws it (a key of COMPONENTS, drawn by
 // src/video/remotion/scenes/<component>.tsx, part of the render cache key), the categories it may be assigned to, and
 // the rules that infer it or constrain it.
-import type { Scene, VisualCategory } from '../lib/storyboard';
+import type { Scene, VisualCategory } from '../../lib/storyboard';
 import type { COMPONENTS } from './remotion/scenes';
 import { BESPOKE } from './bespoke';
 

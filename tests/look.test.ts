@@ -15,10 +15,10 @@ const writeKit = (extra: Record<string, unknown> = {}) =>
 beforeEach(() => {
   root = mkdtempSync(join(tmpdir(), 'vk-look-'));
   mkdirSync(kit(), { recursive: true });
-  mkdirSync(join(root, 'src/video/remotion'), { recursive: true });
+  mkdirSync(join(root, 'src/modules/video/remotion'), { recursive: true });
   writeKit();
   for (const s of LOOK_SLOTS) writeFileSync(join(kit(), `${s}.svg`), '<svg>\n</svg>\n');
-  writeFileSync(join(root, 'src/video/remotion/theme.ts'), 'export const theme = {};\n');
+  writeFileSync(join(root, 'src/modules/video/remotion/theme.ts'), 'export const theme = {};\n');
 });
 afterEach(() => rmSync(root, { recursive: true, force: true }));
 
@@ -26,7 +26,7 @@ describe('look fingerprint', () => {
   it('is stable for the same files and ignores CRLF', () => {
     const a = lookFingerprint('heat-pumps', root);
     writeFileSync(join(kit(), 'close-card.svg'), '<svg>\r\n</svg>\r\n');
-    writeFileSync(join(root, 'src/video/remotion/theme.ts'), 'export const theme = {};\r\n');
+    writeFileSync(join(root, 'src/modules/video/remotion/theme.ts'), 'export const theme = {};\r\n');
     expect(lookFingerprint('heat-pumps', root)).toBe(a);
   });
   it('moves on a palette role, a slot SVG or theme.ts, and on nothing else in the kit', () => {
@@ -40,7 +40,7 @@ describe('look fingerprint', () => {
     writeFileSync(join(kit(), 'seal.svg'), '<svg/>');
     const c = lookFingerprint('heat-pumps', root);
     expect(c).not.toBe(b);
-    writeFileSync(join(root, 'src/video/remotion/theme.ts'), 'export const theme = { a: 1 };\n');
+    writeFileSync(join(root, 'src/modules/video/remotion/theme.ts'), 'export const theme = { a: 1 };\n');
     expect(lookFingerprint('heat-pumps', root)).not.toBe(c);
   });
   it('a missing kit gives a stable fingerprint and never throws', () => {

@@ -84,7 +84,7 @@ draws fails the build. Plan within this vocabulary:
   `person-grid`, `commission-icons` (diagrams), `disclosure-thumbnails` (excerpt), `dot-plot-601`.
   Use `assetIds` only from this list or for an asset you register for a graphic to be built.
 - `diagram` and `animation` without one of those assets are built as bespoke graphics after this
-  stage (`scripts/briefs/graphics.md`) from your `visual.description`: describe them precisely
+  stage (`src/modules/video/briefs/graphics.md`) from your `visual.description`: describe them precisely
   (what is drawn, its labels, what moves and when), because the builder works from that alone.
 
 Quote cards carry only the quoted words; the citation names the speaker or source. On-screen labels

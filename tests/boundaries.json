@@ -4,9 +4,7 @@
     "src/config/": "shared",
     "src/lib/url.ts": "shared",
     "src/lib/storyboard.ts": "shared",
-    "src/video/": "video",
-    "scripts/video.ts": "video",
-    "scripts/music.ts": "video",
+    "src/modules/video/cli.ts": "video",
     "astro.config.mjs": "website",
     "src/pages/": "website",
     "src/components/": "website",
@@ -20,14 +18,14 @@
     "scripts/briefs/": "shared"
   },
   "browserSafe": [
-    "src/video/remotion/",
-    "src/video/bespoke/",
-    "src/video/types.ts",
-    "src/video/kinds.ts",
-    "src/video/words.ts",
-    "src/video/chart.ts",
-    "src/video/cues.ts",
-    "src/video/excerpt.ts",
+    "src/modules/video/remotion/",
+    "src/modules/video/bespoke/",
+    "src/modules/video/types.ts",
+    "src/modules/video/kinds.ts",
+    "src/modules/video/words.ts",
+    "src/modules/video/chart.ts",
+    "src/modules/video/cues.ts",
+    "src/modules/video/excerpt.ts",
     "src/shared/types.ts",
     "src/lib/storyboard.ts"
   ],
@@ -48,16 +46,24 @@
     "website": ["contentGraph", "ctaPath", "loadCta", "matterPath", "resolveCtas", "storyNode", "CtaType"],
     "shorts": ["buildShortPackage", "loadShorts", "shortsPath"],
     "storyboard": ["pointProblems", "chartProblems", "datasetChart", "buildStoryboard", "renderStoryboardMd"],
-    "stories": ["loadStories", "storiesPath", "chainOf", "storyUrlSlug", "loadReview", "reviewPath"]
+    "stories": ["loadStories", "storiesPath", "chainOf", "storyUrlSlug", "loadReview", "reviewPath"],
+    "video": [
+      "loadSegment",
+      "renderCheckProblems",
+      "renderCheckStale",
+      "renderConfigSha",
+      "RENDER_CHECK",
+      "RenderCheckSummary",
+      "VIDEO_FILES",
+      "videoDir",
+      "Timeline",
+      "Segment",
+      "BuildReport"
+    ]
   },
   "edges": [
     {
-      "from": "src/modules/script/cli.ts",
-      "to": "src/video/render-check.ts",
-      "until": "video"
-    },
-    {
-      "from": "scripts/video.ts",
+      "from": "src/modules/video/cli.ts",
       "to": "src/lib/production.ts",
       "until": "orchestration"
     },
@@ -72,58 +78,8 @@
       "until": "orchestration"
     },
     {
-      "from": "src/lib/production.ts",
-      "to": "src/video/render-check.ts",
-      "until": "video"
-    },
-    {
-      "from": "src/modules/packaging/captions.ts",
-      "to": "src/video/types.ts",
-      "until": "video"
-    },
-    {
-      "from": "src/modules/packaging/package.ts",
-      "to": "src/video/files.ts",
-      "until": "video"
-    },
-    {
-      "from": "src/modules/packaging/package.ts",
-      "to": "src/video/report.ts",
-      "until": "video"
-    },
-    {
-      "from": "src/modules/packaging/package.ts",
-      "to": "src/video/select.ts",
-      "until": "video"
-    },
-    {
-      "from": "src/modules/packaging/package.ts",
-      "to": "src/video/types.ts",
-      "until": "video"
-    },
-    {
-      "from": "scripts/video.ts",
+      "from": "src/modules/video/cli.ts",
       "to": "src/modules/publishing/index.ts",
-      "until": "video"
-    },
-    {
-      "from": "src/modules/packaging/cli.ts",
-      "to": "src/video/files.ts",
-      "until": "video"
-    },
-    {
-      "from": "src/modules/packaging/cli.ts",
-      "to": "src/video/report.ts",
-      "until": "video"
-    },
-    {
-      "from": "src/modules/packaging/cli.ts",
-      "to": "src/video/select.ts",
-      "until": "video"
-    },
-    {
-      "from": "src/modules/packaging/cli.ts",
-      "to": "src/video/types.ts",
       "until": "video"
     }
   ]

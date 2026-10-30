@@ -17,9 +17,9 @@ import {
   renderDescription,
   type ReviewPackage,
 } from '../src/modules/packaging';
-import type { BuildReport } from '../src/video/report';
-import type { Segment } from '../src/video/select';
-import type { Timeline } from '../src/video/types';
+import type { BuildReport } from '../src/modules/video/report';
+import type { Segment } from '../src/modules/video/select';
+import type { Timeline } from '../src/modules/video/types';
 
 let root = '';
 afterEach(() => root && rmSync(root, { recursive: true, force: true }));

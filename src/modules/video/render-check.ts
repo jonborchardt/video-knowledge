@@ -3,7 +3,7 @@
 // storyboard with approved graphics without importing from src/video/.
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { fileSha } from '../shared/io';
+import { fileSha } from '../../shared/io';
 
 export const RENDER_CHECK = 'video/render-check.json';
 export interface RenderCheckSummary {

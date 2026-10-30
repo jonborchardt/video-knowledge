@@ -1,14 +1,14 @@
 // The video stage's synthetic fixture: a three-scene storyboard over the script helpers' passing script, a render
 // config and a narration manifest with 0.3 s per word, so the timeline, cache, mixing and report tests need no TTS.
-import { storyboardFingerprint } from '../src/shared/release-check';
-import { validationFingerprint } from '../src/shared/sentence-validation';
-import { scriptFingerprint } from '../src/shared/sentences';
-import type { Release } from '../src/shared/types';
-import { buildStoryboard } from '../src/modules/storyboard';
-import type { StoryboardPlan } from '../src/shared/types';
-import { checkSegment, type SegmentInputs } from '../src/video/select';
-import type { NarrationManifest, RenderConfig } from '../src/video/types';
-import { DOC_D, approveAll, good, pkg, plan, read, run, scene } from './script-helpers';
+import { storyboardFingerprint } from '../../../shared/release-check';
+import { validationFingerprint } from '../../../shared/sentence-validation';
+import { scriptFingerprint } from '../../../shared/sentences';
+import type { Release } from '../../../shared/types';
+import { buildStoryboard } from '../../storyboard';
+import type { StoryboardPlan } from '../../../shared/types';
+import { checkSegment, type SegmentInputs } from '../select';
+import type { NarrationManifest, RenderConfig } from '../types';
+import { DOC_D, approveAll, good, pkg, plan, read, run, scene } from '../../../../tests/script-helpers';
 
 export const POINTS = [
   { label: 'lost money', value: 47, unit: 'percent' as const, display: '47%', cite: DOC_D },

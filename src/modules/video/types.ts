@@ -1,7 +1,7 @@
 // Video stage: the narrow, typed contract between the validated storyboard, the narration audio and the renderer.
 //   storyboard scene -> script sentence ids -> narration audio (NarrationManifest) -> Timeline (frames) -> rendered frames
 // Browser-safe: no node imports; the Remotion bundle imports this file.
-import type { ChartSpec, VisualCategory } from '../lib/storyboard';
+import type { ChartSpec, VisualCategory } from '../../lib/storyboard';
 import type { SceneKind } from './kinds';
 
 export const FPS = 30;

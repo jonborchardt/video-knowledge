@@ -3,11 +3,11 @@
 // validation did not approve, or a chart the renderer cannot draw faithfully is a problem, never a substitution.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { storyboardFingerprint } from '../shared/release-check';
-import { validationFingerprint } from '../shared/sentence-validation';
-import { scriptFingerprint, sentenceFingerprint, sentences } from '../shared/sentences';
-import { FILES, scriptDir, storySlug, readJson, ROOT } from '../shared/io';
-import type { EvidencePackage, Release, Scene, Script, ScriptValidation, Storyboard } from '../shared/types';
+import { storyboardFingerprint } from '../../shared/release-check';
+import { validationFingerprint } from '../../shared/sentence-validation';
+import { scriptFingerprint, sentenceFingerprint, sentences } from '../../shared/sentences';
+import { FILES, scriptDir, storySlug, readJson, ROOT } from '../../shared/io';
+import type { EvidencePackage, Release, Scene, Script, ScriptValidation, Storyboard } from '../../shared/types';
 import {
   type KindRegistry,
   type SceneKind,

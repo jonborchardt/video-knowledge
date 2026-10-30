@@ -16,7 +16,7 @@ export default [
   // Web-quality gate (F. security): HTML-string sinks only with committed repo content, each use disabled with a reason.
   {
     files: ['src/**/*.{astro,ts}'],
-    ignores: ['src/video/**'],
+    ignores: ['src/modules/video/**'],
     rules: {
       'astro/no-set-html-directive': 'error',
       'no-restricted-syntax': [
