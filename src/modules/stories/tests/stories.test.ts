@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import type { ReviewFile } from '../src/shared/types';
-import { discover, loadStories, staleReviewIds, storyTopicNames } from '../src/lib/stories';
-import { loadTopic } from '../src/lib/topics';
-import { loadReview } from '../src/lib/review';
-import { DOC_A, DOC_B, DOC_C, claim, guess, reader, sources, study, topic } from './corpus';
+import type { ReviewFile } from '../../../shared/types';
+import { discover, loadStories, staleReviewIds, storyTopicNames } from '../stories';
+import { loadTopic } from '../../../lib/topics';
+import { loadReview } from '../review';
+import { DOC_A, DOC_B, DOC_C, claim, guess, reader, sources, study, topic } from '../../../../tests/corpus';
 
 const FASTER = 'AI tools make experienced developers faster';
 const LABELS =

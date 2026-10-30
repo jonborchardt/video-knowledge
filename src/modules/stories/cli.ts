@@ -1,16 +1,16 @@
 // npm run stories -- <command> <topic> [...]
 //   discover <topic> [--json]           draft, audit, evaluate and rank candidates; writes topics/<topic>/stories.json
-//                                       (merges topics/<topic>/story-review.json when present; see scripts/briefs/stories.md)
+//                                       (merges topics/<topic>/story-review.json when present; see src/modules/stories/briefs/stories.md)
 //   show <topic> [story-id] [--json]    the ranked list, or one story with its audit and cited passages
 //   validate <topic> <assertions.json> [--json]   run the evidence gate on your own assertions (exit 2 if any is blocked)
 // Reads topics/<topic>/report.json and topics/<topic>/store/ through src/lib/topics.ts; no watcher checkout needed.
 import { readFileSync, writeFileSync } from 'node:fs';
-import { passageReader, toJson } from '../src/shared/io';
-import { validate } from '../src/shared/evidence-gate';
-import type { Assertion, Validation, Story } from '../src/shared/types';
-import { loadReview } from '../src/lib/review';
-import { discover, loadStories, storiesPath } from '../src/lib/stories';
-import { loadTopic } from '../src/lib/topics';
+import { passageReader, toJson } from '../../shared/io';
+import { validate } from '../../shared/evidence-gate';
+import type { Assertion, Validation, Story } from '../../shared/types';
+import { loadReview } from './review';
+import { discover, loadStories, storiesPath } from './stories';
+import { loadTopic } from '../../lib/topics';
 
 const [cmd, topic, ...rest] = process.argv.slice(2);
 const json = rest.includes('--json');

@@ -25,7 +25,7 @@ import { corpusOf } from '../../lib/corpus';
 import { passageReader, readJson, toJson, writeArtifact, ROOT, FILES, scriptDir } from '../../shared/io';
 import { loadPublicRecord, publicRecordPath, withArticleRevision } from '../../shared/public-record';
 import { Refusal } from '../../shared/refusal';
-import { loadReview } from '../../lib/review';
+import { loadReview } from '../stories';
 import type { EvidencePackage, Script, ScriptValidation } from '../../shared/types';
 import { loadTopic } from '../../lib/topics';
 

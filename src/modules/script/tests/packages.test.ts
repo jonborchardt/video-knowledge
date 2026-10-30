@@ -5,13 +5,13 @@
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { passageReader, docHasher, FILES, scriptDirs, readJson, toJson } from '../../../shared/io';
-import { loadReview } from '../../../lib/review';
+import { loadReview } from '../../stories';
 import { buildPackage } from '../evidence-package';
 import { releaseCheck } from '../../../shared/release-check';
 import { sentences } from '../../../shared/sentences';
 import type { EvidencePackage, Release, Script, ScriptReviewFile } from '../../../shared/types';
 import { validateScript } from '../../../shared/sentence-validation';
-import { chainOf, loadStories } from '../../../lib/stories';
+import { chainOf, loadStories } from '../../stories';
 import { buildStoryboard } from '../../storyboard';
 import type { Storyboard, StoryboardPlan } from '../../../shared/types';
 import { loadTopic } from '../../../lib/topics';

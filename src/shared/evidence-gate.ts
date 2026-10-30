@@ -7,7 +7,7 @@
 // 2. Applicability: does a verdict on the canonical claim decide THIS sentence? A base rate ("most lose") cannot decide
 //    a possibility claim ("an expert can"); a verdict whose own note limits its scope ("though the setting is futures,
 //    not stocks") is partial. Defaults come from conservative wording heuristics; a reviewer's judgment (see
-//    scripts/briefs/stories.md) overrides them. Contextual evidence is listed but never decides.
+//    src/modules/stories/briefs/stories.md) overrides them. Contextual evidence is listed but never decides.
 // 3. Never semantic approval: a sentence whose wording differs from the canonical claim is flagged for human review.
 //
 // Evidence hierarchy (README "How verdicts work"): a study verdict with a passage is evidence; an AI guess is context,

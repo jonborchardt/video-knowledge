@@ -10,7 +10,7 @@ import { dirname, isAbsolute, join, relative } from 'node:path';
 import { ROOT, toJson } from '../../shared/io';
 import { publishPath } from '../publishing';
 import { rehearsalDir, rehearsalLedger, rehearsalRefusal, rehearsalSteps, removeRehearsal } from './rehearsal';
-import { storyUrlSlug } from '../../lib/stories';
+import { storyUrlSlug } from '../stories';
 
 const args = process.argv.slice(2);
 const keep = args.includes('--keep');

@@ -25,7 +25,6 @@ import { lookFingerprint } from '../src/shared/look';
 import { storyboardFingerprint } from '../src/shared/release-check';
 import { validationFingerprint } from '../src/shared/sentence-validation';
 import { renderCheckProblems } from '../src/lib/render-check';
-import { loadReview, reviewPath } from '../src/lib/review';
 import { scriptFingerprint, sentenceFingerprint, sentences } from '../src/shared/sentences';
 import type { Release, Script, ScriptReviewFile, SectionName, SentenceType } from '../src/shared/types';
 import { validateScript } from '../src/shared/sentence-validation';
@@ -37,7 +36,7 @@ import {
   shortsPath,
   shortsReviewPath,
 } from '../src/modules/shorts';
-import { chainOf, loadStories, storiesPath } from '../src/lib/stories';
+import { chainOf, loadReview, loadStories, reviewPath, storiesPath } from '../src/modules/stories';
 import { buildStoryboard } from '../src/modules/storyboard';
 import type { StoryboardPlan } from '../src/shared/types';
 import { loadTopic } from '../src/lib/topics';

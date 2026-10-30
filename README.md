@@ -24,7 +24,7 @@ topics/<topic>/
   glyph.svg    optional: line-art icon (44x44 viewBox, stroke currentColor) shown on the home card
   changed-minds.json  optional notes from the changed-minds pass (step 6); nothing reads it
   stories.json  written by `npm run stories -- discover`; commit it (the story-ideas page is built from it)
-  story-review.json  optional, written by the review agent (scripts/briefs/stories.md); discover merges it
+  story-review.json  optional, written by the review agent (src/modules/stories/briefs/stories.md); discover merges it
   scripts/<story slug>/  one generated script per story: evidence-package.json, script.json, script-review.json,
                validation.json, storyboard.json and the readable script.md, storyboard.md, review.md; commit them
   work/        scratch for agent batches (gitignored)
@@ -71,11 +71,11 @@ npm run stories -- validate <topic> <file.json>  # run the evidence gate on your
 
 Three layers, kept apart:
 
-- **Deterministic** (`src/lib/stories.ts` drafting, `src/shared/evidence-gate.ts` checks): five kinds of candidate are drafted
+- **Deterministic** (`src/modules/stories/stories.ts` drafting, `src/shared/evidence-gate.ts` checks): five kinds of candidate are drafted
   (a popular claim a study contradicts, studies or sources that disagree, a study that overturned the AI guess, a widely
   repeated claim nobody checked, and the recap groups in `site.json` as decision stories), and every reference is
   verified. Ids are `<kind>:<claim slug>`, so a rerun is byte-identical and ids survive corpus changes.
-- **Semantic judgment** (`topics/<topic>/story-review.json`, written by an agent following `scripts/briefs/stories.md`): does a
+- **Semantic judgment** (`topics/<topic>/story-review.json`, written by an agent following `src/modules/stories/briefs/stories.md`): does a
   study verdict decide _this_ sentence (`direct`, `partial`, `contextual`), do a candidate's claims answer one question
   (coherence score, pruned claim list, or rejection), and are the audit's qualifications carried into the narrative.
   Without a review, the validator falls back to conservative wording heuristics (a base rate is only context for a

@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { loadMoved, manifestProblems } from '../src/modules/website';
 import { site } from '../src/config/site';
 import { readJson, toJson, topicDir } from '../src/shared/io';
-import { loadStories } from '../src/lib/stories';
+import { loadStories } from '../src/modules/stories';
 import { publicTopicNames } from '../src/lib/topics';
 import { scriptDir } from '../src/shared/io';
 import { uploadProblem } from '../src/modules/publishing';

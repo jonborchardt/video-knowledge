@@ -3,7 +3,7 @@ import { join, relative } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadDatasets } from '../src/lib/datasets';
 import { ROOT, passageReader } from '../src/shared/io';
-import { loadStories } from '../src/lib/stories';
+import { loadStories } from '../src/modules/stories';
 import { TOOLS, toolOf } from '../src/tools';
 import {
   type Result,

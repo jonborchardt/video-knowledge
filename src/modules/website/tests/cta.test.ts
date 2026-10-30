@@ -7,7 +7,7 @@ import { type Cta, loadCta, resolveCtas } from '../cta';
 import { toJson, topicDir } from '../../../shared/io';
 import { appendEvent, emptyLedger, type Ledger, publishPath, saveLedger } from '../../publishing/publish';
 import { FILES, scriptDir } from '../../../shared/io';
-import { loadStories } from '../../../lib/stories';
+import { loadStories } from '../../stories';
 import type { Story } from '../../../shared/types';
 import { publicTopicNames } from '../../../lib/topics';
 

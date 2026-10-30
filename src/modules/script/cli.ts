@@ -23,7 +23,7 @@ import {
   scriptDir,
   shortOf,
 } from '../../shared/io';
-import { loadReview, reviewPath } from '../../lib/review';
+import { loadReview, reviewPath } from '../stories';
 import { buildPackage, transcriptReader } from './evidence-package';
 import { releaseCheck, storyboardFingerprint } from '../../shared/release-check';
 import { approverProblem } from '../../shared/approver';
@@ -34,7 +34,7 @@ import type { EvidencePackage, Release, Script, ScriptReviewFile, ScriptValidati
 import { renderReviewMd, renderScriptMd } from './script-md';
 import { buildShortPackage, loadShorts, shortsPath } from '../shorts';
 import { validateScript } from '../../shared/sentence-validation';
-import { chainOf, loadStories, storiesPath } from '../../lib/stories';
+import { chainOf, loadStories, storiesPath } from '../stories';
 import { buildStoryboard, renderStoryboardMd } from '../storyboard';
 import type { Storyboard, StoryboardPlan } from '../../shared/types';
 import { loadTopic } from '../../lib/topics';

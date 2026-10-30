@@ -18,7 +18,7 @@ import { toJson, topicDir } from '../../../shared/io';
 import { addOutput, appendEvent, emptyLedger, type Ledger, publishPath, saveLedger } from '../../publishing/publish';
 import { scriptDir } from '../../../shared/io';
 import { copyTopic } from '../../../../tests/production-helpers';
-import { loadStories, storyUrlSlug } from '../../../lib/stories';
+import { loadStories, storyUrlSlug } from '../../stories';
 import type { Story } from '../../../shared/types';
 import { publicTopicNames } from '../../../lib/topics';
 

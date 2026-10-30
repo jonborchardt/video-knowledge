@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import { ROOT } from '../../shared/io';
 import { emptyLedger, type Ledger, storyOutputs } from '../publishing';
 import { scriptDir, storySlug } from '../../shared/io';
-import { loadStories } from '../../lib/stories';
+import { loadStories } from '../stories';
 
 export const REHEARSAL_VIDEO_ID = 'REHEARSAL00';
 

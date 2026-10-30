@@ -10,7 +10,7 @@ import { dataRef, loadDatasets } from '../../lib/datasets';
 import { readJson, ROOT, topicDir } from '../../shared/io';
 import { loadLedger, storyOutputs } from '../publishing';
 import { scriptDir } from '../../shared/io';
-import { loadStories, storyUrlSlug } from '../../lib/stories';
+import { loadStories, storyUrlSlug } from '../stories';
 import type { Story } from '../../shared/types';
 import { publicTopicNames } from '../../lib/topics';
 import { absoluteUrl } from '../../lib/url';

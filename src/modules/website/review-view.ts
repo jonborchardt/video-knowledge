@@ -12,7 +12,7 @@ import { type OutputState, type OutputStatus, type PublishEvent, type ReviewNote
 import { FILES, scriptDir, shortId, shortOf, storySlug, topicDir } from '../../shared/io';
 import type { ScriptValidation } from '../../shared/types';
 import { loadShorts } from '../shorts';
-import { loadStories } from '../../lib/stories';
+import { loadStories } from '../stories';
 import { href } from '../../lib/url';
 
 /** The packaged file of a story folder, streamed from disk by the dev server's review-media route. */

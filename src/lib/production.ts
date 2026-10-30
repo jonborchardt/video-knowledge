@@ -67,7 +67,6 @@ import {
   publishPath,
   uploadMetadataOf,
 } from '../modules/publishing';
-import { loadReview, reviewPath } from './review';
 import { buildPackage } from '../modules/script';
 import { releaseCheck, storyboardFingerprint } from '../shared/release-check';
 import { validationFingerprint } from '../shared/sentence-validation';
@@ -81,7 +80,7 @@ import {
   loadShortsReview,
   shortsPath,
 } from '../modules/shorts';
-import { chainOf, discover, loadStories, storiesPath } from './stories';
+import { chainOf, discover, loadReview, loadStories, reviewPath, storiesPath } from '../modules/stories';
 import { buildStoryboard } from '../modules/storyboard';
 import type { Storyboard, StoryboardPlan } from '../shared/types';
 import { loadTopic, topicNames, type Topic } from './topics';
@@ -1323,7 +1322,7 @@ export function topicBoard(
     checks.push({
       name: 'story review',
       health: !existsSync(reviewPath(name, root)) ? 'missing' : reviewed < file.stories.length ? 'pending' : 'current',
-      detail: `${reviewed}/${file.stories.length} candidates reviewed, ${Object.keys(review.applicability ?? {}).length} applicability judgments${reviewed < file.stories.length ? ' (scripts/briefs/stories.md)' : ''}`,
+      detail: `${reviewed}/${file.stories.length} candidates reviewed, ${Object.keys(review.applicability ?? {}).length} applicability judgments${reviewed < file.stories.length ? ' (src/modules/stories/briefs/stories.md)' : ''}`,
       file: `topics/${name}/story-review.json`,
     });
     for (const story of file.stories) {

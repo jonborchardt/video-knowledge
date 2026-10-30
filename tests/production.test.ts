@@ -42,9 +42,8 @@ import {
 } from '../src/modules/article/article';
 import { inspectArticle } from '../src/modules/article';
 import { corpusOf } from '../src/lib/corpus';
-import { loadStories } from '../src/lib/stories';
+import { loadReview, loadStories } from '../src/modules/stories';
 import type { Storyboard } from '../src/shared/types';
-import { loadReview } from '../src/lib/review';
 import { validateScript } from '../src/shared/sentence-validation';
 import { loadTopic } from '../src/lib/topics';
 import { sentenceFingerprint } from '../src/shared/sentences';
