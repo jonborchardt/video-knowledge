@@ -30,10 +30,6 @@
     "src/lib/render-check.ts": "video",
     "scripts/video.ts": "video",
     "scripts/music.ts": "video",
-    "src/lib/article.ts": "article",
-    "src/lib/article-validation.ts": "article",
-    "src/lib/article-view.ts": "article",
-    "scripts/article.ts": "article",
     "src/lib/shorts.ts": "shorts",
     "scripts/shorts.ts": "shorts",
     "src/lib/publish.ts": "publishing",
@@ -86,22 +82,22 @@
       "until": "evidence"
     },
     {
-      "from": "scripts/article.ts",
+      "from": "src/modules/article/cli.ts",
       "to": "src/lib/corpus.ts",
       "until": "evidence"
     },
     {
-      "from": "scripts/article.ts",
+      "from": "src/modules/article/cli.ts",
       "to": "src/lib/publish.ts",
       "until": "publishing"
     },
     {
-      "from": "scripts/article.ts",
+      "from": "src/modules/article/cli.ts",
       "to": "src/lib/review.ts",
       "until": "stories"
     },
     {
-      "from": "scripts/article.ts",
+      "from": "src/modules/article/cli.ts",
       "to": "src/lib/topics.ts",
       "until": "evidence"
     },
@@ -287,11 +283,6 @@
     },
     {
       "from": "src/components/ArticleBody.astro",
-      "to": "src/lib/article-view.ts",
-      "until": "article"
-    },
-    {
-      "from": "src/components/ArticleBody.astro",
       "to": "src/lib/finding-label.ts",
       "until": "evidence"
     },
@@ -391,52 +382,52 @@
       "until": "evidence"
     },
     {
-      "from": "src/lib/article-validation.ts",
+      "from": "src/modules/article/validation.ts",
       "to": "src/lib/datasets.ts",
       "until": "evidence"
     },
     {
-      "from": "src/lib/article-validation.ts",
+      "from": "src/modules/article/validation.ts",
       "to": "src/lib/finding-label.ts",
       "until": "evidence"
     },
     {
-      "from": "src/lib/article-validation.ts",
+      "from": "src/modules/article/validation.ts",
       "to": "src/lib/storyboard.ts",
       "until": "storyboard"
     },
     {
-      "from": "src/lib/article-view.ts",
+      "from": "src/modules/article/view.ts",
       "to": "src/lib/chart-geometry.ts",
       "until": "storyboard"
     },
     {
-      "from": "src/lib/article-view.ts",
+      "from": "src/modules/article/view.ts",
       "to": "src/lib/datasets.ts",
       "until": "evidence"
     },
     {
-      "from": "src/lib/article-view.ts",
+      "from": "src/modules/article/view.ts",
       "to": "src/lib/storyboard.ts",
       "until": "storyboard"
     },
     {
-      "from": "src/lib/article-view.ts",
+      "from": "src/modules/article/view.ts",
       "to": "src/lib/topics.ts",
       "until": "evidence"
     },
     {
-      "from": "src/lib/article.ts",
+      "from": "src/modules/article/article.ts",
       "to": "src/lib/datasets.ts",
       "until": "evidence"
     },
     {
-      "from": "src/lib/article.ts",
+      "from": "src/modules/article/article.ts",
       "to": "src/lib/publish.ts",
       "until": "publishing"
     },
     {
-      "from": "src/lib/article.ts",
+      "from": "src/modules/article/article.ts",
       "to": "src/lib/storyboard.ts",
       "until": "storyboard"
     },
@@ -444,11 +435,6 @@
       "from": "src/lib/chart-geometry.ts",
       "to": "src/lib/datasets.ts",
       "until": "storyboard"
-    },
-    {
-      "from": "src/lib/content-graph.ts",
-      "to": "src/lib/article.ts",
-      "until": "article"
     },
     {
       "from": "src/lib/content-graph.ts",
@@ -476,11 +462,6 @@
       "until": "evidence"
     },
     {
-      "from": "src/lib/cta.ts",
-      "to": "src/lib/article.ts",
-      "until": "article"
-    },
-    {
       "from": "src/lib/datasets.ts",
       "to": "src/lib/storyboard.ts",
       "until": "evidence"
@@ -489,16 +470,6 @@
       "from": "src/lib/evidence-package.ts",
       "to": "src/lib/review.ts",
       "until": "script"
-    },
-    {
-      "from": "src/lib/production.ts",
-      "to": "src/lib/article-validation.ts",
-      "until": "article"
-    },
-    {
-      "from": "src/lib/production.ts",
-      "to": "src/lib/article.ts",
-      "until": "article"
     },
     {
       "from": "src/lib/production.ts",
@@ -624,16 +595,6 @@
       "from": "src/lib/topics.ts",
       "to": "src/shared/io.ts",
       "until": "shared"
-    },
-    {
-      "from": "src/pages/[topic]/[story].astro",
-      "to": "src/lib/article-view.ts",
-      "until": "article"
-    },
-    {
-      "from": "src/pages/[topic]/[story].astro",
-      "to": "src/lib/article.ts",
-      "until": "article"
     },
     {
       "from": "src/pages/[topic]/[story].astro",

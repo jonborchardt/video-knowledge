@@ -1,13 +1,13 @@
 // The released article as the matter page shows it: the release's snapshot (never article.json), each sentence's
 // source marks numbered in first-use order, the noted corrections and a revised finding it relies on.
 import { type ArticleRelease, type Callout, articleSentences } from './article';
-import { chartProblems, datasetChart } from './chart-geometry';
-import { type PublicRecord, type Revision, isClaimRevision } from '../shared/public-record';
-import type { Sentence } from '../shared/types';
-import type { DataTable } from './datasets';
-import type { ChartSpec } from './storyboard';
-import type { Topic } from './topics';
-import { citeHref, citeLabel, datasetSource } from './url';
+import { chartProblems, datasetChart } from '../../lib/chart-geometry';
+import { type PublicRecord, type Revision, isClaimRevision } from '../../shared/public-record';
+import type { Sentence } from '../../shared/types';
+import type { DataTable } from '../../lib/datasets';
+import type { ChartSpec } from '../../lib/storyboard';
+import type { Topic } from '../../lib/topics';
+import { citeHref, citeLabel, datasetSource } from '../../lib/url';
 
 /** What a figure draws: a storyboard chart or an evidence dataset, with the source line its caption carries. */
 export interface FigureDraw {

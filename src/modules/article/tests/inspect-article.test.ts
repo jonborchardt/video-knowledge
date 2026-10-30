@@ -1,11 +1,11 @@
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { articleFingerprint, type Article, type ArticleRelease } from '../src/lib/article';
-import { ARTICLE_FINDINGS, inspectArticle } from '../src/lib/article-validation';
-import { readJson, toJson } from '../src/shared/io';
-import type { EvidencePackage, Script, ScriptValidation } from '../src/shared/types';
-import { syntheticProduction, type Fixture } from './production-helpers';
+import { articleFingerprint, type Article, type ArticleRelease } from '../article';
+import { ARTICLE_FINDINGS, inspectArticle } from '../validation';
+import { readJson, toJson } from '../../../shared/io';
+import type { EvidencePackage, Script, ScriptValidation } from '../../../shared/types';
+import { syntheticProduction, type Fixture } from '../../../../tests/production-helpers';
 
 const say = (id: string, text: string) => ({ id, text, type: 'rhetorical' as const });
 const articleOf = (fx: Fixture): Article => {
@@ -14,7 +14,7 @@ const articleOf = (fx: Fixture): Article => {
     topic: fx.topic,
     story: fx.story,
     revision: 1,
-    generation: { ...s.generation, brief: 'scripts/briefs/article.md' },
+    generation: { ...s.generation, brief: 'src/modules/article/briefs/article.md' },
     meta: {
       headline: 'h',
       seoTitle: 's',

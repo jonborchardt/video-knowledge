@@ -3,9 +3,9 @@
 import { cpSync, existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
-import { ARTICLE_FILES } from '../src/lib/article';
+import { ARTICLE_FILES } from '../src/modules/article';
 import type { BuildSummary } from '../src/shared/build-report';
-import { article } from './article-helpers';
+import { article } from '../src/modules/article/tests/article-helpers';
 import { corpusOf } from '../src/lib/corpus';
 import {
   passageReader,

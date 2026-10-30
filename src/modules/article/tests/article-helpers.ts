@@ -1,8 +1,8 @@
-import { type Article, articleReviewUnits, articleSentences } from '../src/lib/article';
-import { sentenceFingerprint } from '../src/shared/sentences';
-import type { ScriptReviewFile } from '../src/shared/types';
-import { TOPIC } from './corpus';
-import { MLM, fact, pkg, sentence } from './script-helpers';
+import { type Article, articleReviewUnits, articleSentences } from '../article';
+import { sentenceFingerprint } from '../../../shared/sentences';
+import type { ScriptReviewFile } from '../../../shared/types';
+import { TOPIC } from '../../../../tests/corpus';
+import { MLM, fact, pkg, sentence } from '../../../../tests/script-helpers';
 
 export const article = (extra: Partial<Article> = {}): Article => ({
   topic: TOPIC,

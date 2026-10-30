@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { author, commissionKey, commissionOf, commissions, site } from '../src/config/site';
 import { FINDING_LABELS, FINDING_TEXT } from '../src/lib/finding-label';
-import { loadArticleRelease } from '../src/lib/article';
+import { loadArticleRelease } from '../src/modules/article';
 import {
   contentGraph,
   distPages,

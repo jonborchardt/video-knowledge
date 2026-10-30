@@ -5,7 +5,7 @@
 // carries one; the description and the matter page do.
 import { join } from 'node:path';
 import { toolOf } from '../tools';
-import { loadArticleRelease } from './article';
+import { loadArticleRelease } from '../modules/article';
 import { absoluteOf, chainRoot, type Graph, matterPath } from './content-graph';
 import { readJson, ROOT, FILES, scriptDir } from '../shared/io';
 import { absoluteUrl } from './url';

@@ -39,8 +39,8 @@ import {
   articleFingerprint,
   articleReviewUnits,
   articleSentences,
-} from '../src/lib/article';
-import { inspectArticle } from '../src/lib/article-validation';
+} from '../src/modules/article/article';
+import { inspectArticle } from '../src/modules/article';
 import { corpusOf } from '../src/lib/corpus';
 import { loadStories } from '../src/lib/stories';
 import type { Storyboard } from '../src/lib/storyboard';
@@ -605,7 +605,7 @@ describe('the article on the board', () => {
       topic: fx.topic,
       story: fx.story,
       revision: 1,
-      generation: { ...s.generation, brief: 'scripts/briefs/article.md' },
+      generation: { ...s.generation, brief: 'src/modules/article/briefs/article.md' },
       meta: {
         headline: 'Is a heat pump cheaper to run?',
         seoTitle: 'Heat pump running costs',
@@ -656,7 +656,7 @@ describe('the article on the board', () => {
     try {
       expect(articleState(fx)).toEqual({
         state: 'none',
-        next: `agent: scripts/briefs/article.md -> ${relative(fx.root, join(fx.dir, 'article.json')).replaceAll(sep, '/')}`,
+        next: `agent: src/modules/article/briefs/article.md -> ${relative(fx.root, join(fx.dir, 'article.json')).replaceAll(sep, '/')}`,
         kind: 'missing',
       });
       const a = articleOf(fx);
@@ -715,7 +715,7 @@ describe('the article on the board', () => {
       expect(stale.state).toBe('stale');
       expect(stale.next).toContain('2026-02-01');
       expect(stale.next).toContain('a new study');
-      expect(stale.next).toContain('scripts/briefs/article.md (revise)');
+      expect(stale.next).toContain('src/modules/article/briefs/article.md (revise)');
       expect(stale.next).toContain(`npm run article -- reaffirm ${fx.topic} ${fx.story}`);
       // the writer revises: a new revision goes to the reviewer, never to lock
       const revised = structuredClone(a);
@@ -724,7 +724,7 @@ describe('the article on the board', () => {
       write(fx, 'article.json', revised);
       expect(articleState(fx)).toEqual({
         state: 'review',
-        next: `agent: scripts/briefs/article-review.md -> ${relative(fx.root, join(fx.dir, 'article-review.json')).replaceAll(sep, '/')}`,
+        next: `agent: src/modules/article/briefs/article-review.md -> ${relative(fx.root, join(fx.dir, 'article-review.json')).replaceAll(sep, '/')}`,
       });
       // reviewed and passing: a correction
       write(fx, 'article-review.json', {
@@ -783,7 +783,7 @@ describe('the article on the board', () => {
       write(fx, 'evidence-package.json', { ...pkg, fingerprint: 'moved', documents });
       expect(articleState(fx)).toEqual({
         state: 'blocked',
-        next: `agent: scripts/briefs/article.md (revise) -> ${relative(fx.root, join(fx.dir, 'article.json')).replaceAll(sep, '/')}`,
+        next: `agent: src/modules/article/briefs/article.md (revise) -> ${relative(fx.root, join(fx.dir, 'article.json')).replaceAll(sep, '/')}`,
       });
     } finally {
       fx.cleanup();
@@ -825,7 +825,7 @@ describe('the article on the board', () => {
     return { sb, pkg, recut };
   };
   const reviewer = (fx: Fixture) =>
-    `agent: scripts/briefs/article-review.md -> ${relative(fx.root, join(fx.dir, 'article-review.json')).replaceAll(sep, '/')}`;
+    `agent: src/modules/article/briefs/article-review.md -> ${relative(fx.root, join(fx.dir, 'article-review.json')).replaceAll(sep, '/')}`;
   const correctCmd = (fx: Fixture) =>
     `npm run article -- correct ${fx.topic} ${fx.story} --approved-by "<your name>" --note "<what changed>"`;
 
@@ -939,7 +939,7 @@ describe('the article on the board', () => {
       rmSync(join(fx.dir, 'article-release.json'));
       const p = productionOf(fx.topic, fx.story, fx.root)!;
       expect([p.stage, p.halt?.kind]).toEqual(['article', 'missing']);
-      expect(p.next).toContain('scripts/briefs/article.md');
+      expect(p.next).toContain('src/modules/article/briefs/article.md');
     } finally {
       fx.cleanup();
     }

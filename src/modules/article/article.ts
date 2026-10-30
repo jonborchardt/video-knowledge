@@ -1,14 +1,14 @@
 // The companion article: prose blocks over the script's sentences, so the script validator judges it unchanged.
 import { join } from 'node:path';
-import { readJson, ROOT, sha, scriptDir } from '../shared/io';
-import type { Revision } from '../shared/public-record';
-import { Refusal } from './publish';
-import { approverProblem } from '../shared/approver';
-import { validationFingerprint } from '../shared/sentence-validation';
-import { sentenceFingerprint } from '../shared/sentences';
-import type { Script, ScriptValidation, SectionName, Sentence } from '../shared/types';
-import type { DataTable } from './datasets';
-import type { ChartPoint, ChartSpec } from './storyboard';
+import { readJson, ROOT, sha, scriptDir } from '../../shared/io';
+import type { Revision } from '../../shared/public-record';
+import { Refusal } from '../../lib/publish';
+import { approverProblem } from '../../shared/approver';
+import { validationFingerprint } from '../../shared/sentence-validation';
+import { sentenceFingerprint } from '../../shared/sentences';
+import type { Script, ScriptValidation, SectionName, Sentence } from '../../shared/types';
+import type { DataTable } from '../../lib/datasets';
+import type { ChartPoint, ChartSpec } from '../../lib/storyboard';
 
 /** What a figure draws, as released: a storyboard chart or an evidence dataset, copied so a later edit of either never
  *  reaches the page unapproved. */

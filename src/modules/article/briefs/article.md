@@ -4,7 +4,7 @@ Give an agent this file plus the topic id and story id. The agent reads
 `topics/<topic>/scripts/<slug>/evidence-package.json`, the passages it cites in `topics/<topic>/sources/`, the
 approved `script.json` and the `storyboard.json` beside it, writes `topics/<topic>/scripts/<slug>/article.json`,
 and runs `npm run article -- validate <topic> <story-id>` until the deterministic checks pass. An independent
-reviewer (`scripts/briefs/article-review.md`) then judges the wording and writes `article-review.json`; the writer
+reviewer (`src/modules/article/briefs/article-review.md`) then judges the wording and writes `article-review.json`; the writer
 never writes or edits that file. Nothing here adds evidence: if the package cannot support a sentence, the
 sentence changes, not the evidence. The `<slug>` is the story id with `:` replaced by `-`
 (`decision:is-it-cheaper-to-run-than-gas` lives in `decision-is-it-cheaper-to-run-than-gas/`).
@@ -78,7 +78,7 @@ answers nothing again.
 
 ## Metadata
 
-`meta` holds four fields; the validator blocks any over its limit (`LIMITS` in `src/lib/article-validation.ts`):
+`meta` holds four fields; the validator blocks any over its limit (`LIMITS` in `src/modules/article/validation.ts`):
 
 - `headline`: the on-page h1, at most 90 characters. It may differ from the video's title.
 - `seoTitle`: the title tag, at most 60 characters (the site adds its suffix).
@@ -162,7 +162,7 @@ A section is `{ "name", "heading", "blocks": [...] }`. Three kinds of block:
   display keeps the passage's sign ("$120", "£120"), and a sign that contradicts the unit is wrong. Years and a
   COP go under `count`.
 - **Figures.** `ref` is `<story-slug>/<scene-id>` of a storyboard scene that has a chart
-  (`figuresOf` in `src/lib/article-validation.ts`); anything else blocks. The caption describes the chart and
+  (`figuresOf` in `src/modules/article/validation.ts`); anything else blocks. The caption describes the chart and
   carries no figure of its own.
 - A quotation is a sentence whose assertion carries a `quote`, as in a script.
 
@@ -175,7 +175,7 @@ A section is `{ "name", "heading", "blocks": [...] }`. Three kinds of block:
   "revision": 1,
   "generation": {
     "model": "<model id>",
-    "brief": "scripts/briefs/article.md",
+    "brief": "src/modules/article/briefs/article.md",
     "date": "<ISO date>",
     "wordsPerMinute": 150,
     "evidencePackage": "<package fingerprint>"

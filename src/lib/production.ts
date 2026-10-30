@@ -5,8 +5,15 @@
 // queue, park or mark a story published, which no artifact records.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { ARTICLE_FILES, type Article, articleReviewUnits, loadArticleRelease } from './article';
-import { ARTICLE_FINDINGS, inspectArticle, validateArticleIn } from './article-validation';
+import {
+  ARTICLE_FILES,
+  ARTICLE_FINDINGS,
+  type Article,
+  articleReviewUnits,
+  inspectArticle,
+  loadArticleRelease,
+  validateArticleIn,
+} from '../modules/article';
 import type { Inspection } from '../shared/inspect';
 import type {
   Corpus,
@@ -933,7 +940,7 @@ function articleOf({
   short,
 }: BoardContext): BoardContext['article'] {
   if (!release || short) return null;
-  const writer = `agent: scripts/briefs/article.md (revise) -> ${r(ARTICLE_FILES.article)}`;
+  const writer = `agent: src/modules/article/briefs/article.md (revise) -> ${r(ARTICLE_FILES.article)}`;
   let live: ScriptValidation | undefined;
   let text: Article | undefined;
   const inspection = inspectArticle(topic, storyId, root, (a, pkg) => {
@@ -957,7 +964,7 @@ function articleOf({
       case 'stale':
         return `${f}, then ${writer}, or if the text stands: npm run article -- reaffirm ${topic} ${storyId} --approved-by "<your name>" --note "<why unchanged>"`;
       case 'missing':
-        return `agent: scripts/briefs/article.md -> ${r(ARTICLE_FILES.article)}`;
+        return `agent: src/modules/article/briefs/article.md -> ${r(ARTICLE_FILES.article)}`;
       case 'invalid':
         if (f === F.needsEvidence) return 'agent: scripts/briefs/evidence.md';
         if (f === F.noPackage) return `npm run script -- package ${topic} ${storyId}`;
@@ -970,7 +977,7 @@ function articleOf({
         // unapproved unit (an edit beside a held sentence, a new headline) is the reviewer's, whatever the revision.
         return reviewHeld({ p, pkgFp: readJson<EvidencePackage>(p(FILES.pkg))?.fingerprint, live, text })
           ? writer
-          : `agent: scripts/briefs/article-review.md -> ${r(ARTICLE_FILES.review)}`;
+          : `agent: src/modules/article/briefs/article-review.md -> ${r(ARTICLE_FILES.review)}`;
     }
   })();
   return { inspection, next };
@@ -1018,7 +1025,9 @@ function articleView(c: BoardContext): Production['article'] {
       return {
         state: 'review',
         next,
-        ...k(next.startsWith('agent: scripts/briefs/article-review.md') ? 'review-pending' : 'review-findings'),
+        ...k(
+          next.startsWith('agent: src/modules/article/briefs/article-review.md') ? 'review-pending' : 'review-findings',
+        ),
       };
   }
 }

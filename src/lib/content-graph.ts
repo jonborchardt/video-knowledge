@@ -5,7 +5,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { commissionKey, commissionOf } from '../config/site';
 import { toolOf } from '../tools';
-import { loadArticleRelease } from './article';
+import { loadArticleRelease } from '../modules/article';
 import { dataRef, loadDatasets } from './datasets';
 import { readJson, ROOT, topicDir } from '../shared/io';
 import { storyOutputs } from './outputs';

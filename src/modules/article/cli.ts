@@ -18,16 +18,16 @@ import {
   reaffirmArticle,
   releaseFigures,
   renderArticleMd,
-} from '../src/lib/article';
-import { articleStale } from '../src/lib/article-view';
-import { figureData, validateArticleIn } from '../src/lib/article-validation';
-import { corpusOf } from '../src/lib/corpus';
-import { passageReader, readJson, toJson, writeArtifact, ROOT, FILES, scriptDir } from '../src/shared/io';
-import { loadPublicRecord, publicRecordPath, withArticleRevision } from '../src/shared/public-record';
-import { Refusal } from '../src/lib/publish';
-import { loadReview } from '../src/lib/review';
-import type { EvidencePackage, Script, ScriptValidation } from '../src/shared/types';
-import { loadTopic } from '../src/lib/topics';
+} from './article';
+import { articleStale } from './view';
+import { figureData, validateArticleIn } from './validation';
+import { corpusOf } from '../../lib/corpus';
+import { passageReader, readJson, toJson, writeArtifact, ROOT, FILES, scriptDir } from '../../shared/io';
+import { loadPublicRecord, publicRecordPath, withArticleRevision } from '../../shared/public-record';
+import { Refusal } from '../../lib/publish';
+import { loadReview } from '../../lib/review';
+import type { EvidencePackage, Script, ScriptValidation } from '../../shared/types';
+import { loadTopic } from '../../lib/topics';
 
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
 const flag = (name: string) => {
@@ -52,7 +52,7 @@ const today = new Date().toISOString().slice(0, 10);
 /** The article judged against the current package, review, script, storyboard and sources. */
 function validate(): { a: Article; v: ScriptValidation } {
   const a = readJson<Article>(p(ARTICLE_FILES.article));
-  if (!a) throw new Refusal(`no ${rel(p(ARTICLE_FILES.article))}; give an agent scripts/briefs/article.md`);
+  if (!a) throw new Refusal(`no ${rel(p(ARTICLE_FILES.article))}; give an agent src/modules/article/briefs/article.md`);
   const pkg = readJson<EvidencePackage>(p(FILES.pkg));
   if (!pkg) throw new Refusal(`no ${rel(p(FILES.pkg))}; run npm run script -- package ${topic} ${storyId}`);
   const v = validateArticleIn(topic, storyId, a, corpusOf(loadTopic(topic)), passageReader(), {

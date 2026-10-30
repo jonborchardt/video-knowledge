@@ -26,16 +26,16 @@ import {
   type ScriptValidation,
   type Severity,
   type PassageReader,
-} from '../shared/types';
-import { dataRef, loadDatasets } from './datasets';
-import { findingLabel } from './finding-label';
-import { readJson, ROOT, FILES, scriptDir, storySlug } from '../shared/io';
-import { norm, revisionsInPass, sentenceFingerprint, sentences } from '../shared/sentences';
-import { type ValidateOptions, validateScript } from '../shared/sentence-validation';
-import { pointProblems, type StoryboardPlan } from './storyboard';
-import { articleStale } from './article-view';
-import { loadPublicRecord } from '../shared/public-record';
-import type { Inspection } from '../shared/inspect';
+} from '../../shared/types';
+import { dataRef, loadDatasets } from '../../lib/datasets';
+import { findingLabel } from '../../lib/finding-label';
+import { readJson, ROOT, FILES, scriptDir, storySlug } from '../../shared/io';
+import { norm, revisionsInPass, sentenceFingerprint, sentences } from '../../shared/sentences';
+import { type ValidateOptions, validateScript } from '../../shared/sentence-validation';
+import { pointProblems, type StoryboardPlan } from '../../lib/storyboard';
+import { articleStale } from './view';
+import { loadPublicRecord } from '../../shared/public-record';
+import type { Inspection } from '../../shared/inspect';
 
 export const LIMITS = { headline: 90, seoTitle: 60, description: 155 } as const;
 export const OVERLAP = { n: 8, share: 0.3 } as const;

@@ -16,16 +16,16 @@ import {
   reaffirmArticle,
   releaseFigures,
   renderArticleMd,
-} from '../src/lib/article';
-import type { ChartSpec } from '../src/lib/storyboard';
-import { Refusal } from '../src/lib/publish';
-import { publicRecordProblems, withArticleRevision } from '../src/shared/public-record';
-import { LIMITS, figureData, figuresOf, validateArticle } from '../src/lib/article-validation';
-import { buildPackage } from '../src/lib/evidence-package';
-import { scriptDir } from '../src/shared/io';
-import type { EvidencePackage, Sentence } from '../src/shared/types';
+} from '../article';
+import type { ChartSpec } from '../../../lib/storyboard';
+import { Refusal } from '../../../lib/publish';
+import { publicRecordProblems, withArticleRevision } from '../../../shared/public-record';
+import { LIMITS, figureData, figuresOf, validateArticle } from '../validation';
+import { buildPackage } from '../../../lib/evidence-package';
+import { scriptDir } from '../../../shared/io';
+import type { EvidencePackage, Sentence } from '../../../shared/types';
 import { approveArticle, article } from './article-helpers';
-import { claim, guess, sources } from './corpus';
+import { claim, guess, sources } from '../../../../tests/corpus';
 import {
   DOC_D,
   asTopic,
@@ -40,7 +40,7 @@ import {
   sentence,
   story,
   t,
-} from './script-helpers';
+} from '../../../../tests/script-helpers';
 
 describe('article format', () => {
   it('the adapter keeps section order and headings, with the dek and description first', () => {

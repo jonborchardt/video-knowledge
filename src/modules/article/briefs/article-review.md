@@ -81,7 +81,7 @@ When the fix needs a passage the package does not have, say so in the finding. O
 
 ```json
 {
-  "reviewer": "scripts/briefs/article-review.md",
+  "reviewer": "src/modules/article/briefs/article-review.md",
   "model": "<model id>",
   "date": "<ISO date>",
   "revision": 1,
