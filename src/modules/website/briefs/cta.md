@@ -25,7 +25,7 @@ render or the end screen. Nothing here changes a verdict, adds evidence or edits
 | `reference`  | an official outside page (a rebate programme, a regulator), `https` only | where to act; non-commercial                                   |
 | `commercial` | an outside commercial page                                               | only as below                                                  |
 
-The checks are code (`src/lib/cta.ts`) and fail closed: `tool` needs a tool for the story; `evidence` needs a
+The checks are code (`src/modules/website/cta.ts`) and fail closed: `tool` needs a tool for the story; `evidence` needs a
 claim the script did not assert (when the video asserted every claim it becomes `article` if one is
 released, else it is dropped); `article` needs a released article; `data` needs a dataset the article cites;
 `video` needs that video live and in the same chain or sharing claims; `inquiry` needs the story's own
