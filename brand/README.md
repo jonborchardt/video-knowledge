@@ -33,7 +33,7 @@ on its seal, lockups and banners; the closing card keeps the Commonwealth line).
   the same in every brand: red for the official acts (recorded, amended), the brand's ground for a finding, slate for
   a matter under examination. On the ground, record and finding go in paper ink, and amended and examination in a
   light red and a light slate (paper where those fall under 3:1 against the brand's ground).
-- `npm run brand` writes every kit: `scripts/brand/draw.js` draws each slot from the kit and the names in
+- `npm run brand` writes every kit: `src/modules/brand/draw/draw.js` draws each slot from the kit and the names in
   `src/config/site.ts`, Remotion's headless Chrome fits the text in the real fonts (`fonts/`, OFL), and the script
   saves `<slot>.svg` (committed) and the PNG or JPG its slot names (gitignored; run it to get files to upload), plus the
   site's seal copies `public/commissions/<key>.png`. Change a drawing in `draw.js` or a value in a kit, never an SVG.
