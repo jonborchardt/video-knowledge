@@ -263,7 +263,7 @@ export function figureData(topic: string, storyId: string, root = ROOT): Map<str
 export const figuresOf = (topic: string, storyId: string, root = ROOT): Set<string> =>
   new Set(figureData(topic, storyId, root).keys());
 
-/** The sentences `inspectArticle` reports; a consumer that maps them to a workflow (the board) compares against these. */
+/** The sentences `inspectArticle` reports; the board acts on `Inspection.code`, never on these. */
 export const ARTICLE_FINDINGS = {
   missing: 'there is no article.json yet',
   needsEvidence: 'the writer needs passages the corpus does not have',
@@ -290,7 +290,12 @@ export function inspectArticle(
   const a = readJson<Article>(p(ARTICLE_FILES.article));
   const out = loadArticleRelease(topic, storyId, root);
   const pkg = readJson<EvidencePackage>(p(FILES.pkg));
-  const bad = (f: string, findings: string[]): Inspection => ({ status: 'invalid', findings, output: rel(f) });
+  const bad = (code: string, findings: string[]): Inspection => ({
+    status: 'invalid',
+    code,
+    findings,
+    output: rel(ARTICLE_FILES.article),
+  });
   let text = a;
   let corrects = !!out; // after a release, a passing validation asks for a correction unless nothing a reader sees moved
   if (out && (!a || articleFingerprint(out.article) === articleFingerprint(a))) {
@@ -298,28 +303,30 @@ export function inspectArticle(
     if (stale)
       return {
         status: 'stale',
+        code: 'stale',
         findings: [`${stale.id} was revised on ${stale.at}: ${stale.note}`],
         output: rel(ARTICLE_FILES.release),
       };
     const drift = articleDrift(out, { package: pkg?.fingerprint ?? '', figures: figureData(topic, storyId, root) });
-    if (!drift.length) return { status: 'ready', findings: [], output: rel(ARTICLE_FILES.release) };
+    if (!drift.length) return { status: 'ready', code: 'ready', findings: [], output: rel(ARTICLE_FILES.release) };
     text = a ?? out.article;
     corrects = drift.some((d) => d.startsWith('figure '));
   }
   const released = !!out;
-  if (!text) return { status: 'missing', findings: [ARTICLE_FINDINGS.missing] };
-  if (text.generation?.needsEvidence?.length) return bad(ARTICLE_FILES.article, [ARTICLE_FINDINGS.needsEvidence]);
-  if (!pkg) return bad(ARTICLE_FILES.article, [ARTICLE_FINDINGS.noPackage]);
+  if (!text) return { status: 'missing', code: 'missing', findings: [ARTICLE_FINDINGS.missing] };
+  if (text.generation?.needsEvidence?.length) return bad('needs-evidence', [ARTICLE_FINDINGS.needsEvidence]);
+  if (!pkg) return bad('no-package', [ARTICLE_FINDINGS.noPackage]);
   const live = validate
     ? validate(text, pkg)
     : (readJson<ScriptValidation>(p(ARTICLE_FILES.validation)) ?? ({ status: 'needs-review' } as ScriptValidation));
   if (live.status === 'blocked')
-    return bad(ARTICLE_FILES.article, [
-      live.revisionLimitReached ? ARTICLE_FINDINGS.revisionLimit : ARTICLE_FINDINGS.blocking,
-    ]);
+    return live.revisionLimitReached
+      ? bad('revision-limit', [ARTICLE_FINDINGS.revisionLimit])
+      : bad('blocking', [ARTICLE_FINDINGS.blocking]);
   if (live.status === 'passed') {
-    if (released && !corrects) return { status: 'ready', findings: [], output: rel(ARTICLE_FILES.release) };
-    return bad(ARTICLE_FILES.article, [released ? ARTICLE_FINDINGS.changed : ARTICLE_FINDINGS.passed]);
+    if (released && !corrects)
+      return { status: 'ready', code: 'ready', findings: [], output: rel(ARTICLE_FILES.release) };
+    return released ? bad('changed', [ARTICLE_FINDINGS.changed]) : bad('passed', [ARTICLE_FINDINGS.passed]);
   }
-  return bad(ARTICLE_FILES.article, [ARTICLE_FINDINGS.unapproved]);
+  return bad('unapproved', [ARTICLE_FINDINGS.unapproved]);
 }

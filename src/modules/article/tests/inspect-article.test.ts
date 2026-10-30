@@ -39,25 +39,26 @@ describe('inspectArticle', { timeout: 30_000 }, () => {
     const fx = syntheticProduction('locked');
     try {
       const at = (v?: () => ScriptValidation) => inspectArticle(fx.topic, fx.story, fx.root, v);
-      expect(at()).toEqual({ status: 'missing', findings: [ARTICLE_FINDINGS.missing] });
+      expect(at()).toEqual({ status: 'missing', code: 'missing', findings: [ARTICLE_FINDINGS.missing] });
 
       const a = articleOf(fx);
       write(fx, 'article.json', a);
       const none = at(verdict('blocked'));
       expect(none).toMatchObject({
         status: 'invalid',
+        code: 'blocking',
         findings: [ARTICLE_FINDINGS.blocking],
         output: expect.stringContaining('article.json'),
       });
-      expect(at(verdict('blocked', true)).findings).toEqual([ARTICLE_FINDINGS.revisionLimit]);
-      expect(at(verdict('needs-review')).findings).toEqual([ARTICLE_FINDINGS.unapproved]);
-      expect(at(verdict('passed')).findings).toEqual([ARTICLE_FINDINGS.passed]);
+      expect(at(verdict('blocked', true)).code).toBe('revision-limit');
+      expect(at(verdict('needs-review')).code).toBe('unapproved');
+      expect(at(verdict('passed')).code).toBe('passed');
       expect(Object.keys(none)).not.toContain('kind');
 
       const needs = structuredClone(a);
       needs.generation = { ...needs.generation, needsEvidence: ['a passage'] } as never;
       write(fx, 'article.json', needs);
-      expect(at().findings).toEqual([ARTICLE_FINDINGS.needsEvidence]);
+      expect(at().code).toBe('needs-evidence');
       write(fx, 'article.json', a);
 
       const pkg = readJson<EvidencePackage>(join(fx.dir, 'evidence-package.json'))!;
@@ -74,6 +75,7 @@ describe('inspectArticle', { timeout: 30_000 }, () => {
       write(fx, 'article-release.json', release);
       expect(at()).toMatchObject({
         status: 'ready',
+        code: 'ready',
         findings: [],
         output: expect.stringContaining('article-release.json'),
       });
@@ -81,8 +83,8 @@ describe('inspectArticle', { timeout: 30_000 }, () => {
       const revised = structuredClone(a);
       revised.meta.dek = { ...revised.meta.dek, text: 'Newer words.' };
       write(fx, 'article.json', revised);
-      expect(at(verdict('passed')).findings).toEqual([ARTICLE_FINDINGS.changed]);
-      expect(at(verdict('needs-review')).findings).toEqual([ARTICLE_FINDINGS.unapproved]);
+      expect(at(verdict('passed')).code).toBe('changed');
+      expect(at(verdict('needs-review')).code).toBe('unapproved');
 
       write(fx, 'article.json', a);
       const claim = pkg.claims[0].id;
@@ -99,6 +101,7 @@ describe('inspectArticle', { timeout: 30_000 }, () => {
       });
       const stale = at();
       expect(stale.status).toBe('stale');
+      expect(stale.code).toBe('stale');
       expect(stale.findings[0]).toContain('a new study');
     } finally {
       fx.cleanup();
@@ -110,7 +113,7 @@ describe('inspectArticle', { timeout: 30_000 }, () => {
     try {
       write(fx, 'article.json', articleOf(fx));
       write(fx, 'evidence-package.json', null);
-      expect(inspectArticle(fx.topic, fx.story, fx.root).findings).toEqual([ARTICLE_FINDINGS.noPackage]);
+      expect(inspectArticle(fx.topic, fx.story, fx.root).code).toBe('no-package');
     } finally {
       fx.cleanup();
     }

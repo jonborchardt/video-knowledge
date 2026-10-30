@@ -7,7 +7,6 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import {
   ARTICLE_FILES,
-  ARTICLE_FINDINGS,
   type Article,
   articleReviewUnits,
   inspectArticle,
@@ -956,7 +955,7 @@ function articleOf({
     ));
   });
   const f = inspection.findings[0];
-  const F = ARTICLE_FINDINGS;
+  const code = inspection.code;
   const next = (() => {
     switch (inspection.status) {
       case 'ready':
@@ -966,13 +965,13 @@ function articleOf({
       case 'missing':
         return `agent: src/modules/article/briefs/article.md -> ${r(ARTICLE_FILES.article)}`;
       case 'invalid':
-        if (f === F.needsEvidence) return 'agent: scripts/briefs/evidence.md';
-        if (f === F.noPackage) return `npm run script -- package ${topic} ${storyId}`;
-        if (f === F.revisionLimit) return 'stop: revision limit reached with blocking findings';
-        if (f === F.blocking) return writer;
-        if (f === F.changed)
+        if (code === 'needs-evidence') return 'agent: scripts/briefs/evidence.md';
+        if (code === 'no-package') return `npm run script -- package ${topic} ${storyId}`;
+        if (code === 'revision-limit') return 'stop: revision limit reached with blocking findings';
+        if (code === 'blocking') return writer;
+        if (code === 'changed')
           return `npm run article -- correct ${topic} ${storyId} --approved-by "<your name>" --note "<what changed>"`;
-        if (f === F.passed) return `npm run article -- lock ${topic} ${storyId} --approved-by "<approver>"`;
+        if (code === 'passed') return `npm run article -- lock ${topic} ${storyId} --approved-by "<approver>"`;
         // A review of this package that holds every unapproved unit on findings is the writer's to answer; any other
         // unapproved unit (an edit beside a held sentence, a new headline) is the reviewer's, whatever the revision.
         return reviewHeld({ p, pkgFp: readJson<EvidencePackage>(p(FILES.pkg))?.fingerprint, live, text })
@@ -1004,8 +1003,7 @@ function reviewHeld(x: {
 function articleView(c: BoardContext): Production['article'] {
   if (!c.article) return null;
   const { inspection: i, next } = c.article;
-  const f = i.findings[0];
-  const F = ARTICLE_FINDINGS;
+  const code = i.code;
   const released = !!loadArticleRelease(c.topic, c.storyId, c.root);
   const k = (kind: HaltKind) => (released ? {} : { kind });
   switch (i.status) {
@@ -1016,12 +1014,12 @@ function articleView(c: BoardContext): Production['article'] {
     case 'missing':
       return { state: 'none', next, kind: 'missing' };
     case 'invalid':
-      if (f === F.needsEvidence) return { state: 'writing', next, ...k('needs-evidence') };
-      if (f === F.noPackage) return { state: 'blocked', next, ...k('missing') };
-      if (f === F.revisionLimit) return { state: 'blocked', next, ...k('revision-limit') };
-      if (f === F.blocking) return { state: 'blocked', next, ...k('blocking-findings') };
-      if (f === F.changed) return { state: 'changed', next };
-      if (f === F.passed) return { state: 'review', next, kind: 'lock' };
+      if (code === 'needs-evidence') return { state: 'writing', next, ...k('needs-evidence') };
+      if (code === 'no-package') return { state: 'blocked', next, ...k('missing') };
+      if (code === 'revision-limit') return { state: 'blocked', next, ...k('revision-limit') };
+      if (code === 'blocking') return { state: 'blocked', next, ...k('blocking-findings') };
+      if (code === 'changed') return { state: 'changed', next };
+      if (code === 'passed') return { state: 'review', next, kind: 'lock' };
       return {
         state: 'review',
         next,
