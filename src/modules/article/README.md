@@ -1,4 +1,4 @@
-﻿# article
+# article
 
 Article owns editorial content through its lifecycle: drafting, review, validation, corrections and reaffirmations when evidence changes (`article -- correct`, `reaffirm`). Website renders `article-release.json` and never decides whether a finding needs a correction.
 
