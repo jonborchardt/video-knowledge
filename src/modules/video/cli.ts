@@ -23,7 +23,7 @@ import { spawnSync } from 'node:child_process';
 import { appendFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { passageReader, readJson, sha, toJson, ROOT, REVIEW_DIR, scriptDir } from '../../shared/io';
-import { currentBuild, recordApproved } from '../publishing';
+import { currentBuild } from '../publishing';
 import { approverProblem } from '../../shared/approver';
 import { extractFrame, probe } from '../../shared/ffmpeg';
 import { writeRenderCheck } from './check';
@@ -37,7 +37,7 @@ import { ENTRY, renderContactSheet, renderScenes } from './render';
 import { buildReport, renderReportMd } from './report';
 import { VIDEO_FILES, videoDir } from './files';
 import { checkSegment, loadInputs, loadSegment } from './select';
-import { finalRefusal } from './final';
+import { acceptDraftViaCli, finalRefusal } from './final';
 import { buildTimeline } from './timeline';
 import type { NarrationManifest, Timeline } from './types';
 
@@ -334,13 +334,7 @@ try {
       if (!qa.ok) throw new Error('QA failed; the draft package stands');
       if (runPackage() !== 0) throw new Error('package failed');
       // the acceptance goes into the publishing ledger too, so the audit trail shows who accepted which draft
-      if (draft?.status === 'draft')
-        recordApproved(topic, storyId, {
-          by: flag('--approved-by')!,
-          build: draft.sha,
-          accepted: true,
-          note: 'draft accepted by final',
-        });
+      if (draft?.status === 'draft') acceptDraftViaCli(topic, storyId, flag('--approved-by')!, draft.sha, ROOT);
       // the run report is the produce agent's prose and named the draft voice as a blocker: say what settled it
       const runReport = p(`${REVIEW_DIR}/run-report.md`);
       if (existsSync(runReport) && !readFileSync(runReport, 'utf8').includes('## Release build'))
