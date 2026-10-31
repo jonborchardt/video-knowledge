@@ -124,6 +124,14 @@ describe('violations', () => {
     ];
     expect(violations(internal, { ...cfg, readApi: { website: ['urlOf'] } })).toHaveLength(1);
   });
+  it('lets the website import the orchestration index, never its internals', () => {
+    const c = {
+      ...cfg,
+      capabilities: { ...cfg.capabilities, 'src/admin/': 'website', 'src/orchestration/': 'orchestration' },
+    };
+    expect(violations([file('src/admin/Board.astro', ['src/orchestration/index.ts'])], c)).toEqual([]);
+    expect(violations([file('src/admin/Board.astro', ['src/orchestration/production.ts'])], c)).toHaveLength(1);
+  });
   it('flags a cycle between read APIs', () => {
     const a = file('src/modules/a/x.ts', ['src/modules/b/index.ts'], `import { fb } from '../b/index';`);
     const b = file('src/modules/b/y.ts', ['src/modules/a/index.ts'], `import { fa } from '../a/index';`);

@@ -11,8 +11,6 @@
     "src/layouts/": "website",
     "src/admin/": "website",
     "src/tools/": "website",
-    "src/lib/production.ts": "orchestration",
-    "scripts/board.ts": "orchestration",
     "src/modules/": "@folder",
     "src/orchestration/": "orchestration",
     "scripts/briefs/": "shared"
@@ -62,16 +60,6 @@
     ]
   },
   "edges": [
-    {
-      "from": "src/admin/Board.astro",
-      "to": "src/lib/production.ts",
-      "until": "orchestration"
-    },
-    {
-      "from": "src/components/NextStep.astro",
-      "to": "src/lib/production.ts",
-      "until": "orchestration"
-    },
     {
       "from": "src/modules/video/cli.ts",
       "to": "src/modules/publishing/index.ts",

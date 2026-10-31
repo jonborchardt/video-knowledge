@@ -160,7 +160,7 @@ function crossCapability(c: Ctx): Violation | null {
   const { f, to, fromCap, toCap } = c;
   if (!isRepoFile(to) || !fromCap || !toCap || fromCap === toCap) return null;
   if (fromCap === 'shared' || toCap === 'shared' || fromCap === 'orchestration') return null;
-  if (fromCap === 'website' && moduleIndex(to)) return null;
+  if (fromCap === 'website' && (moduleIndex(to) || to === 'src/orchestration/index.ts')) return null;
   if (readApiOk(c)) return null;
   return { from: f.path, to, rule: 'cross-capability' };
 }

@@ -1,9 +1,9 @@
 // npm run board -- next <topic> <story-id> [--json]
-//   next <topic> <story-id> [--json]   the board's stage and next step for one story (src/lib/production.ts, boardNext);
+//   next <topic> <story-id> [--json]   the board's stage and next step for one story (src/orchestration/production.ts, boardNext);
 //                                      with --json the whole answer (stage, next, steps, halt, done), else "<stage>: <next>"
 import { readFileSync } from 'node:fs';
-import { toJson } from '../src/shared/io';
-import { boardNext } from '../src/lib/production';
+import { toJson } from '../shared/io';
+import { boardNext } from './index';
 
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
 if (cmd !== 'next' || !topic || !storyId) {

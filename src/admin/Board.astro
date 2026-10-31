@@ -1,7 +1,7 @@
 ---
 // The production board's four tabs of the admin page (index.astro), each a `main > section` with its tab's id:
 // Board, one row per video across topics (a chain is one row; its follow-up questions get none), in the state of who
-// acts next (src/lib/production.ts columnOf), sortable and filterable, the strip in a row the production stages;
+// acts next (src/orchestration/production.ts columnOf), sortable and filterable, the strip in a row the production stages;
 // Stages, the same videos and their Shorts grouped by that state, each linking the page where the work happens;
 // Pipeline, each topic's research pipeline; Artifacts, artifact-by-artifact inspection of every script directory.
 import NextStep from '../components/NextStep.astro';
@@ -21,7 +21,7 @@ import {
   shortColumnOf,
   type ShortRow,
   type StoryRow,
-} from '../lib/production';
+} from '../orchestration';
 import { storyNode, loadCta, resolveCtas } from '../modules/website';
 import { siteGraph } from '../modules/website/site-graph';
 import { loadLedger } from '../modules/publishing';

@@ -32,7 +32,7 @@ import {
   sendBackPromptOf,
   stepsOf,
   validationHaltKind,
-} from '../src/lib/production';
+} from '../src/orchestration';
 import {
   type Article,
   type ArticleRelease,

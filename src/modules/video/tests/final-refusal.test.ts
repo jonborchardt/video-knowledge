@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { ARTICLE_FILES } from '../../article';
-import { boardNext } from '../../../lib/production';
+import { boardNext } from '../../../orchestration';
 import { readJson, ROOT, toJson } from '../../../shared/io';
 import { type BoardAnswer, boardViaCli, finalRefusal } from '../final';
 import { type Fixture, syntheticProduction } from '../../../../tests/production-helpers';
@@ -81,7 +81,7 @@ describe('final asks the board through its CLI (the real spawner)', () => {
     ] as const) {
       const fx = syntheticProduction(stage);
       try {
-        runAt(fx.root, tsx('scripts/board.ts'));
+        runAt(fx.root, tsx('src/orchestration/board.ts'));
         const calls: unknown[][] = [];
         const spy = ((...a: Parameters<typeof spawnSync>) => {
           calls.push(a);
