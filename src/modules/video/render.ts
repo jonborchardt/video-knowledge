@@ -40,7 +40,7 @@ function typeOnly(node: ts.Node): boolean {
   if (ts.isImportDeclaration(node)) {
     const c = node.importClause;
     if (!c) return false; // a side-effect import runs
-    if (c.isTypeOnly) return true;
+    if (c.phaseModifier === ts.SyntaxKind.TypeKeyword) return true; // `import type ...`
     return !c.name && !!c.namedBindings && ts.isNamedImports(c.namedBindings) && allTypes(c.namedBindings.elements);
   }
   if (ts.isExportDeclaration(node) && node.moduleSpecifier) {
@@ -52,7 +52,7 @@ function typeOnly(node: ts.Node): boolean {
 /** The specifiers a module depends on at run time, in source order: static and side-effect imports, re-exports
  *  (`export * from` included), `import x = require()`, and `import()` / `require()` of a string; type-only
  *  statements are skipped (types never change pixels). */
-export function runtimeSpecifiers(file: string, text: string): string[] {
+function runtimeSpecifiers(file: string, text: string): string[] {
   const out: string[] = [];
   const visit = (node: ts.Node): void => {
     if ((ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) && node.moduleSpecifier) {
@@ -104,11 +104,11 @@ export function rendererVersion(kind: TimelineScene['kind']): string {
 }
 /** A source as it draws: CRLF -> LF and every type-only import or export-from statement (the ones the scanner
  *  skips) removed with the rest of its line, so moving the tree or a type's home never moves a key. */
-export function normalise(text: string): string {
+export function normalise(text: string, file = 'x.tsx'): string {
   const lf = text.replace(/\r\n?/g, '\n');
   let out = '';
   let at = 0;
-  for (const n of parse('x.tsx', lf).statements.filter(typeOnly)) {
+  for (const n of parse(file, lf).statements.filter(typeOnly)) {
     out += lf.slice(at, n.getStart());
     at = n.end + /^[ \t]*\n?/.exec(lf.slice(n.end))![0].length;
   }
@@ -128,7 +128,7 @@ export function componentVersionIn(remotionDir: string, srcDir: string, name: st
     ...direct,
     ...[...deep].sort(), // after the direct imports, so a key only moves when a deeper file is new or edited
   ];
-  return sha([...new Set(files)].map((f) => normalise(readFileSync(f, 'utf8'))).join('\n---\n'));
+  return sha([...new Set(files)].map((f) => normalise(readFileSync(f, 'utf8'), f)).join('\n---\n'));
 }
 /** The code that draws one component, from this tree. */
 export const componentVersion = (name: string): string => componentVersionIn(REMOTION_DIR, SRC_DIR, name);

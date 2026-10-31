@@ -27,7 +27,7 @@ const CAN: Partial<Record<Action, keyof ReviewView['can']>> = {
 };
 
 /** `npm run publish -- <args>` in `root`, waited for: the CLI does every check and the ledger write. */
-export const runPublish = (args: string[], root: string) =>
+const runPublish = (args: string[], root: string) =>
   spawnSync(
     process.execPath,
     [
