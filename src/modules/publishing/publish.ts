@@ -404,8 +404,9 @@ export function outputState(
   const uploads = ev.filter((e) => e.type === 'uploaded');
   const upload = uploads.at(-1) ?? null;
   const id = upload?.id ?? null;
-  const approved = !!upload && approvalHolds(ev, upload.build!, ctx.title);
-  const localApproved = !!build && approvalHolds(ev, build.sha, ctx.title);
+  // an approval on a draft build (a draft acceptance) counts for nothing here: only a release build is approved
+  const approved = !!upload && upload.buildStatus !== 'draft' && approvalHolds(ev, upload.build!, ctx.title);
+  const localApproved = !!build && build.status === 'release' && approvalHolds(ev, build.sha, ctx.title);
   const judged = upload && (!build || build.sha === upload.build) ? upload.build! : build?.sha;
   const requested = judged ? decisionOn(ev, judged) : null;
   // an unpublish closes a chapter: the schedule and publication before it are history

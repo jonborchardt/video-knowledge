@@ -209,6 +209,18 @@ describe('outputState', () => {
     expect(s.next).not.toContain('uploaded');
   });
 
+  it('an approval on a draft build never reads as approved', () => {
+    const accepted = ev('approved', { build: 'd1', note: 'draft accepted by final' });
+    // D accepted and uploaded as a draft
+    expect(outputState(out(up('d1', 'id1', 'draft'), accepted), release, 'm1', ctx).status).not.toBe('approved');
+    // D accepted, D on disk as a draft (an identical re-render), nothing uploaded
+    expect(outputState(out(accepted), draft, 'm1', ctx).status).not.toBe('approved');
+    // a release upload approved: approved as before
+    const s = outputState(out(up('r1', 'id1'), ev('approved', { build: 'r1', id: 'id1' })), release, 'm1', ctx);
+    expect(s.status).toBe('approved');
+    expect(outputState(out(ev('approved', { build: 'r1' })), release, 'm1', ctx).status).toBe('approved');
+  });
+
   it('an uploaded draft waits for final, an uploaded release for approve', () => {
     expect(outputState(out(up('d1', 'id1', 'draft')), draft, 'm1', ctx).next).toContain('npm run video -- final');
     const s = outputState(out(up('r1', 'id1')), release, 'm1', ctx);
