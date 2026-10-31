@@ -196,6 +196,7 @@ async function stageQa(
     command,
     contact ? rel(contact) : null,
     mix,
+    currentBuild(scriptDir(topic, storyId)), // still the package on disk: package runs after QA
   );
   writeFileSync(p(VIDEO_FILES.report), toJson(r));
   writeFileSync(p(VIDEO_FILES.reportMd), renderReportMd(r));

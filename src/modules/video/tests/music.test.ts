@@ -516,6 +516,18 @@ describe('build report clearance and the board', () => {
     expect(none.clearance.music).toBeNull();
     expect(none.limitations).toContain('no soundtrack: narration only');
   });
+  it('records the packaged build it replaced, only when the sha moved', () => {
+    const at = (sha: string | null, onDisk: { sha: string; status: 'draft' | 'release' } | null) =>
+      buildReport(seg, tl, m, { file: 'x.mp4', probe: null, sha, renderSeconds: 1 }, qa, 'cmd', null, null, onDisk)
+        .replaces;
+    expect(at('r1', null)).toBeUndefined(); // a first build
+    expect(at('r1', { sha: 'r1', status: 'draft' })).toBeUndefined(); // the same build again
+    expect(at('r1', { sha: 'd1', status: 'draft' })).toEqual({ sha: 'd1', status: 'draft' });
+    expect(at('r2', { sha: 'r1', status: 'release' })).toEqual({ sha: 'r1', status: 'release' });
+    expect('replaces' in buildReport(seg, tl, m, { file: 'x.mp4', probe: null, renderSeconds: 1 }, qa, 'cmd')).toBe(
+      false,
+    ); // reports without one keep their bytes
+  });
 });
 
 describe('cue sheet draft', () => {

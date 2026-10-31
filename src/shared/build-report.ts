@@ -19,4 +19,7 @@ export interface BuildSummary {
   // config: sha of the parsed render.json; look: lookFingerprint (src/shared/look.ts), absent from older reports
   fingerprints: { script: string; storyboard: string; config: string; look?: string };
   qa: { ok: boolean; checks: { name: string; ok: boolean; detail?: string; scene?: string; sentence?: string }[] };
+  // the build that was packaged on disk (video/review/review.json) when this one was made: absent on a first build or
+  // when the sha is unchanged; how `publish -- accept-draft` proves the draft a release build replaced
+  replaces?: { sha: string; status: 'draft' | 'release' };
 }
