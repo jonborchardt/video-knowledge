@@ -32,6 +32,7 @@ import {
   sendBackPromptOf,
   stepsOf,
   validationHaltKind,
+  HALT_KINDS,
 } from '../src/orchestration';
 import {
   type Article,
@@ -115,6 +116,30 @@ describe('production board', () => {
 });
 
 describe('halt kinds', () => {
+  it('keeps the halt kinds', () => {
+    expect([...HALT_KINDS].sort()).toMatchInlineSnapshot(`
+      [
+        "blocking-findings",
+        "graphics-review",
+        "lock",
+        "look-stale",
+        "missing",
+        "needs-evidence",
+        "needs-graphics",
+        "no-institution",
+        "published",
+        "qa-failed",
+        "render-check",
+        "review-findings",
+        "review-pending",
+        "revision-limit",
+        "stale",
+        "story-left",
+        "storyboard-blocked",
+      ]
+    `);
+  });
+
   it('a blocked validation maps to revision-limit or blocking-findings', () => {
     expect(validationHaltKind(run(blockedScript(3)))).toBe('revision-limit');
     expect(validationHaltKind(run(blockedScript(1)))).toBe('blocking-findings');

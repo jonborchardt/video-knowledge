@@ -89,24 +89,26 @@ import { lookFingerprint, lookStale } from '../shared/look';
 import { type Commission, commissionOf } from '../config/site';
 
 /** Why a stage halted, for a loop that decides what to do next without parsing prose. */
-export type HaltKind =
-  | 'missing'
-  | 'stale'
-  | 'blocking-findings'
-  | 'revision-limit'
-  | 'needs-evidence'
-  | 'review-pending'
-  | 'review-findings'
-  | 'storyboard-blocked'
-  | 'render-check'
-  | 'needs-graphics'
-  | 'graphics-review'
-  | 'lock'
-  | 'qa-failed'
-  | 'look-stale' // a packaged build drawn with an older kit or theme: a person runs video final before approving it
-  | 'story-left'
-  | 'no-institution' // no commission claims the topic: its videos have no brand to carry
-  | 'published'; // the main output is live or scheduled: nothing rebuilds it; a re-release is a new output
+export const HALT_KINDS = [
+  'missing',
+  'stale',
+  'blocking-findings',
+  'revision-limit',
+  'needs-evidence',
+  'review-pending',
+  'review-findings',
+  'storyboard-blocked',
+  'render-check',
+  'needs-graphics',
+  'graphics-review',
+  'lock',
+  'qa-failed',
+  'look-stale', // a packaged build drawn with an older kit or theme: a person runs video final before approving it
+  'story-left',
+  'no-institution', // no commission claims the topic: its videos have no brand to carry
+  'published', // the main output is live or scheduled: nothing rebuilds it; a re-release is a new output
+] as const;
+export type HaltKind = (typeof HALT_KINDS)[number];
 /** A blocked validation: the writer revises, unless the pass has spent its revisions. */
 export const validationHaltKind = (live: ScriptValidation): 'revision-limit' | 'blocking-findings' =>
   live.revisionLimitReached ? 'revision-limit' : 'blocking-findings';

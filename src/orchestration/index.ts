@@ -8,6 +8,7 @@ export {
   type Column,
   COLUMNS,
   columnOf,
+  HALT_KINDS,
   type Health,
   mainState,
   type OutputView,
