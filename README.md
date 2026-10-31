@@ -326,7 +326,7 @@ Short; the related-video link has no API and is set in YouTube Studio, then reco
 ## Production board
 
 The Board, Stages, Pipeline and Artifacts tabs of `/admin` on the dev server (never on the public site) show what stage every topic, story and script is in. Everything on them is derived at
-build time by `src/lib/production.ts` from the committed files: the research pipeline per topic (sources listed vs
+build time by `src/orchestration/production.ts` from the committed files: the research pipeline per topic (sources listed vs
 fetched, fetched vs extracted, documents vs recorded verdicts, report vs store, stories.json vs a fresh `discover`,
 candidates reviewed), each story's readiness, and for each `topics/<topic>/scripts/<slug>/` the health of every artifact.
 "Current" means re-running the library on today's inputs reproduces the file, the same test `lock` applies
