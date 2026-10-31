@@ -57,6 +57,24 @@ export function setLook(dir: string, look: string | undefined): void {
   writeFileSync(pp, toJson({ ...readJson<object>(pp)!, buildReport: fileSha(rp) }));
 }
 
+/** A packaged draft fixture as `npm run video -- final` leaves it: the release build `release` packaged on disk, its
+ *  build report naming the draft it replaced. Returns the draft's sha (what final captured before rebuilding). */
+export function afterFinal(dir: string, release = 'releasesha'): string {
+  const pp = join(dir, 'video', 'review', 'review.json');
+  const rp = join(dir, 'video', 'build-report.json');
+  const review = readJson<{ mp4Sha: string; status: string }>(pp)!;
+  if (review.status === 'release build') throw new Error('afterFinal needs a draft package');
+  const r = readJson<BuildSummary>(rp)!;
+  const replaces = { sha: review.mp4Sha, status: 'draft' as const };
+  const clearance = { narration: true, music: true, publishable: true, why: [] };
+  writeFileSync(
+    rp,
+    toJson({ ...r, narration: { ...r.narration, provider: 'azure', publishable: true }, clearance, replaces }),
+  );
+  writeFileSync(pp, toJson({ ...review, status: 'release build', mp4Sha: release, buildReport: fileSha(rp) }));
+  return review.mp4Sha;
+}
+
 export function copyTopic(topic: string): { root: string; dir: (storyId: string) => string; cleanup: () => void } {
   const root = mkdtempSync(join(tmpdir(), 'vk-topic-'));
   const from = topicDir(topic);

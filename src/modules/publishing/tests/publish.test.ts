@@ -5,7 +5,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { readJson, sha } from '../../../shared/io';
+import { readJson, sha, toJson } from '../../../shared/io';
 import { Refusal } from '../../../shared/refusal';
 import { storySlug } from '../../../shared/io';
 import {
@@ -15,6 +15,7 @@ import {
   addOutput,
   addOutputTo,
   appendEvent,
+  approvalHolds,
   currentBuild,
   emptyLedger,
   eventKey,
@@ -44,7 +45,13 @@ import {
   publishPath,
   recordChangesRequested,
 } from '../publish';
-import { type Fixture, setLook, syntheticProduction, syntheticShort } from '../../../../tests/production-helpers';
+import {
+  type Fixture,
+  afterFinal,
+  setLook,
+  syntheticProduction,
+  syntheticShort,
+} from '../../../../tests/production-helpers';
 
 const tmp = mkdtempSync(join(tmpdir(), 'vk-publish-'));
 afterAll(() => rmSync(tmp, { recursive: true, force: true }));
@@ -472,14 +479,16 @@ describe('verbs', () => {
     const d2 = syntheticProduction('packaged');
     const d3 = syntheticProduction('packaged');
     try {
-      // final accepts a draft nobody uploaded
-      expect(recordApproved(d3.topic, d3.story, a(d3, { build: 'draftsha', accepted: true })).event).toMatchObject({
+      // final accepts the draft on disk, which nobody uploaded
+      const d3sha = currentBuild(d3.dir)!.sha;
+      expect(recordApproved(d3.topic, d3.story, a(d3, { build: d3sha, accepted: true })).event).toMatchObject({
         type: 'approved',
-        build: 'draftsha',
+        build: d3sha,
       });
       recordUploaded(d2.topic, d2.story, a(d2, { id: 'eeeeeeeeeee' }));
       expect(() => recordApproved(d2.topic, d2.story, a(d2))).toThrow(/draft/);
-      expect(recordApproved(d2.topic, d2.story, a(d2, { build: 'draftsha', accepted: true })).existing).toBe(false);
+      const d2sha = currentBuild(d2.dir)!.sha;
+      expect(recordApproved(d2.topic, d2.story, a(d2, { build: d2sha, accepted: true })).existing).toBe(false);
       expect(() => recordUploaded(d2.topic, d2.story, a(d2, { id: 'fffffffffff', visibility: 'public' }))).toThrow(
         /draft/,
       );
@@ -992,7 +1001,7 @@ describe('a Studio upload recorded by hand', () => {
   it('a public Studio upload of the release build after a recorded draft upload records uploaded and published', () => {
     const f = fresh(false);
     recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'apiupload01' });
-    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, build: 'draftsha', accepted: true });
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, build: currentBuild(f.dir)!.sha, accepted: true });
     patchReview(f, { status: 'release build', mp4Sha: 'releasesha' }); // final made the release build
     expect(openOutput(f.topic, f.story, { root: f.root }).build).toMatchObject({
       sha: 'releasesha',
@@ -1025,6 +1034,113 @@ describe('a Studio upload recorded by hand', () => {
     const f = fresh();
     recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001' });
     expect(openOutput(f.topic, f.story, { root: f.root }).state.next).toContain('--checked <n>');
+  });
+});
+
+describe('a draft acceptance (what video final records)', () => {
+  const now = new Date('2026-10-26T00:00:00Z');
+  const fixtures: Fixture[] = [];
+  afterAll(() => fixtures.forEach((f) => f.cleanup()));
+  const fresh = () => {
+    const f = syntheticProduction('packaged');
+    fixtures.push(f);
+    return f;
+  };
+  const accept = (f: Fixture, build?: string) =>
+    recordApproved(f.topic, f.story, {
+      root: f.root,
+      by: 'Jon',
+      now,
+      build,
+      accepted: true,
+      note: 'draft accepted by final',
+    });
+  const events = (f: Fixture) => loadLedger(f.topic, f.story, f.root)?.outputs.youtube.events ?? [];
+  const ledgerBytes = (f: Fixture) => {
+    const p = publishPath(f.topic, f.story, f.root);
+    return existsSync(p) ? readFileSync(p, 'utf8') : null;
+  };
+  const R = 'releasesha';
+
+  it('after final, the draft the release build replaced is accepted with the event final always wrote', () => {
+    const f = fresh();
+    const D = afterFinal(f.dir, R);
+    expect(D).toBe('draftsha');
+    expect(currentBuild(f.dir)).toEqual({ sha: R, status: 'release' });
+    const r = accept(f, D);
+    expect(r.existing).toBe(false);
+    expect(r.event).toEqual({
+      at: now.toISOString(),
+      type: 'approved',
+      by: 'Jon',
+      build: D,
+      title: openOutput(f.topic, f.story, { root: f.root }).metadata!.title,
+      note: 'draft accepted by final',
+    });
+    expect(accept(f, D).existing).toBe(true); // idempotent
+  });
+
+  it('refuses the release build, a stale build and no build, writing nothing', () => {
+    const f = fresh();
+    afterFinal(f.dir, R);
+    expect(() => accept(f, R)).toThrow(/is the release build; .*publish -- approve, never accepted as a draft/);
+    expect(() => accept(f, 'b0b0b0b0b0')).toThrow(
+      /neither the draft on disk \(none\) nor the draft the current build replaced \(draftsha\); a stale or unknown/,
+    );
+    expect(() => accept(f)).toThrow(/accept-draft names the draft build \(--build <sha>\)/);
+    expect(ledgerBytes(f)).toBeNull();
+  });
+
+  it('refuses a draft the release build did not replace (a stale draft), and the replaced one once a draft is back', () => {
+    const f = fresh();
+    expect(() => accept(f, 'olddraft01')).toThrow(/neither the draft on disk \(draftsha\)/);
+    const D = afterFinal(f.dir, R);
+    // a later draft packaged over the release build: the replaced draft is history, the one on disk is the draft
+    const pp = join(f.dir, 'video', 'review', 'review.json');
+    writeFileSync(pp, toJson({ ...readJson<object>(pp)!, status: 'private review build', mp4Sha: 'draft2sha' }));
+    expect(() => accept(f, D)).toThrow(/stale or unknown/);
+    expect(accept(f, 'draft2sha').event).toMatchObject({ build: 'draft2sha' });
+  });
+
+  it('an acceptance never approves the release build: approve still needs the checklist and a person', () => {
+    const f = fresh();
+    const D = afterFinal(f.dir, R);
+    const pp = join(f.dir, 'video', 'review', 'review.json');
+    writeFileSync(pp, toJson({ ...readJson<object>(pp)!, checklist: ['watched it', 'captions read'] }));
+    accept(f, D);
+    const o = openOutput(f.topic, f.story, { root: f.root });
+    expect(o.state.status).not.toBe('approved');
+    expect(approvalHolds(events(f), R)).toBe(false);
+    expect(approvalHolds(events(f), R, o.metadata!.title)).toBe(false);
+    expect(() => recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, checked: 1 })).toThrow(
+      /1 of 2 checklist items/,
+    );
+    expect(() =>
+      recordApproved(f.topic, f.story, { root: f.root, by: 'automated: /produce run started by Jon', now, checked: 2 }),
+    ).toThrow(/never by an automated run/);
+    expect(() =>
+      recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'ppppppppppp', visibility: 'public' }),
+    ).toThrow(/not approved/);
+    expect(approvalHolds(events(f), R)).toBe(false);
+    expect(recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, checked: 2 }).event).toMatchObject({
+      build: R,
+    });
+  });
+
+  it('an accepted draft upload never goes public, scheduled or published', () => {
+    const f = fresh();
+    const D = currentBuild(f.dir)!.sha;
+    accept(f, D);
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'ddddddddddd' });
+    expect(approvalHolds(events(f), D)).toBe(true); // the acceptance is a decision on the draft only
+    expect(() => recordPublished(f.topic, f.story, { root: f.root, by: 'Jon', now })).toThrow(/draft/);
+    expect(() =>
+      recordScheduled(f.topic, f.story, { root: f.root, by: 'Jon', now, at: '2026-11-01T00:00:00Z' }),
+    ).toThrow(/draft/);
+    expect(() =>
+      recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'eeeeeeeeeee', visibility: 'public' }),
+    ).toThrow(/draft/);
+    expect(events(f).map((e) => e.type)).toEqual(['approved', 'uploaded']);
   });
 });
 

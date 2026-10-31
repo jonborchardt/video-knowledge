@@ -744,10 +744,13 @@ export function recordApproved(
   }
   // a generic output (blog post, page, post) is approved as its source file: that file's sha stands in for the build
   const generic = flowOf(o.out.kind) === 'generic';
+  if (a.accepted && !a.build)
+    throw new Refusal('accept-draft names the draft build (--build <sha>); nothing is accepted by default');
   const build = a.build ?? o.build?.sha ?? (generic ? 'none' : undefined);
   if (!build) throw new Refusal('nothing to approve: no review package, no source file and no build named');
   const uploaded = o.out.events.findLast((e) => e.type === 'uploaded' && e.build === build);
   const onDisk = o.build?.sha === build ? o.build : null;
+  if (a.accepted) acceptedProblem(o, build, uploaded);
   // `accepted` is `npm run video -- final` naming the draft it accepted; nobody else approves a draft (edge voice)
   if (!a.accepted && (uploaded?.buildStatus === 'draft' || onDisk?.status === 'draft'))
     throw new Refusal(
@@ -768,6 +771,23 @@ export function recordApproved(
   if (uploaded?.id) e.id = uploaded.id;
   if (a.note) e.note = a.note;
   return write(o, e);
+}
+
+/** Refuses a draft acceptance unless `build` is provably a draft: the draft packaged on disk now, or the draft the
+ *  release build on disk replaced (its build report's `replaces`, which is how `video final` names the draft it accepted
+ *  after the release build took its place). A release build is never accepted, so an acceptance never authorises a
+ *  public upload or go-live: every public path refuses a draft build. */
+function acceptedProblem(o: ReturnType<typeof openOutput>, build: string, uploaded?: PublishEvent): void {
+  if ((o.build?.sha === build && o.build.status === 'release') || uploaded?.buildStatus === 'release')
+    throw new Refusal(
+      `build ${build} is the release build; a release build is approved for publication by npm run publish -- approve, never accepted as a draft`,
+    );
+  if (o.build?.sha === build && o.build.status === 'draft') return; // a person accepts the draft on disk
+  const replaces = readJson<BuildSummary>(join(videoDirOf(o), 'build-report.json'))?.replaces;
+  if (o.build?.status === 'release' && replaces?.sha === build && replaces.status === 'draft') return; // final
+  throw new Refusal(
+    `build ${build} is neither the draft on disk (${o.build?.status === 'draft' ? o.build.sha : 'none'}) nor the draft the current build replaced (${replaces?.status === 'draft' ? replaces.sha : 'none'}); a stale or unknown build is not accepted`,
+  );
 }
 
 /** The output's video folder (a Short's own, in its folder). */

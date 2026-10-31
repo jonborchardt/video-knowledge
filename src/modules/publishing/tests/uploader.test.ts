@@ -449,6 +449,18 @@ describe('goLive', () => {
     expect(client.calls.filter((c) => c.method === 'updateVideo')).toHaveLength(1);
   });
 
+  it('an accepted draft upload never goes live: refused before any call', async () => {
+    const f = withMedia(syntheticProduction('packaged'));
+    fixtures.push(f);
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, build: BUILD, accepted: true });
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'ddddddddddd' });
+    const client = fakeClient();
+    await expect(goLive(f.topic, f.story, ctx(f, client))).rejects.toThrow(/draft/);
+    await expect(goLive(f.topic, f.story, ctx(f, client, { at: '2026-10-28T15:00:00.000Z' }))).rejects.toThrow(/draft/);
+    expect(client.calls).toHaveLength(0);
+    expect(events(f).map((e) => e.type)).toEqual(['approved', 'uploaded']);
+  });
+
   it('refuses before an upload even when the local build is approved', async () => {
     const f = fresh();
     recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
