@@ -24,3 +24,6 @@ export {
   topicBoard,
   validationHaltKind,
 } from './production';
+// The runner's read-only view (status.ts): the admin page reads it; the runner itself (runner.ts) spawns processes
+// and is never loaded into an Astro page.
+export { type StatusRow, statusOf } from './run/status';
