@@ -1,13 +1,14 @@
 // The review page's actions, POSTed by its native forms and answered with a redirect back to the page (post, redirect,
 // get). Dev server only (astro.config.mjs injects it when command === 'dev'). Every action names the build the person
 // judged and is refused unless it is still the current one; a POST from any other origin is refused outright, since a
-// web page could otherwise post to localhost and publish. Decisions go through the publish verbs; the long verbs run the
-// CLI as a job (src/modules/website/review-job.ts). What a person may do is reviewView's `can`, the same reasons the page shows.
+// web page could otherwise post to localhost and publish. Decisions run the publish verbs as a child process (`npm run
+// publish -- approve|request-changes`, waited for); the long verbs run the CLI as a job (src/modules/website/review-job.ts). What a person may do is reviewView's `can`, the same reasons the page shows.
 import type { APIRoute } from 'astro';
+import { spawnSync } from 'node:child_process';
+import { join } from 'node:path';
 import { ROOT } from '../shared/io';
 import { approverProblem } from '../shared/approver';
 import { Refusal } from '../shared/refusal';
-import { recordApproved, recordChangesRequested } from '../modules/publishing';
 import { startJob, type ReviewView, parseNotes, reviewView, storyIdOfPath } from '../modules/website';
 import { scriptDir } from '../shared/io';
 import { href } from '../lib/url';
@@ -25,14 +26,28 @@ const CAN: Partial<Record<Action, keyof ReviewView['can']>> = {
   'go-live': 'goLive',
 };
 
+/** `npm run publish -- <args>` in `root`, waited for: the CLI does every check and the ledger write. */
+export const runPublish = (args: string[], root: string) =>
+  spawnSync(
+    process.execPath,
+    [
+      join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs'),
+      join(ROOT, 'src', 'modules', 'publishing', 'cli.ts'),
+      ...args,
+    ],
+    { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true },
+  );
+const PLACE = { seconds: '--at', scene: '--scene', sentence: '--sentence' } as const;
+
 interface Opts {
   root?: string;
   start?: typeof startJob;
+  run?: (args: string[], root: string) => { status: number | null; stdout: string; stderr: string };
 }
 export async function handle(
   req: Request,
   params: { topic?: string; action?: string; path?: string },
-  { root = ROOT, start = startJob }: Opts = {},
+  { root = ROOT, start = startJob, run = runPublish }: Opts = {},
 ): Promise<Response> {
   if (!sameOrigin(req)) return new Response('forbidden: not this server’s page', { status: 403 });
   const { topic = '', action = '', path = '' } = params;
@@ -62,23 +77,30 @@ export async function handle(
       start(scriptDir(topic, storyId, root), label, args, root);
       return back('ok', `${label} started`);
     };
+    // the verb's first line on success; its refusal (exit 2) bare, as the page showed it when the verb ran in process
+    const verb = (args: string[]) => {
+      const r = run(args, root);
+      if (r.status === 0) return back('ok', r.stdout.split('\n')[0].trim());
+      if (r.status === 2) throw new Refusal(r.stderr.trim().replace(/^refused: /, ''));
+      throw new Error(`npm run publish -- ${args[0]} failed (exit ${r.status ?? 'none'}): ${r.stderr.trim()}`);
+    };
     switch (action as Action) {
+      // the build is the current one (refused above otherwise), which is the one the verbs take
       case 'approve':
-        return back(
-          'ok',
-          recordApproved(topic, storyId, { by, root, build: field('build'), checked: form.getAll('check').length })
-            .message,
-        );
+        return verb(['approve', topic, storyId, '--by', by, '--checked', String(form.getAll('check').length)]);
       case 'request-changes':
-        return back(
-          'ok',
-          recordChangesRequested(topic, storyId, {
-            by,
-            root,
-            build: field('build'),
-            notes: parseNotes(field('notes'), view),
-          }).message,
-        );
+        return verb([
+          'request-changes',
+          topic,
+          storyId,
+          '--by',
+          by,
+          ...parseNotes(field('notes'), view).flatMap(({ text, ...at }) => [
+            '--note',
+            text,
+            ...Object.entries(at).flatMap(([k, v]) => [PLACE[k as keyof typeof PLACE], String(v)]),
+          ]),
+        ]);
       case 'accept-draft':
         return job('video final', ['video', 'final', topic, storyId, '--approved-by', by]);
       case 'upload':

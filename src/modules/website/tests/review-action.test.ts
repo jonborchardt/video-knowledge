@@ -26,6 +26,11 @@ const run = async <F extends Fixture>(f: F, body: (f: F) => Promise<void>) => {
     f.cleanup();
   }
 };
+/** A fixture the publishing CLI runs in: a package.json with the repo's name, so its ROOT resolves to the fixture. */
+const cliRoot = <F extends Fixture>(f: F) => {
+  writeFileSync(join(f.root, 'package.json'), JSON.stringify({ name: 'video-knowledge', private: true }));
+  return f;
+};
 const recorder = () => {
   const calls: { label: string; args: string[] }[] = [];
   const start = (_dir: string, label: string, args: string[]) => void calls.push({ label, args });
@@ -62,26 +67,31 @@ describe('review actions', { timeout: 30_000 }, () => {
       expect(loadLedger(f.topic, f.story, f.root)?.outputs.youtube.events ?? []).toEqual([]);
     }));
 
-  it('approve and request changes go through the publish verbs', () =>
-    run(syntheticProduction('packaged', { release: true }), async (f) => {
+  it('approve and request changes go through the publish verbs', { timeout: 60_000 }, () =>
+    run(cliRoot(syntheticProduction('packaged', { release: true })), async (f) => {
       const params = (action: string) => ({ topic: f.topic, action, path: pathOf(f) });
       let res = await handle(
         post('/', { by: 'Jon', build: 'releasesha', notes: '[0:02] slower\nkeep the end' }),
         params('request-changes'),
         { root: f.root },
       );
-      expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/ok=/);
+      expect(decodeURIComponent(res.headers.get('location')!)).toMatch(
+        /ok=recorded changes-requested \(build releasesha\) at \S+ by Jon$/,
+      );
       res = await handle(post('/', { by: 'Jon', build: 'releasesha' }), params('approve'), {
         root: f.root,
       });
-      expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/ok=/);
+      expect(decodeURIComponent(res.headers.get('location')!)).toMatch(
+        /ok=recorded approved \(build releasesha\) at \S+ by Jon$/,
+      );
       const ev = loadLedger(f.topic, f.story, f.root)!.outputs.youtube.events;
       expect(ev.map((e) => e.type)).toEqual(['changes-requested', 'approved']);
       expect(ev[0].notes).toEqual([{ text: 'slower', seconds: 2 }, { text: 'keep the end' }]);
-    }));
+    }),
+  );
 
-  it('approve counts the ticked checklist items', () =>
-    run(syntheticProduction('packaged', { release: true }), async (f) => {
+  it('approve counts the ticked checklist items', { timeout: 60_000 }, () =>
+    run(cliRoot(syntheticProduction('packaged', { release: true })), async (f) => {
       const rp = join(f.dir, 'video', 'review', 'review.json');
       writeFileSync(rp, JSON.stringify({ ...JSON.parse(readFileSync(rp, 'utf8')), checklist: ['a', 'b'] }));
       const params = { topic: f.topic, action: 'approve', path: pathOf(f) };
@@ -94,6 +104,71 @@ describe('review actions', { timeout: 30_000 }, () => {
       expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/error=.*checklist/);
       res = await handle(post('/', [...one, ['check', '1']]), params, { root: f.root });
       expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/ok=/);
+    }),
+  );
+
+  it('a refused verb (a checklist count short) shows its bare message and writes nothing', { timeout: 60_000 }, () =>
+    run(cliRoot(syntheticProduction('packaged', { release: true })), async (f) => {
+      const rp = join(f.dir, 'video', 'review', 'review.json');
+      writeFileSync(rp, JSON.stringify({ ...JSON.parse(readFileSync(rp, 'utf8')), checklist: ['a', 'b'] }));
+      const params = { topic: f.topic, action: 'approve', path: pathOf(f) };
+      const res = await handle(
+        post('/', [
+          ['by', 'Jon'],
+          ['build', 'releasesha'],
+          ['check', '0'],
+        ]),
+        params,
+        {
+          root: f.root,
+        },
+      );
+      const error = new URL(res.headers.get('location')!, ORIGIN).searchParams.get('error');
+      expect(error).toBe(
+        '1 of 2 checklist items ticked; every one is needed to approve (tick them on the review page, or pass --checked 2 after going through video/review/checklist.md)',
+      );
+      expect(loadLedger(f.topic, f.story, f.root)?.outputs.youtube.events ?? []).toEqual([]);
+    }),
+  );
+
+  it('the decisions run the publish CLI with these arguments, a placed note as --note then its places', () =>
+    run(syntheticProduction('packaged', { release: true }), async (f) => {
+      const calls: string[][] = [];
+      const fake = (args: string[]) => (calls.push(args), { status: 0, stdout: 'recorded it\n{}\n', stderr: '' });
+      const params = (action: string) => ({ topic: f.topic, action, path: pathOf(f) });
+      const o = { root: f.root, run: fake };
+      const res = await handle(
+        post('/', { by: 'Jon', build: 'releasesha', notes: '[1:05] slower\nkeep the end' }),
+        params('request-changes'),
+        o,
+      );
+      expect(new URL(res.headers.get('location')!, ORIGIN).searchParams.get('ok')).toBe('recorded it');
+      await handle(
+        post('/', [
+          ['by', 'Jon'],
+          ['build', 'releasesha'],
+          ['check', '0'],
+          ['check', '1'],
+        ]),
+        params('approve'),
+        o,
+      );
+      expect(calls).toEqual([
+        [
+          'request-changes',
+          f.topic,
+          f.story,
+          '--by',
+          'Jon',
+          '--note',
+          'slower',
+          '--at',
+          '65',
+          '--note',
+          'keep the end',
+        ],
+        ['approve', f.topic, f.story, '--by', 'Jon', '--checked', '2'],
+      ]);
     }));
 
   it('go-live needs the confirmation and a person', () =>
