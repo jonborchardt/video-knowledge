@@ -7,7 +7,7 @@ description: Drive one story from ready to a private review package (the board's
 
 The board is the state machine; you are the loop. `npm run board -- next <topic> <story> --json`
 says where the story is and what moves it on; you do that and ask again. All judgment lives in the
-briefs (`scripts/briefs/`) and the fresh agents you hand them to; all bookkeeping lives in the CLIs.
+briefs (`src/modules/<module>/briefs/`) and the fresh agents you hand them to; all bookkeeping lives in the CLIs.
 A run interrupted halfway resumes by pasting the same prompt.
 
 ## Arguments

@@ -1038,3 +1038,23 @@ describe('the owner gate', () => {
     }
   });
 });
+
+describe('the prompts name the briefs where they live', () => {
+  it('a settle step and a brief hint point at src/modules/<module>/briefs, never a folder that is gone', () => {
+    const settle = stepsOf('settle in story-review.json: is X one story or two', 'demo');
+    expect(settle).toHaveLength(1);
+    expect(settle[0].kind).toBe('prompt');
+    expect(settle[0].text.split('\n')[0]).toBe('Read src/modules/stories/briefs/stories.md and follow it.');
+    const hint = stepsOf('3/5 candidates reviewed (src/modules/stories/briefs/stories.md)', 'demo');
+    expect(hint.map((x) => x.kind)).toEqual(['do', 'prompt']);
+    expect(hint[1].text).toContain('Read src/modules/stories/briefs/stories.md and follow it.');
+    const agent = stepsOf(
+      'agent: src/modules/script/briefs/script-review.md (re-review) -> script-review.json',
+      'demo',
+      'd:1',
+    );
+    expect(agent[0].text).toContain('Read src/modules/script/briefs/script-review.md and follow it.');
+    expect(agent[0].text).toContain('You did not write this script; review it independently.');
+    for (const step of [...settle, ...hint, ...agent]) expect(step.text).not.toContain('scripts/briefs');
+  });
+});
