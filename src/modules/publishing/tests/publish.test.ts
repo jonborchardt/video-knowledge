@@ -1336,6 +1336,76 @@ describe('npm run publish -- accept-draft (the CLI)', () => {
   });
 });
 
+describe('npm run publish -- request-changes (the CLI)', { timeout: 60_000 }, () => {
+  const fixtures: Fixture[] = [];
+  afterAll(() => fixtures.forEach((f) => f.cleanup()));
+  const fresh = () => {
+    const f = syntheticProduction('packaged', { release: true });
+    fixtures.push(f);
+    writeFileSync(join(f.root, 'package.json'), JSON.stringify({ name: 'video-knowledge', private: true }));
+    return f;
+  };
+  const cli = (f: Fixture, ...args: string[]) =>
+    spawnSync(
+      process.execPath,
+      [
+        join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs'),
+        join(ROOT, 'src', 'modules', 'publishing', 'cli.ts'),
+        'request-changes',
+        f.topic,
+        f.story,
+        ...args,
+      ],
+      { cwd: f.root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
+    );
+
+  it('--at, --scene and --sentence place the --note before them, in order', () => {
+    const f = fresh();
+    const r = cli(
+      f,
+      '--by',
+      'Jon',
+      '--note',
+      'slower',
+      '--at',
+      '2',
+      '--note',
+      'cut',
+      '--scene',
+      'sc3',
+      '--sentence',
+      's7',
+      '--at',
+      '41',
+      '--note',
+      'keep the end',
+    );
+    expect([r.status, r.stderr]).toEqual([0, '']);
+    expect(r.stdout).toMatch(/^recorded changes-requested \(build releasesha\)/);
+    const notes = loadLedger(f.topic, f.story, f.root)!.outputs.youtube.events[0].notes;
+    expect(notes).toEqual([
+      { text: 'slower', seconds: 2 },
+      { text: 'cut', scene: 'sc3', sentence: 's7', seconds: 41 },
+      { text: 'keep the end' },
+    ]);
+    expect(Object.keys(notes![1])).toEqual(['text', 'scene', 'sentence', 'seconds']); // argv order, as the page sends it
+  });
+
+  it('refuses a placement before any --note, an unknown flag or a bad time, writing nothing', () => {
+    const f = fresh();
+    for (const [args, why] of [
+      [['--at', '2', '--note', 'x'], /^refused: --at places a note: put it after its --note/],
+      [['--note', 'x', '--colour', 'red'], /^refused: request-changes does not take --colour/],
+      [['--note', 'x', '--at', 'soon'], /^refused: --at needs the note's time in seconds, not soon/],
+    ] as const) {
+      const r = cli(f, '--by', 'Jon', ...args);
+      expect(r.status).toBe(2);
+      expect(r.stderr).toMatch(why);
+    }
+    expect(existsSync(publishPath(f.topic, f.story, f.root))).toBe(false);
+  });
+});
+
 describe('verification events', () => {
   const now = new Date('2026-10-27T00:00:00Z');
   const fixtures: Fixture[] = [];

@@ -6,8 +6,8 @@
 //   accept-draft <topic> <story-id> --by <name> --build <sha> [--note <text>] [--output <id>] [--dry-run]
 //                                                             record that <name> accepted the draft build <sha> (what `npm run video -- final` records; a draft acceptance is never a publication approval and never lets go-live pass)
 //   thumbnail <topic> <story-id> <file>                       use this PNG/JPEG (under the script directory, e.g. video/publish/) as the output's thumbnail
-//   request-changes <topic> <story-id> --by <name> --note <text> [--note <text> ...]
-//                                                             send the current build back; a note may start [m:ss sc20 s31]
+//   request-changes <topic> <story-id> --by <name> --note <text> [--at <seconds>] [--scene <id>] [--sentence <id>] [--note ...]
+//                                                             send the current build back; --at, --scene and --sentence place the note before them
 //   scheduled <topic> <story-id> --at <ISO> [--by <name>]     the approved upload is scheduled on YouTube for that time
 //   published <topic> <story-id> [--url <u>] [--by <name>]    the approved or scheduled upload is live
 //   updated <topic> <story-id> --fields a,b [--by <name>]     title, description, tags or thumbnail were updated on YouTube to the current metadata
@@ -34,6 +34,7 @@ import { join } from 'node:path';
 import { ROOT, toJson } from '../../shared/io';
 import { Refusal } from '../../shared/refusal';
 import {
+  type ReviewNote,
   type VerbResult,
   type Visibility,
   acceptDraftProblem,
@@ -86,6 +87,8 @@ const VALUED = [
   '--source',
   '--checked',
   '--build',
+  '--scene',
+  '--sentence',
 ];
 const positional = rest.filter((a, i) => !a.startsWith('--') && !VALUED.includes(rest[i - 1]));
 const usage = () => {
@@ -117,6 +120,28 @@ const need = (name: string) => {
 const output = flag('--output') ?? (shortArg ? `short:${shortArg.slug}` : undefined);
 const common = () => ({ output, by: by() });
 const api = () => ({ ...common(), client: youtubeClient(loadCredentials()) });
+
+/** request-changes' notes in order: each `--note <text>`, placed by the `--at <seconds>`, `--scene <id>` and
+ *  `--sentence <id>` that follow it (the review page's [m:ss sc20 s31], already resolved). */
+function placedNotes(args: string[]): ReviewNote[] {
+  const notes: ReviewNote[] = [];
+  for (let i = 0; i < args.length; i += 2) {
+    const [name, value] = [args[i], args[i + 1]];
+    if (name === '--by' || name === '--output') continue;
+    if (value === undefined) throw new Refusal(`${name} needs a value`);
+    if (name === '--note') notes.push({ text: value });
+    else if (name !== '--at' && name !== '--scene' && name !== '--sentence')
+      throw new Refusal(`request-changes does not take ${name}`);
+    else if (!notes.length) throw new Refusal(`${name} places a note: put it after its --note`);
+    else if (name === '--at') {
+      const seconds = Number(value);
+      if (value.trim() === '' || !Number.isFinite(seconds) || seconds < 0)
+        throw new Refusal(`--at needs the note's time in seconds, not ${value}`);
+      notes[notes.length - 1].seconds = seconds;
+    } else notes[notes.length - 1][name === '--scene' ? 'scene' : 'sentence'] = value;
+  }
+  return notes;
+}
 
 function show() {
   const dir = scriptDir(topic, storyId);
@@ -190,7 +215,7 @@ async function main() {
       break;
     }
     case 'request-changes': {
-      const notes = rest.flatMap((x, i) => (rest[i - 1] === '--note' ? [{ text: x }] : []));
+      const notes = placedNotes(rest);
       const build = openOutput(topic, storyId, { output }).build?.sha ?? '';
       r = recordChangesRequested(topic, storyId, { output, by: flag('--by') ?? '', build, notes });
       break;
