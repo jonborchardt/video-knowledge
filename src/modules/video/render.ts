@@ -7,6 +7,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { bundle } from '@remotion/bundler';
 import { openBrowser, renderMedia, renderStill, selectComposition } from '@remotion/renderer';
+import ts from 'typescript';
 import { ROOT, sha } from '../../shared/io';
 import { stageBrand } from './brand';
 import { brandKey } from '../../shared/look';
@@ -30,11 +31,58 @@ const SHARED = [
 const SHARED_LIB = ['types.ts', 'words.ts'];
 
 const resolve = (f: string) => [f + '.ts', f + '.tsx'].find((x) => existsSync(x)) ?? null;
-/** Relative imports of a module, resolved to files; `values` skips `import type` (types never change pixels). */
-const importsOf = (file: string, values = false): string[] =>
-  [...readFileSync(file, 'utf8').matchAll(/^(?:import|export) ([^;]*?)from '(\.\.?\/[^']+)'/gms)]
-    .filter((m) => !values || !m[1].startsWith('type '))
-    .map((m) => resolve(join(dirname(file), m[2])))
+const parse = (file: string, text: string) => ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true);
+/** An import or export-from statement that names only types (`import type ...`, `import { type A, type B }`,
+ *  `export type { ... } from`, `export { type A } from`): erased at compile time, so it never changes pixels. */
+function typeOnly(node: ts.Node): boolean {
+  const allTypes = (els: readonly (ts.ImportSpecifier | ts.ExportSpecifier)[]) =>
+    els.length > 0 && els.every((e) => e.isTypeOnly);
+  if (ts.isImportDeclaration(node)) {
+    const c = node.importClause;
+    if (!c) return false; // a side-effect import runs
+    if (c.isTypeOnly) return true;
+    return !c.name && !!c.namedBindings && ts.isNamedImports(c.namedBindings) && allTypes(c.namedBindings.elements);
+  }
+  if (ts.isExportDeclaration(node) && node.moduleSpecifier) {
+    if (node.isTypeOnly) return true;
+    return !!node.exportClause && ts.isNamedExports(node.exportClause) && allTypes(node.exportClause.elements);
+  }
+  return false;
+}
+/** The specifiers a module depends on at run time, in source order: static and side-effect imports, re-exports
+ *  (`export * from` included), `import x = require()`, and `import()` / `require()` of a string; type-only
+ *  statements are skipped (types never change pixels). */
+export function runtimeSpecifiers(file: string, text: string): string[] {
+  const out: string[] = [];
+  const visit = (node: ts.Node): void => {
+    if ((ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) && node.moduleSpecifier) {
+      if (ts.isStringLiteral(node.moduleSpecifier) && !typeOnly(node)) out.push(node.moduleSpecifier.text);
+    } else if (
+      ts.isImportEqualsDeclaration(node) &&
+      !node.isTypeOnly &&
+      ts.isExternalModuleReference(node.moduleReference) &&
+      ts.isStringLiteral(node.moduleReference.expression)
+    ) {
+      out.push(node.moduleReference.expression.text);
+    } else if (
+      ts.isCallExpression(node) &&
+      (node.expression.kind === ts.SyntaxKind.ImportKeyword ||
+        (ts.isIdentifier(node.expression) && node.expression.text === 'require')) &&
+      node.arguments[0] &&
+      ts.isStringLiteralLike(node.arguments[0])
+    ) {
+      out.push(node.arguments[0].text);
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(parse(file, text));
+  return out;
+}
+/** A module's relative runtime dependencies, resolved to files. */
+const importsOf = (file: string): string[] =>
+  runtimeSpecifiers(file, readFileSync(file, 'utf8'))
+    .filter((s) => s.startsWith('./') || s.startsWith('../'))
+    .map((s) => resolve(join(dirname(file), s)))
     .filter((f): f is string => f !== null);
 /** Every module reachable from `entries` by value imports, the entries included. */
 export function deepImports(entries: string[]): Set<string> {
@@ -43,7 +91,7 @@ export function deepImports(entries: string[]): Set<string> {
     const f = stack.pop()!;
     if (seen.has(f)) continue;
     seen.add(f);
-    stack.push(...importsOf(f, true));
+    stack.push(...importsOf(f));
   }
   return seen;
 }
@@ -54,16 +102,24 @@ export function deepImports(entries: string[]): Set<string> {
 export function rendererVersion(kind: TimelineScene['kind']): string {
   return componentVersion(ALL_KINDS[kind].component);
 }
-/** A source as it draws: CRLF -> LF and every `import type { ... } from '...';` or `export type { ... } from '...';`
- *  statement removed (types never change pixels), so moving the tree or a type's home never moves a key. */
-export const normalise = (text: string) =>
-  text.replace(/\r\n?/g, '\n').replace(/^(?:import|export) type \{[^}]*\} from '[^']*';[ \t]*\n?/gm, '');
+/** A source as it draws: CRLF -> LF and every type-only import or export-from statement (the ones the scanner
+ *  skips) removed with the rest of its line, so moving the tree or a type's home never moves a key. */
+export function normalise(text: string): string {
+  const lf = text.replace(/\r\n?/g, '\n');
+  let out = '';
+  let at = 0;
+  for (const n of parse('x.tsx', lf).statements.filter(typeOnly)) {
+    out += lf.slice(at, n.getStart());
+    at = n.end + /^[ \t]*\n?/.exec(lf.slice(n.end))![0].length;
+  }
+  return out + lf.slice(at);
+}
 
 /** The code that draws one component: the shared Remotion files, its file and its value-import closure, each
  *  normalised (a file reached only through `import type` contributes nothing). Pure over the two directories. */
 export function componentVersionIn(remotionDir: string, srcDir: string, name: string): string {
   const component = join(remotionDir, 'scenes', `${name}.tsx`);
-  const direct = importsOf(component, true);
+  const direct = importsOf(component);
   const deep = deepImports(direct);
   const files = [
     ...SHARED.map((f) => join(remotionDir, f)),

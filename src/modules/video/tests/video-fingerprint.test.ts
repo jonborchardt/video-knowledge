@@ -91,3 +91,49 @@ describe('componentVersion', () => {
     expect(tree(fresh(), { video: 'export const Video = 2;\n' })).not.toBe(k);
   });
 });
+
+/** The fixture tree with component X replaced by `x` and the scene files `files` (name -> source, beside X). */
+function custom(x: string, files: Record<string, string>): string {
+  const root = fresh();
+  tree(root);
+  const scenes = join(root, 'remotion', 'scenes');
+  put(join(scenes, 'X.tsx'), x);
+  for (const [f, text] of Object.entries(files)) put(join(scenes, f), text);
+  return componentVersionIn(join(root, 'remotion'), root, 'X');
+}
+const v1 = 'export const a = 1;\nexport type A = number;\n';
+const v2 = 'export const a = 2;\nexport type A = number;\n';
+/** The key moves when `dep` (imported by `x`) is edited. */
+const follows = (x: string, dep: string) => custom(x, { [dep]: v1 }) !== custom(x, { [dep]: v2 });
+
+describe('componentVersion: the runtime dependency forms (AST)', () => {
+  it("follows a side-effect import: import './fx'", () => {
+    expect(follows("import './fx';\nexport const X = 1;\n", 'fx.ts')).toBe(true);
+  });
+  it("follows re-exports: export * from './star' and export { a } from './named'", () => {
+    expect(follows("export * from './star';\nexport const X = 1;\n", 'star.ts')).toBe(true);
+    expect(follows("export { a } from './named';\nexport const X = 1;\n", 'named.ts')).toBe(true);
+  });
+  it("follows a dynamic import: import('./lazy')", () => {
+    expect(follows("export const X = () => import('./lazy');\n", 'lazy.ts')).toBe(true);
+  });
+  it("follows a mixed import: import { type A, a } from './mixed'", () => {
+    expect(follows("import { type A, a } from './mixed';\nexport const X = (n: A) => a + n;\n", 'mixed.ts')).toBe(true);
+  });
+  it('follows a double-quoted specifier: import { a } from "./dq"', () => {
+    expect(follows('import { a } from "./dq";\nexport const X = a;\n', 'dq.ts')).toBe(true);
+  });
+  it("ignores import { type A } from './t' and import type A from './t': editing or moving the type's file", () => {
+    for (const imp of ["import { type A } from './t';", "import type A from './t';"]) {
+      const x = (from: string) => `${imp.replace('./t', from)}\nexport const X = (n: A) => n;\n`;
+      const k = custom(x('./t'), { 't.ts': v1 });
+      expect(custom(x('./t'), { 't.ts': v2 })).toBe(k);
+      expect(custom(x('../moved/t'), { '../moved/t.ts': v1 })).toBe(k);
+    }
+  });
+  it('normalise drops an import whose bindings are all types and a default type import, keeps a side-effect import', () => {
+    const src =
+      "import { type A, type B } from './a';\nimport type C from './c';\nimport './fx';\nexport { type D } from './d';\n";
+    expect(normalise(src)).toBe("import './fx';\n");
+  });
+});
