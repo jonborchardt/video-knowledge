@@ -773,6 +773,27 @@ export function recordApproved(
   return write(o, e);
 }
 
+/** Why `npm run publish -- accept-draft` refuses before recording, or null: the `--by` name, the `--build` sha (the mp4
+ *  sha as review.json records it), then, once the output is open, an output already approved for publication (live,
+ *  scheduled, or its release build on disk approved). `o` is null when only the arguments are checked. */
+export function acceptDraftProblem(by: string, build: string, o: ReturnType<typeof openOutput> | null): string | null {
+  const problem = approverProblem(by);
+  if (problem) return problem.replace('--approved-by', '--by');
+  if (!/^[0-9a-f]{6,64}$/.test(build))
+    return `--build needs the draft's mp4 sha as review.json records it${build ? `, not ${build}` : ''}`;
+  if (!o) return null;
+  const why = o.state.live
+    ? 'it is live'
+    : o.state.status === 'scheduled'
+      ? 'it is scheduled'
+      : o.build?.status === 'release' && approvalHolds(o.out.events, o.build.sha, o.metadata?.title ?? null)
+        ? `the release build ${o.build.sha} is approved`
+        : null;
+  return why
+    ? `${o.id} is already approved for publication (${why}); a draft acceptance after that is meaningless`
+    : null;
+}
+
 /** Refuses a draft acceptance unless `build` is provably a draft: the draft packaged on disk now, or the draft the
  *  release build on disk replaced (its build report's `replaces`, which is how `video final` names the draft it accepted
  *  after the release build took its place). A release build is never accepted, so an acceptance never authorises a

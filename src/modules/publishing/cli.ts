@@ -33,12 +33,11 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT, toJson } from '../../shared/io';
 import { Refusal } from '../../shared/refusal';
-import { approverProblem } from '../../shared/approver';
 import {
   type VerbResult,
   type Visibility,
+  acceptDraftProblem,
   addOutputTo,
-  approvalHolds,
   currentBuild,
   loadLedger,
   emptyLedger,
@@ -180,25 +179,12 @@ async function main() {
     }
     case 'accept-draft': {
       const by = flag('--by') ?? '';
-      const problem = approverProblem(by);
-      if (problem) throw new Refusal(problem.replace('--approved-by', '--by'));
       const build = flag('--build') ?? '';
-      if (!/^[0-9a-f]{6,64}$/.test(build))
-        throw new Refusal(
-          `--build needs the draft's mp4 sha as review.json records it${build ? `, not ${build}` : ''}`,
-        );
+      const p1 = acceptDraftProblem(by, build, null);
+      if (p1) throw new Refusal(p1);
       const o = openOutput(topic, storyId, { output });
-      const why = o.state.live
-        ? 'it is live'
-        : o.state.status === 'scheduled'
-          ? 'it is scheduled'
-          : o.build?.status === 'release' && approvalHolds(o.out.events, o.build.sha, o.metadata?.title ?? null)
-            ? `the release build ${o.build.sha} is approved`
-            : null;
-      if (why)
-        throw new Refusal(
-          `${o.id} is already approved for publication (${why}); a draft acceptance after that is meaningless`,
-        );
+      const p2 = acceptDraftProblem(by, build, o);
+      if (p2) throw new Refusal(p2);
       r = recordApproved(topic, storyId, { output, by, build, accepted: true, note: flag('--note') });
       break;
     }

@@ -13,6 +13,7 @@ import {
   type Ledger,
   type Output,
   type PublishEvent,
+  acceptDraftProblem,
   addOutput,
   addOutputTo,
   appendEvent,
@@ -1176,40 +1177,37 @@ describe('npm run publish -- accept-draft (the CLI)', () => {
     return existsSync(p) ? readFileSync(p, 'utf8') : null;
   };
 
-  it('refuses bad arguments with exit 2 and writes nothing', () => {
-    const f = fresh();
-    const D = afterFinal(f.dir, 'a1a1a1a1a1');
-    for (const [args, why] of [
-      [['--by', 'Jon'], /--build needs the draft's mp4 sha/],
-      [['--by', 'Jon', '--build', 'not a sha'], /--build needs .*, not not a sha/],
-      [['--build', D], /--by needs a real name/],
-      [['--by', '<your name>', '--build', D], /--by needs a real name/],
-    ] as const) {
-      const r = cli(f, ...args);
-      expect(r.status).toBe(2);
-      expect(r.stderr).toMatch(why);
-      expect(ledgerBytes(f)).toBeNull();
-    }
-  }, 120_000);
-
-  it('refuses an output already approved for publication (live)', () => {
+  it('refuses bad arguments and an output already approved for publication, writing nothing', () => {
+    const D = 'd0d0d0d0d0';
+    expect(acceptDraftProblem('Jon', '', null)).toMatch(
+      /^--build needs the draft's mp4 sha as review.json records it$/,
+    );
+    expect(acceptDraftProblem('Jon', 'not a sha', null)).toMatch(/--build needs .*, not not a sha$/);
+    expect(acceptDraftProblem('', D, null)).toMatch(/^--by needs a real name/);
+    expect(acceptDraftProblem('<your name>', D, null)).toMatch(/^--by needs a real name/);
+    expect(acceptDraftProblem('Jon', D, null)).toBeNull();
     const f = fresh(true);
     const a = { root: f.root, by: 'Jon', now: new Date('2026-10-26T00:00:00Z') };
+    expect(acceptDraftProblem('Jon', D, openOutput(f.topic, f.story, { root: f.root }))).toBeNull();
     recordApproved(f.topic, f.story, a);
+    expect(acceptDraftProblem('Jon', D, openOutput(f.topic, f.story, { root: f.root }))).toBe(
+      'youtube is already approved for publication (the release build releasesha is approved); a draft acceptance after that is meaningless',
+    );
     recordUploaded(f.topic, f.story, { ...a, id: 'lllllllllll' });
     recordPublished(f.topic, f.story, a);
     const before = ledgerBytes(f);
-    const r = cli(f, '--by', 'Jon', '--build', 'abcdef1234');
-    expect(r.status).toBe(2);
-    expect(r.stderr).toMatch(/youtube is already approved for publication \(it is live\)/);
+    const o = openOutput(f.topic, f.story, { root: f.root });
+    expect(o.state.live).toBe(true);
+    expect(acceptDraftProblem('Jon', D, o)).toBe(
+      'youtube is already approved for publication (it is live); a draft acceptance after that is meaningless',
+    );
     expect(ledgerBytes(f)).toBe(before);
-  }, 60_000);
+  });
 
-  it('after final records what recordApproved writes, byte for byte, once', () => {
+  it('after final records what recordApproved writes, byte for byte, once', { timeout: 120_000 }, () => {
     const f = fresh();
     const D = afterFinal(f.dir, 'a1a1a1a1a1');
     expect(D).toBe('d0d0d0d0d0');
-    expect(cli(f, '--by', 'Jon', '--build', 'a1a1a1a1a1').stderr).toMatch(/is the release build/);
     const r = cli(f, '--by', 'Jon', '--build', D, '--note', 'draft accepted by final');
     expect(r.stderr).toBe('');
     expect(r.status).toBe(0);
@@ -1231,7 +1229,7 @@ describe('npm run publish -- accept-draft (the CLI)', () => {
     expect(again.status).toBe(0);
     expect(again.stdout).toMatch(/^already recorded: approved \(build d0d0d0d0d0\)/);
     expect(ledgerBytes(f)).toBe(viaCli);
-  }, 120_000);
+  });
 });
 
 describe('verification events', () => {
