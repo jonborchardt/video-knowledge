@@ -25,7 +25,7 @@ describe('final records the acceptance through publish accept-draft', () => {
         calls.push(a);
         return spawnSync(...a);
       }) as typeof spawnSync;
-      acceptDraftViaCli(fx.topic, fx.story, 'Jon', D, fx.root, spy);
+      acceptDraftViaCli(fx.topic, fx.story, 'Jon', D, fx.root, false, spy);
       expect(calls).toHaveLength(1);
       const [cmd, args, opts] = calls[0] as [string, string[], Record<string, unknown>];
       expect(cmd).toBe(process.execPath);
@@ -62,4 +62,33 @@ describe('final records the acceptance through publish accept-draft', () => {
       fx.cleanup();
     }
   }, 120_000);
+
+  it('the dry run final makes before narration adds --dry-run, and its refusal stops final', () => {
+    const calls: string[][] = [];
+    const refuse = ((_cmd: string, args: string[]) => {
+      calls.push(args);
+      return {
+        status: 2,
+        stdout: '',
+        stderr: 'refused: youtube is already approved for publication (it is scheduled)\n',
+      };
+    }) as unknown as typeof spawnSync;
+    expect(() => acceptDraftViaCli('t', 's', 'Jon', 'd0d0d0d0d0', ROOT, true, refuse)).toThrow(
+      'accept-draft refused: refused: youtube is already approved for publication (it is scheduled)',
+    );
+    expect(calls[0].slice(2)).toEqual([
+      'accept-draft',
+      't',
+      's',
+      '--by',
+      'Jon',
+      '--build',
+      'd0d0d0d0d0',
+      '--note',
+      'draft accepted by final',
+      '--dry-run',
+    ]);
+    const pass = (() => ({ status: 0, stdout: '', stderr: '' })) as unknown as typeof spawnSync;
+    expect(() => acceptDraftViaCli('t', 's', 'Jon', 'd0d0d0d0d0', ROOT, true, pass)).not.toThrow();
+  });
 });

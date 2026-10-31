@@ -3,7 +3,7 @@
 //   uploaded <topic> <story-id> --id <youtube id> [--url <u>] [--visibility private|unlisted|public] [--captions] [--by <name>]
 //                                                             record an upload of the packaged build (public needs a prior approve; it also records published; --captions: the package's captions went up with it)
 //   approve <topic> <story-id> --by <name> --checked <n> [--note <text>]  approve the uploaded build, or the release build on disk, with n checklist items ticked (a draft is accepted by video final)
-//   accept-draft <topic> <story-id> --by <name> --build <sha> [--note <text>]
+//   accept-draft <topic> <story-id> --by <name> --build <sha> [--note <text>] [--output <id>] [--dry-run]
 //                                                             record that <name> accepted the draft build <sha> (what `npm run video -- final` records; a draft acceptance is never a publication approval and never lets go-live pass)
 //   thumbnail <topic> <story-id> <file>                       use this PNG/JPEG (under the script directory, e.g. video/publish/) as the output's thumbnail
 //   request-changes <topic> <story-id> --by <name> --note <text> [--note <text> ...]
@@ -185,6 +185,7 @@ async function main() {
       const o = openOutput(topic, storyId, { output });
       const p2 = acceptDraftProblem(by, build, o);
       if (p2) throw new Refusal(p2);
+      if (has('--dry-run')) break; // the checks only: exit 0, nothing printed, nothing written
       r = recordApproved(topic, storyId, { output, by, build, accepted: true, note: flag('--note') });
       break;
     }

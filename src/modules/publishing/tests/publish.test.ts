@@ -1270,6 +1270,9 @@ describe('npm run publish -- accept-draft (the CLI)', () => {
     expect(acceptDraftProblem('', D, null)).toMatch(/^--by needs a real name/);
     expect(acceptDraftProblem('<your name>', D, null)).toMatch(/^--by needs a real name/);
     expect(acceptDraftProblem('Jon', D, null)).toBeNull();
+    expect(acceptDraftProblem('automated: /produce run started by Jon', D, null)).toBe(
+      'a draft is accepted by a person; an automated run never records an acceptance',
+    );
     const f = fresh(true);
     const a = { root: f.root, by: 'Jon', now: new Date('2026-10-26T00:00:00Z') };
     expect(acceptDraftProblem('Jon', D, openOutput(f.topic, f.story, { root: f.root }))).toBeNull();
@@ -1288,10 +1291,27 @@ describe('npm run publish -- accept-draft (the CLI)', () => {
     expect(ledgerBytes(f)).toBe(before);
   });
 
+  it('refuses a scheduled output', () => {
+    const f = fresh(true);
+    const a = { root: f.root, by: 'Jon', now: new Date('2026-10-26T00:00:00Z') };
+    recordApproved(f.topic, f.story, a);
+    recordUploaded(f.topic, f.story, { ...a, id: 'lllllllllll' });
+    recordScheduled(f.topic, f.story, { ...a, at: '2026-11-01T00:00:00Z' });
+    const o = openOutput(f.topic, f.story, { root: f.root });
+    expect(o.state.status).toBe('scheduled');
+    expect(acceptDraftProblem('Jon', 'd0d0d0d0d0', o)).toBe(
+      'youtube is already approved for publication (it is scheduled); a draft acceptance after that is meaningless',
+    );
+  });
+
   it('after final records what recordApproved writes, byte for byte, once', { timeout: 120_000 }, () => {
     const f = fresh();
     const D = afterFinal(f.dir, 'a1a1a1a1a1');
     expect(D).toBe('d0d0d0d0d0');
+    // the dry run final makes before narration: exit 0, nothing printed, nothing written
+    const dry = cli(f, '--by', 'Jon', '--build', D, '--note', 'draft accepted by final', '--dry-run');
+    expect([dry.status, dry.stdout, dry.stderr]).toEqual([0, '', '']);
+    expect(ledgerBytes(f)).toBeNull();
     const r = cli(f, '--by', 'Jon', '--build', D, '--note', 'draft accepted by final');
     expect(r.stderr).toBe('');
     expect(r.status).toBe(0);

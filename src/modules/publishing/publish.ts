@@ -774,12 +774,15 @@ export function recordApproved(
   return write(o, e);
 }
 
-/** Why `npm run publish -- accept-draft` refuses before recording, or null: the `--by` name, the `--build` sha (the mp4
+/** Why `npm run publish -- accept-draft` refuses before recording, or null: the `--by` name (a person, never
+ *  `automated:`), the `--build` sha (the mp4
  *  sha as review.json records it), then, once the output is open, an output already approved for publication (live,
  *  scheduled, or its release build on disk approved). `o` is null when only the arguments are checked. */
 export function acceptDraftProblem(by: string, build: string, o: ReturnType<typeof openOutput> | null): string | null {
   const problem = approverProblem(by);
   if (problem) return problem.replace('--approved-by', '--by');
+  if (by.trim().startsWith('automated:'))
+    return 'a draft is accepted by a person; an automated run never records an acceptance';
   if (!/^[0-9a-f]{6,64}$/.test(build))
     return `--build needs the draft's mp4 sha as review.json records it${build ? `, not ${build}` : ''}`;
   if (!o) return null;

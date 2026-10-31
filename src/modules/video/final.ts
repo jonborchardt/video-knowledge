@@ -52,14 +52,16 @@ export function finalRefusal(topic: string, storyId: string, root: string, ask: 
 }
 
 /** `final` records that `by` accepted the draft `draftSha` through publishing's own CLI (`npm run publish --
- *  accept-draft`), never by importing it: run in `root` with the repo's tsx. Exit 0 prints nothing; any other exit
- *  throws `accept-draft failed: <stderr>`. */
+ *  accept-draft`), never by importing it: run in `root` with the repo's tsx. With `dryRun` it only asks whether the
+ *  acceptance would be refused (`--dry-run`: nothing written), before anything is rendered. Exit 0 prints nothing; any
+ *  other exit throws `accept-draft refused: <stderr>` (dry run) or `accept-draft failed: <stderr>`. */
 export function acceptDraftViaCli(
   topic: string,
   storyId: string,
   by: string,
   draftSha: string,
   root: string,
+  dryRun = false,
   spawn = spawnSync,
 ): void {
   const r = spawn(
@@ -76,9 +78,12 @@ export function acceptDraftViaCli(
       draftSha,
       '--note',
       'draft accepted by final',
+      ...(dryRun ? ['--dry-run'] : []),
     ],
     { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
   );
   if (r.status !== 0)
-    throw new Error(`accept-draft failed: ${(String(r.stderr ?? '') || (r.error?.message ?? '')).trim()}`);
+    throw new Error(
+      `accept-draft ${dryRun ? 'refused' : 'failed'}: ${(String(r.stderr ?? '') || (r.error?.message ?? '')).trim()}`,
+    );
 }

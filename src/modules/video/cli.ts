@@ -335,7 +335,11 @@ try {
       if (problem) throw new Error(problem);
       const refusal = finalRefusal(topic, storyId, ROOT); // the board, asked through its CLI
       if (refusal) throw new Error(refusal);
-      const draft = currentBuild(scriptDir(topic, storyId)); // the build this run accepts, before the release build replaces it
+      const draft = packaged(); // the build this run accepts, before the release build replaces it
+      // only a draft voice is accepted (a draft-labelled Azure build with uncleared music has nothing to accept)
+      const accepts = draft?.status === 'draft' && !draft.narrationPublishable;
+      // asked before the paid render: an output already approved for publication refuses the acceptance
+      if (accepts) acceptDraftViaCli(topic, storyId, flag('--approved-by')!, draft.sha, ROOT, true);
       const { seg, m } = await stageNarrate(provider('azure'));
       const { tl } = stageTimeline(seg, m);
       const { seconds } = await stageRender(tl, m);
@@ -343,7 +347,7 @@ try {
       if (!qa.ok) throw new Error('QA failed; the draft package stands');
       if (runPackage() !== 0) throw new Error('package failed');
       // the acceptance goes into the publishing ledger too, so the audit trail shows who accepted which draft
-      if (draft?.status === 'draft') acceptDraftViaCli(topic, storyId, flag('--approved-by')!, draft.sha, ROOT);
+      if (accepts) acceptDraftViaCli(topic, storyId, flag('--approved-by')!, draft.sha, ROOT);
       // the run report is the produce agent's prose and named the draft voice as a blocker: say what settled it
       const runReport = p(`${REVIEW_DIR}/run-report.md`);
       if (existsSync(runReport) && !readFileSync(runReport, 'utf8').includes('## Release build'))
