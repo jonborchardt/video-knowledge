@@ -10,7 +10,7 @@ export default [
   ...tseslint.configs.recommended,
   ...astro.configs.recommended,
   {
-    files: ['scripts/**/*.mjs', 'src/modules/evidence/*.mjs', '.claude/**/*.mjs', '*.config.{js,mjs}'],
+    files: ['scripts/**/*.mjs', 'src/modules/evidence/*.mjs', '.claude/**/*.mjs', 'tests/**/*.mjs', '*.config.{js,mjs}'],
     languageOptions: { globals: globals.node },
   },
   // Web-quality gate (F. security): HTML-string sinks only with committed repo content, each use disabled with a reason.
