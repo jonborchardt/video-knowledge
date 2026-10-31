@@ -1,6 +1,6 @@
 // One run per story: a lock file with the owner's pid and a heartbeat. Live while the pid is alive (whatever the
 // heartbeat age: a render can go quiet for an hour); a dead owner's lock is taken over and the caller journals it.
-import { existsSync, mkdirSync, unlinkSync } from 'node:fs';
+import { closeSync, existsSync, mkdirSync, openSync, unlinkSync, writeSync } from 'node:fs';
 import { hostname } from 'node:os';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
@@ -16,6 +16,9 @@ export interface Lock {
   startedAt: string;
   heartbeatAt: string;
   command: string;
+  /** The child or agent running now, so a takeover can kill it (Windows children outlive a killed parent). */
+  childPid?: number;
+  childStep?: string;
 }
 
 const pidAlive = (pid: number): boolean => {
@@ -33,23 +36,63 @@ export const readLock = (dir: string): Lock | null => readJson<Lock>(join(dir, L
 export function acquire(
   dir: string,
   command: string,
-  opts: { staleMinutes?: number; now?: () => number; alive?: (pid: number) => boolean; pid?: number } = {},
+  opts: {
+    staleMinutes?: number;
+    now?: () => number;
+    alive?: (pid: number) => boolean;
+    pid?: number;
+    /** Test hook: runs between the read and the exclusive create. */
+    onBeforeWrite?: () => void;
+  } = {},
 ): { lock: Lock; tookOver: Lock | null } | { held: Lock } {
   const alive = opts.alive ?? pidAlive;
   const now = new Date((opts.now ?? Date.now)()).toISOString();
-  const current = readLock(dir);
-  if (current && alive(current.pid)) return { held: current };
-  const lock: Lock = {
-    runId: randomUUID().slice(0, 8),
-    pid: opts.pid ?? process.pid,
-    host: hostname(),
-    startedAt: now,
-    heartbeatAt: now,
-    command,
-  };
+  const path = join(dir, LOCK);
   mkdirSync(dir, { recursive: true });
-  writeJsonAtomic(join(dir, LOCK), lock);
-  return { lock, tookOver: current };
+  // read, then create exclusively (O_EXCL): a lock that appears in between wins, whoever holds it
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const current = readLock(dir);
+    if (current && alive(current.pid)) return { held: current };
+    opts.onBeforeWrite?.();
+    const lock: Lock = {
+      runId: randomUUID().slice(0, 8),
+      pid: opts.pid ?? process.pid,
+      host: hostname(),
+      startedAt: now,
+      heartbeatAt: now,
+      command,
+    };
+    if (current) {
+      try {
+        unlinkSync(path); // the dead owner's file
+      } catch {
+        /* gone already */
+      }
+    }
+    try {
+      const fd = openSync(path, 'wx');
+      writeSync(fd, JSON.stringify(lock, null, 1) + '\n');
+      closeSync(fd);
+      return { lock, tookOver: current };
+    } catch (e) {
+      if ((e as NodeJS.ErrnoException).code !== 'EEXIST') throw e;
+      // someone else created it between our read and our write: read again
+    }
+  }
+  const held = readLock(dir);
+  if (held) return { held };
+  throw new Error(`could not take the lock in ${dir}`);
+}
+
+/** Records the child or agent that runs now (only the owner may). */
+export function setChild(dir: string, lock: Lock, childPid: number | null, childStep?: string): void {
+  const current = readLock(dir);
+  if (current?.runId !== lock.runId) return;
+  writeJsonAtomic(join(dir, LOCK), {
+    ...current,
+    childPid: childPid ?? undefined,
+    childStep: childPid === null ? undefined : (childStep ?? current.childStep),
+  });
 }
 
 export function heartbeat(dir: string, lock: Lock, now: () => number = Date.now): void {

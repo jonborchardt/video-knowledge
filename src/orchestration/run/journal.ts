@@ -42,7 +42,13 @@ export function readJournal(dir: string): JournalEntry[] {
   return readFileSync(p, 'utf8')
     .split('\n')
     .filter((l) => l.trim())
-    .map((l) => JSON.parse(l) as JournalEntry);
+    .flatMap((l) => {
+      try {
+        return [JSON.parse(l) as JournalEntry];
+      } catch {
+        return []; // a kill mid-append leaves a partial last line; it carries nothing a resume needs
+      }
+    });
 }
 
 /** How many attempts the journal records at `next` since the last `resume` or `finish` entry. */

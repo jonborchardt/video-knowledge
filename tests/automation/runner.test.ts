@@ -1,5 +1,6 @@
 // The loop (spec §4.1) over a scripted board and a recording executor: order, halts, no-progress, retries, budget,
 // caps, the guard's halt kind and the execution order around a graphics agent.
+import { spawn } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -8,6 +9,7 @@ import { loadAutomation } from '../../src/shared/automation';
 import type { BoardNext, Step } from '../../src/orchestration/production';
 import { readHalt, readJournal, runDir } from '../../src/orchestration/run/journal';
 import { readLock } from '../../src/orchestration/run/lock';
+import { alive } from '../../src/orchestration/run/proc';
 import { runStory, type RunOptions } from '../../src/orchestration/run/runner';
 import type { StepOutcome } from '../../src/orchestration/run/steps';
 
@@ -257,6 +259,112 @@ describe('runStory', () => {
     });
     expect(r.halt?.kind).toBe('forbidden-flag');
   });
+  it('the finish runs validate in a secret-free environment', async () => {
+    const root = newRoot();
+    let seen: NodeJS.ProcessEnv | null = null;
+    const r = await run(root, {
+      ask: scripted([answer('packaged', 'done', [], null, true)]),
+      exec: async () => ok(),
+      env: { PATH: '/bin', AZURE_SPEECH_KEY: 'k', YOUTUBE_OAUTH_CREDENTIALS_PATH: 'p', OPENAI_API_KEY: 'o' },
+      validate: (env) => {
+        seen = env;
+        return { ok: true, output: '' };
+      },
+    });
+    expect(r.outcome).toBe('done');
+    expect(seen).not.toBeNull();
+    for (const k of ['AZURE_SPEECH_KEY', 'YOUTUBE_OAUTH_CREDENTIALS_PATH', 'OPENAI_API_KEY'])
+      expect(seen![k]).toBeUndefined();
+    expect(seen!.VK_NO_DOTENV).toBe('1');
+  });
+  it('the tree is snapshotted before the first step, so the first child is guarded too', async () => {
+    const root = newRoot();
+    const order: string[] = [];
+    const r = await run(root, {
+      ask: scripted([
+        answer('package', 'npm run script -- package t s', [{ kind: 'run', text: 'npm run script -- package t s' }]),
+        answer('packaged', 'done', [], null, true),
+      ]),
+      exec: async () => {
+        order.push('child');
+        return ok();
+      },
+      hooks: {
+        snapshot: () => order.push('snapshot'),
+        guard: (scope) => {
+          order.push(`guard:${scope}`);
+          return { ok: true, why: '', kept: [] };
+        },
+        componentCheck: () => ({ ok: true, output: '' }),
+      },
+    });
+    expect(r.outcome).toBe('done');
+    expect(order.slice(0, 3)).toEqual(['snapshot', 'child', 'guard:child']);
+  });
+  it('a commit on the wrong branch or a failing git halts git instead of printing done', async () => {
+    for (const git of [
+      (args: string[]) => (args[0] === 'rev-parse' ? 'feat/other\n' : ''),
+      () => {
+        throw new Error('fatal: pre-commit hook failed');
+      },
+    ]) {
+      const root = newRoot();
+      const r = await run(root, {
+        ask: scripted([answer('packaged', 'done', [], null, true)]),
+        exec: async () => ok(),
+        git,
+      });
+      expect(r.outcome).toBe('halted');
+      expect(r.halt?.kind).toBe('git');
+    }
+  });
+  it('records the running child in the lock and clears it after the step', async () => {
+    const root = newRoot();
+    const seen: (number | undefined)[] = [];
+    const dir = runDir(T, S, root);
+    const r = await run(root, {
+      ask: scripted([
+        answer('package', 'npm run script -- package t s', [{ kind: 'run', text: 'npm run script -- package t s' }]),
+        answer('packaged', 'done', [], null, true),
+      ]),
+      exec: async (_a, _s, ctx) => {
+        ctx.onSpawn?.(4242);
+        seen.push(readLock(dir)?.childPid);
+        return ok();
+      },
+    });
+    expect(r.outcome).toBe('done');
+    expect(seen).toEqual([4242]);
+  });
+  it('a takeover kills the dead run’s child before anything else runs', async () => {
+    const root = newRoot();
+    const dir = runDir(T, S, root);
+    const orphan = spawn(process.execPath, ['-e', 'setTimeout(() => {}, 60000)'], {
+      stdio: 'ignore',
+      windowsHide: true,
+    });
+    await new Promise((r) => setTimeout(r, 300));
+    expect(alive(orphan.pid!)).toBe(true);
+    writeFileSync(
+      join(dir, 'lock.json'),
+      JSON.stringify({
+        runId: 'dead',
+        pid: 999999,
+        host: 'h',
+        startedAt: 'x',
+        heartbeatAt: 'x',
+        command: 'story',
+        childPid: orphan.pid,
+        childStep: 'agent: storyboard.md',
+      }),
+    );
+    const r = await run(root, { ask: scripted([answer('packaged', 'done', [], null, true)]), exec: async () => ok() });
+    expect(r.outcome).toBe('done');
+    await new Promise((r) => setTimeout(r, 500));
+    expect(alive(orphan.pid!)).toBe(false);
+    expect(readJournal(dir).find((e) => e.kind === 'resume')?.error).toMatch(/killed child/);
+  });
+
   // The order of operations (spec §4.6) with the real executor: the fake agent appends 'agent' to a record file, the
   // hooks record themselves, the injected CLI records whether it is the validator (video check) or the next child.
   const orderRun = (root: string, componentOk: boolean) => {

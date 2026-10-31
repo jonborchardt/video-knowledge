@@ -86,6 +86,12 @@ describe('envFor (one key family per verb, nothing for the rest)', () => {
     expect(e.PATH).toBe('/bin');
     expect(e.VK_AGENT).toBeUndefined();
   });
+  it('a child never gets the OpenAI or Anthropic keys', () => {
+    const e = envFor('video', ['spike', 't', 's'], { ...env, OPENAI_API_KEY: 'o', ANTHROPIC_API_KEY: 'k' });
+    expect(e.OPENAI_API_KEY).toBeUndefined();
+    expect(e.ANTHROPIC_API_KEY).toBeUndefined();
+    expect(envFor('publish', ['upload'], { ...env, OPENAI_API_KEY: 'o' }).OPENAI_API_KEY).toBeUndefined();
+  });
   it('publish gets YouTube only, social X only, final Azure only', () => {
     expect(envFor('publish', ['upload'], env).YOUTUBE_OAUTH_CREDENTIALS_PATH).toBe('p');
     expect(envFor('publish', ['upload'], env).MAIL_USER).toBeUndefined();
@@ -143,6 +149,15 @@ describe('execStep: run', () => {
     expect(existsSync(join(t, 'remotion-webpack-bundle-x'))).toBe(false);
     expect(existsSync(join(t, 'react-motion-render-y'))).toBe(false);
     expect(existsSync(join(t, 'unrelated'))).toBe(true);
+  });
+  it('reports the child pid as it spawns, so a takeover can kill it', async () => {
+    const pids: number[] = [];
+    const o = await execStep(
+      a,
+      { kind: 'run', text: 'npm run video -- qa t s' },
+      ctx({ argvOf: fakeStep(), onSpawn: (pid: number) => pids.push(pid) }),
+    );
+    expect(pids).toEqual([o.pid]);
   });
   it('a do step is a person’s', async () => {
     const o = await execStep(a, { kind: 'do', text: 'watch it' }, ctx());

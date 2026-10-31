@@ -7,6 +7,8 @@ import { loadAutomation } from '../../src/shared/automation';
 import { cliArgv } from '../../src/shared/cli';
 import { FILES, ROOT } from '../../src/shared/io';
 import { readJournal, runDir } from '../../src/orchestration/run/journal';
+import { readLock } from '../../src/orchestration/run/lock';
+import { alive } from '../../src/orchestration/run/proc';
 import { runStory } from '../../src/orchestration/run/runner';
 import { cliRoot, copyTopic, syntheticProduction } from '../production-helpers';
 
@@ -93,18 +95,18 @@ describe('story run (integration)', () => {
         windowsHide: true,
       });
       const dir = runDir(TOPIC, s.story, s.root);
-      // wait until the storyboard agent is running (its prompt is journaled before it starts), then kill the run
+      // wait until the storyboard agent is running (the lock names the child while it runs), then kill mid-step
       const started = Date.now();
-      while (
-        !readJournal(dir).some((e) => e.kind === 'prompt' && /storyboard\.md/.test(e.step)) &&
-        Date.now() - started < 240_000
-      )
-        await new Promise((r) => setTimeout(r, 500));
-      expect(readJournal(dir).some((e) => /storyboard\.md/.test(e.step))).toBe(true);
+      while (!/storyboard\.md/.test(readLock(dir)?.childStep ?? '') && Date.now() - started < 240_000)
+        await new Promise((r) => setTimeout(r, 300));
+      const orphan = readLock(dir)?.childPid;
+      expect(orphan).toBeGreaterThan(0);
+      expect(alive(orphan!)).toBe(true);
       child.kill();
       await new Promise((r) => child.on('exit', r));
       expect(existsSync(join(dir, 'lock.json'))).toBe(true); // a kill leaves the lock
-      const stageBefore = readJournal(dir).at(-1)?.stage;
+      expect(readJournal(dir).some((e) => e.kind === 'prompt' && /storyboard\.md/.test(e.step))).toBe(false); // mid-step
+      const stageBefore = 'storyboard';
       writeFileSync(s.scenario, JSON.stringify(s.entries(0)));
       const r = await runStory(TOPIC, s.story, s.fake, {
         approver: 'automated: test',
@@ -119,6 +121,10 @@ describe('story run (integration)', () => {
       const resume = j.find((e) => e.kind === 'resume');
       expect(resume).toBeTruthy();
       expect(resume?.error).toMatch(/took over/);
+      // tsx binds the driver and its children on Windows, so the agent dies with the run here; when it survives (a
+      // runner process that dies alone), the takeover kills it: runner.test.ts proves that path with a real orphan
+      await new Promise((r) => setTimeout(r, 300));
+      expect(alive(orphan!)).toBe(false); // either way, the dead run's storyboard agent is gone
       expect(stageBefore).toBe('storyboard');
       expect(j.filter((e) => e.kind === 'run' && /script -- package/.test(e.step))).toHaveLength(1); // nothing redone
       expect(existsSync(join(s.dir, FILES.release))).toBe(true);

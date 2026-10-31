@@ -24,9 +24,10 @@ import {
   type RunHaltKind,
   writeHalt,
 } from './journal';
-import { acquire, aliveLocks, heartbeat, type Lock, release } from './lock';
+import { acquire, aliveLocks, heartbeat, type Lock, release, setChild } from './lock';
+import { alive, killTree } from './proc';
 import { grantFor } from './roles';
-import { execStep as realExecStep, roleOf, type StepContext, type StepOutcome } from './steps';
+import { envFor, execStep as realExecStep, roleOf, type StepContext, type StepOutcome } from './steps';
 
 export interface RunHooks {
   snapshot?: () => void;
@@ -45,8 +46,8 @@ export interface RunOptions {
   runId?: string;
   /** `'none'` in tests; the default runs git in `root`. */
   git?: 'none' | ((args: string[]) => string);
-  /** `npm run validate` at the finish; tests inject a pass. */
-  validate?: () => { ok: boolean; output: string };
+  /** `npm run validate` at the finish, given a secret-free environment; tests inject a pass. */
+  validate?: (env: NodeJS.ProcessEnv) => { ok: boolean; output: string };
   env?: NodeJS.ProcessEnv;
   hooks?: RunHooks;
   /** Tests inject a fake CLI; the default is the repo's own (`cliArgv`). */
@@ -62,6 +63,15 @@ export interface RunResult {
 }
 
 const PERSON_HALTS = new Set(['revision-limit', 'story-left', 'no-institution', 'published']);
+/** What no phase 0 child writes: the store, the documents and the public record stay protected in the child scope
+ *  too (a planted component could run inside a validator; layer 1 already denies agents these paths). */
+const CHILD_DENY = [
+  'topics/*/store/**',
+  'topics/*/sources/**',
+  'topics/*/public-record.json',
+  'topics/*/applicability.json',
+  'topics/*/report.json',
+];
 const RETRYABLE_VERBS = new Set(['render', 'spike', 'narrate', 'qa', 'frames']);
 const FORBIDDEN = /--replace-cited|--force\b/;
 export const AUTOMATION_DIR = '.automation';
@@ -125,7 +135,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
       : o.git
         ? o.git(args)
         : execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
-  const validate = o.validate ?? (() => runValidate(root));
+  const validate = o.validate ?? ((env) => runValidate(root, env));
   let snap: TreeSnapshot | null = null;
   const hooks: Required<RunHooks> = {
     snapshot: o.hooks?.snapshot ?? (() => void (snap = realSnapshot(root))),
@@ -141,7 +151,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
                 newFilesOnly: currentGrant.newFilesOnly,
                 additiveOnly: currentGrant.additiveOnly,
               })
-            : realGuard(snap, root, [`topics/${topic}/**`]);
+            : realGuard(snap, root, [`topics/${topic}/**`], { deny: CHILD_DENY });
         snap = realSnapshot(root);
         return {
           ok: g.ok,
@@ -157,17 +167,26 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
   };
   let currentGrant = grantFor('writer', { topic, storyId });
 
+  // a dead run's child (an agent or a render) may still be running: Windows children outlive a killed parent
+  let killed = '';
+  if (acquired.tookOver?.childPid && alive(acquired.tookOver.childPid)) {
+    killTree(acquired.tookOver.childPid);
+    killed = `; killed child ${acquired.tookOver.childPid} (${acquired.tookOver.childStep ?? 'step'})`;
+  }
   const existing = readJournal(dir);
-  if (existing.length)
+  if (existing.length || acquired.tookOver)
     journal({
       stage: '',
       next: '',
       step: 'resume',
       kind: 'resume',
       attempt: 0,
-      error: acquired.tookOver ? `took over ${acquired.tookOver.runId} (pid ${acquired.tookOver.pid})` : undefined,
+      error: acquired.tookOver
+        ? `took over ${acquired.tookOver.runId} (pid ${acquired.tookOver.pid})${killed}`
+        : undefined,
     });
   const beat = setInterval(() => heartbeat(dir, lock, now), 60_000);
+  hooks.snapshot(); // before the first step, so the first child is guarded too
   let cost = 0;
   let iterations = 0;
   let stepNo = readJournal(dir).length;
@@ -199,7 +218,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
         { kind: 'fix', text: 'read the run folder; a file outside the run was changed and reverted' },
         board,
       );
-    const v = validate();
+    const v = validate(envFor('validate', [], o.env ?? process.env));
     if (!v.ok)
       return halt(
         'step-failed',
@@ -208,7 +227,17 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
         board,
       );
     writeRunReport(topic, storyId, root, dir, readJournal(dir));
-    commit(git, a, topic, storyId, storyRel, board.stage);
+    const problem = o.git === 'none' ? null : commit(git, a, topic, storyId, storyRel, board.stage);
+    if (problem)
+      return halt(
+        'git',
+        problem,
+        {
+          kind: 'fix',
+          text: `the files stand uncommitted in ${storyRel}; commit them by hand or fix git and run again`,
+        },
+        board,
+      );
     journal({ stage: board.stage, next: board.next, step: 'finish', kind: 'finish', attempt: 0, costUsd: 0 });
     clearHalt(dir);
     clearInterval(beat);
@@ -260,6 +289,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
           otherLocksAlive: () => aliveLocks(root).some((d) => d !== dir),
           guard: (scope) => hooks.guard(scope),
           componentCheck: (kept) => hooks.componentCheck(kept),
+          onSpawn: (pid) => setChild(dir, lock, pid, step.text.split('\n')[0].slice(0, 120)),
         };
         const verb = /^npm run \S+ -- (\S+)/.exec(step.text)?.[1] ?? '';
         if (step.kind === 'prompt') {
@@ -301,14 +331,14 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
               { kind: 'decide', text: 'raise agents.budgetUsd or wait for the next week' },
               n,
             );
-          hooks.snapshot();
-          ctx.budgetUsd = perAgent;
+          ctx.budgetUsd = perAgent; // the tree was snapshotted at the start and after every guard since
         }
         let out: StepOutcome;
         let tries = 0;
         for (;;) {
           tries++;
           out = await exec(a, step, ctx);
+          setChild(dir, lock, null);
           cost += out.costUsd;
           if (out.costUsd) addSpend(root, isoWeek(new Date(now())), out.costUsd);
           journal({
@@ -383,13 +413,16 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
   }
 }
 
-function runValidate(root: string): { ok: boolean; output: string } {
+/** `npm run validate` in a secret-free environment: the suite imports the renderer tree, which carries agent code. */
+function runValidate(root: string, env: NodeJS.ProcessEnv): { ok: boolean; output: string } {
   try {
     const out = execFileSync('npm', ['run', 'validate'], {
       cwd: root,
+      env,
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'pipe'],
       shell: process.platform === 'win32',
+      timeout: 60 * 60_000,
     });
     return { ok: true, output: out };
   } catch (e) {
@@ -405,7 +438,7 @@ function commit(
   storyId: string,
   storyRel: string,
   stage: string,
-): void {
+): string | null {
   try {
     if (a.git.commitOn === 'produce-branch') {
       const branch = `produce/${topic}-${storySlug(storyId)}`;
@@ -414,6 +447,10 @@ function commit(
       } catch {
         git(['checkout', '-q', '-b', branch]);
       }
+    } else {
+      const branch = git(['rev-parse', '--abbrev-ref', 'HEAD']).trim();
+      if (branch !== 'main')
+        return `git.commitOn is main but the checkout is on ${branch}: the runner never commits to another branch`;
     }
     git([
       'add',
@@ -425,15 +462,16 @@ function commit(
       'music',
     ]);
     const staged = git(['diff', '--cached', '--name-only']).trim();
-    if (!staged) return;
+    if (!staged) return null;
     git([
       'commit',
       '-q',
       '-m',
       `produce(${topic}): ${storyId} ${stage}\n\n${storyRel}\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>`,
     ]);
-  } catch {
-    /* git 'none' or a repo without a remote: the files stand; the report says what to commit */
+    return null;
+  } catch (e) {
+    return `git failed: ${(e as Error).message.split('\n')[0]}`;
   }
 }
 

@@ -42,7 +42,7 @@ export function timeoutFor(a: Automation, cli: string, args: string[]): number {
   return (t[args[0]] ?? t[cli] ?? t.default ?? 30) * 60_000;
 }
 
-const SECRET_KEY = /^(MAIL_|X_|AZURE_|YOUTUBE_|APPROVAL_|ANTHROPIC_ADMIN)/;
+const SECRET_KEY = /^(MAIL_|X_|AZURE_|YOUTUBE_|APPROVAL_|OPENAI_|ANTHROPIC_)/;
 const FAMILY: Record<string, RegExp | undefined> = { publish: /^YOUTUBE_/, social: /^X_/ };
 
 /** The environment a child CLI gets: every secret family removed, then one family back by verb (`publish` →
@@ -137,6 +137,8 @@ export interface StepContext {
   /** Runs on a graphics agent's kept components after a passing guard and before the validator could load them. */
   componentCheck?: (kept: string[]) => { ok: boolean; output: string };
   budgetUsd?: number;
+  /** Told the pid of every child or agent as it spawns (the lock records it so a takeover can kill it). */
+  onSpawn?: (pid: number) => void;
 }
 
 const RENDER_VERBS = new Set(['render', 'spike', 'final']);
@@ -162,7 +164,14 @@ interface ChildResult {
 function runChild(
   exe: string,
   argv: string[],
-  o: { cwd: string; env: NodeJS.ProcessEnv; logPath: string; timeoutMs: number; spawn?: typeof nodeSpawn },
+  o: {
+    cwd: string;
+    env: NodeJS.ProcessEnv;
+    logPath: string;
+    timeoutMs: number;
+    spawn?: typeof nodeSpawn;
+    onSpawn?: (pid: number) => void;
+  },
 ): Promise<ChildResult> {
   const spawn = o.spawn ?? nodeSpawn;
   const t0 = Date.now();
@@ -177,6 +186,7 @@ function runChild(
       detached: process.platform !== 'win32',
     });
     let timedOut = false;
+    if (child.pid) o.onSpawn?.(child.pid);
     const timer = setTimeout(() => {
       timedOut = true;
       if (child.pid) killTree(child.pid);
@@ -220,6 +230,7 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
       logPath: ctx.logPath,
       timeoutMs: ctx.timeoutMs ?? timeoutFor(a, r.cli, r.args),
       spawn: ctx.spawn,
+      onSpawn: ctx.onSpawn,
     });
     const result = lastResult(c.tail);
     const ok = !c.timedOut && c.exit === 0 && (result === null || result.startsWith('RESULT: PASSED'));
@@ -251,7 +262,7 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
         appendSystem: UNATTENDED,
         resume,
       },
-      { env: ctx.env, spawn: ctx.spawn },
+      { env: ctx.env, spawn: ctx.spawn, onSpawn: ctx.onSpawn },
     );
     cost += last.costUsd;
     ms += last.ms;
@@ -305,6 +316,7 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
       logPath: ctx.logPath,
       timeoutMs: timeoutFor(a, validator.cli, validator.args),
       spawn: ctx.spawn,
+      onSpawn: ctx.onSpawn,
     });
     ms += v.ms;
     const after = ctx.guard?.('child') ?? { ok: true, why: '' };

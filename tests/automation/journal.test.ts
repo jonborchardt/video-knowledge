@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
@@ -42,6 +42,12 @@ describe('journal', () => {
     appendJournal(d, entry({ attempt: 1 }));
     appendJournal(d, entry({ attempt: 2 }));
     expect(readJournal(d).map((e) => e.attempt)).toEqual([1, 2]);
+  });
+  it('a truncated last line (a kill mid-append) is skipped, the rest is read', () => {
+    const d = join(tmp, 'j4');
+    appendJournal(d, entry({ attempt: 1 }));
+    writeFileSync(join(d, 'journal.jsonl'), '{"at":"2026-10-31T00:00:00.000Z","runId":"r1","sta', { flag: 'a' });
+    expect(readJournal(d).map((e) => e.attempt)).toEqual([1]);
   });
   it('attemptsAt counts entries with that next since the last resume or finish', () => {
     const es = [

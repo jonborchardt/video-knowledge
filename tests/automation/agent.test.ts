@@ -90,6 +90,8 @@ describe('agentEnv', () => {
       expect(env[k]).toBeUndefined();
     expect(env.VK_AGENT).toBe('1');
     expect(env.CI).toBe('1');
+    expect(env.VK_NO_DOTENV).toBe('1'); // a verb the agent runs itself must not reload .env either
+    expect(agentEnv({ OPENAI_API_KEY: 'o' }, grantFor('writer', subject)).OPENAI_API_KEY).toBeUndefined();
     expect(env.VK_WRITABLE).toContain('script.json');
     expect(env.VK_SHELL).toBe('');
   });

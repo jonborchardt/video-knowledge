@@ -9,7 +9,7 @@ import { builtinModules } from 'node:module';
 import { homedir } from 'node:os';
 import { basename, dirname, isAbsolute, join, relative } from 'node:path';
 import ts from 'typescript';
-import { ROOT, sha } from '../../shared/io';
+import { readJson, ROOT, sha } from '../../shared/io';
 
 /** Repo files whose change is never the agent's to make, restored from the snapshot when the content is held. */
 export const CANARIES = [
@@ -23,6 +23,9 @@ export const CANARIES = [
   'package-lock.json',
   'automation.json',
   'node_modules/.package-lock.json',
+  // what the runner executes for every child: a rewrite of either would run agent code with the runner's keys
+  'node_modules/tsx/dist/cli.mjs',
+  'node_modules/typescript/lib/tsc.js',
 ];
 /** Outside the repo: the person's own Claude settings. Reported on change, never touched. */
 export const HOME_CANARIES = ['.claude/settings.json', '.claude.json'];
@@ -59,6 +62,8 @@ export function matchesAny(path: string, patterns: string[]): boolean {
 export interface TreeSnapshot {
   /** porcelain status by path (`M`, `A`, `??`, …) for every path that was already dirty before the agent ran. */
   status: Map<string, string>;
+  /** The content hash of every path that was already dirty: a further change to it is the agent's. */
+  dirtySha: Map<string, string>;
   canaries: Map<string, { sha: string; content: Buffer | null }>;
 }
 
@@ -107,14 +112,43 @@ const readdirSafe = (d: string): string[] => {
   }
 };
 
+/** What a canary's hash covers: the whole file, except `~/.claude.json`, which Claude Code itself rewrites on every
+ *  start (counters, authored paths); of it only the permission-bearing parts count. */
+function canaryContent(file: string): Buffer {
+  if (basename(file) !== '.claude.json') return readFileSync(file);
+  try {
+    const j = JSON.parse(readFileSync(file, 'utf8')) as Record<string, unknown>;
+    const projects = (j.projects ?? {}) as Record<string, Record<string, unknown>>;
+    const projection = {
+      mcpServers: j.mcpServers ?? null,
+      permissions: j.permissions ?? null,
+      projects: Object.fromEntries(
+        Object.entries(projects).map(([k, p]) => [
+          k,
+          { allowedTools: p.allowedTools ?? null, mcpServers: p.mcpServers ?? null, hooks: p.hooks ?? null },
+        ]),
+      ),
+    };
+    return Buffer.from(JSON.stringify(projection));
+  } catch {
+    return readFileSync(file);
+  }
+}
+
 export function snapshot(root: string, opts: { git?: Git; home?: string } = {}): TreeSnapshot {
   const git = opts.git ?? runGit;
   const canaries = new Map<string, { sha: string; content: Buffer | null }>();
   for (const f of canaryFiles(root, opts.home ?? homedir())) {
-    const buf = readFileSync(f);
+    const buf = canaryContent(f);
     canaries.set(f, { sha: sha(buf), content: buf.length <= HOLD_BYTES ? buf : null });
   }
-  return { status: porcelain(root, git), canaries };
+  const status = porcelain(root, git);
+  const dirtySha = new Map<string, string>();
+  for (const p of status.keys()) {
+    const full = join(root, p);
+    if (existsSync(full) && statSync(full).isFile()) dirtySha.set(p, sha(readFileSync(full)));
+  }
+  return { status, dirtySha, canaries };
 }
 
 export interface GuardResult {
@@ -132,18 +166,25 @@ export function guard(
   before: TreeSnapshot,
   root: string,
   writable: string[],
-  opts: { newFilesOnly?: string[]; additiveOnly?: string[]; git?: Git; home?: string } = {},
+  opts: { newFilesOnly?: string[]; additiveOnly?: string[]; deny?: string[]; git?: Git; home?: string } = {},
 ): GuardResult {
   const git = opts.git ?? runGit;
   const result: GuardResult = { ok: true, reverted: [], restored: [], reported: [], kept: [] };
   const now = porcelain(root, git);
   // A file that was already dirty before the step and keeps its status code is the person's and is left alone: a
   // second modification of an `M` file cannot be told apart by status, and a stash would move their work.
-  const changed = [...now.entries()].filter(([p, code]) => before.status.get(p) !== code);
+  const changed = [...now.entries()].filter(([p, code]) => {
+    if (before.status.get(p) !== code) return true;
+    const was = before.dirtySha.get(p);
+    if (was === undefined) return false;
+    const full = join(root, p);
+    return existsSync(full) && statSync(full).isFile() ? sha(readFileSync(full)) !== was : true;
+  });
   for (const [path, code] of changed) {
     const name = basename(path);
     const byName = NEVER_BY_NAME.has(name) || path.split('/').includes('node_modules');
-    const allowed = !byName && matchesAny(path, writable);
+    const denied = matchesAny(path, opts.deny ?? []);
+    const allowed = !byName && !denied && matchesAny(path, writable);
     const wasNew = code === '??' || code === 'A';
     const newOnly = matchesAny(path, opts.newFilesOnly ?? []) && !wasNew;
     const additive = matchesAny(path, opts.additiveOnly ?? []) && !wasNew && deletesLines(git, root, path);
@@ -156,7 +197,7 @@ export function guard(
   }
   for (const [file, was] of before.canaries) {
     const inRepo = !relative(root, file).startsWith('..') && !isAbsolute(relative(root, file));
-    const nowSha = existsSync(file) ? sha(readFileSync(file)) : 'missing';
+    const nowSha = existsSync(file) ? sha(canaryContent(file)) : 'missing';
     if (nowSha === was.sha) continue;
     if (inRepo && was.content) {
       mkdirSync(dirname(file), { recursive: true });
@@ -203,7 +244,20 @@ export function componentCheck(
       true,
       rel.endsWith('x') ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
     );
-    const bad = (spec: string) => spec.startsWith('node:') || builtins.has(spec);
+    const safePrefixes = (
+      readJson<{ browserSafe?: string[] }>(join(ROOT, 'tests', 'boundaries.json'))?.browserSafe ?? []
+    ).map((p) => p.replace(/\.tsx?$/, ''));
+    // a relative import must land in the browser-safe set (the boundary test's rule); a package import is fine
+    const bad = (spec: string): string | null => {
+      if (spec.startsWith('node:') || builtins.has(spec)) return `imports ${spec}`;
+      if (!spec.startsWith('.')) return null;
+      const target = toPosix(relative(root, join(dirname(full), spec))).replace(/\.tsx?$/, '');
+      return safePrefixes.some(
+        (p) => target === p || target.startsWith(p.endsWith('/') ? p : p + '/') || target.startsWith(p),
+      )
+        ? null
+        : `imports ${spec} (${target}), outside the browser-safe set`;
+    };
     const specOf = (e: ts.Expression): string | null => {
       if (ts.isStringLiteralLike(e)) return e.text;
       if (ts.isBinaryExpression(e) && e.operatorToken.kind === ts.SyntaxKind.PlusToken) {
@@ -220,7 +274,8 @@ export function componentCheck(
         n.moduleSpecifier &&
         ts.isStringLiteral(n.moduleSpecifier)
       ) {
-        if (bad(n.moduleSpecifier.text)) problems.push(`${rel}: imports ${n.moduleSpecifier.text}`);
+        const why = bad(n.moduleSpecifier.text);
+        if (why) problems.push(`${rel}: ${why}`);
       } else if (ts.isCallExpression(n)) {
         const callee = n.expression;
         const isImport = callee.kind === ts.SyntaxKind.ImportKeyword;
@@ -228,7 +283,10 @@ export function componentCheck(
         if ((isImport || isRequire) && n.arguments[0]) {
           const spec = specOf(n.arguments[0]);
           if (spec === null) problems.push(`${rel}: ${isImport ? 'import()' : 'require()'} of a computed specifier`);
-          else if (bad(spec)) problems.push(`${rel}: ${isImport ? 'imports' : 'requires'} ${spec}`);
+          else {
+            const why = bad(spec);
+            if (why) problems.push(`${rel}: ${why}`);
+          }
         }
       }
       if (

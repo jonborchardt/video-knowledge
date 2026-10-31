@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { componentCheck, guard, matchesAny, snapshot } from '../../src/orchestration/run/guard';
+import { CANARIES, componentCheck, guard, matchesAny, snapshot } from '../../src/orchestration/run/guard';
 import { grantFor } from '../../src/orchestration/run/roles';
 import { fixtureRepo, type FixtureRepo } from './helpers';
 
@@ -114,7 +114,80 @@ describe('guard', () => {
   });
 });
 
+describe('guard: child scope denies, pre-dirty files, home projection', () => {
+  const writer = () => grantFor('writer', { topic: r.topic, storyId: r.storyId });
+  it('a child-scope deny list reverts a store write even inside the writable folder', () => {
+    r.write(`topics/${r.topic}/store/topics.json`, '{}');
+    r.git('add', '-A');
+    r.git('commit', '-q', '-m', 'store');
+    const before = snapshot(r.root, { home: home() });
+    r.write(`topics/${r.topic}/store/topics.json`, '{"planted":true}');
+    r.write(`topics/${r.topic}/stories.json`, '{}');
+    const g = guard(before, r.root, [`topics/${r.topic}/**`], {
+      deny: [`topics/*/store/**`, 'topics/*/public-record.json'],
+    });
+    expect(g.reverted).toEqual([`topics/${r.topic}/store/topics.json`]);
+    expect(g.kept).toEqual([`topics/${r.topic}/stories.json`]);
+    r.git('clean', '-fdq', 'topics');
+  });
+  it('a tracked file already dirty before the step is still reverted when its content moves again', () => {
+    r.write('package.json', '{"name":"fixture","scripts":{"script":"tsx x.ts"},"dirty":1}');
+    const before = snapshot(r.root, { home: home() });
+    r.write('package.json', '{"name":"fixture","scripts":{"script":"node evil.js"}}');
+    const g = guard(before, r.root, writer().writable);
+    expect(g.reverted).toEqual(['package.json']);
+    expect(r.read('package.json')).toContain('tsx x.ts'); // back to the committed content
+    r.git('checkout', '--', '.');
+  });
+  it('the tsx and tsc the runner executes are canaries', () => {
+    expect(CANARIES).toContain('node_modules/tsx/dist/cli.mjs');
+    expect(CANARIES).toContain('node_modules/typescript/lib/tsc.js');
+  });
+  it('~/.claude.json: Claude Code’s own churn passes, a permission change is reported', () => {
+    const h = home();
+    const cj = join(h, '.claude.json');
+    const base = { numStartups: 1, projects: { [r.root]: { allowedTools: [], loggedAuthoredArtifactPaths: [] } } };
+    writeFileSync(cj, JSON.stringify(base));
+    const before = snapshot(r.root, { home: h });
+    writeFileSync(
+      cj,
+      JSON.stringify({
+        ...base,
+        numStartups: 2,
+        projects: { [r.root]: { ...base.projects[r.root], loggedAuthoredArtifactPaths: ['x'] } },
+      }),
+    );
+    expect(guard(before, r.root, writer().writable).ok).toBe(true);
+    writeFileSync(
+      cj,
+      JSON.stringify({ ...base, projects: { [r.root]: { ...base.projects[r.root], allowedTools: ['Bash(*)'] } } }),
+    );
+    const g = guard(before, r.root, writer().writable);
+    expect(g.reported).toEqual([cj]);
+    rmSync(cj);
+  });
+});
+
 describe('componentCheck', () => {
+  it('fails a component that imports a repo file outside the browser-safe set', () => {
+    r.write(
+      'src/modules/video/remotion/scenes/Io.tsx',
+      "import { sha } from '../../../../shared/io';\nexport const Io = sha;\n",
+    );
+    r.write(
+      'src/modules/video/remotion/scenes/Render.tsx',
+      "import { x } from '../../render';\nexport const Render = x;\n",
+    );
+    r.write(
+      'src/modules/video/remotion/scenes/Theme.tsx',
+      "import { theme } from '../theme';\nexport const Theme = () => theme;\n",
+    );
+    const tsc = () => ({ ok: true, output: '' });
+    expect(componentCheck(r.root, ['src/modules/video/remotion/scenes/Io.tsx'], tsc).output).toMatch(/shared\/io/);
+    expect(componentCheck(r.root, ['src/modules/video/remotion/scenes/Render.tsx'], tsc).ok).toBe(false);
+    expect(componentCheck(r.root, ['src/modules/video/remotion/scenes/Theme.tsx'], tsc).ok).toBe(true);
+    r.git('clean', '-fdq', 'src');
+  });
   it('fails a component with a dynamic node import and passes a plain one', () => {
     r.write(
       'src/modules/video/remotion/scenes/Evil.tsx',
