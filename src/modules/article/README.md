@@ -9,4 +9,4 @@ Article owns editorial content through its lifecycle: drafting, review, validati
 - Inspect: yes, `inspectArticle` returns an `Inspection` whose `code` is one of `missing`, `needs-evidence`, `no-package`, `revision-limit`, `blocking`, `unapproved`, `passed`, `changed`, `stale`, `ready`; only the board maps a code to a halt and a next command.
 - CLI: `npm run article -- validate|show|lock|correct|reaffirm <topic> <story-id>` (`cli.ts`).
 - Public API (`index.ts`): release and view readers for the site, inspect and validate for the board.
-- Read API: none yet.
+- Read API (listed under `article` in `tests/boundaries.json`; read-only, nothing written): `loadArticleRelease(topic, storyId)` reads `article-release.json`, or null; `articleModified(release)` is the date the released text last changed, from a release already read; `releaseFigureDraws(release, docNames)` is what each figure draws, computed from the release's own snapshot (it throws on a release without one, never reads); `articleView(release, topic, record, repo, figures)` is the page model, a pure projection; `ArticleView` is its type.

@@ -143,6 +143,29 @@ describe('violations', () => {
     expect(violations([file('src/admin/Board.astro', ['src/orchestration/index.ts'])], c)).toEqual([]);
     expect(violations([file('src/admin/Board.astro', ['src/orchestration/production.ts'])], c)).toHaveLength(1);
   });
+  it('holds the website to the read API: a publishing mutation fails, a listed reader passes', () => {
+    const c = {
+      ...cfg,
+      capabilities: {
+        ...cfg.capabilities,
+        'src/admin/': 'website',
+        'src/pages/': 'website',
+        'src/orchestration/': 'orchestration',
+      },
+      readApi: { publishing: ['loadLedger'] },
+    };
+    const pub = ['src/modules/publishing/index.ts'];
+    const ts = (names: string) => `import { ${names} } from '../modules/publishing';`;
+    expect(violations([file('src/admin/x.ts', pub, ts('recordApproved'))], c)).toEqual([
+      { from: 'src/admin/x.ts', to: pub[0], rule: 'cross-capability' },
+    ]);
+    expect(violations([file('src/admin/x.ts', pub, ts('loadLedger'))], c)).toEqual([]);
+    expect(violations([file('src/admin/x.ts', ['src/orchestration/index.ts'])], c)).toEqual([]);
+    const astro = `---\nimport { recordApproved } from '../modules/publishing';\n---\n<p />`;
+    expect(violations([file('src/pages/y.astro', pub, astro)], c)).toEqual([
+      { from: 'src/pages/y.astro', to: pub[0], rule: 'cross-capability' },
+    ]);
+  });
   it('flags a cycle between read APIs', () => {
     const a = file('src/modules/a/x.ts', ['src/modules/b/index.ts'], `import { fb } from '../b/index';`);
     const b = file('src/modules/b/y.ts', ['src/modules/a/index.ts'], `import { fa } from '../a/index';`);
@@ -236,9 +259,12 @@ describe('more rules', () => {
     const v = violations([file('src/orchestration/production.ts', ['scripts/video.ts', 'src/admin/Board.astro'])], c);
     expect(v.map((x) => x.rule)).toEqual(['orchestration-imports-internal', 'orchestration-imports-internal']);
   });
-  it('lets website import a module index', () => {
+  it('lets website import a module index for read-API names only', () => {
     const c = { ...cfg, capabilities: { ...cfg.capabilities, 'src/pages/': 'website' } };
-    expect(violations([file('src/pages/a.astro', ['src/modules/article/index.ts'])], c)).toEqual([]);
+    const astro = `---\nimport { articleView } from '../modules/article';\n---\n`;
+    const f = [file('src/pages/a.astro', ['src/modules/article/index.ts'], astro)];
+    expect(violations(f, c)).toHaveLength(1);
+    expect(violations(f, { ...c, readApi: { article: ['articleView'] } })).toEqual([]);
   });
   it('flags an unmapped target', () => {
     const v = violations([file('src/lib/article.ts', ['src/lib/mystery.ts'])], cfg);
