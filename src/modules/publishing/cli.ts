@@ -3,6 +3,8 @@
 //   uploaded <topic> <story-id> --id <youtube id> [--url <u>] [--visibility private|unlisted|public] [--captions] [--by <name>]
 //                                                             record an upload of the packaged build (public needs a prior approve; it also records published; --captions: the package's captions went up with it)
 //   approve <topic> <story-id> --by <name> --checked <n> [--note <text>]  approve the uploaded build, or the release build on disk, with n checklist items ticked (a draft is accepted by video final)
+//   accept-draft <topic> <story-id> --by <name> --build <sha> [--note <text>]
+//                                                             record that <name> accepted the draft build <sha> (what `npm run video -- final` records; a draft acceptance is never a publication approval and never lets go-live pass)
 //   thumbnail <topic> <story-id> <file>                       use this PNG/JPEG (under the script directory, e.g. video/publish/) as the output's thumbnail
 //   request-changes <topic> <story-id> --by <name> --note <text> [--note <text> ...]
 //                                                             send the current build back; a note may start [m:ss sc20 s31]
@@ -31,10 +33,12 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT, toJson } from '../../shared/io';
 import { Refusal } from '../../shared/refusal';
+import { approverProblem } from '../../shared/approver';
 import {
   type VerbResult,
   type Visibility,
   addOutputTo,
+  approvalHolds,
   currentBuild,
   loadLedger,
   emptyLedger,
@@ -82,13 +86,14 @@ const VALUED = [
   '--from',
   '--source',
   '--checked',
+  '--build',
 ];
 const positional = rest.filter((a, i) => !a.startsWith('--') && !VALUED.includes(rest[i - 1]));
 const usage = () => {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 27)
+      .slice(0, 29)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -171,6 +176,30 @@ async function main() {
       if (!Number.isInteger(checked) || checked < 0)
         throw new Refusal('--checked needs the number of checklist items you ticked');
       r = recordApproved(topic, storyId, { output, by: flag('--by') ?? '', note: flag('--note'), checked });
+      break;
+    }
+    case 'accept-draft': {
+      const by = flag('--by') ?? '';
+      const problem = approverProblem(by);
+      if (problem) throw new Refusal(problem.replace('--approved-by', '--by'));
+      const build = flag('--build') ?? '';
+      if (!/^[0-9a-f]{6,64}$/.test(build))
+        throw new Refusal(
+          `--build needs the draft's mp4 sha as review.json records it${build ? `, not ${build}` : ''}`,
+        );
+      const o = openOutput(topic, storyId, { output });
+      const why = o.state.live
+        ? 'it is live'
+        : o.state.status === 'scheduled'
+          ? 'it is scheduled'
+          : o.build?.status === 'release' && approvalHolds(o.out.events, o.build.sha, o.metadata?.title ?? null)
+            ? `the release build ${o.build.sha} is approved`
+            : null;
+      if (why)
+        throw new Refusal(
+          `${o.id} is already approved for publication (${why}); a draft acceptance after that is meaningless`,
+        );
+      r = recordApproved(topic, storyId, { output, by, build, accepted: true, note: flag('--note') });
       break;
     }
     case 'request-changes': {

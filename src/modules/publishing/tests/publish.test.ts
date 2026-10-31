@@ -2,10 +2,11 @@
 // composed upload metadata, the CLI's verbs and their refusals. Nothing here touches YouTube: the ledger records what a
 // person (or later an uploader) did.
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { readJson, sha, toJson } from '../../../shared/io';
+import { readJson, ROOT, sha, toJson } from '../../../shared/io';
 import { Refusal } from '../../../shared/refusal';
 import { storySlug } from '../../../shared/io';
 import {
@@ -1142,6 +1143,95 @@ describe('a draft acceptance (what video final records)', () => {
     ).toThrow(/draft/);
     expect(events(f).map((e) => e.type)).toEqual(['approved', 'uploaded']);
   });
+});
+
+describe('npm run publish -- accept-draft (the CLI)', () => {
+  const fixtures: Fixture[] = [];
+  afterAll(() => fixtures.forEach((f) => f.cleanup()));
+  /** A fixture root the CLI runs in: a package.json with the repo's name, so ROOT resolves to it. */
+  const fresh = (release = false) => {
+    const f = syntheticProduction('packaged', { release });
+    fixtures.push(f);
+    writeFileSync(join(f.root, 'package.json'), JSON.stringify({ name: 'video-knowledge', private: true }));
+    // real builds are named by hex shas (the fixture's are words): the draft is d0d0d0d0d0
+    const pp = join(f.dir, 'video', 'review', 'review.json');
+    if (!release) writeFileSync(pp, toJson({ ...readJson<object>(pp)!, mp4Sha: 'd0d0d0d0d0' }));
+    return f;
+  };
+  const cli = (f: Fixture, ...args: string[]) =>
+    spawnSync(
+      process.execPath,
+      [
+        join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs'),
+        join(ROOT, 'src', 'modules', 'publishing', 'cli.ts'),
+        'accept-draft',
+        f.topic,
+        f.story,
+        ...args,
+      ],
+      { cwd: f.root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
+    );
+  const ledgerBytes = (f: Fixture) => {
+    const p = publishPath(f.topic, f.story, f.root);
+    return existsSync(p) ? readFileSync(p, 'utf8') : null;
+  };
+
+  it('refuses bad arguments with exit 2 and writes nothing', () => {
+    const f = fresh();
+    const D = afterFinal(f.dir, 'a1a1a1a1a1');
+    for (const [args, why] of [
+      [['--by', 'Jon'], /--build needs the draft's mp4 sha/],
+      [['--by', 'Jon', '--build', 'not a sha'], /--build needs .*, not not a sha/],
+      [['--build', D], /--by needs a real name/],
+      [['--by', '<your name>', '--build', D], /--by needs a real name/],
+    ] as const) {
+      const r = cli(f, ...args);
+      expect(r.status).toBe(2);
+      expect(r.stderr).toMatch(why);
+      expect(ledgerBytes(f)).toBeNull();
+    }
+  }, 120_000);
+
+  it('refuses an output already approved for publication (live)', () => {
+    const f = fresh(true);
+    const a = { root: f.root, by: 'Jon', now: new Date('2026-10-26T00:00:00Z') };
+    recordApproved(f.topic, f.story, a);
+    recordUploaded(f.topic, f.story, { ...a, id: 'lllllllllll' });
+    recordPublished(f.topic, f.story, a);
+    const before = ledgerBytes(f);
+    const r = cli(f, '--by', 'Jon', '--build', 'abcdef1234');
+    expect(r.status).toBe(2);
+    expect(r.stderr).toMatch(/youtube is already approved for publication \(it is live\)/);
+    expect(ledgerBytes(f)).toBe(before);
+  }, 60_000);
+
+  it('after final records what recordApproved writes, byte for byte, once', () => {
+    const f = fresh();
+    const D = afterFinal(f.dir, 'a1a1a1a1a1');
+    expect(D).toBe('d0d0d0d0d0');
+    expect(cli(f, '--by', 'Jon', '--build', 'a1a1a1a1a1').stderr).toMatch(/is the release build/);
+    const r = cli(f, '--by', 'Jon', '--build', D, '--note', 'draft accepted by final');
+    expect(r.stderr).toBe('');
+    expect(r.status).toBe(0);
+    expect(r.stdout).toMatch(/^recorded approved \(build d0d0d0d0d0\)/);
+    const viaCli = ledgerBytes(f)!;
+    const at = loadLedger(f.topic, f.story, f.root)!.outputs.youtube.events[0].at;
+    // the same arguments and clock in process, on the same state: the same bytes
+    rmSync(publishPath(f.topic, f.story, f.root));
+    recordApproved(f.topic, f.story, {
+      root: f.root,
+      by: 'Jon',
+      build: D,
+      accepted: true,
+      note: 'draft accepted by final',
+      now: new Date(at),
+    });
+    expect(ledgerBytes(f)).toBe(viaCli);
+    const again = cli(f, '--by', 'Jon', '--build', D, '--note', 'draft accepted by final');
+    expect(again.status).toBe(0);
+    expect(again.stdout).toMatch(/^already recorded: approved \(build d0d0d0d0d0\)/);
+    expect(ledgerBytes(f)).toBe(viaCli);
+  }, 120_000);
 });
 
 describe('verification events', () => {
