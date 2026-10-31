@@ -56,7 +56,7 @@ describe('final records the acceptance through publish accept-draft', () => {
       });
       // the release build is never accepted: the refusal becomes final's error
       expect(() => acceptDraftViaCli(fx.topic, fx.story, 'Jon', 'a1a1a1a1a1', fx.root)).toThrow(
-        /^accept-draft failed: refused: build a1a1a1a1a1 is the release build/,
+        /^accept-draft failed: refused: build a1a1a1a1a1 was narrated under commercial terms/,
       );
     } finally {
       fx.cleanup();

@@ -517,13 +517,19 @@ describe('build report clearance and the board', () => {
     expect(none.limitations).toContain('no soundtrack: narration only');
   });
   it('records the packaged build it replaced, only when the sha moved', () => {
-    const at = (sha: string | null, onDisk: { sha: string; status: 'draft' | 'release' } | null) =>
+    type OnDisk = { sha: string; status: 'draft' | 'release'; narrationPublishable: boolean };
+    const at = (sha: string | null, onDisk: OnDisk | null) =>
       buildReport(seg, tl, m, { file: 'x.mp4', probe: null, sha, renderSeconds: 1 }, qa, 'cmd', null, null, onDisk)
         .replaces;
+    const edge = { sha: 'd1', status: 'draft' as const, narrationPublishable: false };
     expect(at('r1', null)).toBeUndefined(); // a first build
-    expect(at('r1', { sha: 'r1', status: 'draft' })).toBeUndefined(); // the same build again
-    expect(at('r1', { sha: 'd1', status: 'draft' })).toEqual({ sha: 'd1', status: 'draft' });
-    expect(at('r2', { sha: 'r1', status: 'release' })).toEqual({ sha: 'r1', status: 'release' });
+    expect(at('d1', edge)).toBeUndefined(); // the same build again
+    expect(at('r1', edge)).toEqual(edge);
+    // an Azure build labelled draft (uncleared music) keeps its commercial voice in the record
+    const azure = { sha: 's1', status: 'draft' as const, narrationPublishable: true };
+    expect(at('r1', azure)).toEqual(azure);
+    const rel = { sha: 'r1', status: 'release' as const, narrationPublishable: true };
+    expect(at('r2', rel)).toEqual(rel);
     expect('replaces' in buildReport(seg, tl, m, { file: 'x.mp4', probe: null, renderSeconds: 1 }, qa, 'cmd')).toBe(
       false,
     ); // reports without one keep their bytes

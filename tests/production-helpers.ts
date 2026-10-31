@@ -57,21 +57,32 @@ export function setLook(dir: string, look: string | undefined): void {
   writeFileSync(pp, toJson({ ...readJson<object>(pp)!, buildReport: fileSha(rp) }));
 }
 
-/** A packaged draft fixture as `npm run video -- final` leaves it: the release build `release` packaged on disk, its
- *  build report naming the draft it replaced. Returns the draft's sha (what final captured before rebuilding). */
-export function afterFinal(dir: string, release = 'releasesha'): string {
+/** A packaged draft fixture as `npm run video -- final` leaves it: the Azure build `release` packaged on disk, its
+ *  build report naming the Edge draft it replaced. With uncleared music the Azure build is still labelled a draft
+ *  (the label is clearance, not the voice). Returns the draft's sha (what final captured before rebuilding). */
+export function afterFinal(dir: string, release = 'releasesha', opts: { musicCleared?: boolean } = {}): string {
+  const cleared = opts.musicCleared ?? true;
   const pp = join(dir, 'video', 'review', 'review.json');
   const rp = join(dir, 'video', 'build-report.json');
   const review = readJson<{ mp4Sha: string; status: string }>(pp)!;
   if (review.status === 'release build') throw new Error('afterFinal needs a draft package');
   const r = readJson<BuildSummary>(rp)!;
-  const replaces = { sha: review.mp4Sha, status: 'draft' as const };
-  const clearance = { narration: true, music: true, publishable: true, why: [] };
+  const replaces = { sha: review.mp4Sha, status: 'draft' as const, narrationPublishable: false };
+  const clearance = cleared
+    ? { narration: true, music: true, publishable: true, why: [] }
+    : { narration: true, music: false, publishable: false, why: ['music Fixture is not cleared'] };
+  const narration = { ...r.narration, provider: 'azure', publishable: true };
+  writeFileSync(rp, toJson({ ...r, narration, clearance, replaces }));
   writeFileSync(
-    rp,
-    toJson({ ...r, narration: { ...r.narration, provider: 'azure', publishable: true }, clearance, replaces }),
+    pp,
+    toJson({
+      ...review,
+      status: cleared ? 'release build' : 'private review build',
+      mp4Sha: release,
+      buildReport: fileSha(rp),
+      provenance: { narration, clearance },
+    }),
   );
-  writeFileSync(pp, toJson({ ...review, status: 'release build', mp4Sha: release, buildReport: fileSha(rp) }));
   return review.mp4Sha;
 }
 

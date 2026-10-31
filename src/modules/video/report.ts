@@ -62,7 +62,7 @@ export function buildReport(
   command: string,
   contactSheet: string | null = null,
   mix: MixReport | null = null,
-  onDisk: { sha: string; status: 'draft' | 'release' } | null = null, // the build packaged before this one
+  onDisk: NonNullable<BuildSummary['replaces']> | null = null, // the build packaged before this one
 ): BuildReport {
   const p = out.probe;
   const speech = manifest.sentences.reduce((n, s) => n + s.duration, 0);
@@ -162,7 +162,9 @@ export function buildReport(
         : 'no soundtrack: narration only',
       ...(seg.release ? [] : ['no release.json: the script and storyboard are validated but not locked']),
     ],
-    ...(onDisk && onDisk.sha !== out.sha ? { replaces: { sha: onDisk.sha, status: onDisk.status } } : {}),
+    ...(onDisk && onDisk.sha !== out.sha
+      ? { replaces: { sha: onDisk.sha, status: onDisk.status, narrationPublishable: onDisk.narrationPublishable } }
+      : {}),
   };
 }
 

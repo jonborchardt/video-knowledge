@@ -794,20 +794,30 @@ export function acceptDraftProblem(by: string, build: string, o: ReturnType<type
     : null;
 }
 
-/** Refuses a draft acceptance unless `build` is provably a draft: the draft packaged on disk now, or the draft the
- *  release build on disk replaced (its build report's `replaces`, which is how `video final` names the draft it accepted
- *  after the release build took its place). A release build is never accepted, so an acceptance never authorises a
- *  public upload or go-live: every public path refuses a draft build. */
+/** Refuses a draft acceptance unless `build` is the draft-voice build the build on disk replaced: its build report's
+ *  `replaces`, with narration that was not publishable (how `video final` names the draft it accepted, after the
+ *  release build took its place). A draft is a draft voice, never a review.json label: a label flips to release when
+ *  music is cleared under the same sha, a draft voice never does (release re-narrates). So an accepted build can never
+ *  be the one published, and every public path refuses a draft build. Generic outputs have no draft. */
 function acceptedProblem(o: ReturnType<typeof openOutput>, build: string, uploaded?: PublishEvent): void {
-  if ((o.build?.sha === build && o.build.status === 'release') || uploaded?.buildStatus === 'release')
+  if (flowOf(o.out.kind) === 'generic')
     throw new Refusal(
-      `build ${build} is the release build; a release build is approved for publication by npm run publish -- approve, never accepted as a draft`,
+      `a ${o.out.kind} output has no draft build; it is approved as its source file by npm run publish -- approve`,
     );
-  if (o.build?.sha === build && o.build.status === 'draft') return; // a person accepts the draft on disk
-  const replaces = readJson<BuildSummary>(join(videoDirOf(o), 'build-report.json'))?.replaces;
-  if (o.build?.status === 'release' && replaces?.sha === build && replaces.status === 'draft') return; // final
+  const report = readJson<BuildSummary>(join(videoDirOf(o), 'build-report.json'));
+  const replaces = report?.replaces;
+  const onDisk = o.build?.sha === build;
+  if (
+    (onDisk && (o.build!.status === 'release' || report?.narration.publishable !== false)) ||
+    uploaded?.buildStatus === 'release' ||
+    (replaces?.sha === build && replaces.narrationPublishable !== false)
+  )
+    throw new Refusal(
+      `build ${build} was narrated under commercial terms; it is approved for publication by npm run publish -- approve, never accepted as a draft`,
+    );
+  if (!onDisk && replaces?.sha === build) return; // the draft voice final replaced
   throw new Refusal(
-    `build ${build} is neither the draft on disk (${o.build?.status === 'draft' ? o.build.sha : 'none'}) nor the draft the current build replaced (${replaces?.status === 'draft' ? replaces.sha : 'none'}); a stale or unknown build is not accepted`,
+    `build ${build} is not the draft the current build replaced (${replaces?.sha ?? 'none'}); a draft is accepted by npm run video -- final`,
   );
 }
 

@@ -153,6 +153,15 @@ async function stageRender(
   return { out, seconds, full: !only };
 }
 
+/** The build packaged on disk (review.json), with whether its narration was publishable; unknown counts as
+ *  publishable, so a package without provenance is never taken for a draft voice. */
+function packaged() {
+  const b = currentBuild(scriptDir(topic, storyId));
+  if (!b) return null;
+  const rp = readJson<{ provenance?: { narration?: { publishable?: boolean } } }>(p(`${REVIEW_DIR}/review.json`));
+  return { ...b, narrationPublishable: rp?.provenance?.narration?.publishable !== false };
+}
+
 async function stageQa(
   seg = loadSegment(topic, storyId),
   m = readJson<NarrationManifest>(p(VIDEO_FILES.narration)),
@@ -196,7 +205,7 @@ async function stageQa(
     command,
     contact ? rel(contact) : null,
     mix,
-    currentBuild(scriptDir(topic, storyId)), // still the package on disk: package runs after QA
+    packaged(), // still the package on disk: package runs after QA
   );
   writeFileSync(p(VIDEO_FILES.report), toJson(r));
   writeFileSync(p(VIDEO_FILES.reportMd), renderReportMd(r));

@@ -30,7 +30,13 @@ import {
   verify,
 } from '../uploader';
 import { type RemoteVideo, type YouTubeClient, YouTubeError } from '../youtube';
-import { type Fixture, setLook, syntheticProduction, syntheticShort } from '../../../../tests/production-helpers';
+import {
+  type Fixture,
+  afterFinal,
+  setLook,
+  syntheticProduction,
+  syntheticShort,
+} from '../../../../tests/production-helpers';
 
 /** The packaged fixture has no media; give it an mp4 the review.json describes and the thumbnail it names. */
 function withMedia(f: Fixture): Fixture {
@@ -452,13 +458,33 @@ describe('goLive', () => {
   it('an accepted draft upload never goes live: refused before any call', async () => {
     const f = withMedia(syntheticProduction('packaged'));
     fixtures.push(f);
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'ddddddddddd' }); // the draft, privately
+    expect(afterFinal(f.dir, 'a1a1a1a1a1')).toBe(BUILD);
     recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, build: BUILD, accepted: true });
-    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'ddddddddddd' });
     const client = fakeClient();
-    await expect(goLive(f.topic, f.story, ctx(f, client))).rejects.toThrow(/draft/);
-    await expect(goLive(f.topic, f.story, ctx(f, client, { at: '2026-10-28T15:00:00.000Z' }))).rejects.toThrow(/draft/);
+    await expect(goLive(f.topic, f.story, ctx(f, client))).rejects.toThrow(/draft|not approved/);
+    await expect(goLive(f.topic, f.story, ctx(f, client, { at: '2026-10-28T15:00:00.000Z' }))).rejects.toThrow(
+      /draft|not approved/,
+    );
     expect(client.calls).toHaveLength(0);
-    expect(events(f).map((e) => e.type)).toEqual(['approved', 'uploaded']);
+    expect(events(f).map((e) => e.type)).toEqual(['uploaded', 'approved']);
+  });
+
+  it('an Azure build relabelled a release under the same sha is not approved by the acceptance of its draft', async () => {
+    const f = withMedia(syntheticProduction('packaged'));
+    fixtures.push(f);
+    const review = join(f.dir, 'video', 'review');
+    const azure = Buffer.alloc(1024, 7);
+    writeFileSync(join(review, 'fixture.mp4'), azure);
+    const S = sha(azure);
+    afterFinal(f.dir, S, { musicCleared: false }); // final with uncleared music: Azure, labelled draft
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, build: BUILD, accepted: true });
+    const rp = readJson<Record<string, unknown>>(join(review, 'review.json'))!;
+    writeFileSync(join(review, 'review.json'), toJson({ ...rp, status: 'release build' })); // the music cleared
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'sssssssssss' });
+    const client = fakeClient();
+    await expect(goLive(f.topic, f.story, ctx(f, client))).rejects.toThrow(/not approved/);
+    expect(client.calls).toHaveLength(0);
   });
 
   it('refuses before an upload even when the local build is approved', async () => {

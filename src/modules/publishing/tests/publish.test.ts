@@ -8,7 +8,7 @@ import { join, relative, sep } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { readJson, ROOT, sha, toJson } from '../../../shared/io';
 import { Refusal } from '../../../shared/refusal';
-import { storySlug } from '../../../shared/io';
+import { scriptDir, storySlug } from '../../../shared/io';
 import {
   type Ledger,
   type Output,
@@ -481,21 +481,28 @@ describe('verbs', () => {
     const d2 = syntheticProduction('packaged');
     const d3 = syntheticProduction('packaged');
     try {
-      // final accepts the draft on disk, which nobody uploaded
+      // final accepts the draft it replaced, which nobody uploaded; never the draft on disk by hand
       const d3sha = currentBuild(d3.dir)!.sha;
+      expect(() => recordApproved(d3.topic, d3.story, a(d3, { build: d3sha, accepted: true }))).toThrow(
+        /a draft is accepted by npm run video -- final/,
+      );
+      afterFinal(d3.dir);
       expect(recordApproved(d3.topic, d3.story, a(d3, { build: d3sha, accepted: true })).event).toMatchObject({
         type: 'approved',
         build: d3sha,
       });
       recordUploaded(d2.topic, d2.story, a(d2, { id: 'eeeeeeeeeee' }));
       expect(() => recordApproved(d2.topic, d2.story, a(d2))).toThrow(/draft/);
-      const d2sha = currentBuild(d2.dir)!.sha;
+      const d2sha = afterFinal(d2.dir);
       expect(recordApproved(d2.topic, d2.story, a(d2, { build: d2sha, accepted: true })).existing).toBe(false);
+      // the accepted draft upload, and the release build that has no approval: neither goes public
       expect(() => recordUploaded(d2.topic, d2.story, a(d2, { id: 'fffffffffff', visibility: 'public' }))).toThrow(
-        /draft/,
+        /not approved/,
       );
-      expect(() => recordScheduled(d2.topic, d2.story, a(d2, { at: '2026-11-01T00:00:00Z' }))).toThrow(/draft/);
-      expect(() => recordPublished(d2.topic, d2.story, a(d2))).toThrow(/draft/);
+      expect(() => recordScheduled(d2.topic, d2.story, a(d2, { at: '2026-11-01T00:00:00Z' }))).toThrow(
+        /draft|not approved/,
+      );
+      expect(() => recordPublished(d2.topic, d2.story, a(d2))).toThrow(/draft|not approved/);
     } finally {
       d2.cleanup();
       d3.cleanup();
@@ -1003,8 +1010,8 @@ describe('a Studio upload recorded by hand', () => {
   it('a public Studio upload of the release build after a recorded draft upload records uploaded and published', () => {
     const f = fresh(false);
     recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'apiupload01' });
-    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, build: currentBuild(f.dir)!.sha, accepted: true });
-    patchReview(f, { status: 'release build', mp4Sha: 'releasesha' }); // final made the release build
+    const D = afterFinal(f.dir); // final made the release build
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, build: D, accepted: true });
     expect(openOutput(f.topic, f.story, { root: f.root }).build).toMatchObject({
       sha: 'releasesha',
       status: 'release',
@@ -1085,23 +1092,88 @@ describe('a draft acceptance (what video final records)', () => {
   it('refuses the release build, a stale build and no build, writing nothing', () => {
     const f = fresh();
     afterFinal(f.dir, R);
-    expect(() => accept(f, R)).toThrow(/is the release build; .*publish -- approve, never accepted as a draft/);
+    expect(() => accept(f, R)).toThrow(
+      /build releasesha was narrated under commercial terms; it is approved for publication by npm run publish -- approve, never accepted as a draft/,
+    );
     expect(() => accept(f, 'b0b0b0b0b0')).toThrow(
-      /neither the draft on disk \(none\) nor the draft the current build replaced \(draftsha\); a stale or unknown/,
+      /build b0b0b0b0b0 is not the draft the current build replaced \(draftsha\); a draft is accepted by npm run video -- final/,
     );
     expect(() => accept(f)).toThrow(/accept-draft names the draft build \(--build <sha>\)/);
     expect(ledgerBytes(f)).toBeNull();
   });
 
-  it('refuses a draft the release build did not replace (a stale draft), and the replaced one once a draft is back', () => {
+  it('never accepts the draft on disk by hand: a draft is accepted by running final', () => {
     const f = fresh();
-    expect(() => accept(f, 'olddraft01')).toThrow(/neither the draft on disk \(draftsha\)/);
-    const D = afterFinal(f.dir, R);
-    // a later draft packaged over the release build: the replaced draft is history, the one on disk is the draft
+    expect(() => accept(f, 'draftsha')).toThrow(
+      /build draftsha is not the draft the current build replaced \(none\); a draft is accepted by npm run video -- final/,
+    );
+    expect(ledgerBytes(f)).toBeNull();
+  });
+
+  it('final with uncleared music: the Edge draft is accepted, the Azure build never, even relabelled a release', () => {
+    const f = fresh();
+    const S = 'azuresha01';
+    const D = afterFinal(f.dir, S, { musicCleared: false });
+    expect(currentBuild(f.dir)).toEqual({ sha: S, status: 'draft' }); // the label is clearance, not the voice
+    expect(() => accept(f, S)).toThrow(/was narrated under commercial terms/);
+    expect(accept(f, D).event).toMatchObject({ type: 'approved', build: D });
+    // a retried final that captured the Azure package: its replaced build is commercial, so never accepted
+    const rp = join(f.dir, 'video', 'build-report.json');
+    const replaces = { sha: S, status: 'draft', narrationPublishable: true };
+    writeFileSync(rp, toJson({ ...readJson<object>(rp)!, replaces }));
+    expect(() => accept(f, S)).toThrow(/was narrated under commercial terms/);
+    // the music is cleared and the same sha packages as the release build: nothing approves it but approve
     const pp = join(f.dir, 'video', 'review', 'review.json');
-    writeFileSync(pp, toJson({ ...readJson<object>(pp)!, status: 'private review build', mp4Sha: 'draft2sha' }));
-    expect(() => accept(f, D)).toThrow(/stale or unknown/);
-    expect(accept(f, 'draft2sha').event).toMatchObject({ build: 'draft2sha' });
+    writeFileSync(pp, toJson({ ...readJson<object>(pp)!, status: 'release build' }));
+    expect(currentBuild(f.dir)).toEqual({ sha: S, status: 'release' });
+    expect(approvalHolds(events(f), S)).toBe(false);
+    expect(openOutput(f.topic, f.story, { root: f.root }).state.status).not.toBe('approved');
+    expect(() =>
+      recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'sssssssssss', visibility: 'public' }),
+    ).toThrow(/not approved/);
+  });
+
+  it('a generic output has no draft build', () => {
+    const f = fresh();
+    const D = afterFinal(f.dir, R);
+    mkdirSync(join(f.root, 'blog'), { recursive: true });
+    writeFileSync(join(f.root, 'blog', 'post.md'), '# post');
+    addOutputTo(f.topic, f.story, 'blog', 'blog-post', { root: f.root, source: 'blog/post.md' });
+    const before = ledgerBytes(f);
+    for (const build of [D, sha(readFileSync(join(f.root, 'blog', 'post.md')))])
+      expect(() =>
+        recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, output: 'blog', build, accepted: true }),
+      ).toThrow(
+        'a blog-post output has no draft build; it is approved as its source file by npm run publish -- approve',
+      );
+    expect(ledgerBytes(f)).toBe(before);
+    expect(openOutput(f.topic, f.story, { root: f.root, output: 'blog' }).state.status).not.toBe('approved');
+  });
+
+  it("a Short is accepted against its own package's replaced draft, never its parent's", () => {
+    const f = syntheticShort('packaged');
+    fixtures.push(f);
+    const source = relative(f.root, f.dir).split(sep).join('/');
+    addOutputTo(f.topic, f.parent, 'short:fixture-short', 'youtube-short', {
+      derivedFrom: 'youtube',
+      source,
+      root: f.root,
+    });
+    const parentVideo = join(scriptDir(f.topic, f.parent, f.root), 'video');
+    mkdirSync(parentVideo, { recursive: true });
+    const prp = join(parentVideo, 'build-report.json');
+    const parentReplaces = { sha: 'parentdraft', status: 'draft', narrationPublishable: false };
+    writeFileSync(prp, toJson({ ...(readJson<object>(prp) ?? {}), replaces: parentReplaces }));
+    const acceptShort = (build: string) =>
+      recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, build, accepted: true });
+    expect(() => acceptShort('parentdraft')).toThrow(/is not the draft the current build replaced \(none\)/);
+    const D = afterFinal(f.dir, 'shortreleasesha');
+    expect(D).toBe('shortdraftsha');
+    expect(() => acceptShort('parentdraft')).toThrow(/replaced \(shortdraftsha\)/);
+    expect(acceptShort(D).event).toMatchObject({ build: D });
+    const l = loadLedger(f.topic, f.parent, f.root)!;
+    expect(l.outputs['short:fixture-short'].events.map((e) => e.build)).toEqual([D]);
+    expect(l.outputs.youtube.events).toEqual([]);
   });
 
   it('an acceptance never approves the release build: approve still needs the checklist and a person', () => {
@@ -1131,18 +1203,18 @@ describe('a draft acceptance (what video final records)', () => {
 
   it('an accepted draft upload never goes public, scheduled or published', () => {
     const f = fresh();
-    const D = currentBuild(f.dir)!.sha;
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'ddddddddddd' }); // the draft, privately
+    const D = afterFinal(f.dir, R);
     accept(f, D);
-    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'ddddddddddd' });
     expect(approvalHolds(events(f), D)).toBe(true); // the acceptance is a decision on the draft only
-    expect(() => recordPublished(f.topic, f.story, { root: f.root, by: 'Jon', now })).toThrow(/draft/);
+    expect(() => recordPublished(f.topic, f.story, { root: f.root, by: 'Jon', now })).toThrow(/draft|not approved/);
     expect(() =>
       recordScheduled(f.topic, f.story, { root: f.root, by: 'Jon', now, at: '2026-11-01T00:00:00Z' }),
-    ).toThrow(/draft/);
+    ).toThrow(/draft|not approved/);
     expect(() =>
       recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'eeeeeeeeeee', visibility: 'public' }),
-    ).toThrow(/draft/);
-    expect(events(f).map((e) => e.type)).toEqual(['approved', 'uploaded']);
+    ).toThrow(/not approved/);
+    expect(events(f).map((e) => e.type)).toEqual(['uploaded', 'approved']);
   });
 });
 
