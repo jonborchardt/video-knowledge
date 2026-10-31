@@ -110,8 +110,10 @@ export function validatorFor(step: Step, topic: string, storyId: string): { cli:
   }
 }
 
+/** The tree guard as the runner wires it: `agent` scope after an agent turn (the role's exact files), `child` scope
+ *  after a child CLI (the topic's folder: a CLI writes derived artifacts there and nowhere else). */
 export interface GuardHook {
-  (): { ok: boolean; why: string };
+  (scope: 'agent' | 'child'): { ok: boolean; why: string; kept?: string[] };
 }
 
 export interface StepContext {
@@ -129,8 +131,11 @@ export interface StepContext {
   timeoutMs?: number;
   tmpDir?: string;
   otherLocksAlive?: () => boolean;
-  /** Runs after every agent turn (Task 6's tree guard, wired by the runner); a failure ends the step. */
+  /** Runs after every agent turn and after the validator child (the tree guard, wired by the runner); a failure ends
+   *  the step. */
   guard?: GuardHook;
+  /** Runs on a graphics agent's kept components after a passing guard and before the validator could load them. */
+  componentCheck?: (kept: string[]) => { ok: boolean; output: string };
   budgetUsd?: number;
 }
 
@@ -251,19 +256,26 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
     cost += last.costUsd;
     ms += last.ms;
     resume = last.sessionId ?? undefined;
-    const g = ctx.guard?.() ?? { ok: true, why: '' };
-    if (!g.ok)
-      return {
-        ...base,
-        ok: false,
-        exit: last.exit,
-        ms,
-        costUsd: cost,
-        sessionId: last.sessionId,
-        error: g.why,
-        guardFailed: true,
-        rounds: round + 1,
-      };
+    const guarded = (why: string): StepOutcome => ({
+      ...base,
+      ok: false,
+      exit: last?.exit ?? null,
+      ms,
+      costUsd: cost,
+      sessionId: last?.sessionId ?? null,
+      error: why,
+      guardFailed: true,
+      rounds: round + 1,
+    });
+    const g = ctx.guard?.('agent') ?? { ok: true, why: '', kept: [] };
+    if (!g.ok) return guarded(g.why);
+    if (ctx.role === 'graphics' && ctx.componentCheck) {
+      const components = (g.kept ?? []).filter((p) => /\.(tsx|ts)$/.test(p) && p.startsWith('src/'));
+      if (components.length) {
+        const c = ctx.componentCheck(components);
+        if (!c.ok) return guarded(`component check failed: ${c.output}`);
+      }
+    }
     if (!last.ok)
       return {
         ...base,
@@ -295,6 +307,8 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
       spawn: ctx.spawn,
     });
     ms += v.ms;
+    const after = ctx.guard?.('child') ?? { ok: true, why: '' };
+    if (!after.ok) return guarded(after.why);
     const findings = v.tail.trim().split('\n').slice(-40).join('\n');
     if (v.exit === 0 && !v.timedOut)
       return {

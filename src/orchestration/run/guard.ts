@@ -122,6 +122,8 @@ export interface GuardResult {
   reverted: string[];
   restored: string[];
   reported: string[];
+  /** Changed paths inside the writable set, left in place (a graphics agent's new components go to componentCheck). */
+  kept: string[];
 }
 
 /** Every path whose status changed since `before` and is outside `writable` is reverted; a changed canary is
@@ -133,7 +135,7 @@ export function guard(
   opts: { newFilesOnly?: string[]; additiveOnly?: string[]; git?: Git; home?: string } = {},
 ): GuardResult {
   const git = opts.git ?? runGit;
-  const result: GuardResult = { ok: true, reverted: [], restored: [], reported: [] };
+  const result: GuardResult = { ok: true, reverted: [], restored: [], reported: [], kept: [] };
   const now = porcelain(root, git);
   // A file that was already dirty before the step and keeps its status code is the person's and is left alone: a
   // second modification of an `M` file cannot be told apart by status, and a stash would move their work.
@@ -145,7 +147,10 @@ export function guard(
     const wasNew = code === '??' || code === 'A';
     const newOnly = matchesAny(path, opts.newFilesOnly ?? []) && !wasNew;
     const additive = matchesAny(path, opts.additiveOnly ?? []) && !wasNew && deletesLines(git, root, path);
-    if (allowed && !newOnly && !additive) continue;
+    if (allowed && !newOnly && !additive) {
+      result.kept.push(path);
+      continue;
+    }
     revert(git, root, path, wasNew);
     result.reverted.push(path);
   }

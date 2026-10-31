@@ -4,9 +4,10 @@ import { existsSync, mkdirSync, unlinkSync } from 'node:fs';
 import { hostname } from 'node:os';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
-import { readJson, writeJsonAtomic } from '../../shared/io';
+import { readJson, scriptDirs, writeJsonAtomic } from '../../shared/io';
 
 const LOCK = 'lock.json';
+const RUN_DIR = 'run';
 
 export interface Lock {
   runId: string;
@@ -55,6 +56,16 @@ export function heartbeat(dir: string, lock: Lock, now: () => number = Date.now)
   const current = readLock(dir);
   if (current?.runId !== lock.runId) return;
   writeJsonAtomic(join(dir, LOCK), { ...current, heartbeatAt: new Date(now()).toISOString() });
+}
+
+/** Every story folder under `root` whose lock belongs to a live process, as `<topic>/<slug>` dir paths. */
+export function aliveLocks(root: string, alive: (pid: number) => boolean = pidAlive): string[] {
+  return scriptDirs(root)
+    .map((d) => join(d.dir, RUN_DIR))
+    .filter((dir) => {
+      const l = readLock(dir);
+      return l !== null && alive(l.pid);
+    });
 }
 
 /** Only the owner removes its lock. */

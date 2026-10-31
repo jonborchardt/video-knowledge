@@ -3,7 +3,7 @@
 // check is caught before a child would load it, a child of a renderer-loading verb holds no secret, and content roles
 // have no shell rule. What it cannot prove: code running inside the agent's own process, or inside the first child
 // that loads it before the guard, with the user's privileges. The spec and CLAUDE.md say so in those words.
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { loadAutomation } from '../../src/shared/automation';
@@ -28,6 +28,13 @@ const prompt = {
   text: 'Read src/modules/script/briefs/script.md and follow it.\nTopic: t\nStory: s',
 };
 
+/** Step logs live where the runner puts them, under the story's gitignored run/ folder: never a change the guard sees. */
+const logIn = (name: string) => {
+  const d = join(r.root, r.story, 'run');
+  mkdirSync(d, { recursive: true });
+  return join(d, `${name}.log`);
+};
+
 /** Runs one agent step with the real guard wired in (as the runner does), after a scenario that plants `actions`. */
 async function agentWrites(name: string, actions: unknown[], role: 'writer' | 'graphics' = 'writer') {
   const scenario = join(r.root, `${name}.json`);
@@ -42,7 +49,7 @@ async function agentWrites(name: string, actions: unknown[], role: 'writer' | 'g
     root: r.root,
     approver: 'automated: test',
     role,
-    logPath: join(r.root, `${name}.log`),
+    logPath: logIn(name),
     env: { ...process.env, FAKE_CLAUDE_SCENARIO: scenario },
     argvOf: () => [process.execPath, [FAKE_STEP]],
     guard: () => {
@@ -122,7 +129,7 @@ describe('containment (criterion 14)', () => {
         root: r.root,
         approver: 'x',
         role: 'writer',
-        logPath: join(r.root, 'c6.log'),
+        logPath: logIn('c6-child'),
         env: {
           PATH: process.env.PATH,
           YOUTUBE_OAUTH_CREDENTIALS_PATH: 'p',
