@@ -45,7 +45,7 @@ describe('sameOrigin', () => {
   });
 });
 
-describe('review actions', { timeout: 30_000 }, () => {
+describe('review actions', () => {
   it('a foreign origin is 403 and starts nothing', () =>
     run(syntheticProduction('packaged', { release: true }), async (f) => {
       const r = recorder();

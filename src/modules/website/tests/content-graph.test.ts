@@ -147,7 +147,7 @@ describe('content graph', () => {
     } finally {
       c.cleanup();
     }
-  }, 30_000);
+  });
 
   it('every edge joins two existing nodes', () => {
     const g = contentGraph();

@@ -48,7 +48,7 @@ const run = <F extends Fixture, T>(f: F, body: (f: F) => T) => {
   }
 };
 
-describe('reviewView', { timeout: 30_000 }, () => {
+describe('reviewView', () => {
   it('links a failed QA check to its sentence and sorts it first', () =>
     run(placed(syntheticProduction('packaged', { release: true })), (f) => {
       const v = reviewView(f.topic, f.story, f.root);

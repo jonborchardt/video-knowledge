@@ -519,7 +519,7 @@ describe('verbs', () => {
       d2.cleanup();
       d3.cleanup();
     }
-  }, 30_000); // two synthetic productions; slow when the suite runs in parallel
+  });
 
   it('refuses a missing or non-image thumbnail', () => {
     expect(() => setThumbnail(rel2.topic, rel2.story, { root: rel2.root, file: join(rel2.dir, 'nope.png') })).toThrow(

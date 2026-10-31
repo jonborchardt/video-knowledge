@@ -34,7 +34,7 @@ const verdict =
   () =>
     ({ status, revisionLimitReached, sentences: [] }) as unknown as ScriptValidation;
 
-describe('inspectArticle', { timeout: 30_000 }, () => {
+describe('inspectArticle', () => {
   it('reports each status without naming a halt', () => {
     const fx = syntheticProduction('locked');
     try {

@@ -71,7 +71,7 @@ describe('production board', () => {
     }
   });
 
-  it('a locked production reads as its lock says', { timeout: 30_000 }, () => {
+  it('a locked production reads as its lock says', () => {
     const f = syntheticProduction('locked');
     try {
       const prod = productionOf(f.topic, f.story, f.root)!;
@@ -145,7 +145,7 @@ describe('halt kinds', () => {
     expect(validationHaltKind(run(blockedScript(1)))).toBe('blocking-findings');
   });
 
-  it('a script asking for evidence halts with needs-evidence', { timeout: 30_000 }, () => {
+  it('a script asking for evidence halts with needs-evidence', () => {
     const fx = syntheticProduction('graphics');
     try {
       const f = join(fx.dir, 'script.json');
@@ -162,41 +162,37 @@ describe('halt kinds', () => {
 });
 
 describe('review findings', () => {
-  it(
-    'a sentence the reviewer holds on a warning goes back to the writer, not to another review',
-    { timeout: 30_000 },
-    () => {
-      const fx = syntheticProduction('graphics');
-      try {
-        const { dir, topic, story, root } = fx;
-        const f = join(dir, 'script-review.json');
-        const r = readJson<ScriptReviewFile>(f)!;
-        const [id, fingerprint] = Object.entries(r.approved)[0];
-        delete r.approved[id];
-        r.findings.push({ sentence: id, fingerprint, category: 'x', severity: 'warning', explanation: 'imprecise' });
-        writeFileSync(f, toJson(r));
-        const v = validateScript(
-          readJson<Script>(join(dir, 'script.json'))!,
-          corpusOf(loadTopic(topic)),
-          passageReader(root),
-          {
-            review: r,
-            judgments: loadReview(topic, root).applicability,
-            previous: readJson<ScriptValidation>(join(dir, 'validation.json')),
-            pkg: readJson<EvidencePackage>(join(dir, 'evidence-package.json'))!,
-            hashDoc: docHasher(docReader(root)),
-          },
-        );
-        expect(v.status).toBe('needs-review');
-        writeFileSync(join(dir, 'validation.json'), toJson(v));
-        const prod = productionOf(topic, story, root)!;
-        expect(prod.halt).toMatchObject({ kind: 'review-findings', stage: 'script' });
-        expect(prod.next).toContain('agent: src/modules/script/briefs/script.md (revise)');
-      } finally {
-        fx.cleanup();
-      }
-    },
-  );
+  it('a sentence the reviewer holds on a warning goes back to the writer, not to another review', () => {
+    const fx = syntheticProduction('graphics');
+    try {
+      const { dir, topic, story, root } = fx;
+      const f = join(dir, 'script-review.json');
+      const r = readJson<ScriptReviewFile>(f)!;
+      const [id, fingerprint] = Object.entries(r.approved)[0];
+      delete r.approved[id];
+      r.findings.push({ sentence: id, fingerprint, category: 'x', severity: 'warning', explanation: 'imprecise' });
+      writeFileSync(f, toJson(r));
+      const v = validateScript(
+        readJson<Script>(join(dir, 'script.json'))!,
+        corpusOf(loadTopic(topic)),
+        passageReader(root),
+        {
+          review: r,
+          judgments: loadReview(topic, root).applicability,
+          previous: readJson<ScriptValidation>(join(dir, 'validation.json')),
+          pkg: readJson<EvidencePackage>(join(dir, 'evidence-package.json'))!,
+          hashDoc: docHasher(docReader(root)),
+        },
+      );
+      expect(v.status).toBe('needs-review');
+      writeFileSync(join(dir, 'validation.json'), toJson(v));
+      const prod = productionOf(topic, story, root)!;
+      expect(prod.halt).toMatchObject({ kind: 'review-findings', stage: 'script' });
+      expect(prod.next).toContain('agent: src/modules/script/briefs/script.md (revise)');
+    } finally {
+      fx.cleanup();
+    }
+  });
 });
 
 describe('graphics stage', () => {
@@ -206,7 +202,7 @@ describe('graphics stage', () => {
     writeFileSync(join(fx.dir, 'video', 'render-check.json'), toJson({ ...rc, ...over }));
   };
 
-  it('without a release the graphics stage gates the lock', { timeout: 30_000 }, () => {
+  it('without a release the graphics stage gates the lock', () => {
     const fx = syntheticProduction('graphics');
     try {
       const { topic, story, root } = fx;
@@ -680,7 +676,7 @@ describe('the article on the board', () => {
     history: [],
   });
 
-  it('no article state before the script lock', { timeout: 30_000 }, () => {
+  it('no article state before the script lock', () => {
     const fx = syntheticProduction('graphics');
     try {
       expect(articleState(fx)).toBeNull();
@@ -689,7 +685,7 @@ describe('the article on the board', () => {
     }
   });
 
-  it('none, review, released, changed, stale', { timeout: 30_000 }, () => {
+  it('none, review, released, changed, stale', () => {
     const fx = syntheticProduction('locked');
     try {
       expect(articleState(fx)).toEqual({
@@ -779,7 +775,7 @@ describe('the article on the board', () => {
     }
   });
 
-  it('maps the article inspection to a halt without the module naming one', { timeout: 30_000 }, () => {
+  it('maps the article inspection to a halt without the module naming one', () => {
     const fx = syntheticProduction('locked');
     try {
       write(fx, 'article.json', articleOf(fx));
@@ -792,7 +788,7 @@ describe('the article on the board', () => {
     }
   });
 
-  it('a released article whose package moved a cite shows blocked', { timeout: 30_000 }, () => {
+  it('a released article whose package moved a cite shows blocked', () => {
     const fx = syntheticProduction('locked');
     try {
       const pkg = readJson<EvidencePackage>(join(fx.dir, 'evidence-package.json'))!;
@@ -867,7 +863,7 @@ describe('the article on the board', () => {
   const correctCmd = (fx: Fixture) =>
     `npm run article -- correct ${fx.topic} ${fx.story} --approved-by "<your name>" --note "<what changed>"`;
 
-  it('a released article whose chart changed shows changed with the correct command', { timeout: 30_000 }, () => {
+  it('a released article whose chart changed shows changed with the correct command', () => {
     const fx = syntheticProduction('locked');
     try {
       const { recut } = figured(fx);
@@ -879,22 +875,18 @@ describe('the article on the board', () => {
     }
   });
 
-  it(
-    'a rebuilt package the review does not cover goes to the reviewer, with or without a re-cut chart',
-    { timeout: 30_000 },
-    () => {
-      const fx = syntheticProduction('locked');
-      try {
-        const { pkg, recut } = figured(fx);
-        write(fx, 'evidence-package.json', { ...pkg, fingerprint: 'rebuilt' });
-        expect(articleState(fx)).toEqual({ state: 'review', next: reviewer(fx) });
-        recut(); // correct would refuse: the validation does not pass
-        expect(articleState(fx)).toEqual({ state: 'review', next: reviewer(fx) });
-      } finally {
-        fx.cleanup();
-      }
-    },
-  );
+  it('a rebuilt package the review does not cover goes to the reviewer, with or without a re-cut chart', () => {
+    const fx = syntheticProduction('locked');
+    try {
+      const { pkg, recut } = figured(fx);
+      write(fx, 'evidence-package.json', { ...pkg, fingerprint: 'rebuilt' });
+      expect(articleState(fx)).toEqual({ state: 'review', next: reviewer(fx) });
+      recut(); // correct would refuse: the validation does not pass
+      expect(articleState(fx)).toEqual({ state: 'review', next: reviewer(fx) });
+    } finally {
+      fx.cleanup();
+    }
+  });
 
   // A review at revision 1 approving every unit but the first sentence, which carries a finding of this severity.
   const heldReview = (fx: Fixture, severity: 'warning' | 'info') => {
@@ -919,7 +911,7 @@ describe('the article on the board', () => {
     return a;
   };
 
-  it('A: an edit beside a held sentence goes to the reviewer, not back to the writer', { timeout: 30_000 }, () => {
+  it('A: an edit beside a held sentence goes to the reviewer, not back to the writer', () => {
     const fx = syntheticProduction('locked');
     try {
       const a = heldReview(fx, 'warning');
@@ -936,7 +928,7 @@ describe('the article on the board', () => {
     }
   });
 
-  it('B: only held sentences unapproved: the writer revises them', { timeout: 30_000 }, () => {
+  it('B: only held sentences unapproved: the writer revises them', () => {
     const fx = syntheticProduction('locked');
     try {
       heldReview(fx, 'warning');
@@ -950,7 +942,7 @@ describe('the article on the board', () => {
     }
   });
 
-  it('C: an edited headline with no finding goes to the reviewer', { timeout: 30_000 }, () => {
+  it('C: an edited headline with no finding goes to the reviewer', () => {
     const fx = syntheticProduction('locked');
     try {
       const a = heldReview(fx, 'warning');
@@ -961,7 +953,7 @@ describe('the article on the board', () => {
     }
   });
 
-  it('D: an info finding never holds a sentence', { timeout: 30_000 }, () => {
+  it('D: an info finding never holds a sentence', () => {
     const fx = syntheticProduction('locked');
     try {
       heldReview(fx, 'info');
@@ -971,7 +963,7 @@ describe('the article on the board', () => {
     }
   });
 
-  it('the article stage: halts a scored video until released, never earlier', { timeout: 30_000 }, () => {
+  it('the article stage: halts a scored video until released, never earlier', () => {
     const fx = syntheticProduction('packaged');
     try {
       rmSync(join(fx.dir, 'article-release.json'));
@@ -983,7 +975,7 @@ describe('the article on the board', () => {
     }
   });
 
-  it('before the video is scored the article never changes the stage or halt', { timeout: 30_000 }, () => {
+  it('before the video is scored the article never changes the stage or halt', () => {
     const fx = syntheticProduction('locked');
     try {
       const before = productionOf(fx.topic, fx.story, fx.root)!;
@@ -996,7 +988,7 @@ describe('the article on the board', () => {
     }
   });
 
-  it('an article asking for evidence is writing', { timeout: 30_000 }, () => {
+  it('an article asking for evidence is writing', () => {
     const fx = syntheticProduction('locked');
     try {
       const a = articleOf(fx);
@@ -1013,7 +1005,7 @@ describe('the article on the board', () => {
   });
 
   // live data: a later claim revision may make it stale, and a correction in progress changed
-  it('the first released article has a release state', { timeout: 15_000 }, () => {
+  it('the first released article has a release state', () => {
     expect(['released', 'stale', 'changed']).toContain(
       productionOf('heat-pumps', 'decision:is-it-cheaper-to-run-than-gas')?.article?.state,
     );

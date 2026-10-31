@@ -178,7 +178,7 @@ describe('verificationChecks', () => {
   });
 });
 
-describe('expectedOf', { timeout: 30_000 }, () => {
+describe('expectedOf', () => {
   const fixtures: Fixture[] = [];
   afterAll(() => fixtures.forEach((f) => f.cleanup()));
 
