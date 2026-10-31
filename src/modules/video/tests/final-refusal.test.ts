@@ -92,10 +92,13 @@ describe('final asks the board through its CLI (the real spawner)', () => {
         expect(r === null).toBe(!refused);
         expect(calls).toHaveLength(1);
         const [cmd, args, opts] = calls[0] as [string, string[], Record<string, unknown>];
-        expect([cmd, ...args]).toEqual(['npm', 'run', '-s', 'board', '--', 'next', fx.topic, fx.story, '--json']);
+        const argv = ['run', '-s', 'board', '--', 'next', fx.topic, fx.story, '--json'];
+        const win = process.platform === 'win32';
+        // On Windows: one command string through the shell (no args array, so no DEP0190); elsewhere npm + argv.
+        expect([cmd, ...args]).toEqual(win ? [['npm', ...argv.map((a) => `"${a}"`)].join(' ')] : ['npm', ...argv]);
         expect(opts).toMatchObject({
           cwd: fx.root,
-          shell: process.platform === 'win32',
+          shell: win,
           encoding: 'utf8',
           stdio: ['ignore', 'pipe', 'pipe'],
         });
@@ -113,6 +116,12 @@ describe('final asks the board through its CLI (the real spawner)', () => {
       expect(finalRefusal('t', 's', root)).toBe('final could not ask the board: the board broke');
       runAt(root, `node -e "process.stdout.write('not json');process.stderr.write('odd')"`);
       expect(finalRefusal('t', 's', root)).toBe('final could not ask the board: odd');
+      runAt(root, `node -e "process.stdout.write('null');process.stderr.write('no stage')"`);
+      expect(finalRefusal('t', 's', root)).toBe('final could not ask the board: no stage');
+      runAt(root, `node -e "process.stdout.write(JSON.stringify({next:'x'}))"`);
+      expect(finalRefusal('t', 's', root)).toBe('final could not ask the board: ');
+      runAt(root, 'no-such-command-vk');
+      expect(finalRefusal('t', 's', root)).toMatch(/^final could not ask the board: .+/);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
