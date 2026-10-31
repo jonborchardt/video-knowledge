@@ -1,0 +1,69 @@
+{
+  "enabled": {
+    "tick": false,
+    "work": false,
+    "production": false,
+    "discovery": false,
+    "maintenance": false,
+    "social": false
+  },
+  "clone": null,
+  "git": { "commitOn": "main" },
+  "schedule": {
+    "tickMinutes": 15,
+    "discovery": { "weekday": "friday", "hour": 7 },
+    "maintenance": { "everyDays": 30 },
+    "timezone": "America/Los_Angeles"
+  },
+  "production": {
+    "weekday": "monday",
+    "hour": 6,
+    "storiesPerWeek": 1,
+    "perInstitutionPerWeek": 1,
+    "maxAwaitingApproval": 2
+  },
+  "runs": {
+    "maxConcurrentStoryRuns": 1,
+    "maxConcurrentTopicRuns": 1,
+    "maxParallelAgents": 4,
+    "loopCap": 60,
+    "graphicsRevisions": 3,
+    "qaFixes": 3,
+    "noProgressAttempts": 3,
+    "timeoutsPerStep": 3,
+    "validationRounds": 2,
+    "stepTimeoutMinutes": { "default": 30, "render": 240, "spike": 300, "narrate": 60, "final": 300 },
+    "agentTimeoutMinutes": 90,
+    "lockStaleMinutes": 10,
+    "retryBackoffMinutes": [15, 60, 240],
+    "stuckAfterMinutes": 180,
+    "minFreeGb": 20
+  },
+  "agents": {
+    "command": "claude",
+    "effort": "high",
+    "models": {
+      "writer": "opus",
+      "reviewer": "opus",
+      "graphics": "opus",
+      "extraction": "opus",
+      "collect": "opus",
+      "discovery": "opus",
+      "proposalReview": "opus",
+      "draftReview": "opus",
+      "notes": "opus"
+    },
+    "budgetUsd": { "perAgent": 8, "perRun": 80, "perTopic": 150, "perWeek": 200 }
+  },
+  "review": { "draft": "person", "draftReviewRounds": 2 },
+  "approvals": {
+    "to": "",
+    "from": "",
+    "approverName": "",
+    "expiresDays": 7,
+    "scheduleLeadMinutes": 30
+  },
+  "notifications": { "to": "", "digest": { "weekday": "monday", "hour": 8 } },
+  "topics": { "proposalsPerInstitution": 2, "minOverall": 0.6, "minSources": 40, "minStudies": 12, "minDecided": 0.5 },
+  "launch": { "push": true, "deployTimeoutMinutes": 40, "social": { "video": true, "shorts": false } }
+}
