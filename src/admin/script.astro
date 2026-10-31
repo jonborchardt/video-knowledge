@@ -1,13 +1,11 @@
 ---
 // One generated script: the narration with its validation markers, the evidence behind every sentence, and the
-// storyboard. Built from topics/<topic>/scripts/<slug>/*.json (see src/lib/script.ts); static, no client script.
+// storyboard. Built from topics/<topic>/scripts/<slug>/*.json (see src/shared/types.ts); static, no client script.
 import { join } from 'node:path';
 import Base from '../layouts/Base.astro';
 import { site } from '../config/site';
-import { passageReader } from '../lib/evidence';
-import { readJson } from '../lib/io';
-import { type EvidencePackage, FILES, type Issue, type Script, type ScriptValidation, scriptDirs } from '../lib/script';
-import type { Storyboard } from '../lib/storyboard';
+import { passageReader, readJson, FILES, scriptDirs } from '../shared/io';
+import type { EvidencePackage, Issue, Script, ScriptValidation, Storyboard } from '../shared/types';
 import { citeHref as repoCite, href } from '../lib/url';
 
 export function getStaticPaths() {

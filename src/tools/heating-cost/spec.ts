@@ -1,4 +1,4 @@
-import { type DataTable, dataRef } from '../../lib/datasets';
+import { type DataTable, dataRef } from '../../modules/evidence';
 import type { ToolSpec } from '../index';
 
 const SRC = 'heat-pumps/sources/eia-2026-state-residential-energy-prices.txt';

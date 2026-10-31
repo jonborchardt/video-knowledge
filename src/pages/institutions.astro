@@ -5,11 +5,10 @@
 import Base from '../layouts/Base.astro';
 import InstitutionCard from '../components/InstitutionCard.astro';
 import SourceIcons from '../components/SourceIcons.astro';
-import { matterOrder } from '../lib/content-graph';
-import { siteGraph, siteTopics } from '../lib/site-graph';
+import { matterOrder, breadcrumbJsonLd, collectionJsonLd } from '../modules/website';
+import { siteGraph, siteTopics } from '../modules/website/site-graph';
 import { commissions, site } from '../config/site';
-import { breadcrumbJsonLd, collectionJsonLd } from '../lib/seo';
-import { loadTopic } from '../lib/topics';
+import { loadTopic } from '../modules/evidence';
 import { href } from '../lib/url';
 
 const graph = siteGraph();

@@ -1,15 +1,11 @@
 // The exit criterion of docs/superpowers/specs/2026-10-17-hardening-spec.md section 1, one deliberate error per test:
 // invented numbers, unsupported quotations and unverifiable speaker attributions fail validation.
 import { describe, expect, it } from 'vitest';
-import {
-  type EvidencePackage,
-  type Script,
-  type ScriptReviewFile,
-  sentenceFingerprint,
-  sentences,
-} from '../src/lib/script';
-import { validateScript } from '../src/lib/script-validation';
-import { type ChartSpec, type StoryboardPlan, buildStoryboard } from '../src/lib/storyboard';
+import { sentenceFingerprint, sentences } from '../src/shared/sentences';
+import type { EvidencePackage, Script, ScriptReviewFile } from '../src/shared/types';
+import { validateScript } from '../src/shared/sentence-validation';
+import { buildStoryboard } from '../src/modules/storyboard';
+import type { ChartSpec, StoryboardPlan } from '../src/shared/types';
 import { TOPIC, claim, study } from './corpus';
 import {
   DOC_D,

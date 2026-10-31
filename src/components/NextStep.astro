@@ -2,8 +2,8 @@
 // A board item's next move: a button that opens a native popover listing each step as a command to run, a
 // prompt to hand an agent, or a manual step. Each block has a Copy button (the only client script here). A story
 // with a stage gets the /produce prompt first: start or resume the whole run, or (once packaged) send it back.
-import { runPromptOf, sendBackPromptOf, type Step, stepsOf } from '../lib/production';
-import type { ReviewNote, UploadMetadata } from '../lib/publish';
+import { runPromptOf, sendBackPromptOf, type Step, stepsOf } from '../orchestration';
+import type { ReviewNote, UploadMetadata } from '../modules/publishing';
 
 interface Props {
   id: string;

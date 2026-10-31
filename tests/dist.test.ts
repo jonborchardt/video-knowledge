@@ -3,8 +3,8 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { author, commissionKey, commissionOf, commissions, site } from '../src/config/site';
-import { FINDING_LABELS, FINDING_TEXT } from '../src/lib/finding-label';
-import { loadArticleRelease } from '../src/lib/article';
+import { FINDING_LABELS, FINDING_TEXT } from '../src/modules/evidence';
+import { loadArticleRelease } from '../src/modules/article';
 import {
   contentGraph,
   distPages,
@@ -13,14 +13,14 @@ import {
   hasVideo,
   loadMoved,
   manifestProblems,
-} from '../src/lib/content-graph';
-import { datasetChart } from '../src/lib/chart-geometry';
-import { dataRef, loadDatasets } from '../src/lib/datasets';
-import { ROOT, readJson, topicDir } from '../src/lib/io';
-import type { Storyboard } from '../src/lib/storyboard';
-import { loadStories, storyUrlSlug } from '../src/lib/stories';
-import { loadPublicRecord } from '../src/lib/public-record';
-import { loadTopic, publicTopicNames, topicNames } from '../src/lib/topics';
+} from '../src/modules/website';
+import { datasetChart } from '../src/modules/storyboard';
+import { dataRef, loadDatasets } from '../src/modules/evidence';
+import { ROOT, readJson, topicDir } from '../src/shared/io';
+import type { Storyboard } from '../src/shared/types';
+import { loadStories, storyUrlSlug } from '../src/modules/stories';
+import { loadPublicRecord } from '../src/shared/public-record';
+import { loadTopic, publicTopicNames, topicNames } from '../src/modules/evidence';
 
 const DIST = join(ROOT, 'dist');
 // Same switch as astro.config.mjs: the GitHub Pages mirror under a base path, else the root site.

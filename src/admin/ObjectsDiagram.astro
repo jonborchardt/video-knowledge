@@ -2,7 +2,7 @@
 // Every object the repo keeps, the file that holds it and how it points at the next one, laid out in the columns the
 // work moves through (identity, research, stories, script stage, video, publishing). Positions are computed from the
 // lists below; a new object is one entry and, if it points somewhere, one edge. The table under it is the content
-// graph's view of the same objects (src/lib/content-graph.ts).
+// graph's view of the same objects (src/modules/website/content-graph.ts).
 type Box = { id: string; t: string; d: string[]; you?: boolean };
 type Col = { title: string; dir: string; boxes: Box[] };
 const cols: Col[] = [
@@ -95,7 +95,7 @@ const cols: Col[] = [
       {
         id: 'render',
         t: 'Render plan',
-        d: ['render.json: scenes to kinds, cues;', 'bespoke graphics in src/video/bespoke/'],
+        d: ['render.json: scenes to kinds, cues;', 'bespoke graphics in src/modules/video/bespoke/'],
       },
       { id: 'build', t: 'Build', d: ['segment.mp4 named by its sha; build-report;', 'review/: the package you watch'] },
       {
@@ -241,7 +241,7 @@ const vocab: { obj: string; t: string; file: string; v: [string, string][] }[] =
   {
     obj: 'Claim',
     t: 'verdict, confidence, decided by',
-    file: 'batches.ts (VERDICTS), evidence.ts (STRONG)',
+    file: 'batches.ts (VERDICTS), shared/evidence-gate.ts (STRONG)',
     v: [
       ['right, wrong, partly', 'the effective verdict; partly is true only under conditions'],
       ['untestable, unknown', 'no verdict can be given, or none yet; these carry no confidence'],
@@ -492,7 +492,9 @@ const small = 'text-sm text-muted-foreground';
 
 <h3 class="mt-8 font-semibold">The same objects as the site sees them: the content graph</h3>
 <p class={`mt-1 max-w-prose ${small}`}>
-  <code>src/lib/content-graph.ts</code> rebuilds this graph at every build from the files above and <code>urlOf</code>
+  <code>src/modules/website/content-graph.ts</code> rebuilds this graph at every build from the files above and <code
+    >urlOf</code
+  >
   is the only way a page, a description or a package makes a link (from an id, never a title). Edges: publishes (institution
   to inquiry), in (story to inquiry), partOf (a chained question to its first), madeFrom (video, Short or article to its story),
   derivedFrom (Short to video), cites (article to chart or dataset), uses (story to tool), shares-claims (story to story,

@@ -7,7 +7,7 @@ description: Drive one story from ready to a private review package (the board's
 
 The board is the state machine; you are the loop. `npm run board -- next <topic> <story> --json`
 says where the story is and what moves it on; you do that and ask again. All judgment lives in the
-briefs (`scripts/briefs/`) and the fresh agents you hand them to; all bookkeeping lives in the CLIs.
+briefs (`src/modules/<module>/briefs/`) and the fresh agents you hand them to; all bookkeeping lives in the CLIs.
 A run interrupted halfway resumes by pasting the same prompt.
 
 ## Arguments
@@ -60,7 +60,7 @@ What each halt kind means for you:
 | `halt.kind` | do |
 |---|---|
 | `missing`, `stale`, `review-pending`, `review-findings`, `storyboard-blocked`, `blocking-findings`, `lock` | follow the steps (`review-findings`: the reviewer holds sentences on warnings; the writer revises them, then the steps ask for a re-review) |
-| `needs-evidence` | the steps hand `scripts/briefs/evidence.md` to a fresh agent; if it records nothing for a gap, Stop |
+| `needs-evidence` | the steps hand `src/modules/evidence/briefs/evidence.md` to a fresh agent; if it records nothing for a gap, Stop |
 | `needs-graphics` | one fresh `graphics.md` agent per listed scene (`Scenes: <id>`), then the check |
 | `graphics-review` | a fresh `visual-review.md` agent that built none of them; a `revise` verdict goes back to a graphics agent with the notes |
 | `render-check`, `qa-failed` | a fresh `video-fix.md` agent, then the command |
@@ -94,7 +94,7 @@ send-back prompt, each `[m:ss scene sentence]` placed; treat them like any other
 Route each note to the artifact that owns it, then run the Loop:
 
 - wording, cuts, order: set `passStartRevision` in `script.json` to its current `revision` (the pass
-  gets its own three revisions), then a fresh writer with `agent: scripts/briefs/script.md (notes)`
+  gets its own three revisions), then a fresh writer with `agent: src/modules/script/briefs/script.md (notes)`
   and the notes; the board then asks for the re-review, storyboard, render check and lock again.
 - a graphic: a fresh `graphics.md` agent for that scene with the note, then `visual-review.md`. A component edit
   does not change any fingerprint the build is bound to, so after the graphic is approved run

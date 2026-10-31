@@ -2,10 +2,10 @@
 // OWNER APPROVAL: Jon approves this text before the compliance form is submitted (plan 1.5, H3).
 // Out of character, on purpose, like About's Publisher section: plain type, the real publisher, no seal. Every statement
 // must stay true of the code: no analytics, cookies, forms or accounts on the site; the publishing tool in the repository
-// (src/lib/youtube.ts, src/lib/uploader.ts) is the only YouTube API client, and /publishing/ describes it.
+// (src/modules/publishing/youtube.ts, src/modules/publishing/uploader.ts) is the only YouTube API client, and /publishing/ describes it.
 import Base from '../layouts/Base.astro';
 import { author, site } from '../config/site';
-import { breadcrumbJsonLd } from '../lib/seo';
+import { breadcrumbJsonLd } from '../modules/website';
 import { href } from '../lib/url';
 
 const REVISED = 'October 27, 2026';

@@ -4,10 +4,10 @@
 // Static, no client script: each story is a <details> card.
 import Base from '../layouts/Base.astro';
 import { site } from '../config/site';
-import type { EvidenceItem, Validation } from '../lib/evidence';
-import { scriptDirs, storySlug } from '../lib/script';
-import { loadStories, storyTopicNames, type Readiness, type StoriesFile } from '../lib/stories';
-import { loadTopic, type Topic } from '../lib/topics';
+import type { EvidenceItem, Validation, Readiness } from '../shared/types';
+import { scriptDirs, storySlug } from '../shared/io';
+import { loadStories, storyTopicNames, type StoriesFile } from '../modules/stories';
+import { loadTopic, type Topic } from '../modules/evidence';
 import { citeHref as repoCite, href } from '../lib/url';
 
 export function getStaticPaths() {

@@ -4,10 +4,10 @@
 // limitations. The one script imports only the pure model; inputs never leave the browser (no form, nothing stored or sent).
 import LabelStrip from '../LabelStrip.astro';
 import { site } from '../../config/site';
-import { dataRef, loadDatasets } from '../../lib/datasets';
-import type { FindingLabel } from '../../lib/finding-label';
-import type { Story } from '../../lib/stories';
-import type { Topic } from '../../lib/topics';
+import { dataRef, loadDatasets } from '../../modules/evidence';
+import type { FindingLabel } from '../../modules/evidence';
+import type { Story } from '../../shared/types';
+import type { Topic } from '../../modules/evidence';
 import { citeHref, citeLines, href } from '../../lib/url';
 import type { ToolSpec } from '../../tools';
 import { estimate, type Result } from '../../tools/heating-cost/model';

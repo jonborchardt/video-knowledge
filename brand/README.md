@@ -33,7 +33,7 @@ on its seal, lockups and banners; the closing card keeps the Commonwealth line).
   the same in every brand: red for the official acts (recorded, amended), the brand's ground for a finding, slate for
   a matter under examination. On the ground, record and finding go in paper ink, and amended and examination in a
   light red and a light slate (paper where those fall under 3:1 against the brand's ground).
-- `npm run brand` writes every kit: `scripts/brand/draw.js` draws each slot from the kit and the names in
+- `npm run brand` writes every kit: `src/modules/brand/draw/draw.js` draws each slot from the kit and the names in
   `src/config/site.ts`, Remotion's headless Chrome fits the text in the real fonts (`fonts/`, OFL), and the script
   saves `<slot>.svg` (committed) and the PNG or JPG its slot names (gitignored; run it to get files to upload), plus the
   site's seal copies `public/commissions/<key>.png`. Change a drawing in `draw.js` or a value in a kit, never an SVG.
@@ -52,9 +52,9 @@ Where the kit is used:
   commission, topic and story pages; its stamps (`public/stamps/<key>/`, `src/components/Stamp.astro`, paper ink
   swapped for ground ink in dark mode) close a topic page and a ready story page (record), mark the topic's finding,
   and mark a story still under examination.
-- **Video**: every render copies the story's institution's kit into the video folder's `brand/` (`src/video/brand.ts`,
+- **Video**: every render copies the story's institution's kit into the video folder's `brand/` (`src/modules/video/brand.ts`,
   gitignored), so a scene loads a slot with `staticFile('brand/<slot>.png')`. A landscape video of a published topic ends on
-  an unnarrated scene `end` (kind `close-card`, appended by `src/video/timeline.ts`): the kit's `close-card` for 4 s,
+  an unnarrated scene `end` (kind `close-card`, appended by `src/modules/video/timeline.ts`): the kit's `close-card` for 4 s,
   then its `endscreen-subscribe` for the 12 s YouTube's end-screen elements sit on. A music cue that runs to the end of the last
   narrated scene plays on under it. Its render cache key includes
   those two SVGs, so a redrawn kit re-renders it. The channel's avatar, banner and

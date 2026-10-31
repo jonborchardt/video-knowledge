@@ -8,10 +8,9 @@ import { execFileSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import Base from '../layouts/Base.astro';
-import { noteLine, stampOf } from '../lib/publish';
-import { jobStatus } from '../lib/review-job';
-import { type Finding, reviewMediaHref, reviewView, storyIdOfPath } from '../lib/review-view';
-import { scriptDir, storySlug } from '../lib/script';
+import { noteLine, stampOf } from '../modules/publishing';
+import { jobStatus, type Finding, reviewMediaHref, reviewView, storyIdOfPath } from '../modules/website';
+import { scriptDir, storySlug } from '../shared/io';
 import { href } from '../lib/url';
 
 const { topic = '', path = '' } = Astro.params;

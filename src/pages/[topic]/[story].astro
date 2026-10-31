@@ -13,26 +13,35 @@ import ArticleBody from '../../components/ArticleBody.astro';
 import HeatingCost from '../../components/tools/HeatingCost.astro';
 import MatterList from '../../components/MatterList.astro';
 import NextSteps from '../../components/NextSteps.astro';
-import { loadCta, resolveCtas } from '../../lib/cta';
-import { isPreview, matterItem, matterPath, related, storyNode } from '../../lib/content-graph';
-import { siteGraph } from '../../lib/site-graph';
+import {
+  loadCta,
+  resolveCtas,
+  isPreview,
+  matterItem,
+  matterPath,
+  related,
+  storyNode,
+  reviewMediaHref,
+  articleJsonLd,
+  breadcrumbJsonLd,
+  videoJsonLd,
+} from '../../modules/website';
+import { siteGraph } from '../../modules/website/site-graph';
 import { toolOf } from '../../tools';
-import { articleModified, loadArticleRelease } from '../../lib/article';
-import { articleView, releaseFigureDraws } from '../../lib/article-view';
-import { loadDatasets } from '../../lib/datasets';
-import { reviewMediaHref } from '../../lib/review-view';
-import { storySlug } from '../../lib/script';
-import { storyOutputs } from '../../lib/outputs';
-import { articleJsonLd, breadcrumbJsonLd, videoJsonLd } from '../../lib/seo';
-import { loadPublicRecord, revisionLine } from '../../lib/public-record';
-import { FINDING_LABELS, FINDING_TEXT, findingLabel, labelCounts } from '../../lib/finding-label';
+import { articleModified, articleView, loadArticleRelease, releaseFigureDraws } from '../../modules/article';
+import { loadDatasets } from '../../modules/evidence';
+import { storySlug } from '../../shared/io';
+import { storyOutputs } from '../../modules/publishing';
+import { loadPublicRecord, revisionLine } from '../../shared/public-record';
+import { FINDING_LABELS, FINDING_TEXT, findingLabel, labelCounts } from '../../modules/evidence';
 import SourceIcons from '../../components/SourceIcons.astro';
 import SourceLink from '../../components/SourceLink.astro';
 import Stamp from '../../components/Stamp.astro';
 import { commissionBody, commissionKey, commissionOf, site } from '../../config/site';
-import { loadStories, type Story, storyUrlSlug } from '../../lib/stories';
-import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
-import { ROOT } from '../../lib/io';
+import { loadStories, storyUrlSlug } from '../../modules/stories';
+import type { Story } from '../../shared/types';
+import { loadTopic, publicTopicNames, type Topic } from '../../modules/evidence';
+import { ROOT } from '../../shared/io';
 import { href } from '../../lib/url';
 
 export function getStaticPaths() {

@@ -24,7 +24,7 @@ topics/<topic>/
   glyph.svg    optional: line-art icon (44x44 viewBox, stroke currentColor) shown on the home card
   changed-minds.json  optional notes from the changed-minds pass (step 6); nothing reads it
   stories.json  written by `npm run stories -- discover`; commit it (the story-ideas page is built from it)
-  story-review.json  optional, written by the review agent (scripts/briefs/stories.md); discover merges it
+  story-review.json  optional, written by the review agent (src/modules/stories/briefs/stories.md); discover merges it
   scripts/<story slug>/  one generated script per story: evidence-package.json, script.json, script-review.json,
                validation.json, storyboard.json and the readable script.md, storyboard.md, review.md; commit them
   work/        scratch for agent batches (gitignored)
@@ -36,14 +36,14 @@ The agent does the reading and judging; the scripts do the bookkeeping. Steps 3â
 
 1. **Lists.** Create `topics/<topic>/videos.txt` (and `blogs.txt` if any). Mark later additions with a `# --- Batch N, <how they were found>` line so it's clear which sources came from where.
 2. **Fetch.** `npm run watcher -- fetch topics/<topic>/videos.txt --store topics/<topic>/store`, then the same for `blogs.txt`. Videos without captions are reported and skipped. An article that comes out as junk can be attached by hand: `npm run watcher -- fetch --text <file> <id> --title "<t>" --url <u> --store topics/<topic>/store`.
-3. **Extract.** Write the claims list (`npm run watcher -- claims list --topic <topic> --store topics/<topic>/store > topics/<topic>/work/claims.txt`), split the `extract` entries from `npm run watcher -- next --json --store topics/<topic>/store` into `topics/<topic>/work/grpN.txt` files (about 400k characters each), and give each group to an agent with `scripts/briefs/extract.md`. Each writes `topics/<topic>/work/hN.json` with its claims, AI guesses and lean tags (the format is typed and checked in `src/lib/batches.ts`; `record` refuses a malformed file before writing anything).
+3. **Extract.** Write the claims list (`npm run watcher -- claims list --topic <topic> --store topics/<topic>/store > topics/<topic>/work/claims.txt`), split the `extract` entries from `npm run watcher -- next --json --store topics/<topic>/store` into `topics/<topic>/work/grpN.txt` files (about 400k characters each), and give each group to an agent with `src/modules/evidence/briefs/extract.md`. Each writes `topics/<topic>/work/hN.json` with its claims, AI guesses and lean tags (the format is typed and checked in `src/modules/evidence/batches.ts`; `record` refuses a malformed file before writing anything).
 4. **Merge and record.** Agents working in parallel can each create the same new claim. List those in a merges file (`{"<duplicate text>": "<existing-slug>" | "=<canonical new text>"}`), then:
    ```
    npm run merge-claims -- topics/<topic>/work/merges.json topics/<topic>/work/h*.json
    npm run record -- <topic> topics/<topic>/work/h1.json --label "<Topic label>"   # --label only on the very first batch
    npm run record -- <topic> topics/<topic>/work/h2.json                            # â€¦and so on; --from <id> resumes
    ```
-5. **Studies.** Put papers in `topics/<topic>/sources/` and convert them (`pdftotext -layout x.pdf x.txt`). Give each agent `scripts/briefs/sources.md`, a few documents and the claims list. Each writes `topics/<topic>/work/sv_G.json`. Then `npm run record-sources -- <topic> topics/<topic>/work/sv_*.json`. When you add claims or documents later, only the new pairs need checking: new claims against all documents, and new documents against all claims.
+5. **Studies.** Put papers in `topics/<topic>/sources/` and convert them (`pdftotext -layout x.pdf x.txt`). Give each agent `src/modules/evidence/briefs/sources.md`, a few documents and the claims list. Each writes `topics/<topic>/work/sv_G.json`. Then `npm run record-sources -- <topic> topics/<topic>/work/sv_*.json`. When you add claims or documents later, only the new pairs need checking: new claims against all documents, and new documents against all claims.
 6. **Changed minds.** If a speaker reverses an earlier position in a later source, run `npm run watcher -- supersede <old-id> <new-id> --store topics/<topic>/store`. The old source stays listed but stops counting.
 7. **Institution.** Claim the topic in `commissions` (`src/config/site.ts`): an existing institution, or a new one whose channel a person has created (never an invented handle); a similar subject can be a second topic under another institution. Then `npm run brand`.
 8. **Publish.** Optionally add `topics/<topic>/site.json` (copy `topics/ai-coding/site.json`: recap groups, bottom line, study display names). Then `npm run report && npm run validate`, check the page with `npm run dev`, and commit and push.
@@ -71,11 +71,11 @@ npm run stories -- validate <topic> <file.json>  # run the evidence gate on your
 
 Three layers, kept apart:
 
-- **Deterministic** (`src/lib/stories.ts` drafting, `src/lib/evidence.ts` checks): five kinds of candidate are drafted
+- **Deterministic** (`src/modules/stories/stories.ts` drafting, `src/shared/evidence-gate.ts` checks): five kinds of candidate are drafted
   (a popular claim a study contradicts, studies or sources that disagree, a study that overturned the AI guess, a widely
   repeated claim nobody checked, and the recap groups in `site.json` as decision stories), and every reference is
   verified. Ids are `<kind>:<claim slug>`, so a rerun is byte-identical and ids survive corpus changes.
-- **Semantic judgment** (`topics/<topic>/story-review.json`, written by an agent following `scripts/briefs/stories.md`): does a
+- **Semantic judgment** (`topics/<topic>/story-review.json`, written by an agent following `src/modules/stories/briefs/stories.md`): does a
   study verdict decide _this_ sentence (`direct`, `partial`, `contextual`), do a candidate's claims answer one question
   (coherence score, pruned claim list, or rejection), and are the audit's qualifications carried into the narrative.
   Without a review, the validator falls back to conservative wording heuristics (a base rate is only context for a
@@ -102,7 +102,7 @@ at `needs-review`. Its evidence package carries every question's own premise, te
 story outside a chain (ready stories sharing no claims, nearest in wording); the reviewer decides. A review entry for an
 id discovery no longer drafts fails a test (`staleReviewIds`).
 
-The validator (`src/lib/evidence.ts`) takes an assertion (`fact`, `attribution` or `disagreement`), the canonical
+The validator (`src/shared/evidence-gate.ts`) takes an assertion (`fact`, `attribution` or `disagreement`), the canonical
 claims it rests on and its evidence references, and returns a status (`supported`, `qualified`, `disputed`,
 `unsupported`, `unverified`), a publication decision (`approved`, `qualify`, `blocked`), whether a human must review
 it, and the supporting, contradicting and qualifying evidence with passages. It is deterministic and fails closed: a
@@ -134,16 +134,16 @@ endorsing X.
 
 A `ready` story becomes a narration script and a storyboard in `topics/<topic>/scripts/<story slug>/`. The code builds
 the evidence package, checks the script and fills in the storyboard; three agent briefs do the writing and the
-judging (`scripts/briefs/script.md`, `script-review.md`, `storyboard.md`). Every stage persists its output, so a
+judging (`src/modules/script/briefs/script.md`, `script-review.md`; `src/modules/storyboard/briefs/storyboard.md`). Every stage persists its output, so a
 rejected script is revised and rechecked without touching research or story discovery.
 
 ```
 npm run script -- package <topic> <story-id>      # evidence-package.json: the story, its final claims, every passage, statement and gap
-# an agent writes script.json from scripts/briefs/script.md
+# an agent writes script.json from src/modules/script/briefs/script.md
 npm run script -- validate <topic> <story-id>     # validation.json, script.md, review.md (exit 2 when blocked)
 npm run script -- show <topic> <story-id> [s12]   # the reviewer's sheet: sentences, assertions, fingerprints, passages
-# an independent agent writes script-review.json from scripts/briefs/script-review.md, then validate again
-# an agent writes storyboard.json from scripts/briefs/storyboard.md
+# an independent agent writes script-review.json from src/modules/script/briefs/script-review.md, then validate again
+# an agent writes storyboard.json from src/modules/storyboard/briefs/storyboard.md
 npm run script -- storyboard <topic> <story-id>   # fills narration and timing, checks charts and citations; storyboard.md
 npm run script -- run <topic> <story-id>          # every stage whose inputs exist, then the next agent step
 npm run script -- lock <topic> <story-id> --approved-by "<name>"   # release.json: the approved fingerprints (passed + ok only)
@@ -189,10 +189,11 @@ voice, rate and text, with the measured duration and word boundaries in `narrati
 accepted draft with it) and `openai` (commercial terms; `OPENAI_API_KEY`, word timestamps from its transcription of
 the output, cost estimated in the manifest). The timeline tiles the scenes by the measured audio, never by the word-count estimate, resolves
 every cue to the frame its word is spoken on, and reads each cited excerpt from the corpus. The composition is
-Remotion (React components in `src/video/remotion/scenes/`; the closed kind records in `src/video/kinds.ts`, with
-each video's bespoke kinds registered in `src/video/bespoke/`). Scenes render one at a time into cached chunks
-(`video/scenes/`, keyed by the scene and the code that draws it: the component and every helper it imports, however
-deep), the chunks are concatenated without re-encoding (`src/video/assemble.ts`), and the narration is laid down as one
+Remotion (React components in `src/modules/video/remotion/scenes/`; the closed kind records in `src/modules/video/kinds.ts`, with
+each video's bespoke kinds registered in `src/modules/video/bespoke/`). Scenes render one at a time into cached chunks
+(`video/scenes/`, keyed by the scene and the code that draws it: the component and every helper it imports by value, however
+deep, each normalised with its type-only imports removed; that normalisation moved every chunk key once, a cache
+re-render, never an approval), the chunks are concatenated without re-encoding (`src/modules/video/assemble.ts`), and the narration is laid down as one
 loudness-normalised track; ffmpeg comes with Remotion, nothing else is installed. Rendering needs Chrome (downloaded
 on first run). A scene without a renderer is reported, never substituted.
 
@@ -302,7 +303,7 @@ captions (`brand/design.md` 2.6). A Short is a nested production, `<story-id>/sh
 
 ```
 npm run shorts -- discover <topic> <story-id>     # shorts.json: one candidate per finding scene of the produced video
-# an agent writes shorts-review.json from scripts/briefs/shorts.md (keep, slug, format, hook, carries), then discover again
+# an agent writes shorts-review.json from src/modules/shorts/briefs/shorts.md (keep, slug, format, hook, carries), then discover again
 npm run shorts -- show <topic> <story-id> [key]   # a candidate with its sentences, qualifications and passages
 /produce <topic> <story-id>/shorts/<slug>         # package, writer, reviewer, storyboard, lock, render, qa, package: the same loop
 ```
@@ -325,7 +326,7 @@ Short; the related-video link has no API and is set in YouTube Studio, then reco
 ## Production board
 
 The Board, Stages, Pipeline and Artifacts tabs of `/admin` on the dev server (never on the public site) show what stage every topic, story and script is in. Everything on them is derived at
-build time by `src/lib/production.ts` from the committed files: the research pipeline per topic (sources listed vs
+build time by `src/orchestration/production.ts` from the committed files: the research pipeline per topic (sources listed vs
 fetched, fetched vs extracted, documents vs recorded verdicts, report vs store, stories.json vs a fresh `discover`,
 candidates reviewed), each story's readiness, and for each `topics/<topic>/scripts/<slug>/` the health of every artifact.
 "Current" means re-running the library on today's inputs reproduces the file, the same test `lock` applies
@@ -496,7 +497,7 @@ It asks for:
 - **Evidence (720p or larger, address bar visible, one file under 10 MB each):** the privacy page showing its YouTube
   sections, the Google Privacy Policy link and what is kept; the home page showing the footer's Privacy link beside the
   channel links; the terms; the consent screen, scopes and revocation; for uploading, the upload script
-  (`src/lib/uploader.ts` with `scripts/publish.ts`, public in this repository) or a screencast.
+  (`src/modules/publishing/uploader.ts` with `src/modules/publishing/cli.ts`, public in this repository) or a screencast.
 - **Attestations:** the YouTube API Services Terms of Service, the Google Privacy Policy, the Developer Policies,
   termination and accuracy.
 
@@ -523,14 +524,14 @@ Paste it into a Claude Code session in this repo (fill in your name) and leave. 
 `npm run board -- next <topic> <story-id> --json`: it runs each command the board names and hands each brief to a
 fresh agent (the writer and reviewer, the graphics builder and visual reviewer, are never the same agent). Between
 `storyboard` and `lock` the board's `graphics` stage drafts `video/render.json` (`npm run video -- init`), has a
-bespoke component built for each diagram or animation (`scripts/briefs/graphics.md`), judged from its frames by
-another agent (`scripts/briefs/visual-review.md`), and requires a current `npm run video -- check`. After the lock it
+bespoke component built for each diagram or animation (`src/modules/video/briefs/graphics.md`), judged from its frames by
+another agent (`src/modules/video/briefs/visual-review.md`), and requires a current `npm run video -- check`. After the lock it
 renders, drafts the cue sheet (`npm run music -- cues`), mixes, runs QA and makes the review package.
 
 It ends one of two ways: **packaged** (committed after `npm run validate`, never pushed, with
 `video/review/run-report.md` listing every judgment call: evidence added, revisions, graphics, music, the QA result),
 or **stopped** (nothing committed; the stage, the open problem and what would unblock it). A missing passage goes to
-an evidence agent (`scripts/briefs/evidence.md`) rather than a weaker sentence; a writer pass that spends its three
+an evidence agent (`src/modules/evidence/briefs/evidence.md`) rather than a weaker sentence; a writer pass that spends its three
 revisions with blocking findings open stops the run.
 
 On a `packaged` story the popover offers the send-back prompt instead, ending in `Notes:`; each note goes to the
@@ -547,7 +548,7 @@ A fresh checkout plus these makes a story's `topics/<topic>/scripts/<slug>/video
   are the ones in Remotion's compositor package; `FFMPEG_DIR` overrides the directory.
 - **Python 3 with `pip install edge-tts`** for the draft voice (`VK_PYTHON` names the interpreter, default
   `python`). The release voice needs `AZURE_SPEECH_KEY=...` and `AZURE_SPEECH_REGION=...` in `.env` at the repo root
-  (gitignored; `scripts/video.ts` loads it); only `npm run video -- final` uses it.
+  (gitignored; `src/modules/video/cli.ts` loads it); only `npm run video -- final` uses it.
 - **The music assets**: `music/undertow/*.wav` are not committed. Either copy `music/undertow/source.strudel` into a
   strudel-bench checkout as `songs/undertow.strudel`, run `npm run headless -- songs/undertow.strudel` there, and
   `STRUDEL_BENCH=<dir> npm run music -- render undertow` here; or delete `video/music.json` to build without music.
@@ -588,15 +589,15 @@ Rehearsing a go-live: the public build shows only stories with a live video, so 
 
 ### Refreshing a dataset
 
-A dataset (`topics/<topic>/data/<id>.json`) needs a refresh when `tests/datasets.test.ts` fails with "refresh it", which it does once the dataset's `retrieved` date is older than `DATASET_MAX_AGE_DAYS` (`src/lib/datasets.ts`), or when EIA publishes a newer full year of prices (the Electric Power Annual and the Natural Gas Annual).
+A dataset (`topics/<topic>/data/<id>.json`) needs a refresh when `src/modules/evidence/tests/datasets.test.ts` fails with "refresh it", which it does once the dataset's `retrieved` date is older than `DATASET_MAX_AGE_DAYS` (`src/modules/evidence/datasets.ts`), or when EIA publishes a newer full year of prices (the Electric Power Annual and the Natural Gas Annual).
 
-The new figures come in as a new source document. A source agent (`scripts/briefs/sources.md`) writes `topics/<topic>/sources/eia-<year>-state-residential-energy-prices.txt` in the same layout as the current one: line 1 names the tables and ends `(retrieved YYYY-MM-DD)`, Parts 1 and 2 hold the raw prices, and the derived section shows its method. It never edits the old file, whose cites stay valid for everything that already cites it.
+The new figures come in as a new source document. A source agent (`src/modules/evidence/briefs/sources.md`) writes `topics/<topic>/sources/eia-<year>-state-residential-energy-prices.txt` in the same layout as the current one: line 1 names the tables and ends `(retrieved YYYY-MM-DD)`, Parts 1 and 2 hold the raw prices, and the derived section shows its method. It never edits the old file, whose cites stay valid for everything that already cites it.
 
 The document enters the corpus through `npm run record-sources -- <topic> topics/<topic>/work/sv_*.json`, with a verdict on `heat-pumps/whether-heat-pump-cheaper-run-gas` that cites the method lines, as `topics/heat-pumps/work/sv_A.json` does for the current file. The store is never hand-edited. Then run `npm run report`; if the claim's finding changes, it prints the revision that needs a `note`.
 
 Then rewrite the dataset: its cites point into the new file, and `asOf` and `retrieved` say what the new file says. Point the tool's own cites (`src/tools/heating-cost/spec.ts`: `justification`, `afue`, `cops`, `latest`) at the new file as well, and update `latest.value` to the new file's figure. Rewrite the period in `priceNote`'s wording there ("January to July 2026 electricity and 2025 gas prices") to the new file's, and in `tests/tools.test.ts` update the expected note and the `3.60` in the `latest` passage check to the new file's values. A `retrieved` date after today fails `datasetProblems`.
 
-Check with `npx vitest run tests/datasets.test.ts tests/tools.test.ts`. The recompute test in `tests/tools.test.ts` reads the raw columns by line range: update the ranges and the file name for the new file, never the expected arithmetic. Then run `npm run validate` and `npm run quality`.
+Check with `npx vitest run src/modules/evidence/tests/datasets.test.ts tests/tools.test.ts`. The recompute test in `tests/tools.test.ts` reads the raw columns by line range: update the ranges and the file name for the new file, never the expected arithmetic. Then run `npm run validate` and `npm run quality`.
 
 A new verdict can change the story's evidence package on its next `npm run script -- package`, and the board then says what to re-bind. A changed finding makes released articles stale, and `npm run board -- next` names the article step.
 

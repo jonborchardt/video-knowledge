@@ -1,0 +1,57 @@
+import { readFileSync, existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { describe, expect, it } from 'vitest';
+import { ROOT } from '../src/shared/io';
+import { check, importsOf, resolveSpecifier, violations, walk } from './boundaries-helpers';
+
+const config = JSON.parse(readFileSync(join(ROOT, 'tests/boundaries.json'), 'utf8'));
+const exists = (p: string) => existsSync(join(ROOT, p));
+
+describe('module boundaries (CLAUDE.md: Module boundaries)', () => {
+  const paths = [...walk(['src', 'scripts'], ROOT), ...(exists('astro.config.mjs') ? ['astro.config.mjs'] : [])];
+  const files = paths.map((path) => {
+    const source = readFileSync(join(ROOT, path), 'utf8');
+    const specs = importsOf(path, source);
+    const imports = specs.map((s) => resolveSpecifier(path, s, exists) ?? s);
+    return { path, specs, imports, source };
+  });
+  const { unexpected, stale } = check(violations(files, config), config.edges);
+
+  it('has no import edge outside the allowlist', () => {
+    const lines = unexpected.map((v) => `  { "from": "${v.from}", "to": "${v.to}", "until": "<cap>" }  // ${v.rule}`);
+    expect(unexpected, `unlisted edges:\n${lines.join('\n')}`).toEqual([]);
+  });
+  it('has no stale allowlist entry', () => {
+    expect(stale, `remove from tests/boundaries.json:\n${JSON.stringify(stale, null, 1)}`).toEqual([]);
+  });
+  it('gives every allowlisted edge an until', () => {
+    expect(config.edges.filter((e: { until?: string }) => !e.until)).toEqual([]);
+  });
+  it('names a known capability in every until', () => {
+    const caps = new Set<string>([
+      'shared',
+      ...Object.values<string>(config.capabilities).filter((c) => c !== '@folder'),
+    ]);
+    expect(config.edges.filter((e: { until: string }) => !caps.has(e.until))).toEqual([]);
+  });
+  it('resolves a folder import to its index.ts, never to the folder', () => {
+    // existsSync is true for a folder too; a folder is not a file the rules can judge, so an import of a module
+    // index written as '../modules/x' must land on src/modules/x/index.ts.
+    const fs = new Set(['src/modules/x/index.ts', 'src/lib/y.ts', 'scripts/w.mjs']);
+    const has = (p: string) => fs.has(p) || p === 'src/modules/x' || p === 'src/lib';
+    expect(resolveSpecifier('src/lib/a.ts', '../modules/x', has)).toBe('src/modules/x/index.ts');
+    expect(resolveSpecifier('src/lib/a.ts', './y', has)).toBe('src/lib/y.ts');
+    expect(resolveSpecifier('scripts/v.ts', './w.mjs', has)).toBe('scripts/w.mjs');
+    expect(resolveSpecifier('src/lib/a.ts', '.', has)).toBeNull();
+  });
+
+  it('resolves every relative import, so no edge is dropped', () => {
+    const misses = files.flatMap((f) =>
+      f.specs
+        .filter((s) => s.startsWith('./') || s.startsWith('../'))
+        .filter((s) => resolveSpecifier(f.path, s, exists) === null)
+        .map((s) => `${f.path}: ${s}`),
+    );
+    expect(misses).toEqual([]);
+  });
+});

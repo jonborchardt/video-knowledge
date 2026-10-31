@@ -1,0 +1,42 @@
+# Modules
+
+Each capability is a folder here (`index.ts` public API, `cli.ts` the npm entry, `briefs/`, `tests/`, `README.md`).
+Boundaries are enforced by
+`tests/boundaries.test.ts` (config `tests/boundaries.json`); this table is the only place future ownership is recorded
+in code.
+
+| capability      | today                                                                                                                                                                                    | CLI                                                                                                         | briefs                                                                |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| shared          | `src/shared/` (contracts, io, sentence validation, evidence gate, public record, look, build report, inspect), `src/config/`                                                             |                                                                                                             |                                                                       |
+| evidence        | `src/modules/evidence/` (`topics.ts`, `corpus.ts`, `batches.ts`, `finding-label.ts`, `verdict-label.ts`, `cited.ts`, `datasets.ts`, `live-claims.ts`)                                    | `src/modules/evidence/cli-report.ts`, `record.mjs`, `record-sources.mjs`, `watcher.mjs`, `merge-claims.mjs` | `extract.md`, `sources.md`, `evidence.md`                             |
+| stories         | `src/modules/stories/`                                                                                                                                                                   | `src/modules/stories/cli.ts`                                                                                | `stories.md`                                                          |
+| script          | `src/modules/script/` (`evidence-package.ts`, `script-md.ts`; validators in `src/shared/`)                                                                                               | `src/modules/script/cli.ts`                                                                                 | `script.md`, `script-review.md`                                       |
+| storyboard      | `src/modules/storyboard/` (`storyboard.ts`, `chart-geometry.ts`; types in `src/shared/types.ts`)                                                                                         | (driven by `src/modules/script/cli.ts`)                                                                     | `storyboard.md`                                                       |
+| video           | `src/modules/video/` (`remotion/`, `bespoke/`, `tts/`, `render-check.ts`, `final.ts`), `music/`                                                                                          | `src/modules/video/cli.ts`, `cli-music.ts`                                                                  | `graphics.md`, `visual-review.md`, `video-fix.md`, `strudel-bench.md` |
+| packaging       | `src/modules/packaging/`                                                                                                                                                                 | `src/modules/packaging/cli.ts`                                                                              |                                                                       |
+| article         | `src/modules/article/`                                                                                                                                                                   | `src/modules/article/cli.ts`                                                                                | `article.md`, `article-review.md`                                     |
+| shorts          | `src/modules/shorts/`                                                                                                                                                                    | `src/modules/shorts/cli.ts`                                                                                 | `shorts.md`                                                           |
+| publishing      | `src/modules/publishing/`                                                                                                                                                                | `src/modules/publishing/cli.ts`                                                                             |                                                                       |
+| brand           | `src/modules/brand/`, `brand/`                                                                                                                                                           | `src/modules/brand/cli.ts`                                                                                  |                                                                       |
+| website         | `src/modules/website/` (graph, SEO, CTA, review page model and job, rehearsal), `src/pages`, `src/components`, `src/layouts`, `src/styles`, `src/admin`, `src/tools`, `astro.config.mjs` | `src/modules/website/cli-links.ts`, `cli-quality.ts`, `cli-rehearse.ts`                                     | `cta.md`                                                              |
+| orchestration   | `src/orchestration/`                                                                                                                                                                     | `src/orchestration/board.ts`                                                                                | `.claude/skills/produce/SKILL.md`                                     |
+| topic-discovery | Milestone 2, not present                                                                                                                                                                 |                                                                                                             |                                                                       |
+| social          | Milestone 2, not present                                                                                                                                                                 |                                                                                                             |                                                                       |
+
+Orchestration lives outside this folder: `src/orchestration/` (the board, `npm run board`) reads the modules through their
+`index.ts` and decides stage, next step, halt kind and column (a published output's next line is the ledger's own, passed through); see `src/orchestration/README.md`.
+
+## Responsibility boundaries
+
+1. **Topic discovery vs. evidence.** Topic discovery (future) identifies, evaluates, scores and deduplicates
+   candidate topics; its output is a proposal (institution fit, rationale, potential claims, preliminary sources,
+   research feasibility). Evidence owns substantive research: gathering sources, extracting claims, assessing
+   studies, maintaining verdicts, generating reports, and is the only writer of the store. Topic discovery must
+   never become a second evidence-research implementation.
+2. **Publishing vs. social.** Publishing owns YouTube-specific operations: uploads, release approval records,
+   scheduling, go-live, verification. Social (future) owns X-specific content and publication. No generalized
+   publishing framework, no coupling between the two; orchestration coordinates them.
+3. **Article vs. website.** Article owns editorial content through its lifecycle: drafting, review, validation,
+   corrections and reaffirmations when evidence changes (`article -- correct`, `reaffirm`). Website owns
+   rendering, content relationships, building and deploying the site; it never decides whether a finding needs a
+   correction.

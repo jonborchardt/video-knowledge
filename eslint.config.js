@@ -9,11 +9,14 @@ export default [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   ...astro.configs.recommended,
-  { files: ['scripts/**/*.mjs', '.claude/**/*.mjs', '*.config.{js,mjs}'], languageOptions: { globals: globals.node } },
+  {
+    files: ['scripts/**/*.mjs', 'src/modules/evidence/*.mjs', '.claude/**/*.mjs', '*.config.{js,mjs}'],
+    languageOptions: { globals: globals.node },
+  },
   // Web-quality gate (F. security): HTML-string sinks only with committed repo content, each use disabled with a reason.
   {
     files: ['src/**/*.{astro,ts}'],
-    ignores: ['src/video/**'],
+    ignores: ['src/modules/video/**'],
     rules: {
       'astro/no-set-html-directive': 'error',
       'no-restricted-syntax': [

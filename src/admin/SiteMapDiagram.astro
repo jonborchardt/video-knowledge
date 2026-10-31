@@ -4,11 +4,11 @@
 // templates in src/pages and src/components). Each box links to a live example on this dev server: the first public
 // topic with a live video if there is one, else the first with a matter page.
 import { commissionKey, commissionOf } from '../config/site';
-import { inquiryMatters, matterPath, type Node, urlOf } from '../lib/content-graph';
-import { siteGraph } from '../lib/site-graph';
-import { loadDatasets } from '../lib/datasets';
-import { scriptDirs } from '../lib/script';
-import { publicTopicNames } from '../lib/topics';
+import { inquiryMatters, matterPath, type Node, urlOf } from '../modules/website';
+import { siteGraph } from '../modules/website/site-graph';
+import { loadDatasets } from '../modules/evidence';
+import { scriptDirs } from '../shared/io';
+import { publicTopicNames } from '../modules/evidence';
 import { href } from '../lib/url';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';

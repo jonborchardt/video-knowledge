@@ -1,6 +1,6 @@
-import { datasetCsv, dataRef, loadDatasets } from '../../../lib/datasets';
-import { siteGraph } from '../../../lib/site-graph';
-import { publicTopicNames } from '../../../lib/topics';
+import { datasetCsv, dataRef, loadDatasets } from '../../../modules/evidence';
+import { siteGraph } from '../../../modules/website/site-graph';
+import { publicTopicNames } from '../../../modules/evidence';
 
 export function getStaticPaths() {
   const g = siteGraph();

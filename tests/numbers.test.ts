@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { hasFigure, nums, spokenWords, wordsToDigits } from '../src/lib/numbers';
+import { hasFigure, nums, spokenWords, wordsToDigits } from '../src/shared/numbers';
 
 describe('number words', () => {
   it.each([

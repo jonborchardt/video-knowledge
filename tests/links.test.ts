@@ -2,13 +2,13 @@ import { existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync 
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { loadMoved, manifestProblems } from '../src/lib/content-graph';
+import { loadMoved, manifestProblems } from '../src/modules/website';
 import { site } from '../src/config/site';
-import { readJson, toJson, topicDir } from '../src/lib/io';
-import { loadStories } from '../src/lib/stories';
-import { publicTopicNames } from '../src/lib/topics';
-import { scriptDir } from '../src/lib/script';
-import { uploadProblem } from '../src/lib/uploader';
+import { readJson, toJson, topicDir } from '../src/shared/io';
+import { loadStories } from '../src/modules/stories';
+import { publicTopicNames } from '../src/modules/evidence';
+import { scriptDir } from '../src/shared/io';
+import { uploadProblem } from '../src/modules/publishing';
 import {
   assertWithinLimits,
   descriptionLinks,
@@ -16,10 +16,10 @@ import {
   keywordsOf,
   renderDescription,
   type ReviewPackage,
-} from '../src/video/package';
-import type { BuildReport } from '../src/video/report';
-import type { Segment } from '../src/video/select';
-import type { Timeline } from '../src/video/types';
+} from '../src/modules/packaging';
+import type { BuildReport } from '../src/modules/video/report';
+import type { Segment } from '../src/modules/video/select';
+import type { Timeline } from '../src/modules/video/types';
 
 let root = '';
 afterEach(() => root && rmSync(root, { recursive: true, force: true }));

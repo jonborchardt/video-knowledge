@@ -5,7 +5,17 @@ import { configDefaults, defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     projects: [
-      { test: { name: 'unit', exclude: [...configDefaults.exclude, 'tests/browser/**'] } },
+      {
+        test: {
+          name: 'unit',
+          include: ['tests/**/*.test.ts', 'src/modules/**/tests/**/*.test.ts'],
+          exclude: [...configDefaults.exclude, 'tests/browser/**'],
+          // The unit suite runs the repo's CLIs (board, publish, packaging, final) as real processes beside the
+          // fixture-copying tests; vitest's 5 s default was the budget of an in-process suite and times out
+          // healthy tests under that load. 30 s still catches a hang; no assertion depends on the timeout.
+          testTimeout: 30_000,
+        },
+      },
       {
         test: {
           name: 'browser',

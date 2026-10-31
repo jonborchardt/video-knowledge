@@ -1,8 +1,7 @@
 // A small synthetic corpus in the shape loadTopic() produces, for the evidence and story tests.
-import type { Corpus } from '../src/lib/corpus';
-import type { PassageReader } from '../src/lib/evidence';
-import type { StoryInput } from '../src/lib/stories';
-import type { ClaimSourceView, ClaimVerdictView, ClaimView, Verdict } from '../src/lib/topics';
+import type { ClaimSourceView, ClaimVerdictView, Corpus, PassageReader } from '../src/shared/types';
+import type { StoryInput } from '../src/modules/stories';
+import type { ClaimView, Verdict } from '../src/modules/evidence';
 
 export const TOPIC = 'demo';
 export const DOC_A = `${TOPIC}/sources/rct-a.txt#L10-L12`;

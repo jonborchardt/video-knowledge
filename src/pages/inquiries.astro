@@ -7,11 +7,10 @@ import Base from '../layouts/Base.astro';
 import KindIcon from '../components/KindIcon.astro';
 import MatterList from '../components/MatterList.astro';
 import SourceIcons from '../components/SourceIcons.astro';
-import { inquiryMatters } from '../lib/content-graph';
-import { siteGraph, siteTopics } from '../lib/site-graph';
+import { inquiryMatters, breadcrumbJsonLd, collectionJsonLd } from '../modules/website';
+import { siteGraph, siteTopics } from '../modules/website/site-graph';
 import { commissionKey, commissions, site } from '../config/site';
-import { breadcrumbJsonLd, collectionJsonLd } from '../lib/seo';
-import { loadTopic } from '../lib/topics';
+import { loadTopic } from '../modules/evidence';
 import { href } from '../lib/url';
 
 const graph = siteGraph();

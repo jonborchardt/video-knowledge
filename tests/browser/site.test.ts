@@ -8,7 +8,7 @@ import axe from 'axe-core';
 import { preview } from 'astro';
 import { chromium, firefox, webkit, type Browser, type BrowserContextOptions, type Page } from 'playwright';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { ROOT } from '../../src/lib/io';
+import { ROOT } from '../../src/shared/io';
 import { DIST, distPages, representativePages, summarize, triage, type Finding } from '../web-quality-helpers';
 
 const ENGINES = { chromium, firefox, webkit };

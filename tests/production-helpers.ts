@@ -3,31 +3,29 @@
 import { cpSync, existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
-import { ARTICLE_FILES } from '../src/lib/article';
-import type { BuildSummary } from '../src/lib/build-report';
-import { article } from './article-helpers';
-import { corpusOf } from '../src/lib/corpus';
-import { passageReader } from '../src/lib/evidence';
-import { buildPackage, docHasher, docReader } from '../src/lib/evidence-package';
-import { fileSha, readJson, sha, toJson, topicDir } from '../src/lib/io';
-import { lookFingerprint } from '../src/lib/look';
-import { storyboardFingerprint, validationFingerprint } from '../src/lib/release';
-import { renderCheckProblems } from '../src/lib/render-check';
-import { loadReview, reviewPath } from '../src/lib/review';
+import { ARTICLE_FILES } from '../src/modules/article';
+import type { BuildSummary } from '../src/shared/build-report';
+import { article } from '../src/modules/article/tests/article-helpers';
 import {
+  passageReader,
+  docHasher,
+  docReader,
+  fileSha,
+  readJson,
+  sha,
+  toJson,
+  topicDir,
   FILES,
-  type Release,
-  type Script,
-  type ScriptReviewFile,
-  type SectionName,
-  type SentenceType,
   scriptDir,
-  scriptFingerprint,
-  sentenceFingerprint,
-  sentences,
   shortId,
-} from '../src/lib/script';
-import { validateScript } from '../src/lib/script-validation';
+} from '../src/shared/io';
+import { buildPackage } from '../src/modules/script';
+import { lookFingerprint } from '../src/shared/look';
+import { storyboardFingerprint } from '../src/shared/release-check';
+import { renderCheckProblems } from '../src/modules/video/render-check';
+import { scriptFingerprint, sentenceFingerprint, sentences } from '../src/shared/sentences';
+import type { Release, Script, ScriptReviewFile, SectionName, SentenceType, StoryboardPlan } from '../src/shared/types';
+import { validateScript, validationFingerprint } from '../src/shared/sentence-validation';
 import {
   type ShortsReviewFile,
   buildShortPackage,
@@ -35,16 +33,20 @@ import {
   loadShortParent,
   shortsPath,
   shortsReviewPath,
-} from '../src/lib/shorts';
-import { chainOf, loadStories, storiesPath } from '../src/lib/stories';
-import { type StoryboardPlan, buildStoryboard } from '../src/lib/storyboard';
-import { loadTopic } from '../src/lib/topics';
-import { writeRenderCheck } from '../src/video/check';
-import { initVideo } from '../src/video/init';
+} from '../src/modules/shorts';
+import { chainOf, loadReview, loadStories, reviewPath, storiesPath } from '../src/modules/stories';
+import { buildStoryboard } from '../src/modules/storyboard';
+import { corpusOf, loadTopic } from '../src/modules/evidence';
+import { writeRenderCheck } from '../src/modules/video/check';
+import { initVideo } from '../src/modules/video/init';
 
 // Matched against the path inside the topic, never the checkout's own path (CI checks out under .../work/...).
 const SKIP = ['/store/transcripts', '/work', '/video/scenes', '/video/narration', '/video/frames', '/publish.json'];
 const SKIP_EXT = ['.pdf', '.mp4', '.wav', '.png'];
+
+/** Make `root` a root a repo CLI runs in: a package.json with the repo's name, so its ROOT resolves to it. */
+export const cliRoot = (root: string): void =>
+  writeFileSync(join(root, 'package.json'), toJson({ name: 'video-knowledge', private: true }));
 
 /** Re-record a build's look (undefined: a report from before builds recorded it) and re-point the review package at
  *  the edited report, so only the look differs. */
@@ -54,6 +56,35 @@ export function setLook(dir: string, look: string | undefined): void {
   writeFileSync(rp, toJson({ ...r, fingerprints: { ...r.fingerprints, look } }));
   const pp = join(dir, 'video', 'review', 'review.json');
   writeFileSync(pp, toJson({ ...readJson<object>(pp)!, buildReport: fileSha(rp) }));
+}
+
+/** A packaged draft fixture as `npm run video -- final` leaves it: the Azure build `release` packaged on disk, its
+ *  build report naming the Edge draft it replaced. With uncleared music the Azure build is still labelled a draft
+ *  (the label is clearance, not the voice). Returns the draft's sha (what final captured before rebuilding). */
+export function afterFinal(dir: string, release = 'releasesha', opts: { musicCleared?: boolean } = {}): string {
+  const cleared = opts.musicCleared ?? true;
+  const pp = join(dir, 'video', 'review', 'review.json');
+  const rp = join(dir, 'video', 'build-report.json');
+  const review = readJson<{ mp4Sha: string; status: string }>(pp)!;
+  if (review.status === 'release build') throw new Error('afterFinal needs a draft package');
+  const r = readJson<BuildSummary>(rp)!;
+  const replaces = { sha: review.mp4Sha, status: 'draft' as const, narrationPublishable: false };
+  const clearance = cleared
+    ? { narration: true, music: true, publishable: true, why: [] }
+    : { narration: true, music: false, publishable: false, why: ['music Fixture is not cleared'] };
+  const narration = { ...r.narration, provider: 'azure', publishable: true };
+  writeFileSync(rp, toJson({ ...r, narration, clearance, replaces }));
+  writeFileSync(
+    pp,
+    toJson({
+      ...review,
+      status: cleared ? 'release build' : 'private review build',
+      mp4Sha: release,
+      buildReport: fileSha(rp),
+      provenance: { narration, clearance },
+    }),
+  );
+  return review.mp4Sha;
 }
 
 export function copyTopic(topic: string): { root: string; dir: (storyId: string) => string; cleanup: () => void } {
@@ -132,7 +163,7 @@ export function syntheticProduction(upTo: FixtureStage, opts: { release?: boolea
     revision: 1,
     generation: {
       model: 'fixture',
-      brief: 'scripts/briefs/script.md',
+      brief: 'src/modules/script/briefs/script.md',
       date: '2026-01-01',
       wordsPerMinute: 150,
       evidencePackage: pkg.fingerprint,
@@ -166,7 +197,7 @@ export function syntheticProduction(upTo: FixtureStage, opts: { release?: boolea
     topic: TOPIC,
     story: story.id,
     scriptFingerprint: scriptFingerprint(script),
-    generation: { model: 'fixture', brief: 'scripts/briefs/storyboard.md', date: '2026-01-01' },
+    generation: { model: 'fixture', brief: 'src/modules/storyboard/briefs/storyboard.md', date: '2026-01-01' },
     assets: {},
     scenes: sentences(script).map((s, i) => ({
       id: `sc${i + 1}`,
@@ -336,7 +367,7 @@ export function syntheticShort(upTo: 'reviewed' | 'packaged', opts: { release?: 
     revision: 1,
     generation: {
       model: 'fixture',
-      brief: 'scripts/briefs/script.md',
+      brief: 'src/modules/script/briefs/script.md',
       date: '2026-01-01',
       wordsPerMinute: 150,
       evidencePackage: pkg.fingerprint,
@@ -376,7 +407,7 @@ export function syntheticShort(upTo: 'reviewed' | 'packaged', opts: { release?: 
     topic: TOPIC,
     story: short,
     scriptFingerprint: scriptFingerprint(script),
-    generation: { model: 'fixture', brief: 'scripts/briefs/storyboard.md', date: '2026-01-01' },
+    generation: { model: 'fixture', brief: 'src/modules/storyboard/briefs/storyboard.md', date: '2026-01-01' },
     assets: {},
     scenes: sentences(script).map((s, i) => ({
       id: `sc${i + 1}`,

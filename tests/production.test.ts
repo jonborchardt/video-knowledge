@@ -4,9 +4,19 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { ROOT, readJson, toJson } from '../src/lib/io';
-import type { RenderCheckSummary } from '../src/lib/render-check';
-import { writeRenderCheck } from '../src/video/check';
+import {
+  ROOT,
+  readJson,
+  toJson,
+  passageReader,
+  docHasher,
+  docReader,
+  scriptDir,
+  shortId,
+  storySlug,
+} from '../src/shared/io';
+import type { RenderCheckSummary } from '../src/modules/video/render-check';
+import { writeRenderCheck } from '../src/modules/video/check';
 import {
   type StoryRow,
   board,
@@ -22,33 +32,28 @@ import {
   sendBackPromptOf,
   stepsOf,
   validationHaltKind,
-} from '../src/lib/production';
+  HALT_KINDS,
+} from '../src/orchestration';
 import {
   type Article,
   type ArticleRelease,
   articleFingerprint,
   articleReviewUnits,
   articleSentences,
-} from '../src/lib/article';
-import { corpusOf } from '../src/lib/corpus';
-import { loadStories } from '../src/lib/stories';
-import { passageReader } from '../src/lib/evidence';
-import type { Storyboard } from '../src/lib/storyboard';
-import { docHasher, docReader } from '../src/lib/evidence-package';
-import { loadReview } from '../src/lib/review';
-import { validateScript } from '../src/lib/script-validation';
-import { loadTopic } from '../src/lib/topics';
+} from '../src/modules/article/article';
+import { inspectArticle } from '../src/modules/article';
+import { loadReview, loadStories } from '../src/modules/stories';
+import { validateScript } from '../src/shared/sentence-validation';
+import { corpusOf, loadTopic } from '../src/modules/evidence';
+import { sentenceFingerprint } from '../src/shared/sentences';
+import type { EvidencePackage, Script, ScriptReviewFile, ScriptValidation, Storyboard } from '../src/shared/types';
 import {
-  type EvidencePackage,
-  type Script,
-  type ScriptReviewFile,
-  type ScriptValidation,
-  scriptDir,
-  sentenceFingerprint,
-  shortId,
-  storySlug,
-} from '../src/lib/script';
-import { addOutputTo, recordApproved, recordPublished, recordUploaded, setThumbnail } from '../src/lib/publish';
+  addOutputTo,
+  recordApproved,
+  recordPublished,
+  recordUploaded,
+  setThumbnail,
+} from '../src/modules/publishing/publish';
 import { type Fixture, copyTopic, setLook, syntheticProduction, syntheticShort } from './production-helpers';
 import { blockedScript, run } from './script-helpers';
 
@@ -64,7 +69,7 @@ describe('production board', () => {
     }
   });
 
-  it('a locked production reads as its lock says', { timeout: 30_000 }, () => {
+  it('a locked production reads as its lock says', () => {
     const f = syntheticProduction('locked');
     try {
       const prod = productionOf(f.topic, f.story, f.root)!;
@@ -109,12 +114,36 @@ describe('production board', () => {
 });
 
 describe('halt kinds', () => {
+  it('keeps the halt kinds', () => {
+    expect([...HALT_KINDS].sort()).toMatchInlineSnapshot(`
+      [
+        "blocking-findings",
+        "graphics-review",
+        "lock",
+        "look-stale",
+        "missing",
+        "needs-evidence",
+        "needs-graphics",
+        "no-institution",
+        "published",
+        "qa-failed",
+        "render-check",
+        "review-findings",
+        "review-pending",
+        "revision-limit",
+        "stale",
+        "story-left",
+        "storyboard-blocked",
+      ]
+    `);
+  });
+
   it('a blocked validation maps to revision-limit or blocking-findings', () => {
     expect(validationHaltKind(run(blockedScript(3)))).toBe('revision-limit');
     expect(validationHaltKind(run(blockedScript(1)))).toBe('blocking-findings');
   });
 
-  it('a script asking for evidence halts with needs-evidence', { timeout: 30_000 }, () => {
+  it('a script asking for evidence halts with needs-evidence', () => {
     const fx = syntheticProduction('graphics');
     try {
       const f = join(fx.dir, 'script.json');
@@ -123,7 +152,7 @@ describe('halt kinds', () => {
       writeFileSync(f, toJson(s));
       const prod = productionOf(fx.topic, fx.story, fx.root)!;
       expect(prod.halt).toMatchObject({ kind: 'needs-evidence', stage: 'script' });
-      expect(prod.next.startsWith('agent: scripts/briefs/evidence.md')).toBe(true);
+      expect(prod.next.startsWith('agent: src/modules/evidence/briefs/evidence.md')).toBe(true);
     } finally {
       fx.cleanup();
     }
@@ -131,41 +160,37 @@ describe('halt kinds', () => {
 });
 
 describe('review findings', () => {
-  it(
-    'a sentence the reviewer holds on a warning goes back to the writer, not to another review',
-    { timeout: 30_000 },
-    () => {
-      const fx = syntheticProduction('graphics');
-      try {
-        const { dir, topic, story, root } = fx;
-        const f = join(dir, 'script-review.json');
-        const r = readJson<ScriptReviewFile>(f)!;
-        const [id, fingerprint] = Object.entries(r.approved)[0];
-        delete r.approved[id];
-        r.findings.push({ sentence: id, fingerprint, category: 'x', severity: 'warning', explanation: 'imprecise' });
-        writeFileSync(f, toJson(r));
-        const v = validateScript(
-          readJson<Script>(join(dir, 'script.json'))!,
-          corpusOf(loadTopic(topic)),
-          passageReader(root),
-          {
-            review: r,
-            judgments: loadReview(topic, root).applicability,
-            previous: readJson<ScriptValidation>(join(dir, 'validation.json')),
-            pkg: readJson<EvidencePackage>(join(dir, 'evidence-package.json'))!,
-            hashDoc: docHasher(docReader(root)),
-          },
-        );
-        expect(v.status).toBe('needs-review');
-        writeFileSync(join(dir, 'validation.json'), toJson(v));
-        const prod = productionOf(topic, story, root)!;
-        expect(prod.halt).toMatchObject({ kind: 'review-findings', stage: 'script' });
-        expect(prod.next).toContain('agent: scripts/briefs/script.md (revise)');
-      } finally {
-        fx.cleanup();
-      }
-    },
-  );
+  it('a sentence the reviewer holds on a warning goes back to the writer, not to another review', () => {
+    const fx = syntheticProduction('graphics');
+    try {
+      const { dir, topic, story, root } = fx;
+      const f = join(dir, 'script-review.json');
+      const r = readJson<ScriptReviewFile>(f)!;
+      const [id, fingerprint] = Object.entries(r.approved)[0];
+      delete r.approved[id];
+      r.findings.push({ sentence: id, fingerprint, category: 'x', severity: 'warning', explanation: 'imprecise' });
+      writeFileSync(f, toJson(r));
+      const v = validateScript(
+        readJson<Script>(join(dir, 'script.json'))!,
+        corpusOf(loadTopic(topic)),
+        passageReader(root),
+        {
+          review: r,
+          judgments: loadReview(topic, root).applicability,
+          previous: readJson<ScriptValidation>(join(dir, 'validation.json')),
+          pkg: readJson<EvidencePackage>(join(dir, 'evidence-package.json'))!,
+          hashDoc: docHasher(docReader(root)),
+        },
+      );
+      expect(v.status).toBe('needs-review');
+      writeFileSync(join(dir, 'validation.json'), toJson(v));
+      const prod = productionOf(topic, story, root)!;
+      expect(prod.halt).toMatchObject({ kind: 'review-findings', stage: 'script' });
+      expect(prod.next).toContain('agent: src/modules/script/briefs/script.md (revise)');
+    } finally {
+      fx.cleanup();
+    }
+  });
 });
 
 describe('graphics stage', () => {
@@ -185,11 +210,11 @@ describe('graphics stage', () => {
       writeCheck(fx, { ok: false, needsGraphics: ['sc3'] });
       const p1 = productionOf(topic, story, root)!;
       expect(p1.halt?.kind).toBe('needs-graphics');
-      expect(p1.next).toContain('agent: scripts/briefs/graphics.md (sc3)');
+      expect(p1.next).toContain('agent: src/modules/video/briefs/graphics.md (sc3)');
       writeCheck(fx, { graphics: [{ scene: 'sc3', kind: 'hp-labels', key: 'k', approved: false }] });
       const p2 = productionOf(topic, story, root)!;
       expect(p2.halt?.kind).toBe('graphics-review');
-      expect(p2.next).toContain('agent: scripts/briefs/visual-review.md (sc3)');
+      expect(p2.next).toContain('agent: src/modules/video/briefs/visual-review.md (sc3)');
       writeCheck(fx, { graphics: [{ scene: 'sc3', kind: 'hp-labels', key: 'k', approved: true }] });
       const p3 = productionOf(topic, story, root)!;
       expect(p3.stage).toBe('lock');
@@ -218,7 +243,9 @@ describe('graphics stage', () => {
   });
 
   it('stepsOf passes a scene list to the graphics brief', () => {
-    expect(stepsOf('agent: scripts/briefs/graphics.md (sc18,sc20)', 't', 's')[0].text).toContain('Scenes: sc18,sc20');
+    expect(stepsOf('agent: src/modules/video/briefs/graphics.md (sc18,sc20)', 't', 's')[0].text).toContain(
+      'Scenes: sc18,sc20',
+    );
   });
 });
 
@@ -258,12 +285,12 @@ describe('board next', () => {
 describe('next steps', () => {
   it('splits a next line into commands, agent prompts and manual steps', () => {
     const steps = stepsOf(
-      'agent: scripts/briefs/script-review.md (re-review), then npm run script -- validate t s; public release is blocked: draft voice',
+      'agent: src/modules/script/briefs/script-review.md (re-review), then npm run script -- validate t s; public release is blocked: draft voice',
       't',
       's',
     );
     expect(steps.map((x) => x.kind)).toEqual(['prompt', 'run', 'do']);
-    expect(steps[0].text).toContain('Read scripts/briefs/script-review.md');
+    expect(steps[0].text).toContain('Read src/modules/script/briefs/script-review.md');
     expect(steps[0].text).toContain('Story: s');
     expect(steps[0].text).toContain('re-review');
     expect(steps[1].text).toBe('npm run script -- validate t s');
@@ -285,8 +312,14 @@ describe('next steps', () => {
   });
 
   it('promptOf carries the notes and corrective modes', () => {
-    expect(stepsOf('agent: scripts/briefs/script.md (notes)', 't', 's')[0].text).toContain('send-back pass');
-    expect(stepsOf('agent: scripts/briefs/script.md (corrective)', 't', 's')[0].text).toContain('corrective pass');
+    expect(stepsOf('agent: src/modules/article/briefs/article.md -> a.json', 't', 's')[0]).toMatchObject({
+      kind: 'prompt',
+      text: expect.stringContaining('Read src/modules/article/briefs/article.md and follow it.'),
+    });
+    expect(stepsOf('agent: src/modules/script/briefs/script.md (notes)', 't', 's')[0].text).toContain('send-back pass');
+    expect(stepsOf('agent: src/modules/script/briefs/script.md (corrective)', 't', 's')[0].text).toContain(
+      'corrective pass',
+    );
   });
 
   it('gives every board item at least one step', () => {
@@ -604,7 +637,7 @@ describe('the article on the board', () => {
       topic: fx.topic,
       story: fx.story,
       revision: 1,
-      generation: { ...s.generation, brief: 'scripts/briefs/article.md' },
+      generation: { ...s.generation, brief: 'src/modules/article/briefs/article.md' },
       meta: {
         headline: 'Is a heat pump cheaper to run?',
         seoTitle: 'Heat pump running costs',
@@ -641,7 +674,7 @@ describe('the article on the board', () => {
     history: [],
   });
 
-  it('no article state before the script lock', { timeout: 30_000 }, () => {
+  it('no article state before the script lock', () => {
     const fx = syntheticProduction('graphics');
     try {
       expect(articleState(fx)).toBeNull();
@@ -650,12 +683,12 @@ describe('the article on the board', () => {
     }
   });
 
-  it('none, review, released, changed, stale', { timeout: 30_000 }, () => {
+  it('none, review, released, changed, stale', () => {
     const fx = syntheticProduction('locked');
     try {
       expect(articleState(fx)).toEqual({
         state: 'none',
-        next: `agent: scripts/briefs/article.md -> ${relative(fx.root, join(fx.dir, 'article.json')).replaceAll(sep, '/')}`,
+        next: `agent: src/modules/article/briefs/article.md -> ${relative(fx.root, join(fx.dir, 'article.json')).replaceAll(sep, '/')}`,
         kind: 'missing',
       });
       const a = articleOf(fx);
@@ -714,7 +747,7 @@ describe('the article on the board', () => {
       expect(stale.state).toBe('stale');
       expect(stale.next).toContain('2026-02-01');
       expect(stale.next).toContain('a new study');
-      expect(stale.next).toContain('scripts/briefs/article.md (revise)');
+      expect(stale.next).toContain('src/modules/article/briefs/article.md (revise)');
       expect(stale.next).toContain(`npm run article -- reaffirm ${fx.topic} ${fx.story}`);
       // the writer revises: a new revision goes to the reviewer, never to lock
       const revised = structuredClone(a);
@@ -723,7 +756,7 @@ describe('the article on the board', () => {
       write(fx, 'article.json', revised);
       expect(articleState(fx)).toEqual({
         state: 'review',
-        next: `agent: scripts/briefs/article-review.md -> ${relative(fx.root, join(fx.dir, 'article-review.json')).replaceAll(sep, '/')}`,
+        next: `agent: src/modules/article/briefs/article-review.md -> ${relative(fx.root, join(fx.dir, 'article-review.json')).replaceAll(sep, '/')}`,
       });
       // reviewed and passing: a correction
       write(fx, 'article-review.json', {
@@ -740,7 +773,20 @@ describe('the article on the board', () => {
     }
   });
 
-  it('a released article whose package moved a cite shows blocked', { timeout: 30_000 }, () => {
+  it('maps the article inspection to a halt without the module naming one', () => {
+    const fx = syntheticProduction('locked');
+    try {
+      write(fx, 'article.json', articleOf(fx));
+      const inspection = inspectArticle(fx.topic, fx.story, fx.root);
+      expect(inspection).toMatchObject({ status: 'invalid' });
+      expect(Object.keys(inspection)).not.toContain('kind');
+      expect(articleState(fx)).toMatchObject({ state: 'review', kind: 'review-pending' });
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  it('a released article whose package moved a cite shows blocked', () => {
     const fx = syntheticProduction('locked');
     try {
       const pkg = readJson<EvidencePackage>(join(fx.dir, 'evidence-package.json'))!;
@@ -769,7 +815,7 @@ describe('the article on the board', () => {
       write(fx, 'evidence-package.json', { ...pkg, fingerprint: 'moved', documents });
       expect(articleState(fx)).toEqual({
         state: 'blocked',
-        next: `agent: scripts/briefs/article.md (revise) -> ${relative(fx.root, join(fx.dir, 'article.json')).replaceAll(sep, '/')}`,
+        next: `agent: src/modules/article/briefs/article.md (revise) -> ${relative(fx.root, join(fx.dir, 'article.json')).replaceAll(sep, '/')}`,
       });
     } finally {
       fx.cleanup();
@@ -811,11 +857,11 @@ describe('the article on the board', () => {
     return { sb, pkg, recut };
   };
   const reviewer = (fx: Fixture) =>
-    `agent: scripts/briefs/article-review.md -> ${relative(fx.root, join(fx.dir, 'article-review.json')).replaceAll(sep, '/')}`;
+    `agent: src/modules/article/briefs/article-review.md -> ${relative(fx.root, join(fx.dir, 'article-review.json')).replaceAll(sep, '/')}`;
   const correctCmd = (fx: Fixture) =>
     `npm run article -- correct ${fx.topic} ${fx.story} --approved-by "<your name>" --note "<what changed>"`;
 
-  it('a released article whose chart changed shows changed with the correct command', { timeout: 30_000 }, () => {
+  it('a released article whose chart changed shows changed with the correct command', () => {
     const fx = syntheticProduction('locked');
     try {
       const { recut } = figured(fx);
@@ -827,22 +873,18 @@ describe('the article on the board', () => {
     }
   });
 
-  it(
-    'a rebuilt package the review does not cover goes to the reviewer, with or without a re-cut chart',
-    { timeout: 30_000 },
-    () => {
-      const fx = syntheticProduction('locked');
-      try {
-        const { pkg, recut } = figured(fx);
-        write(fx, 'evidence-package.json', { ...pkg, fingerprint: 'rebuilt' });
-        expect(articleState(fx)).toEqual({ state: 'review', next: reviewer(fx) });
-        recut(); // correct would refuse: the validation does not pass
-        expect(articleState(fx)).toEqual({ state: 'review', next: reviewer(fx) });
-      } finally {
-        fx.cleanup();
-      }
-    },
-  );
+  it('a rebuilt package the review does not cover goes to the reviewer, with or without a re-cut chart', () => {
+    const fx = syntheticProduction('locked');
+    try {
+      const { pkg, recut } = figured(fx);
+      write(fx, 'evidence-package.json', { ...pkg, fingerprint: 'rebuilt' });
+      expect(articleState(fx)).toEqual({ state: 'review', next: reviewer(fx) });
+      recut(); // correct would refuse: the validation does not pass
+      expect(articleState(fx)).toEqual({ state: 'review', next: reviewer(fx) });
+    } finally {
+      fx.cleanup();
+    }
+  });
 
   // A review at revision 1 approving every unit but the first sentence, which carries a finding of this severity.
   const heldReview = (fx: Fixture, severity: 'warning' | 'info') => {
@@ -867,7 +909,7 @@ describe('the article on the board', () => {
     return a;
   };
 
-  it('A: an edit beside a held sentence goes to the reviewer, not back to the writer', { timeout: 30_000 }, () => {
+  it('A: an edit beside a held sentence goes to the reviewer, not back to the writer', () => {
     const fx = syntheticProduction('locked');
     try {
       const a = heldReview(fx, 'warning');
@@ -884,7 +926,7 @@ describe('the article on the board', () => {
     }
   });
 
-  it('B: only held sentences unapproved: the writer revises them', { timeout: 30_000 }, () => {
+  it('B: only held sentences unapproved: the writer revises them', () => {
     const fx = syntheticProduction('locked');
     try {
       heldReview(fx, 'warning');
@@ -898,7 +940,7 @@ describe('the article on the board', () => {
     }
   });
 
-  it('C: an edited headline with no finding goes to the reviewer', { timeout: 30_000 }, () => {
+  it('C: an edited headline with no finding goes to the reviewer', () => {
     const fx = syntheticProduction('locked');
     try {
       const a = heldReview(fx, 'warning');
@@ -909,7 +951,7 @@ describe('the article on the board', () => {
     }
   });
 
-  it('D: an info finding never holds a sentence', { timeout: 30_000 }, () => {
+  it('D: an info finding never holds a sentence', () => {
     const fx = syntheticProduction('locked');
     try {
       heldReview(fx, 'info');
@@ -919,19 +961,19 @@ describe('the article on the board', () => {
     }
   });
 
-  it('the article stage: halts a scored video until released, never earlier', { timeout: 30_000 }, () => {
+  it('the article stage: halts a scored video until released, never earlier', () => {
     const fx = syntheticProduction('packaged');
     try {
       rmSync(join(fx.dir, 'article-release.json'));
       const p = productionOf(fx.topic, fx.story, fx.root)!;
       expect([p.stage, p.halt?.kind]).toEqual(['article', 'missing']);
-      expect(p.next).toContain('scripts/briefs/article.md');
+      expect(p.next).toContain('src/modules/article/briefs/article.md');
     } finally {
       fx.cleanup();
     }
   });
 
-  it('before the video is scored the article never changes the stage or halt', { timeout: 30_000 }, () => {
+  it('before the video is scored the article never changes the stage or halt', () => {
     const fx = syntheticProduction('locked');
     try {
       const before = productionOf(fx.topic, fx.story, fx.root)!;
@@ -944,7 +986,7 @@ describe('the article on the board', () => {
     }
   });
 
-  it('an article asking for evidence is writing', { timeout: 30_000 }, () => {
+  it('an article asking for evidence is writing', () => {
     const fx = syntheticProduction('locked');
     try {
       const a = articleOf(fx);
@@ -952,7 +994,7 @@ describe('the article on the board', () => {
       write(fx, 'article.json', a);
       expect(articleState(fx)).toEqual({
         state: 'writing',
-        next: 'agent: scripts/briefs/evidence.md',
+        next: 'agent: src/modules/evidence/briefs/evidence.md',
         kind: 'needs-evidence',
       });
     } finally {
@@ -961,7 +1003,7 @@ describe('the article on the board', () => {
   });
 
   // live data: a later claim revision may make it stale, and a correction in progress changed
-  it('the first released article has a release state', { timeout: 15_000 }, () => {
+  it('the first released article has a release state', () => {
     expect(['released', 'stale', 'changed']).toContain(
       productionOf('heat-pumps', 'decision:is-it-cheaper-to-run-than-gas')?.article?.state,
     );
@@ -984,5 +1026,25 @@ describe('the owner gate', () => {
     } finally {
       fx.cleanup();
     }
+  });
+});
+
+describe('the prompts name the briefs where they live', () => {
+  it('a settle step and a brief hint point at src/modules/<module>/briefs, never a folder that is gone', () => {
+    const settle = stepsOf('settle in story-review.json: is X one story or two', 'demo');
+    expect(settle).toHaveLength(1);
+    expect(settle[0].kind).toBe('prompt');
+    expect(settle[0].text.split('\n')[0]).toBe('Read src/modules/stories/briefs/stories.md and follow it.');
+    const hint = stepsOf('3/5 candidates reviewed (src/modules/stories/briefs/stories.md)', 'demo');
+    expect(hint.map((x) => x.kind)).toEqual(['do', 'prompt']);
+    expect(hint[1].text).toContain('Read src/modules/stories/briefs/stories.md and follow it.');
+    const agent = stepsOf(
+      'agent: src/modules/script/briefs/script-review.md (re-review) -> script-review.json',
+      'demo',
+      'd:1',
+    );
+    expect(agent[0].text).toContain('Read src/modules/script/briefs/script-review.md and follow it.');
+    expect(agent[0].text).toContain('You did not write this script; review it independently.');
+    for (const step of [...settle, ...hint, ...agent]) expect(step.text).not.toContain('scripts/briefs');
   });
 });

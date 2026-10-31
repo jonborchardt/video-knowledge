@@ -1,0 +1,1464 @@
+// The publishing ledger (publish.json): its shape, the idempotent append, the state an output's events derive to, the
+// composed upload metadata, the CLI's verbs and their refusals. Nothing here touches YouTube: the ledger records what a
+// person (or later an uploader) did.
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, relative, sep } from 'node:path';
+import { afterAll, describe, expect, it } from 'vitest';
+import { readJson, sha, toJson } from '../../../shared/io';
+import { runCli } from '../../../shared/cli';
+import { Refusal } from '../../../shared/refusal';
+import { scriptDir, storySlug } from '../../../shared/io';
+import {
+  type Ledger,
+  type Output,
+  type PublishEvent,
+  acceptDraftProblem,
+  addOutput,
+  addOutputTo,
+  appendEvent,
+  approvalHolds,
+  currentBuild,
+  emptyLedger,
+  eventKey,
+  failedSince,
+  flowOf,
+  lastCaptions,
+  ledgerProblems,
+  loadLedger,
+  mainOutput,
+  outputState,
+  outputStates,
+  parentUrlOf,
+  recordApproved,
+  recordFailed,
+  recordPublished,
+  recordScheduled,
+  recordSimple,
+  recordUpdated,
+  recordUploaded,
+  recordVerified,
+  saveLedger,
+  setThumbnail,
+  uploadMetadataOf,
+  sourceBuild,
+  nestedSource,
+  openOutput,
+  publishPath,
+  recordChangesRequested,
+} from '../publish';
+import {
+  type Fixture,
+  afterFinal,
+  cliRoot,
+  setLook,
+  syntheticProduction,
+  syntheticShort,
+} from '../../../../tests/production-helpers';
+
+const tmp = mkdtempSync(join(tmpdir(), 'vk-publish-'));
+afterAll(() => rmSync(tmp, { recursive: true, force: true }));
+
+const fixtures: Fixture[] = [];
+afterAll(() => fixtures.forEach((f) => f.cleanup()));
+/** A packaged synthetic production (`release`: the release build). With `cliRoot` the repo's CLIs run in its root,
+ *  and a draft is named by a hex sha as a real build is (the fixture's are words): d0d0d0d0d0. */
+const fresh = ({ release = false, cliRoot: runsCli = false }: { release?: boolean; cliRoot?: boolean } = {}) => {
+  const f = syntheticProduction('packaged', { release });
+  fixtures.push(f);
+  if (runsCli) {
+    cliRoot(f.root);
+    const pp = join(f.dir, 'video', 'review', 'review.json');
+    if (!release) writeFileSync(pp, toJson({ ...readJson<object>(pp)!, mp4Sha: 'd0d0d0d0d0' }));
+  }
+  return f;
+};
+const events = (f: Fixture, output = 'youtube') => loadLedger(f.topic, f.story, f.root)?.outputs[output]?.events ?? [];
+const ledgerBytes = (f: Fixture) => {
+  const p = publishPath(f.topic, f.story, f.root);
+  return existsSync(p) ? readFileSync(p, 'utf8') : null;
+};
+const cli = (f: Fixture, verb: string, ...args: string[]) =>
+  runCli('publish', [verb, f.topic, f.story, ...args], { cwd: f.root });
+
+const ev = (type: PublishEvent['type'], extra: Partial<PublishEvent> = {}, at = '2026-10-24T09:00:00Z'): PublishEvent =>
+  ({ at, type, by: 'Jon', ...extra }) as PublishEvent;
+const uploaded = (build: string, id: string, at?: string) =>
+  ev('uploaded', { build, buildStatus: 'release', metadata: 'm1', id, visibility: 'private' }, at);
+
+/** The spec's example ledger. */
+const example = (): Ledger => ({
+  video: 'ai-coding/decision:how-much-faster',
+  outputs: {
+    youtube: {
+      kind: 'youtube-video',
+      metadata: { tags: ['ai coding'], thumbnail: { file: 'video/publish/thumbnail.png', sha: 'abc' } },
+      events: [
+        uploaded('9b2dfb11fb', 'dQw4w9WgXcQ', '2026-10-24T09:00:00Z'),
+        ev('approved', { build: '9b2dfb11fb', id: 'dQw4w9WgXcQ', note: 'clean' }, '2026-10-25T18:12:00Z'),
+        ev('scheduled', { id: 'dQw4w9WgXcQ', publishAt: '2026-10-28T15:00:00Z' }, '2026-10-25T18:15:00Z'),
+        ev('published', { id: 'dQw4w9WgXcQ', url: 'https://youtu.be/dQw4w9WgXcQ' }, '2026-10-28T15:01:00Z'),
+        ev('updated', { id: 'dQw4w9WgXcQ', metadata: 'a91f22d0c4', fields: ['thumbnail'] }, '2026-11-02T10:00:00Z'),
+      ],
+    },
+    'short-1': {
+      kind: 'youtube-short',
+      derivedFrom: 'youtube',
+      source: 'video/shorts/short-1.mp4',
+      metadata: { title: 'Developers were slower with AI' },
+      events: [ev('failed', { step: 'upload', error: 'quota exceeded', retryable: true, by: 'uploader' })],
+    },
+  },
+});
+
+describe('ledger', () => {
+  it('starts with one youtube output', () => {
+    expect(emptyLedger('t/s').outputs.youtube.kind).toBe('youtube-video');
+    expect(emptyLedger('t/s').video).toBe('t/s');
+  });
+
+  it("accepts the spec's example", () => {
+    expect(ledgerProblems(example(), 'ai-coding/decision:how-much-faster')).toEqual([]);
+  });
+
+  it('an event may carry the captions sha it sent; old events without one stay valid', () => {
+    const l = example();
+    expect(ledgerProblems(l, l.video)).toEqual([]);
+    l.outputs.youtube.events[0].captions = 'c1';
+    expect(ledgerProblems(l, l.video)).toEqual([]);
+    (l.outputs.youtube.events[0] as unknown as Record<string, unknown>).captions = 3;
+    expect(ledgerProblems(l, l.video)).toEqual(['outputs.youtube.events[0].captions: not a sha']);
+  });
+
+  it('names the field that is wrong', () => {
+    const bad = (mutate: (l: Ledger) => void) => {
+      const l = example();
+      mutate(l);
+      return ledgerProblems(l, 'ai-coding/decision:how-much-faster');
+    };
+    expect(bad((l) => (l.video = 'other'))[0]).toMatch(/video/);
+    expect(bad((l) => ((l.outputs.youtube.events[0] as { type: string }).type = 'liked'))[0]).toMatch(/type/);
+    expect(bad((l) => delete (l.outputs.youtube.events[1] as Partial<PublishEvent>).by)[0]).toMatch(/by/);
+    expect(bad((l) => (l.outputs['short-1'].derivedFrom = 'nope'))[0]).toMatch(/derivedFrom/);
+    expect(bad((l) => delete l.outputs.youtube.events[0].build)[0]).toMatch(/build/);
+    expect(bad((l) => delete l.outputs.youtube.events[2].publishAt)[0]).toMatch(/publishAt/);
+    expect(bad((l) => delete l.outputs['short-1'].events[0].error)[0]).toMatch(/error/);
+    expect(bad((l) => (l.outputs.youtube.events[3].at = '2026-01-01T00:00:00Z'))[0]).toMatch(/at .* before/);
+    expect(
+      bad((l) => ((l.outputs.youtube.metadata as Record<string, unknown>).containsSyntheticMedia = 'yes'))[0],
+    ).toMatch(/containsSyntheticMedia/);
+  });
+
+  it('appends once per key', () => {
+    let l = emptyLedger('t/s');
+    const first = appendEvent(l, 'youtube', uploaded('b1', 'id1'));
+    expect(first.existing).toBeNull();
+    const again = appendEvent(first.ledger, 'youtube', uploaded('b1', 'id1', '2026-10-25T00:00:00Z'));
+    expect(again.existing).toEqual(first.ledger.outputs.youtube.events[0]);
+    expect(again.ledger.outputs.youtube.events).toHaveLength(1);
+    l = appendEvent(again.ledger, 'youtube', uploaded('b1', 'id2')).ledger; // the same build, another id: a re-upload
+    expect(l.outputs.youtube.events).toHaveLength(2);
+    const f = ev('failed', { step: 'upload', error: 'x' });
+    l = appendEvent(appendEvent(l, 'youtube', f).ledger, 'youtube', f).ledger;
+    expect(l.outputs.youtube.events.filter((e) => e.type === 'failed')).toHaveLength(2);
+    expect(eventKey(f)).toBeNull();
+    // publish, unpublish, publish again is three events; a repeat of the latest is not
+    const pub = ev('published', { id: 'id1' });
+    l = appendEvent(l, 'youtube', pub).ledger;
+    expect(appendEvent(l, 'youtube', pub).existing).toEqual(pub);
+    l = appendEvent(l, 'youtube', ev('unpublished', { id: 'id1', note: 'oops' })).ledger;
+    l = appendEvent(l, 'youtube', pub).ledger;
+    expect(l.outputs.youtube.events.filter((e) => e.type === 'published')).toHaveLength(2);
+    // metadata A, B, A: every update is its own event (the verb refuses an unchanged sha itself)
+    const upd = (m: string) => ev('updated', { id: 'id1', metadata: m, fields: ['thumbnail'] });
+    l = [upd('a'), upd('b'), upd('a')].reduce((x, e) => appendEvent(x, 'youtube', e).ledger, l);
+    expect(l.outputs.youtube.events.filter((e) => e.type === 'updated')).toHaveLength(3);
+    // a reschedule is a new event
+    const sch = (at: string) => ev('scheduled', { id: 'id1', publishAt: at });
+    l = appendEvent(
+      appendEvent(l, 'youtube', sch('2026-11-01T00:00:00Z')).ledger,
+      'youtube',
+      sch('2026-11-02T00:00:00Z'),
+    ).ledger;
+    expect(l.outputs.youtube.events.filter((e) => e.type === 'scheduled')).toHaveLength(2);
+  });
+
+  it('refuses an event for an output that does not exist', () => {
+    expect(() => appendEvent(emptyLedger('t/s'), 'nope', uploaded('b1', 'id1'))).toThrow(/nope/);
+  });
+
+  it('the main output is the last live youtube video', () => {
+    let l = emptyLedger('t/s');
+    expect(mainOutput(l)).toBe('youtube');
+    l = appendEvent(l, 'youtube', ev('retracted', { note: 'wrong channel' })).ledger;
+    expect(mainOutput(l)).toBeNull();
+    l = addOutput(l, 'youtube-2', 'youtube-video');
+    expect(mainOutput(l)).toBe('youtube-2');
+    expect(mainOutput(addOutput(emptyLedger('t/s'), 'blog', 'blog-post'))).toBe('youtube');
+  });
+
+  it('adds an output once', () => {
+    const l = addOutput(emptyLedger('t/s'), 'short-1', 'youtube-short', { derivedFrom: 'youtube' });
+    expect(l.outputs['short-1']).toEqual({ kind: 'youtube-short', derivedFrom: 'youtube', metadata: {}, events: [] });
+    expect(() => addOutput(l, 'short-1', 'youtube-short')).toThrow(/exists/);
+    expect(() => addOutput(l, 'short-2', 'youtube-short', { derivedFrom: 'nope' })).toThrow(/derivedFrom/);
+  });
+
+  it('saves atomically and round-trips', () => {
+    const path = join(tmp, 'publish.json');
+    saveLedger(path, example());
+    expect(readJson<Ledger>(path)).toEqual(example());
+    expect(existsSync(`${path}.tmp`)).toBe(false);
+  });
+});
+
+describe('outputState', () => {
+  const release = { sha: 'r1', status: 'release' } as const;
+  const draft = { sha: 'd1', status: 'draft' } as const;
+  const ctx = {
+    topic: 'ai-coding',
+    story: 'decision:how-much-faster',
+    output: 'youtube',
+    now: new Date('2026-10-26T00:00:00Z'),
+  };
+  const out = (...events: PublishEvent[]): Output => ({ kind: 'youtube-video', metadata: {}, events });
+  const up = (build: string, id: string, status: 'draft' | 'release' = 'release') =>
+    ev('uploaded', { build, buildStatus: status, metadata: 'm1', id, visibility: 'private' });
+
+  it('starts not uploaded', () => {
+    const s = outputState(out(), release, 'm1', ctx);
+    expect(s.status).toBe('not-uploaded');
+    expect(s.next).toContain('npm run publish -- upload ai-coding decision:how-much-faster');
+    expect(s.next).not.toContain('uploaded');
+  });
+
+  it('an approval on a draft build never reads as approved', () => {
+    const accepted = ev('approved', { build: 'd1', note: 'draft accepted by final' });
+    // D accepted and uploaded as a draft
+    expect(outputState(out(up('d1', 'id1', 'draft'), accepted), release, 'm1', ctx).status).not.toBe('approved');
+    // D accepted, D on disk as a draft (an identical re-render), nothing uploaded
+    expect(outputState(out(accepted), draft, 'm1', ctx).status).not.toBe('approved');
+    // a release upload approved: approved as before
+    const s = outputState(out(up('r1', 'id1'), ev('approved', { build: 'r1', id: 'id1' })), release, 'm1', ctx);
+    expect(s.status).toBe('approved');
+    expect(outputState(out(ev('approved', { build: 'r1' })), release, 'm1', ctx).status).toBe('approved');
+  });
+
+  it('an uploaded draft waits for final, an uploaded release for approve', () => {
+    expect(outputState(out(up('d1', 'id1', 'draft')), draft, 'm1', ctx).next).toContain('npm run video -- final');
+    const s = outputState(out(up('r1', 'id1')), release, 'm1', ctx);
+    expect(s.status).toBe('uploaded');
+    expect(s.id).toBe('id1');
+    expect(s.next).toContain('npm run publish -- approve ai-coding decision:how-much-faster --by');
+  });
+
+  it('a new build after an upload is build-behind; the old upload is superseded once the new one lands', () => {
+    const s = outputState(out(up('d1', 'id1', 'draft')), release, 'm1', ctx);
+    expect(s.status).toBe('build-behind');
+    expect(s.next).toContain('npm run publish -- upload ai-coding');
+    expect(s.superseded).toEqual([]);
+    const s2 = outputState(out(up('d1', 'id1', 'draft'), up('r1', 'id2')), release, 'm1', ctx);
+    expect(s2.status).toBe('uploaded');
+    expect(s2.superseded).toEqual(['id1']);
+    expect(s2.uploadedBuild).toBe('r1');
+  });
+
+  it('approved, then scheduled, which falls due', () => {
+    const base = [up('r1', 'id1'), ev('approved', { build: 'r1', id: 'id1' })];
+    expect(outputState(out(...base), release, 'm1', ctx).status).toBe('approved');
+    expect(outputState(out(...base), release, 'm1', ctx).next).toContain('npm run publish -- go-live ai-coding');
+    const soon = outputState(
+      out(...base, ev('scheduled', { id: 'id1', publishAt: '2026-10-28T15:00:00Z' })),
+      release,
+      'm1',
+      ctx,
+    );
+    expect(soon.status).toBe('scheduled');
+    expect(soon.due).toBe(false);
+    const due = outputState(
+      out(...base, ev('scheduled', { id: 'id1', publishAt: '2026-10-20T15:00:00Z' })),
+      release,
+      'm1',
+      ctx,
+    );
+    expect(due.due).toBe(true);
+    expect(due.next).toContain('npm run publish -- sync ai-coding');
+  });
+
+  it('published stays published when the build on disk moves on', () => {
+    const o = out(
+      up('r1', 'id1'),
+      ev('approved', { build: 'r1' }),
+      ev('published', { id: 'id1', url: 'https://youtu.be/id1' }),
+    );
+    const s = outputState(o, { sha: 'r2', status: 'release' }, 'm1', ctx);
+    expect(s.status).toBe('published');
+    expect(s.url).toBe('https://youtu.be/id1');
+    expect(s.next).toContain('npm run publish -- add ai-coding decision:how-much-faster youtube-2');
+  });
+
+  it('metadata behind, until an update records the new sha', () => {
+    const o = out(up('r1', 'id1'), ev('approved', { build: 'r1' }), ev('published', { id: 'id1' }));
+    const s = outputState(o, release, 'm2', ctx);
+    expect(s.status).toBe('metadata-behind');
+    expect(s.live).toBe(true); // still live: the board keeps it in the published column
+    expect(s.next).toContain('npm run publish -- push ai-coding');
+    o.events.push(ev('updated', { id: 'id1', metadata: 'm2', fields: ['thumbnail'] }));
+    expect(outputState(o, release, 'm2', ctx).status).toBe('published');
+  });
+
+  it('publish, unpublish, publish again', () => {
+    const o = out(
+      up('r1', 'id1'),
+      ev('approved', { build: 'r1' }),
+      ev('scheduled', { id: 'id1', publishAt: '2026-10-20T00:00:00Z' }),
+      ev('published', { id: 'id1' }),
+      ev('unpublished', { id: 'id1', note: 'typo' }),
+    );
+    const s = outputState(o, release, 'm1', ctx);
+    expect(s.status).toBe('approved'); // the old schedule is history
+    expect(s.live).toBe(false);
+    o.events.push(ev('published', { id: 'id1' }));
+    expect(outputState(o, release, 'm1', ctx).live).toBe(true);
+  });
+
+  it('an output with its own source file is judged against that file, not the video build', () => {
+    const src = join(tmp, 'shorts', 's1.mp4');
+    mkdirSync(join(tmp, 'shorts'), { recursive: true });
+    writeFileSync(src, 'short bytes');
+    const own = sha(readFileSync(src));
+    const l = addOutput(emptyLedger('t/s'), 'short-1', 'youtube-short', { source: 'shorts/s1.mp4' });
+    const c = { topic: 't', story: 's', root: tmp };
+    const behind = appendEvent(l, 'short-1', uploaded('r1', 'id9')).ledger; // recorded against the main video's build
+    expect(outputStates(behind, release, () => null, c)['short-1'].status).toBe('build-behind');
+    const right = appendEvent(l, 'short-1', uploaded(own, 'id9')).ledger;
+    expect(outputStates(right, release, () => null, c)['short-1'].status).toBe('uploaded');
+  });
+
+  it('a failure is an overlay on the state before it', () => {
+    const o = out(up('r1', 'id1'), ev('failed', { step: 'approve', error: 'boom', retryable: true }));
+    const s = outputState(o, release, 'm1', ctx);
+    expect(s.status).toBe('uploaded');
+    expect(s.failed?.error).toBe('boom');
+    expect(s.next).toContain('retry');
+  });
+
+  it('retracted', () => {
+    expect(outputState(out(ev('retracted', { note: 'no' })), release, 'm1', ctx).status).toBe('retracted');
+  });
+
+  it('survives a missing review package', () => {
+    const o = out(up('r1', 'id1'), ev('approved', { build: 'r1' }), ev('published', { id: 'id1' }));
+    const s = outputState(o, null, null, ctx);
+    expect(s.status).toBe('published');
+    const fresh = outputState(out(up('r1', 'id1')), null, null, ctx);
+    expect(fresh.status).toBe('uploaded');
+    expect(fresh.next).toContain('package');
+  });
+
+  it('reads the current build from the review package', () => {
+    const dir = join(tmp, 'cb');
+    expect(currentBuild(dir)).toBeNull();
+    mkdirSync(join(dir, 'video', 'review'), { recursive: true });
+    writeFileSync(
+      join(dir, 'video', 'review', 'review.json'),
+      JSON.stringify({ mp4Sha: 'abc', status: 'release build' }),
+    );
+    expect(currentBuild(dir)).toEqual({ sha: 'abc', status: 'release' });
+    writeFileSync(
+      join(dir, 'video', 'review', 'review.json'),
+      JSON.stringify({ mp4Sha: 'abd', status: 'private review build' }),
+    );
+    expect(currentBuild(dir)).toEqual({ sha: 'abd', status: 'draft' });
+  });
+});
+
+describe('uploadMetadataOf', () => {
+  const dir = join(tmp, 'meta');
+  mkdirSync(join(dir, 'video', 'review'), { recursive: true });
+  writeFileSync(
+    join(dir, 'video', 'review', 'review.json'),
+    JSON.stringify({
+      title: 'How Fast?',
+      mp4: 'slug.mp4',
+      mp4Sha: 'r1',
+      status: 'release build',
+      thumbnailSha: 'card1',
+    }),
+  );
+  writeFileSync(join(dir, 'video', 'review', 'description.txt'), 'How fast?\n\nChapters\n0:00 Hook\n');
+  const rel = (f: string) => `topics/t/scripts/slug/${f}`;
+  const out = (metadata: Output['metadata'] = {}): Output => ({ kind: 'youtube-video', metadata, events: [] });
+
+  it('comes from the review package when nothing overrides it', () => {
+    const m = uploadMetadataOf(dir, rel, out())!;
+    expect(m.title).toBe('How Fast?');
+    expect(m.description).toBe('How fast?\n\nChapters\n0:00 Hook');
+    expect(m.file).toBe('topics/t/scripts/slug/video/review/slug.mp4');
+    expect(m.thumbnail).toEqual({ file: 'topics/t/scripts/slug/video/review/thumbnail.png', sha: 'card1' });
+    expect(m.tags).toEqual([]);
+  });
+
+  it("takes the package's tags unless the ledger sets them", () => {
+    const f = join(dir, 'video', 'review', 'review.json');
+    const rp = JSON.parse(readFileSync(f, 'utf8'));
+    writeFileSync(f, JSON.stringify({ ...rp, tags: ['Commission on Spending'] }));
+    expect(uploadMetadataOf(dir, rel, out())!.tags).toEqual(['Commission on Spending']);
+    expect(uploadMetadataOf(dir, rel, out({ tags: ['ai'] }))!.tags).toEqual(['ai']);
+    writeFileSync(f, JSON.stringify(rp));
+  });
+
+  it('applies the overrides', () => {
+    const m = uploadMetadataOf(dir, rel, out({ title: 'Faster?', descriptionAppend: 'More.', tags: ['ai'] }))!;
+    expect(m.title).toBe('Faster?');
+    expect(m.description).toBe('How fast?\n\nChapters\n0:00 Hook\n\nMore.');
+    expect(m.tags).toEqual(['ai']);
+    expect(m.sha).not.toBe(uploadMetadataOf(dir, rel, out())!.sha);
+  });
+
+  it('a new thumbnail changes the sha and nothing else', () => {
+    const a = uploadMetadataOf(dir, rel, out())!;
+    const b = uploadMetadataOf(dir, rel, out({ thumbnail: { file: 'video/publish/thumbnail.png', sha: 'mine' } }))!;
+    expect(b.thumbnail).toEqual({ file: 'video/publish/thumbnail.png', sha: 'mine' });
+    expect(b.sha).not.toBe(a.sha);
+    expect({ ...a, sha: 0, thumbnail: 0 }).toEqual({ ...b, sha: 0, thumbnail: 0 });
+  });
+
+  it('hashes the same with CRLF and LF', () => {
+    const a = uploadMetadataOf(dir, rel, out())!.sha;
+    writeFileSync(join(dir, 'video', 'review', 'description.txt'), 'How fast?\r\n\r\nChapters\r\n0:00 Hook\r\n');
+    expect(uploadMetadataOf(dir, rel, out())!.sha).toBe(a);
+  });
+
+  it('is null without a review package', () => {
+    expect(uploadMetadataOf(join(tmp, 'nowhere'), rel, out())).toBeNull();
+  });
+});
+
+describe('verbs', () => {
+  const now = new Date('2026-10-26T00:00:00Z');
+  const rel = syntheticProduction('packaged', { release: true });
+  const rel2 = syntheticProduction('packaged', { release: true });
+  const draft = syntheticProduction('packaged');
+  afterAll(() => [rel, rel2, draft].forEach((f) => f.cleanup()));
+  const a = <T extends object>(f: Fixture, extra: T = {} as T) => ({ root: f.root, by: 'Jon', now, ...extra });
+
+  it('records an upload once per build and id, with the build and the metadata it sent', () => {
+    const r = recordUploaded(rel.topic, rel.story, a(rel, { id: 'dQw4w9WgXcQ', visibility: 'private' }));
+    expect(r.existing).toBe(false);
+    expect(r.event).toMatchObject({ type: 'uploaded', build: 'releasesha', buildStatus: 'release', id: 'dQw4w9WgXcQ' });
+    const meta = uploadMetadataOf(rel.dir, (f) => f, loadLedger(rel.topic, rel.story, rel.root)!.outputs.youtube)!;
+    expect(r.event!.metadata).toBe(meta.sha);
+    expect(recordUploaded(rel.topic, rel.story, a(rel, { id: 'dQw4w9WgXcQ' })).existing).toBe(true);
+    expect(events(rel)).toHaveLength(1);
+  });
+
+  it('a public upload needs the build approved first, and lands as published', () => {
+    const pub = () => recordUploaded(rel.topic, rel.story, a(rel, { id: 'aaaaaaaaaaa', visibility: 'public' }));
+    expect(pub).toThrow(Refusal);
+    expect(pub).toThrow(/approved/);
+    recordApproved(rel.topic, rel.story, a(rel, { note: 'checklist clean' }));
+    recordUploaded(
+      rel.topic,
+      rel.story,
+      a(rel, { id: 'aaaaaaaaaaa', visibility: 'public', url: 'https://youtu.be/aaaaaaaaaaa' }),
+    );
+    expect(events(rel).map((e) => e.type)).toEqual(['uploaded', 'approved', 'uploaded', 'published']);
+    expect(events(rel).at(-1)).toMatchObject({ id: 'aaaaaaaaaaa', url: 'https://youtu.be/aaaaaaaaaaa' });
+  });
+
+  it('approve needs a real name and a build it can stand on', () => {
+    expect(() => recordApproved(rel2.topic, rel2.story, a(rel2, { by: '<your name>' }))).toThrow(/name/);
+    expect(() => recordApproved(draft.topic, draft.story, a(draft))).toThrow(/draft|upload/); // a draft nobody has uploaded
+    const r = recordApproved(rel2.topic, rel2.story, a(rel2)); // the local release build is enough
+    expect(r.event).toMatchObject({ type: 'approved', build: 'releasesha' });
+    expect(recordApproved(rel2.topic, rel2.story, a(rel2)).existing).toBe(true);
+  });
+
+  it('scheduled needs an approved upload and a future time; published follows', () => {
+    expect(() => recordScheduled(draft.topic, draft.story, a(draft, { at: '2026-11-01T00:00:00Z' }))).toThrow(Refusal);
+    recordUploaded(rel2.topic, rel2.story, a(rel2, { id: 'bbbbbbbbbbb' }));
+    expect(() => recordScheduled(rel2.topic, rel2.story, a(rel2, { at: '2026-10-01T00:00:00Z' }))).toThrow(/past/);
+    expect(recordScheduled(rel2.topic, rel2.story, a(rel2, { at: '2026-11-01T00:00:00Z' })).event).toMatchObject({
+      type: 'scheduled',
+      id: 'bbbbbbbbbbb',
+      publishAt: '2026-11-01T00:00:00Z',
+    });
+    expect(recordPublished(rel2.topic, rel2.story, a(rel2)).event).toMatchObject({
+      type: 'published',
+      id: 'bbbbbbbbbbb',
+    });
+    expect(() => recordPublished(draft.topic, draft.story, a(draft))).toThrow(Refusal);
+  });
+
+  it('updated records a changed metadata sha and nothing when unchanged', () => {
+    expect(recordUpdated(rel2.topic, rel2.story, a(rel2, { fields: ['title'] })).existing).toBe(true);
+    const png = join(rel2.dir, 'video', 'publish', 'thumbnail.png');
+    mkdirSync(join(rel2.dir, 'video', 'publish'), { recursive: true });
+    writeFileSync(png, 'not really a png');
+    expect(setThumbnail(rel2.topic, rel2.story, { root: rel2.root, file: png })).toMatch(/^[0-9a-f]{10}$/);
+    const t = loadLedger(rel2.topic, rel2.story, rel2.root)!.outputs.youtube.metadata.thumbnail!;
+    expect(t.file).toMatch(/^topics\/.*\/video\/publish\/thumbnail\.png$/);
+    const r = recordUpdated(rel2.topic, rel2.story, a(rel2, { fields: ['thumbnail'] }));
+    expect(r.existing).toBe(false);
+    expect(r.event).toMatchObject({ type: 'updated', fields: ['thumbnail'] });
+  });
+
+  it('unpublish, then publish again', () => {
+    recordSimple(rel2.topic, rel2.story, 'unpublished', a(rel2, { note: 'typo in the title card' }));
+    const r = recordPublished(rel2.topic, rel2.story, a(rel2));
+    expect(r.existing).toBe(false);
+    expect(r.event!.type).toBe('published');
+  });
+
+  it('a draft build is accepted only by final and never goes public', () => {
+    const d2 = syntheticProduction('packaged');
+    const d3 = syntheticProduction('packaged');
+    try {
+      // final accepts the draft it replaced, which nobody uploaded; never the draft on disk by hand
+      const d3sha = currentBuild(d3.dir)!.sha;
+      expect(() => recordApproved(d3.topic, d3.story, a(d3, { build: d3sha, accepted: true }))).toThrow(
+        /a draft is accepted by npm run video -- final/,
+      );
+      afterFinal(d3.dir);
+      expect(recordApproved(d3.topic, d3.story, a(d3, { build: d3sha, accepted: true })).event).toMatchObject({
+        type: 'approved',
+        build: d3sha,
+      });
+      recordUploaded(d2.topic, d2.story, a(d2, { id: 'eeeeeeeeeee' }));
+      expect(() => recordApproved(d2.topic, d2.story, a(d2))).toThrow(/draft/);
+      const d2sha = afterFinal(d2.dir);
+      expect(recordApproved(d2.topic, d2.story, a(d2, { build: d2sha, accepted: true })).existing).toBe(false);
+      // the accepted draft upload, and the release build that has no approval: neither goes public
+      expect(() => recordUploaded(d2.topic, d2.story, a(d2, { id: 'fffffffffff', visibility: 'public' }))).toThrow(
+        /not approved/,
+      );
+      expect(() => recordScheduled(d2.topic, d2.story, a(d2, { at: '2026-11-01T00:00:00Z' }))).toThrow(
+        /draft|not approved/,
+      );
+      expect(() => recordPublished(d2.topic, d2.story, a(d2))).toThrow(/draft|not approved/);
+    } finally {
+      d2.cleanup();
+      d3.cleanup();
+    }
+  });
+
+  it('refuses a missing or non-image thumbnail', () => {
+    expect(() => setThumbnail(rel2.topic, rel2.story, { root: rel2.root, file: join(rel2.dir, 'nope.png') })).toThrow(
+      Refusal,
+    );
+    expect(() =>
+      setThumbnail(rel2.topic, rel2.story, { root: rel2.root, file: join(rel2.dir, 'script.json') }),
+    ).toThrow(/png|jpe?g/i);
+  });
+
+  it('refuses a follow-up story and a YouTube URL in place of an id', () => {
+    expect(() =>
+      recordUploaded('heat-pumps', 'decision:when-does-it-pay-for-itself', a(rel, { id: 'ccccccccccc' })),
+    ).toThrow(/follow-up/);
+    expect(() => recordUploaded(draft.topic, draft.story, a(draft, { id: 'https://youtu.be/dQw4w9WgXcQ' }))).toThrow(
+      /dQw4w9WgXcQ/,
+    );
+    expect(() => recordUploaded(draft.topic, draft.story, a(draft, { id: 'short' }))).toThrow(/id/);
+  });
+
+  it('a draft upload waits for final; failures and simple events append', () => {
+    recordUploaded(draft.topic, draft.story, a(draft, { id: 'ddddddddddd' }));
+    expect(events(draft)[0]).toMatchObject({ buildStatus: 'draft', build: 'draftsha' });
+    recordFailed(draft.topic, draft.story, a(draft, { step: 'upload', error: 'quota', retryable: true }));
+    recordFailed(draft.topic, draft.story, a(draft, { step: 'upload', error: 'quota', retryable: true }));
+    expect(events(draft).filter((e) => e.type === 'failed')).toHaveLength(2);
+    recordSimple(draft.topic, draft.story, 'retracted', a(draft, { note: 'wrong channel' }));
+    expect(events(draft).at(-1)!.type).toBe('retracted');
+  });
+
+  it('adds an output', () => {
+    addOutputTo(draft.topic, draft.story, 'short-1', 'youtube-short', { root: draft.root, derivedFrom: 'youtube' });
+    expect(loadLedger(draft.topic, draft.story, draft.root)!.outputs['short-1'].derivedFrom).toBe('youtube');
+    expect(() => addOutputTo(draft.topic, draft.story, 'short-1', 'youtube-short', { root: draft.root })).toThrow(
+      /exists/,
+    );
+    expect(() =>
+      addOutputTo(draft.topic, draft.story, 'blog', 'blog-post', { root: draft.root, source: 'nope.md' }),
+    ).toThrow(/nope\.md/);
+  });
+});
+
+describe('derivative flows', () => {
+  const ctx = { topic: 't', story: 's', output: 'blog', now: new Date('2026-10-26T00:00:00Z') };
+  const blog = (...events: PublishEvent[]): Output => ({
+    kind: 'blog-post',
+    source: 'blog/post.md',
+    metadata: {},
+    events,
+  });
+
+  it('a blog post needs no upload: made, approved, published', () => {
+    expect(flowOf('blog-post')).toBe('generic');
+    expect(flowOf('youtube-short')).toBe('youtube');
+    const made = outputState(blog(), null, null, ctx);
+    expect(made.status).toBe('not-uploaded');
+    expect(made.next).toContain('npm run publish -- approve t s --output blog');
+    expect(outputState(blog(ev('approved', { build: 'src1' })), null, null, ctx).status).toBe('approved');
+    const live = outputState(
+      blog(
+        ev('approved', { build: 'src1' }),
+        ev('published', { id: 'https://example.org/post', url: 'https://example.org/post' }),
+      ),
+      null,
+      null,
+      ctx,
+    );
+    expect(live.status).toBe('published');
+    expect(live.url).toBe('https://example.org/post');
+  });
+
+  it('a derivative waits for its parent to be live', () => {
+    const l = addOutput(emptyLedger('t/s'), 'short-1', 'youtube-short', { derivedFrom: 'youtube' });
+    const states = outputStates(l, null, () => null, { topic: 't', story: 's' });
+    expect(states['short-1'].status).toBe('not-uploaded');
+    expect(states['short-1'].next).toMatch(/publish youtube first/);
+    const live = appendEvent(
+      appendEvent(appendEvent(l, 'youtube', uploaded('r1', 'id1')).ledger, 'youtube', ev('approved', { build: 'r1' }))
+        .ledger,
+      'youtube',
+      ev('published', { id: 'id1' }),
+    ).ledger;
+    expect(outputStates(live, null, () => null, { topic: 't', story: 's' })['short-1'].next).not.toMatch(/first/);
+  });
+
+  it('a short is uploaded and approved as its own file', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      const src = `topics/${f.topic}/scripts/${storySlug(f.story)}/video/shorts/short-1.mp4`;
+      mkdirSync(join(f.dir, 'video', 'shorts'), { recursive: true });
+      writeFileSync(join(f.root, src), 'short bytes');
+      addOutputTo(f.topic, f.story, 'short-1', 'youtube-short', { root: f.root, derivedFrom: 'youtube', source: src });
+      const r = recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', output: 'short-1', id: 'ggggggggggg' });
+      expect(r.event!.build).toBe(sha(readFileSync(join(f.root, src))));
+    } finally {
+      f.cleanup();
+    }
+  });
+
+  it('a release build drawn with an older look is refused approval and nothing is written', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      setLook(f.dir, 'old');
+      expect(() => recordApproved(f.topic, f.story, { root: f.root, by: 'Jon' })).toThrow(
+        /rendered with look old.*npm run video -- final/,
+      );
+      expect(loadLedger(f.topic, f.story, f.root)?.outputs.youtube?.events ?? []).toHaveLength(0);
+      setLook(f.dir, undefined); // a report from before builds recorded their look
+      expect(() => recordApproved(f.topic, f.story, { root: f.root, by: 'Jon' })).toThrow(/before builds recorded/);
+    } finally {
+      f.cleanup();
+    }
+  });
+
+  it('an approved build whose look went stale is never scheduled or published by hand', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      const a = { root: f.root, by: 'Jon' };
+      recordUploaded(f.topic, f.story, { ...a, id: 'hhhhhhhhhhh' });
+      recordApproved(f.topic, f.story, a);
+      setLook(f.dir, 'old');
+      const final = /rendered with look old.*npm run video -- final/;
+      expect(() => recordScheduled(f.topic, f.story, { ...a, at: '2099-01-01T00:00:00Z' })).toThrow(final);
+      expect(() => recordPublished(f.topic, f.story, { ...a, url: 'https://youtu.be/hhhhhhhhhhh' })).toThrow(final);
+      // what sync read back public is a fact, recorded whatever the look
+      expect(recordPublished(f.topic, f.story, { ...a, observed: true }).event?.type).toBe('published');
+    } finally {
+      f.cleanup();
+    }
+  });
+
+  it('approve and publish a generic output through the verbs', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      mkdirSync(join(f.root, 'blog'), { recursive: true });
+      writeFileSync(join(f.root, 'blog', 'post.md'), '# post');
+      addOutputTo(f.topic, f.story, 'blog', 'blog-post', { root: f.root, source: 'blog/post.md' });
+      const a = { root: f.root, by: 'Jon', output: 'blog' };
+      expect(() => recordPublished(f.topic, f.story, { ...a, url: 'https://example.org/p' })).toThrow(Refusal);
+      const ok = recordApproved(f.topic, f.story, a);
+      expect(ok.event!.build).toMatch(/^[0-9a-f]{10}$/); // the source file's sha stands in for the build
+      const pub = recordPublished(f.topic, f.story, { ...a, url: 'https://example.org/p' });
+      expect(pub.event).toMatchObject({ type: 'published', id: 'https://example.org/p', url: 'https://example.org/p' });
+    } finally {
+      f.cleanup();
+    }
+  });
+});
+
+describe('captions and the parent link in the composed metadata', () => {
+  const dir = join(tmp, 'meta2');
+  mkdirSync(join(dir, 'video', 'review'), { recursive: true });
+  const review = (extra: Record<string, unknown>) =>
+    writeFileSync(
+      join(dir, 'video', 'review', 'review.json'),
+      JSON.stringify({ title: 'T', mp4: 'slug.mp4', mp4Sha: 'r1', status: 'release build', ...extra }),
+    );
+  const rel = (f: string) => `topics/t/scripts/slug/${f}`;
+  const out = (kind = 'youtube-video', extra: Partial<Output> = {}): Output => ({
+    kind,
+    metadata: {},
+    events: [],
+    ...extra,
+  });
+
+  it('carries the package captions and hashes them', () => {
+    review({});
+    const none = uploadMetadataOf(dir, rel, out())!;
+    expect(none.captions).toBeNull();
+    review({ captionsSha: 'c1' });
+    const m = uploadMetadataOf(dir, rel, out())!;
+    expect(m.captions).toEqual({
+      file: 'topics/t/scripts/slug/video/review/captions.en.srt',
+      sha: 'c1',
+      language: 'en',
+    });
+    expect(m.sha).not.toBe(none.sha);
+    expect(uploadMetadataOf(dir, rel, out('youtube-short', { source: 'x.mp4' }))!.captions).toBeNull();
+  });
+
+  it('a derivative links the full video once its parent is live; a main output never does', () => {
+    review({});
+    const short = out('youtube-short', { derivedFrom: 'youtube' });
+    const linked = uploadMetadataOf(dir, rel, short, 'https://youtu.be/parent00001')!;
+    expect(linked.description.endsWith('\n\nFull video: https://youtu.be/parent00001')).toBe(true);
+    expect(linked.sha).not.toBe(uploadMetadataOf(dir, rel, short, null)!.sha);
+    expect(uploadMetadataOf(dir, rel, out(), 'https://youtu.be/parent00001')!.description).not.toContain('Full video');
+  });
+
+  it('parentUrlOf is the parent output live url, or null', () => {
+    let l = addOutput(emptyLedger('t/s'), 'short-1', 'youtube-short', { derivedFrom: 'youtube' });
+    expect(parentUrlOf(l, l.outputs['short-1'])).toBeNull();
+    expect(parentUrlOf(l, l.outputs.youtube)).toBeNull();
+    l = appendEvent(l, 'youtube', uploaded('r1', 'parent00001')).ledger;
+    expect(parentUrlOf(l, l.outputs['short-1'])).toBeNull();
+    l = appendEvent(l, 'youtube', ev('published', { id: 'parent00001' })).ledger;
+    expect(parentUrlOf(l, l.outputs['short-1'])).toBe('https://youtu.be/parent00001');
+    l = appendEvent(l, 'youtube', ev('unpublished', { id: 'parent00001', note: 'x' })).ledger;
+    expect(parentUrlOf(l, l.outputs['short-1'])).toBeNull();
+  });
+
+  it('a published short tells the person to set the related video in Studio', () => {
+    const o: Output = {
+      kind: 'youtube-short',
+      derivedFrom: 'youtube',
+      source: 'x.mp4',
+      metadata: {},
+      events: [uploaded('s1', 'short000001'), ev('approved', { build: 's1' }), ev('published', { id: 'short000001' })],
+    };
+    const s = outputState(o, { sha: 's1', status: 'release' }, 'm1', { topic: 't', story: 's', output: 'short-1' });
+    expect(s.status).toBe('published');
+    expect(s.next).toMatch(/related video.*YouTube Studio/);
+  });
+});
+
+describe('a nested production as an output source (a Short)', () => {
+  const root = join(tmp, 'nested-root');
+  const parent = join(root, 'topics', 't', 'scripts', 'parent');
+  const shortDir = join(parent, 'shorts', 'x');
+  mkdirSync(join(parent, 'video', 'review'), { recursive: true });
+  mkdirSync(join(shortDir, 'video', 'review'), { recursive: true });
+  writeFileSync(
+    join(parent, 'video', 'review', 'review.json'),
+    JSON.stringify({ title: 'Parent', mp4: 'parent.mp4', mp4Sha: 'p1', status: 'release build', captionsSha: 'pc' }),
+  );
+  writeFileSync(join(parent, 'video', 'review', 'description.txt'), 'Parent description\n');
+  writeFileSync(
+    join(shortDir, 'video', 'review', 'review.json'),
+    JSON.stringify({
+      title: 'Short title',
+      mp4: 'parent-short-x.mp4',
+      mp4Sha: 's1',
+      status: 'private review build',
+      captionsSha: 'sc',
+      thumbnailSha: 'st',
+    }),
+  );
+  writeFileSync(join(shortDir, 'video', 'review', 'description.txt'), 'Hook\n\n#Shorts\n');
+  const source = 'topics/t/scripts/parent/shorts/x';
+  const rel = (f: string) => `topics/t/scripts/parent/${f}`;
+  const short = (): Output => ({ kind: 'youtube-short', derivedFrom: 'youtube', source, metadata: {}, events: [] });
+
+  it('is judged by its own package: build, title, description, captions and thumbnail from the nested folder', () => {
+    expect(nestedSource(root, short())).toBe(source);
+    expect(nestedSource(root, { source: 'topics/t/scripts/parent/nowhere' })).toBeNull();
+    expect(sourceBuild(root, source)).toEqual({ sha: 's1', status: 'draft' });
+    const m = uploadMetadataOf(parent, rel, short(), null, root)!;
+    expect(m.title).toBe('Short title');
+    expect(m.description).toBe('Hook\n\n#Shorts');
+    expect(m.file).toBe(`${source}/video/review/parent-short-x.mp4`);
+    expect(m.captions).toEqual({ file: `${source}/video/review/captions.en.srt`, sha: 'sc', language: 'en' });
+    expect(m.thumbnail).toEqual({ file: `${source}/video/review/thumbnail.png`, sha: 'st' });
+    // the parent's own output is untouched
+    const main = uploadMetadataOf(parent, rel, { kind: 'youtube-video', metadata: {}, events: [] }, null, root)!;
+    expect(main.title).toBe('Parent');
+    expect(main.file).toBe('topics/t/scripts/parent/video/review/parent.mp4');
+  });
+});
+
+describe('review decisions (the review page)', () => {
+  const now = new Date('2026-10-26T00:00:00Z');
+  const a = <T extends object>(f: Fixture, extra: T = {} as T) => ({ root: f.root, by: 'Jon', now, ...extra });
+  const note = { text: 'too fast here', scene: 'sc02', sentence: 's02', seconds: 4 };
+
+  it('approval binds the title: a hand-edited title asks for approval again', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      const r = recordApproved(f.topic, f.story, a(f));
+      expect(r.event!.title).toBeTruthy();
+      expect(openOutput(f.topic, f.story, { root: f.root }).state.status).toBe('approved');
+      const l = loadLedger(f.topic, f.story, f.root)!;
+      l.outputs.youtube.metadata.title = 'A different title';
+      saveLedger(publishPath(f.topic, f.story, f.root), l);
+      expect(openOutput(f.topic, f.story, { root: f.root }).state.status).not.toBe('approved');
+    } finally {
+      f.cleanup();
+    }
+  });
+
+  it('an old approval without a title still counts', () => {
+    const out: Output = { kind: 'youtube-video', metadata: {}, events: [ev('approved', { build: 'r1' })] };
+    const ctx = { topic: 't', story: 's', output: 'youtube', title: 'Anything' };
+    expect(outputState(out, { sha: 'r1', status: 'release' }, 'm1', ctx).status).toBe('approved');
+  });
+
+  it('changes requested on the current build wins over an earlier approval, and a later approval wins back', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      recordApproved(f.topic, f.story, a(f));
+      const r = recordChangesRequested(f.topic, f.story, a(f, { build: 'releasesha', notes: [note] }));
+      expect(r.event).toMatchObject({ type: 'changes-requested', build: 'releasesha', notes: [note] });
+      const s = openOutput(f.topic, f.story, { root: f.root }).state;
+      expect(s.status).toBe('changes-requested');
+      expect(s.requested?.notes).toEqual([note]);
+      expect(s.next).toContain('/produce');
+      recordApproved(f.topic, f.story, a(f, { now: new Date('2026-10-27T00:00:00Z') }));
+      expect(openOutput(f.topic, f.story, { root: f.root }).state.status).toBe('approved');
+    } finally {
+      f.cleanup();
+    }
+  });
+
+  it('changes requested on an old build does not hold a new one', () => {
+    const out: Output = {
+      kind: 'youtube-video',
+      metadata: {},
+      events: [ev('changes-requested', { build: 'r1', notes: [note] })],
+    };
+    const ctx = { topic: 't', story: 's', output: 'youtube' };
+    expect(outputState(out, { sha: 'r1', status: 'release' }, 'm1', ctx).status).toBe('changes-requested');
+    expect(outputState(out, { sha: 'r2', status: 'release' }, 'm1', ctx).status).toBe('not-uploaded');
+  });
+
+  it('request changes refuses empty notes, a stale build and a placeholder name; it is idempotent', () => {
+    const f = syntheticProduction('packaged');
+    try {
+      expect(() => recordChangesRequested(f.topic, f.story, a(f, { build: 'draftsha', notes: [] }))).toThrow(Refusal);
+      expect(() => recordChangesRequested(f.topic, f.story, a(f, { build: 'old', notes: [note] }))).toThrow(
+        /current build/,
+      );
+      expect(() =>
+        recordChangesRequested(f.topic, f.story, a(f, { by: '<name>', build: 'draftsha', notes: [note] })),
+      ).toThrow(/name/);
+      // a draft can be sent back (it cannot be approved)
+      expect(recordChangesRequested(f.topic, f.story, a(f, { build: 'draftsha', notes: [note] })).existing).toBe(false);
+      expect(recordChangesRequested(f.topic, f.story, a(f, { build: 'draftsha', notes: [note] })).existing).toBe(true);
+    } finally {
+      f.cleanup();
+    }
+  });
+
+  it('approve refuses an automated approver and an unticked checklist', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      const rp = join(f.dir, 'video', 'review', 'review.json');
+      writeFileSync(rp, JSON.stringify({ ...readJson<object>(rp), checklist: ['one', 'two'] }));
+      expect(() => recordApproved(f.topic, f.story, a(f, { by: 'automated: /produce run started by Jon' }))).toThrow(
+        /person/,
+      );
+      expect(() => recordApproved(f.topic, f.story, a(f, { checked: 1 }))).toThrow(/checklist/);
+      expect(recordApproved(f.topic, f.story, a(f, { checked: 2 })).existing).toBe(false);
+    } finally {
+      f.cleanup();
+    }
+  });
+
+  it("a Short's decisions land on short:<slug> in the parent's ledger, bound to the Short's own build and title", () => {
+    const f = syntheticShort('packaged', { release: true });
+    try {
+      const source = relative(f.root, f.dir).split(sep).join('/');
+      addOutputTo(f.topic, f.parent, 'short:fixture-short', 'youtube-short', {
+        derivedFrom: 'youtube',
+        source,
+        root: f.root,
+      });
+      recordChangesRequested(f.topic, f.story, a(f, { build: 'shortreleasesha', notes: [note] }));
+      const l = loadLedger(f.topic, f.parent, f.root)!;
+      expect(l.outputs['short:fixture-short'].events.map((e) => e.type)).toEqual(['changes-requested']);
+      expect(l.outputs.youtube.events).toEqual([]);
+      const s = openOutput(f.topic, f.story, { root: f.root }).state;
+      expect(s.next).toContain(`/produce ${f.topic} ${f.story}`);
+      const r = recordApproved(f.topic, f.story, a(f, { now: new Date('2026-10-27T00:00:00Z') }));
+      expect(r.event).toMatchObject({ build: 'shortreleasesha' });
+      expect(r.event!.title).toBe(openOutput(f.topic, f.story, { root: f.root }).metadata!.title);
+      expect(openOutput(f.topic, f.story, { root: f.root }).parentLive).toBe(false);
+    } finally {
+      f.cleanup();
+    }
+  });
+});
+
+describe('review fixes', () => {
+  const now = new Date('2026-10-26T00:00:00Z');
+  it('a build approved again under a new title is approved', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
+      const l = loadLedger(f.topic, f.story, f.root)!;
+      l.outputs.youtube.metadata.title = 'A better title';
+      saveLedger(publishPath(f.topic, f.story, f.root), l);
+      const r = recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now: new Date('2026-10-27T00:00:00Z') });
+      expect(r.existing).toBe(false);
+      expect(r.event!.title).toBe('A better title');
+      expect(openOutput(f.topic, f.story, { root: f.root }).state.status).toBe('approved');
+    } finally {
+      f.cleanup();
+    }
+  });
+
+  it('a scheduled upload stays scheduled through a title edit, and refuses a change request', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'aaaaaaaaaaa' });
+      recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
+      recordScheduled(f.topic, f.story, { root: f.root, by: 'Jon', now, at: '2026-11-01T15:00:00Z' });
+      const l = loadLedger(f.topic, f.story, f.root)!;
+      l.outputs.youtube.metadata.title = 'Retitled';
+      saveLedger(publishPath(f.topic, f.story, f.root), l);
+      expect(openOutput(f.topic, f.story, { root: f.root }).state.status).toBe('scheduled');
+      expect(() =>
+        recordChangesRequested(f.topic, f.story, {
+          root: f.root,
+          by: 'Jon',
+          now,
+          build: 'releasesha',
+          notes: [{ text: 'x' }],
+        }),
+      ).toThrow(/scheduled/);
+    } finally {
+      f.cleanup();
+    }
+  });
+});
+
+describe('going live is a person, on the latest decision, after the parent', () => {
+  const now = new Date('2026-10-26T00:00:00Z');
+  const a = <T extends object>(f: Fixture, extra: T = {} as T) => ({ root: f.root, by: 'Jon', now, ...extra });
+  it('a public upload refuses a build sent back since its approval, and an automated run', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      recordApproved(f.topic, f.story, a(f));
+      const pub = (by = 'Jon') =>
+        recordUploaded(f.topic, f.story, a(f, { by, id: 'aaaaaaaaaaa', visibility: 'public' as const }));
+      expect(() => pub('automated: /produce run started by Jon')).toThrow(/person/);
+      recordChangesRequested(f.topic, f.story, a(f, { build: 'releasesha', notes: [{ text: 'too fast' }] }));
+      expect(() => pub()).toThrow(/not approved/);
+      expect(loadLedger(f.topic, f.story, f.root)!.outputs.youtube.events.map((e) => e.type)).toEqual([
+        'approved',
+        'changes-requested',
+      ]);
+    } finally {
+      f.cleanup();
+    }
+  });
+
+  it('the hand verbs refuse an automated run and a Short before its parent is live', () => {
+    const f = syntheticShort('packaged', { release: true });
+    try {
+      const source = relative(f.root, f.dir).split(sep).join('/');
+      addOutputTo(f.topic, f.parent, 'short:fixture-short', 'youtube-short', {
+        derivedFrom: 'youtube',
+        source,
+        root: f.root,
+      });
+      recordUploaded(f.topic, f.story, a(f, { id: 'bbbbbbbbbbb' }));
+      recordApproved(f.topic, f.story, a(f));
+      expect(() => recordPublished(f.topic, f.story, a(f))).toThrow(/youtube first/);
+      expect(() => recordScheduled(f.topic, f.story, a(f, { at: '2026-11-01T00:00:00Z' }))).toThrow(/youtube first/);
+      expect(() => recordPublished(f.topic, f.story, a(f, { by: 'automated: x' }))).toThrow(/person/);
+      expect(recordPublished(f.topic, f.story, a(f, { observed: true })).event!.type).toBe('published'); // sync saw it
+    } finally {
+      f.cleanup();
+    }
+  });
+});
+
+describe('a Studio upload recorded by hand', () => {
+  const now = new Date('2026-10-26T00:00:00Z');
+  const later = new Date('2026-10-26T01:00:00Z');
+  const later2 = new Date('2026-10-26T02:00:00Z');
+  const reviewPath = (f: Fixture) => join(f.dir, 'video', 'review', 'review.json');
+  const patchReview = (f: Fixture, extra: Record<string, unknown>) =>
+    writeFileSync(reviewPath(f), JSON.stringify({ ...readJson<object>(reviewPath(f)), ...extra }));
+
+  it('uploaded --captions records the package captions sha so push does not resend them', () => {
+    const f = fresh({ release: true });
+    const r = recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001', captionsSent: true });
+    expect(r.event!.captions).toBe(openOutput(f.topic, f.story, { root: f.root }).metadata!.captions!.sha);
+    expect(lastCaptions(loadLedger(f.topic, f.story, f.root)!.outputs.youtube)).toBe(r.event!.captions);
+  });
+
+  it('uploaded --captions is refused when the package has none', () => {
+    const f = fresh({ release: true });
+    patchReview(f, { captionsSha: null });
+    expect(() =>
+      recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001', captionsSent: true }),
+    ).toThrow(/has no captions/);
+  });
+
+  it('approve after a Studio re-upload of the same build names the latest upload', () => {
+    const f = fresh({ release: true });
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'apiupload01' });
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now: later, id: 'studio00001' });
+    const a = recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now: later2 });
+    expect(a.event!.id).toBe('studio00001');
+    expect(openOutput(f.topic, f.story, { root: f.root }).state).toMatchObject({
+      status: 'approved',
+      id: 'studio00001',
+    });
+  });
+
+  it('a public Studio upload of the release build after a recorded draft upload records uploaded and published', () => {
+    const f = fresh();
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'apiupload01' });
+    const D = afterFinal(f.dir); // final made the release build
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, build: D, accepted: true });
+    expect(openOutput(f.topic, f.story, { root: f.root }).build).toMatchObject({
+      sha: 'releasesha',
+      status: 'release',
+    });
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now: later });
+    const r = recordUploaded(f.topic, f.story, {
+      root: f.root,
+      by: 'Jon',
+      now: later2,
+      id: 'studio00001',
+      visibility: 'public',
+    });
+    expect(r.event).toMatchObject({ type: 'uploaded', buildStatus: 'release', visibility: 'public' });
+    expect(events(f).at(-1)).toMatchObject({ type: 'published', id: 'studio00001' });
+  });
+
+  it('the CLI approve passes --checked and refuses without it', () => {
+    const f = fresh({ release: true });
+    patchReview(f, { checklist: ['watched it', 'captions read'] });
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001' });
+    expect(() => recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', checked: 0 })).toThrow(
+      /pass --checked \d+/,
+    );
+    const n = readJson<{ checklist: string[] }>(reviewPath(f))!.checklist.length;
+    expect(recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', checked: n }).event!.type).toBe('approved');
+  });
+
+  it('the release next step names --checked', () => {
+    const f = fresh({ release: true });
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001' });
+    expect(openOutput(f.topic, f.story, { root: f.root }).state.next).toContain('--checked <n>');
+  });
+});
+
+describe('a draft acceptance (what video final records)', () => {
+  const now = new Date('2026-10-26T00:00:00Z');
+  const accept = (f: Fixture, build?: string) =>
+    recordApproved(f.topic, f.story, {
+      root: f.root,
+      by: 'Jon',
+      now,
+      build,
+      accepted: true,
+      note: 'draft accepted by final',
+    });
+  const R = 'releasesha';
+
+  it('after final, the draft the release build replaced is accepted with the event final always wrote', () => {
+    const f = fresh();
+    const D = afterFinal(f.dir, R);
+    expect(D).toBe('draftsha');
+    expect(currentBuild(f.dir)).toEqual({ sha: R, status: 'release' });
+    const r = accept(f, D);
+    expect(r.existing).toBe(false);
+    expect(r.event).toEqual({
+      at: now.toISOString(),
+      type: 'approved',
+      by: 'Jon',
+      build: D,
+      title: openOutput(f.topic, f.story, { root: f.root }).metadata!.title,
+      note: 'draft accepted by final',
+    });
+    expect(accept(f, D).existing).toBe(true); // idempotent
+  });
+
+  it('an automated run never records an acceptance, even called in process', () => {
+    const f = fresh();
+    const D = afterFinal(f.dir, R);
+    expect(() =>
+      recordApproved(f.topic, f.story, { root: f.root, by: 'automated: x', now, build: D, accepted: true }),
+    ).toThrow(/approved by a person/);
+    expect(events(f)).toEqual([]);
+  });
+
+  it('refuses the release build, a stale build and no build, writing nothing', () => {
+    const f = fresh();
+    afterFinal(f.dir, R);
+    expect(() => accept(f, R)).toThrow(
+      /build releasesha was narrated under commercial terms; it is approved for publication by npm run publish -- approve, never accepted as a draft/,
+    );
+    expect(() => accept(f, 'b0b0b0b0b0')).toThrow(
+      /build b0b0b0b0b0 is not the draft the current build replaced \(draftsha\); a draft is accepted by npm run video -- final/,
+    );
+    expect(() => accept(f)).toThrow(/accept-draft names the draft build \(--build <sha>\)/);
+    expect(ledgerBytes(f)).toBeNull();
+  });
+
+  it('never accepts the draft on disk by hand: a draft is accepted by running final', () => {
+    const f = fresh();
+    expect(() => accept(f, 'draftsha')).toThrow(
+      /build draftsha is not the draft the current build replaced \(none\); a draft is accepted by npm run video -- final/,
+    );
+    expect(ledgerBytes(f)).toBeNull();
+  });
+
+  it('final with uncleared music: the Edge draft is accepted, the Azure build never, even relabelled a release', () => {
+    const f = fresh();
+    const S = 'azuresha01';
+    const D = afterFinal(f.dir, S, { musicCleared: false });
+    expect(currentBuild(f.dir)).toEqual({ sha: S, status: 'draft' }); // the label is clearance, not the voice
+    expect(() => accept(f, S)).toThrow(/was narrated under commercial terms/);
+    expect(accept(f, D).event).toMatchObject({ type: 'approved', build: D });
+    // a retried final that captured the Azure package: its replaced build is commercial, so never accepted
+    const rp = join(f.dir, 'video', 'build-report.json');
+    const replaces = { sha: S, status: 'draft', narrationPublishable: true };
+    writeFileSync(rp, toJson({ ...readJson<object>(rp)!, replaces }));
+    expect(() => accept(f, S)).toThrow(/was narrated under commercial terms/);
+    // the music is cleared and the same sha packages as the release build: nothing approves it but approve
+    const pp = join(f.dir, 'video', 'review', 'review.json');
+    writeFileSync(pp, toJson({ ...readJson<object>(pp)!, status: 'release build' }));
+    expect(currentBuild(f.dir)).toEqual({ sha: S, status: 'release' });
+    expect(approvalHolds(events(f), S)).toBe(false);
+    expect(openOutput(f.topic, f.story, { root: f.root }).state.status).not.toBe('approved');
+    expect(() =>
+      recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'sssssssssss', visibility: 'public' }),
+    ).toThrow(/not approved/);
+  });
+
+  it('a generic output has no draft build', () => {
+    const f = fresh();
+    const D = afterFinal(f.dir, R);
+    mkdirSync(join(f.root, 'blog'), { recursive: true });
+    writeFileSync(join(f.root, 'blog', 'post.md'), '# post');
+    addOutputTo(f.topic, f.story, 'blog', 'blog-post', { root: f.root, source: 'blog/post.md' });
+    const before = ledgerBytes(f);
+    for (const build of [D, sha(readFileSync(join(f.root, 'blog', 'post.md')))])
+      expect(() =>
+        recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, output: 'blog', build, accepted: true }),
+      ).toThrow(
+        'a blog-post output has no draft build; it is approved as its source file by npm run publish -- approve',
+      );
+    expect(ledgerBytes(f)).toBe(before);
+    expect(openOutput(f.topic, f.story, { root: f.root, output: 'blog' }).state.status).not.toBe('approved');
+  });
+
+  it("a Short is accepted against its own package's replaced draft, never its parent's", () => {
+    const f = syntheticShort('packaged');
+    fixtures.push(f);
+    const source = relative(f.root, f.dir).split(sep).join('/');
+    addOutputTo(f.topic, f.parent, 'short:fixture-short', 'youtube-short', {
+      derivedFrom: 'youtube',
+      source,
+      root: f.root,
+    });
+    const parentVideo = join(scriptDir(f.topic, f.parent, f.root), 'video');
+    mkdirSync(parentVideo, { recursive: true });
+    const prp = join(parentVideo, 'build-report.json');
+    const parentReplaces = { sha: 'parentdraft', status: 'draft', narrationPublishable: false };
+    writeFileSync(prp, toJson({ ...(readJson<object>(prp) ?? {}), replaces: parentReplaces }));
+    const acceptShort = (build: string) =>
+      recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, build, accepted: true });
+    expect(() => acceptShort('parentdraft')).toThrow(/is not the draft the current build replaced \(none\)/);
+    const D = afterFinal(f.dir, 'shortreleasesha');
+    expect(D).toBe('shortdraftsha');
+    expect(() => acceptShort('parentdraft')).toThrow(/replaced \(shortdraftsha\)/);
+    expect(acceptShort(D).event).toMatchObject({ build: D });
+    const l = loadLedger(f.topic, f.parent, f.root)!;
+    expect(l.outputs['short:fixture-short'].events.map((e) => e.build)).toEqual([D]);
+    expect(l.outputs.youtube.events).toEqual([]);
+  });
+
+  it('an acceptance never approves the release build: approve still needs the checklist and a person', () => {
+    const f = fresh();
+    const D = afterFinal(f.dir, R);
+    const pp = join(f.dir, 'video', 'review', 'review.json');
+    writeFileSync(pp, toJson({ ...readJson<object>(pp)!, checklist: ['watched it', 'captions read'] }));
+    accept(f, D);
+    const o = openOutput(f.topic, f.story, { root: f.root });
+    expect(o.state.status).not.toBe('approved');
+    expect(approvalHolds(events(f), R)).toBe(false);
+    expect(approvalHolds(events(f), R, o.metadata!.title)).toBe(false);
+    expect(() => recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, checked: 1 })).toThrow(
+      /1 of 2 checklist items/,
+    );
+    expect(() =>
+      recordApproved(f.topic, f.story, { root: f.root, by: 'automated: /produce run started by Jon', now, checked: 2 }),
+    ).toThrow(/never by an automated run/);
+    expect(() =>
+      recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'ppppppppppp', visibility: 'public' }),
+    ).toThrow(/not approved/);
+    expect(approvalHolds(events(f), R)).toBe(false);
+    expect(recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, checked: 2 }).event).toMatchObject({
+      build: R,
+    });
+  });
+
+  it('an accepted draft upload never goes public, scheduled or published', () => {
+    const f = fresh();
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'ddddddddddd' }); // the draft, privately
+    const D = afterFinal(f.dir, R);
+    accept(f, D);
+    expect(approvalHolds(events(f), D)).toBe(true); // the acceptance is a decision on the draft only
+    expect(() => recordPublished(f.topic, f.story, { root: f.root, by: 'Jon', now })).toThrow(/draft|not approved/);
+    expect(() =>
+      recordScheduled(f.topic, f.story, { root: f.root, by: 'Jon', now, at: '2026-11-01T00:00:00Z' }),
+    ).toThrow(/draft|not approved/);
+    expect(() =>
+      recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'eeeeeeeeeee', visibility: 'public' }),
+    ).toThrow(/not approved/);
+    expect(events(f).map((e) => e.type)).toEqual(['uploaded', 'approved']);
+  });
+});
+
+describe('npm run publish -- accept-draft (the CLI)', () => {
+  it('refuses bad arguments and an output already approved for publication, writing nothing', () => {
+    const D = 'd0d0d0d0d0';
+    expect(acceptDraftProblem('Jon', '', null)).toMatch(
+      /^--build needs the draft's mp4 sha as review.json records it$/,
+    );
+    expect(acceptDraftProblem('Jon', 'not a sha', null)).toMatch(/--build needs .*, not not a sha$/);
+    expect(acceptDraftProblem('', D, null)).toMatch(/^--by needs a real name/);
+    expect(acceptDraftProblem('<your name>', D, null)).toMatch(/^--by needs a real name/);
+    expect(acceptDraftProblem('Jon', D, null)).toBeNull();
+    expect(acceptDraftProblem('automated: /produce run started by Jon', D, null)).toBe(
+      'a draft is accepted by a person; an automated run never records an acceptance',
+    );
+    const f = fresh({ release: true, cliRoot: true });
+    const a = { root: f.root, by: 'Jon', now: new Date('2026-10-26T00:00:00Z') };
+    expect(acceptDraftProblem('Jon', D, openOutput(f.topic, f.story, { root: f.root }))).toBeNull();
+    recordApproved(f.topic, f.story, a);
+    expect(acceptDraftProblem('Jon', D, openOutput(f.topic, f.story, { root: f.root }))).toBe(
+      'youtube is already approved for publication (the release build releasesha is approved); a draft acceptance after that is meaningless',
+    );
+    recordUploaded(f.topic, f.story, { ...a, id: 'lllllllllll' });
+    recordPublished(f.topic, f.story, a);
+    const before = ledgerBytes(f);
+    const o = openOutput(f.topic, f.story, { root: f.root });
+    expect(o.state.live).toBe(true);
+    expect(acceptDraftProblem('Jon', D, o)).toBe(
+      'youtube is already approved for publication (it is live); a draft acceptance after that is meaningless',
+    );
+    expect(ledgerBytes(f)).toBe(before);
+  });
+
+  it('refuses a scheduled output', () => {
+    const f = fresh({ release: true, cliRoot: true });
+    const a = { root: f.root, by: 'Jon', now: new Date('2026-10-26T00:00:00Z') };
+    recordApproved(f.topic, f.story, a);
+    recordUploaded(f.topic, f.story, { ...a, id: 'lllllllllll' });
+    recordScheduled(f.topic, f.story, { ...a, at: '2026-11-01T00:00:00Z' });
+    const o = openOutput(f.topic, f.story, { root: f.root });
+    expect(o.state.status).toBe('scheduled');
+    expect(acceptDraftProblem('Jon', 'd0d0d0d0d0', o)).toBe(
+      'youtube is already approved for publication (it is scheduled); a draft acceptance after that is meaningless',
+    );
+  });
+
+  it('after final records what recordApproved writes, byte for byte, once', { timeout: 120_000 }, () => {
+    const f = fresh({ cliRoot: true });
+    const D = afterFinal(f.dir, 'a1a1a1a1a1');
+    expect(D).toBe('d0d0d0d0d0');
+    // the dry run final makes before narration: exit 0, nothing printed, nothing written
+    const dry = cli(f, 'accept-draft', '--by', 'Jon', '--build', D, '--note', 'draft accepted by final', '--dry-run');
+    expect([dry.status, dry.stdout, dry.stderr]).toEqual([0, '', '']);
+    expect(ledgerBytes(f)).toBeNull();
+    const r = cli(f, 'accept-draft', '--by', 'Jon', '--build', D, '--note', 'draft accepted by final');
+    expect(r.stderr).toBe('');
+    expect(r.status).toBe(0);
+    expect(r.stdout).toMatch(/^recorded approved \(build d0d0d0d0d0\)/);
+    const viaCli = ledgerBytes(f)!;
+    const at = loadLedger(f.topic, f.story, f.root)!.outputs.youtube.events[0].at;
+    // the same arguments and clock in process, on the same state: the same bytes
+    rmSync(publishPath(f.topic, f.story, f.root));
+    recordApproved(f.topic, f.story, {
+      root: f.root,
+      by: 'Jon',
+      build: D,
+      accepted: true,
+      note: 'draft accepted by final',
+      now: new Date(at),
+    });
+    expect(ledgerBytes(f)).toBe(viaCli);
+    const again = cli(f, 'accept-draft', '--by', 'Jon', '--build', D, '--note', 'draft accepted by final');
+    expect(again.status).toBe(0);
+    expect(again.stdout).toMatch(/^already recorded: approved \(build d0d0d0d0d0\)/);
+    expect(ledgerBytes(f)).toBe(viaCli);
+  });
+});
+
+describe('npm run publish -- request-changes (the CLI)', { timeout: 60_000 }, () => {
+  it('--at, --scene and --sentence place the --note before them, in order', () => {
+    const f = fresh({ release: true, cliRoot: true });
+    const r = cli(
+      f,
+      'request-changes',
+      '--by',
+      'Jon',
+      '--note',
+      'slower',
+      '--at',
+      '2',
+      '--note',
+      'cut',
+      '--scene',
+      'sc3',
+      '--sentence',
+      's7',
+      '--at',
+      '41',
+      '--note',
+      'keep the end',
+    );
+    expect([r.status, r.stderr]).toEqual([0, '']);
+    expect(r.stdout).toMatch(/^recorded changes-requested \(build releasesha\)/);
+    const notes = loadLedger(f.topic, f.story, f.root)!.outputs.youtube.events[0].notes;
+    expect(notes).toEqual([
+      { text: 'slower', seconds: 2 },
+      { text: 'cut', scene: 'sc3', sentence: 's7', seconds: 41 },
+      { text: 'keep the end' },
+    ]);
+    expect(Object.keys(notes![1])).toEqual(['text', 'scene', 'sentence', 'seconds']); // argv order, as the page sends it
+  });
+
+  it('refuses a placement before any --note, an unknown flag or a bad time, writing nothing', () => {
+    const f = fresh({ release: true, cliRoot: true });
+    for (const [args, why] of [
+      [['--at', '2', '--note', 'x'], /^refused: --at places a note: put it after its --note/],
+      [['--note', 'x', '--colour', 'red'], /^refused: request-changes does not take --colour/],
+      [['--note', 'x', '--at', 'soon'], /^refused: --at needs the note's time in seconds, not soon/],
+    ] as const) {
+      const r = cli(f, 'request-changes', '--by', 'Jon', ...args);
+      expect(r.status).toBe(2);
+      expect(r.stderr).toMatch(why);
+    }
+    expect(existsSync(publishPath(f.topic, f.story, f.root))).toBe(false);
+  });
+});
+
+describe('verification events', () => {
+  const now = new Date('2026-10-27T00:00:00Z');
+  const a = (f: Fixture) => ({ root: f.root, by: 'Jon', now });
+
+  it('a verification is recorded with its checks and validated', () => {
+    const f = fresh({ release: true });
+    recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
+    const r = recordVerified(f.topic, f.story, {
+      ...a(f),
+      result: 'passed',
+      checks: [{ name: 'title', result: 'pass' }],
+    });
+    expect(r.event).toMatchObject({ type: 'verified', id: 'studio00001', result: 'passed', build: 'releasesha' });
+    expect(r.event!.metadata).toBe(openOutput(f.topic, f.story, { root: f.root }).metadata!.sha);
+    const bad = {
+      video: 'v',
+      outputs: {
+        youtube: {
+          kind: 'youtube-video',
+          metadata: {},
+          events: [
+            {
+              at: '2026-10-27T00:00:00Z',
+              type: 'verified',
+              by: 'Jon',
+              id: 'x',
+              result: 'maybe',
+              checks: [{ result: 'pass' }],
+            },
+          ],
+        },
+      },
+    };
+    expect(ledgerProblems(bad, 'v')).toEqual(
+      expect.arrayContaining([expect.stringMatching(/result/), expect.stringMatching(/checks\[0\]\.name/)]),
+    );
+  });
+
+  it('a repeat of the latest verification is the same event', () => {
+    const f = fresh({ release: true });
+    recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
+    const pass = { result: 'passed' as const, checks: [{ name: 'title', result: 'pass' as const }] };
+    const fail = { result: 'failed' as const, checks: [{ name: 'title', result: 'fail' as const, detail: 'differs' }] };
+    recordVerified(f.topic, f.story, { ...a(f), ...pass });
+    expect(recordVerified(f.topic, f.story, { ...a(f), ...pass }).existing).toBe(true);
+    recordVerified(f.topic, f.story, { ...a(f), ...fail });
+    expect(recordVerified(f.topic, f.story, { ...a(f), ...pass }).existing).toBe(false);
+    expect(events(f).filter((e) => e.type === 'verified')).toHaveLength(3);
+  });
+
+  it('the same failure after a push is a new verification', () => {
+    const f = fresh({ release: true });
+    recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
+    const fail = { result: 'failed' as const, checks: [{ name: 'title', result: 'fail' as const, detail: 'differs' }] };
+    recordVerified(f.topic, f.story, { ...a(f), ...fail });
+    recordUpdated(f.topic, f.story, { ...a(f), fields: ['snippet'] }); // push resent it
+    const again = recordVerified(f.topic, f.story, { ...a(f), ...fail });
+    expect(again.existing).toBe(false);
+    expect(failedSince(loadLedger(f.topic, f.story, f.root)!.outputs.youtube, ['title'])).toBe(true);
+  });
+
+  it('a verification does not hide a failure and is recorded', () => {
+    const f = fresh({ release: true });
+    recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
+    recordFailed(f.topic, f.story, { ...a(f), step: 'thumbnail', error: 'forbidden', retryable: false });
+    recordVerified(f.topic, f.story, { ...a(f), result: 'passed', checks: [{ name: 'title', result: 'pass' }] });
+    const o = openOutput(f.topic, f.story, { root: f.root });
+    const s = o.state;
+    expect(s.failed?.step).toBe('thumbnail');
+    expect(o.out.events.at(-1)?.result).toBe('passed');
+    expect(s.status).toBe('uploaded');
+  });
+
+  it('refuses a verification before any upload', () => {
+    const f = fresh({ release: true });
+    expect(() => recordVerified(f.topic, f.story, { ...a(f), result: 'passed', checks: [] })).toThrow(
+      /nothing uploaded/,
+    );
+    expect(existsSync(publishPath(f.topic, f.story, f.root))).toBe(false);
+  });
+
+  it('failedSince reads only a verification after the last upload or update', () => {
+    const f = fresh({ release: true });
+    recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
+    recordVerified(f.topic, f.story, {
+      ...a(f),
+      result: 'failed',
+      checks: [{ name: 'title', result: 'fail', detail: 'differs' }],
+    });
+    const out = () => loadLedger(f.topic, f.story, f.root)!.outputs.youtube;
+    expect(failedSince(out(), ['title'])).toBe(true);
+    expect(failedSince(out(), ['captions'])).toBe(false);
+    recordUpdated(f.topic, f.story, { ...a(f), fields: ['snippet'] });
+    expect(failedSince(out(), ['title'])).toBe(false);
+  });
+});
