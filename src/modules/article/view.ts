@@ -2,8 +2,8 @@
 // source marks numbered in first-use order, the noted corrections and a revised finding it relies on.
 import { type ArticleRelease, type Callout, articleSentences } from './article';
 import { chartProblems, datasetChart } from '../storyboard';
-import { type PublicRecord, type Revision, isClaimRevision } from '../../shared/public-record';
-import type { ChartSpec, DataTable, Sentence } from '../../shared/types';
+import { isClaimRevision } from '../../shared/public-record';
+import type { ChartSpec, DataTable, PublicRecord, Revision, Sentence } from '../../shared/types';
 import type { Topic } from '../evidence';
 import { citeHref, citeLabel, datasetSource } from '../../lib/url';
 

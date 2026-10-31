@@ -6,7 +6,6 @@ export {
   chainOf,
   storyUrlSlug,
   groupSlug,
-  staleReviewIds,
   storyTopicNames,
   type StoryInput,
   type StoriesFile,

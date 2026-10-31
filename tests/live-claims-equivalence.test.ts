@@ -1,5 +1,5 @@
 // Pins `liveClaimIds` (what the report CLI numbers as exhibits, read from stories.json and the publishing ledgers) to
-// the content graph's `liveClaims` it replaced: every committed topic, plus a temp root with a live chain.
+// the content graph's `liveClaims`: every committed topic, plus a temp root with a live chain.
 import { mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';

@@ -733,7 +733,7 @@ export function recordApproved(
   const problem = approverProblem(a.by);
   if (problem) throw new Refusal(problem.replace('--approved-by', '--by'));
   // publication is authorised by a person: an automated run may lock a script, never approve a build
-  if (!a.accepted && a.by.trim().startsWith('automated:'))
+  if (a.by.trim().startsWith('automated:'))
     throw new Refusal('a build is approved by a person, never by an automated run');
   const o = openOutput(topic, storyId, a);
   if (a.checked !== undefined) {

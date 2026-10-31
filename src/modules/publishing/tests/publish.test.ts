@@ -1103,6 +1103,15 @@ describe('a draft acceptance (what video final records)', () => {
     expect(accept(f, D).existing).toBe(true); // idempotent
   });
 
+  it('an automated run never records an acceptance, even called in process', () => {
+    const f = fresh();
+    const D = afterFinal(f.dir, R);
+    expect(() =>
+      recordApproved(f.topic, f.story, { root: f.root, by: 'automated: x', now, build: D, accepted: true }),
+    ).toThrow(/approved by a person/);
+    expect(events(f)).toEqual([]);
+  });
+
   it('refuses the release build, a stale build and no build, writing nothing', () => {
     const f = fresh();
     afterFinal(f.dir, R);

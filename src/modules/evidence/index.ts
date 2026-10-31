@@ -5,8 +5,6 @@ export {
   loadTopic,
   publicTopicNames,
   topicNames,
-  type ClaimSourceView,
-  type ClaimVerdictView,
   type ClaimView,
   type SourceClaimView,
   type SourceView,

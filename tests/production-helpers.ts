@@ -6,7 +6,6 @@ import { join, relative } from 'node:path';
 import { ARTICLE_FILES } from '../src/modules/article';
 import type { BuildSummary } from '../src/shared/build-report';
 import { article } from '../src/modules/article/tests/article-helpers';
-import { corpusOf } from '../src/modules/evidence';
 import {
   passageReader,
   docHasher,
@@ -23,11 +22,10 @@ import {
 import { buildPackage } from '../src/modules/script';
 import { lookFingerprint } from '../src/shared/look';
 import { storyboardFingerprint } from '../src/shared/release-check';
-import { validationFingerprint } from '../src/shared/sentence-validation';
 import { renderCheckProblems } from '../src/modules/video/render-check';
 import { scriptFingerprint, sentenceFingerprint, sentences } from '../src/shared/sentences';
-import type { Release, Script, ScriptReviewFile, SectionName, SentenceType } from '../src/shared/types';
-import { validateScript } from '../src/shared/sentence-validation';
+import type { Release, Script, ScriptReviewFile, SectionName, SentenceType, StoryboardPlan } from '../src/shared/types';
+import { validateScript, validationFingerprint } from '../src/shared/sentence-validation';
 import {
   type ShortsReviewFile,
   buildShortPackage,
@@ -38,8 +36,7 @@ import {
 } from '../src/modules/shorts';
 import { chainOf, loadReview, loadStories, reviewPath, storiesPath } from '../src/modules/stories';
 import { buildStoryboard } from '../src/modules/storyboard';
-import type { StoryboardPlan } from '../src/shared/types';
-import { loadTopic } from '../src/modules/evidence';
+import { corpusOf, loadTopic } from '../src/modules/evidence';
 import { writeRenderCheck } from '../src/modules/video/check';
 import { initVideo } from '../src/modules/video/init';
 

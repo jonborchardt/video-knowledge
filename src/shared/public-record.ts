@@ -6,8 +6,6 @@ import { join } from 'node:path';
 import { readJson, ROOT, topicDir } from './io';
 import { FINDING_LABELS, type ClaimRevision, type ClaimState, type PublicRecord, type Revision } from './types';
 
-export type { ClaimRevision, ClaimState, PublicRecord, Revision } from './types';
-
 export const isClaimRevision = (r: Revision): r is ClaimRevision => r.kind === 'claim';
 export const publicRecordPath = (topic: string, root = ROOT) => join(topicDir(topic, root), 'public-record.json');
 

@@ -7,8 +7,6 @@ import { join } from 'node:path';
 import { topicDir, ROOT } from '../../shared/io';
 import type { ReviewFile } from '../../shared/types';
 
-export { MAX_QUESTIONS, MAX_CHAIN_CLAIMS } from '../../shared/types';
-
 export const reviewPath = (topic: string, root = ROOT) => join(topicDir(topic, root), 'story-review.json');
 export function loadReview(topic: string, root = ROOT): ReviewFile {
   const p = reviewPath(topic, root);

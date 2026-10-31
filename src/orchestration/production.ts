@@ -26,7 +26,6 @@ import type {
   ScriptValidation,
   Story,
 } from '../shared/types';
-import { corpusOf } from '../modules/evidence';
 import {
   passageReader,
   fileSha,
@@ -69,8 +68,7 @@ import {
 } from '../modules/publishing';
 import { buildPackage } from '../modules/script';
 import { releaseCheck, storyboardFingerprint } from '../shared/release-check';
-import { validationFingerprint } from '../shared/sentence-validation';
-import { validateScript } from '../shared/sentence-validation';
+import { validateScript, validationFingerprint } from '../shared/sentence-validation';
 import {
   type ShortsFile,
   buildShortPackage,
@@ -83,7 +81,7 @@ import {
 import { chainOf, discover, loadReview, loadStories, reviewPath, storiesPath } from '../modules/stories';
 import { buildStoryboard } from '../modules/storyboard';
 import type { Storyboard, StoryboardPlan } from '../shared/types';
-import { loadTopic, topicNames, type Topic } from '../modules/evidence';
+import { corpusOf, loadTopic, topicNames, type Topic } from '../modules/evidence';
 import type { BuildSummary, Clearance } from '../shared/build-report';
 import { lookFingerprint, lookStale } from '../shared/look';
 import { type Commission, commissionOf } from '../config/site';

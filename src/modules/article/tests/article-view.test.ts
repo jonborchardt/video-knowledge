@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { ARTICLE_FILES, type ArticleRelease, loadArticleRelease } from '../article';
 import { articleStale, articleView, releaseFigureDraws } from '../view';
-import type { PublicRecord, Revision } from '../../../shared/public-record';
+import type { PublicRecord, Revision } from '../../../shared/types';
 import { readJson } from '../../../shared/io';
 import { scriptDir, scriptDirs } from '../../../shared/io';
 import type { SourceView } from '../../evidence';

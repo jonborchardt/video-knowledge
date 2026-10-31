@@ -312,7 +312,6 @@ export function inspectArticle(
     text = a ?? out.article;
     corrects = drift.some((d) => d.startsWith('figure '));
   }
-  const released = !!out;
   if (!text) return { status: 'missing', code: 'missing', findings: [ARTICLE_FINDINGS.missing] };
   if (text.generation?.needsEvidence?.length) return bad('needs-evidence', [ARTICLE_FINDINGS.needsEvidence]);
   if (!pkg) return bad('no-package', [ARTICLE_FINDINGS.noPackage]);
@@ -324,9 +323,8 @@ export function inspectArticle(
       ? bad('revision-limit', [ARTICLE_FINDINGS.revisionLimit])
       : bad('blocking', [ARTICLE_FINDINGS.blocking]);
   if (live.status === 'passed') {
-    if (released && !corrects)
-      return { status: 'ready', code: 'ready', findings: [], output: rel(ARTICLE_FILES.release) };
-    return released ? bad('changed', [ARTICLE_FINDINGS.changed]) : bad('passed', [ARTICLE_FINDINGS.passed]);
+    if (out && !corrects) return { status: 'ready', code: 'ready', findings: [], output: rel(ARTICLE_FILES.release) };
+    return out ? bad('changed', [ARTICLE_FINDINGS.changed]) : bad('passed', [ARTICLE_FINDINGS.passed]);
   }
   return bad('unapproved', [ARTICLE_FINDINGS.unapproved]);
 }

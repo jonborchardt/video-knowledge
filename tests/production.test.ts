@@ -42,13 +42,11 @@ import {
   articleSentences,
 } from '../src/modules/article/article';
 import { inspectArticle } from '../src/modules/article';
-import { corpusOf } from '../src/modules/evidence';
 import { loadReview, loadStories } from '../src/modules/stories';
-import type { Storyboard } from '../src/shared/types';
 import { validateScript } from '../src/shared/sentence-validation';
-import { loadTopic } from '../src/modules/evidence';
+import { corpusOf, loadTopic } from '../src/modules/evidence';
 import { sentenceFingerprint } from '../src/shared/sentences';
-import type { EvidencePackage, Script, ScriptReviewFile, ScriptValidation } from '../src/shared/types';
+import type { EvidencePackage, Script, ScriptReviewFile, ScriptValidation, Storyboard } from '../src/shared/types';
 import {
   addOutputTo,
   recordApproved,

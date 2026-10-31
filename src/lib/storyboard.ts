@@ -1,6 +1,5 @@
 // Kept at this path for src/modules/video/types.ts and kinds.ts, which import these types from here (their only edit in
 // the move was this specifier; the fingerprint strips type imports). Nothing else imports this file.
-export { VISUALS, CHART_TYPES, UNITS } from '../shared/types';
 export type {
   VisualCategory,
   ChartType,

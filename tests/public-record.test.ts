@@ -17,13 +17,13 @@ import {
   nextPublicRecord,
   noteRevision,
   publicRecordPath,
-  type PublicRecord,
   publicRecordProblems,
   revisionLine,
 } from '../src/shared/public-record';
 import { claimStates, ledgerClaims } from '../src/modules/evidence';
 import { contentGraph, liveClaims } from '../src/modules/website';
 import { ROOT, toJson, topicDir } from '../src/shared/io';
+import type { PublicRecord } from '../src/shared/types';
 import { type ClaimView, loadTopic, publicTopicNames, type SourceView, type Verdict } from '../src/modules/evidence';
 
 const next = (

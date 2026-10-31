@@ -7,7 +7,6 @@ export {
   type PublishEvent,
   type ReviewNote,
   type UploadMetadata,
-  addOutputTo,
   currentBuild,
   emptyLedger,
   loadLedger,
@@ -17,8 +16,6 @@ export {
   outputStates,
   parentUrlOf,
   publishPath,
-  recordApproved,
-  recordChangesRequested,
   stampOf,
   uploadMetadataOf,
 } from './publish';

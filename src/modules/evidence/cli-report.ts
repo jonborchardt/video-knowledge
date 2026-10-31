@@ -7,14 +7,8 @@
 // The watcher lives in ../retire-sim (or $WATCHER_DIR), so the default command only runs locally; commit the results.
 import { existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import {
-  type ClaimState,
-  loadPublicRecord,
-  nextPublicRecord,
-  noteRevision,
-  publicRecordPath,
-  type PublicRecord,
-} from '../../shared/public-record';
+import { loadPublicRecord, nextPublicRecord, noteRevision, publicRecordPath } from '../../shared/public-record';
+import type { ClaimState, PublicRecord } from '../../shared/types';
 import { liveClaimIds } from './live-claims';
 import { toJson, topicDir, topicsDir } from '../../shared/io';
 import { claimStates, ledgerClaims } from './finding-label';

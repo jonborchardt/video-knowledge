@@ -4,12 +4,11 @@
 // web page could otherwise post to localhost and publish. Decisions run the publish verbs as a child process (`npm run
 // publish -- approve|request-changes`, waited for); the long verbs run the CLI as a job (src/modules/website/review-job.ts). What a person may do is reviewView's `can`, the same reasons the page shows.
 import type { APIRoute } from 'astro';
-import { ROOT } from '../shared/io';
+import { ROOT, scriptDir } from '../shared/io';
 import { runCli } from '../shared/cli';
 import { approverProblem } from '../shared/approver';
 import { Refusal } from '../shared/refusal';
 import { startJob, type ReviewView, parseNotes, reviewView, storyIdOfPath } from '../modules/website';
-import { scriptDir } from '../shared/io';
 import { href } from '../lib/url';
 
 /** The request comes from a page this server served: its Origin header is the server's own origin. */

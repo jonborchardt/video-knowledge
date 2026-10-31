@@ -597,7 +597,7 @@ The document enters the corpus through `npm run record-sources -- <topic> topics
 
 Then rewrite the dataset: its cites point into the new file, and `asOf` and `retrieved` say what the new file says. Point the tool's own cites (`src/tools/heating-cost/spec.ts`: `justification`, `afue`, `cops`, `latest`) at the new file as well, and update `latest.value` to the new file's figure. Rewrite the period in `priceNote`'s wording there ("January to July 2026 electricity and 2025 gas prices") to the new file's, and in `tests/tools.test.ts` update the expected note and the `3.60` in the `latest` passage check to the new file's values. A `retrieved` date after today fails `datasetProblems`.
 
-Check with `npx vitest run tests/datasets.test.ts tests/tools.test.ts`. The recompute test in `tests/tools.test.ts` reads the raw columns by line range: update the ranges and the file name for the new file, never the expected arithmetic. Then run `npm run validate` and `npm run quality`.
+Check with `npx vitest run src/modules/evidence/tests/datasets.test.ts tests/tools.test.ts`. The recompute test in `tests/tools.test.ts` reads the raw columns by line range: update the ranges and the file name for the new file, never the expected arithmetic. Then run `npm run validate` and `npm run quality`.
 
 A new verdict can change the story's evidence package on its next `npm run script -- package`, and the board then says what to re-bind. A changed finding makes released articles stale, and `npm run board -- next` names the article step.
 

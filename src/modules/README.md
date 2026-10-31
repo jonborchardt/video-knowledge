@@ -1,7 +1,7 @@
 # Modules
 
-Each capability is a folder here (`index.ts` public API, `cli.ts` the npm entry, `briefs/`, `tests/`, `README.md`),
-or, until its extraction, the `src/lib` and `scripts` files listed below. Boundaries are enforced by
+Each capability is a folder here (`index.ts` public API, `cli.ts` the npm entry, `briefs/`, `tests/`, `README.md`).
+Boundaries are enforced by
 `tests/boundaries.test.ts` (config `tests/boundaries.json`); this table is the only place future ownership is recorded
 in code.
 

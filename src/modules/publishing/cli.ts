@@ -205,11 +205,9 @@ async function main() {
     case 'accept-draft': {
       const by = flag('--by') ?? '';
       const build = flag('--build') ?? '';
-      const p1 = acceptDraftProblem(by, build, null);
-      if (p1) throw new Refusal(p1);
-      const o = openOutput(topic, storyId, { output });
-      const p2 = acceptDraftProblem(by, build, o);
-      if (p2) throw new Refusal(p2);
+      const p =
+        acceptDraftProblem(by, build, null) ?? acceptDraftProblem(by, build, openOutput(topic, storyId, { output }));
+      if (p) throw new Refusal(p);
       if (has('--dry-run')) break; // the checks only: exit 0, nothing printed, nothing written
       r = recordApproved(topic, storyId, { output, by, build, accepted: true, note: flag('--note') });
       break;

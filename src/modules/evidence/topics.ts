@@ -22,15 +22,7 @@ import { applicabilityKey, checkApplicabilityFile } from './batches';
 export const APPLICABILITY_FILE = 'applicability.json';
 
 export type { Verdict };
-export type {
-  ClaimView,
-  ClaimSourceView,
-  ClaimVerdictView,
-  SourceClaimView,
-  SourceView,
-  SurpriseView,
-  Topic,
-} from '../../shared/types';
+export type { ClaimView, SourceClaimView, SourceView, SurpriseView, Topic } from '../../shared/types';
 const JUDGED: Verdict[] = ['right', 'wrong', 'partly'];
 
 // The slice of `watcher report --json` this site reads.
