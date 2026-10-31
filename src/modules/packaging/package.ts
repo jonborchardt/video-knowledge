@@ -7,7 +7,7 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFil
 import { join } from 'node:path';
 import { commissionKey, commissionOf, site } from '../../config/site';
 import { contentGraph, matterPath, storyNode, type CtaType, ctaPath, loadCta, resolveCtas } from '../website';
-import { fileSha, readJson, REVIEW_DIR, ROOT, sha, toJson, topicDir } from '../../shared/io';
+import { fileSha, readJson, REVIEW_DIR, ROOT, sha, toJson, topicDir, writeJsonAtomic } from '../../shared/io';
 import { loadLedger, mainOutput, uploadProblem } from '../publishing';
 import { sectionTitle } from '../../shared/sentences';
 import { absoluteUrl } from '../../lib/url';
@@ -443,7 +443,7 @@ export function buildReviewPackage(
   writeFileSync(join(dir, REVIEW_FILES.links), toJson(links));
   writeFileSync(join(dir, REVIEW_FILES.checklist), renderChecklist(pkg, tl));
   copyFileSync(join(videoDir, VIDEO_FILES.reportMd), join(dir, REVIEW_FILES.report));
-  writeFileSync(join(dir, REVIEW_FILES.json), toJson(pkg));
+  writeJsonAtomic(join(dir, REVIEW_FILES.json), pkg);
   log?.(`${pkg.files.length} files in ${dir}`);
   return pkg;
 }

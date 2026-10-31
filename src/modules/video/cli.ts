@@ -22,7 +22,7 @@
 import { spawnSync } from 'node:child_process';
 import { appendFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { passageReader, readJson, sha, toJson, ROOT, REVIEW_DIR, scriptDir } from '../../shared/io';
+import { passageReader, readJson, sha, toJson, ROOT, REVIEW_DIR, scriptDir, writeJsonAtomic } from '../../shared/io';
 import { runCli } from '../../shared/cli';
 import { currentBuild } from '../publishing';
 import { approverProblem } from '../../shared/approver';
@@ -208,7 +208,7 @@ async function stageQa(
     mix,
     packaged(), // still the package on disk: package runs after QA
   );
-  writeFileSync(p(VIDEO_FILES.report), toJson(r));
+  writeJsonAtomic(p(VIDEO_FILES.report), r);
   writeFileSync(p(VIDEO_FILES.reportMd), renderReportMd(r));
   for (const c of qa.checks) if (!c.ok) console.log(`  FAIL ${c.name}: ${c.detail}`);
   const failed = qa.checks.filter((c) => !c.ok).length;

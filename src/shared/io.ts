@@ -1,7 +1,7 @@
 // Repo-wide file helpers: content hashes, line endings and JSON artifacts. Every stage imports them from here, so no
 // stage depends on another stage's module for a utility.
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, unlinkSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { PassageReader } from './types';
@@ -34,9 +34,49 @@ export const fileSha = (f: string) => (existsSync(f) ? sha(lf(readFileSync(f, 'u
 export const readJson = <T>(p: string): T | null => (existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')) as T) : null);
 /** Serialises without passages: provenance stays with the citation, and the CLI re-reads them on demand. */
 export const toJson = (x: unknown) => JSON.stringify(x, (k, v) => (k === 'passage' ? undefined : v), 1) + '\n';
+
+const RENAME_RETRIES = 5;
+const sleepMs = (ms: number) => {
+  if (ms > 0) Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+};
+/** Writes `toJson(value)` to `<path>.tmp` and renames it over `path`, so a kill mid-write never leaves a truncated
+ *  file for a reader (the board reads these on every call). Windows refuses the rename with EPERM or EBUSY while the
+ *  dev server or an antivirus holds the target open: the rename is retried a few times, `retryMs` apart. */
+export function writeJsonAtomic(
+  path: string,
+  value: unknown,
+  io: { writeFileSync: (p: string, data: string) => void; renameSync: (a: string, b: string) => void } = {
+    writeFileSync,
+    renameSync,
+  },
+  retryMs = 100,
+): void {
+  const tmp = `${path}.tmp`;
+  io.writeFileSync(tmp, toJson(value));
+  for (let attempt = 1; ; attempt++) {
+    try {
+      io.renameSync(tmp, path);
+      return;
+    } catch (e) {
+      const code = (e as NodeJS.ErrnoException).code;
+      if ((code !== 'EPERM' && code !== 'EBUSY') || attempt >= RENAME_RETRIES) {
+        try {
+          unlinkSync(tmp);
+        } catch {
+          /* the old file stands; the .tmp is left when even that fails */
+        }
+        throw e;
+      }
+      sleepMs(retryMs);
+    }
+  }
+}
+
+/** Writes an artifact into `dir` (created on demand); a `.json` artifact atomically, since the board reads those. */
 export function writeArtifact(dir: string, name: string, content: string) {
   mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, name), content);
+  if (name.endsWith('.json')) writeJsonAtomic(join(dir, name), JSON.parse(content));
+  else writeFileSync(join(dir, name), content);
 }
 
 // ---- script folders ----

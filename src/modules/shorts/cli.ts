@@ -3,9 +3,9 @@
 //                                      topics/<topic>/scripts/<slug>/shorts.json (merges shorts-review.json; see src/modules/shorts/briefs/shorts.md)
 //   show <topic> <story-id> [key]      the candidates, or one with its sentences, qualifications and cited passages
 // A Short is then produced as <story-id>/shorts/<slug> through the same CLIs as a video (npm run board -- next, /produce).
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { relative } from 'node:path';
-import { passageReader, toJson, ROOT, shortId, shortOf } from '../../shared/io';
+import { passageReader, ROOT, shortId, shortOf, writeJsonAtomic } from '../../shared/io';
 import { sentences } from '../../shared/sentences';
 import {
   type ShortCandidate,
@@ -48,7 +48,7 @@ try {
       const parent = loadShortParent(topic, storyId);
       const review = loadShortsReview(topic, storyId);
       const file = discoverShorts(parent, review);
-      writeFileSync(shortsPath(topic, storyId), toJson(file));
+      writeJsonAtomic(shortsPath(topic, storyId), file);
       list(file.candidates);
       for (const r of file.rejected) console.log(`rejected ${r.key}: ${r.reason}`);
       const ready = file.candidates.filter((c) => c.readiness === 'ready');
