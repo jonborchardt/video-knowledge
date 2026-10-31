@@ -2,10 +2,11 @@
 // the release build is packaged: the event is the one the in-process recordApproved call wrote, and a refusal fails
 // final.
 import { spawnSync } from 'node:child_process';
-import { writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadLedger } from '../../publishing';
+import { publishPath, recordApproved, recordScheduled, recordUploaded } from '../../publishing/publish';
 import { readJson, ROOT, toJson } from '../../../shared/io';
 import { acceptDraftViaCli } from '../final';
 import { afterFinal, syntheticProduction } from '../../../../tests/production-helpers';
@@ -91,4 +92,68 @@ describe('final records the acceptance through publish accept-draft', () => {
     const pass = (() => ({ status: 0, stdout: '', stderr: '' })) as unknown as typeof spawnSync;
     expect(() => acceptDraftViaCli('t', 's', 'Jon', 'd0d0d0d0d0', ROOT, true, pass)).not.toThrow();
   });
+
+  it('a scheduled release refuses the real final before narration, rendering or any ledger write', () => {
+    // a release build approved, uploaded and scheduled; then an edit put a new draft package on disk
+    const fx = syntheticProduction('packaged', { release: true });
+    try {
+      const tsx = (f: string) =>
+        `node "${join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs').replaceAll('\\', '/')}" "${join(ROOT, f).replaceAll('\\', '/')}"`;
+      writeFileSync(
+        join(fx.root, 'package.json'),
+        toJson({ name: 'video-knowledge', private: true, scripts: { board: tsx('src/orchestration/board.ts') } }),
+      );
+      const a = { root: fx.root, by: 'Jon', now: new Date('2026-10-26T00:00:00Z') };
+      recordApproved(fx.topic, fx.story, a);
+      recordUploaded(fx.topic, fx.story, { ...a, id: 'sssssssssss' });
+      recordScheduled(fx.topic, fx.story, { ...a, at: '2099-01-01T00:00:00Z' });
+      const pp = join(fx.dir, 'video', 'review', 'review.json');
+      const review = readJson<{ provenance?: { narration?: object } }>(pp)!;
+      writeFileSync(
+        pp,
+        toJson({
+          ...review,
+          status: 'private review build',
+          mp4Sha: 'd1d1d1d1d1',
+          provenance: { ...review.provenance, narration: { ...review.provenance?.narration, publishable: false } },
+        }),
+      );
+      const ledgerPath = publishPath(fx.topic, fx.story, fx.root);
+      const before = {
+        ledger: readFileSync(ledgerPath, 'utf8'),
+        review: readFileSync(pp, 'utf8'),
+        video: readdirSync(join(fx.dir, 'video')).sort(),
+      };
+      // the real verb, in the fixture root (no .env there: no Azure key, so narration could not even start)
+      const r = spawnSync(
+        process.execPath,
+        [
+          join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs'),
+          '--tsconfig',
+          join(ROOT, 'tsconfig.json'), // the renderer's JSX needs the repo's tsconfig, which the fixture root lacks
+          join(ROOT, 'src', 'modules', 'video', 'cli.ts'),
+          'final',
+          fx.topic,
+          fx.story,
+          '--approved-by',
+          'Jon',
+        ],
+        { cwd: fx.root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
+      );
+      expect(r.status).not.toBe(0);
+      // either the board refuses it, or the dry run of the acceptance does: both before narration
+      expect(r.stderr).toMatch(
+        /accept-draft refused: .*\(it is scheduled\)|final (needs a packaged story|never rebuilds)/,
+      );
+      expect(r.stderr).not.toMatch(/azure|narrat(ed|ing)|render/i);
+      expect(readFileSync(ledgerPath, 'utf8')).toBe(before.ledger);
+      expect(readFileSync(pp, 'utf8')).toBe(before.review);
+      expect(readdirSync(join(fx.dir, 'video')).sort()).toEqual(before.video);
+      // the scheduled release and its approval stand exactly as recorded
+      const ev = loadLedger(fx.topic, fx.story, fx.root)!.outputs.youtube.events;
+      expect(ev.map((e) => e.type)).toEqual(['approved', 'uploaded', 'scheduled']);
+    } finally {
+      fx.cleanup();
+    }
+  }, 240_000);
 });
