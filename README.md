@@ -6,6 +6,12 @@ Site: https://commonwealthofreason.com/ (Cloudflare, `wrangler.jsonc`), mirrored
 
 The library lives in `../retire-sim/watcher`, which must be checked out next to this repo on a branch that has it (or point `WATCHER_DIR` at it).
 
+## Milestones
+
+1. **Module separation** (done): every capability is a module under `src/modules/` behind a boundary test; the production board derives state from the files; module CLIs are the write boundary (`src/modules/README.md`).
+2. **Autonomous operations** (next): discover, research, produce, approve, publish, distribute and maintain with minimal manual coordination. The test: approve a batch of topics, stop thinking about the system for a week, and come back to well-researched, professionally produced releases that need only the final decisions, with failures already identified and routine problems handled. A person still creates institutions and channels, approves topics, reviews drafts until automated review earns trust, approves each exact release and every paid link, and resolves genuine exceptions.
+3. **Business optimization** (later): measure audience response, compare stories and institutions, optimize topic selection, test monetization, allocate production by results.
+
 ## Setup
 
 Node 22, `npm install`, and `pdftotext` (poppler) for step 5. The watcher checkout is only needed for the data scripts, not for building the site.
