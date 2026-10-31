@@ -1,4 +1,4 @@
-import { readdirSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import { builtinModules } from 'node:module';
 import { posix } from 'node:path';
 import ts from 'typescript';
@@ -110,9 +110,12 @@ export function capabilityOf(repoPath: string, map: Record<string, string>): str
   return cap === '@folder' ? repoPath.slice(prefix.length).split('/')[0] : cap;
 }
 
+/** Every source file under `dirs` (relative to `root`); a dir that is not there contributes nothing (a checkout
+ *  has no empty folders, so `scripts/` is absent once nothing is tracked in it). */
 export function walk(dirs: string[], root: string): string[] {
   const out: string[] = [];
   const visit = (rel: string) => {
+    if (!existsSync(posix.join(root, rel))) return;
     for (const e of readdirSync(posix.join(root, rel), { withFileTypes: true })) {
       if (e.name === 'node_modules' || e.name === 'dist' || e.name === 'tests') continue;
       const p = posix.join(rel, e.name);

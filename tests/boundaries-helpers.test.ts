@@ -1,5 +1,16 @@
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { capabilityOf, cycles, importedNames, importsOf, isNodeBuiltin, resolveSpecifier } from './boundaries-helpers';
+import {
+  capabilityOf,
+  cycles,
+  importedNames,
+  importsOf,
+  isNodeBuiltin,
+  resolveSpecifier,
+  walk,
+} from './boundaries-helpers';
 
 describe('importsOf', () => {
   it('lists static, type-only, export-from, dynamic and require specifiers', () => {
@@ -249,5 +260,20 @@ describe('check', () => {
   it('never allowlists read-api-cycle', () => {
     const u = [{ from: 'a', to: 'b', rule: 'read-api-cycle' }];
     expect(check(u, [{ from: 'a', to: 'b' }]).unexpected).toEqual(u);
+  });
+});
+
+describe('walk', () => {
+  it('skips a root that is not there (a checkout has no empty folders) and still lists the others', () => {
+    const root = mkdtempSync(join(tmpdir(), 'vk-walk-'));
+    try {
+      mkdirSync(join(root, 'src', 'a'), { recursive: true });
+      writeFileSync(join(root, 'src', 'a', 'x.ts'), '');
+      writeFileSync(join(root, 'src', 'a', 'notes.md'), '');
+      expect(walk(['src', 'scripts'], root)).toEqual(['src/a/x.ts']);
+      expect(walk(['scripts'], root)).toEqual([]);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });
