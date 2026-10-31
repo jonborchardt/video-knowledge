@@ -7,6 +7,7 @@ import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 
 const argv = process.argv.slice(2);
+if (process.env.FAKE_CLAUDE_LOG) writeFileSync(process.env.FAKE_CLAUDE_LOG, JSON.stringify(argv) + '\n', { flag: 'a' });
 const prompt = argv[argv.indexOf('-p') + 1] ?? '';
 const resumeAt = argv.indexOf('--resume');
 const session = resumeAt >= 0 ? argv[resumeAt + 1] : `fake-${Math.random().toString(36).slice(2, 8)}`;

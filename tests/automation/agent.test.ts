@@ -113,7 +113,7 @@ describe('runAgent (with the fake claude)', () => {
     const r = await runAgent(fake, req({ timeoutMs: 500 }), { env: { ...process.env, FAKE_CLAUDE_SCENARIO: s } });
     expect(r.ok).toBe(false);
     expect(r.error).toBe('timeout');
-    expect(Date.now() - t0).toBeLessThan(3000);
+    expect(Date.now() - t0).toBeLessThan(5000); // the fake sleeps 5 s: anything shorter means it was killed
   });
   it('an agent error is ok false with its cost and text', async () => {
     const s = scenario('err', [{ match: 'write', actions: [], cost: 0.2, error: true, result: 'budget exceeded' }]);

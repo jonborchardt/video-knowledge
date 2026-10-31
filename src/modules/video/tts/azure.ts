@@ -18,6 +18,13 @@ export interface Boundary {
 /** Synthesize `ssml` into `outFile` (a RIFF wav), reporting each boundary as it comes. */
 export type Speak = (ssml: string, outFile: string, onBoundary: (b: Boundary) => void) => Promise<void>;
 
+/** Drops the Azure key and region from this process: `video final` calls it after the narration so the render, QA
+ *  and package phases (which load agent-written components) and anything they spawn run without a secret. */
+export function forgetAzureKeys(): void {
+  delete process.env.AZURE_SPEECH_KEY;
+  delete process.env.AZURE_SPEECH_REGION;
+}
+
 const escape = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 /** The edge-tts rate ("-10%") is already a valid SSML prosody rate. */

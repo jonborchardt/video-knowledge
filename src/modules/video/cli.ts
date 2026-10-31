@@ -22,7 +22,17 @@
 import { spawnSync } from 'node:child_process';
 import { appendFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { passageReader, readJson, sha, toJson, ROOT, REVIEW_DIR, scriptDir, writeJsonAtomic } from '../../shared/io';
+import {
+  loadDotEnv,
+  passageReader,
+  readJson,
+  sha,
+  toJson,
+  ROOT,
+  REVIEW_DIR,
+  scriptDir,
+  writeJsonAtomic,
+} from '../../shared/io';
 import { runCli } from '../../shared/cli';
 import { currentBuild } from '../publishing';
 import { approverProblem } from '../../shared/approver';
@@ -32,6 +42,7 @@ import { initVideo } from './init';
 import { MIX_FILE, type MixReport, loadMusicConfig, resolveCues } from './music';
 import { narrate } from './narration';
 import { type TtsProvider, provider } from './tts';
+import { forgetAzureKeys } from './tts/azure';
 import { DECODABLE, type QaResult, extractInspectionFrames, qaSegment } from './qa';
 import { assemble } from './assemble';
 import { ENTRY, renderContactSheet, renderScenes } from './render';
@@ -42,7 +53,7 @@ import { acceptDraftViaCli, finalRefusal } from './final';
 import { buildTimeline } from './timeline';
 import type { NarrationManifest, Timeline } from './types';
 
-if (existsSync(join(ROOT, '.env'))) process.loadEnvFile(join(ROOT, '.env')); // keys only; never committed
+loadDotEnv(); // keys only; never committed; skipped when the runner handed this child its keys (VK_NO_DOTENV)
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
 const flag = (name: string) => {
   const i = rest.indexOf(name);
@@ -331,6 +342,7 @@ try {
       // asked before the paid render: an output already approved for publication refuses the acceptance
       if (accepts) acceptDraftViaCli(topic, storyId, flag('--approved-by')!, draft.sha, ROOT, true);
       const { seg, m } = await stageNarrate(provider('azure'));
+      forgetAzureKeys(); // the render, QA and package phases (and anything they spawn) run without the key
       const { tl } = stageTimeline(seg, m);
       const { seconds } = await stageRender(tl, m);
       const qa = await stageQa(seg, m, tl, seconds);

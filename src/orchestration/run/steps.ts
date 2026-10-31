@@ -1,0 +1,332 @@
+// One board step, executed: a `run` step is a module CLI as a timed child with only its verb's secrets (spec §4.6,
+// layer 3); a `prompt` step is a budgeted agent (agent.ts) followed by the brief's validator, run by the runner,
+// whose findings go back to the same session for a bounded number of rounds; a `do` step is a person's.
+import { spawn as nodeSpawn } from 'node:child_process';
+import { closeSync, existsSync, openSync, readdirSync, rmSync, writeSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import type { AgentRole, Automation } from '../../shared/automation';
+import { cliArgv } from '../../shared/cli';
+import type { Step } from '../production';
+import { type AgentResult, runAgent, UNATTENDED } from './agent';
+import { killTree } from './proc';
+import type { Subject } from './roles';
+
+export interface StepOutcome {
+  kind: Step['kind'];
+  ok: boolean;
+  exit: number | null;
+  ms: number;
+  costUsd: number;
+  sessionId: string | null;
+  error: string | null;
+  log: string;
+  pid?: number;
+  /** The tree guard (Task 6) refused the agent's changes: the halt is unexpected-edit, not no-progress. */
+  guardFailed?: boolean;
+  rounds?: number;
+}
+
+/** `npm run <cli> -- <args>` → the cli and its args, with `<approver>` filled in; anything else null. */
+export function parseRun(text: string, approver: string): { cli: string; args: string[] } | null {
+  const m = /^npm run ([a-z-]+)(?: -- (.*))?$/.exec(text.trim());
+  if (!m) return null;
+  const args: string[] = [];
+  const re = /"([^"]*)"|'([^']*)'|(\S+)/g;
+  for (const t of (m[2] ?? '').matchAll(re)) args.push((t[1] ?? t[2] ?? t[3]).replace('<approver>', approver));
+  return { cli: m[1], args };
+}
+
+export function timeoutFor(a: Automation, cli: string, args: string[]): number {
+  const t = a.runs.stepTimeoutMinutes;
+  return (t[args[0]] ?? t[cli] ?? t.default ?? 30) * 60_000;
+}
+
+const SECRET_KEY = /^(MAIL_|X_|AZURE_|YOUTUBE_|APPROVAL_|ANTHROPIC_ADMIN)/;
+const FAMILY: Record<string, RegExp | undefined> = { publish: /^YOUTUBE_/, social: /^X_/ };
+
+/** The environment a child CLI gets: every secret family removed, then one family back by verb (`publish` →
+ *  YouTube, `social` → X, `video final` → Azure); every verb is told not to load .env itself (VK_NO_DOTENV), so a
+ *  child holds exactly the keys the runner handed it and a process that loads agent code holds none. */
+export function envFor(cli: string, args: string[], env: NodeJS.ProcessEnv = process.env): NodeJS.ProcessEnv {
+  const keep = cli === 'video' && args[0] === 'final' ? /^AZURE_/ : FAMILY[cli];
+  const out: NodeJS.ProcessEnv = {};
+  for (const [k, v] of Object.entries(env)) {
+    if (k === 'VK_AGENT' || k === 'VK_WRITABLE' || k === 'VK_SHELL') continue;
+    if (!SECRET_KEY.test(k) || keep?.test(k)) out[k] = v;
+  }
+  out.VK_NO_DOTENV = '1'; // the child never reloads .env: it holds exactly the keys above, handed by the runner
+  return out;
+}
+
+const briefOf = (s: Step): string | null => /briefs\/([\w-]+\.md)/.exec(s.text)?.[1] ?? null;
+
+export function roleOf(step: Step): AgentRole {
+  const b = briefOf(step) ?? '';
+  if (
+    [
+      'script-review.md',
+      'article-review.md',
+      'visual-review.md',
+      'stories.md',
+      'shorts-review.md',
+      'shorts.md',
+    ].includes(b)
+  )
+    return 'reviewer';
+  if (['graphics.md', 'video-fix.md'].includes(b)) return 'graphics';
+  if (['extract.md', 'sources.md', 'merge.md', 'evidence.md'].includes(b)) return 'extraction';
+  if (['collect.md', 'studies.md', 'new-sources.md'].includes(b)) return 'collect';
+  if (b === 'discover.md') return 'discovery';
+  if (b === 'proposal-review.md') return 'proposalReview';
+  if (b === 'draft-review.md') return 'draftReview';
+  if (b === 'revision-note.md') return 'notes';
+  if (!b && /^Find studies/.test(step.text)) return 'collect';
+  return 'writer';
+}
+
+/** The deterministic check the brief used to run itself, now the runner's; null when the brief has none. */
+export function validatorFor(step: Step, topic: string, storyId: string): { cli: string; args: string[] } | null {
+  if (step.kind !== 'prompt') return null;
+  switch (briefOf(step)) {
+    case 'script.md':
+    case 'script-review.md':
+      return { cli: 'script', args: ['validate', topic, storyId] };
+    case 'storyboard.md':
+      return { cli: 'script', args: ['storyboard', topic, storyId] };
+    case 'article.md':
+    case 'article-review.md':
+      return { cli: 'article', args: ['validate', topic, storyId] };
+    case 'stories.md':
+      return { cli: 'stories', args: ['discover', topic] };
+    case 'shorts.md':
+      return { cli: 'shorts', args: ['discover', topic, storyId] };
+    case 'graphics.md':
+    case 'visual-review.md':
+    case 'video-fix.md':
+      return { cli: 'video', args: ['check', topic, storyId] };
+    default:
+      return null;
+  }
+}
+
+export interface GuardHook {
+  (): { ok: boolean; why: string };
+}
+
+export interface StepContext {
+  topic: string;
+  storyId: string;
+  root: string;
+  approver: string;
+  notes?: string;
+  role: AgentRole;
+  logPath: string;
+  env?: NodeJS.ProcessEnv;
+  spawn?: typeof nodeSpawn;
+  /** The executable and argv for `npm run <cli> -- <args>` (tests inject a fake step). */
+  argvOf?: (cli: string, args: string[]) => [string, string[]];
+  timeoutMs?: number;
+  tmpDir?: string;
+  otherLocksAlive?: () => boolean;
+  /** Runs after every agent turn (Task 6's tree guard, wired by the runner); a failure ends the step. */
+  guard?: GuardHook;
+  budgetUsd?: number;
+}
+
+const RENDER_VERBS = new Set(['render', 'spike', 'final']);
+export function cleanRenderTemp(dir = tmpdir()): string[] {
+  const gone: string[] = [];
+  if (!existsSync(dir)) return gone;
+  for (const name of readdirSync(dir))
+    if (/^(remotion-webpack-bundle-|react-motion-render)/.test(name)) {
+      rmSync(join(dir, name), { recursive: true, force: true });
+      gone.push(name);
+    }
+  return gone;
+}
+
+interface ChildResult {
+  exit: number | null;
+  ms: number;
+  pid: number;
+  timedOut: boolean;
+  tail: string;
+}
+
+function runChild(
+  exe: string,
+  argv: string[],
+  o: { cwd: string; env: NodeJS.ProcessEnv; logPath: string; timeoutMs: number; spawn?: typeof nodeSpawn },
+): Promise<ChildResult> {
+  const spawn = o.spawn ?? nodeSpawn;
+  const t0 = Date.now();
+  const fd = openSync(o.logPath, 'a');
+  let tail = '';
+  return new Promise((resolve) => {
+    const child = spawn(exe, argv, {
+      cwd: o.cwd,
+      env: o.env,
+      stdio: ['ignore', 'pipe', 'pipe'],
+      windowsHide: true,
+      detached: process.platform !== 'win32',
+    });
+    let timedOut = false;
+    const timer = setTimeout(() => {
+      timedOut = true;
+      if (child.pid) killTree(child.pid);
+    }, o.timeoutMs);
+    const onData = (d: Buffer) => {
+      writeSync(fd, d);
+      tail = (tail + d.toString()).slice(-4000);
+    };
+    child.stdout?.on('data', onData);
+    child.stderr?.on('data', onData);
+    const done = (exit: number | null) => {
+      clearTimeout(timer);
+      closeSync(fd);
+      resolve({ exit, ms: Date.now() - t0, pid: child.pid ?? -1, timedOut, tail });
+    };
+    child.on('error', (e) => {
+      tail += `\n${e.message}`;
+      done(null);
+    });
+    child.on('close', (code) => done(code));
+  });
+}
+
+const lastResult = (tail: string): string | null => {
+  const lines = tail.trim().split('\n');
+  for (let i = lines.length - 1; i >= 0; i--) if (lines[i].startsWith('RESULT:')) return lines[i].trim();
+  return null;
+};
+
+export async function execStep(a: Automation, s: Step, ctx: StepContext): Promise<StepOutcome> {
+  const base = { kind: s.kind, costUsd: 0, sessionId: null, log: ctx.logPath };
+  if (s.kind === 'do') return { ...base, ok: false, exit: null, ms: 0, error: `a person's step: ${s.text}` };
+  if (s.kind === 'run') {
+    const r = parseRun(s.text, ctx.approver);
+    if (!r) return { ...base, ok: false, exit: null, ms: 0, error: `not a command: ${s.text}` };
+    if (RENDER_VERBS.has(r.args[0]) && !(ctx.otherLocksAlive?.() ?? false)) cleanRenderTemp(ctx.tmpDir);
+    const [exe, argv] = (ctx.argvOf ?? cliArgv)(r.cli, r.args);
+    const c = await runChild(exe, argv, {
+      cwd: ctx.root,
+      env: envFor(r.cli, r.args, ctx.env),
+      logPath: ctx.logPath,
+      timeoutMs: ctx.timeoutMs ?? timeoutFor(a, r.cli, r.args),
+      spawn: ctx.spawn,
+    });
+    const result = lastResult(c.tail);
+    const ok = !c.timedOut && c.exit === 0 && (result === null || result.startsWith('RESULT: PASSED'));
+    const error = c.timedOut
+      ? 'timeout'
+      : ok
+        ? null
+        : (result ?? `exit ${c.exit}: ${c.tail.trim().split('\n').slice(-3).join(' | ')}`);
+    return { ...base, ok, exit: c.exit, ms: c.ms, error, pid: c.pid };
+  }
+  // prompt: the agent, the guard, the validator, and the findings back to the same session
+  const subject: Subject = { topic: ctx.topic, storyId: ctx.storyId };
+  const validator = validatorFor(s, ctx.topic, ctx.storyId);
+  let prompt = ctx.notes ? `${s.text}\n\nNotes:\n${ctx.notes}` : s.text;
+  let resume: string | undefined;
+  let cost = 0;
+  let ms = 0;
+  let last: AgentResult | null = null;
+  for (let round = 0; round <= a.runs.validationRounds; round++) {
+    last = await runAgent(
+      a,
+      {
+        role: ctx.role,
+        subject,
+        prompt,
+        cwd: ctx.root,
+        budgetUsd: ctx.budgetUsd ?? a.agents.budgetUsd.perAgent,
+        timeoutMs: ctx.timeoutMs ?? a.runs.agentTimeoutMinutes * 60_000,
+        appendSystem: UNATTENDED,
+        resume,
+      },
+      { env: ctx.env, spawn: ctx.spawn },
+    );
+    cost += last.costUsd;
+    ms += last.ms;
+    resume = last.sessionId ?? undefined;
+    const g = ctx.guard?.() ?? { ok: true, why: '' };
+    if (!g.ok)
+      return {
+        ...base,
+        ok: false,
+        exit: last.exit,
+        ms,
+        costUsd: cost,
+        sessionId: last.sessionId,
+        error: g.why,
+        guardFailed: true,
+        rounds: round + 1,
+      };
+    if (!last.ok)
+      return {
+        ...base,
+        ok: false,
+        exit: last.exit,
+        ms,
+        costUsd: cost,
+        sessionId: last.sessionId,
+        error: last.error ?? 'agent failed',
+        rounds: round + 1,
+      };
+    if (!validator)
+      return {
+        ...base,
+        ok: true,
+        exit: last.exit,
+        ms,
+        costUsd: cost,
+        sessionId: last.sessionId,
+        error: null,
+        rounds: round + 1,
+      };
+    const [exe, argv] = (ctx.argvOf ?? cliArgv)(validator.cli, validator.args);
+    const v = await runChild(exe, argv, {
+      cwd: ctx.root,
+      env: envFor(validator.cli, validator.args, ctx.env),
+      logPath: ctx.logPath,
+      timeoutMs: timeoutFor(a, validator.cli, validator.args),
+      spawn: ctx.spawn,
+    });
+    ms += v.ms;
+    const findings = v.tail.trim().split('\n').slice(-40).join('\n');
+    if (v.exit === 0 && !v.timedOut)
+      return {
+        ...base,
+        ok: true,
+        exit: v.exit,
+        ms,
+        costUsd: cost,
+        sessionId: last.sessionId,
+        error: null,
+        rounds: round + 1,
+      };
+    if (round === a.runs.validationRounds || !resume)
+      return {
+        ...base,
+        ok: false,
+        exit: v.exit,
+        ms,
+        costUsd: cost,
+        sessionId: last.sessionId,
+        error: `validator ${validator.cli} ${validator.args[0]} failed: ${findings}`,
+        rounds: round + 1,
+      };
+    prompt = `The validator (npm run ${validator.cli} -- ${validator.args.join(' ')}) reports:\n${findings}\n\nFix the file you wrote and stop.`;
+  }
+  return {
+    ...base,
+    ok: false,
+    exit: last?.exit ?? null,
+    ms,
+    costUsd: cost,
+    sessionId: last?.sessionId ?? null,
+    error: 'no rounds',
+  };
+}

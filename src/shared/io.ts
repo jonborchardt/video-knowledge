@@ -32,6 +32,16 @@ export const lf = (s: string) => s.replace(/\r\n?/g, '\n');
 /** The sha of a text file with its line endings normalised (checkout-independent); 'missing' when it is not there. */
 export const fileSha = (f: string) => (existsSync(f) ? sha(lf(readFileSync(f, 'utf8'))) : 'missing');
 export const readJson = <T>(p: string): T | null => (existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')) as T) : null);
+/** Loads the repo's .env into process.env (keys only; never committed) unless the parent said not to: the runner
+ *  hands each child exactly the keys its verb needs and sets VK_NO_DOTENV so the child never widens that. */
+export function loadDotEnv(root = ROOT, env: NodeJS.ProcessEnv = process.env): boolean {
+  if (env.VK_NO_DOTENV === '1') return false;
+  const p = join(root, '.env');
+  if (!existsSync(p)) return false;
+  process.loadEnvFile(p);
+  return true;
+}
+
 /** Serialises without passages: provenance stays with the citation, and the CLI re-reads them on demand. */
 export const toJson = (x: unknown) => JSON.stringify(x, (k, v) => (k === 'passage' ? undefined : v), 1) + '\n';
 

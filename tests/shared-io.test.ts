@@ -2,7 +2,20 @@ import { describe, expect, it } from 'vitest';
 import { existsSync, mkdtempSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { ROOT, scriptDir, shortOf, storySlug, toJson, topicDir, writeJsonAtomic } from '../src/shared/io';
+import { loadDotEnv, ROOT, scriptDir, shortOf, storySlug, toJson, topicDir, writeJsonAtomic } from '../src/shared/io';
+
+describe('loadDotEnv', () => {
+  it('loads the root .env unless VK_NO_DOTENV says the parent handed the keys', () => {
+    const root = mkdtempSync(join(tmpdir(), 'vk-dotenv-'));
+    writeFileSync(join(root, '.env'), 'VK_DOTENV_TEST=loaded\n');
+    expect(loadDotEnv(root, { VK_NO_DOTENV: '1' })).toBe(false);
+    expect(process.env.VK_DOTENV_TEST).toBeUndefined();
+    expect(loadDotEnv(root, {})).toBe(true);
+    expect(process.env.VK_DOTENV_TEST).toBe('loaded');
+    delete process.env.VK_DOTENV_TEST;
+    expect(loadDotEnv(join(root, 'nowhere'), {})).toBe(false);
+  });
+});
 
 describe('writeJsonAtomic', () => {
   const dir = () => mkdtempSync(join(tmpdir(), 'vk-atomic-'));
