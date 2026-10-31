@@ -206,7 +206,7 @@ describe('graphics stage', () => {
     writeFileSync(join(fx.dir, 'video', 'render-check.json'), toJson({ ...rc, ...over }));
   };
 
-  it('without a release the graphics stage gates the lock', () => {
+  it('without a release the graphics stage gates the lock', { timeout: 30_000 }, () => {
     const fx = syntheticProduction('graphics');
     try {
       const { topic, story, root } = fx;

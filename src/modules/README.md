@@ -24,7 +24,7 @@ in code.
 | social          | Milestone 2, not present                                                                                                                                                                 |                                                                                                             |                                                                       |
 
 Orchestration lives outside this folder: `src/orchestration/` (the board, `npm run board`) reads the modules through their
-`index.ts` and decides stage, next step, halt kind and column; see `src/orchestration/README.md`.
+`index.ts` and decides stage, next step, halt kind and column (a published output's next line is the ledger's own, passed through); see `src/orchestration/README.md`.
 
 ## Responsibility boundaries
 

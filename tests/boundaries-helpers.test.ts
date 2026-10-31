@@ -76,7 +76,7 @@ const cfg = {
     'src/lib/io.ts': 'shared',
     'src/lib/article.ts': 'article',
     'src/lib/publish.ts': 'publishing',
-    'src/lib/production.ts': 'orchestration',
+    'src/orchestration/production.ts': 'orchestration',
     'src/modules/': '@folder',
     'src/video/': 'video',
     'src/shared/': 'shared',
@@ -96,7 +96,7 @@ describe('violations', () => {
   });
   it('lets orchestration import a module index only', () => {
     const v = violations(
-      [file('src/lib/production.ts', ['src/modules/article/index.ts', 'src/modules/article/state.ts'])],
+      [file('src/orchestration/production.ts', ['src/modules/article/index.ts', 'src/modules/article/state.ts'])],
       cfg,
     );
     expect(v.map((x) => x.rule)).toEqual(['orchestration-imports-internal']);
@@ -217,12 +217,12 @@ describe('read-API name check', () => {
 
 describe('more rules', () => {
   it('orchestration importing a non-shared lib internal is flagged', () => {
-    const v = violations([file('src/lib/production.ts', ['src/lib/article.ts'])], cfg);
+    const v = violations([file('src/orchestration/production.ts', ['src/lib/article.ts'])], cfg);
     expect(v.map((x) => x.rule)).toEqual(['orchestration-imports-internal']);
   });
   it('orchestration importing a script or admin target is flagged', () => {
     const c = { ...cfg, capabilities: { ...cfg.capabilities, 'scripts/': 'video', 'src/admin/': 'website' } };
-    const v = violations([file('src/lib/production.ts', ['scripts/video.ts', 'src/admin/Board.astro'])], c);
+    const v = violations([file('src/orchestration/production.ts', ['scripts/video.ts', 'src/admin/Board.astro'])], c);
     expect(v.map((x) => x.rule)).toEqual(['orchestration-imports-internal', 'orchestration-imports-internal']);
   });
   it('lets website import a module index', () => {
