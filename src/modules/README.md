@@ -23,6 +23,9 @@ in code.
 | topic-discovery | Milestone 2, not present                                                                                                                                                                 |                                                                                                             |                                                                       |
 | social          | Milestone 2, not present                                                                                                                                                                 |                                                                                                             |                                                                       |
 
+Orchestration lives outside this folder: `src/orchestration/` (the board, `npm run board`) reads the modules through their
+`index.ts` and decides stage, next step, halt kind and column; see `src/orchestration/README.md`.
+
 ## Responsibility boundaries
 
 1. **Topic discovery vs. evidence.** Topic discovery (future) identifies, evaluates, scores and deduplicates
