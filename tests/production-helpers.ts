@@ -47,6 +47,10 @@ import { initVideo } from '../src/modules/video/init';
 const SKIP = ['/store/transcripts', '/work', '/video/scenes', '/video/narration', '/video/frames', '/publish.json'];
 const SKIP_EXT = ['.pdf', '.mp4', '.wav', '.png'];
 
+/** Make `root` a root a repo CLI runs in: a package.json with the repo's name, so its ROOT resolves to it. */
+export const cliRoot = (root: string): void =>
+  writeFileSync(join(root, 'package.json'), toJson({ name: 'video-knowledge', private: true }));
+
 /** Re-record a build's look (undefined: a report from before builds recorded it) and re-point the review package at
  *  the edited report, so only the look differs. */
 export function setLook(dir: string, look: string | undefined): void {

@@ -7,7 +7,7 @@ import { addOutputTo, loadLedger, recordApproved, recordUploaded } from '../../p
 import { JOB_FILE, jobStatus, startJob } from '../review-job';
 import { handle, sameOrigin } from '../../../admin/review-action';
 import { storySlug } from '../../../shared/io';
-import { type Fixture, syntheticProduction, syntheticShort } from '../../../../tests/production-helpers';
+import { type Fixture, cliRoot, syntheticProduction, syntheticShort } from '../../../../tests/production-helpers';
 
 const ORIGIN = 'http://localhost:4321';
 const post = (path: string, fields: Record<string, string> | [string, string][], origin: string | null = ORIGIN) => {
@@ -26,11 +26,8 @@ const run = async <F extends Fixture>(f: F, body: (f: F) => Promise<void>) => {
     f.cleanup();
   }
 };
-/** A fixture the publishing CLI runs in: a package.json with the repo's name, so its ROOT resolves to the fixture. */
-const cliRoot = <F extends Fixture>(f: F) => {
-  writeFileSync(join(f.root, 'package.json'), JSON.stringify({ name: 'video-knowledge', private: true }));
-  return f;
-};
+/** A fixture the publishing CLI runs in. */
+const inCli = <F extends Fixture>(f: F) => (cliRoot(f.root), f);
 const recorder = () => {
   const calls: { label: string; args: string[] }[] = [];
   const start = (_dir: string, label: string, args: string[]) => void calls.push({ label, args });
@@ -68,7 +65,7 @@ describe('review actions', () => {
     }));
 
   it('approve and request changes go through the publish verbs', { timeout: 60_000 }, () =>
-    run(cliRoot(syntheticProduction('packaged', { release: true })), async (f) => {
+    run(inCli(syntheticProduction('packaged', { release: true })), async (f) => {
       const params = (action: string) => ({ topic: f.topic, action, path: pathOf(f) });
       let res = await handle(
         post('/', { by: 'Jon', build: 'releasesha', notes: '[0:02] slower\nkeep the end' }),
@@ -90,45 +87,28 @@ describe('review actions', () => {
     }),
   );
 
-  it('approve counts the ticked checklist items', { timeout: 60_000 }, () =>
-    run(cliRoot(syntheticProduction('packaged', { release: true })), async (f) => {
-      const rp = join(f.dir, 'video', 'review', 'review.json');
-      writeFileSync(rp, JSON.stringify({ ...JSON.parse(readFileSync(rp, 'utf8')), checklist: ['a', 'b'] }));
-      const params = { topic: f.topic, action: 'approve', path: pathOf(f) };
-      const one: [string, string][] = [
-        ['by', 'Jon'],
-        ['build', 'releasesha'],
-        ['check', '0'],
-      ];
-      let res = await handle(post('/', one), params, { root: f.root });
-      expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/error=.*checklist/);
-      res = await handle(post('/', [...one, ['check', '1']]), params, { root: f.root });
-      expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/ok=/);
-    }),
-  );
-
-  it('a refused verb (a checklist count short) shows its bare message and writes nothing', { timeout: 60_000 }, () =>
-    run(cliRoot(syntheticProduction('packaged', { release: true })), async (f) => {
-      const rp = join(f.dir, 'video', 'review', 'review.json');
-      writeFileSync(rp, JSON.stringify({ ...JSON.parse(readFileSync(rp, 'utf8')), checklist: ['a', 'b'] }));
-      const params = { topic: f.topic, action: 'approve', path: pathOf(f) };
-      const res = await handle(
-        post('/', [
+  it(
+    'a refused verb (a checklist count short) shows its bare message and writes nothing; all ticked approves',
+    { timeout: 60_000 },
+    () =>
+      run(inCli(syntheticProduction('packaged', { release: true })), async (f) => {
+        const rp = join(f.dir, 'video', 'review', 'review.json');
+        writeFileSync(rp, JSON.stringify({ ...JSON.parse(readFileSync(rp, 'utf8')), checklist: ['a', 'b'] }));
+        const params = { topic: f.topic, action: 'approve', path: pathOf(f) };
+        const one: [string, string][] = [
           ['by', 'Jon'],
           ['build', 'releasesha'],
           ['check', '0'],
-        ]),
-        params,
-        {
-          root: f.root,
-        },
-      );
-      const error = new URL(res.headers.get('location')!, ORIGIN).searchParams.get('error');
-      expect(error).toBe(
-        '1 of 2 checklist items ticked; every one is needed to approve (tick them on the review page, or pass --checked 2 after going through video/review/checklist.md)',
-      );
-      expect(loadLedger(f.topic, f.story, f.root)?.outputs.youtube.events ?? []).toEqual([]);
-    }),
+        ];
+        let res = await handle(post('/', one), params, { root: f.root });
+        const error = new URL(res.headers.get('location')!, ORIGIN).searchParams.get('error');
+        expect(error).toBe(
+          '1 of 2 checklist items ticked; every one is needed to approve (tick them on the review page, or pass --checked 2 after going through video/review/checklist.md)',
+        );
+        expect(loadLedger(f.topic, f.story, f.root)?.outputs.youtube.events ?? []).toEqual([]);
+        res = await handle(post('/', [...one, ['check', '1']]), params, { root: f.root });
+        expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/ok=/);
+      }),
   );
 
   it('the decisions run the publish CLI with these arguments, a placed note as --note then its places', () =>

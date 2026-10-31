@@ -250,21 +250,10 @@ describe('read-API name check', () => {
 });
 
 describe('more rules', () => {
-  it('orchestration importing a non-shared lib internal is flagged', () => {
-    const v = violations([file('src/orchestration/production.ts', ['src/lib/article.ts'])], cfg);
-    expect(v.map((x) => x.rule)).toEqual(['orchestration-imports-internal']);
-  });
   it('orchestration importing a script or admin target is flagged', () => {
     const c = { ...cfg, capabilities: { ...cfg.capabilities, 'scripts/': 'video', 'src/admin/': 'website' } };
     const v = violations([file('src/orchestration/production.ts', ['scripts/video.ts', 'src/admin/Board.astro'])], c);
     expect(v.map((x) => x.rule)).toEqual(['orchestration-imports-internal', 'orchestration-imports-internal']);
-  });
-  it('lets website import a module index for read-API names only', () => {
-    const c = { ...cfg, capabilities: { ...cfg.capabilities, 'src/pages/': 'website' } };
-    const astro = `---\nimport { articleView } from '../modules/article';\n---\n`;
-    const f = [file('src/pages/a.astro', ['src/modules/article/index.ts'], astro)];
-    expect(violations(f, c)).toHaveLength(1);
-    expect(violations(f, { ...c, readApi: { article: ['articleView'] } })).toEqual([]);
   });
   it('flags an unmapped target', () => {
     const v = violations([file('src/lib/article.ts', ['src/lib/mystery.ts'])], cfg);

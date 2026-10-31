@@ -50,6 +50,7 @@ import {
 import {
   type Fixture,
   afterFinal,
+  cliRoot,
   setLook,
   syntheticProduction,
   syntheticShort,
@@ -57,6 +58,28 @@ import {
 
 const tmp = mkdtempSync(join(tmpdir(), 'vk-publish-'));
 afterAll(() => rmSync(tmp, { recursive: true, force: true }));
+
+const fixtures: Fixture[] = [];
+afterAll(() => fixtures.forEach((f) => f.cleanup()));
+/** A packaged synthetic production (`release`: the release build). With `cliRoot` the repo's CLIs run in its root,
+ *  and a draft is named by a hex sha as a real build is (the fixture's are words): d0d0d0d0d0. */
+const fresh = ({ release = false, cliRoot: runsCli = false }: { release?: boolean; cliRoot?: boolean } = {}) => {
+  const f = syntheticProduction('packaged', { release });
+  fixtures.push(f);
+  if (runsCli) {
+    cliRoot(f.root);
+    const pp = join(f.dir, 'video', 'review', 'review.json');
+    if (!release) writeFileSync(pp, toJson({ ...readJson<object>(pp)!, mp4Sha: 'd0d0d0d0d0' }));
+  }
+  return f;
+};
+const events = (f: Fixture, output = 'youtube') => loadLedger(f.topic, f.story, f.root)?.outputs[output]?.events ?? [];
+const ledgerBytes = (f: Fixture) => {
+  const p = publishPath(f.topic, f.story, f.root);
+  return existsSync(p) ? readFileSync(p, 'utf8') : null;
+};
+const cli = (f: Fixture, verb: string, ...args: string[]) =>
+  runCli('publish', [verb, f.topic, f.story, ...args], { cwd: f.root });
 
 const ev = (type: PublishEvent['type'], extra: Partial<PublishEvent> = {}, at = '2026-10-24T09:00:00Z'): PublishEvent =>
   ({ at, type, by: 'Jon', ...extra }) as PublishEvent;
@@ -419,7 +442,6 @@ describe('verbs', () => {
   const draft = syntheticProduction('packaged');
   afterAll(() => [rel, rel2, draft].forEach((f) => f.cleanup()));
   const a = <T extends object>(f: Fixture, extra: T = {} as T) => ({ root: f.root, by: 'Jon', now, ...extra });
-  const events = (f: Fixture, output = 'youtube') => loadLedger(f.topic, f.story, f.root)!.outputs[output].events;
 
   it('records an upload once per build and id, with the build and the metadata it sent', () => {
     const r = recordUploaded(rel.topic, rel.story, a(rel, { id: 'dQw4w9WgXcQ', visibility: 'private' }));
@@ -980,27 +1002,19 @@ describe('a Studio upload recorded by hand', () => {
   const now = new Date('2026-10-26T00:00:00Z');
   const later = new Date('2026-10-26T01:00:00Z');
   const later2 = new Date('2026-10-26T02:00:00Z');
-  const fixtures: Fixture[] = [];
-  afterAll(() => fixtures.forEach((f) => f.cleanup()));
-  const fresh = (release = true) => {
-    const f = syntheticProduction('packaged', { release });
-    fixtures.push(f);
-    return f;
-  };
-  const events = (f: Fixture) => loadLedger(f.topic, f.story, f.root)!.outputs.youtube.events;
   const reviewPath = (f: Fixture) => join(f.dir, 'video', 'review', 'review.json');
   const patchReview = (f: Fixture, extra: Record<string, unknown>) =>
     writeFileSync(reviewPath(f), JSON.stringify({ ...readJson<object>(reviewPath(f)), ...extra }));
 
   it('uploaded --captions records the package captions sha so push does not resend them', () => {
-    const f = fresh();
+    const f = fresh({ release: true });
     const r = recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001', captionsSent: true });
     expect(r.event!.captions).toBe(openOutput(f.topic, f.story, { root: f.root }).metadata!.captions!.sha);
     expect(lastCaptions(loadLedger(f.topic, f.story, f.root)!.outputs.youtube)).toBe(r.event!.captions);
   });
 
   it('uploaded --captions is refused when the package has none', () => {
-    const f = fresh();
+    const f = fresh({ release: true });
     patchReview(f, { captionsSha: null });
     expect(() =>
       recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001', captionsSent: true }),
@@ -1008,7 +1022,7 @@ describe('a Studio upload recorded by hand', () => {
   });
 
   it('approve after a Studio re-upload of the same build names the latest upload', () => {
-    const f = fresh();
+    const f = fresh({ release: true });
     recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'apiupload01' });
     recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now: later, id: 'studio00001' });
     const a = recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now: later2 });
@@ -1020,7 +1034,7 @@ describe('a Studio upload recorded by hand', () => {
   });
 
   it('a public Studio upload of the release build after a recorded draft upload records uploaded and published', () => {
-    const f = fresh(false);
+    const f = fresh();
     recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'apiupload01' });
     const D = afterFinal(f.dir); // final made the release build
     recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now, build: D, accepted: true });
@@ -1041,7 +1055,7 @@ describe('a Studio upload recorded by hand', () => {
   });
 
   it('the CLI approve passes --checked and refuses without it', () => {
-    const f = fresh();
+    const f = fresh({ release: true });
     patchReview(f, { checklist: ['watched it', 'captions read'] });
     recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001' });
     expect(() => recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', checked: 0 })).toThrow(
@@ -1052,7 +1066,7 @@ describe('a Studio upload recorded by hand', () => {
   });
 
   it('the release next step names --checked', () => {
-    const f = fresh();
+    const f = fresh({ release: true });
     recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'studio00001' });
     expect(openOutput(f.topic, f.story, { root: f.root }).state.next).toContain('--checked <n>');
   });
@@ -1060,13 +1074,6 @@ describe('a Studio upload recorded by hand', () => {
 
 describe('a draft acceptance (what video final records)', () => {
   const now = new Date('2026-10-26T00:00:00Z');
-  const fixtures: Fixture[] = [];
-  afterAll(() => fixtures.forEach((f) => f.cleanup()));
-  const fresh = () => {
-    const f = syntheticProduction('packaged');
-    fixtures.push(f);
-    return f;
-  };
   const accept = (f: Fixture, build?: string) =>
     recordApproved(f.topic, f.story, {
       root: f.root,
@@ -1076,11 +1083,6 @@ describe('a draft acceptance (what video final records)', () => {
       accepted: true,
       note: 'draft accepted by final',
     });
-  const events = (f: Fixture) => loadLedger(f.topic, f.story, f.root)?.outputs.youtube.events ?? [];
-  const ledgerBytes = (f: Fixture) => {
-    const p = publishPath(f.topic, f.story, f.root);
-    return existsSync(p) ? readFileSync(p, 'utf8') : null;
-  };
   const R = 'releasesha';
 
   it('after final, the draft the release build replaced is accepted with the event final always wrote', () => {
@@ -1231,25 +1233,6 @@ describe('a draft acceptance (what video final records)', () => {
 });
 
 describe('npm run publish -- accept-draft (the CLI)', () => {
-  const fixtures: Fixture[] = [];
-  afterAll(() => fixtures.forEach((f) => f.cleanup()));
-  /** A fixture root the CLI runs in: a package.json with the repo's name, so ROOT resolves to it. */
-  const fresh = (release = false) => {
-    const f = syntheticProduction('packaged', { release });
-    fixtures.push(f);
-    writeFileSync(join(f.root, 'package.json'), JSON.stringify({ name: 'video-knowledge', private: true }));
-    // real builds are named by hex shas (the fixture's are words): the draft is d0d0d0d0d0
-    const pp = join(f.dir, 'video', 'review', 'review.json');
-    if (!release) writeFileSync(pp, toJson({ ...readJson<object>(pp)!, mp4Sha: 'd0d0d0d0d0' }));
-    return f;
-  };
-  const cli = (f: Fixture, ...args: string[]) =>
-    runCli('publish', ['accept-draft', f.topic, f.story, ...args], { cwd: f.root });
-  const ledgerBytes = (f: Fixture) => {
-    const p = publishPath(f.topic, f.story, f.root);
-    return existsSync(p) ? readFileSync(p, 'utf8') : null;
-  };
-
   it('refuses bad arguments and an output already approved for publication, writing nothing', () => {
     const D = 'd0d0d0d0d0';
     expect(acceptDraftProblem('Jon', '', null)).toMatch(
@@ -1262,7 +1245,7 @@ describe('npm run publish -- accept-draft (the CLI)', () => {
     expect(acceptDraftProblem('automated: /produce run started by Jon', D, null)).toBe(
       'a draft is accepted by a person; an automated run never records an acceptance',
     );
-    const f = fresh(true);
+    const f = fresh({ release: true, cliRoot: true });
     const a = { root: f.root, by: 'Jon', now: new Date('2026-10-26T00:00:00Z') };
     expect(acceptDraftProblem('Jon', D, openOutput(f.topic, f.story, { root: f.root }))).toBeNull();
     recordApproved(f.topic, f.story, a);
@@ -1281,7 +1264,7 @@ describe('npm run publish -- accept-draft (the CLI)', () => {
   });
 
   it('refuses a scheduled output', () => {
-    const f = fresh(true);
+    const f = fresh({ release: true, cliRoot: true });
     const a = { root: f.root, by: 'Jon', now: new Date('2026-10-26T00:00:00Z') };
     recordApproved(f.topic, f.story, a);
     recordUploaded(f.topic, f.story, { ...a, id: 'lllllllllll' });
@@ -1294,14 +1277,14 @@ describe('npm run publish -- accept-draft (the CLI)', () => {
   });
 
   it('after final records what recordApproved writes, byte for byte, once', { timeout: 120_000 }, () => {
-    const f = fresh();
+    const f = fresh({ cliRoot: true });
     const D = afterFinal(f.dir, 'a1a1a1a1a1');
     expect(D).toBe('d0d0d0d0d0');
     // the dry run final makes before narration: exit 0, nothing printed, nothing written
-    const dry = cli(f, '--by', 'Jon', '--build', D, '--note', 'draft accepted by final', '--dry-run');
+    const dry = cli(f, 'accept-draft', '--by', 'Jon', '--build', D, '--note', 'draft accepted by final', '--dry-run');
     expect([dry.status, dry.stdout, dry.stderr]).toEqual([0, '', '']);
     expect(ledgerBytes(f)).toBeNull();
-    const r = cli(f, '--by', 'Jon', '--build', D, '--note', 'draft accepted by final');
+    const r = cli(f, 'accept-draft', '--by', 'Jon', '--build', D, '--note', 'draft accepted by final');
     expect(r.stderr).toBe('');
     expect(r.status).toBe(0);
     expect(r.stdout).toMatch(/^recorded approved \(build d0d0d0d0d0\)/);
@@ -1318,7 +1301,7 @@ describe('npm run publish -- accept-draft (the CLI)', () => {
       now: new Date(at),
     });
     expect(ledgerBytes(f)).toBe(viaCli);
-    const again = cli(f, '--by', 'Jon', '--build', D, '--note', 'draft accepted by final');
+    const again = cli(f, 'accept-draft', '--by', 'Jon', '--build', D, '--note', 'draft accepted by final');
     expect(again.status).toBe(0);
     expect(again.stdout).toMatch(/^already recorded: approved \(build d0d0d0d0d0\)/);
     expect(ledgerBytes(f)).toBe(viaCli);
@@ -1326,21 +1309,11 @@ describe('npm run publish -- accept-draft (the CLI)', () => {
 });
 
 describe('npm run publish -- request-changes (the CLI)', { timeout: 60_000 }, () => {
-  const fixtures: Fixture[] = [];
-  afterAll(() => fixtures.forEach((f) => f.cleanup()));
-  const fresh = () => {
-    const f = syntheticProduction('packaged', { release: true });
-    fixtures.push(f);
-    writeFileSync(join(f.root, 'package.json'), JSON.stringify({ name: 'video-knowledge', private: true }));
-    return f;
-  };
-  const cli = (f: Fixture, ...args: string[]) =>
-    runCli('publish', ['request-changes', f.topic, f.story, ...args], { cwd: f.root });
-
   it('--at, --scene and --sentence place the --note before them, in order', () => {
-    const f = fresh();
+    const f = fresh({ release: true, cliRoot: true });
     const r = cli(
       f,
+      'request-changes',
       '--by',
       'Jon',
       '--note',
@@ -1370,13 +1343,13 @@ describe('npm run publish -- request-changes (the CLI)', { timeout: 60_000 }, ()
   });
 
   it('refuses a placement before any --note, an unknown flag or a bad time, writing nothing', () => {
-    const f = fresh();
+    const f = fresh({ release: true, cliRoot: true });
     for (const [args, why] of [
       [['--at', '2', '--note', 'x'], /^refused: --at places a note: put it after its --note/],
       [['--note', 'x', '--colour', 'red'], /^refused: request-changes does not take --colour/],
       [['--note', 'x', '--at', 'soon'], /^refused: --at needs the note's time in seconds, not soon/],
     ] as const) {
-      const r = cli(f, '--by', 'Jon', ...args);
+      const r = cli(f, 'request-changes', '--by', 'Jon', ...args);
       expect(r.status).toBe(2);
       expect(r.stderr).toMatch(why);
     }
@@ -1386,18 +1359,10 @@ describe('npm run publish -- request-changes (the CLI)', { timeout: 60_000 }, ()
 
 describe('verification events', () => {
   const now = new Date('2026-10-27T00:00:00Z');
-  const fixtures: Fixture[] = [];
-  afterAll(() => fixtures.forEach((f) => f.cleanup()));
-  const fresh = () => {
-    const f = syntheticProduction('packaged', { release: true });
-    fixtures.push(f);
-    return f;
-  };
-  const events = (f: Fixture) => loadLedger(f.topic, f.story, f.root)!.outputs.youtube.events;
   const a = (f: Fixture) => ({ root: f.root, by: 'Jon', now });
 
   it('a verification is recorded with its checks and validated', () => {
-    const f = fresh();
+    const f = fresh({ release: true });
     recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
     const r = recordVerified(f.topic, f.story, {
       ...a(f),
@@ -1431,7 +1396,7 @@ describe('verification events', () => {
   });
 
   it('a repeat of the latest verification is the same event', () => {
-    const f = fresh();
+    const f = fresh({ release: true });
     recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
     const pass = { result: 'passed' as const, checks: [{ name: 'title', result: 'pass' as const }] };
     const fail = { result: 'failed' as const, checks: [{ name: 'title', result: 'fail' as const, detail: 'differs' }] };
@@ -1443,7 +1408,7 @@ describe('verification events', () => {
   });
 
   it('the same failure after a push is a new verification', () => {
-    const f = fresh();
+    const f = fresh({ release: true });
     recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
     const fail = { result: 'failed' as const, checks: [{ name: 'title', result: 'fail' as const, detail: 'differs' }] };
     recordVerified(f.topic, f.story, { ...a(f), ...fail });
@@ -1454,7 +1419,7 @@ describe('verification events', () => {
   });
 
   it('a verification does not hide a failure and is recorded', () => {
-    const f = fresh();
+    const f = fresh({ release: true });
     recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
     recordFailed(f.topic, f.story, { ...a(f), step: 'thumbnail', error: 'forbidden', retryable: false });
     recordVerified(f.topic, f.story, { ...a(f), result: 'passed', checks: [{ name: 'title', result: 'pass' }] });
@@ -1466,7 +1431,7 @@ describe('verification events', () => {
   });
 
   it('refuses a verification before any upload', () => {
-    const f = fresh();
+    const f = fresh({ release: true });
     expect(() => recordVerified(f.topic, f.story, { ...a(f), result: 'passed', checks: [] })).toThrow(
       /nothing uploaded/,
     );
@@ -1474,7 +1439,7 @@ describe('verification events', () => {
   });
 
   it('failedSince reads only a verification after the last upload or update', () => {
-    const f = fresh();
+    const f = fresh({ release: true });
     recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
     recordVerified(f.topic, f.story, {
       ...a(f),
