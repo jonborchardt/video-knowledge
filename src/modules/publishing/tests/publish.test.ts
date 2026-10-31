@@ -2,11 +2,11 @@
 // composed upload metadata, the CLI's verbs and their refusals. Nothing here touches YouTube: the ledger records what a
 // person (or later an uploader) did.
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { readJson, ROOT, sha, toJson } from '../../../shared/io';
+import { readJson, sha, toJson } from '../../../shared/io';
+import { runCli } from '../../../shared/cli';
 import { Refusal } from '../../../shared/refusal';
 import { scriptDir, storySlug } from '../../../shared/io';
 import {
@@ -1244,18 +1244,7 @@ describe('npm run publish -- accept-draft (the CLI)', () => {
     return f;
   };
   const cli = (f: Fixture, ...args: string[]) =>
-    spawnSync(
-      process.execPath,
-      [
-        join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs'),
-        join(ROOT, 'src', 'modules', 'publishing', 'cli.ts'),
-        'accept-draft',
-        f.topic,
-        f.story,
-        ...args,
-      ],
-      { cwd: f.root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
-    );
+    runCli('publish', ['accept-draft', f.topic, f.story, ...args], { cwd: f.root });
   const ledgerBytes = (f: Fixture) => {
     const p = publishPath(f.topic, f.story, f.root);
     return existsSync(p) ? readFileSync(p, 'utf8') : null;
@@ -1346,18 +1335,7 @@ describe('npm run publish -- request-changes (the CLI)', { timeout: 60_000 }, ()
     return f;
   };
   const cli = (f: Fixture, ...args: string[]) =>
-    spawnSync(
-      process.execPath,
-      [
-        join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs'),
-        join(ROOT, 'src', 'modules', 'publishing', 'cli.ts'),
-        'request-changes',
-        f.topic,
-        f.story,
-        ...args,
-      ],
-      { cwd: f.root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
-    );
+    runCli('publish', ['request-changes', f.topic, f.story, ...args], { cwd: f.root });
 
   it('--at, --scene and --sentence place the --note before them, in order', () => {
     const f = fresh();

@@ -23,6 +23,7 @@ import { spawnSync } from 'node:child_process';
 import { appendFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { passageReader, readJson, sha, toJson, ROOT, REVIEW_DIR, scriptDir } from '../../shared/io';
+import { runCli } from '../../shared/cli';
 import { currentBuild } from '../publishing';
 import { approverProblem } from '../../shared/approver';
 import { extractFrame, probe } from '../../shared/ffmpeg';
@@ -222,18 +223,7 @@ async function stageQa(
 
 /** The review package is packaging's: its own CLI, run as a child so this script never imports it. */
 function runPackage(): number {
-  const r = spawnSync(
-    process.execPath,
-    [
-      join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs'),
-      join('src', 'modules', 'packaging', 'cli.ts'),
-      'package',
-      topic,
-      storyId,
-    ],
-    { cwd: ROOT, stdio: 'inherit' },
-  );
-  return r.status ?? 1;
+  return runCli('packaging', ['package', topic, storyId], { stdio: 'inherit' }).status ?? 1;
 }
 
 function stageInit() {

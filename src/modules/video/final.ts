@@ -2,8 +2,7 @@
 // (`npm run board -- next --json`), never by importing the orchestrator, and records the draft it accepted through
 // publishing's (`npm run publish -- accept-draft`), never by importing publishing.
 import { spawnSync } from 'node:child_process';
-import { join } from 'node:path';
-import { ROOT } from '../../shared/io';
+import { cliArgv } from '../../shared/cli';
 
 /** The part of the board's answer `final` reads. */
 export interface BoardAnswer {
@@ -13,18 +12,12 @@ export interface BoardAnswer {
 }
 export type Ask = (topic: string, storyId: string, root: string) => BoardAnswer;
 
-/** The board's answer for one story, from `npm run -s board -- next <topic> <story> --json` run in `root`. A non-zero
- *  exit, output that is not JSON or JSON without a `stage` throws `final could not ask the board: <stderr>`. */
+/** The board's answer for one story, from `npm run board -- next <topic> <story> --json` (the board's file under the
+ *  repo's tsx, src/shared/cli.ts) run in `root`. A non-zero exit, output that is not JSON or JSON without a `stage`
+ *  throws `final could not ask the board: <stderr>`. */
 export function boardViaCli(topic: string, storyId: string, root: string, spawn = spawnSync): BoardAnswer {
-  const argv = ['run', '-s', 'board', '--', 'next', topic, storyId, '--json'];
-  // On Windows npm is a .cmd, so it needs a shell; one command string (no args array) keeps Node's DEP0190 quiet.
-  const win = process.platform === 'win32';
-  const r = spawn(win ? ['npm', ...argv.map((a) => `"${a}"`)].join(' ') : 'npm', win ? [] : argv, {
-    shell: win,
-    cwd: root,
-    encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'pipe'],
-  });
+  const [exe, argv] = cliArgv('board', ['next', topic, storyId, '--json']);
+  const r = spawn(exe, argv, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
   const fail = () =>
     new Error(`final could not ask the board: ${(String(r.stderr ?? '') || (r.error?.message ?? '')).trim()}`);
   if (r.status !== 0) throw fail();
@@ -64,24 +57,19 @@ export function acceptDraftViaCli(
   dryRun = false,
   spawn = spawnSync,
 ): void {
-  const r = spawn(
-    process.execPath,
-    [
-      join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs'),
-      join(ROOT, 'src', 'modules', 'publishing', 'cli.ts'),
-      'accept-draft',
-      topic,
-      storyId,
-      '--by',
-      by,
-      '--build',
-      draftSha,
-      '--note',
-      'draft accepted by final',
-      ...(dryRun ? ['--dry-run'] : []),
-    ],
-    { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
-  );
+  const [exe, argv] = cliArgv('publish', [
+    'accept-draft',
+    topic,
+    storyId,
+    '--by',
+    by,
+    '--build',
+    draftSha,
+    '--note',
+    'draft accepted by final',
+    ...(dryRun ? ['--dry-run'] : []),
+  ]);
+  const r = spawn(exe, argv, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
   if (r.status !== 0)
     throw new Error(
       `accept-draft ${dryRun ? 'refused' : 'failed'}: ${(String(r.stderr ?? '') || (r.error?.message ?? '')).trim()}`,

@@ -7,7 +7,6 @@
 //   lock <topic> <story-id> --approved-by "<name>"   write release.json (the approved fingerprints) when validation passed, the storyboard is ok
 //                                                    and the render check (re-run) is ok with every graphic approved; a real name or "automated: ..."
 // Stages are independent and persisted; a rejected script never touches research or story discovery.
-import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { corpusOf, loadTopic } from '../evidence';
@@ -23,6 +22,7 @@ import {
   scriptDir,
   shortOf,
 } from '../../shared/io';
+import { runCli } from '../../shared/cli';
 import { loadReview, reviewPath } from '../stories';
 import { buildPackage, transcriptReader } from './evidence-package';
 import { releaseCheck, storyboardFingerprint } from '../../shared/release-check';
@@ -162,11 +162,7 @@ function withRelease(v: ScriptValidation, sb: Storyboard | null) {
 
 /** The render check is video's: its own CLI (npm run video -- check), run as a child so this script never imports it. */
 function runRenderCheck(): RenderCheckSummary {
-  const r = spawnSync(
-    process.execPath,
-    [join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs'), join('scripts', 'video.ts'), 'check', topic, storyId],
-    { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'], encoding: 'utf8' },
-  );
+  const r = runCli('video', ['check', topic, storyId], { stdio: ['ignore', 'ignore', 'pipe'] });
   // exit 2 is a check that wrote its file and is not ok (whatever node warned on stderr): the lock reports its
   // problems below; any other failure, or a check that left no file, stops the lock as a thrown error did before
   if (r.status !== 0 && r.status !== 2) throw new Error(r.stderr.trim() || 'video check failed');

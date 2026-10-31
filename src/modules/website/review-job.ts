@@ -6,12 +6,13 @@ import { closeSync, existsSync, openSync, readFileSync, writeFileSync } from 'no
 import { spawn } from 'node:child_process';
 import { join } from 'node:path';
 import { ROOT, readJson, toJson } from '../../shared/io';
+import { cliArgv } from '../../shared/cli';
 
 export const JOB_FILE = 'review-job.json';
 const JOB_LOG = 'review-job.log';
 interface Job {
   label: string;
-  args: string[]; // [cli, ...args]: cli is a scripts/<cli>.ts
+  args: string[]; // [cli, ...args]: cli is an npm run name (src/shared/cli.ts resolves its file)
   pid: number;
   startedAt: string;
   exitCode: number | null;
@@ -41,7 +42,7 @@ export function jobStatus(dir: string): { label: string; state: JobState; tail: 
   return { label: job.label, state, tail: log.split(/\r?\n/).slice(-15).join('\n').trim(), startedAt: job.startedAt };
 }
 
-/** Starts `npm run <cli> -- <args>` (as tsx scripts/<cli>.ts, no shell, so no argument is ever re-parsed) for the
+/** Starts `npm run <cli> -- <args>` (the CLI's file under the repo's tsx, no shell, so no argument is ever re-parsed) for the
  *  production in `dir`; refuses while that production's last job is still running. */
 export function startJob(dir: string, label: string, args: string[], root = ROOT): void {
   const last = jobStatus(dir);
@@ -50,11 +51,8 @@ export function startJob(dir: string, label: string, args: string[], root = ROOT
   if (!/^[a-z]+$/.test(cli ?? '')) throw new Error(`not a CLI: ${cli}`);
   const p = paths(dir);
   const fd = openSync(p.log, 'w');
-  const child = spawn(
-    process.execPath,
-    [join(root, 'node_modules', 'tsx', 'dist', 'cli.mjs'), join('scripts', `${cli}.ts`), ...rest],
-    { cwd: root, stdio: ['ignore', fd, fd], windowsHide: true },
-  );
+  const [exe, argv] = cliArgv(cli, rest);
+  const child = spawn(exe, argv, { cwd: root, stdio: ['ignore', fd, fd], windowsHide: true });
   closeSync(fd);
   const job: Job = { label, args, pid: child.pid ?? -1, startedAt: new Date().toISOString(), exitCode: null };
   writeFileSync(p.json, toJson(job));

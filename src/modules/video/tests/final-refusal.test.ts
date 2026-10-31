@@ -1,13 +1,13 @@
 // `npm run video -- final` asks the board through its CLI (decision C): the refusal is the board's answer, the same
 // text the in-process call gave, and a board that cannot answer is a refusal, never a pass.
 import { execFileSync, spawnSync } from 'node:child_process';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { ARTICLE_FILES } from '../../article';
 import { boardNext } from '../../../orchestration';
 import { readJson, ROOT, toJson } from '../../../shared/io';
+import { cliArgv } from '../../../shared/cli';
 import { type BoardAnswer, boardViaCli, finalRefusal } from '../final';
 import { type Fixture, syntheticProduction } from '../../../../tests/production-helpers';
 
@@ -64,12 +64,9 @@ describe('final asks the board (finalRefusal over the board in process)', () => 
     }, 60_000);
 });
 
-/** A fixture root the board CLI runs in: its package.json is the repo's name (so ROOT resolves to it) with `board`
- *  pointing at the repo's board CLI, or at a stub command. */
-const runAt = (root: string, board: string) =>
-  writeFileSync(join(root, 'package.json'), toJson({ name: 'video-knowledge', private: true, scripts: { board } }));
-const tsx = (f: string) =>
-  `node "${join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs').replaceAll('\\', '/')}" "${join(ROOT, f).replaceAll('\\', '/')}"`;
+/** A fixture root the board runs in: its package.json carries the repo's name, so ROOT resolves to it. */
+const runAt = (root: string) =>
+  writeFileSync(join(root, 'package.json'), toJson({ name: 'video-knowledge', private: true }));
 const porcelain = () => execFileSync('git', ['status', '--porcelain'], { cwd: ROOT, encoding: 'utf8' });
 
 describe('final asks the board through its CLI (the real spawner)', () => {
@@ -81,7 +78,7 @@ describe('final asks the board through its CLI (the real spawner)', () => {
     ] as const) {
       const fx = syntheticProduction(stage);
       try {
-        runAt(fx.root, tsx('src/orchestration/board.ts'));
+        runAt(fx.root);
         const calls: unknown[][] = [];
         const spy = ((...a: Parameters<typeof spawnSync>) => {
           calls.push(a);
@@ -92,16 +89,8 @@ describe('final asks the board through its CLI (the real spawner)', () => {
         expect(r === null).toBe(!refused);
         expect(calls).toHaveLength(1);
         const [cmd, args, opts] = calls[0] as [string, string[], Record<string, unknown>];
-        const argv = ['run', '-s', 'board', '--', 'next', fx.topic, fx.story, '--json'];
-        const win = process.platform === 'win32';
-        // On Windows: one command string through the shell (no args array, so no DEP0190); elsewhere npm + argv.
-        expect([cmd, ...args]).toEqual(win ? [['npm', ...argv.map((a) => `"${a}"`)].join(' ')] : ['npm', ...argv]);
-        expect(opts).toMatchObject({
-          cwd: fx.root,
-          shell: win,
-          encoding: 'utf8',
-          stdio: ['ignore', 'pipe', 'pipe'],
-        });
+        expect([cmd, args]).toEqual(cliArgv('board', ['next', fx.topic, fx.story, '--json']));
+        expect(opts).toMatchObject({ cwd: fx.root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
       } finally {
         fx.cleanup();
       }
@@ -110,20 +99,18 @@ describe('final asks the board through its CLI (the real spawner)', () => {
   }, 120_000);
 
   it('a board that fails or answers no JSON is a refusal carrying its stderr, never a pass', () => {
-    const root = mkdtempSync(join(tmpdir(), 'vk-final-'));
-    try {
-      runAt(root, `node -e "process.stderr.write('the board broke');process.exit(1)"`);
-      expect(finalRefusal('t', 's', root)).toBe('final could not ask the board: the board broke');
-      runAt(root, `node -e "process.stdout.write('not json');process.stderr.write('odd')"`);
-      expect(finalRefusal('t', 's', root)).toBe('final could not ask the board: odd');
-      runAt(root, `node -e "process.stdout.write('null');process.stderr.write('no stage')"`);
-      expect(finalRefusal('t', 's', root)).toBe('final could not ask the board: no stage');
-      runAt(root, `node -e "process.stdout.write(JSON.stringify({next:'x'}))"`);
-      expect(finalRefusal('t', 's', root)).toBe('final could not ask the board: ');
-      runAt(root, 'no-such-command-vk');
-      expect(finalRefusal('t', 's', root)).toMatch(/^final could not ask the board: .+/);
-    } finally {
-      rmSync(root, { recursive: true, force: true });
-    }
-  }, 60_000);
+    const answer = (status: number, stdout: string, stderr: string) =>
+      (() => ({ status, stdout, stderr })) as unknown as typeof spawnSync;
+    const ask = (r: typeof spawnSync) => () => boardViaCli('t', 's', ROOT, r);
+    expect(finalRefusal('t', 's', ROOT, ask(answer(1, '', 'the board broke')))).toBe(
+      'final could not ask the board: the board broke',
+    );
+    expect(finalRefusal('t', 's', ROOT, ask(answer(0, 'not json', 'odd')))).toBe('final could not ask the board: odd');
+    expect(finalRefusal('t', 's', ROOT, ask(answer(0, 'null', 'no stage')))).toBe(
+      'final could not ask the board: no stage',
+    );
+    expect(finalRefusal('t', 's', ROOT, ask(answer(0, JSON.stringify({ next: 'x' }), '')))).toBe(
+      'final could not ask the board: ',
+    );
+  });
 });

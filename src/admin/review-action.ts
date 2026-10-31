@@ -4,9 +4,8 @@
 // web page could otherwise post to localhost and publish. Decisions run the publish verbs as a child process (`npm run
 // publish -- approve|request-changes`, waited for); the long verbs run the CLI as a job (src/modules/website/review-job.ts). What a person may do is reviewView's `can`, the same reasons the page shows.
 import type { APIRoute } from 'astro';
-import { spawnSync } from 'node:child_process';
-import { join } from 'node:path';
 import { ROOT } from '../shared/io';
+import { runCli } from '../shared/cli';
 import { approverProblem } from '../shared/approver';
 import { Refusal } from '../shared/refusal';
 import { startJob, type ReviewView, parseNotes, reviewView, storyIdOfPath } from '../modules/website';
@@ -27,16 +26,7 @@ const CAN: Partial<Record<Action, keyof ReviewView['can']>> = {
 };
 
 /** `npm run publish -- <args>` in `root`, waited for: the CLI does every check and the ledger write. */
-const runPublish = (args: string[], root: string) =>
-  spawnSync(
-    process.execPath,
-    [
-      join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs'),
-      join(ROOT, 'src', 'modules', 'publishing', 'cli.ts'),
-      ...args,
-    ],
-    { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true },
-  );
+const runPublish = (args: string[], root: string) => runCli('publish', args, { cwd: root });
 const PLACE = { seconds: '--at', scene: '--scene', sentence: '--sentence' } as const;
 
 interface Opts {

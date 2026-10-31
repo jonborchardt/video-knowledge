@@ -2,11 +2,11 @@
 //   package <topic> <story-id>   the review package in video/review/: the mp4 (copied), working title, description with
 //                                measured chapters and sources, provenance, captions, checklist; a Short is also recorded
 //                                as an output of its parent's publish.json
-import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { buildReviewPackage } from './package';
 import { readJson, REVIEW_DIR, ROOT, scriptDir, shortOf } from '../../shared/io';
+import { runCli } from '../../shared/cli';
 import { type BuildReport, type Timeline, VIDEO_FILES, loadSegment, videoDir } from '../video';
 
 const [cmd, topic, storyId] = process.argv.slice(2);
@@ -47,24 +47,18 @@ function stagePackage() {
   const short = shortOf(storyId);
   if (short) {
     const id = `short:${short.slug}`;
-    const r = spawnSync(
-      process.execPath,
-      [
-        join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs'),
-        join('src', 'modules', 'publishing', 'cli.ts'),
-        'add',
-        topic,
-        short.parent,
-        id,
-        '--kind',
-        'youtube-short',
-        '--from',
-        'youtube',
-        '--source',
-        rel(scriptDir(topic, storyId)),
-      ],
-      { cwd: ROOT, stdio: 'pipe', encoding: 'utf8' },
-    );
+    const r = runCli('publish', [
+      'add',
+      topic,
+      short.parent,
+      id,
+      '--kind',
+      'youtube-short',
+      '--from',
+      'youtube',
+      '--source',
+      rel(scriptDir(topic, storyId)),
+    ]);
     const out = `${r.stderr ?? ''}${r.stdout ?? ''}`;
     if (r.status === 0) console.log(`recorded ${id} in ${short.parent}'s publish.json`);
     else if (!/exists/.test(out)) throw new Error(out.trim() || `publish add failed (${r.status})`);
