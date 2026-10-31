@@ -46,10 +46,10 @@ const SECRET_KEY = /^(MAIL_|X_|AZURE_|YOUTUBE_|APPROVAL_|OPENAI_|ANTHROPIC_)/;
 const FAMILY: Record<string, RegExp | undefined> = { publish: /^YOUTUBE_/, social: /^X_/ };
 
 /** The environment a child CLI gets: every secret family removed, then one family back by verb (`publish` →
- *  YouTube, `social` → X, `video final` → Azure); every verb is told not to load .env itself (VK_NO_DOTENV), so a
+ *  YouTube, `social` → X; no video verb: `final` narrates through a worker); every verb is told not to load .env itself (VK_NO_DOTENV), so a
  *  child holds exactly the keys the runner handed it and a process that loads agent code holds none. */
 export function envFor(cli: string, args: string[], env: NodeJS.ProcessEnv = process.env): NodeJS.ProcessEnv {
-  const keep = cli === 'video' && args[0] === 'final' ? /^AZURE_/ : FAMILY[cli];
+  const keep = FAMILY[cli]; // the Azure key never: `video final` narrates through a worker that loads .env itself
   const out: NodeJS.ProcessEnv = {};
   for (const [k, v] of Object.entries(env)) {
     if (k === 'VK_AGENT' || k === 'VK_WRITABLE' || k === 'VK_SHELL') continue;

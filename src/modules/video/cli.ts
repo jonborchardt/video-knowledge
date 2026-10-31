@@ -54,6 +54,7 @@ import { buildTimeline } from './timeline';
 import type { NarrationManifest, Timeline } from './types';
 
 loadDotEnv(); // keys only; never committed; skipped when the runner handed this child its keys (VK_NO_DOTENV)
+forgetAzureKeys(); // the Azure key is the narration worker's alone (tts/azure-worker.ts loads .env itself)
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
 const flag = (name: string) => {
   const i = rest.indexOf(name);
@@ -342,7 +343,6 @@ try {
       // asked before the paid render: an output already approved for publication refuses the acceptance
       if (accepts) acceptDraftViaCli(topic, storyId, flag('--approved-by')!, draft.sha, ROOT, true);
       const { seg, m } = await stageNarrate(provider('azure'));
-      forgetAzureKeys(); // the render, QA and package phases (and anything they spawn) run without the key
       const { tl } = stageTimeline(seg, m);
       const { seconds } = await stageRender(tl, m);
       const qa = await stageQa(seg, m, tl, seconds);

@@ -531,8 +531,9 @@ permission rules (`src/orchestration/run/roles.ts`: exact `Edit` rules for the f
 content roles; the runner runs each brief's validator itself and sends the findings back to the same session, up to
 `runs.validationRounds` times). After every agent and every child the tree guard reverts anything written outside the
 role's files and halts `unexpected-edit`; a graphics agent's new components are typechecked and checked for node
-imports before any child loads them; a child gets only the secrets its verb needs (`publish` the YouTube keys, `video
-final` the Azure key, nothing else anything). Every attempt is journaled under the story's gitignored `run/`; one run
+imports before any child loads them; a child gets only the secrets its verb needs (`publish` the YouTube keys; no
+video verb gets any: `final` narrates through `npm run tts-azure`, a worker per sentence that loads `.env` itself and
+imports no renderer code). Every attempt is journaled under the story's gitignored `run/`; one run
 per story (a live run makes a second exit 3); a crash resumes with the same command, from whatever the board says.
 Caps and budgets come from `automation.json` (every feature off; the runner itself needs no flag). It ends `done`
 (exit 0, committed after `npm run validate` as `/produce` would, never pushed) or halted (exit 1, `HALT <kind>: <why>`

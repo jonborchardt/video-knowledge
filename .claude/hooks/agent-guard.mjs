@@ -50,6 +50,7 @@ if (tool === 'Bash') {
   const verbs = list(process.env.VK_SHELL);
   if (verbs.length === 0) deny('this role has no shell');
   if (/[;&|`$<>\n]|--prefix|\s-C\s/.test(cmd)) deny(`not a single plain command: ${cmd}`);
+  if (/--force\b|--replace-cited\b/.test(cmd)) deny(`a forbidden flag: ${cmd}`);
   const ok = verbs.some((rule) => {
     const m = /^Bash\((.*)\)$/.exec(rule);
     if (!m) return false;

@@ -3,7 +3,7 @@
 // no stored progress: the board re-derives the stage from the files; the journal only supplies attempt counts.
 // Around every agent: snapshot, agent, guard, (component check), validator, guard; after every child: guard.
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
 import { readJson, ROOT, scriptDir, storySlug, writeJsonAtomic } from '../../shared/io';
@@ -27,7 +27,7 @@ import {
 import { acquire, aliveLocks, heartbeat, type Lock, release, setChild } from './lock';
 import { alive, killTree } from './proc';
 import { grantFor } from './roles';
-import { envFor, execStep as realExecStep, roleOf, type StepContext, type StepOutcome } from './steps';
+import { envFor, execStep as realExecStep, parseRun, roleOf, type StepContext, type StepOutcome } from './steps';
 
 export interface RunHooks {
   snapshot?: () => void;
@@ -245,9 +245,19 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
     return { outcome: 'done', stage: board.stage, halt: null, iterations, costUsd: cost };
   };
 
+  let lastBoard: BoardNext = {
+    topic,
+    story: storyId,
+    stage: 'package',
+    next: '',
+    steps: [],
+    halt: null,
+    done: false,
+  };
   try {
     for (; iterations < a.runs.loopCap; iterations++) {
       const n = ask(topic, storyId, root);
+      lastBoard = n;
       if (n.done || (o.until && n.stage === o.until)) return finish(n);
       if (n.halt?.kind === 'look-stale' && n.stage === 'packaged') return finish(n);
       if (n.next.startsWith('stop:') || (n.halt && PERSON_HALTS.has(n.halt.kind)))
@@ -272,6 +282,16 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
 
       for (const step of n.steps) {
         if (step.kind === 'do') return halt('awaiting-person', step.text, { kind: 'decide', text: step.text }, n);
+        // a forbidden flag is judged on the command the board asks for, never on diagnostic output
+        const forbidden =
+          step.kind === 'run' ? parseRun(step.text, o.approver)?.args.find((x) => FORBIDDEN.test(x)) : undefined;
+        if (forbidden)
+          return halt(
+            'forbidden-flag',
+            `the board asked for ${forbidden}: ${step.text}`,
+            { kind: 'fix', text: 'a person runs that flag by hand, never the runner' },
+            n,
+          );
         const role = roleOf(step);
         currentGrant = grantFor(role, { topic, storyId });
         const logPath = join(dir, 'steps', `${++stepNo}.log`);
@@ -365,15 +385,6 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
             continue;
           break;
         }
-        // the agent's text and the step log may not carry a forbidden flag
-        const logText = existsSync(logPath) ? readFileSync(logPath, 'utf8') : '';
-        if (FORBIDDEN.test(logText))
-          return halt(
-            'forbidden-flag',
-            `a step used ${FORBIDDEN.exec(logText)?.[0]}`,
-            { kind: 'fix', text: `read ${logPath}` },
-            n,
-          );
         if (out.guardFailed)
           return halt(
             'unexpected-edit',
@@ -407,6 +418,15 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
       `${a.runs.loopCap} loop iterations`,
       { kind: 'run', text: `npm run run -- story ${topic} ${storyId}` },
       n,
+    );
+  } catch (e) {
+    // an exception (the board, a parse, a spawn) is a recorded failure with an unblock, never a bare crash
+    const msg = (e as Error).message ?? String(e);
+    return halt(
+      'step-failed',
+      `the runner failed: ${msg}`,
+      { kind: 'fix', text: `read ${dir}; fix the cause and run the same command` },
+      lastBoard,
     );
   } finally {
     clearInterval(beat);

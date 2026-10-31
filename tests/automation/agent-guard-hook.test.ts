@@ -49,6 +49,8 @@ describe('agent-guard hook', () => {
     expect(run(bash('npm run video --prefix evil frames t s'), agentEnv).decision).toBe('deny');
     expect(run(bash('npm run video -- frames t s $(id)'), agentEnv).decision).toBe('deny');
     expect(run(bash('npm run script -- validate t s'), agentEnv).decision).toBe('deny');
+    expect(run(bash('npm run video -- check t s --force'), agentEnv).decision).toBe('deny');
+    expect(run(bash('npm run video -- frames t s --replace-cited'), agentEnv).decision).toBe('deny');
     expect(run(bash('npm run video -- frames t s --scene sc1'), agentEnv).decision).toBeNull();
     const none = run(bash('npm run video -- frames t s'), { ...agentEnv, VK_SHELL: '' });
     expect(none.decision).toBe('deny');

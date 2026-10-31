@@ -92,12 +92,16 @@ describe('envFor (one key family per verb, nothing for the rest)', () => {
     expect(e.ANTHROPIC_API_KEY).toBeUndefined();
     expect(envFor('publish', ['upload'], { ...env, OPENAI_API_KEY: 'o' }).OPENAI_API_KEY).toBeUndefined();
   });
-  it('publish gets YouTube only, social X only, final Azure only', () => {
+  it('no video verb gets the Azure key: final narrates through the worker, which loads .env itself', () => {
+    const e = envFor('video', ['final', 't', 's'], env);
+    expect(e.AZURE_SPEECH_KEY).toBeUndefined();
+    expect(e.VK_NO_DOTENV).toBe('1');
+  });
+  it('publish gets YouTube only, social X only', () => {
     expect(envFor('publish', ['upload'], env).YOUTUBE_OAUTH_CREDENTIALS_PATH).toBe('p');
     expect(envFor('publish', ['upload'], env).MAIL_USER).toBeUndefined();
     expect(envFor('social', ['post'], env).X_A_API_KEY).toBe('x');
     expect(envFor('social', ['post'], env).YOUTUBE_OAUTH_CREDENTIALS_PATH).toBeUndefined();
-    expect(envFor('video', ['final', 't', 's'], env).AZURE_SPEECH_KEY).toBe('k');
     expect(envFor('video', ['final', 't', 's'], env).YOUTUBE_OAUTH_CREDENTIALS_PATH).toBeUndefined();
   });
 });

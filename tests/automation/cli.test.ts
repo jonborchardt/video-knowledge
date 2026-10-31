@@ -25,15 +25,25 @@ const halt: Halt = {
   board: { stage: 'review', next: 'watch it' },
 };
 writeHalt(runDir(T, S, root), halt);
+// a second story that halted before its writer ever wrote script.json (a budget halt at `package`), and a Short's run
+const EARLY = 'decision:never-started';
+writeHalt(runDir(T, EARLY, root), { ...halt, kind: 'budget', why: 'week spent', stage: 'package' });
+writeHalt(runDir(T, `${S}/shorts/one`, root), { ...halt, kind: 'timeout', why: 'render hung', stage: 'video' });
 
 describe('npm run run', () => {
+  it('status lists a run that halted before script.json existed, and a Short’s run', () => {
+    const rows = statusOf(root);
+    expect(rows.map((r) => r.storyId).sort()).toEqual([S, `${S}/shorts/one`, 'decision-never-started'].sort());
+    expect(rows.find((r) => r.storyId === 'decision-never-started')?.halt?.kind).toBe('budget');
+    expect(rows.find((r) => r.storyId === `${S}/shorts/one`)?.halt?.kind).toBe('timeout');
+  });
   it('prints usage and exits 2 without a verb', () => {
     const r = runCli('run', [], { cwd: root });
     expect(r.status).toBe(2);
     expect(r.stderr + r.stdout).toMatch(/story <topic> <story-id>/);
   });
   it('status lists every run folder with its halt and unblock', () => {
-    const rows = statusOf(root);
+    const rows = statusOf(root).filter((r) => r.storyId === S);
     expect(rows).toHaveLength(1);
     expect(rows[0]).toMatchObject({
       topic: T,
@@ -45,7 +55,7 @@ describe('npm run run', () => {
     const r = runCli('run', ['status', '--json'], { cwd: root });
     expect(r.status).toBe(0);
     const parsed = JSON.parse(r.stdout) as typeof rows;
-    expect(parsed[0].halt?.kind).toBe('awaiting-person');
+    expect(parsed.find((x) => x.storyId === S)?.halt?.kind).toBe('awaiting-person');
     const text = runCli('run', ['status'], { cwd: root });
     expect(text.stdout).toMatch(/awaiting-person/);
     expect(text.stdout).toMatch(/reply OK/);

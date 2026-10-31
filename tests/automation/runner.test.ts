@@ -246,18 +246,50 @@ describe('runStory', () => {
     expect(r.halt?.kind).toBe('cap');
     expect(n).toBe(a.runs.graphicsRevisions);
   });
-  it('a forbidden flag in a step log halts forbidden-flag', async () => {
+  it('a board command carrying a forbidden flag halts forbidden-flag before it runs', async () => {
     const root = newRoot();
+    let ran = 0;
     const r = await run(root, {
       ask: scripted([
-        answer('script', 'agent: a', [{ kind: 'prompt', text: 'Read src/modules/evidence/briefs/evidence.md' }]),
+        answer('video', 'npm run video -- init t s --force', [
+          { kind: 'run', text: 'npm run video -- init t s --force' },
+        ]),
       ]),
-      exec: async (_a, _s, ctx) => {
-        writeFileSync(ctx.logPath, 'ran npm run record-sources -- t x --replace-cited\n');
-        return ok({ kind: 'prompt', sessionId: 'e1' });
+      exec: async () => {
+        ran++;
+        return ok();
       },
     });
     expect(r.halt?.kind).toBe('forbidden-flag');
+    expect(ran).toBe(0);
+  });
+  it('diagnostic output that merely mentions a forbidden flag does not halt', async () => {
+    const root = newRoot();
+    const r = await run(root, {
+      ask: scripted([
+        answer('video', 'npm run video -- init t s', [{ kind: 'run', text: 'npm run video -- init t s' }]),
+        answer('packaged', 'done', [], null, true),
+      ]),
+      exec: async (_a, _s, ctx) => {
+        writeFileSync(ctx.logPath, 'usage: init <topic> <story-id> [--force]  never overwrites without --force\n');
+        return ok();
+      },
+    });
+    expect(r.outcome).toBe('done');
+  });
+  it('an exception from the board becomes a recorded step-failed halt, never a bare crash', async () => {
+    const root = newRoot();
+    const r = await run(root, {
+      ask: () => {
+        throw new Error('stories.json: unexpected token');
+      },
+      exec: async () => ok(),
+    });
+    expect(r.outcome).toBe('halted');
+    expect(r.halt?.kind).toBe('step-failed');
+    expect(r.halt?.why).toMatch(/unexpected token/);
+    expect(readHalt(runDir(T, S, root))?.kind).toBe('step-failed');
+    expect(readLock(runDir(T, S, root))).toBeNull();
   });
   it('the finish runs validate in a secret-free environment', async () => {
     const root = newRoot();

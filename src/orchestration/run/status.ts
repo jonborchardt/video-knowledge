@@ -1,8 +1,9 @@
 // The terminal and admin view of every run: what runs, what is halted and what unblocks it. Read from the run
-// folders only (journals, locks, halts); nothing here decides a stage.
+// folders only (journals, locks, halts); nothing here decides a stage. Every `run/` folder counts, including one of a
+// story whose writer never wrote script.json (a halt at `package`) and a Short's.
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
-import { join, relative } from 'node:path';
-import { ROOT, scriptDirs, topicsDir } from '../../shared/io';
+import { join } from 'node:path';
+import { ROOT, topicsDir } from '../../shared/io';
 import { type Halt, readHalt, readJournal, RUN_DIR } from './journal';
 import { readLock } from './lock';
 import { alive } from './proc';
@@ -19,22 +20,31 @@ export interface StatusRow {
   costUsd: number;
 }
 
-/** Every story (and Short) folder under `root` with a run/ folder. */
+const dirsIn = (d: string): string[] =>
+  existsSync(d) ? readdirSync(d).filter((n) => statSync(join(d, n)).isDirectory()) : [];
+
+/** Every story and Short folder under `root` that has a run/ folder: `topics/<t>/scripts/<slug>[/shorts/<slug>]`. */
+function runFolders(root: string): { topic: string; dir: string; storyId: string }[] {
+  const out: { topic: string; dir: string; storyId: string }[] = [];
+  for (const topic of dirsIn(topicsDir(root))) {
+    const scripts = join(topicsDir(root), topic, 'scripts');
+    for (const slug of dirsIn(scripts)) {
+      const dir = join(scripts, slug);
+      const id = idFromDir(dir, slug);
+      if (existsSync(join(dir, RUN_DIR))) out.push({ topic, dir, storyId: id });
+      for (const short of dirsIn(join(dir, 'shorts'))) {
+        const sdir = join(dir, 'shorts', short);
+        if (existsSync(join(sdir, RUN_DIR))) out.push({ topic, dir: sdir, storyId: `${id}/shorts/${short}` });
+      }
+    }
+  }
+  return out;
+}
+
 export function statusOf(root = ROOT, isAlive: (pid: number) => boolean = alive): StatusRow[] {
   const rows: StatusRow[] = [];
-  const dirs = scriptDirs(root).flatMap((d) => {
-    const shorts = join(d.dir, 'shorts');
-    const nested = existsSync(shorts)
-      ? readdirSync(shorts)
-          .map((s) => join(shorts, s))
-          .filter((p) => statSync(p).isDirectory())
-          .map((p) => ({ topic: d.topic, dir: p, storyId: `${idFromDir(d.dir, root)}/shorts/${relative(shorts, p)}` }))
-      : [];
-    return [{ topic: d.topic, dir: d.dir, storyId: idFromDir(d.dir, root) }, ...nested];
-  });
-  for (const d of dirs) {
+  for (const d of runFolders(root)) {
     const run = join(d.dir, RUN_DIR);
-    if (!existsSync(run)) continue;
     const lock = readLock(run);
     const halt = readHalt(run);
     const journal = readJournal(run);
@@ -47,7 +57,7 @@ export function statusOf(root = ROOT, isAlive: (pid: number) => boolean = alive)
       dir: run,
       state: running ? 'running' : halt ? 'halted' : 'idle',
       since: running ? lock.startedAt : (halt?.at ?? null),
-      step: running ? (last?.step ?? null) : null,
+      step: running ? (lock.childStep ?? last?.step ?? null) : null,
       halt: running ? null : halt,
       lastFinish: finishes.at(-1)?.at ?? null,
       costUsd: journal.reduce((s, e) => s + (e.costUsd ?? 0), 0),
@@ -56,8 +66,9 @@ export function statusOf(root = ROOT, isAlive: (pid: number) => boolean = alive)
   return rows;
 }
 
-/** The story id a run folder belongs to: the script.json inside names it; a folder without one keeps its slug. */
-function idFromDir(dir: string, root: string): string {
+/** The story id a folder belongs to: its script.json names it; a folder without one (a run that halted before the
+ *  writer wrote it) keeps its slug. */
+function idFromDir(dir: string, slug: string): string {
   const script = join(dir, 'script.json');
   if (existsSync(script)) {
     try {
@@ -67,7 +78,7 @@ function idFromDir(dir: string, root: string): string {
       /* fall through */
     }
   }
-  return relative(topicsDir(root), dir).replaceAll('\\', '/').split('/').pop() ?? dir;
+  return slug;
 }
 
 export function renderStatus(rows: StatusRow[]): string {
