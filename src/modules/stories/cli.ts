@@ -4,8 +4,8 @@
 //   show <topic> [story-id] [--json]    the ranked list, or one story with its audit and cited passages
 //   validate <topic> <assertions.json> [--json]   run the evidence gate on your own assertions (exit 2 if any is blocked)
 // Reads topics/<topic>/report.json and topics/<topic>/store/ through src/modules/evidence/topics.ts; no watcher checkout needed.
-import { readFileSync, writeFileSync } from 'node:fs';
-import { passageReader, toJson } from '../../shared/io';
+import { readFileSync } from 'node:fs';
+import { passageReader, toJson, writeJsonAtomic } from '../../shared/io';
 import { validate } from '../../shared/evidence-gate';
 import type { Assertion, Validation, Story } from '../../shared/types';
 import { loadReview } from './review';
@@ -102,7 +102,7 @@ switch (cmd) {
   case 'discover': {
     const file = discover(loadTopic(topic), read, loadReview(topic));
     const out = toJson(file);
-    writeFileSync(storiesPath(topic), out);
+    writeJsonAtomic(storiesPath(topic), file);
     if (json) console.log(out);
     else {
       list(file.stories);

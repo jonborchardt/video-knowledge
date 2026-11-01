@@ -2,9 +2,8 @@
 // and has an agent that did not build each bespoke graphic approved its frames? Writes video/render-check.json (the
 // library's RenderCheckSummary), which the lock and the board's graphics stage read. A graphic is approved at a key
 // (the scene plus the code that draws it), so editing either asks for a new visual review.
-import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { readJson, sha, toJson, ROOT } from '../../shared/io';
+import { readJson, sha, toJson, ROOT, writeJsonAtomic } from '../../shared/io';
 import { RENDER_CHECK, type RenderCheckSummary, renderConfigSha } from './render-check';
 import { scriptDir, storySlug } from '../../shared/io';
 import type { Scene } from '../../shared/types';
@@ -67,6 +66,6 @@ export function writeRenderCheck(topic: string, storyId: string, root = ROOT): R
     renderConfigSha(sdir),
     bespoke,
   );
-  writeFileSync(join(sdir, RENDER_CHECK), toJson(rc));
+  writeJsonAtomic(join(sdir, RENDER_CHECK), rc);
   return rc;
 }

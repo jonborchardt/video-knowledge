@@ -6,6 +6,12 @@ Site: https://commonwealthofreason.com/ (Cloudflare, `wrangler.jsonc`), mirrored
 
 The library lives in `../retire-sim/watcher`, which must be checked out next to this repo on a branch that has it (or point `WATCHER_DIR` at it).
 
+## Milestones
+
+1. **Module separation** (done): every capability is a module under `src/modules/` behind a boundary test; the production board derives state from the files; module CLIs are the write boundary (`src/modules/README.md`).
+2. **Autonomous operations** (next): discover, research, produce, approve, publish, distribute and maintain with minimal manual coordination. The test: approve a batch of topics, stop thinking about the system for a week, and come back to well-researched, professionally produced releases that need only the final decisions, with failures already identified and routine problems handled. A person still creates institutions and channels, approves topics, reviews drafts until automated review earns trust, approves each exact release and every paid link, and resolves genuine exceptions.
+3. **Business optimization** (later): measure audience response, compare stories and institutions, optimize topic selection, test monetization, allocate production by results.
+
 ## Setup
 
 Node 22, `npm install`, and `pdftotext` (poppler) for step 5. The watcher checkout is only needed for the data scripts, not for building the site.
@@ -512,7 +518,31 @@ events.
 
 ## Producing a story
 
-On the board, a story that is not yet `packaged` offers one prompt first in its "What next?" popover:
+The runner drives a story without a session:
+
+```
+npm run run -- story <topic> <story-id> [--approver "<name>"] [--until <stage>]
+npm run run -- status [--json]
+```
+
+It is the `/produce` loop as code (`src/orchestration/run/`): it asks `npm run board -- next --json`, runs each
+command the board names as a child process and hands each brief to a fresh `claude -p` agent under that role's
+permission rules (`src/orchestration/run/roles.ts`: exact `Edit` rules for the files the role owns, no shell for
+content roles; the runner runs each brief's validator itself and sends the findings back to the same session, up to
+`runs.validationRounds` times). After every agent and every child the tree guard reverts anything written outside the
+role's files and halts `unexpected-edit`; a graphics agent's new components are typechecked and checked for node
+imports before any child loads them; a child gets only the secrets its verb needs (`publish` the YouTube keys; no
+video verb gets any: `final` narrates through `npm run tts-azure`, a worker per sentence that loads `.env` itself and
+imports no renderer code). Every attempt is journaled under the story's gitignored `run/`; one run
+per story (a live run makes a second exit 3); a crash resumes with the same command, from whatever the board says.
+Caps and budgets come from `automation.json` (every feature off; the runner itself needs no flag). It ends `done`
+(exit 0, committed after `npm run validate` as `/produce` would, never pushed) or halted (exit 1, `HALT <kind>: <why>`
+and `UNBLOCK: <the one command, reply or edit that clears it>`). The containment is protection, not isolation: it
+detects and reverts unauthorised writes and keeps secrets out of processes that load agent code; it does not stop
+agent-written code from running with your user's privileges, so run it supervised.
+
+The interactive path still works. On the board, a story that is not yet `packaged` offers one prompt first in its
+"What next?" popover:
 
 ```
 /produce <topic> <story-id>

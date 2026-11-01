@@ -22,7 +22,17 @@
 import { spawnSync } from 'node:child_process';
 import { appendFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { passageReader, readJson, sha, toJson, ROOT, REVIEW_DIR, scriptDir } from '../../shared/io';
+import {
+  loadDotEnv,
+  passageReader,
+  readJson,
+  sha,
+  toJson,
+  ROOT,
+  REVIEW_DIR,
+  scriptDir,
+  writeJsonAtomic,
+} from '../../shared/io';
 import { runCli } from '../../shared/cli';
 import { currentBuild } from '../publishing';
 import { approverProblem } from '../../shared/approver';
@@ -32,6 +42,7 @@ import { initVideo } from './init';
 import { MIX_FILE, type MixReport, loadMusicConfig, resolveCues } from './music';
 import { narrate } from './narration';
 import { type TtsProvider, provider } from './tts';
+import { forgetAzureKeys } from './tts/azure';
 import { DECODABLE, type QaResult, extractInspectionFrames, qaSegment } from './qa';
 import { assemble } from './assemble';
 import { ENTRY, renderContactSheet, renderScenes } from './render';
@@ -42,7 +53,8 @@ import { acceptDraftViaCli, finalRefusal } from './final';
 import { buildTimeline } from './timeline';
 import type { NarrationManifest, Timeline } from './types';
 
-if (existsSync(join(ROOT, '.env'))) process.loadEnvFile(join(ROOT, '.env')); // keys only; never committed
+loadDotEnv(); // keys only; never committed; skipped when the runner handed this child its keys (VK_NO_DOTENV)
+forgetAzureKeys(); // the Azure key is the narration worker's alone (tts/azure-worker.ts loads .env itself)
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
 const flag = (name: string) => {
   const i = rest.indexOf(name);
@@ -208,7 +220,7 @@ async function stageQa(
     mix,
     packaged(), // still the package on disk: package runs after QA
   );
-  writeFileSync(p(VIDEO_FILES.report), toJson(r));
+  writeJsonAtomic(p(VIDEO_FILES.report), r);
   writeFileSync(p(VIDEO_FILES.reportMd), renderReportMd(r));
   for (const c of qa.checks) if (!c.ok) console.log(`  FAIL ${c.name}: ${c.detail}`);
   const failed = qa.checks.filter((c) => !c.ok).length;

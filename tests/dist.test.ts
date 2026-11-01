@@ -17,6 +17,7 @@ import {
 import { datasetChart } from '../src/modules/storyboard';
 import { dataRef, loadDatasets } from '../src/modules/evidence';
 import { ROOT, readJson, topicDir } from '../src/shared/io';
+import { AUTOMATION_FILE, automationProblems } from '../src/shared/automation';
 import type { Storyboard } from '../src/shared/types';
 import { loadStories, storyUrlSlug } from '../src/modules/stories';
 import { loadPublicRecord } from '../src/shared/public-record';
@@ -59,6 +60,10 @@ const ldOf = (html: string) =>
   [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]));
 const csvCell = (v: string) => (/[",\n]/.test(v) ? `"${v.replaceAll('"', '""')}"` : v); // RFC 4180
 const decode = (s: string) => s.replaceAll('&#39;', "'").replaceAll('&quot;', '"').replaceAll('&amp;', '&');
+
+describe('committed policy files', () => {
+  it('automation.json is valid', () => expect(automationProblems(readJson(join(ROOT, AUTOMATION_FILE)))).toEqual([]));
+});
 
 describe.skipIf(!existsSync(DIST))('built site', () => {
   it.each(pages)('%s exists without template leaks', (p) => {

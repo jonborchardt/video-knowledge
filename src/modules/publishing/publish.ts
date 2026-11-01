@@ -3,10 +3,10 @@
 // metadata choices. Events are written only by `npm run publish` (src/modules/publishing/cli.ts); `metadata` may be hand-edited.
 // Builds are named by the mp4 sha the QA checked, upload metadata by the sha of the composed text and thumbnail sha, so
 // nothing new is versioned here. Library layer: it reads video/review/review.json by path and never imports the video module.
-import { existsSync, readFileSync, renameSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve } from 'node:path';
 import type { BuildSummary } from '../../shared/build-report';
-import { lf, readJson, ROOT, sha, toJson } from '../../shared/io';
+import { lf, readJson, ROOT, sha, toJson, writeJsonAtomic } from '../../shared/io';
 import { lookStale } from '../../shared/look';
 import { approverProblem } from '../../shared/approver';
 import { scriptDir, shortId, shortOf, storySlug, topicDir } from '../../shared/io';
@@ -281,9 +281,7 @@ export function mainOutput(ledger: Ledger): string | null {
 
 /** Whole-file atomic write: a crash leaves the previous ledger. */
 export function saveLedger(path: string, ledger: Ledger): void {
-  const tmp = `${path}.tmp`;
-  writeFileSync(tmp, toJson(ledger));
-  renameSync(tmp, path);
+  writeJsonAtomic(path, ledger);
 }
 
 /** The captions sha the current video has: the latest upload, or an update of that same video since, that recorded

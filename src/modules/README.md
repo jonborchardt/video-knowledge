@@ -40,3 +40,25 @@ Orchestration lives outside this folder: `src/orchestration/` (the board, `npm r
    corrections and reaffirmations when evidence changes (`article -- correct`, `reaffirm`). Website owns
    rendering, content relationships, building and deploying the site; it never decides whether a finding needs a
    correction.
+4. **Orchestration vs. modules.** A module knows its own artifacts: it validates them, inspects them
+   (`missing | invalid | stale | ready`) and changes them through its CLI. Orchestration knows the workflow: which
+   stage a story or topic is in, what runs next, who acts, and (from Milestone 2) when it runs, how it is retried,
+   what it may cost and whom to tell. A module never answers what runs next or whether something may go live;
+   orchestration never judges content and never writes a module's artifact except through that module's CLI.
+5. **Agents vs. machinery.** An agent writes artifacts a validator checks (a script, a review, a batch, a proposal,
+   a component where the graphics brief allows). It never edits the code, configuration or settings that run it,
+   never publishes, posts, pushes or holds a secret. A writer and its reviewer are different agents.
+
+## Milestones
+
+- **Milestone 1 (done): module separation.** One module per capability behind a compiler-backed boundary test;
+  derived board state; child-process CLIs as the write boundary.
+- **Milestone 2: autonomous operations.** Discover, research, produce, approve, publish, distribute and maintain
+  with minimal manual coordination. The question it answers: can a person approve a batch of topics, stop
+  thinking about the system for a week, and return to a set of well-researched, professionally produced releases
+  that need only their final decisions, with failures already identified and routine problems handled? Adds the
+  modules `topic-discovery` and `social` and an executor in orchestration; changes no boundary above.
+- **A later milestone: business optimization.** Measure audience response, compare stories and institutions,
+  optimize topic selection, test monetization, allocate production by results. Milestone 2 only keeps the
+  identity every publication needs for that (institution, topic, story, format, date, channel, call to action)
+  in its ledgers.

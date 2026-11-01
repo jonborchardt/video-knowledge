@@ -29,9 +29,8 @@
 // The ledger is topics/<topic>/scripts/<slug>/publish.json (src/modules/publishing/publish.ts); events are written only here, metadata may
 // be hand-edited.
 import { execFileSync, spawnSync } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { ROOT, toJson } from '../../shared/io';
+import { readFileSync } from 'node:fs';
+import { loadDotEnv, ROOT, toJson } from '../../shared/io';
 import { Refusal } from '../../shared/refusal';
 import {
   type ReviewNote,
@@ -60,7 +59,7 @@ import { scriptDir, shortOf, storySlug } from '../../shared/io';
 import { goLive, push, sync, upload, verify } from './uploader';
 import { TOKEN_FILE, YouTubeError, authorize, loadCredentials, youtubeClient } from './youtube';
 
-if (existsSync(join(ROOT, '.env'))) process.loadEnvFile(join(ROOT, '.env')); // keys only; never committed
+loadDotEnv(); // keys only; never committed; skipped when the runner handed this child its keys (VK_NO_DOTENV)
 
 const [cmd, topic, rawStory, ...rest] = process.argv.slice(2);
 // A Short (<story-id>/shorts/<slug>) is recorded in its parent's ledger as the output short:<slug>.
