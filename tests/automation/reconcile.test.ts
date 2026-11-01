@@ -28,6 +28,7 @@ import { SESSION_FILE, push, upload } from '../../src/modules/publishing/uploade
 import { readOutbox } from '../../src/orchestration/run/notify';
 import { sendReleaseRequest } from '../../src/orchestration/run/requests';
 import { type Fixture, cliRoot, syntheticProduction } from '../production-helpers';
+import { stagedRelease } from './publish-fake-cli';
 
 const fixtures: Fixture[] = [];
 afterAll(() => fixtures.forEach((f) => f.cleanup()));
@@ -156,4 +157,70 @@ describe('criterion 13: the crash boundaries this phase owns', () => {
     ).toBeNull();
     expect(openRequest(loadLedger(s.f.topic, s.f.story, s.f.root)!, manifest.releaseSha, now)?.messageId).toBe(id);
   }, 120_000);
+});
+
+// Phase 3's rows of spec 4.5's table (criterion 13): go-live and the schedule (a decide that dies after YouTube's
+// update and before `decided` is completed, never repeated); the commit and the push (launch.test.ts: killed after
+// the commit, the resumed job pushes that commit once); the X post (social/tests/compose.test.ts: a POST that dies
+// before the record is found on the account); the request (above). The store's rows belong to the topic runs of
+// phase 4.
+describe('criterion 13: the crash boundaries of phase 3', () => {
+  const T1 = new Date('2026-10-30T12:00:00Z');
+  const decideArgs = (s: ReturnType<typeof stagedRelease>, verdict: string, at?: string) => [
+    'decide',
+    s.f.topic,
+    s.f.story,
+    '--request',
+    s.request,
+    '--by',
+    'Jon',
+    '--verdict',
+    verdict,
+    ...(at ? ['--at', at] : []),
+    '--via',
+    'email:<m@x>',
+  ];
+  const crashOnce = (s: ReturnType<typeof stagedRelease>) =>
+    writeFakeState(s.fake, {
+      ...readFakeState(s.fake),
+      fail: [{ method: 'updateVideo', status: 0, reason: 'crash', retryable: false, times: 1, kind: 'crash' }],
+    });
+  it('a go-live that dies after the update: the next decide finds the video public, records it observed, and decides once', async () => {
+    const s = stagedRelease(T1);
+    crashOnce(s);
+    const args = decideArgs(s, 'ok');
+    const first = await s.run('publish', args);
+    expect(first.status).toBe(1);
+    expect(first.stderr).toMatch(/crashed after updateVideo/);
+    expect(s.events().some((e) => e.type === 'decided')).toBe(false);
+    const second = await s.run('publish', args);
+    expect(second.status).toBe(0);
+    expect(s.publicUpdates()).toHaveLength(1);
+    expect(s.events().filter((e) => e.type === 'published')).toHaveLength(1);
+    expect(s.events().find((e) => e.type === 'published')?.note).toMatch(/observed public/);
+    expect(s.events().filter((e) => e.type === 'decided')).toHaveLength(1);
+    const third = await s.run('publish', args);
+    expect(third.status).toBe(0);
+    expect(third.stdout).toMatch(/already recorded/);
+    expect(s.publicUpdates()).toHaveLength(1);
+    s.f.cleanup();
+  });
+  it('a schedule that dies after the update: the next decide sets the same time once more and records one schedule', async () => {
+    const s = stagedRelease(T1);
+    crashOnce(s);
+    const at = new Date(T1.getTime() + 2 * 3600_000).toISOString();
+    const args = decideArgs(s, 'schedule', at);
+    expect((await s.run('publish', args)).status).toBe(1);
+    expect(s.events().some((e) => e.type === 'scheduled' || e.type === 'decided')).toBe(false);
+    expect((await s.run('publish', args)).status).toBe(0);
+    expect(s.events().filter((e) => e.type === 'scheduled')).toHaveLength(1);
+    expect(s.events().find((e) => e.type === 'scheduled')?.publishAt).toBe(at);
+    expect(s.events().filter((e) => e.type === 'decided')).toHaveLength(1);
+    const sent = s
+      .calls('updateVideo')
+      .map((c) => (c.args[1] as { status?: { publishAt?: string } }).status?.publishAt);
+    expect(sent).toEqual([at, at]); // the same instruction twice is one schedule on YouTube
+    expect(s.publicUpdates()).toHaveLength(0);
+    s.f.cleanup();
+  });
 });

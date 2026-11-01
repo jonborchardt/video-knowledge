@@ -83,8 +83,8 @@ export function launchProblem(topic: string, storyId: string, root = ROOT): stri
   for (const id of Object.keys(ledger.outputs)) {
     if (!id.startsWith('short:')) continue;
     const s = openOutput(topic, storyId, { root, output: id });
-    if (s.state.status === 'approved' || s.state.status === 'scheduled')
-      return `${id} is ${s.state.status}, not live yet`;
+    // an uploaded Short goes live before the launch (it is approved, scheduled, or behind on its parent link)
+    if (s.state.id && !s.state.live) return `${id} is ${s.state.status}, not live yet`;
   }
   return null;
 }
@@ -187,11 +187,12 @@ export async function launch(
     );
   if (!record.committed) {
     let why = await step('pulled', () => {
-      const dirty = d.git(['status', '--porcelain']).trim();
+      // porcelain lines are "XY path": never trim the whole output (a leading space is the first line's status)
       const owned = LAUNCH_PATHS(topic);
-      const unowned = dirty
+      const unowned = d
+        .git(['status', '--porcelain'])
         .split('\n')
-        .filter(Boolean)
+        .filter((l) => l.trim())
         .map((l) => l.slice(3).trim())
         .filter((p) => !owned.some((o) => p === o || p.startsWith(`${o}/`)));
       if (unowned.length) return `the clone is dirty outside the launch's paths: ${unowned.slice(0, 5).join(', ')}`;

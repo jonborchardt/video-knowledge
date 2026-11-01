@@ -17,6 +17,7 @@ import {
   launch,
   launchJobs,
   launchPaths,
+  launchProblem,
   launches,
   probeLaunches,
   readLaunch,
@@ -156,13 +157,38 @@ describe('launch', () => {
     expect(launchJobs(a, c.f.root)).toEqual([]);
   });
 
+  it('an uploaded Short that is not live yet (approved, or behind on its parent link) blocks the launch', async () => {
+    const c = clone();
+    const l = loadLedger(c.f.topic, c.f.story, c.f.root)!;
+    l.outputs['short:one'] = { kind: 'youtube-short', derivedFrom: 'youtube', metadata: {}, events: [] };
+    saveLedger(
+      publishPath(c.f.topic, c.f.story, c.f.root),
+      appendEvent(l, 'short:one', {
+        at: '2026-11-01T02:00:00Z',
+        type: 'uploaded',
+        by: 'automation',
+        build: 'shortsha',
+        buildStatus: 'release',
+        metadata: 'm',
+        id: 'vid00000001',
+        visibility: 'private',
+      }).ledger,
+    );
+    expect(launchProblem(c.f.topic, c.f.story, c.f.root)).toMatch(/short:one is .*not live yet/);
+    expect(launchJobs(a, c.f.root)).toEqual([]);
+  });
+
   it('runs the sequence once, commits the story and the site outputs on main, pushes once, and fills the record', async () => {
     const c = clone();
     expect(launchJobs(a, c.f.root)).toEqual([
       { kind: 'launch', topic: c.f.topic, storyId: c.f.story, why: 'launch: the release group is live' },
     ]);
     const before = c.commits();
+    // the clone is dirty with the story's own files first (a modified report: the porcelain line starts with a space)
+    writeFileSync(join(c.f.root, 'topics', c.f.topic, 'report.json'), '{"changed":true}\n');
+    expect(c.git('status', '--porcelain').startsWith(' M topics/')).toBe(true);
     const r = await launch(c.f.topic, c.f.story, a, c.deps(), c.f.root);
+    expect(r.halt?.why).toBeUndefined();
     expect(r.outcome).toBe('done');
     expect(c.ran).toEqual([`report seed ${c.f.topic}`, 'brand', 'build', 'links freeze']);
     const rec = readLaunch(c.f.topic, c.f.story, c.f.root)!;

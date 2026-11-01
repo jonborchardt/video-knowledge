@@ -77,6 +77,20 @@ describe('publishDue', () => {
     expect(s.publicUpdates('vid00000000')).toHaveLength(0); // the video was never touched again
   });
 
+  it('a video that decide published is read back once by the next tick (the launch needs it verified since)', async () => {
+    const s = stagedRelease(T0, { shorts: [] });
+    stages.push(s);
+    expect((await decided(s, 'ok')).status).toBe(0);
+    expect(state(s, 'youtube').live).toBe(true);
+    const before = s.events().filter((e) => e.type === 'verified').length;
+    const a1 = await publishDue(a, s.f.root, { now: () => T0.getTime() + 60_000, run: s.run, mail: null });
+    expect(a1.join('\n')).toMatch(/verify \(0\)/);
+    expect(s.events().filter((e) => e.type === 'verified')).toHaveLength(before + 1);
+    expect(s.events().at(-1)).toMatchObject({ type: 'verified', result: 'passed' });
+    const a2 = await publishDue(a, s.f.root, { now: () => T0.getTime() + 120_000, run: s.run, mail: null });
+    expect(a2).toEqual([]); // once
+  });
+
   it("a Short's go-live 5xx is a retryable failure: the next tick retries that Short only", async () => {
     const s = stagedRelease(T0, { shorts: ['one', 'two'] });
     stages.push(s);

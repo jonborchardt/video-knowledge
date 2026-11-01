@@ -2,7 +2,9 @@
 // the same exit codes (a Refusal is 2, an error 1), over the fake YouTube client; the website's and packaging's
 // children (`links -- cta approve`, `video package`, `social post`) are recorded as commands and answered 0. A
 // requested release group (a video and one Short uploaded private, verified, requested) is the shared stage.
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import { MANIFEST_FILE, REVIEW_DIR, readJson, sha, toJson } from '../../src/shared/io';
 import { FakeMail } from '../../src/shared/mail';
@@ -12,6 +14,7 @@ import { writeManifest } from '../../src/modules/packaging/manifest';
 import { type DecideVerdict, decide } from '../../src/modules/publishing/decide';
 import {
   emptyFakeState,
+  fakeAnonymous,
   fakeYoutubeClient,
   readFakeState,
   writeFakeState,
@@ -32,6 +35,9 @@ import {
 } from '../../src/modules/publishing/publish';
 import { goLive, push, sync, verify } from '../../src/modules/publishing/uploader';
 import { sendTracked } from '../../src/orchestration/run/notify';
+import { site } from '../../src/config/site';
+import { post as postOnX, textFor } from '../../src/modules/social/social';
+import type { XClient } from '../../src/modules/social/x';
 import { type Fixture, cliRoot, syntheticProduction } from '../production-helpers';
 
 export const SECRET = 'a-test-secret-of-some-length';
@@ -55,7 +61,10 @@ export interface Stage {
 }
 
 /** A requested release group over the fake client at `now`. */
-export function stagedRelease(now: Date, opts: { shorts?: string[]; expiresDays?: number } = {}): Stage {
+export function stagedRelease(
+  now: Date,
+  opts: { shorts?: string[]; expiresDays?: number; x?: { client: XClient; handle: string } | null } = {},
+): Stage {
   const f = syntheticProduction('packaged', { release: true });
   cliRoot(f.root);
   const review = join(f.dir, 'video', REVIEW_DIR);
@@ -112,8 +121,8 @@ export function stagedRelease(now: Date, opts: { shorts?: string[]; expiresDays?
       publishAt: null,
       uploadStatus: 'processed',
       processingStatus: 'succeeded',
-      captions: [],
-      thumbnail: false,
+      captions: [{ id: 'cap-1', language: 'en', trackKind: 'standard', status: 'serving' }],
+      thumbnail: true,
       fileSize: 1024,
       gets: 0,
     };
@@ -136,7 +145,7 @@ export function stagedRelease(now: Date, opts: { shorts?: string[]; expiresDays?
   const request = openRequest(loadLedger(f.topic, f.story, f.root)!, m.releaseSha, now)!.request;
   const ran: string[][] = [];
   const clock = { now };
-  const run = fakePublishCli(f, fake, manifestOf, ran, { now: () => clock.now });
+  const run = fakePublishCli(f, fake, manifestOf, ran, { now: () => clock.now, x: opts.x ?? null });
   const events = (output = 'youtube') => loadLedger(f.topic, f.story, f.root)!.outputs[output].events;
   const calls = (method: string) => readFakeState(fake).calls.filter((c) => c.method === method);
   const publicUpdates = (id?: string) =>
@@ -178,7 +187,7 @@ export function fakePublishCli(
   fake: string,
   manifestOf: () => ReleaseManifest | null,
   ran: string[][],
-  opts: { now?: () => Date; scheduleLeadMinutes?: number } = {},
+  opts: { now?: () => Date; scheduleLeadMinutes?: number; x?: { client: XClient; handle: string } | null } = {},
 ): Run {
   const client = fakeYoutubeClient(fake);
   const flag = (args: string[], name: string) => {
@@ -216,13 +225,35 @@ export function fakePublishCli(
       stderr: '',
     };
   };
+  // `social post` in process over an injected X when the stage names one (the CLI's answers), else not configured
+  const social = async (args: string[]): Promise<Result> => {
+    ran.push(['social', ...args]);
+    if (!opts.x) return { status: 0, stdout: 'not configured: no x handle or keys\n', stderr: '' };
+    const [, topic, storyId] = args;
+    const i = args.indexOf('--output');
+    const output = i >= 0 ? args[i + 1] : 'youtube';
+    const t = textFor(topic, storyId, output, site.disclosure, f.root);
+    if (!t) return { status: 2, stdout: '', stderr: `refused: ${output} is not live\n` };
+    const r = await postOnX(topic, storyId, output, opts.x.handle, t, { client: opts.x.client }, f.root);
+    return r.status === 'posted'
+      ? { status: 0, stdout: `RESULT: POSTED ${r.url ?? ''}\n`, stderr: '' }
+      : { status: 1, stdout: `RESULT: FAILED${r.retryable ? ' (retryable)' : ''}: ${r.error}\n`, stderr: '' };
+  };
   const run: Run = async (cli, args) => {
+    if (cli === 'social' && args[0] === 'post') return social(args);
     if (cli !== 'publish') return child(cli, args);
     const [verb, topic, story, ...rest] = args;
     const shortMatch = /^(.+)\/shorts\/([a-z0-9-]+)$/.exec(story);
     const storyId = shortMatch ? shortMatch[1] : story;
     const output = flag(rest, '--output') ?? (shortMatch ? `short:${shortMatch[2]}` : undefined);
-    const ctx = { root: f.root, by: flag(rest, '--by') ?? 'automation', now: opts.now?.(), output, client };
+    const ctx = {
+      root: f.root,
+      by: flag(rest, '--by') ?? 'automation',
+      now: opts.now?.(),
+      output,
+      client,
+      anonymous: fakeAnonymous(fake),
+    };
     const done = (r: { message?: string } | unknown) => ({
       status: 0,
       stdout: (typeof r === 'object' && r && 'message' in r ? String((r as { message: string }).message) : '') + '\n',
@@ -303,4 +334,29 @@ export function fakePublishCli(
     }
   };
   return run;
+}
+
+/** Makes a fixture root a git clone of a bare origin on `main` (git 2.15: the branch named by a checkout). */
+export function gitOrigin(root: string): {
+  bare: string;
+  git: (...args: string[]) => string;
+  originHead: () => string;
+} {
+  const git = (...args: string[]) =>
+    execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+  writeFileSync(join(root, '.gitignore'), '.automation/\ntopics/*/scripts/*/run/\nyoutube-fake.json\nx-fake.json\n');
+  git('init', '-q');
+  git('checkout', '-q', '-b', 'main');
+  git('config', 'core.autocrlf', 'false');
+  git('config', 'user.email', 'test@example.com');
+  git('config', 'user.name', 'test');
+  git('add', '-A');
+  git('commit', '-q', '-m', 'fixture');
+  const bare = mkdtempSync(join(tmpdir(), 'vk-origin-'));
+  execFileSync('git', ['init', '-q', '--bare', bare]);
+  execFileSync('git', ['symbolic-ref', 'HEAD', 'refs/heads/main'], { cwd: bare });
+  git('remote', 'add', 'origin', bare);
+  git('push', '-q', '-u', 'origin', 'main');
+  const originHead = () => execFileSync('git', ['rev-parse', 'main'], { cwd: bare, encoding: 'utf8' }).trim();
+  return { bare, git, originHead };
 }

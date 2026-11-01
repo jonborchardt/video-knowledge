@@ -62,6 +62,12 @@ export async function publishDue(a: Automation, root = ROOT, d: PublishDeps): Pr
       continue;
     }
     if (main.state.live) {
+      // a video that decide published is read back once here (the launch needs it verified since)
+      const published = main.out.events.findLastIndex((e) => e.type === 'published');
+      if (!main.out.events.slice(published).some((e) => e.type === 'verified')) {
+        const r = await run('publish', ['verify', topic, storyId, '--by', by]);
+        actions.push(`${tag}: verify (${r.status})`);
+      }
       const req = main.out.events.findLast((e) => e.type === 'approval-requested')?.request;
       const via = `tick:${req ?? ''}`;
       for (const id of Object.keys(ledger.outputs)) {
