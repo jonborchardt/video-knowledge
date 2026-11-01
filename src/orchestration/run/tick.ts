@@ -12,7 +12,8 @@ import type { DigestExtra } from './digest';
 import { sendDigestIfDue } from './digest';
 import type { Halt } from './journal';
 import { acquire, heartbeat, release } from './lock';
-import { type OutboxEntry, automationDir, flushOutbox, notifyHalts } from './notify';
+import { type OutboxEntry, automationDir, flushOutbox, notifyHalts, renderHalt, haltKey } from './notify';
+import { renderDigest } from './digest';
 import { type PreflightDeps, preflight } from './preflight';
 import { alive, killTree } from './proc';
 import { dueResumes, stuckRows } from './resume';
@@ -57,6 +58,26 @@ export const freeGbOf = (path: string): number => {
   return (s.bavail * s.bsize) / 1024 ** 3;
 };
 
+/** Re-renders a resendable outbox entry from the current state: a halt by its subject, the digest, a test. Request
+ *  mails (phase 2) are rendered by their own module. */
+export const defaultRender =
+  (a: Automation, rows: () => StatusRow[], extra: () => DigestExtra = () => ({})) =>
+  (e: OutboxEntry): Omit<OutMail, 'messageId'> | null => {
+    if (e.kind === 'halt') {
+      const r = rows().find((x) => x.halt && renderHalt(x.topic, x.storyId, x.halt, a).subject === e.subject);
+      return r ? renderHalt(r.topic, r.storyId, r.halt!, a, { dir: r.dir }) : null;
+    }
+    if (e.kind === 'digest') return renderDigest(rows(), extra(), a);
+    if (e.kind === 'test')
+      return {
+        from: a.approvals.from || a.notifications.to,
+        to: e.to,
+        subject: e.subject,
+        text: 'A resend of the mail test.',
+      };
+    return null;
+  };
+
 const preflightRow = (root: string, h: Halt): StatusRow => ({
   topic: 'automation',
   storyId: 'preflight',
@@ -84,6 +105,15 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
       env: process.env,
       freeGb: freeGbOf,
       launches: () => [],
+      running: () =>
+        (deps.rows ?? (() => statusOf(root, deps.alive)))()
+          .filter((r) => r.state === 'running')
+          .map((r) =>
+            r.dir
+              .slice(root.length + 1)
+              .replaceAll('\\', '/')
+              .replace(/\/run$/, ''),
+          ),
       ...deps.preflight,
     });
     const haltPath = join(dir, PREFLIGHT_HALT);
@@ -92,8 +122,8 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
       const h: Halt = {
         kind: 'preflight',
         stage: 'tick',
-        why: pre.problems.join('; '),
-        unblock: { kind: 'fix', text: pre.problems[0] },
+        why: pre.problems.join('; '), // stable: the same problem keys the same halt every tick
+        unblock: { kind: 'fix', text: [...pre.details, ...(pre.details.length ? [] : [pre.problems[0]])].join('\n') },
         at: readJson<Halt>(haltPath)?.at ?? at,
         runId: lock.runId,
         board: { stage: 'tick', next: '' },
@@ -101,7 +131,8 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
       writeJsonAtomic(haltPath, h);
       actions.push(`preflight failed: ${h.why}`);
       if (deps.mail) {
-        const sent = await notifyHalts(a, deps.mail, root, { now, rows: [preflightRow(root, h)] });
+        // a partial pass: the stories' halts are not pruned from notified.json (they are not resolved, just unseen)
+        const sent = await notifyHalts(a, deps.mail, root, { now, rows: [preflightRow(root, h)], prune: false });
         if (sent.length) actions.push('preflight halt emailed');
       }
       return { outcome: 'preflight', actions };
@@ -112,7 +143,13 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
     }
     heartbeat(join(dir, TICK_LOCK), lock, now);
     if (deps.mail) {
-      const resent = await flushOutbox(deps.mail, root, now, deps.render ?? (() => null));
+      const rowsNow = deps.rows ?? (() => statusOf(root, deps.alive));
+      const resent = await flushOutbox(
+        deps.mail,
+        root,
+        now,
+        deps.render ?? defaultRender(a, rowsNow, deps.digestExtra),
+      );
       if (resent.length) actions.push(`outbox: resent ${resent.length}`);
     }
     // inbox, due publications and deploy probes: phase 3

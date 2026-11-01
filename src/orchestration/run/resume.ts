@@ -9,6 +9,7 @@ import { readLock, release } from './lock';
 import { alive as pidAlive, killTree } from './proc';
 import { type DueResume, isoWeek } from './schedule';
 import { type StatusRow, statusOf } from './status';
+import { isFixtureTopic } from '../../config/site';
 
 const RETRYABLE_ERROR = /No audio was received|truncated|ECONN|ETIMEDOUT|Session closed|bringToFront/;
 
@@ -18,9 +19,16 @@ export function retryable(h: Pick<Halt, 'kind' | 'why'>): boolean {
   return h.kind === 'step-failed' && RETRYABLE_ERROR.test(h.why);
 }
 
-/** How many times the halted story was resumed since its halt was written. */
-const resumesSince = (dir: string, h: Halt): number =>
-  readJournal(dir).filter((e) => e.kind === 'resume' && e.at >= h.at).length;
+/** How many times the story was resumed into the same kind of halt: every failed resume rewrites the halt with a new
+ *  `at`, so the count runs from the last finish, or the last halt of another kind, to now. */
+export function resumesSince(dir: string, h: Pick<Halt, 'kind'>): number {
+  let n = 0;
+  for (const e of readJournal(dir)) {
+    if (e.kind === 'finish' || (e.kind === 'halt' && e.step !== h.kind)) n = 0;
+    else if (e.kind === 'resume') n++;
+  }
+  return n;
+}
 
 export interface ResumeDeps {
   now?: () => number;
@@ -38,6 +46,7 @@ export function dueResumes(a: Automation, root = ROOT, deps: ResumeDeps = {}): D
   const due: DueResume[] = [];
   for (const r of rows) {
     if (r.state !== 'halted' || !r.halt) continue;
+    if (isFixtureTopic(r.topic)) continue; // the fixture is excluded from every automatic selection (spec 5.8)
     const h = r.halt;
     if (retryable(h)) {
       const attempt = resumesSince(r.dir, h);
@@ -100,7 +109,11 @@ export function stuckRows(
       const last = readJournal(r.dir).at(-1);
       const silent = last ? now() - Date.parse(last.at) : now() - Date.parse(r.since ?? new Date(now()).toISOString());
       const lock = readLock(r.dir);
-      if (silent >= limit && lock) {
+      // a live runner heartbeats every minute and its own step timeouts outlast stuckAfterMinutes: only a stale
+      // heartbeat (the runner frozen or gone) with a silent journal is stuck; an unreadable heartbeat counts as stale
+      const beat = lock ? now() - Date.parse(lock.heartbeatAt) : 0;
+      const staleBeat = !(beat < a.runs.lockStaleMinutes * 60_000);
+      if (silent >= limit && staleBeat && lock) {
         kill(lock.pid);
         release(r.dir, lock); // the dead run's lock: the halt shows at once and the story is free for a resume
         writeHalt(r.dir, {

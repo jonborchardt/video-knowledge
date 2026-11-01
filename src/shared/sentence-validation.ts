@@ -207,15 +207,15 @@ function scriptIssues(
   });
   if (
     duration &&
-    pkg?.targetDurationSeconds !== undefined &&
-    script.targetDurationSeconds !== pkg.targetDurationSeconds
+    pkg &&
+    script.targetDurationSeconds !== pkg.targetDurationSeconds // both ways: a writer never sets its own target
   )
     top.push(
       issue(
         '-',
         'duration',
         'blocking',
-        `the package targets ${pkg.targetDurationSeconds} s; the script says ${script.targetDurationSeconds ?? 'nothing'}: copy targetDurationSeconds from the package`,
+        `the package targets ${pkg.targetDurationSeconds ?? 'nothing'}; the script says ${script.targetDurationSeconds ?? 'nothing'}: targetDurationSeconds is the package's, copied or absent`,
       ),
     );
   if (duration)

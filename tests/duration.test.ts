@@ -91,10 +91,12 @@ describe('the script by band', () => {
     const v = run({ ...micro(1800), sections: [{ name: 'hook', sentences: three() }] }, q);
     expect(blockingCats(v)).toContain('words');
   });
-  it("requires the script to carry the package's target", () => {
+  it("requires the script to carry the package's target, and never one of its own", () => {
     const q = withTarget(pkg(), 15);
     const v = run({ ...micro(), targetDurationSeconds: undefined }, q);
     expect(blockingCats(v)).toContain('duration');
+    // a writer cannot set a target the package does not have (it would relax the pacing checks)
+    expect(blockingCats(run(micro(15), pkg()))).toContain('duration');
   });
   it('judges the same sentences identically under micro and long: the gate and the fingerprints do not move', () => {
     const s = three();

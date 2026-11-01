@@ -6,6 +6,7 @@ import type { Automation } from '../../shared/automation';
 import { ROOT } from '../../shared/io';
 import { alive } from './proc';
 import { statusOf } from './status';
+import { pickJob } from './pick';
 import { type RunResult, runStory } from './runner';
 import { type DueResume, readSchedule, updateSchedule } from './schedule';
 
@@ -23,6 +24,8 @@ export interface WorkDeps {
   /** The production pick (Task 5): the job to start when the cadence says so, else null. */
   pick?: () => Job | null;
   runStory?: (topic: string, storyId: string, a: Automation, approver: string) => Promise<RunResult>;
+  /** Runs the production pick (records the pick before the start, signs with the pick's approver); default pickJob. */
+  runPick?: () => Promise<{ started?: string; why?: string; result?: RunResult }>;
   approver?: string;
   skip?: Job[]; // jobs this instance already found held
 }
@@ -69,7 +72,10 @@ export async function work(a: Automation, root = ROOT, deps: WorkDeps = {}): Pro
         ...s,
         due: (s.due ?? []).filter((d) => !(d.topic === job.topic && d.storyId === job.storyId)),
       }));
-    const result = await run(job.topic!, job.storyId!, a, approver);
+    // a pick is recorded in schedule.json before it starts (a crash never starts two; the cadence binds)
+    const picked = job.kind === 'pick' ? await (deps.runPick ?? (() => pickJob(a, root)))() : null;
+    if (job.kind === 'pick' && !picked?.result) return { outcome: 'idle', job: null };
+    const result = picked?.result ?? (await run(job.topic!, job.storyId!, a, approver));
     if (result.outcome === 'held') {
       skip.push(job); // another instance owns it: try the next job once
       continue;

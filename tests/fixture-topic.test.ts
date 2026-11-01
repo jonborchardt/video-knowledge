@@ -1,5 +1,6 @@
 // The miniature fixture topic (spec §5.8): real content, claimed by the existing commission as a fixture topic, kept
 // out of the production site and of every automatic selection, present only in a FIXTURE_SITE=1 build.
+import { execFileSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -29,7 +30,8 @@ describe('the fixture topic', () => {
     expect(ready[0].claims).toEqual([`${T}/every-leap-second-since-utc-began`]);
     expect(ready[0].audit.central.status).toBe('supported');
     expect(existsSync(join(topicDir(T), 'sources', 'iers-leap-second-dat.txt'))).toBe(true);
-    expect(existsSync(join(topicDir(T), 'history'))).toBe(false); // gitignored and never committed
+    // --fresh archives to history/, which is gitignored: it may exist and is never tracked
+    expect(execFileSync('git', ['ls-files', 'topics/test-fixture/history'], { cwd: ROOT, encoding: 'utf8' }).trim()).toBe('');
   });
   it('is absent from the live and preview graphs of the public topics, and present only in the fixture view', () => {
     expect(contentGraph(ROOT, publicTopicNames(), 'live').nodes.has(T)).toBe(false);

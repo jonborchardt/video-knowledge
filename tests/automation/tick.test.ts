@@ -81,7 +81,7 @@ describe('tick', () => {
     expect(r1.outcome).toBe('preflight');
     expect(mail.sent).toHaveLength(1);
     expect(mail.sent[0].subject).toContain('automation/preflight (preflight)');
-    expect(mail.sent[0].text).toContain('dirty: src/x.ts');
+    expect(mail.sent[0].text).toContain('src/x.ts');
     expect(readSchedule(root).due).toBeUndefined();
     const r2 = await tick(on, root, { mail, now: () => T0 + 60_000, preflight: dirty, ask: same });
     expect(r2.outcome).toBe('preflight');
@@ -118,7 +118,7 @@ describe('tick', () => {
         pid: 777,
         host: 'h',
         startedAt: new Date(T0 - 5 * 3600_000).toISOString(),
-        heartbeatAt: 'x',
+        heartbeatAt: new Date(T0 - 60 * 60_000).toISOString(),
         command: 'c',
         childStep: 'render',
       }),
@@ -156,5 +156,66 @@ describe('tick', () => {
     const again = await tick(on, root, { ...deps, now: () => T0 + 60_000, alive: () => false });
     expect(again.outcome).toBe('ok');
     expect(mail.sent).toHaveLength(3);
+  });
+  it('a story with a live run passes preflight although its folder is dirty; a healthy long render is never killed', async () => {
+    const root = fresh();
+    const dir = runDir(T, 'decision:b', root);
+    writeFileSync(
+      join(dir, 'lock.json'),
+      JSON.stringify({
+        runId: 'r9',
+        pid: 777,
+        host: 'h',
+        startedAt: new Date(T0 - 5 * 3600_000).toISOString(),
+        heartbeatAt: new Date(T0 - 30_000).toISOString(),
+        command: 'c',
+        childStep: 'render',
+      }),
+    );
+    appendJournal(dir, {
+      at: new Date(T0 - 4 * 3600_000).toISOString(),
+      runId: 'r9',
+      stage: 'video',
+      next: 'n',
+      step: 'render',
+      kind: 'run',
+      attempt: 1,
+    });
+    const dirty = {
+      ...okPre,
+      git: (a: string[]) =>
+        a[0] === 'status' ? '?? topics/heat-pumps/scripts/decision-b/video/render.json\n' : 'main\n',
+    };
+    const killed: number[] = [];
+    const r = await tick(on, root, {
+      mail: new FakeMail(),
+      now: () => T0,
+      preflight: dirty,
+      ask: same,
+      alive: (pid) => pid === 777,
+      kill: (pid) => void killed.push(pid),
+    });
+    expect(r.outcome).toBe('ok');
+    expect(killed).toEqual([]);
+    expect(readHalt(dir)).toBeNull();
+  });
+  it("a failed preflight keeps the stories' notified keys, and its own key is stable while the details change", async () => {
+    const root = fresh();
+    const mail = new FakeMail();
+    writeHalt(runDir(T, S, root), halt());
+    expect((await tick(on, root, { mail, now: () => T0, preflight: okPre, ask: same })).outcome).toBe('ok');
+    expect(mail.sent).toHaveLength(2); // the halt and the Monday digest
+    const dirty = { ...okPre, git: (a: string[]) => (a[0] === 'status' ? ' M src/x.ts\n' : 'main\n') };
+    expect((await tick(on, root, { mail, now: () => T0 + 60_000, preflight: dirty, ask: same })).outcome).toBe(
+      'preflight',
+    );
+    expect(mail.sent).toHaveLength(3); // the preflight halt
+    const dirtier = { ...okPre, git: (a: string[]) => (a[0] === 'status' ? ' M src/x.ts\n M src/y.ts\n' : 'main\n') };
+    expect((await tick(on, root, { mail, now: () => T0 + 120_000, preflight: dirtier, ask: same })).outcome).toBe(
+      'preflight',
+    );
+    expect(mail.sent).toHaveLength(3); // the same problem: no second mail
+    expect((await tick(on, root, { mail, now: () => T0 + 180_000, preflight: okPre, ask: same })).outcome).toBe('ok');
+    expect(mail.sent).toHaveLength(3); // the story's halt was never re-emailed
   });
 });

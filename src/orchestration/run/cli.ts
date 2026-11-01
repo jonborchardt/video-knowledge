@@ -201,7 +201,7 @@ switch (verb) {
     console.log(`sent ${messageId} to ${a.notifications.to}`);
     if (!rest.includes('--await-reply')) break;
     const deadline = Date.now() + 10 * 60_000;
-    let since = 0;
+    let since = await mail.lastUid(); // only what arrives after the test: never the whole inbox
     while (Date.now() < deadline) {
       const got = await mail.fetchSince(since);
       for (const m of got) since = Math.max(since, m.uid);
@@ -212,7 +212,7 @@ switch (verb) {
           .replaceAll(a.notifications.to, 'jon@example.test')
           .replaceAll(cfg!.user, 'automation@example.test');
         writeFileSync(file, raw);
-        console.log(`reply from ${reply.from} at ${reply.date}; own text:\n${reply.text}\nsaved ${file}`);
+        console.log(`reply at ${reply.date}; own text:\n${reply.text}\nsaved ${file}`);
         process.exit(0);
       }
       await new Promise((r) => setTimeout(r, 20_000));

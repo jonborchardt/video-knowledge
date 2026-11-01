@@ -72,6 +72,7 @@ describe('work', () => {
     const r2 = await work(on, root, {
       runStory: async (_t, s) => (ran.push(s), s === 'decision:a' ? held() : done()),
       pick: () => pick,
+      runPick: async () => ({ started: 'heat-pumps/decision:p', result: done() }),
     });
     expect(r2.outcome).toBe('done');
     expect(r2.job?.kind).toBe('pick');
@@ -106,5 +107,25 @@ describe('work', () => {
     expect(text).toContain('Run a new instance in parallel');
     expect(text).toContain('powercfg /change standby-timeout-ac 0');
     expect(scheduleText(on, 'F:/x', 'linux')).toContain('*/15 * * * * cd F:/x');
+  });
+  it('runs a pick through the pick itself, which records it before the start (never runStory directly)', async () => {
+    const root = fresh();
+    const ran: string[] = [];
+    let recorded = false;
+    const r = await work(on, root, {
+      pick: () => pick,
+      runStory: async (_t, s) => (ran.push(s), done()),
+      runPick: async () => ((recorded = true), { started: 'heat-pumps/decision:p', result: done() }),
+    });
+    expect(r.outcome).toBe('done');
+    expect(recorded).toBe(true);
+    expect(ran).toEqual([]);
+    const idle = await work(on, root, {
+      pick: () => pick,
+      runStory: async (_t, s) => (ran.push(s), done()),
+      runPick: async () => ({ why: 'nothing due' }),
+    });
+    expect(idle.outcome).toBe('idle');
+    expect(ran).toEqual([]);
   });
 });

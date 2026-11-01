@@ -61,6 +61,8 @@ export interface InMail {
 export interface MailTransport {
   send(m: OutMail): Promise<{ messageId: string }>;
   fetchSince(sinceUid: number, opts?: { mailbox?: string }): Promise<InMail[]>;
+  /** The highest uid the mailbox holds now (0 when empty): a poll for new mail starts after it. */
+  lastUid(opts?: { mailbox?: string }): Promise<number>;
 }
 
 export interface MailDeps {
@@ -112,6 +114,27 @@ export function libraryTransport(c: MailConfig, deps: MailDeps = {}): MailTransp
         await client.logout();
       }
       return out.sort((a, b) => a.uid - b.uid);
+    },
+    async lastUid(opts = {}) {
+      const client = new Imap({
+        host: c.imapHost,
+        port: c.imapPort,
+        secure: true,
+        auth: { user: c.user, pass: c.password },
+        logger: false,
+      });
+      await client.connect();
+      try {
+        const lock = await client.getMailboxLock(opts.mailbox ?? 'INBOX');
+        try {
+          const box = client.mailbox;
+          return box && typeof box === 'object' && 'uidNext' in box ? Number(box.uidNext) - 1 : 0;
+        } finally {
+          lock.release();
+        }
+      } finally {
+        await client.logout();
+      }
     },
   };
 }
@@ -172,6 +195,9 @@ export class FakeMail implements MailTransport {
   }
   deliver(m: InMail): void {
     this.inbox.push(m);
+  }
+  async lastUid(): Promise<number> {
+    return this.inbox.reduce((n, m) => Math.max(n, m.uid), 0);
   }
 }
 

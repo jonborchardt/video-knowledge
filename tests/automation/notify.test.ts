@@ -197,4 +197,75 @@ describe('the digest', () => {
     expect(isoWeek(Date.parse('2026-01-01T00:00:00Z'))).toBe('2026-W01');
     expect(isoWeek(Date.parse('2026-11-02T00:00:00Z'))).toBe('2026-W45');
   });
+  describe("the review's findings", () => {
+    it('an SMTP failure on one halt leaves one outbox entry per halt and no second id', async () => {
+      const root = fresh();
+      const mail = new FakeMail();
+      writeHalt(runDir(T, S, root), halt());
+      const other = 'decision:b';
+      runDir(T, other, root);
+      writeFileSync(join(scriptDir(T, other, root), 'script.json'), JSON.stringify({ story: other }));
+      writeHalt(runDir(T, other, root), halt({ why: 'other' }));
+      mail.failNext = 'before'; // the first send throws before any copy went out
+      const sent = await notifyHalts(a, mail, root, { now: () => T0, rows: statusOf(root, () => false) });
+      expect(sent).toHaveLength(2);
+      expect(mail.sent).toHaveLength(1);
+      const unsent = readOutbox(root).filter((e) => !e.sentAt);
+      expect(unsent).toHaveLength(1);
+      expect(
+        await notifyHalts(a, mail, root, { now: () => T0 + 60_000, rows: statusOf(root, () => false) }),
+      ).toHaveLength(0);
+      expect(
+        await flushOutbox(
+          mail,
+          root,
+          () => T0 + 11 * 60_000,
+          () => ({ from: 'a', to: 'b', subject: unsent[0].subject, text: 'x' }),
+        ),
+      ).toEqual([unsent[0].messageId]);
+      expect(mail.sent.map((m) => m.messageId)).toContain(unsent[0].messageId);
+      expect(mail.sent).toHaveLength(2);
+    });
+    it('an entry nothing can re-render runs out of attempts and is listed as unsent', async () => {
+      const root = fresh();
+      const mail = new FakeMail();
+      mail.failNext = 'before';
+      await expect(
+        sendTracked(mail, { from: 'a', to: 'b', subject: 's', text: 't' }, 'release-request', root, { now: () => T0 }),
+      ).rejects.toThrow();
+      let t = T0;
+      for (let i = 0; i < 3; i++) {
+        t += 11 * 60_000;
+        expect(
+          await flushOutbox(
+            mail,
+            root,
+            () => t,
+            () => null,
+          ),
+        ).toEqual([]);
+      }
+      expect(readOutbox(root)[0].attempts).toBe(3);
+      expect(
+        renderDigest([], { unsent: readOutbox(root).filter((e) => !e.sentAt && e.attempts >= 3) }, a).text,
+      ).toContain('could not be sent');
+    });
+    it("the digest redacts a secret in a halt's text", () => {
+      const root = fresh();
+      writeHalt(
+        runDir(T, S, root),
+        halt({
+          why: 'MAIL_PASSWORD=hunter2hunter2 in the log',
+          unblock: { kind: 'fix', text: 'rotate hunter2hunter2' },
+        }),
+      );
+      const d = renderDigest(
+        statusOf(root, () => false),
+        { secrets: ['hunter2hunter2'] },
+        a,
+      );
+      expect(d.text).not.toContain('hunter2hunter2');
+      expect(d.text).toContain('[redacted]');
+    });
+  });
 });

@@ -4,7 +4,8 @@
 import type { Automation } from '../../shared/automation';
 import { ROOT } from '../../shared/io';
 import type { MailTransport, OutMail } from '../../shared/mail';
-import { type OutboxEntry, sendTracked, unsentOutbox } from './notify';
+import { type OutboxEntry, secretsOf, sendTracked, unsentOutbox } from './notify';
+import { redact } from '../../shared/mail';
 import { lastSlot, readSchedule, updateSchedule } from './schedule';
 import type { StatusRow } from './status';
 
@@ -18,6 +19,7 @@ export interface DigestExtra {
   unsent?: OutboxEntry[];
   queue?: { readyStories: number; approvedTopics: number; awaitingApproval: number };
   spend?: { weekUsd: number; perWeekUsd: number };
+  secrets?: string[]; // what a body must never carry; the environment's secret families by default
 }
 
 const section = (title: string, lines: string[]): string[] => (lines.length ? ['', `## ${title}`, ...lines] : []);
@@ -26,6 +28,7 @@ const h = (n: number) => (n === 1 ? '1 hour' : `${Math.round(n)} hours`);
 export function renderDigest(rows: StatusRow[], extra: DigestExtra, a: Automation): Omit<OutMail, 'messageId'> {
   const running = rows.filter((r) => r.state === 'running');
   const blocked = rows.filter((r) => r.halt);
+  const clean = (t: string) => redact(t, extra.secrets ?? secretsOf());
   const lines = [
     'The week at the Commonwealth of Reason.',
     ...section(
@@ -39,8 +42,8 @@ export function renderDigest(rows: StatusRow[], extra: DigestExtra, a: Automatio
     ...section(
       'Blocked',
       blocked.flatMap((r) => [
-        `- ${r.topic} / ${r.storyId}: ${r.halt!.kind} at ${r.halt!.stage} since ${r.halt!.at}: ${r.halt!.why}`,
-        `  Unblock: ${r.halt!.unblock.text}`,
+        `- ${r.topic} / ${r.storyId}: ${r.halt!.kind} at ${r.halt!.stage} since ${r.halt!.at}: ${clean(r.halt!.why)}`,
+        `  Unblock: ${clean(r.halt!.unblock.text)}`,
       ]),
     ),
     ...section(

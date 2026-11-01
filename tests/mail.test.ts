@@ -165,5 +165,6 @@ describe('FakeMail', () => {
     });
     expect((await f.fetchSince(4)).map((m) => m.uid)).toEqual([5]);
     expect(await f.fetchSince(5)).toEqual([]);
+    expect(await f.lastUid()).toBe(5);
   });
 });

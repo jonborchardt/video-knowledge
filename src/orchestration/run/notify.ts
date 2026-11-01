@@ -94,12 +94,12 @@ export async function flushOutbox(
   for (const e of readOutbox(root)) {
     if (e.sentAt || e.attempts >= MAX_ATTEMPTS) continue;
     if (now() - Date.parse(e.createdAt) < RESEND_AFTER_MS) continue;
-    const body = render(e);
-    if (!body) continue;
     writeOutbox(
       root,
       readOutbox(root).map((x) => (x.messageId === e.messageId ? { ...x, attempts: x.attempts + 1 } : x)),
     );
+    const body = render(e);
+    if (!body) continue; // nothing to resend it from: it runs out of attempts and the digest lists it
     try {
       await mail.send({ ...body, messageId: e.messageId });
     } catch {
@@ -176,6 +176,8 @@ export async function notifyHalts(
     rows?: StatusRow[];
     secrets?: string[];
     sessionOf?: (r: StatusRow) => string | null;
+    /** false on a partial pass (a failed preflight): keys of halts not in `rows` are kept, not treated as resolved. */
+    prune?: boolean;
   } = {},
 ): Promise<string[]> {
   const now = opts.now ?? Date.now;
@@ -188,17 +190,22 @@ export async function notifyHalts(
     const key = haltKey(r.topic, r.storyId, r.halt);
     current.add(key);
     if (notified[key]) continue;
-    await sendTracked(
-      mail,
-      renderHalt(r.topic, r.storyId, r.halt, a, { dir: r.dir, sessionId: opts.sessionOf?.(r) ?? null }, opts.secrets),
-      'halt',
-      root,
-      { now },
-    );
+    try {
+      await sendTracked(
+        mail,
+        renderHalt(r.topic, r.storyId, r.halt, a, { dir: r.dir, sessionId: opts.sessionOf?.(r) ?? null }, opts.secrets),
+        'halt',
+        root,
+        { now },
+      );
+    } catch {
+      // the outbox entry exists with its id: flushOutbox resends it; a second copy with a new id is never made
+    }
     notified[key] = { at: new Date(now()).toISOString(), topic: r.topic, storyId: r.storyId, kind: r.halt.kind };
+    writeJsonAtomic(notifiedPath(root), notified); // per halt: a crash between two sends loses no key
     sent.push(key);
   }
-  for (const key of Object.keys(notified)) if (!current.has(key)) delete notified[key];
+  if (opts.prune !== false) for (const key of Object.keys(notified)) if (!current.has(key)) delete notified[key];
   writeJsonAtomic(notifiedPath(root), notified);
   return sent;
 }
