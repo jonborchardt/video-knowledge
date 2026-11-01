@@ -244,10 +244,17 @@ export function topicNext(
       counts.claims === 0 ||
       counts.decided / Math.max(1, counts.claims) < a.topics.minDecided)
   ) {
+    // parked after two rounds that found nothing, or after three rounds in all (a round that keeps finding
+    // documents without deciding the claims is not progress worth another agent)
     if (emptyRounds >= STUDIES_ROUNDS)
       return answer('studies', studiesStep, {
         steps: [],
         park: { why: `${thin.why} after ${emptyRounds} study rounds that added nothing` },
+      });
+    if (rounds.length >= STUDIES_ROUNDS + 1)
+      return answer('studies', studiesStep, {
+        steps: [],
+        park: { why: `${thin.why} after ${rounds.length} study rounds` },
       });
     return answer('studies', studiesStep);
   }

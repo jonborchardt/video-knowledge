@@ -33,6 +33,7 @@ interface Shape {
   merges?: boolean;
   documents?: { file: string; judged?: boolean }[];
   studiesRounds?: number;
+  studiesAdded?: number[];
   report?: 'none' | 'current' | 'stale';
   openRevisions?: number;
   stories?: { id: string; readiness: string; reviewed: boolean; blocking?: string[] }[] | 'none';
@@ -101,7 +102,9 @@ function topic(s: Shape) {
     if (s.studiesRounds !== undefined)
       writeFileSync(
         join(dir, 'work', TOPIC_RUN_DIR, 'studies-rounds.json'),
-        toJson({ rounds: Array.from({ length: s.studiesRounds }, () => ({ at: 'x', added: 0 })) }),
+        toJson({
+          rounds: Array.from({ length: s.studiesRounds }, (_, i) => ({ at: 'x', added: s.studiesAdded?.[i] ?? 0 })),
+        }),
       );
     if (s.reviewRounds !== undefined)
       writeFileSync(join(dir, 'work', TOPIC_RUN_DIR, 'review-rounds.json'), toJson({ rounds: s.reviewRounds }));
@@ -320,6 +323,33 @@ describe('topicNext', () => {
     );
     expect(again.park).toBeUndefined();
     expect(again.next).toContain('studies.md');
+    // rounds that keep finding documents without deciding claims end too: three rounds, then parked still thin
+    const capped = next(
+      topic({
+        ...base,
+        documents: [
+          { file: 'd0.txt', judged: true },
+          { file: 'd1.txt', judged: true },
+        ],
+        studiesRounds: 3,
+        studiesAdded: [6, 4, 2],
+      }),
+    );
+    expect(capped.park?.why).toMatch(/thin/);
+    expect(capped.park?.why).toMatch(/after 3 study rounds/);
+    const third = next(
+      topic({
+        ...base,
+        documents: [
+          { file: 'd0.txt', judged: true },
+          { file: 'd1.txt', judged: true },
+        ],
+        studiesRounds: 2,
+        studiesAdded: [6, 4],
+      }),
+    );
+    expect(third.park).toBeUndefined();
+    expect(third.next).toContain('studies.md');
   });
   it('report, claim, stories, review, ready', () => {
     const sufficient = {
