@@ -12,7 +12,7 @@ import type { DigestExtra } from './digest';
 import { sendDigestIfDue } from './digest';
 import type { Halt } from './journal';
 import { acquire, heartbeat, release } from './lock';
-import { type OutboxEntry, automationDir, flushOutbox, notifyHalts, renderHalt, haltKey } from './notify';
+import { type OutboxEntry, automationDir, flushOutbox, notifyHalts, renderHalt } from './notify';
 import { renderDigest } from './digest';
 import { type PreflightDeps, preflight } from './preflight';
 import { alive, killTree } from './proc';
