@@ -31,7 +31,9 @@ describe('the fixture topic', () => {
     expect(ready[0].audit.central.status).toBe('supported');
     expect(existsSync(join(topicDir(T), 'sources', 'iers-leap-second-dat.txt'))).toBe(true);
     // --fresh archives to history/, which is gitignored: it may exist and is never tracked
-    expect(execFileSync('git', ['ls-files', 'topics/test-fixture/history'], { cwd: ROOT, encoding: 'utf8' }).trim()).toBe('');
+    expect(
+      execFileSync('git', ['ls-files', 'topics/test-fixture/history'], { cwd: ROOT, encoding: 'utf8' }).trim(),
+    ).toBe('');
   });
   it('is absent from the live and preview graphs of the public topics, and present only in the fixture view', () => {
     expect(contentGraph(ROOT, publicTopicNames(), 'live').nodes.has(T)).toBe(false);
