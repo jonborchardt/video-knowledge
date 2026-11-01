@@ -13,7 +13,15 @@ import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
 import { ROOT, readJson, topicDir, writeJsonAtomic } from '../../shared/io';
 import type { ExtractionBatch } from '../../modules/evidence';
-import { type RecordedMarker, type ReviewRounds, type StudiesRounds, type TopicNext, topicNext } from '../research';
+import {
+  FETCHED_FILE,
+  type RecordedMarker,
+  type ReviewRounds,
+  type StudiesRounds,
+  type TopicNext,
+  listsFingerprint,
+  topicNext,
+} from '../research';
 import type { Step } from '../production';
 import { guard as realGuard, snapshot as realSnapshot, type TreeSnapshot } from './guard';
 import {
@@ -22,6 +30,7 @@ import {
   type RunHaltKind,
   TOPIC_RUN_DIR,
   appendJournal,
+  clearHalt,
   readJournal,
   topicRunDir,
   writeHalt,
@@ -138,6 +147,7 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
       attempt: 0,
       error: acquired.tookOver ? `took over ${acquired.tookOver.runId}` : undefined,
     });
+  clearHalt(dir); // a resume asks the board anew; the halt returns if the cause is still there
   const beat = setInterval(() => heartbeat(dir, lock, now), 60_000);
   hooks.snapshot();
   let cost = 0;
@@ -421,6 +431,13 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
         }
         const g = hooks.guard('child');
         if (!g.ok) return halt('unexpected-edit', g.why, { kind: 'fix', text: 'the files were reverted' }, n);
+        // a fetch exits 2 when some listed videos have no captions (recorded and skipped): the lists count as fetched
+        // once the last list of the stage ran either way
+        const isFetch = parsed.cli === 'watcher' && parsed.args[0] === 'fetch';
+        const lastFetch =
+          isFetch && !n.steps.slice(i + 1).some((s) => s.kind === 'run' && /watcher -- fetch/.test(s.text));
+        if (lastFetch && (out.ok || out.exit === 2))
+          writeJsonAtomic(join(dir, FETCHED_FILE), { lists: listsFingerprint(topic, root) });
         if (out.ok) {
           if (parsed.cli === 'record') markRecorded([parsed.args[1].replace(`topics/${topic}/`, '')]);
           if (parsed.cli === 'record-sources') {

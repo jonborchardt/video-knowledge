@@ -9,6 +9,7 @@ import { DEFAULTS } from '../src/shared/automation';
 import { toJson } from '../src/shared/io';
 import type { Proposal } from '../src/shared/types';
 import { RESEARCH_STAGES, stepsOf, topicNext } from '../src/orchestration';
+import { FETCHED_FILE, listsFingerprint } from '../src/orchestration/research';
 import { TOPIC_RUN_DIR } from '../src/orchestration/run/journal';
 
 const roots: string[] = [];
@@ -38,6 +39,7 @@ interface Shape {
   rejected?: { id: string; reason: string }[];
   review?: boolean;
   reviewRounds?: number;
+  fetched?: boolean;
 }
 
 /** A topic folder in the state the shape describes. */
@@ -56,6 +58,11 @@ function topic(s: Shape) {
   if (s.videos) writeFileSync(join(dir, 'videos.txt'), ['# --- Batch 1', ...s.videos].join('\n') + '\n');
   if (s.blogs) writeFileSync(join(dir, 'blogs.txt'), s.blogs.join('\n') + '\n');
   if (s.records || s.claims) {
+    // the runner's fetch marker: the lists as they are (the fetch case leaves it out)
+    if (s.fetched !== false) {
+      mkdirSync(join(dir, 'work', TOPIC_RUN_DIR), { recursive: true });
+      writeFileSync(join(dir, 'work', TOPIC_RUN_DIR, FETCHED_FILE), toJson({ lists: listsFingerprint(T, root) }));
+    }
     mkdirSync(join(dir, 'store', 'videos'), { recursive: true });
     mkdirSync(join(dir, 'store', 'transcripts'), { recursive: true });
     for (const r of s.records ?? []) {
@@ -182,15 +189,28 @@ describe('topicNext', () => {
     expect(stepsOf(n.next, T)).toHaveLength(1);
     expect(n.done).toBe(false);
   });
-  it('fetch: more listed than in the store runs the watcher on both lists', () => {
+  it('fetch: lists the runner has not fetched (no marker) run the watcher on both lists; a listed video without a record does not keep it pending', () => {
     const n = next(
-      topic({ videos: ['https://www.youtube.com/watch?v=aaaaaaaaaaa'], blogs: ['https://x.test/post'], records: [] }),
+      topic({
+        videos: ['https://www.youtube.com/watch?v=aaaaaaaaaaa'],
+        blogs: ['https://x.test/post'],
+        records: [],
+        fetched: false,
+      }),
     );
     expect(n.stage).toBe('fetch');
     expect(n.next).toBe(
       `npm run watcher -- fetch topics/${T}/videos.txt --store topics/${T}/store, then npm run watcher -- fetch topics/${T}/blogs.txt --store topics/${T}/store`,
     );
     expect(stepsOf(n.next, T).every((s) => s.kind === 'run')).toBe(true);
+    // fetched, with one listed video that left no record (no captions, or gone): extract, not fetch again
+    const m = next(
+      topic({
+        videos: ['https://www.youtube.com/watch?v=aaaaaaaaaaa', 'https://www.youtube.com/watch?v=bbbbbbbbbbb'],
+        records: [{ id: 'a' }],
+      }),
+    );
+    expect(m.stage).toBe('extract');
   });
   it('extract: fetched sources without assertions make groups and one extraction agent per group (sized by the transcript cache)', () => {
     const n = next(

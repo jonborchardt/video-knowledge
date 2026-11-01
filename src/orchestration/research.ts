@@ -8,7 +8,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { type Commission, commissionOf } from '../config/site';
 import { type Automation, loadAutomation } from '../shared/automation';
-import { ROOT, readJson, topicDir } from '../shared/io';
+import { ROOT, readJson, sha, topicDir } from '../shared/io';
 import type { Proposal, PublicRecord } from '../shared/types';
 import { splitGroups, thinness } from '../modules/evidence';
 import { loadStories } from '../modules/stories';
@@ -55,6 +55,21 @@ export interface StudiesRounds {
 export interface ReviewRounds {
   rounds: number; // stories.md agent runs
 }
+/** The runner's marker after a fetch: the lists it fetched (their fingerprint). The store's count cannot say whether
+ *  a fetch ran: the watcher makes no record for an unavailable video. */
+export interface FetchedMarker {
+  lists: string;
+}
+export const FETCHED_FILE = 'fetched.json';
+/** The lists as they are now: the fingerprint of videos.txt and blogs.txt (blank and comment lines aside). */
+export const listsFingerprint = (topic: string, root = ROOT): string =>
+  sha(
+    [
+      ...nonBlank(join(topicDir(topic, root), 'videos.txt')),
+      '|',
+      ...nonBlank(join(topicDir(topic, root), 'blogs.txt')),
+    ].join('\n'),
+  );
 
 const BRIEFS = 'src/modules/evidence/briefs';
 const STORIES_BRIEF = 'src/modules/stories/briefs/stories.md';
@@ -128,12 +143,15 @@ export function topicNext(
   const blogs = nonBlank(join(dir, 'blogs.txt'));
   if (!videos.length) return answer('lists', `agent: ${BRIEFS}/collect.md -> ${rel}/videos.txt`);
 
-  // fetch
+  // fetch: pending until the runner fetched these lists (a listed video without captions or no longer available has
+  // no record, so the counts cannot decide it)
   const store = join(dir, 'store');
   const records: StoreRecord[] = files(join(store, 'videos'), /\.json$/).map((f) =>
     readJson<StoreRecord>(join(store, 'videos', f))!,
   );
-  if (videos.length + blogs.length > records.length)
+  const work = join(dir, 'work');
+  const fetched = readJson<FetchedMarker>(join(work, TOPIC_RUN_DIR, FETCHED_FILE));
+  if (fetched?.lists !== listsFingerprint(topic, root))
     return answer(
       'fetch',
       [
@@ -143,7 +161,6 @@ export function topicNext(
     );
 
   // extract: fetched records without assertions (and with a transcript), grouped by the cached transcript's size
-  const work = join(dir, 'work');
   const marker = readJson<RecordedMarker>(join(work, TOPIC_RUN_DIR, 'recorded.json')) ?? { files: [], documents: [] };
   const batchFiles = files(work, /^h\d+\.json$/).sort((x, y) => Number(x.slice(1, -5)) - Number(y.slice(1, -5)));
   const unrecorded = batchFiles.filter((f) => !marker.files.includes(`work/${f}`));
