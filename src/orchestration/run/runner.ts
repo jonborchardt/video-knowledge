@@ -606,7 +606,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
 }
 
 /** `npm run validate` in a secret-free environment: the suite imports the renderer tree, which carries agent code. */
-function runValidate(root: string, env: NodeJS.ProcessEnv): { ok: boolean; output: string } {
+export function runValidate(root: string, env: NodeJS.ProcessEnv): { ok: boolean; output: string } {
   try {
     const out = execFileSync('npm', ['run', 'validate'], {
       cwd: root,

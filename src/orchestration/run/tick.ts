@@ -20,6 +20,7 @@ import { renderDigest } from './digest';
 import { type PreflightDeps, preflight } from './preflight';
 import { pollInbox } from './inbox';
 import { publishDue } from './publish-due';
+import { launchPaths, probeLaunches } from './launch';
 import { type CliResult, runCli } from '../../shared/cli';
 import { envFor } from './steps';
 import { alive, killTree } from './proc';
@@ -43,6 +44,8 @@ export interface TickDeps {
   render?: (e: OutboxEntry) => Omit<OutMail, 'messageId'> | null;
   /** Runs a publishing verb as a child (the inbox's decisions, the due publications); tests inject. */
   run?: (cli: string, args: string[]) => Promise<CliResult> | CliResult;
+  /** The deploy probe's fetch; tests inject. */
+  fetchFn?: typeof fetch;
 }
 
 export interface TickReport {
@@ -126,7 +129,7 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
       claude: () => claudeAnswers(a.agents.command),
       env: process.env,
       freeGb: freeGbOf,
-      launches: () => [],
+      launches: () => launchPaths(root),
       running: () =>
         (deps.rows ?? (() => statusOf(root, deps.alive)))()
           .filter((r) => r.state === 'running')
@@ -188,6 +191,8 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
     }
     const published = await publishDue(a, root, { now, run, mail: deps.mail, env: process.env });
     actions.push(...published);
+    // the deploy probes: one per pending launch, then the social post and the launch mail
+    actions.push(...(await probeLaunches(a, root, { now, run, mail: deps.mail, fetchFn: deps.fetchFn })));
     const rows = (deps.rows ?? (() => statusOf(root, deps.alive)))();
     const due = dueResumes(a, root, { now, rows, ask: deps.ask, alive: deps.alive });
     updateSchedule(root, (s) => ({ ...s, due }));

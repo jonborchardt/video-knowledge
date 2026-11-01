@@ -15,6 +15,9 @@
 //                                      --no-commit: a supervised run on a feature branch; the finish validates and
 //                                      leaves the artifacts uncommitted for the person (the runner commits only on
 //                                      git.commitOn's branch).
+//   launch <topic> <story-id>          the launch job by hand (what the work plane runs once the release group is live and
+//                                      verified): report seed, brand, build, links freeze, validate, commit, push, resumable
+//                                      from its record under .automation/launch/; clears the launch's halt first.
 //   status [--json]                    every run folder: running, halted (kind, why, unblock) or idle, and its spend.
 //   tick                               the control plane (automation.json enabled.tick): one short pass: preflight,
 //                                      outbox, due resumes, stuck runs, halt emails, the digest. Never runs a story.
@@ -41,7 +44,8 @@ import { candidates, pickJob, pickJobIfDue, pickState, rank } from './pick';
 import { runStory } from './runner';
 import { renderStatus, statusOf } from './status';
 import { tick } from './tick';
-import { type Job, nextJob, scheduleText, work } from './work';
+import { type Job, launchDeps, nextJob, scheduleText, work } from './work';
+import { launch } from './launch';
 
 const usage = () =>
   readFileSync(new URL(import.meta.url), 'utf8')
@@ -119,6 +123,20 @@ switch (verb) {
       process.exit(1);
     }
     console.log(`done at ${r.stage}; ${r.iterations} iterations; ${r.costUsd.toFixed(2)} USD`);
+    break;
+  }
+  case 'launch': {
+    const [topic, storyId] = rest;
+    if (!topic || !storyId) die(usage());
+    const a = loadAutomation(ROOT);
+    const r = await launch(topic, storyId, a, launchDeps(ROOT), ROOT);
+    if (r.outcome === 'halted' && r.halt) {
+      console.log(`HALT ${r.halt.kind}: ${r.halt.why}`);
+      console.log(`UNBLOCK: ${r.halt.unblock.text}`);
+      process.exit(1);
+    }
+    const pushed = r.record?.pushed ? `, pushed ${r.record.pushed}` : '';
+    console.log(`launched: committed ${r.record?.committed ?? 'nothing'}${pushed}; the tick probes the deploy`);
     break;
   }
   case 'status': {

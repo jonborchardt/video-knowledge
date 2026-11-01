@@ -15,7 +15,11 @@ import { alive } from './proc';
 import { releasePending } from './release';
 import { statusOf } from './status';
 import { pickJob } from './pick';
-import { type RunResult, runStory } from './runner';
+import { type RunResult, runStory, runValidate } from './runner';
+import { type LaunchDeps, launch, launchJobs } from './launch';
+import { runCli } from '../../shared/cli';
+import { envFor } from './steps';
+import { execFileSync } from 'node:child_process';
 import { type DueResume, readSchedule, updateSchedule } from './schedule';
 
 export type JobKind = 'launch' | 'resume' | 'release' | 'pick' | 'topic' | 'discovery' | 'scan';
@@ -33,6 +37,10 @@ export interface WorkDeps {
   pick?: () => Job | null;
   /** The release jobs (phase 2): packaged stories with an automation step pending; the default reads the board. */
   releases?: () => Job[];
+  /** The launch jobs (phase 3): live, verified groups without a finished launch; the default reads the ledgers. */
+  launches?: () => Job[];
+  /** Runs a launch job; the default runs the real sequence in the clone. */
+  runLaunch?: (topic: string, storyId: string, a: Automation) => Promise<RunResult>;
   runStory?: (topic: string, storyId: string, a: Automation, approver: string) => Promise<RunResult>;
   /** Runs the production pick (records the pick before the start, signs with the pick's approver); default pickJob. */
   runPick?: () => Promise<{ started?: string; why?: string; result?: RunResult }>;
@@ -53,7 +61,9 @@ export function nextJob(a: Automation, root = ROOT, deps: WorkDeps = {}): Job | 
   const skip = deps.skip ?? [];
   const running = statusOf(root, deps.alive ?? alive).filter((r) => r.state === 'running').length;
   const storyRoom = running < a.runs.maxConcurrentStoryRuns;
-  // launches: phase 3
+  // launches first (spec §4.4): a live, verified release group whose site update is pending
+  for (const job of (deps.launches ?? (() => launchJobs(a, root)))())
+    if (!skip.some((s) => sameJob(s, job))) return job;
   const due: DueResume[] = readSchedule(root).due ?? [];
   if (storyRoom)
     for (const d of due) {
@@ -114,7 +124,15 @@ export async function work(a: Automation, root = ROOT, deps: WorkDeps = {}): Pro
     // a pick is recorded in schedule.json before it starts (a crash never starts two; the cadence binds)
     const picked = job.kind === 'pick' ? await (deps.runPick ?? (() => pickJob(a, root)))() : null;
     if (job.kind === 'pick' && !picked?.result) return { outcome: 'idle', job: null };
-    const result = picked?.result ?? (await run(job.topic!, job.storyId!, a, approver));
+    const result =
+      picked?.result ??
+      (job.kind === 'launch'
+        ? await (deps.runLaunch ?? ((t, s, auto) => launch(t, s, auto, launchDeps(root), root)))(
+            job.topic!,
+            job.storyId!,
+            a,
+          )
+        : await run(job.topic!, job.storyId!, a, approver));
     if (result.outcome === 'held') {
       skip.push(job); // another instance owns it: try the next job once
       continue;
@@ -127,6 +145,13 @@ export async function work(a: Automation, root = ROOT, deps: WorkDeps = {}): Pro
   }
   return { outcome: 'idle', job: null };
 }
+
+/** The launch job's real dependencies: git in the clone, each CLI as a child with its verb's environment, validate. */
+export const launchDeps = (root: string): LaunchDeps => ({
+  git: (args) => execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }),
+  run: (cli, args) => runCli(cli, args, { cwd: root, env: envFor(cli, args, process.env) }),
+  validate: () => runValidate(root, envFor('validate', [], process.env)),
+});
 
 /** The two scheduler commands and the settings a person applies, for the platform; never run here (register D1, D2). */
 export function scheduleText(a: Automation, root: string, platform = process.platform): string {

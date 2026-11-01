@@ -12,7 +12,10 @@ import { runDir } from './journal';
 import type { MailTransport, OutMail } from '../../shared/mail';
 import { redact } from '../../shared/mail';
 import type { ReleaseManifest } from '../../shared/types';
-import { type ApprovalRequest, loadLedger, openRequest, stampOf } from '../../modules/publishing';
+import { type ApprovalRequest, loadLedger, openRequest, stampOf, storyOutputs } from '../../modules/publishing';
+import { publicUrlsOf } from '../../modules/website';
+import { commissionOf } from '../../config/site';
+import type { LaunchRecord } from './launch';
 import { readOutbox, secretsOf, sendTracked } from './notify';
 import type { ShadowEntry } from './release';
 import { envFor } from './steps';
@@ -354,4 +357,52 @@ export async function sendDraftRequest(
     [build]: { messageId, at: new Date((deps.now ?? Date.now)()).toISOString() },
   });
   return messageId;
+}
+
+// ---- the launch mail (phase 3 Task 4) --------------------------------------------------------------------------
+
+/** The mail that closes a launch: the public links, the deploy URL, the X post (or "not configured"), and the
+ *  optional Studio steps YouTube keeps manual, each with the line that records it done. */
+export function renderLaunched(rec: LaunchRecord, a: Automation, root = ROOT): Omit<OutMail, 'messageId'> {
+  const outs = storyOutputs(rec.topic, rec.storyId, root);
+  const urls = publicUrlsOf(rec.topic, rec.storyId, root);
+  const c = commissionOf(rec.topic);
+  const title = outs.video?.title || rec.storyId;
+  const lines = [
+    `${title} is live.`,
+    '',
+    `Page: ${urls.matterUrl}`,
+    ...(urls.articleUrl ? [`Article: ${urls.articleUrl}`] : []),
+    ...(outs.video ? [`Video: ${outs.video.url}`] : []),
+    ...outs.shorts.map((s) => `Short: ${s.url}`),
+    '',
+  ];
+  const social = readJson<{ outputs: Record<string, { posts: { status: string; url?: string }[] }> }>(
+    join(scriptDir(rec.topic, rec.storyId, root), 'social.json'),
+  );
+  const posted = Object.values(social?.outputs ?? {}).flatMap((o) =>
+    o.posts.filter((p) => p.status === 'posted' && p.url).map((p) => p.url!),
+  );
+  if (rec.posted === 'not-configured' || rec.posted === null)
+    lines.push(`X: not configured (${c ? `${c.name} has no account or keys` : 'no institution'}); nothing was posted.`);
+  else if (rec.posted === true) lines.push(`X: posted${posted.length ? `: ${posted.join(', ')}` : ''}.`);
+  else lines.push('X: the post failed; see the halt or npm run social -- show.');
+  lines.push(
+    '',
+    'Optional Studio steps YouTube keeps manual (each line records it done once you have):',
+    ...outs.shorts.map(
+      (s) =>
+        `- Related video on ${s.url}: Studio > the Short > Related video > ${outs.video?.url ?? 'the video'}; then npm run publish -- updated ${rec.topic} ${rec.storyId}/shorts/${s.output.slice('short:'.length)} --fields relatedVideo`,
+    ),
+    `- End screen elements on the video (the close card leaves the room): Studio > Editor > End screen; then npm run publish -- updated ${rec.topic} ${rec.storyId} --fields endScreen`,
+    `- Cards on the video: Studio > Editor > Cards; then npm run publish -- updated ${rec.topic} ${rec.storyId} --fields cards`,
+    '',
+    `Deploy: ${rec.pushed ?? rec.committed ?? 'not pushed'}${rec.fixtureBranch ? ` (also pushed as ${rec.fixtureBranch})` : ''}; confirmed at ${rec.liveAt ?? 'not yet'} after ${rec.probes} probe${rec.probes === 1 ? '' : 's'}.`,
+  );
+  return {
+    from: a.approvals.from || a.notifications.to,
+    to: a.notifications.to || a.approvals.to,
+    subject: `[CoR live] ${title}`,
+    text: redact(lines.join('\n'), secretsOf()),
+  };
 }
