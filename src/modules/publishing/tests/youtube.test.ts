@@ -451,7 +451,7 @@ describe('thumbnail, captions, update, list', () => {
                   containsSyntheticMedia: false,
                 },
                 contentDetails: { hasCustomThumbnail: true, contentRating: {} },
-                processingDetails: { processingStatus: 'succeeded', fileAvailability: 'available' },
+                processingDetails: { processingStatus: 'succeeded', fileDetailsAvailability: 'available' },
                 fileDetails: { fileName: 'x.mp4', fileSize: '1024' },
               },
             ],
