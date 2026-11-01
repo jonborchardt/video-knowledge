@@ -73,6 +73,16 @@ describe('study verdicts', () => {
       applicability: 'direct',
     };
     expect(checkStudyVerdicts([good, { ...good, verdict: 'unknown', confidence: null }])).toEqual([]);
+    // against the store: a verdict on a claim no source makes is refused, naming the nearest id (an agent's
+    // untruncated or misspelt slug), so the agent corrects it instead of record-sources refusing the whole file
+    const known = ['demo/old-claim', 'demo/taking-out-many-buy-now-pay', 'demo/other'];
+    expect(checkStudyVerdicts([good], known)).toEqual([]);
+    expect(checkStudyVerdicts([{ ...good, claim: 'demo/taking-out-many-buy-now-pay-later' }], known)).toEqual([
+      '[0] demo/taking-out-many-buy-now-pay-later: no claim with this id in the store (did you mean demo/taking-out-many-buy-now-pay?)',
+    ]);
+    expect(checkStudyVerdicts([{ ...good, claim: 'demo/nothing-like-it' }], known)).toEqual([
+      '[0] demo/nothing-like-it: no claim with this id in the store',
+    ]);
     expect(
       checkStudyVerdicts([
         { ...good, verdict: 'yes' },

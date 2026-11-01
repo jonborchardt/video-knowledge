@@ -114,13 +114,17 @@ export function checkBatches(x: unknown, topic: string, claims: { id: string; te
 
 const CITE = /^[a-z0-9-]+\/sources\/[^#\s]+\.txt#L\d+(-L\d+)?$/i;
 /** Every problem in a study verdict file. */
-export function checkStudyVerdicts(x: unknown): string[] {
+export function checkStudyVerdicts(x: unknown, knownClaims?: string[]): string[] {
   if (!Array.isArray(x)) return ['the file is not a JSON array of verdicts'];
   const out: string[] = [];
   x.forEach((v: unknown, i) => {
     const at = isObj(v) && isText(v.claim) ? `[${i}] ${v.claim}` : `[${i}]`;
     if (!isObj(v)) return void out.push(`${at}: not an object`);
     if (!isText(v.claim) || !v.claim.includes('/')) out.push(`${at}: "claim" is not <topic>/<slug>`);
+    else if (knownClaims && !knownClaims.includes(v.claim)) {
+      const near = nearestId(v.claim, knownClaims);
+      out.push(`${at}: no claim with this id in the store${near ? ` (did you mean ${near}?)` : ''}`);
+    }
     if (!isVerdict(v.verdict))
       out.push(`${at}: verdict ${JSON.stringify(v.verdict)} is not one of ${VERDICTS.join(', ')}`);
     else {
@@ -138,6 +142,21 @@ export function checkStudyVerdicts(x: unknown): string[] {
 }
 
 const isLevel = (x: unknown): x is ApplicabilityLevel => (APPLICABILITY as readonly unknown[]).includes(x);
+/** The known id sharing the longest prefix with an unknown one, when that prefix covers most of either (a truncated
+ *  or extended slug); null when nothing is close. */
+function nearestId(id: string, known: string[]): string | null {
+  let best: string | null = null;
+  let bestLen = 0;
+  for (const k of known) {
+    let n = 0;
+    while (n < id.length && n < k.length && id[n] === k[n]) n++;
+    if (n > bestLen) {
+      bestLen = n;
+      best = k;
+    }
+  }
+  return best && bestLen >= 0.8 * Math.min(id.length, best.length) ? best : null;
+}
 /** Every problem in topics/<topic>/applicability.json. */
 export function checkApplicabilityFile(x: unknown): string[] {
   if (!isObj(x)) return ['applicability.json is not an object'];

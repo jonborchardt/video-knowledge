@@ -250,7 +250,10 @@ async function main() {
       } catch (e) {
         throw new Refusal(`${file}: not JSON: ${(e as Error).message}`);
       }
-      const problems = checkStudyVerdicts(parsed);
+      // the claims the verdicts may name: the store's, when the file lives under a topic (topics/<topic>/work/...)
+      const topic = /^topics\/([^/]+)\//.exec(file.replaceAll('\\', '/'))?.[1];
+      const known = topic ? storeClaims(topic).map((c) => c.id) : undefined;
+      const problems = checkStudyVerdicts(parsed, known?.length ? known : undefined);
       if (problems.length) throw new Refusal(problems.join('\n'));
       console.log(`RESULT: PASSED (${file})`);
       break;
