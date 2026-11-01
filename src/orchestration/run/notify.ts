@@ -186,7 +186,7 @@ export async function notifyHalts(
   const current = new Set<string>();
   const sent: string[] = [];
   for (const r of rows) {
-    if (!r.halt) continue;
+    if (!r.halt || r.halt.retryable) continue; // a retryable halt resumes by itself; retries-spent is emailed
     const key = haltKey(r.topic, r.storyId, r.halt);
     current.add(key);
     if (notified[key]) continue;

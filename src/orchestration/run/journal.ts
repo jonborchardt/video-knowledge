@@ -89,6 +89,9 @@ export interface Halt {
   runId: string;
   /** The board's answer when the halt was written: a tick resumes a non-retryable halt once this moves. */
   board: { stage: string; next: string };
+  /** The halt resumes by backoff without a person (a transient the release loop met: YouTube processing, a retryable
+   *  API failure); never emailed, counted by `resumesSince` like a timeout. */
+  retryable?: boolean;
 }
 
 export function writeHalt(dir: string, h: Halt): void {

@@ -2,9 +2,16 @@
 // exits. The scheduler starts instances in parallel; the subject's lock is the bound on how many run at once, not
 // the scheduler. The pick order is fixed: a launch (phase 3), a due resume, a release loop (phase 2), the production
 // pick when due, a topic run (phase 5), a discovery (phase 4), a scan (phase 6).
+import { existsSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
+import { isFixtureTopic } from '../../config/site';
 import type { Automation } from '../../shared/automation';
-import { ROOT } from '../../shared/io';
+import { ROOT, scriptDir, topicsDir } from '../../shared/io';
+import { loadDecisions, topicBoard } from '../production';
+import { RUN_DIR } from './journal';
+import { readLock } from './lock';
 import { alive } from './proc';
+import { releasePending } from './release';
 import { statusOf } from './status';
 import { pickJob } from './pick';
 import { type RunResult, runStory } from './runner';
@@ -23,6 +30,8 @@ export interface WorkDeps {
   alive?: (pid: number) => boolean;
   /** The production pick (Task 5): the job to start when the cadence says so, else null. */
   pick?: () => Job | null;
+  /** The release jobs (phase 2): packaged stories with an automation step pending; the default reads the board. */
+  releases?: () => Job[];
   runStory?: (topic: string, storyId: string, a: Automation, approver: string) => Promise<RunResult>;
   /** Runs the production pick (records the pick before the start, signs with the pick's approver); default pickJob. */
   runPick?: () => Promise<{ started?: string; why?: string; result?: RunResult }>;
@@ -49,13 +58,40 @@ export function nextJob(a: Automation, root = ROOT, deps: WorkDeps = {}): Job | 
       const job: Job = { kind: 'resume', topic: d.topic, storyId: d.storyId, why: `due resume (${d.why})` };
       if (!skip.some((s) => sameJob(s, job))) return job;
     }
-  // release loops: phase 2
+  // release loops (spec §4.4): a packaged story with an automation step pending, not halted, not running
+  if (storyRoom)
+    for (const job of (deps.releases ?? (() => releaseJobs(a, root, deps.alive ?? alive)))())
+      if (!skip.some((s) => sameJob(s, job))) return job;
   if (storyRoom && deps.pick) {
     const p = deps.pick();
     if (p && !skip.some((s) => sameJob(s, p))) return p;
   }
   // topic runs, discovery, scans: phases 4 to 6
   return null;
+}
+
+/** Every packaged story (never a fixture topic's, never a follow-up) whose release loop has work and that no halt or
+ *  live run holds. */
+export function releaseJobs(a: Automation, root = ROOT, isAlive: (pid: number) => boolean = alive): Job[] {
+  const out: Job[] = [];
+  const decisions = loadDecisions(root);
+  const topics = existsSync(topicsDir(root))
+    ? readdirSync(topicsDir(root)).filter((t) => existsSync(join(topicsDir(root), t, 'stories.json')))
+    : [];
+  for (const topic of topics) {
+    if (isFixtureTopic(topic)) continue; // the fixture is never selected by automation (spec §5.8)
+    const tb = topicBoard(topic, root, decisions);
+    for (const r of tb.stories) {
+      if (r.story.partOf || r.production?.stage !== 'packaged') continue;
+      const dir = join(scriptDir(topic, r.story.id, root), RUN_DIR);
+      if (existsSync(join(dir, 'halt.json'))) continue;
+      const lock = readLock(dir);
+      if (lock && isAlive(lock.pid)) continue;
+      const why = releasePending(topic, r.story.id, a, root);
+      if (why) out.push({ kind: 'release', topic, storyId: r.story.id, why: `release: ${why}` });
+    }
+  }
+  return out;
 }
 
 export async function work(a: Automation, root = ROOT, deps: WorkDeps = {}): Promise<WorkReport> {

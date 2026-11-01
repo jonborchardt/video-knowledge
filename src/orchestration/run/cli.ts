@@ -1,6 +1,9 @@
 // npm run run -- <verb> ...
-//   story <topic> <story-id> [--approver "<name>"] [--notes-file <path>] [--until <stage>] [--fresh] [--no-commit] [--model <m>]
-//                                      drive one story from the board's ready to packaged (or to <stage>) unattended: each
+//   story <topic> <story-id> [--approver "<name>"] [--notes-file <path>] [--until <stage>|requested] [--fresh] [--no-commit] [--model <m>]
+//                                      drive one story from the board's ready through packaged and the release loop (the
+//                                      draft by policy, the release build, the Shorts, the private uploads, push, verify,
+//                                      the manifest, the approval request: --until requested, the default; --until
+//                                      packaged stops before it) unattended: each
 //                                      board step runs as a child process or a budgeted claude -p agent under its role's
 //                                      permission rules; journaled under the story's run/; one run per story (exit 3 when
 //                                      a live run holds it); a crash resumes with the same command. Exit 0 done, 1 halted
@@ -69,8 +72,9 @@ switch (verb) {
       const problem = approverProblem(approver);
       if (problem) die(problem);
     }
-    const until = flag('--until') as ProductionStage | undefined;
-    if (until && !PRODUCTION_STAGES.includes(until)) die(`--until must be one of ${PRODUCTION_STAGES.join(', ')}`);
+    const until = flag('--until') as ProductionStage | 'requested' | undefined;
+    if (until && until !== 'requested' && !PRODUCTION_STAGES.includes(until))
+      die(`--until must be one of ${PRODUCTION_STAGES.join(', ')}, requested`);
     const notesFile = flag('--notes-file');
     const loaded = loadAutomation(ROOT);
     const model = flag('--model');

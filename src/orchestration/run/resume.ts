@@ -14,7 +14,8 @@ import { isFixtureTopic } from '../../config/site';
 const RETRYABLE_ERROR = /No audio was received|truncated|ECONN|ETIMEDOUT|Session closed|bringToFront/;
 
 /** A halt the tick may clear on its own, by backoff: a hung step, a stale lock, a step that failed on a transient. */
-export function retryable(h: Pick<Halt, 'kind' | 'why'>): boolean {
+export function retryable(h: Pick<Halt, 'kind' | 'why'> & { retryable?: boolean }): boolean {
+  if (h.retryable) return true;
   if (h.kind === 'timeout' || h.kind === 'lock-stale') return true;
   return h.kind === 'step-failed' && RETRYABLE_ERROR.test(h.why);
 }

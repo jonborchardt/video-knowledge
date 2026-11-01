@@ -7,7 +7,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
 import { readJson, ROOT, scriptDir, storySlug, writeJsonAtomic } from '../../shared/io';
-import { type BoardNext, boardNext, type ProductionStage } from '../production';
+import { type BoardNext, boardNext, type ProductionStage, type Step } from '../production';
 import {
   componentCheck as realComponentCheck,
   guard as realGuard,
@@ -28,6 +28,8 @@ import { acquire, aliveLocks, heartbeat, type Lock, release, setChild } from './
 import { alive, killTree } from './proc';
 import { grantFor } from './roles';
 import { envFor, execStep as realExecStep, parseRun, roleOf, type StepContext, type StepOutcome } from './steps';
+import { type ReleaseContext, releaseLoop } from './release';
+import { currentBuild } from '../../modules/publishing';
 
 export interface RunHooks {
   snapshot?: () => void;
@@ -38,7 +40,8 @@ export interface RunHooks {
 export interface RunOptions {
   approver: string;
   notes?: string;
-  until?: ProductionStage;
+  /** Stop at a stage; `packaged` stops before the release loop (spec §5.3), `requested` (the default) runs it. */
+  until?: ProductionStage | 'requested';
   root?: string;
   ask?: (topic: string, storyId: string, root: string) => BoardNext;
   exec?: typeof realExecStep;
@@ -52,6 +55,12 @@ export interface RunOptions {
   hooks?: RunHooks;
   /** Tests inject a fake CLI; the default is the repo's own (`cliArgv`). */
   argvOf?: StepContext['argvOf'];
+  /** The nested run of one Short (the release loop's); the default is this runner to `packaged`. */
+  runShort?: (shortStoryId: string) => Promise<RunResult>;
+  /** The draft and release request mails (phase 2 Task 6); absent: no mail, the halts say what to do. */
+  releaseMail?: ReleaseContext['mail'];
+  /** Tests override automation.json's review.draft. */
+  policy?: ReleaseContext['policy'];
 }
 
 export interface RunResult {
@@ -193,7 +202,13 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
   let lastKey: string | null = null;
   let attempt = 0;
 
-  const halt = (kind: RunHaltKind, why: string, unblock: Halt['unblock'], board: BoardNext): RunResult => {
+  const halt = (
+    kind: RunHaltKind,
+    why: string,
+    unblock: Halt['unblock'],
+    board: BoardNext,
+    extra: { retryable?: boolean } = {},
+  ): RunResult => {
     const h: Halt = {
       kind,
       stage: board.stage,
@@ -202,6 +217,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
       at: stamp(),
       runId,
       board: { stage: board.stage, next: board.next },
+      ...(extra.retryable && { retryable: true }),
     };
     writeHalt(dir, h);
     journal({ stage: board.stage, next: board.next, step: kind, kind: 'halt', attempt, error: why });
@@ -254,11 +270,115 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
     halt: null,
     done: false,
   };
+  /** One step of the release loop under this run's lock: the same child or agent execution, journal, guard and
+   *  per-agent budget as a board step; a guard failure or an exhausted budget comes back as the halt itself. */
+  const runOne = async (step: Step, n: BoardNext): Promise<StepOutcome | RunResult> => {
+    const role = roleOf(step);
+    currentGrant = grantFor(role, { topic, storyId });
+    const logPath = join(dir, 'steps', `${++stepNo}.log`);
+    mkdirSync(join(dir, 'steps'), { recursive: true });
+    const ctx: StepContext = {
+      topic,
+      storyId,
+      root,
+      approver: o.approver,
+      role,
+      logPath,
+      env: o.env,
+      argvOf: o.argvOf,
+      otherLocksAlive: () => aliveLocks(root).some((d) => d !== dir),
+      guard: (scope) => hooks.guard(scope),
+      componentCheck: (kept) => hooks.componentCheck(kept),
+      onSpawn: (pid) => setChild(dir, lock, pid, step.text.split('\n')[0].slice(0, 120)),
+    };
+    if (step.kind === 'prompt') {
+      const week = isoWeek(new Date(now()));
+      const spentRun = runSpend(readJournal(dir));
+      const perAgent = a.agents.budgetUsd.perAgent;
+      if (
+        spentRun + perAgent > a.agents.budgetUsd.perRun ||
+        weekSpend(root, week) + perAgent > a.agents.budgetUsd.perWeek
+      )
+        return halt(
+          'budget',
+          `run ${spentRun.toFixed(2)} of ${a.agents.budgetUsd.perRun} USD, week ${weekSpend(root, week).toFixed(2)} of ${a.agents.budgetUsd.perWeek} USD; the next agent may cost ${perAgent}`,
+          { kind: 'decide', text: 'raise agents.budgetUsd or wait for the next week' },
+          n,
+        );
+      ctx.budgetUsd = perAgent;
+    }
+    const out = await exec(a, step, ctx);
+    setChild(dir, lock, null);
+    cost += out.costUsd;
+    if (out.costUsd) addSpend(root, isoWeek(new Date(now())), out.costUsd);
+    journal({
+      stage: n.stage,
+      next: n.next,
+      step: step.text.split('\n')[0].slice(0, 200),
+      kind: step.kind,
+      attempt: 1,
+      exit: out.exit,
+      ms: out.ms,
+      costUsd: out.costUsd,
+      sessionId: out.sessionId ?? undefined,
+      error: out.error ?? undefined,
+    });
+    if (out.guardFailed)
+      return halt(
+        'unexpected-edit',
+        `${out.error}${out.sessionId ? ` (session ${out.sessionId})` : ''}`,
+        {
+          kind: 'fix',
+          text: `the files were reverted; read the agent's session${out.sessionId ? ` ${out.sessionId}` : ''}`,
+        },
+        n,
+      );
+    if (step.kind === 'run') {
+      const g = hooks.guard('child');
+      if (!g.ok) return halt('unexpected-edit', g.why, { kind: 'fix', text: 'the files were reverted' }, n);
+    }
+    return out;
+  };
+  const releaseContext = (n: BoardNext): ReleaseContext => ({
+    root,
+    approver: o.approver,
+    now,
+    run: (step, stage) => runOne(step, { ...n, stage: stage as BoardNext['stage'], next: step.text }),
+    runShort:
+      o.runShort ??
+      ((sid) =>
+        runStory(topic, sid, a, {
+          ...o,
+          until: 'packaged',
+          runId: undefined,
+          git: 'none', // the parent's finish commits the topic, Shorts included
+          validate: () => ({ ok: true, output: '' }), // once, at the parent's finish
+          notes: undefined,
+        })),
+    halt: (kind, why, unblock, extra) => halt(kind, why, unblock, n, extra),
+    done: () => ({ outcome: 'done', stage: n.stage, halt: null, iterations, costUsd: cost }),
+    board: () => ask(topic, storyId, root),
+    mail: o.releaseMail,
+    policy: o.policy,
+  });
   try {
     for (; iterations < a.runs.loopCap; iterations++) {
       const n = ask(topic, storyId, root);
       lastBoard = n;
-      if (n.done || (o.until && n.stage === o.until)) return finish(n);
+      if (n.done || (o.until && n.stage === o.until)) {
+        // packaged, nothing to produce: the release loop carries the group to the approval request (spec §5.3)
+        if (
+          n.done &&
+          n.stage === 'packaged' &&
+          !n.halt &&
+          o.until !== 'packaged' &&
+          currentBuild(scriptDir(topic, storyId, root))
+        ) {
+          const rr = await releaseLoop(topic, storyId, a, releaseContext(n));
+          if (rr.outcome === 'halted') return rr;
+        }
+        return finish(n);
+      }
       if (n.halt?.kind === 'look-stale' && n.stage === 'packaged') return finish(n);
       if (n.next.startsWith('stop:') || (n.halt && PERSON_HALTS.has(n.halt.kind)))
         return halt('awaiting-person', n.halt?.why ?? n.next, { kind: 'decide', text: n.next }, n);

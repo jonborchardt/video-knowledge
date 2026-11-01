@@ -1,5 +1,5 @@
 // npm run publish -- <verb> <topic> <story-id> [--output <id>] [flags]
-//   show <topic> <story-id>                                   the build, every output's state and next step, the composed upload metadata (the description to paste into Studio), the event log
+//   show <topic> <story-id> [--json]                          the build, every output's state and next step, the composed upload metadata (the description to paste into Studio), the event log; --json: the states with their structured steps and the open request
 //   uploaded <topic> <story-id> --id <youtube id> [--url <u>] [--visibility private|unlisted|public] [--captions] [--by <name>]
 //                                                             record an upload of the packaged build (public needs a prior approve; it also records published; --captions: the package's captions went up with it)
 //   approve <topic> <story-id> --by <name> --checked <n> [--note <text>]  approve the uploaded build, or the release build on disk, with n checklist items ticked (a draft is accepted by video final)
@@ -59,6 +59,7 @@ import {
   recordMessageSent,
   recordRequested,
   openOutput,
+  openRequest,
   videoDirOf,
   recordFailed,
   recordPublished,
@@ -72,6 +73,7 @@ import {
 import { scriptDir, shortOf, storySlug } from '../../shared/io';
 import { goLive, push, sync, upload, verify } from './uploader';
 import { TOKEN_FILE, YouTubeError, authorize, loadCredentials, youtubeClient } from './youtube';
+import { fakeAnonymous, fakeYoutubeClient } from './fake-youtube';
 
 loadDotEnv(); // keys only; never committed; skipped when the runner handed this child its keys (VK_NO_DOTENV)
 
@@ -135,7 +137,13 @@ const need = (name: string) => {
 };
 const output = flag('--output') ?? (shortArg ? `short:${shortArg.slug}` : undefined);
 const common = () => ({ output, by: by() });
-const api = () => ({ ...common(), client: youtubeClient(loadCredentials()) });
+// YOUTUBE_FAKE=<state file> (tests only; nothing in the repo sets it): a recording client over a JSON file
+const api = () => {
+  const fake = process.env.YOUTUBE_FAKE;
+  return fake
+    ? { ...common(), client: fakeYoutubeClient(fake), anonymous: fakeAnonymous(fake) }
+    : { ...common(), client: youtubeClient(loadCredentials()) };
+};
 
 /** request-changes' notes in order: each `--note <text>`, placed by the `--at <seconds>`, `--scene <id>` and
  *  `--sentence <id>` that follow it (the review page's [m:ss sc20 s31], already resolved). */
@@ -159,7 +167,7 @@ function placedNotes(args: string[]): ReviewNote[] {
   return notes;
 }
 
-function show() {
+function show(json = false) {
   const dir = scriptDir(topic, storyId);
   const ledger = loadLedger(topic, storyId) ?? emptyLedger(`${topic}/${storyId}`);
   const build = currentBuild(dir);
@@ -169,6 +177,22 @@ function show() {
     Object.entries(ledger.outputs).map(([id, o]) => [id, uploadMetadataOf(dir, rel, o, parentUrlOf(ledger, o))]),
   );
   const states = outputStates(ledger, build, (id) => metas[id]?.sha ?? null, { topic, story: storyId });
+  if (json) {
+    // the ledger as the runner and the admin pages read it: every output's state with its structured step
+    console.log(
+      toJson({
+        build,
+        outputs: Object.fromEntries(
+          Object.entries(ledger.outputs).map(([id, o]) => [
+            id,
+            { kind: o.kind, state: states[id], title: metas[id]?.title ?? null, metadataSha: metas[id]?.sha ?? null },
+          ]),
+        ),
+        request: openRequest(ledger),
+      }).trim(),
+    );
+    return;
+  }
   for (const [id, out] of Object.entries(ledger.outputs)) {
     const meta = metas[id];
     const s = states[id];
@@ -199,7 +223,7 @@ async function main() {
   let r: VerbResult | null = null;
   switch (cmd) {
     case 'show':
-      show();
+      show(has('--json'));
       break;
     case 'uploaded':
       r = recordUploaded(topic, storyId, {
