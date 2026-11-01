@@ -19,6 +19,7 @@ import {
   writeJsonAtomic,
 } from '../../shared/io';
 import { FRESH_FILE, type FreshRun } from '../../shared/types';
+import { bandOf } from '../../shared/duration';
 import { loadLedger, mainOutput, uploadProblem } from '../publishing';
 import { sectionTitle } from '../../shared/sentences';
 import { absoluteUrl } from '../../lib/url';
@@ -162,9 +163,13 @@ export function chapters(seg: Segment, tl: Timeline): Chapter[] {
       });
   list.sort((a, b) => a.seconds - b.seconds);
   if (list.length) list[0].seconds = 0;
-  // YouTube ignores every chapter unless there are at least three, starting at 0:00, each at least 10 s long
-  if (list.length < 3) throw new Error(`${list.length} chapters; YouTube needs at least 3`);
+  // YouTube ignores every chapter unless there are at least three, starting at 0:00, each at least 10 s long. A
+  // micro or short story (src/shared/duration.ts) that cannot hold that simply has none; a longer one is a defect.
+  const band = bandOf(tl.targetDurationSeconds);
+  const brief = band === 'micro' || band === 'short';
   const short = list.filter((c, i) => i > 0 && c.seconds - list[i - 1].seconds < 10);
+  if (brief && (list.length < 3 || short.length)) return [];
+  if (list.length < 3) throw new Error(`${list.length} chapters; YouTube needs at least 3`);
   if (short.length) throw new Error(`chapters under 10 s: ${short.map((c) => c.title).join(', ')}`);
   return list.map((c) => ({ ...c, stamp: stamp(c.seconds) }));
 }
@@ -315,7 +320,12 @@ export function renderDescription(
   // a Short (brand/design.md 2.6): the hook, the links, the studies, #Shorts; the uploader adds the full video once live
   const body = pkg.short
     ? [seg.pkg.short?.hook ?? tl.title, '', ...block]
-    : [seg.pkg.question ?? tl.title, '', ...block, '', 'Chapters', ...pkg.chapters.map((c) => `${c.stamp} ${c.title}`)];
+    : [
+        seg.pkg.question ?? tl.title,
+        '',
+        ...block,
+        ...(pkg.chapters.length ? ['', 'Chapters', ...pkg.chapters.map((c) => `${c.stamp} ${c.title}`)] : []),
+      ];
   return (
     [
       ...(release

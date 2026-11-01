@@ -39,6 +39,20 @@ describe('review package chapters', () => {
       ['0:40', 'Three'],
     ]);
   });
+  it('a micro or short story carries no chapters when it cannot hold three of ten seconds', () => {
+    // the first real fixture run was refused at package for two chapters of a 17 s video
+    const micro = { ...tl(), targetDurationSeconds: 15 };
+    expect(chapters(seg({ sc01: 'One', sc02: 'Two' }), micro)).toEqual([]);
+    const tight = { ...tl(), targetDurationSeconds: 60 };
+    tight.scenes[1].start = 150;
+    expect(chapters(seg({ sc01: 'One', sc02: 'Two', sc03: 'Three' }), tight)).toEqual([]);
+    expect(
+      chapters(seg({ sc01: 'One', sc02: 'Two', sc03: 'Three' }), { ...tl(), targetDurationSeconds: 60 }),
+    ).toHaveLength(3);
+    expect(() => chapters(seg({ sc01: 'One', sc02: 'Two' }), { ...tl(), targetDurationSeconds: 300 })).toThrow(
+      /at least 3/,
+    );
+  });
   it('refuses chapters YouTube would ignore, and scenes that are not there', () => {
     expect(() => chapters(seg({ sc01: 'One', sc02: 'Two' }), tl())).toThrow(/at least 3/);
     expect(() => chapters(seg({ sc01: 'One', sc02: 'Two', sc99: 'X' }), tl())).toThrow(/sc99, not in the timeline/);
