@@ -73,7 +73,7 @@ export function buildReport(
     ...(publishable
       ? []
       : [
-          `narration is ${manifest.licence}; when the draft is accepted, "npm run video -- final ${tl.topic} ${tl.story} --approved-by \"your name\"" re-narrates it for release`,
+          `narration is ${manifest.licence}; when the draft is accepted, "npm run video -- final ${tl.topic} ${tl.story} --approved-by "your name"" re-narrates it for release`,
         ]),
     ...(mix?.compositions ?? [])
       .filter((c) => !c.licence.cleared)
@@ -153,7 +153,7 @@ export function buildReport(
     limitations: [
       publishable
         ? `narration licence: ${manifest.licence}`
-        : `NOT FOR PUBLICATION: narration is ${manifest.licence}; once the draft is accepted, "npm run video -- final <topic> <story-id> --approved-by \"your name\"" re-narrates it with Azure for release`,
+        : `NOT FOR PUBLICATION: narration is ${manifest.licence}; once the draft is accepted, "npm run video -- final <topic> <story-id> --approved-by "your name"" re-narrates it with Azure for release`,
       ...providerLimitations(manifest.provider),
       ...RENDERER_LIMITATIONS,
       'automated QA checks integrity and consistency, not editorial quality: a person reviews the contact sheet and the video before any publication decision',
