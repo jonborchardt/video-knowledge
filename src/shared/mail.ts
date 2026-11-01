@@ -55,6 +55,7 @@ export interface InMail {
   text: string; // the text part, or the html stripped to text when there is none
   html: string | null;
   date: string; // ISO
+  raw?: string; // the source as fetched (mail-test saves a reply as a fixture); a fake leaves it out
 }
 
 export interface MailTransport {
@@ -104,7 +105,7 @@ export function libraryTransport(c: MailConfig, deps: MailDeps = {}): MailTransp
       try {
         for await (const msg of client.fetch({ uid: `${sinceUid + 1}:*` }, { uid: true, source: true })) {
           if (msg.uid <= sinceUid || !msg.source) continue; // `n:*` yields the last message even below n
-          out.push(toInMail(msg.uid, await parse(msg.source)));
+          out.push({ ...toInMail(msg.uid, await parse(msg.source)), raw: msg.source.toString('utf8') });
         }
       } finally {
         lock.release();
