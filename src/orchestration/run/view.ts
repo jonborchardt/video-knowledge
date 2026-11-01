@@ -12,6 +12,10 @@ import { PREFLIGHT_HALT } from './tick';
 import { loadLedger, openRequest, storyOutputs } from '../../modules/publishing';
 import { type LaunchRecord, launches } from './launch';
 import { storiesWithLedgers } from './publish-due';
+import { loadMaintenance, publicTopicNames } from '../../modules/evidence';
+import { loadArticleRequest } from '../../modules/article';
+import { loadStories } from '../../modules/stories';
+import { isFixtureTopic } from '../../config/site';
 
 export interface AutomationView {
   lastTick: string | null;
@@ -27,6 +31,9 @@ export interface AutomationView {
   launches: LaunchRecord[];
   /** The optional Studio steps YouTube keeps manual, not yet recorded done (`publish -- updated --fields <name>`). */
   studio: { topic: string; storyId: string; step: string; record: string }[];
+  /** Phase 6: each public topic's last maintenance scan, and the article corrections awaiting the person's reply. */
+  scans: { topic: string; lastScan: string | null; found: number; recorded: number }[];
+  corrections: { topic: string; storyId: string; request: string; at: string; expiresAt: string }[];
 }
 
 /** The Studio steps still to record for a launched story: a live Short's related video, the video's end screen and cards. */
@@ -81,10 +88,27 @@ export function automationView(root = ROOT, now = Date.now()): AutomationView {
     .sort((x, y) => x.at.localeCompare(y.at));
   const launched = launches(root);
   const studio = launched.filter((r) => r.liveAt).flatMap((r) => studioSteps(r.topic, r.storyId, root));
+  const scans = publicTopicNames()
+    .filter((t) => !isFixtureTopic(t))
+    .map((t) => {
+      const m = loadMaintenance(t, root);
+      const last = m?.scans.at(-1);
+      return { topic: t, lastScan: m?.lastScan ?? null, found: last?.found ?? 0, recorded: last?.recorded ?? 0 };
+    });
+  const corrections = publicTopicNames().flatMap((t) =>
+    (loadStories(t, root)?.stories ?? []).flatMap((s) => {
+      const r = loadArticleRequest(t, s.id, root);
+      return r && !r.decided && Date.parse(r.expiresAt) > now
+        ? [{ topic: t, storyId: s.id, request: r.request, at: r.at, expiresAt: r.expiresAt }]
+        : [];
+    }),
+  );
   return {
     requests,
     launches: launched,
     studio,
+    scans,
+    corrections,
     lastTick: s.lastTick ?? null,
     lastWork: s.lastWork ?? null,
     week,

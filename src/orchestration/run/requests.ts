@@ -20,6 +20,13 @@ import { topicDir } from '../../shared/io';
 import type { LaunchRecord } from './launch';
 import { loadProposals } from '../../modules/topic-discovery';
 import { discoveryRecords } from './discovery-state';
+import {
+  ARTICLE_FILES,
+  type Article,
+  type ArticleRequest,
+  articleRequestPath,
+  loadArticleRelease,
+} from '../../modules/article';
 import { readOutbox, secretsOf, sendTracked } from './notify';
 import type { ShadowEntry } from './release';
 import { envFor } from './steps';
@@ -509,4 +516,89 @@ export function renderBatch(root: string, id: string, a: Automation): Omit<OutMa
     subject: `[CoR topics] ${listed.length} proposal${listed.length === 1 ? '' : 's'} for your review (${id})`,
     text: redact(lines.join('\n'), secretsOf()),
   };
+}
+
+/** The correction request (register D10): the sentences the correction changes, before and after, the revised
+ *  finding behind it, the reviewer's verdict, and the reply lines; the request id in the subject. */
+export function renderCorrectionRequest(
+  topic: string,
+  storyId: string,
+  req: ArticleRequest,
+  a: Automation,
+  root = ROOT,
+): Omit<OutMail, 'messageId'> {
+  const dir = scriptDir(topic, storyId, root);
+  const release = loadArticleRelease(topic, storyId, root);
+  const now = readJson<Article>(join(dir, ARTICLE_FILES.article));
+  const review = readJson<{ findings?: { text: string; severity: string }[] }>(join(dir, ARTICLE_FILES.review));
+  const sentencesOf = (x: Article | null | undefined) =>
+    new Map(
+      (x?.sections ?? []).flatMap((s) =>
+        s.blocks.flatMap((b) => (b.kind === 'prose' ? b.sentences.map((t) => [t.id, t.text] as const) : [])),
+      ),
+    );
+  const before = sentencesOf(release?.article);
+  const after = sentencesOf(now);
+  const changed = [...after].filter(([id, text]) => before.get(id) !== text);
+  const removed = [...before.keys()].filter((id) => !after.has(id));
+  const urls = publicUrlsOf(topic, storyId, root);
+  const clean = (s: string) => redact(s, secretsOf());
+  const lines = [
+    `The article of ${topic} / ${storyId} needs a correction: a finding it relies on was revised.`,
+    '',
+    `Published at: ${urls.articleUrl ?? urls.matterUrl}`,
+    '',
+    'What changes (sentence by sentence):',
+    ...changed.flatMap(([id, text]) => [
+      `- ${id}`,
+      `  was: ${clean(before.get(id) ?? '(new)')}`,
+      `  now: ${clean(text)}`,
+    ]),
+    ...removed.map((id) => `- ${id}: removed (was: ${clean(before.get(id) ?? '')})`),
+    ...(changed.length + removed.length
+      ? []
+      : ['- the text is unchanged; the figures or the evidence package behind it moved']),
+    '',
+    ...(review?.findings?.length
+      ? ['The reviewer noted:', ...review.findings.slice(0, 5).map((f) => `- [${f.severity}] ${clean(f.text)}`)]
+      : ['The reviewer approved every changed sentence.']),
+    '',
+    'Reply OK to release the correction (the public record gains a revision naming these sentences), or CHANGES: and',
+    'one note per line for the writer. Nothing changes on the site until you reply.',
+    ...footer(a),
+    `Request ${req.request}`,
+  ];
+  return {
+    from: a.approvals.from || a.notifications.to,
+    to: a.approvals.to || a.notifications.to,
+    subject: `[CoR correction] ${topic} / ${storyId} (${req.request})`,
+    text: lines.join('\n'),
+  };
+}
+
+/** Sends the correction request once per request id (the Message-ID recorded on the request file). */
+export async function sendCorrectionRequest(
+  topic: string,
+  storyId: string,
+  req: ArticleRequest,
+  a: Automation,
+  mail: MailTransport,
+  deps: SendDeps = {},
+): Promise<string | null> {
+  const root = deps.root ?? ROOT;
+  if (req.messageId) return null;
+  const { messageId } = await sendTracked(
+    mail,
+    renderCorrectionRequest(topic, storyId, req, a, root),
+    'correction-request',
+    root,
+    {
+      request: req.request,
+      topic,
+      storyId,
+      now: deps.now,
+    },
+  );
+  writeJsonAtomic(articleRequestPath(topic, storyId, root), { ...req, messageId });
+  return messageId;
 }

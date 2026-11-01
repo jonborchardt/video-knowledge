@@ -1522,6 +1522,10 @@ const MODES: Record<string, string> = {
   notes:
     'This is a send-back pass: apply the editor notes below to the artifact this brief owns, change nothing else, and keep what passed.',
   corrective: 'This is a corrective pass: change only the sentences listed in generation.corrective for this revision.',
+  correction:
+    'This is a correction of a released article: a finding it relies on was revised (the Revised: line). Change only the sentences that finding touches, bump revision, keep every id; everything else stays as released.',
+  reaffirm:
+    'This is a reaffirmation review: a finding the released article relies on was revised (the Revised: line). Judge whether the released text still holds as written; write article-review.json with reaffirm: { ok, why } beside your approvals, ok only when nothing a reader sees must change.',
 };
 
 /** The prompt a person hands an agent: `path` is the brief's repo path (`src/modules/<module>/briefs/<brief>.md`). */

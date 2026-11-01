@@ -127,6 +127,11 @@ describe('parseReply', () => {
       { text: '> quoted' },
     ]);
     expect(ok('changes: trim the hook').notes).toEqual([{ text: 'trim the hook' }]);
+    expect(ok('CHANGES:\n- say when the survey ran\n* keep the pounds\n2. [sc3] shorter').notes).toEqual([
+      { text: 'say when the survey ran' },
+      { text: 'keep the pounds' },
+      { text: 'shorter', scene: 'sc3' },
+    ]); // a list bullet is how a mail writes one note per line
     expect(bad('CHANGES:').problem).toMatch(/at least one note/);
   });
   it('PAID OK anywhere, alone or numbered', () => {

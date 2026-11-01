@@ -17,6 +17,11 @@
 //                                      git.commitOn's branch).
 //   topic <topic>                      the research pipeline for one approved proposal (what the work plane runs); a
 //                                      crashed run resumes with the same command; a thin topic is parked, not halted
+//   maintain <topic>                   the maintenance scan of one public topic by hand (what the work plane runs when
+//                                      enabled.maintenance and schedule.maintenance.everyDays say it is due)
+//   clear <topic> <story-id> --by <name>
+//                                      clears a story's halt that needs no action (a live video whose cited finding was
+//                                      revised), journaled by name
 //   discover [--institution <key>] [--dry-run]
 //                                      the weekly topic discovery by hand (costs agents): one discovery agent per
 //                                      institution with a channel, one independent review per proposal, the batch and its
@@ -54,6 +59,8 @@ import { type Job, launchDeps, nextJob, scheduleText, work } from './work';
 import { launch } from './launch';
 import { discover, discoveryDeps } from './discovery';
 import { runTopic } from './topic-runner';
+import { maintain, maintainDeps } from './maintain';
+import { clearHalt, readHalt, runDir, appendJournal } from './journal';
 
 const usage = () =>
   readFileSync(new URL(import.meta.url), 'utf8')
@@ -161,6 +168,49 @@ switch (verb) {
       process.exit(1);
     }
     console.log(`done: ${topic} ${r.stage} (${r.iterations} steps, ${r.costUsd.toFixed(2)} USD)`);
+    break;
+  }
+  case 'maintain': {
+    // the maintenance scan of one public topic by hand (what the work plane runs when a scan is due): costs agents
+    const topic = rest[0];
+    if (!topic) die(usage());
+    const a = loadAutomation(ROOT);
+    const cfg = mailConfigFromEnv();
+    const r = await maintain(topic, a, maintainDeps(cfg && a.approvals.to ? libraryTransport(cfg) : null), ROOT);
+    for (const line of r.actions) console.log(line);
+    if (r.outcome === 'held') die('another run holds this topic', 3);
+    if (r.outcome === 'halted' && r.halt) {
+      console.log(`HALT ${r.halt.kind}: ${r.halt.why}`);
+      console.log(`UNBLOCK: ${r.halt.unblock.text}`);
+      process.exit(1);
+    }
+    console.log(`scan done: ${topic} (${r.costUsd.toFixed(2)} USD)`);
+    break;
+  }
+  case 'clear': {
+    // a person clears a halt that needs no action (a live video whose cited finding was revised): journaled by name
+    const [topic, storyId] = rest;
+    if (!topic || !storyId) die(usage());
+    const by = flag('--by');
+    if (!by || /^automated:/i.test(by)) die('clear needs --by <your name>');
+    const dir = runDir(topic, storyId, ROOT);
+    const h = readHalt(dir);
+    if (!h) {
+      console.log('no halt to clear');
+      break;
+    }
+    clearHalt(dir);
+    appendJournal(dir, {
+      at: new Date().toISOString(),
+      runId: 'clear',
+      stage: h.stage,
+      next: h.board.next,
+      step: 'clear',
+      kind: 'do',
+      attempt: 0,
+      error: `cleared by ${by}: ${h.kind}: ${h.why}`,
+    });
+    console.log(`cleared ${h.kind} on ${topic} ${storyId} (by ${by})`);
     break;
   }
   case 'discover': {

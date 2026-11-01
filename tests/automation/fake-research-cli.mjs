@@ -162,6 +162,16 @@ switch (cli) {
   }
   // eslint-disable-next-line no-fallthrough -- process.exit above ends the case
   case 'report': {
+    const revised = () =>
+      (cfg.revisedClaims ?? []).map((id) => ({
+        kind: 'claim',
+        id,
+        at: '2026-12-01',
+        date: '2026-12-01',
+        from: 'right',
+        to: 'wrong',
+        note: '',
+      }));
     if (verb === 'note') {
       const [, topic, claim, note] = args;
       const pr = read(join(root, 'topics', topic, 'public-record.json'));
@@ -180,10 +190,17 @@ switch (cli) {
       if (!existing)
         write(join(root, 'topics', topic, 'public-record.json'), {
           exhibits: {},
-          revisions: claims
-            .slice(0, cfg.openRevisions ?? 0)
-            .map((c) => ({ kind: 'claim', id: c.id, date: '2026-11-01', from: 'unknown', to: 'right', note: '' })),
+          revisions: [
+            ...claims
+              .slice(0, cfg.openRevisions ?? 0)
+              .map((c) => ({ kind: 'claim', id: c.id, date: '2026-11-01', from: 'unknown', to: 'right', note: '' })),
+            ...revised(),
+          ],
         });
+      else if (cfg.revisedClaims?.length && !existing.revisions.some((r) => r.at === '2026-12-01')) {
+        existing.revisions.push(...revised());
+        write(join(root, 'topics', topic, 'public-record.json'), existing);
+      }
       console.log(`wrote topics/${topic}/report.json`);
     }
     process.exit(0);
@@ -194,6 +211,10 @@ switch (cli) {
     const reviewed = existsSync(join(root, 'topics', topic, 'story-review.json'));
     const claims = claimsOf(topic);
     const mode = cfg.storiesMode ?? 'ready';
+    if (mode === 'keep' && existsSync(join(root, 'topics', topic, 'stories.json'))) {
+      console.log('kept stories.json');
+      process.exit(0);
+    }
     const story = (readiness) => ({
       id: `decision:${slug(claims[0]?.text ?? 'x')}`,
       question: 'Is it true?',

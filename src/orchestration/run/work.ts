@@ -23,6 +23,7 @@ import { execFileSync } from 'node:child_process';
 import { type DueResume, readSchedule, updateSchedule } from './schedule';
 import { discover, discoveryDeps, discoveryDir, discoveryDue } from './discovery';
 import { runTopic, topicRunFolder } from './topic-runner';
+import { maintain, maintainDeps, scanJobs } from './maintain';
 import { loadProposals, researched } from '../../modules/topic-discovery';
 
 export type JobKind = 'launch' | 'resume' | 'release' | 'pick' | 'topic' | 'discovery' | 'scan';
@@ -54,6 +55,10 @@ export interface WorkDeps {
   runTopic?: (topic: string, a: Automation) => Promise<RunResult>;
   /** The topic jobs (phase 5): approved proposals not yet researched; the default reads proposals/. */
   topics?: () => Job[];
+  /** The scan jobs (phase 6): the public topic whose maintenance scan is due; the default reads maintenance.json. */
+  scans?: () => Job[];
+  /** Runs a scan job; the default is the maintenance job with real agents and CLIs. */
+  runScan?: (topic: string, a: Automation) => Promise<RunResult>;
   skip?: Job[]; // jobs this instance already found held
   mail?: MailTransport | null; // the request mails of a release loop
 }
@@ -100,7 +105,13 @@ export function nextJob(a: Automation, root = ROOT, deps: WorkDeps = {}): Job | 
   if (topicRuns < a.runs.maxConcurrentTopicRuns)
     for (const job of (deps.topics ?? (() => topicJobs(root, deps.alive ?? alive)))())
       if (!skip.some((s) => sameJob(s, job))) return job;
-  // scans: phase 6
+  // scans (phase 6): the public topic whose scan is oldest and due, one at a time, never while its topic runs
+  if (topicRuns < a.runs.maxConcurrentTopicRuns)
+    for (const job of (deps.scans ?? (() => scanJobs(a, root, (deps.now ?? Date.now)())))())
+      if (!skip.some((s) => sameJob(s, job))) {
+        const lock = readLock(topicRunFolder(job.topic!, root));
+        if (!(lock && (deps.alive ?? alive)(lock.pid))) return job;
+      }
   return null;
 }
 
@@ -167,13 +178,18 @@ export async function work(a: Automation, root = ROOT, deps: WorkDeps = {}): Pro
         ? await (deps.runDiscovery ?? ((auto) => discover(auto, discoveryDeps(deps.mail ?? null), root)))(a)
         : job.kind === 'topic'
           ? await (deps.runTopic ?? ((t, auto) => runTopic(t, auto, { root })))(job.topic!, a)
-          : job.kind === 'launch'
-            ? await (deps.runLaunch ?? ((t, s, auto) => launch(t, s, auto, launchDeps(root), root)))(
+          : job.kind === 'scan'
+            ? await (deps.runScan ?? ((t, auto) => maintain(t, auto, maintainDeps(deps.mail ?? null), root)))(
                 job.topic!,
-                job.storyId!,
                 a,
               )
-            : await run(job.topic!, job.storyId!, a, approver));
+            : job.kind === 'launch'
+              ? await (deps.runLaunch ?? ((t, s, auto) => launch(t, s, auto, launchDeps(root), root)))(
+                  job.topic!,
+                  job.storyId!,
+                  a,
+                )
+              : await run(job.topic!, job.storyId!, a, approver));
     if (result.outcome === 'held') {
       skip.push(job); // another instance owns it: try the next job once
       continue;

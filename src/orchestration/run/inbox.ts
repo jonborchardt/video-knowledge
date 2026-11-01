@@ -334,9 +334,77 @@ export async function pollInbox(
       );
       continue;
     }
-    // corrections (phase 6) answer by their own ids
+    if (thread.kind === 'correction-request' && thread.topic && thread.storyId) {
+      // an article correction (register D10): OK runs `article decide --verdict ok` (the correction itself, for the
+      // exact fingerprint the request bound, by the person); CHANGES records the notes for the next writer pass
+      const { topic, storyId } = thread;
+      const id = correctionIdIn(m.subject) ?? correctionIdIn(own);
+      if (!id || id !== thread.request) {
+        ignore(`the correction id in the reply (${id ?? 'none'}) is not the thread's (${thread.request})`);
+        continue;
+      }
+      const parsed = parseReply(own, a, new Date(now()), 'correction');
+      if ('problem' in parsed || parsed.decision.verdict === 'schedule') {
+        await reply(
+          `I could not read your reply to the correction request ${id}: reply OK to release the correction, or CHANGES: and one note per line.${'problem' in parsed ? `\n\n${parsed.problem}` : ''}`,
+        );
+        report.clarified.push(id);
+        done('clarified', id);
+        continue;
+      }
+      const d = parsed.decision;
+      const args = [
+        'decide',
+        topic,
+        storyId,
+        '--request',
+        id,
+        '--verdict',
+        d.verdict === 'ok' ? 'ok' : 'changes',
+        '--by',
+        by,
+        '--via',
+        `email:${m.messageId}`,
+      ];
+      for (const n of d.notes ?? []) args.push('--note', n.text);
+      const r = await deps.run('article', args);
+      if (r.status === 2) {
+        const why = r.stderr.trim().replace(/^refused: /, '');
+        await reply(
+          `Your reply to the correction request ${id} could not be applied: ${why}.${/changed since/.test(why) ? ' A new request follows.' : ''}`,
+        );
+        report.refused.push(`${id}: ${why}`);
+        done(`refused:${why}`, id);
+        continue;
+      }
+      if (r.status !== 0) {
+        const err = (r.stderr || r.stdout).trim().split('\n').at(-1) ?? 'exit 1';
+        const dir = runDir(topic, storyId, root);
+        const why = `article decide ${id} failed: ${err}`;
+        if (readHalt(dir)?.why !== why)
+          writeHalt(dir, {
+            kind: 'step-failed',
+            stage: 'article',
+            why,
+            unblock: {
+              kind: 'fix',
+              text: `fix what it names, or run npm run article -- decide ${topic} ${storyId} --request ${id} --verdict ${d.verdict} --by "<name>" by hand; the next tick tries the reply again`,
+            },
+            at: new Date(now()).toISOString(),
+            runId: 'tick',
+            board: { stage: 'article', next: 'the correction' },
+          } satisfies Halt);
+        report.failed.push(`${id}: ${err}`);
+        leftAt ??= m.uid;
+        continue;
+      }
+      report.applied.push(`${id}: correction ${d.verdict}`);
+      done(`applied:correction-${d.verdict}`, id);
+      if (d.verdict === 'ok') moved(topic, storyId); // the launch job deploys the corrected article (no social post)
+      continue;
+    }
     const other = correctionIdIn(m.subject) ?? correctionIdIn(own);
-    ignore(other ? `${other}: not handled in this phase` : 'not a request reply');
+    ignore(other ? `${other}: not a request this automation sent` : 'not a request reply');
   }
   // a message left behind is fetched again next poll (the handled ones after it are skipped by their ids)
   file.lastUid = leftAt === null ? maxUid : Math.max(file.lastUid, leftAt - 1);

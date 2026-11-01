@@ -159,11 +159,13 @@ function nextDay(today: { y: number; m: number; d: number }, timeZone: string, d
 }
 
 const PLACED = /^\[([^\]]*)\]\s*(.*)$/;
+const BULLET = /^(?:[-*•]|\d{1,2}[.)])\s+/;
 /** A `CHANGES:` note line: `[m:ss sc20 s31] text`, any of the three places, in any order. */
-export function parseNoteLine(line: string): ReplyNote {
-  const m = PLACED.exec(line.trim());
-  if (!m) return { text: line.trim() };
-  const note: ReplyNote = { text: m[2].trim() || line.trim() };
+export function parseNoteLine(raw: string): ReplyNote {
+  const line = raw.trim().replace(BULLET, ''); // a mail's list bullet or number is not part of the note
+  const m = PLACED.exec(line);
+  if (!m) return { text: line };
+  const note: ReplyNote = { text: m[2].trim() || line };
   for (const tok of m[1].trim().split(/\s+/)) {
     const mmss = /^(\d+):([0-5]\d)$/.exec(tok);
     if (mmss) note.seconds = Number(mmss[1]) * 60 + Number(mmss[2]);
