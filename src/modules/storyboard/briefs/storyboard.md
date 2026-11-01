@@ -131,6 +131,10 @@ smaller vocabulary; a scene outside it fails the render check, never gets a plac
   them and no ceremonial intro. The `close` section's scene is drawn as the end card (seal, the full inquiry's
   question, the call to action): give it `typography` with at most two short lines, or none.
 
+## Target duration
+
+When `script.json` carries `targetDurationSeconds`, plan to it: a micro story (up to 20 s) is one or two scenes, a short story (up to 90 s) two to eight, a longer one at most one scene per 4 s of target. The builder blocks a plan outside the band's range (`scenes`), and the storyboard carries the target to the timeline, where QA checks the narrated runtime against it (the larger of 35% and 3 s either side). Every other rule above is unchanged.
+
 ## Unattended runs
 
 When the runner hands you this brief (an unattended `claude -p` agent), you have no shell: do not run the commands

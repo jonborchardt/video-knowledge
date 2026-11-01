@@ -1,0 +1,62 @@
+{
+  "topic": "test-fixture",
+  "story": "decision:most-discussed-claims",
+  "title": "Has a leap second ever been taken away?",
+  "revision": 1,
+  "targetDurationSeconds": 15,
+  "generation": {
+    "model": "claude-sonnet-5",
+    "brief": "src/modules/script/briefs/script.md",
+    "date": "2026-10-31",
+    "wordsPerMinute": 150,
+    "evidencePackage": "5879ca5f47"
+  },
+  "sections": [
+    {
+      "name": "answer",
+      "sentences": [
+        {
+          "id": "s01",
+          "text": "The IERS table of TAI-UTC runs from 10 seconds in 1972 to 37 seconds in 2017, each value exactly one second more than the one before it.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s01.a",
+              "text": "The IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017.",
+              "kind": "fact",
+              "claims": [{ "id": "test-fixture/every-leap-second-since-utc-began", "stance": "asserts" }],
+              "evidence": [
+                { "kind": "study", "claim": "test-fixture/every-leap-second-since-utc-began", "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44" }
+              ]
+            },
+            {
+              "id": "s01.b",
+              "text": "Each value in the table is exactly one second greater than the value before it.",
+              "kind": "fact",
+              "claims": [{ "id": "test-fixture/every-leap-second-since-utc-began", "stance": "asserts" }],
+              "evidence": [
+                { "kind": "study", "claim": "test-fixture/every-leap-second-since-utc-began", "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s02",
+          "text": "No leap second has ever been subtracted from civil time; every one on record has only been added.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s02.a",
+              "text": "No leap second has ever been subtracted from civil time; every one on record has only been added.",
+              "kind": "fact",
+              "claims": [{ "id": "test-fixture/every-leap-second-since-utc-began", "stance": "asserts" }],
+              "evidence": [
+                { "kind": "study", "claim": "test-fixture/every-leap-second-since-utc-began", "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -5,9 +5,21 @@
 // which of the two it is: a draft build carries the private banners and the draft-voice check, a release build carries none.
 import { copyFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { commissionKey, commissionOf, site } from '../../config/site';
+import { commissionKey, commissionOf, isFixtureTopic, site } from '../../config/site';
 import { contentGraph, matterPath, storyNode, type CtaType, ctaPath, loadCta, resolveCtas } from '../website';
-import { fileSha, readJson, REVIEW_DIR, ROOT, sha, toJson, topicDir, writeJsonAtomic } from '../../shared/io';
+import {
+  fileSha,
+  readJson,
+  REVIEW_DIR,
+  ROOT,
+  scriptDir,
+  sha,
+  toJson,
+  topicDir,
+  writeJsonAtomic,
+} from '../../shared/io';
+import { FRESH_FILE, type FreshRun } from '../../shared/types';
+import { bandOf } from '../../shared/duration';
 import { loadLedger, mainOutput, uploadProblem } from '../publishing';
 import { sectionTitle } from '../../shared/sentences';
 import { absoluteUrl } from '../../lib/url';
@@ -94,6 +106,8 @@ export interface ReviewPackage {
   generatedAt: string;
   status: 'private review build' | 'release build';
   title: string; // the working title for a private upload, the real title for a release
+  /** A fixture story's run id (`run/fresh.json`, or `manual` when the story was not started fresh); absent otherwise. */
+  fixtureRun?: string;
   mp4: string; // the file to upload, relative to the review dir (or the segment path when not copied)
   mp4Sha: string;
   thumbnailSha: string | null; // of thumbnail.png (gitignored), so the board can tell a changed thumbnail in CI
@@ -149,9 +163,14 @@ export function chapters(seg: Segment, tl: Timeline): Chapter[] {
       });
   list.sort((a, b) => a.seconds - b.seconds);
   if (list.length) list[0].seconds = 0;
-  // YouTube ignores every chapter unless there are at least three, starting at 0:00, each at least 10 s long
-  if (list.length < 3) throw new Error(`${list.length} chapters; YouTube needs at least 3`);
+  // YouTube ignores every chapter unless there are at least three, starting at 0:00, each at least 10 s long. A
+  // micro or short story (src/shared/duration.ts) that cannot hold that simply has none; a longer one is a defect.
+  // the target rides in the timeline JSON, outside the Timeline type (types.ts is in every component's key)
+  const band = bandOf((tl as Timeline & { targetDurationSeconds?: number }).targetDurationSeconds);
+  const brief = band === 'micro' || band === 'short';
   const short = list.filter((c, i) => i > 0 && c.seconds - list[i - 1].seconds < 10);
+  if (brief && (list.length < 3 || short.length)) return [];
+  if (list.length < 3) throw new Error(`${list.length} chapters; YouTube needs at least 3`);
   if (short.length) throw new Error(`chapters under 10 s: ${short.map((c) => c.title).join(', ')}`);
   return list.map((c) => ({ ...c, stamp: stamp(c.seconds) }));
 }
@@ -230,10 +249,16 @@ export function reviewData(
     ).values(),
   ];
   const release = report.clearance.publishable;
+  // A fixture story's title carries its run id so no fixture upload can pass for ordinary content (spec §5.8).
+  const fixtureRun = isFixtureTopic(tl.topic)
+    ? (readJson<FreshRun>(join(scriptDir(tl.topic, seg.script.story), FRESH_FILE))?.runId ?? 'manual')
+    : null;
+  const title = fixtureRun ? `[fixture ${fixtureRun}] ${tl.title}` : tl.title;
   return {
     generatedAt: made.generatedAt,
     status: release ? 'release build' : 'private review build',
-    title: release ? tl.title : `[PRIVATE REVIEW] ${tl.title}`,
+    title: release ? title : `[PRIVATE REVIEW] ${title}`,
+    ...(fixtureRun && { fixtureRun }),
     mp4: made.mp4,
     mp4Sha: made.mp4Sha,
     thumbnailSha: made.thumbnailSha,
@@ -296,7 +321,12 @@ export function renderDescription(
   // a Short (brand/design.md 2.6): the hook, the links, the studies, #Shorts; the uploader adds the full video once live
   const body = pkg.short
     ? [seg.pkg.short?.hook ?? tl.title, '', ...block]
-    : [seg.pkg.question ?? tl.title, '', ...block, '', 'Chapters', ...pkg.chapters.map((c) => `${c.stamp} ${c.title}`)];
+    : [
+        seg.pkg.question ?? tl.title,
+        '',
+        ...block,
+        ...(pkg.chapters.length ? ['', 'Chapters', ...pkg.chapters.map((c) => `${c.stamp} ${c.title}`)] : []),
+      ];
   return (
     [
       ...(release

@@ -3,7 +3,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { readJson, topicDir, topicsDir } from '../../shared/io';
-import { commissionOf } from '../../config/site';
+import { commissionOf, isFixtureTopic } from '../../config/site';
 import { isClaimRevision, loadPublicRecord } from '../../shared/public-record';
 import type {
   ClaimSourceView,
@@ -103,7 +103,10 @@ export function topicNames(): string[] {
 
 /** The topics the public site shows: those an institution has claimed (`commissions` in the site config). The rest
  *  stay in the repo and on the dev server's working pages only. */
-export const publicTopicNames = (): string[] => topicNames().filter((n) => commissionOf(n));
+export const publicTopicNames = (): string[] => topicNames().filter((n) => commissionOf(n) && !isFixtureTopic(n));
+
+/** The fixture topics with a store (spec §5.8): built into the site only by a `FIXTURE_SITE=1` build. */
+export const fixtureTopicNames = (): string[] => topicNames().filter((n) => isFixtureTopic(n));
 
 export function loadTopic(name: string): Topic {
   const dir = topicDir(name);

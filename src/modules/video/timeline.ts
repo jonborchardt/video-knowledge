@@ -151,6 +151,9 @@ export function buildTimeline(
     },
     narration: { provider: manifest.provider, voice: manifest.voice, rate: manifest.rate, licence: manifest.licence },
     palette: kitPalette(seg.script.topic),
+    ...(seg.storyboard.targetDurationSeconds !== undefined && {
+      targetDurationSeconds: seg.storyboard.targetDurationSeconds,
+    }),
     ...(short
       ? {
           short: {

@@ -10,3 +10,7 @@ Script turns a reviewed story into the evidence package the writer may cite, val
 - Public API (`index.ts`): `buildPackage`. Read API: none.
 - Consumes: shorts' read API (`buildShortPackage`, `loadShorts`, `shortsPath`); evidence's and stories' (`corpusOf`, `loadTopic`, `loadReview`, `loadStories`), and storyboard's read API (`buildStoryboard`, `renderStoryboardMd`); video's `render-check` reader; the lock spawns `npm run video -- check`.
 - Rules: the writer and the reviewer are different agents; approvals are by fingerprint, so a changed sentence is re-reviewed; the lock needs a passed validation, an ok storyboard and a render check with every bespoke graphic approved.
+
+## Target duration
+
+A story's optional `targetDurationSeconds` (set in `story-review.json`, carried by the package) proportions this stage by band through `src/shared/duration.ts`; the module's correctness checks do not change with it. See the Script rule in CLAUDE.md.

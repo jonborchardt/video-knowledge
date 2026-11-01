@@ -1,0 +1,114 @@
+{
+ "topic": "test-fixture",
+ "story": "decision:most-discussed-claims",
+ "title": "Has a leap second ever been taken away?",
+ "scriptFingerprint": "efcf0861e8",
+ "scriptStatus": "passed",
+ "wordsPerMinute": 150,
+ "runtime": 20.4,
+ "generation": {
+  "model": "claude-sonnet-5",
+  "brief": "src/modules/storyboard/briefs/storyboard.md",
+  "date": "2026-10-31"
+ },
+ "assets": {},
+ "status": "ok",
+ "issues": [],
+ "scenes": [
+  {
+   "id": "sc01",
+   "sentences": [
+    "s01"
+   ],
+   "purpose": "Show the viewer the full span of the IERS record and that it only ever grows, one second at a time.",
+   "visual": {
+    "category": "data-chart",
+    "description": "Dark field; the IERS table of TAI-UTC values scrolls upward past the frame from 1972 to 2017, then settles into two large stat tiles side by side: 10 s / 1972 on the left, 37 s / 2017 on the right, with the intervening rows fading to a thin connecting line to show the steady climb.",
+    "onScreenText": [
+     "10 seconds, 1972",
+     "37 seconds, 2017"
+    ],
+    "chart": {
+     "type": "stat-tiles",
+     "title": "TAI-UTC, start to most recent value",
+     "points": [
+      {
+       "label": "1972",
+       "value": 10,
+       "unit": "count",
+       "display": "10",
+       "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+      },
+      {
+       "label": "2017",
+       "value": 37,
+       "unit": "count",
+       "display": "37",
+       "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+      }
+     ],
+     "note": "The table lists every value between these; each one is exactly one second more than the value before it. These tiles mark the endpoints, not the full run."
+    }
+   },
+   "citations": [
+    {
+     "label": "IERS, Leap_Second.dat (Bulletin C 72)",
+     "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+    }
+   ],
+   "direction": "Table of TAI-UTC values scrolls upward from 1972 to 2017, settling on the two highlighted stat tiles; hold half a second on the settled tiles before the cut.",
+   "order": 1,
+   "narration": "The IERS table of TAI-UTC runs from 10 seconds in 1972 to 37 seconds in 2017, each value exactly one second more than the one before it.",
+   "words": 27,
+   "spokenWords": 33,
+   "timing": [
+    {
+     "id": "s01",
+     "start": 0,
+     "duration": 13.2,
+     "end": 13.2
+    }
+   ],
+   "start": 0,
+   "duration": 13.2,
+   "end": 13.2
+  },
+  {
+   "id": "sc02",
+   "sentences": [
+    "s02"
+   ],
+   "purpose": "State the answer plainly: no leap second has ever been subtracted, only added.",
+   "visual": {
+    "category": "typography",
+    "description": "Hard cut to a dark field; a single title line types on in large serif: 'Only ever added. Never subtracted.' Hold on the settled line.",
+    "onScreenText": [
+     "Only ever added. Never subtracted."
+    ]
+   },
+   "citations": [
+    {
+     "label": "IERS, Leap_Second.dat (Bulletin C 72)",
+     "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+    }
+   ],
+   "direction": "Hard cut in; title types on; hold 1 s after the last word before the close card.",
+   "order": 2,
+   "narration": "No leap second has ever been subtracted from civil time; every one on record has only been added.",
+   "words": 18,
+   "spokenWords": 18,
+   "timing": [
+    {
+     "id": "s02",
+     "start": 13.2,
+     "duration": 7.2,
+     "end": 20.4
+    }
+   ],
+   "start": 13.2,
+   "duration": 7.2,
+   "end": 20.4
+  }
+ ],
+ "targetDurationSeconds": 15
+}

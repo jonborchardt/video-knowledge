@@ -11,3 +11,7 @@ Stories turns a topic's judged claims into ranked candidate videos, each with it
 - Read API (listed under `stories` in `tests/boundaries.json`): `loadStories`, `storiesPath`, `chainOf`, `storyUrlSlug`, `loadReview`, `reviewPath`, `storyTopicNames` (the topics with a `stories.json`), `groupSlug` (a recap group's slug from its title, pure), the type `StoriesFile`; each only reads `stories.json` or `story-review.json`, builds a path, or selects over a loaded file. `discover` is not in it: only the orchestrator runs it.
 - Consumes: evidence's `loadTopic`, `topicNames` and `VAL` (`src/modules/evidence/`, listed under `evidence` in `tests/boundaries.json`); the topic view types are in `src/shared/types.ts`.
 - Rules: `stories.json` is derived and holds references only (never passage text); semantic judgment lives only in `story-review.json`, keyed by stable ids; a story with more than one claim is never `ready` without a review; a video may chain up to three questions (`MAX_CHAIN_CLAIMS` 14), chains do not nest and a chained story is `partOf` the first.
+
+## Target duration
+
+A story's optional `targetDurationSeconds` (set in `story-review.json`, carried by the package) proportions this stage by band through `src/shared/duration.ts`; the module's correctness checks do not change with it. See the Script rule in CLAUDE.md.

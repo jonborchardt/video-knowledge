@@ -27,3 +27,4 @@ export {
 // The runner's read-only view (status.ts): the admin page reads it; the runner itself (runner.ts) spawns processes
 // and is never loaded into an Astro page.
 export { type StatusRow, statusOf } from './run/status';
+export { type AutomationView, automationView } from './run/view';

@@ -34,6 +34,9 @@ export interface Commission {
   youtube?: string;
   channelId?: string; // the public UC... id, for the Studio links on /admin
   topics: string[];
+  /** The miniature fixture topics this institution runs on its channel (spec §5.8): produced by the real pipeline,
+   *  uploaded private, never a page of the production site, never picked or proposed by automation. */
+  fixtureTopics?: string[];
 }
 
 export const commissions: Record<string, Commission> = {
@@ -47,6 +50,7 @@ export const commissions: Record<string, Commission> = {
     youtube: 'https://www.youtube.com/@CORSpending',
     channelId: 'UCc5kWuv226H1gjz7e4bj_0Q',
     topics: ['heat-pumps', 'inflation-2026'],
+    fixtureTopics: ['test-fixture'],
   },
   'dubious-returns': {
     name: 'Bureau of Dubious Returns',
@@ -86,7 +90,12 @@ export const commissions: Record<string, Commission> = {
 };
 
 export const commissionOf = (topic: string): Commission | null =>
-  Object.values(commissions).find((c) => c.topics.includes(topic)) ?? null;
+  Object.values(commissions).find((c) => c.topics.includes(topic) || c.fixtureTopics?.includes(topic)) ?? null;
+
+/** A fixture topic (spec §5.8): claimed through `fixtureTopics`, so its kit, channel and credentials are real, while
+ *  the production site, the production pick and topic discovery leave it out. */
+export const isFixtureTopic = (topic: string): boolean =>
+  Object.values(commissions).some((c) => c.fixtureTopics?.includes(topic));
 
 /** The institution's kind, wherever it sits in its name: "the Commission", "the Bureau", ... */
 export const commissionBody = (c: Commission): string =>

@@ -111,6 +111,10 @@ a finding whose qualification (`short.carries`) is not said in the Short itself,
 limits. Check the close promises no more than the finding and carries no figure, and that the title and the
 hook would not mislead someone who never watches the full video.
 
+## Target duration
+
+When the script carries `targetDurationSeconds`, judge proportion to it as part of the wording: does the narrative fit the target without padding or without dropping a qualification to make the length? A story written to a short target is held to the same evidence standard as a long one; raise a finding for substance, never for a section the band does not ask for (the validator already checks the band's structure).
+
 ## Unattended runs
 
 When the runner hands you this brief (an unattended `claude -p` agent), you have no shell: do not run the commands

@@ -12,3 +12,7 @@ Storyboard fills the planner's scenes with the script's own narration, times the
 - Consumes: shared only (`src/shared/types`, numbers, sentences).
 - Shim: `src/lib/storyboard.ts` re-exports the storyboard vocabulary and types only; `src/modules/video/types.ts` and `kinds.ts` import them from there (type-only imports, which the fingerprint ignores); it stays until they are repointed to `src/shared/types.ts`.
 - Rules: the storyboard never carries narration of its own; chart data is numeric points with a unit and a cite; required assets are registered by id; timing is per sentence.
+
+## Target duration
+
+A story's optional `targetDurationSeconds` (set in `story-review.json`, carried by the package) proportions this stage by band through `src/shared/duration.ts`; the module's correctness checks do not change with it. See the Script rule in CLAUDE.md.

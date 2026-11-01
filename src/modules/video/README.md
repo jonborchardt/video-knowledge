@@ -11,3 +11,7 @@ Video owns the media of a story: narration, the timeline, the Remotion render (s
 - Consumes: publishing's `currentBuild` (read API); publishing through its CLI (`final` records the draft it accepted with `npm run publish -- accept-draft <topic> <story> --by <approver> --build <draft sha>`, `acceptDraftViaCli` in `final.ts`: once with `--dry-run` before narration, so an output already approved for publication refuses before the paid render, then for real after QA and package, so the release build's report already names the draft in `replaces`; only a draft voice is accepted); the board through its CLI (`final` runs `npm run -s board -- next <topic> <story> --json`, `final.ts`).
 - Fingerprint: `componentVersion` (`render.ts`) hashes normalised sources (type-only imports dropped, value imports followed), so a move of the tree or of a type's home never moves a graphic key or a chunk key. `video/key-migration.json` beside each visual review records the one-time key migration.
 - Browser-safe (no node imports): `remotion/`, `bespoke/`, `types.ts`, `kinds.ts`, `words.ts`, `chart.ts`, `cues.ts`, `excerpt.ts`.
+
+## Target duration
+
+A story's optional `targetDurationSeconds` (set in `story-review.json`, carried by the package) proportions this stage by band through `src/shared/duration.ts`; the module's correctness checks do not change with it. See the Script rule in CLAUDE.md.

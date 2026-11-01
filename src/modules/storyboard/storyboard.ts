@@ -20,6 +20,7 @@ import {
   type Storyboard,
 } from '../../shared/types';
 import { hasFigure, nums, spokenWords } from '../../shared/numbers';
+import { bandOf, sceneRange } from '../../shared/duration';
 import { scriptFingerprint, sentences, words } from '../../shared/sentences';
 
 /** The problems with one chart point: its cite, value, display, unit and the figures it draws against its passage. */
@@ -262,6 +263,14 @@ export function buildStoryboard(
       'warning',
       `${images} of ${scenes.length} scenes are images; prefer programmatic graphics where the evidence is numeric`,
     );
+  // A target duration bounds the scene count by band (src/shared/duration.ts); the standards above do not move.
+  const target = script.targetDurationSeconds;
+  const band = bandOf(target);
+  if (band && target) {
+    const [lo, hi] = sceneRange(band, target);
+    if (scenes.length < lo || scenes.length > hi)
+      issue('-', 'scenes', 'blocking', `${scenes.length} scenes; a ${band} story (${target} s) has ${lo} to ${hi}`);
+  }
   // A Short may not estimate past its cap (YouTube's limit is 180 s of measured audio; the cap leaves a margin).
   if (pkg.short && t > pkg.short.maxSeconds)
     issue(
@@ -283,6 +292,7 @@ export function buildStoryboard(
     status: issues.some((i) => i.severity === 'blocking') ? 'blocked' : 'ok',
     issues,
     scenes,
+    ...(target !== undefined && { targetDurationSeconds: target }),
   };
 }
 

@@ -11,3 +11,7 @@ Shorts finds which findings of a produced video can stand on their own as a vert
 - Read API (read-only, listed under `shorts` in `tests/boundaries.json`): `buildShortPackage` is pure over the parsed parent package and candidate (reads, computes and writes nothing); `loadShorts` reads `shorts.json`; `shortsPath` is a path.
 - Consumes: shared only (`release-check`, storyboard types, io, sentences).
 - Rules: a Short never touches the store, the corpus, a verdict or `record-sources`; its package is a filter of the parent's, never built from the store or the story.
+
+## Target duration
+
+A story's optional `targetDurationSeconds` (set in `story-review.json`, carried by the package) proportions this stage by band through `src/shared/duration.ts`; the module's correctness checks do not change with it. See the Script rule in CLAUDE.md.

@@ -3,6 +3,7 @@
 // prose, table cells that state their cited values, figures that name a chart the story has, and prose that is not
 // the narration read back.
 import { join, relative, sep } from 'node:path';
+import { articleProportion } from '../../shared/duration';
 import {
   ARTICLE_FILES,
   type Article,
@@ -90,6 +91,13 @@ export function articleIssues(
       out.push(issue('-', 'gap-coverage', 'warning', `no unresolved callout names gap ${i}: "${g}"`));
   });
 
+  // A target duration proportions the article by band (src/shared/duration.ts): paragraphs and tables, never evidence.
+  const proportion = articleProportion(
+    // A callout carries a qualification the evidence requires whatever the band: it is not a paragraph of the count.
+    { paragraphs: prose.filter((b) => !b.callout).length, tables: blocks.filter((b) => b.kind === 'table').length },
+    pkg.targetDurationSeconds,
+  );
+  if (proportion) out.push(issue('-', 'proportion', 'blocking', proportion));
   for (const [field, max] of Object.entries(LIMITS) as [keyof typeof LIMITS, number][]) {
     const m = a.meta[field];
     const text = typeof m === 'string' ? m : m.text;
@@ -175,7 +183,7 @@ export function validateArticle(
   opts: ValidateOptions & { pkg: EvidencePackage; script: Script | null; figures: Set<string> },
 ): ScriptValidation {
   const script = articleAsScript(a);
-  const v = validateScript(script, t, read, { ...opts, pacing: false });
+  const v = validateScript(script, t, read, { ...opts, pacing: false, duration: false });
   const own = articleIssues(a, opts.pkg, read, opts);
   // Dispositions as validateScript applies them: a current review retires a warning at the sentence's fingerprint.
   const review = opts.review ?? null;

@@ -203,6 +203,7 @@ export function buildPackage(
     tension: story.tension,
     arc: story.arc,
     readiness: story.readiness,
+    ...(story.targetDurationSeconds !== undefined && { targetDurationSeconds: story.targetDurationSeconds }),
     central: {
       text: story.audit.central.text,
       status: story.audit.central.status,

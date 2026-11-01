@@ -13,6 +13,14 @@ export const SHORT_SECTIONS = ['hook', 'finding', 'close'] as const;
 /** A Short's storyboard may not estimate longer than this. YouTube allows 180 s, but a Short is watched on a phone
  *  with a thumb on the screen: the brief aims at 30 to 45 s and this is the editorial ceiling. */
 export const SHORT_MAX_SECONDS = 60;
+/** Written by `npm run run -- story --fresh` (orchestration) in a fixture story's run folder; the packaging stage reads
+ *  it for the title prefix and `fixtureRun` (spec §5.8). */
+export const FRESH_FILE = 'run/fresh.json';
+export interface FreshRun {
+  runId: string; // YYYYMMDD-hhmm-<4 hex>
+  at: string;
+  previous: string | null; // the run id this fresh run archived, when there was one
+}
 /** Ready Short candidates per video; the reviewer picks by leaving the rest unkept. */
 export const MAX_SHORTS = 3;
 /** Questions one video may answer: the story's own plus its chain. */
@@ -97,6 +105,8 @@ export interface EvidencePackage {
   tension: string;
   arc: Story['arc'];
   readiness: string;
+  /** The story's target duration (story-review.json, §5.7); absent means today's rules. The script copies it. */
+  targetDurationSeconds?: number;
   central: { text: string; status: string; decision: string; strength: number; independent: number };
   claims: PackageClaim[];
   documents: PackageDoc[];
@@ -174,6 +184,8 @@ export interface Script {
   revision: number; // 1 for the first draft; the writer increments it on each revision
   /** The revision a send-back pass started from (absent = 0): the revision limit counts revisions within the pass. */
   passStartRevision?: number;
+  /** Copied from the package: the target the narrative is proportioned to (src/shared/duration.ts). */
+  targetDurationSeconds?: number;
   generation: {
     model: string;
     brief: string;
@@ -398,6 +410,8 @@ export interface Story {
   partOf?: string;
   /** Suggested follow-ups for the reviewer (ready, no shared claims, nearest wording); never applied by code. */
   chainCandidates?: string[];
+  /** The reviewer's target duration in seconds (story-review.json); the package carries it to every stage. */
+  targetDurationSeconds?: number;
 }
 export type Verdict = 'right' | 'wrong' | 'partly' | 'untestable' | 'unknown';
 /** How far a study verdict's passage reaches its claim. contextual is listed but never decides any sentence. */
@@ -473,6 +487,9 @@ export interface StoryReview {
   chain?: string[];
   /** Why each answer leads to the next question (required with a chain). */
   chainWhy?: string;
+  /** The target duration in seconds the whole pipeline proportions the story to (spec §5.7); absent keeps today's
+   *  rules. A positive number; the band it falls in supplies editorial defaults, never a format. */
+  targetDurationSeconds?: number;
 }
 
 export interface ReviewFile {
@@ -616,6 +633,8 @@ export interface Storyboard {
   status: 'ok' | 'blocked';
   issues: Issue[];
   scenes: Scene[];
+  /** The script's target, carried to the timeline for QA's runtime check. */
+  targetDurationSeconds?: number;
 }
 
 export interface DataTable {

@@ -84,6 +84,8 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
 
   it('builds no page or file for a story, topic or dataset that is not live', () => {
     for (const t of publicTopicNames()) expect(existsSync(join(DIST, t)), t).toBe(!!live.nodes.get(t)?.public);
+    // the fixture topic (spec 5.8) is never a page of the production build, whatever its story's state
+    expect(existsSync(join(DIST, 'test-fixture'))).toBe(false);
     for (const n of live.nodes.values()) {
       if (n.kind === 'story' && !n.public)
         expect(existsSync(join(DIST, matterPath(n.topic!, live.stories.get(n.id)!))), n.id).toBe(false);

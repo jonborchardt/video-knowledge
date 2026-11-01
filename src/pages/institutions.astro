@@ -6,7 +6,7 @@ import Base from '../layouts/Base.astro';
 import InstitutionCard from '../components/InstitutionCard.astro';
 import SourceIcons from '../components/SourceIcons.astro';
 import { matterOrder, breadcrumbJsonLd, collectionJsonLd } from '../modules/website';
-import { siteGraph, siteTopics } from '../modules/website/site-graph';
+import { commissionTopics, siteGraph, siteTopics } from '../modules/website/site-graph';
 import { commissions, site } from '../config/site';
 import { loadTopic } from '../modules/evidence';
 import { href } from '../lib/url';
@@ -14,7 +14,9 @@ import { href } from '../lib/url';
 const graph = siteGraph();
 const names = new Set(siteTopics(graph));
 const institutions = Object.values(commissions).map((c) => {
-  const published = c.topics.filter((n) => names.has(n)).map((n) => loadTopic(n));
+  const published = commissionTopics(c)
+    .filter((n) => names.has(n))
+    .map((n) => loadTopic(n));
   // Featured: the first ready matter across the institution's inquiries in the one order (a live video first); a
   // follow-up is never featured on its own.
   const first = [...graph.nodes.values()]

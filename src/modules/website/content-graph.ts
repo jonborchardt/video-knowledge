@@ -3,7 +3,7 @@
 // the one way a page, description or package builds a link to a node (D2); a URL comes from an id, never a title.
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { commissionKey, commissionOf } from '../../config/site';
+import { commissionKey, commissionOf, isFixtureTopic } from '../../config/site';
 import { toolOf } from '../../tools';
 import { loadArticleRelease } from '../article';
 import { dataRef, loadDatasets } from '../evidence';
@@ -43,8 +43,9 @@ export const storyNode = (topic: string, storyId: string) => `${topic}/${storyId
 /** A matter page's root-relative path, from the story id (never its title). */
 export const matterPath = (topic: string, s: Pick<Story, 'id'>) => `/${topic}/${storyUrlSlug(s)}/`;
 
-/** What is public: `live` = stories whose YouTube video is live; `preview` (the dev server) adds packaged ones. */
-export type View = 'live' | 'preview';
+/** What is public: `live` = stories whose YouTube video is live; `preview` (the dev server) adds packaged ones;
+ *  `fixture` (a `FIXTURE_SITE=1` build) is `live` plus the packaged stories of fixture topics (spec §5.8). */
+export type View = 'live' | 'preview' | 'fixture';
 
 const memo = new Map<string, Graph>();
 // ponytail: memoised for the life of the process (one build); the dev server needs a restart to see new stories.
@@ -86,7 +87,8 @@ function buildGraph(root: string, topics: string[], view: View, assumeLive: stri
       const rootId = s.partOf ?? s.id; // a follow-up is public exactly when its first question is
       const isLive = !!storyOutputs(topic, rootId, root).video || assumeLive.includes(storyNode(topic, rootId));
       const packaged =
-        view === 'preview' && existsSync(join(scriptDir(topic, rootId, root), 'video', 'review', 'review.json'));
+        (view === 'preview' || (view === 'fixture' && isFixtureTopic(topic))) &&
+        existsSync(join(scriptDir(topic, rootId, root), 'video', 'review', 'review.json'));
       node({ id, kind: 'story', title: s.title, topic, story: id, public: isLive || packaged });
       edge(id, topic, 'in');
     }
