@@ -28,3 +28,4 @@ export {
   isAutomated,
   parkProposal,
 } from './decisions';
+export { claimEdit, claimedBy } from './claim';

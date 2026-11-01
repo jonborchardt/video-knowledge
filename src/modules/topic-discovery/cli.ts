@@ -14,9 +14,13 @@
 //                                            writes one batch id (APPROVAL_SECRET) into each listed file and prints the
 //                                            batch as JSON for the adapter
 //   sent <batch id> --message-id <id>        records the batch mail's Message-ID on every proposal of the batch
+//   claim <topic> <commission> [--dry-run] [--force --by <name>]
+//                                            adds the topic to the commission's topics literal in src/config/site.ts (register
+//                                            D8): refused unless proposals/<topic>.json is approved and names that commission
+//                                            (a person's --force with --by claims for another); idempotent; then npm run brand
 // Exit 2 refuses and writes nothing. Nothing here researches or writes under topics/.
-import { existsSync, mkdirSync, readFileSync } from 'node:fs';
-import { dirname } from 'node:path';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { commissions } from '../../config/site';
 import { loadAutomation } from '../../shared/automation';
 import { ROOT, loadDotEnv, readJson, toJson, writeJsonAtomic } from '../../shared/io';
@@ -25,6 +29,8 @@ import { secretFromEnv } from '../../shared/request';
 import type { Proposal, ProposalReview } from '../../shared/types';
 import { loadStories } from '../stories';
 import { batchOf, decideProposal, parkProposal } from './decisions';
+import { claimEdit, claimedBy } from './claim';
+import { isAutomated as isAutomatedActor } from './decisions';
 import {
   PROPOSALS_DIR,
   existingOf,
@@ -51,7 +57,7 @@ const usage = () => {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 18)
+      .slice(0, 22)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -231,6 +237,43 @@ function main() {
         unreviewed: batch.unreviewed,
       };
       console.log(JSON.stringify({ ...out, invalid: invalid.map((i) => i.slug) }, null, 1));
+      break;
+    }
+    case 'claim': {
+      const [topic, commission] = positional;
+      if (!topic || !commission) throw new Refusal('claim needs <topic> <commission>');
+      const force = has('--force');
+      const by = flag('--by') ?? '';
+      if (force && (!by.trim() || isAutomatedActor(by)))
+        throw new Refusal('--force needs --by <name>: only a person claims for another commission');
+      const sitePath = join(root, 'src', 'config', 'site.ts');
+      if (!existsSync(sitePath)) throw new Refusal(`no ${sitePath}`);
+      const source = readFileSync(sitePath, 'utf8');
+      if (claimedBy(source, topic) === commission) {
+        console.log(`${topic}: already claimed by ${commission}`);
+        break;
+      }
+      if (!force) {
+        const { proposal } = load(topic);
+        if (proposal.status !== 'approved')
+          throw new Refusal(`${topic} is ${proposal.status}, not approved: only an approved proposal is claimed`);
+        if (proposal.institution !== commission)
+          throw new Refusal(
+            `the proposal names ${proposal.institution}, not ${commission} (a person may pass --force --by <name>)`,
+          );
+      }
+      const r = claimEdit(source, commission, topic);
+      if ('problem' in r) throw new Refusal(r.problem);
+      if (claimedBy(r.source, topic) !== commission)
+        throw new Refusal('the edit did not re-parse with the topic in that commission; site.ts was not changed');
+      if (has('--dry-run')) {
+        console.log(`dry run: would claim ${topic} for ${commission}`);
+        break;
+      }
+      writeFileSync(sitePath, r.source);
+      console.log(
+        `claimed ${topic} for ${commission} in src/config/site.ts${force ? ` (forced by ${by})` : ''}; run npm run brand for its assets; npm run validate typechecks it`,
+      );
       break;
     }
     case 'sent': {
