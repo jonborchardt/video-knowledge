@@ -788,3 +788,50 @@ export interface Topic {
   revisions: ClaimRevision[]; // every public change of a finding in this inquiry, oldest first
   revised: string | null; // the latest revision's date
 }
+
+// ---- topic discovery (Milestone 2, phase 4) -----------------------------------------------------------------------
+
+/** Five judgments in [0, 1] both the proposer and the independent reviewer give; evidence and checkability weigh double. */
+export interface ProposalScores {
+  evidence: number;
+  checkability: number;
+  depth: number;
+  fit: number;
+  novelty: number;
+}
+export type ProposalStatus = 'proposed' | 'approved' | 'rejected' | 'parked';
+/** proposals/<slug>.json: a topic an agent proposes for an institution; only a person approves or rejects it; code or
+ *  the topic runner parks it with a reason. Nothing in it is researched. */
+export interface Proposal {
+  slug: string;
+  institution: string; // a commission key
+  question: string;
+  rationale: string;
+  fit: string;
+  claims: string[];
+  sources: { url: string; title: string }[];
+  studies: { url: string; title: string }[];
+  overlap: { topics: string[]; stories: string[]; note: string };
+  scores: ProposalScores;
+  overall?: number;
+  generation: { model: string; brief: string; date: string; session?: string };
+  status: ProposalStatus;
+  parkedWhy?: string;
+  decidedBy?: string;
+  decidedAt?: string;
+  note?: string;
+  via?: { channel: string; messageId?: string };
+  batch?: { id: string; sentAt: string; messageId: string };
+}
+/** proposals/<slug>.review.json: the independent reviewer's verdict on one proposal (a fresh agent, never the proposer). */
+export interface ProposalReview {
+  slug: string;
+  fit: boolean;
+  verdict: string;
+  concerns: string[];
+  scores: ProposalScores;
+  overall?: number;
+  reviewer: string;
+  session?: string;
+  date: string;
+}

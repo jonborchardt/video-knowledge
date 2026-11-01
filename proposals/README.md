@@ -1,0 +1,3 @@
+# proposals
+
+A proposal (`<slug>.json`) is a topic an agent suggests for one of the Commonwealth's institutions: the question it would ask, why that institution, the claims the public makes about it, where the evidence would come from, and five scores. An independent agent reviews each one (`<slug>.review.json`) and may fail it for substance. Code validates and ranks them and parks the weak ones with the reason. Only a person approves or rejects a proposal (by reply to the weekly batch email, or `npm run topics -- approve|reject`); an approved proposal is what the research pipeline starts from. Nothing here is researched, and a proposal never writes under `topics/`.
