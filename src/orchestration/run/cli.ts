@@ -15,6 +15,8 @@
 //                                      --no-commit: a supervised run on a feature branch; the finish validates and
 //                                      leaves the artifacts uncommitted for the person (the runner commits only on
 //                                      git.commitOn's branch).
+//   topic <topic>                      the research pipeline for one approved proposal (what the work plane runs); a
+//                                      crashed run resumes with the same command; a thin topic is parked, not halted
 //   discover [--institution <key>] [--dry-run]
 //                                      the weekly topic discovery by hand (costs agents): one discovery agent per
 //                                      institution with a channel, one independent review per proposal, the batch and its
@@ -51,6 +53,7 @@ import { tick } from './tick';
 import { type Job, launchDeps, nextJob, scheduleText, work } from './work';
 import { launch } from './launch';
 import { discover, discoveryDeps } from './discovery';
+import { runTopic } from './topic-runner';
 
 const usage = () =>
   readFileSync(new URL(import.meta.url), 'utf8')
@@ -142,6 +145,22 @@ switch (verb) {
     }
     const pushed = r.record?.pushed ? `, pushed ${r.record.pushed}` : '';
     console.log(`launched: committed ${r.record?.committed ?? 'nothing'}${pushed}; the tick probes the deploy`);
+    break;
+  }
+  case 'topic': {
+    // the research pipeline for one approved proposal (what the work plane runs): real agents, the watcher and the
+    // research verbs as children; a crashed run resumes with the same command
+    const topic = rest[0];
+    if (!topic) die(usage());
+    const a = loadAutomation(ROOT);
+    const r = await runTopic(topic, a, { root: ROOT });
+    if (r.outcome === 'held') die('another run holds this topic', 3);
+    if (r.outcome === 'halted' && r.halt) {
+      console.log(`HALT ${r.halt.kind}: ${r.halt.why}`);
+      console.log(`UNBLOCK: ${r.halt.unblock.text}`);
+      process.exit(1);
+    }
+    console.log(`done: ${topic} ${r.stage} (${r.iterations} steps, ${r.costUsd.toFixed(2)} USD)`);
     break;
   }
   case 'discover': {

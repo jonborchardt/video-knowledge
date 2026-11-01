@@ -25,6 +25,8 @@ export interface StepOutcome {
   /** The tree guard (Task 6) refused the agent's changes: the halt is unexpected-edit, not no-progress. */
   guardFailed?: boolean;
   rounds?: number;
+  /** The agent's final reply (a notes agent's output is its reply). */
+  text?: string;
 }
 
 /** `npm run <cli> -- <args>` → the cli and its args, with `<approver>` filled in; anything else null. */
@@ -111,6 +113,18 @@ export function validatorFor(step: Step, topic: string, storyId: string): { cli:
       return { cli: 'video', args: ['check', topic, storyId] };
     case 'discover.md': // the new proposals (no review yet), whatever slugs the agent chose
       return { cli: 'topics', args: ['validate', '--fresh'] };
+    case 'collect.md':
+      return { cli: 'evidence', args: ['lists', topic] };
+    case 'extract.md': {
+      const out = /^Write: (\S+)$/m.exec(step.text)?.[1];
+      return out ? { cli: 'evidence', args: ['check-batch', topic, out] } : null;
+    }
+    case 'merge.md':
+      return { cli: 'evidence', args: ['check-merges', topic] };
+    case 'sources.md': {
+      const out = /^Write: (\S+)$/m.exec(step.text)?.[1];
+      return out ? { cli: 'evidence', args: ['check-verdicts', out] } : null;
+    }
     case 'proposal-review.md': // `topic` carries the proposal's slug for this role
       return { cli: 'topics', args: ['validate', topic, '--review'] };
     default:
@@ -307,6 +321,7 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
         sessionId: last.sessionId,
         error: last.error ?? 'agent failed',
         rounds: round + 1,
+        text: last.text,
       };
     if (!validator)
       return {
@@ -318,6 +333,7 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
         sessionId: last.sessionId,
         error: null,
         rounds: round + 1,
+        text: last.text,
       };
     const [exe, argv] = (ctx.argvOf ?? cliArgv)(validator.cli, validator.args);
     const v = await runChild(exe, argv, {
@@ -342,6 +358,7 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
         sessionId: last.sessionId,
         error: null,
         rounds: round + 1,
+        text: last.text,
       };
     if (round === a.runs.validationRounds || !resume)
       return {

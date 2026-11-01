@@ -28,6 +28,9 @@ const dirsIn = (d: string): string[] =>
 function runFolders(root: string): { topic: string; dir: string; storyId: string }[] {
   const out: { topic: string; dir: string; storyId: string }[] = [];
   for (const topic of dirsIn(topicsDir(root))) {
+    // a topic run (the research pipeline) keeps its run folder under work/
+    const research = join(topicsDir(root), topic, 'work', RUN_DIR);
+    if (existsSync(research)) out.push({ topic, dir: join(topicsDir(root), topic, 'work'), storyId: 'research' });
     const scripts = join(topicsDir(root), topic, 'scripts');
     for (const slug of dirsIn(scripts)) {
       const dir = join(scripts, slug);

@@ -65,7 +65,11 @@ export interface TreeSnapshot {
   /** The content hash of every path that was already dirty: a further change to it is the agent's. */
   dirtySha: Map<string, string>;
   canaries: Map<string, { sha: string; content: Buffer | null }>;
+  /** The content of untracked files under `hold` patterns (a research run's store and documents before their finish
+   *  commit): an agent's overwrite is restored from it instead of deleted. */
+  held: Map<string, Buffer>;
 }
+const HOLD_UNTRACKED_BYTES = 2 * 1024 * 1024;
 
 type Git = (args: string[], cwd: string) => string;
 const runGit: Git = (args, cwd) =>
@@ -157,7 +161,7 @@ function canaryContent(file: string): Buffer {
   }
 }
 
-export function snapshot(root: string, opts: { git?: Git; home?: string } = {}): TreeSnapshot {
+export function snapshot(root: string, opts: { git?: Git; home?: string; hold?: string[] } = {}): TreeSnapshot {
   const git = opts.git ?? runGit;
   const canaries = new Map<string, { sha: string; content: Buffer | null }>();
   for (const f of canaryFiles(root, opts.home ?? homedir())) {
@@ -166,11 +170,16 @@ export function snapshot(root: string, opts: { git?: Git; home?: string } = {}):
   }
   const status = porcelain(root, git);
   const dirtySha = new Map<string, string>();
-  for (const p of status.keys()) {
+  const held = new Map<string, Buffer>();
+  for (const [p, code] of status) {
     const full = join(root, p);
-    if (existsSync(full) && statSync(full).isFile()) dirtySha.set(p, sha(readFileSync(full)));
+    if (!existsSync(full) || !statSync(full).isFile()) continue;
+    const buf = readFileSync(full);
+    dirtySha.set(p, sha(buf));
+    if (code === '??' && opts.hold?.length && buf.length <= HOLD_UNTRACKED_BYTES && matchesAny(p, opts.hold))
+      held.set(p, buf);
   }
-  return { status, dirtySha, canaries };
+  return { status, dirtySha, canaries, held };
 }
 
 export interface GuardResult {
@@ -212,6 +221,13 @@ export function guard(
     const additive = matchesAny(path, opts.additiveOnly ?? []) && !wasNew && deletesLines(git, root, path);
     if (allowed && !newOnly && !additive) {
       result.kept.push(path);
+      continue;
+    }
+    const held = before.held?.get(path);
+    if (held && wasNew) {
+      // an untracked data file the snapshot holds (a research run's store before its commit): put back, never deleted
+      writeFileSync(join(root, path), held);
+      result.restored.push(path);
       continue;
     }
     revert(git, root, path, wasNew);

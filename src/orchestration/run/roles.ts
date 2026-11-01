@@ -51,15 +51,17 @@ export function grantFor(role: AgentRole, s: Subject): RoleGrant {
     case 'reviewer':
       return {
         ...none,
-        writable: [
-          'script-review.json',
-          'article-review.json',
-          'shorts-review.json',
-          'video/visual-review.json',
-          'video/draft-review.json',
-        ]
-          .map((f) => `${storyRel(s)}/${f}`)
-          .concat([`topics/${s.topic}/story-review.json`]),
+        // without a story (the stories reviewer of a topic run) only the topic's story review
+        writable: (s.storyId
+          ? [
+              'script-review.json',
+              'article-review.json',
+              'shorts-review.json',
+              'video/visual-review.json',
+              'video/draft-review.json',
+            ].map((f) => `${storyRel(s)}/${f}`)
+          : []
+        ).concat([`topics/${s.topic}/story-review.json`]),
       };
     case 'draftReview':
       return { ...none, writable: [`${storyRel(s)}/video/draft-review.json`] };

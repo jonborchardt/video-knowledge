@@ -11,6 +11,7 @@
 //   groups <topic>                                the watcher's extract entries into work/grpN.txt (about 400k characters
 //                                                 each) and work/claims.txt; prints the group count
 //   check-batch <topic> <work/hN.json>            the extraction batch check (exit 2 with the findings)
+//   check-verdicts <work/sv_N.json>               the study-verdict batch check (exit 2 with the findings)
 //   dedupe <topic>                                exact cross-file duplicate new claims in work/h*.json become n2 of the
 //                                                 first; rewrites the files, prints the count
 //   check-merges <topic>                          work/merges.json and work/distinct.json shapes, and the collisions of
@@ -26,7 +27,7 @@ import { join } from 'node:path';
 import { loadAutomation } from '../../shared/automation';
 import { ROOT, loadDotEnv, readJson, toJson, topicDir } from '../../shared/io';
 import { Refusal } from '../../shared/refusal';
-import { type ExtractionBatch, checkBatches } from './batches';
+import { type ExtractionBatch, checkBatches, checkStudyVerdicts } from './batches';
 import { type Collision, collisions, similarityFn } from './collide';
 import { dedupeBatches } from './dedupe';
 import { fetchDoc, fetchDocProblem } from './fetch-doc';
@@ -47,7 +48,7 @@ const usage = () => {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 24)
+      .slice(0, 25)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -226,6 +227,22 @@ async function main() {
         ),
       );
       const problems = checkBatches(parsed, topic, [...storeClaims(topic), ...texts]);
+      if (problems.length) throw new Refusal(problems.join('\n'));
+      console.log(`RESULT: PASSED (${file})`);
+      break;
+    }
+    case 'check-verdicts': {
+      const file = positional[0];
+      if (!file) throw new Refusal('check-verdicts needs <work/sv_N.json>');
+      const p = join(root, file);
+      if (!existsSync(p)) throw new Refusal(`no ${file}`);
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(readFileSync(p, 'utf8'));
+      } catch (e) {
+        throw new Refusal(`${file}: not JSON: ${(e as Error).message}`);
+      }
+      const problems = checkStudyVerdicts(parsed);
       if (problems.length) throw new Refusal(problems.join('\n'));
       console.log(`RESULT: PASSED (${file})`);
       break;

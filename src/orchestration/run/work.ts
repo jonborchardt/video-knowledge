@@ -22,6 +22,8 @@ import { envFor } from './steps';
 import { execFileSync } from 'node:child_process';
 import { type DueResume, readSchedule, updateSchedule } from './schedule';
 import { discover, discoveryDeps, discoveryDir, discoveryDue } from './discovery';
+import { runTopic, topicRunFolder } from './topic-runner';
+import { loadProposals, researched } from '../../modules/topic-discovery';
 
 export type JobKind = 'launch' | 'resume' | 'release' | 'pick' | 'topic' | 'discovery' | 'scan';
 export interface Job {
@@ -48,6 +50,10 @@ export interface WorkDeps {
   approver?: string;
   /** Runs the discovery job (phase 4); the default runs the agents and mails the batch. */
   runDiscovery?: (a: Automation) => Promise<RunResult>;
+  /** Runs a topic run (phase 5); the default is the topic runner with real agents and CLIs. */
+  runTopic?: (topic: string, a: Automation) => Promise<RunResult>;
+  /** The topic jobs (phase 5): approved proposals not yet researched; the default reads proposals/. */
+  topics?: () => Job[];
   skip?: Job[]; // jobs this instance already found held
   mail?: MailTransport | null; // the request mails of a release loop
 }
@@ -87,7 +93,14 @@ export function nextJob(a: Automation, root = ROOT, deps: WorkDeps = {}): Job | 
     const job: Job = { kind: 'discovery', why: 'discovery: the weekly slot' };
     if (!(held && (deps.alive ?? alive)(held.pid)) && !skip.some((s) => sameJob(s, job))) return job;
   }
-  // topic runs and scans: phases 5 and 6
+  // topic runs (phase 5): an approved proposal not yet researched, under the topic-run concurrency cap
+  const topicRuns = statusOf(root, deps.alive ?? alive).filter(
+    (r) => r.state === 'running' && r.storyId === 'research',
+  ).length;
+  if (topicRuns < a.runs.maxConcurrentTopicRuns)
+    for (const job of (deps.topics ?? (() => topicJobs(root, deps.alive ?? alive)))())
+      if (!skip.some((s) => sameJob(s, job))) return job;
+  // scans: phase 6
   return null;
 }
 
@@ -115,6 +128,21 @@ export function releaseJobs(a: Automation, root = ROOT, isAlive: (pid: number) =
   return out;
 }
 
+/** Every approved proposal that is not researched yet (no ready story), never a fixture topic's, with no live run
+ *  and no halt in its topic run folder. */
+export function topicJobs(root = ROOT, isAlive: (pid: number) => boolean = alive): Job[] {
+  const out: Job[] = [];
+  for (const { proposal } of loadProposals(root)) {
+    if (proposal.status !== 'approved' || isFixtureTopic(proposal.slug) || researched(proposal.slug, root)) continue;
+    const dir = topicRunFolder(proposal.slug, root);
+    if (existsSync(join(dir, 'halt.json'))) continue;
+    const lock = readLock(dir);
+    if (lock && isAlive(lock.pid)) continue;
+    out.push({ kind: 'topic', topic: proposal.slug, why: `research: the approved proposal ${proposal.slug}` });
+  }
+  return out;
+}
+
 export async function work(a: Automation, root = ROOT, deps: WorkDeps = {}): Promise<WorkReport> {
   const now = deps.now ?? Date.now;
   if (!a.enabled.work) return { outcome: 'disabled', job: null };
@@ -137,13 +165,15 @@ export async function work(a: Automation, root = ROOT, deps: WorkDeps = {}): Pro
       picked?.result ??
       (job.kind === 'discovery'
         ? await (deps.runDiscovery ?? ((auto) => discover(auto, discoveryDeps(deps.mail ?? null), root)))(a)
-        : job.kind === 'launch'
-          ? await (deps.runLaunch ?? ((t, s, auto) => launch(t, s, auto, launchDeps(root), root)))(
-              job.topic!,
-              job.storyId!,
-              a,
-            )
-          : await run(job.topic!, job.storyId!, a, approver));
+        : job.kind === 'topic'
+          ? await (deps.runTopic ?? ((t, auto) => runTopic(t, auto, { root })))(job.topic!, a)
+          : job.kind === 'launch'
+            ? await (deps.runLaunch ?? ((t, s, auto) => launch(t, s, auto, launchDeps(root), root)))(
+                job.topic!,
+                job.storyId!,
+                a,
+              )
+            : await run(job.topic!, job.storyId!, a, approver));
     if (result.outcome === 'held') {
       skip.push(job); // another instance owns it: try the next job once
       continue;
