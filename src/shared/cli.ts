@@ -32,6 +32,14 @@ export function cliArgv(name: string, args: string[]): [string, string[]] {
   return [process.execPath, [...runner, file, ...args]];
 }
 
+/** What a child CLI run answers: the exit status and both streams (what the orchestration's steps take, so a test
+ *  can run the verb in process). */
+export interface CliResult {
+  status: number | null;
+  stdout: string;
+  stderr: string;
+}
+
 /** Runs `npm run <name> -- <args>` and waits: stdout and stderr captured as text unless `stdio` says otherwise.
  *  `cwd` defaults to `ROOT`; a test passes its fixture root. */
 export function runCli(

@@ -14,6 +14,7 @@ import { addOutputTo, loadLedger, openOutput, recordChangesRequested } from '../
 import { runCli } from '../../src/shared/cli';
 import { type Halt, clearHalt, readJournal, runDir, writeHalt } from '../../src/orchestration/run/journal';
 import {
+  DRAFT_ACCEPTED_FILE,
   readShadow,
   releasePending,
   shadowAgreement,
@@ -410,6 +411,57 @@ describe('the draft by policy', () => {
     expect(existsSync(s.reviewFile)).toBe(false);
     expect(readShadow(s.f.root)).toEqual([]);
     expect(releasePending(s.f.topic, s.f.story, s.a, s.f.root)).toBeNull();
+  }, 600_000);
+
+  it("person: the OK reply to the draft mail (run/draft-accepted.json, phase 3) makes the next run final by the person's name", async () => {
+    const s = draftStaged('accept', 'person');
+    const first = await s.run({ env: s.env }, s.a);
+    expect(first.halt?.kind).toBe('awaiting-person');
+    writeFileSync(
+      join(runDir(s.f.topic, s.f.story, s.f.root), DRAFT_ACCEPTED_FILE),
+      toJson({ build: s.build, by: 'Jon', via: { channel: 'email', messageId: '<r1@jon>' }, at: '2026-11-01' }),
+    );
+    const finals: string[] = [];
+    const r = await s.run(
+      {
+        env: s.env,
+        exec: async (a, step, ctx) => {
+          const m = /^npm run video -- final (\S+) (\S+) --approved-by "?([^"]+?)"?$/.exec(step.text);
+          if (m) {
+            finals.push(m[3]);
+            afterFinal(s.f.dir, 'releasesha');
+            const bytes = Buffer.alloc(4096, 6);
+            writeFileSync(join(s.f.dir, 'video', REVIEW_DIR, 'fixture.mp4'), bytes);
+            const rp = join(s.f.dir, 'video', REVIEW_DIR, 'review.json');
+            writeFileSync(rp, toJson({ ...readJson<object>(rp)!, mp4Sha: sha(bytes) }));
+            const acc = runCli(
+              'publish',
+              ['accept-draft', m[1], m[2], '--by', m[3], '--build', s.build, '--note', 'draft accepted by final'],
+              { cwd: s.f.root, env: s.env },
+            );
+            return {
+              kind: 'run',
+              ok: acc.status === 0,
+              exit: acc.status,
+              ms: 1,
+              costUsd: 0,
+              sessionId: null,
+              error: acc.status === 0 ? null : acc.stderr,
+              log: '',
+            };
+          }
+          return execStep(a, step, ctx);
+        },
+      },
+      s.a,
+    );
+    expect(finals).toEqual(['Jon']);
+    expect(r.halt?.kind).toBe('awaiting-person');
+    expect(r.halt?.unblock.text).toMatch(/reply OK/); // on to the release request
+    const ev = s.events();
+    expect(ev.find((e) => e.type === 'approved')).toMatchObject({ by: 'Jon', build: s.build });
+    expect(ev.filter((e) => e.type === 'uploaded')).toHaveLength(2); // the draft, then the release build
+    expect(publicUpdates(s.calls())).toEqual([]);
   }, 600_000);
 
   it("shadow: the draft is uploaded, the agent's verdict goes to shadow.json and nowhere else, the person decides", async () => {

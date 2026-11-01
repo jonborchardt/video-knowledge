@@ -18,6 +18,10 @@ import { acquire, heartbeat, release } from './lock';
 import { type OutboxEntry, automationDir, flushOutbox, notifyHalts, renderHalt } from './notify';
 import { renderDigest } from './digest';
 import { type PreflightDeps, preflight } from './preflight';
+import { pollInbox } from './inbox';
+import { publishDue } from './publish-due';
+import { type CliResult, runCli } from '../../shared/cli';
+import { envFor } from './steps';
 import { alive, killTree } from './proc';
 import { dueResumes, stuckRows } from './resume';
 import { updateSchedule } from './schedule';
@@ -37,6 +41,8 @@ export interface TickDeps {
   digestExtra?: () => DigestExtra;
   /** Re-renders a resendable outbox entry's body (the outbox stores none); null leaves it. */
   render?: (e: OutboxEntry) => Omit<OutMail, 'messageId'> | null;
+  /** Runs a publishing verb as a child (the inbox's decisions, the due publications); tests inject. */
+  run?: (cli: string, args: string[]) => Promise<CliResult> | CliResult;
 }
 
 export interface TickReport {
@@ -168,7 +174,20 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
       );
       if (resent.length) actions.push(`outbox: resent ${resent.length}`);
     }
-    // inbox, due publications and deploy probes: phase 3
+    // the inbox (replies become decisions) and the due publications (a schedule, the Shorts, a renewal); the deploy
+    // probes follow (phase 3 Task 4)
+    const run =
+      deps.run ??
+      ((cli: string, args: string[]) => runCli(cli, args, { cwd: root, env: envFor(cli, args, process.env) }));
+    if (deps.mail) {
+      const inbox = await pollInbox(a, deps.mail, root, { now, run });
+      if (inbox.fetched)
+        actions.push(
+          `inbox: ${inbox.fetched} fetched, ${inbox.applied.length} applied, ${inbox.clarified.length} clarified, ${inbox.refused.length} refused, ${inbox.ignored.length} ignored`,
+        );
+    }
+    const published = await publishDue(a, root, { now, run, mail: deps.mail, env: process.env });
+    actions.push(...published);
     const rows = (deps.rows ?? (() => statusOf(root, deps.alive)))();
     const due = dueResumes(a, root, { now, rows, ask: deps.ask, alive: deps.alive });
     updateSchedule(root, (s) => ({ ...s, due }));

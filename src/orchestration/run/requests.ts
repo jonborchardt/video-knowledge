@@ -6,7 +6,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
 import type { BuildSummary } from '../../shared/build-report';
-import { runCli } from '../../shared/cli';
+import { type CliResult, runCli } from '../../shared/cli';
 import { REVIEW_DIR, ROOT, readJson, scriptDir, writeJsonAtomic } from '../../shared/io';
 import { runDir } from './journal';
 import type { MailTransport, OutMail } from '../../shared/mail';
@@ -228,6 +228,8 @@ export interface SendDeps {
   now?: () => number;
   env?: NodeJS.ProcessEnv;
   secrets?: string[];
+  /** Runs `publish message-sent` (the ledger's record of the mail); the default spawns the CLI. Tests inject. */
+  run?: (cli: string, args: string[]) => Promise<CliResult> | CliResult;
 }
 
 /** Sends the release request once per request id (the outbox remembers), then records the Message-ID on the
@@ -247,7 +249,7 @@ export async function sendReleaseRequest(
   const sent = readOutbox(root).find((e) => e.request === req.request);
   if (sent) {
     // sent before: the ledger may lack the record (a crash between the send and it): complete it from the outbox
-    if (!req.messageId) recordSent(topic, storyId, req.request, sent.messageId, root, deps.env);
+    if (!req.messageId) await recordSent(topic, storyId, req.request, sent.messageId, root, deps);
     return req.messageId ? null : sent.messageId;
   }
   const urls = Object.fromEntries(
@@ -269,7 +271,7 @@ export async function sendReleaseRequest(
     storyId,
     now: deps.now,
   });
-  recordSent(topic, storyId, req.request, messageId, root, deps.env);
+  await recordSent(topic, storyId, req.request, messageId, root, deps);
   return messageId;
 }
 
@@ -293,32 +295,28 @@ export function urlsOf(
   );
 }
 
-function recordSent(
+async function recordSent(
   topic: string,
   storyId: string,
   request: string,
   messageId: string,
   root: string,
-  env?: NodeJS.ProcessEnv,
-): void {
-  const r = runCli(
-    'publish',
-    [
-      'message-sent',
-      topic,
-      storyId,
-      '--request',
-      request,
-      '--message-id',
-      messageId,
-      '--by',
-      'automated: release request',
-    ],
-    {
-      cwd: root,
-      env: envFor('publish', [], env ?? process.env),
-    },
-  );
+  deps: SendDeps,
+): Promise<void> {
+  const args = [
+    'message-sent',
+    topic,
+    storyId,
+    '--request',
+    request,
+    '--message-id',
+    messageId,
+    '--by',
+    'automated: release request',
+  ];
+  const r = deps.run
+    ? await deps.run('publish', args)
+    : runCli('publish', args, { cwd: root, env: envFor('publish', [], deps.env ?? process.env) });
   if (r.status !== 0) throw new Error(`publish message-sent failed: ${(r.stderr || r.stdout).trim()}`);
 }
 

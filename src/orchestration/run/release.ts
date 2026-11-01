@@ -28,7 +28,7 @@ import {
   openRequest,
 } from '../../modules/publishing';
 import { type BoardNext, type Step, stepsOf } from '../production';
-import type { Halt, RunHaltKind } from './journal';
+import { type Halt, type RunHaltKind, runDir } from './journal';
 import { automationDir } from './notify';
 import type { RunResult } from './runner';
 import { type ShortsContext, shortsForParent, shortsOwed, shortsPending } from './shorts';
@@ -37,6 +37,7 @@ import type { StepOutcome } from './steps';
 export const SHADOW_FILE = 'shadow.json';
 export const DRAFT_REVIEW_BRIEF = 'src/modules/video/briefs/draft-review.md';
 export const DRAFT_REVIEW_FILE = 'video/draft-review.json';
+export const DRAFT_ACCEPTED_FILE = 'draft-accepted.json'; // under the story's run/: a person's OK to the draft mail
 
 export interface GroupOutput {
   id: string; // the ledger output id: youtube, short:<slug>
@@ -494,6 +495,21 @@ async function draftPass(
         at: new Date(c.now()).toISOString(),
       };
       recordShadowAgent(root, shadow);
+    }
+    // the person's OK to the draft mail (the inbox adapter wrote run/draft-accepted.json): `video final` by their name
+    const accepted = readJson<{ build: string; by: string }>(
+      join(runDir(topic, main.storyId, root), DRAFT_ACCEPTED_FILE),
+    );
+    if (accepted && accepted.build === main.build!.sha) {
+      const fin = await c.run(cmd('video', ['final', topic, main.storyId, '--approved-by', accepted.by]), 'release');
+      if (halted(fin)) return fin;
+      if (!fin.ok)
+        return c.halt(
+          fin.error === 'timeout' ? 'timeout' : 'step-failed',
+          `video final failed for ${main.id}: ${fin.error}`,
+          { kind: 'run', text: `npm run run -- story ${topic} ${storyId}` },
+        );
+      return null;
     }
     if (c.mail) await c.mail.draft(main, shadow); // the output under review, a Short's own when it is the Short
     const url = main.state.url ?? '(not uploaded)';

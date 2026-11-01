@@ -149,15 +149,18 @@ const need = (name: string) => {
   return v;
 };
 const output = flag('--output') ?? (shortArg ? `short:${shortArg.slug}` : undefined);
-/** `--via review-page` (the page), `--via email:<message id>` (phase 3's adapter); a hand-run verb records none. */
-const via = (): { channel: 'email' | 'review-page' | 'tick' | 'cli'; messageId?: string } | undefined => {
+/** `--via review-page` (the page), `--via email:<message id>` (the inbox adapter), `--via tick:<request id>` (the
+ *  tick applying a decided request to a Short); a hand-run verb records none. */
+const via = ():
+  { channel: 'email' | 'review-page' | 'tick' | 'cli'; messageId?: string; request?: string } | undefined => {
   const v = flag('--via');
   if (!v) return undefined;
   const [channel, ...rest] = v.split(':');
   if (!['email', 'review-page', 'tick', 'cli'].includes(channel))
     throw new Refusal(`--via ${v}: email, review-page, tick or cli`);
-  const messageId = rest.join(':');
-  return { channel: channel as 'email' | 'review-page' | 'tick' | 'cli', ...(messageId && { messageId }) };
+  const detail = rest.join(':');
+  const key = channel === 'tick' ? 'request' : 'messageId';
+  return { channel: channel as 'email' | 'review-page' | 'tick' | 'cli', ...(detail && { [key]: detail }) };
 };
 const common = () => ({ output, by: by() });
 // YOUTUBE_FAKE=<state file> (tests only; nothing in the repo sets it): a recording client over a JSON file
