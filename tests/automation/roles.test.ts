@@ -33,6 +33,9 @@ describe('roles (the agent permission table, as code)', () => {
       ['src/modules/video/bespoke/index.ts', 'src/modules/video/remotion/scenes/index.ts'].sort(),
     );
     expect(g.shell).toEqual(['Bash(npm run video -- frames *)', 'Bash(npm run video -- check *)']);
+    // what those two verbs write: accepted by the guard, never an Edit rule (the fixture's Short halted on it)
+    expect(g.derived.sort()).toEqual([`${story}/video/frames/*`, `${story}/video/render-check.json`].sort());
+    expect(grantFor('writer', subject).derived).toEqual([]);
   });
   it('extraction and collect write only under the topic work folder and sources', () => {
     const e = grantFor('extraction', { topic: 'heat-pumps' });

@@ -53,7 +53,7 @@ async function agentWrites(name: string, actions: unknown[], role: 'writer' | 'g
     env: { ...process.env, FAKE_CLAUDE_SCENARIO: scenario },
     argvOf: () => [process.execPath, [FAKE_STEP]],
     guard: () => {
-      const g = guard(before, r.root, g0.writable, {
+      const g = guard(before, r.root, [...g0.writable, ...g0.derived], {
         newFilesOnly: g0.newFilesOnly,
         additiveOnly: g0.additiveOnly,
         home,
@@ -146,6 +146,15 @@ describe('containment (criterion 14)', () => {
       expect(env[k]).toBeUndefined();
     expect(env.VK_NO_DOTENV).toBe('1');
     r.git('clean', '-fdq', 'src');
+  });
+  it("(7) a graphics agent's own check verb writes render-check.json: kept, never reverted", async () => {
+    const { o, reverted } = await agentWrites(
+      'c7',
+      [{ write: `${r.story}/video/render-check.json`, text: '{"problems":[]}\n' }],
+      'graphics',
+    );
+    expect(o.guardFailed).toBeFalsy();
+    expect(reverted).toEqual([]);
   });
   it('(8) a content role has no Bash rule, whatever the configuration says', () => {
     for (const role of CONTENT_ROLES) {

@@ -165,13 +165,19 @@ export function videoChecks(p: Probe, tl: Timeline, duration?: [number, number])
  *  type: types.ts is in every component's import graph, and a change there moves every bespoke graphic's key. */
 export type TimelineTarget = { targetDurationSeconds?: number };
 export function runtimeCheck(p: Pick<Probe, 'duration'>, tl: Pick<Timeline, 'fps' | 'scenes'> & TimelineTarget): Check {
+  // the target constrains the narrative, which the words budget made a speech budget: the measure is the speech the
+  // timeline's sentences carry (holds, a title card and the end card are production time); a timeline without
+  // measured sentences falls back to the frame span less the appended end card
   const last = tl.scenes.at(-1);
   const end = last?.kind === 'close-card' ? last.duration / tl.fps : 0;
-  const narrated = Math.max(0, p.duration - end);
+  const spokenFrames = tl.scenes.flatMap((s) => s.sentences ?? []).reduce((n, x) => n + (x.duration ?? 0), 0);
+  const spoken = spokenFrames > 0 ? spokenFrames / tl.fps : null;
+  const narrated = spoken ?? Math.max(0, p.duration - end);
+  const word = spoken === null ? 'narrated' : 'spoken';
   const target = tl.targetDurationSeconds;
-  if (target === undefined) return check('runtime', true, `${narrated.toFixed(1)}s narrated, no target`);
+  if (target === undefined) return check('runtime', true, `${narrated.toFixed(1)}s ${word}, no target`);
   const problem = runtimeProblem(narrated, target);
-  return check('runtime', !problem, problem ?? `${narrated.toFixed(1)}s narrated against a ${target} s target`);
+  return check('runtime', !problem, problem ?? `${narrated.toFixed(1)}s ${word} against a ${target} s target`);
 }
 
 /** The audio stream, its levels and silences, and every sentence's narration fitting its slot. */

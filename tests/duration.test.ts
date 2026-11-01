@@ -173,6 +173,24 @@ describe('downstream artifacts by band', () => {
     expect(runtime(probe(24), tl(15)).ok).toBe(true); // 14 s narrated
     expect(runtime(probe(35), tl()).ok).toBe(true);
     expect(runtime(probe(35), tl()).detail).toMatch(/no target/);
+    // a timeline whose sentences carry their measured speech: the speech is what the target constrains, not the
+    // holds around it (the fixture's Short: 10.4 s of speech in a 11.9 s frame span against 7.5 s)
+    const spoken = (target: number, frames: number[]): Timeline =>
+      ({
+        ...tl(target, 0),
+        scenes: [
+          {
+            id: 'sc1',
+            kind: 'short-stat-tiles',
+            start: 0,
+            duration: 357,
+            sentences: frames.map((d, i) => ({ id: `s${i + 1}`, start: i * 100, duration: d })),
+          },
+        ],
+      }) as unknown as Timeline;
+    expect(runtime(probe(11.9), spoken(7.5, [63, 96, 96, 57])).ok).toBe(true); // 10.4 s spoken
+    expect(runtime(probe(11.9), spoken(7.5, [63, 96, 96, 57])).detail).toMatch(/10\.4s spoken/);
+    expect(runtime(probe(11.9), spoken(7.5, [90, 96, 96, 57])).ok).toBe(false); // 11.3 s spoken
   });
   it('a micro article is one paragraph without tables; a short one two to four', () => {
     const base = article();

@@ -18,6 +18,8 @@ export interface RoleGrant {
   newFilesOnly: string[];
   /** Patterns in `writable` whose edits may only add lines. */
   additiveOnly: string[];
+  /** What the role's fixed verbs write (derived files): the guard accepts them, the agent gets no Edit rule for them. */
+  derived: string[];
   /** Bash rules, in Claude Code's syntax; empty for every content role. */
   shell: string[];
   web: boolean;
@@ -32,7 +34,7 @@ const SCENES = 'src/modules/video/remotion/scenes';
 const BESPOKE = 'src/modules/video/bespoke';
 
 export function grantFor(role: AgentRole, s: Subject): RoleGrant {
-  const none = { newFilesOnly: [], additiveOnly: [], shell: [], web: true };
+  const none = { newFilesOnly: [], additiveOnly: [], derived: [], shell: [], web: true };
   switch (role) {
     case 'writer':
       return {
@@ -73,6 +75,7 @@ export function grantFor(role: AgentRole, s: Subject): RoleGrant {
         ],
         newFilesOnly: [`${SCENES}/*.tsx`],
         additiveOnly: [`${SCENES}/index.ts`, `${BESPOKE}/index.ts`],
+        derived: [`${storyRel(s)}/video/render-check.json`, `${storyRel(s)}/video/frames/*`], // what check and frames write
         shell: ['Bash(npm run video -- frames *)', 'Bash(npm run video -- check *)'],
         web: false,
       };

@@ -160,7 +160,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
         // nowhere else (the machinery stays protected; a planted package.json is caught by name)
         const g =
           scope === 'agent'
-            ? realGuard(snap, root, currentGrant.writable, {
+            ? realGuard(snap, root, [...currentGrant.writable, ...currentGrant.derived], {
                 newFilesOnly: currentGrant.newFilesOnly,
                 additiveOnly: currentGrant.additiveOnly,
               })
