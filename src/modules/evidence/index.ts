@@ -1,8 +1,9 @@
 // Public API of the evidence module. Read API for other capabilities (listed under `evidence` in tests/boundaries.json):
-// loadTopic, topicNames, publicTopicNames, VAL, Topic, corpusOf, loadDatasets, dataRef, findingLabel.
+// loadTopic, topicNames, publicTopicNames, fixtureTopicNames, VAL, Topic, corpusOf, loadDatasets, dataRef, findingLabel.
 export {
   VAL,
   loadTopic,
+  fixtureTopicNames,
   publicTopicNames,
   topicNames,
   type ClaimView,

@@ -13,6 +13,14 @@ export const SHORT_SECTIONS = ['hook', 'finding', 'close'] as const;
 /** A Short's storyboard may not estimate longer than this. YouTube allows 180 s, but a Short is watched on a phone
  *  with a thumb on the screen: the brief aims at 30 to 45 s and this is the editorial ceiling. */
 export const SHORT_MAX_SECONDS = 60;
+/** Written by `npm run run -- story --fresh` (orchestration) in a fixture story's run folder; the packaging stage reads
+ *  it for the title prefix and `fixtureRun` (spec §5.8). */
+export const FRESH_FILE = 'run/fresh.json';
+export interface FreshRun {
+  runId: string; // YYYYMMDD-hhmm-<4 hex>
+  at: string;
+  previous: string | null; // the run id this fresh run archived, when there was one
+}
 /** Ready Short candidates per video; the reviewer picks by leaving the rest unkept. */
 export const MAX_SHORTS = 3;
 /** Questions one video may answer: the story's own plus its chain. */

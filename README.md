@@ -570,6 +570,29 @@ artifact that owns it (wording to the script, a graphic to its component, pacing
 `render.json`, so a pacing note re-renders by itself; a revised graphic is re-rendered by the run after its visual
 review (only the changed scene chunk renders again).
 
+### Miniature production run (the fixture)
+
+`topics/test-fixture/` is a permanent, tiny, real story ("Has a leap second ever been taken away?": two public
+documents, the IERS leap-second table, one claim the table decides) that the existing commission claims as a
+**fixture topic** (`fixtureTopics` in `src/config/site.ts`), with `targetDurationSeconds: 15` in its review. It runs the
+real pipeline end to end with nothing relaxed: real agents, real validators, real narration, a real render, a real
+article, one real Short (8 s at most), and later real uploads, all judged by the rules its duration band supplies
+(CLAUDE.md, the Script rule).
+
+```
+npm run run -- story test-fixture <story-id> [--until packaged]   # resume from wherever the board says
+npm run run -- story test-fixture <story-id> --fresh              # archive the production and run every stage again
+```
+
+`--fresh` moves `scripts/<slug>/` (its Shorts, ledger and run journal included) to the gitignored
+`topics/test-fixture/history/<run id>/`, records the previous uploads as superseded in `archived.json` there, and
+starts from `ready`: every artifact, fingerprint, review and approval is made anew; nothing is reused. It is refused
+for any other topic. The run id (`YYYYMMDD-hhmm-<4 hex>`) names the archive, the journal and the video title
+(`[fixture <run id>] ...`; `fixtureRun` in `review.json`). What it costs: a few USD of agents and a release render per
+run. What it never does: appear on the production site (`publicTopicNames()` leaves fixture topics out; only a
+`FIXTURE_SITE=1 npm run build` pages them, `noindex` and outside the sitemap), be picked or proposed by automation, or
+change a video's visibility (uploads are private; unlisted at most, on a person's explicit decision; never public).
+
 ## Reproducing a video
 
 A fresh checkout plus these makes a story's `topics/<topic>/scripts/<slug>/video/segment.mp4` again:

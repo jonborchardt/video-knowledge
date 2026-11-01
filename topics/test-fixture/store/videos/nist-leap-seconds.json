@@ -1,0 +1,53 @@
+{
+  "id": "nist-leap-seconds",
+  "title": "Leap second and UT1-UTC information",
+  "channel": "NIST",
+  "origin": "manual",
+  "fetched": "2026-10-31",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://www.nist.gov/pml/time-and-frequency-division/time-realization/leap-seconds",
+  "summary": "NIST's leap-second page: how UTC is kept within 0.9 s of the Earth's rotation by inserting leap seconds, the current TAI-UTC offset, and the table of every leap second inserted since 1972, all of them positive.",
+  "topics": {
+    "primary": "test-fixture",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "test-fixture/every-leap-second-since-utc-began",
+      "stance": "asserts",
+      "quote": "All leap seconds listed in the table are positive leap seconds, which means an extra second is inserted into the UTC time scale.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.5,
+          "note": "The page lists every leap second since 1972 and says all are positive; the official table decides it.",
+          "date": "2026-10-31"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.85,
+          "note": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before: every one of the 27 steps added a second and none subtracted one.",
+          "source": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44",
+          "date": "2026-10-31"
+        }
+      ]
+    },
+    {
+      "claim": "test-fixture/leap-seconds-exist-because-earth-rotation",
+      "stance": "asserts",
+      "quote": "Coordinated Universal Time (UTC) is based on International Atomic Time (TAI), but it is adjusted by leap seconds to account for the difference between the definition of the second and the rotation of Earth.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.5,
+          "note": "The definition of UTC: leap seconds keep UT1-UTC within 0.9 s; a mechanism statement no single table decides.",
+          "date": "2026-10-31"
+        }
+      ]
+    }
+  ]
+}

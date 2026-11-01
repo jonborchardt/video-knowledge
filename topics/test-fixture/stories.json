@@ -1,0 +1,144 @@
+{
+ "topic": "test-fixture",
+ "basis": {
+  "claims": 2,
+  "sources": 2,
+  "studies": 1,
+  "candidates": 1
+ },
+ "stories": [
+  {
+   "id": "decision:most-discussed-claims",
+   "kind": "decision",
+   "title": "Has a leap second ever been taken away?",
+   "alternates": [
+    "Every leap second so far has been added",
+    "Leap seconds: added, never removed"
+   ],
+   "question": "Has a leap second ever been taken away?",
+   "whyWatch": "Clocks can in principle lose a second as well as gain one. The record says which has actually happened.",
+   "tension": "A negative leap second is allowed by the rules and talked about every few years; the question is whether one has ever been used.",
+   "evidenceNeeded": "The official table of every change to TAI-UTC since 1972, read step by step.",
+   "evidenceAvailable": [
+    "iers-leap-second-dat.txt: right (0.85, direct)"
+   ],
+   "gaps": [],
+   "premise": "Since 1972 civil time has been kept in step with the Earth's rotation by leap seconds. The IERS table lists every one; it answers whether any was ever subtracted.",
+   "claims": [
+    "test-fixture/every-leap-second-since-utc-began"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "A clock can be told to skip a second or to repeat one. Which has happened?",
+    "conflict": "The claims pulling in different directions: \"Leap seconds exist because the Earth's rotation does not keep exact atomic time, so civil time is adjusted to stay within a second of it\"; \"Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away\".",
+    "evidence": "The IERS table of TAI-UTC: 28 values from 10 s in 1972 to 37 s in 2017, each one second more than the last.",
+    "resolution": "Every leap second so far was added; none was ever taken away.",
+    "takeaway": "The next change, whichever direction, will be announced in Bulletin C."
+   },
+   "coherence": {
+    "score": 0.9,
+    "basis": "review",
+    "explanation": "One question with one answer the official table settles: has a leap second ever been taken away? The second claim (why leap seconds exist) is background no study in the corpus checks; it is pruned so the story rests on the decided claim alone."
+   },
+   "scores": {
+    "coherence": 0.9,
+    "relevance": 0.23,
+    "curiosity": 0.5,
+    "stakes": 0.3,
+    "depth": 0.23,
+    "originality": 1,
+    "evidence": 0.85,
+    "editorial": 0.43,
+    "overall": 0.6,
+    "explanation": "editorial 0.43 = mean of coherence 0.9 (review), relevance 0.23 (1 source, 1 channel), curiosity 0.5 (decision), stakes 0.3 (lean: neutral), depth 0.23 (1 study, 1 claim); evidence 0.85 = strongest iers-leap-second-dat.txt at 0.85 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.9), central conclusion supported, 1 essential finding verified, no pending review.",
+   "targetDurationSeconds": 15,
+   "blocking": [],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away",
+     "kind": "fact",
+     "modality": "universal",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0.85,
+     "independent": 1,
+     "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "test-fixture/every-leap-second-since-utc-began",
+        "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "iers-leap-second-dat.txt",
+       "verdict": "right",
+       "confidence": 0.85,
+       "note": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before: every one of the 27 steps added a second and none subtracted one.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "contradicting": [],
+     "qualifying": [],
+     "context": [],
+     "problems": [],
+     "limitations": [],
+     "suggestions": [],
+     "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away",
+       "kind": "fact",
+       "modality": "universal",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0.85,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "test-fixture/every-leap-second-since-utc-began",
+          "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "iers-leap-second-dat.txt",
+         "verdict": "right",
+         "confidence": 0.85,
+         "note": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before: every one of the 27 steps added a second and none subtracted one.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
+       "problems": [],
+       "limitations": [],
+       "suggestions": [],
+       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
+      }
+     }
+    ]
+   }
+  }
+ ],
+ "rejected": []
+}

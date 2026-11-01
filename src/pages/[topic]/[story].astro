@@ -26,7 +26,7 @@ import {
   breadcrumbJsonLd,
   videoJsonLd,
 } from '../../modules/website';
-import { siteGraph } from '../../modules/website/site-graph';
+import { siteGraph, siteTopicNames } from '../../modules/website/site-graph';
 import { toolOf } from '../../tools';
 import { articleModified, articleView, loadArticleRelease, releaseFigureDraws } from '../../modules/article';
 import { loadDatasets } from '../../modules/evidence';
@@ -37,16 +37,16 @@ import { FINDING_LABELS, FINDING_TEXT, findingLabel, labelCounts } from '../../m
 import SourceIcons from '../../components/SourceIcons.astro';
 import SourceLink from '../../components/SourceLink.astro';
 import Stamp from '../../components/Stamp.astro';
-import { commissionBody, commissionKey, commissionOf, site } from '../../config/site';
+import { commissionBody, commissionKey, commissionOf, isFixtureTopic, site } from '../../config/site';
 import { loadStories, storyUrlSlug } from '../../modules/stories';
 import type { Story } from '../../shared/types';
-import { loadTopic, publicTopicNames, type Topic } from '../../modules/evidence';
+import { loadTopic, type Topic } from '../../modules/evidence';
 import { ROOT } from '../../shared/io';
 import { href } from '../../lib/url';
 
 export function getStaticPaths() {
   const g = siteGraph();
-  return publicTopicNames().flatMap((name) => {
+  return siteTopicNames().flatMap((name) => {
     const t = loadTopic(name);
     const stories = loadStories(name)?.stories ?? [];
     return stories
@@ -126,6 +126,7 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
   description={meta?.description.text ?? s.question}
   image={image}
   jsonLd={jsonLd}
+  noindex={isFixtureTopic(t.name)}
 >
   <SourceIcons />
   {

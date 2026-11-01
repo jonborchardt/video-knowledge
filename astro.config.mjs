@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { contentGraph, movedRedirects } from './src/modules/website/content-graph.ts';
-import { publicTopicNames } from './src/modules/evidence/index.ts';
+import { fixtureTopicNames, publicTopicNames } from './src/modules/evidence/index.ts';
 
 // Two deploy targets while both run: Cloudflare serves https://commonwealthofreason.com/ at the root (the default,
 // wrangler.jsonc); DEPLOY_TARGET=pages builds the GitHub Pages mirror at https://jonborchardt.github.io/video-knowledge/.
@@ -47,6 +47,7 @@ export default defineConfig({
   redirects: Object.fromEntries(
     Object.entries(movedRedirects(liveTopics)).map(([from, to]) => [from, `${pages ? '/video-knowledge' : ''}${to}`]),
   ),
-  integrations: [sitemap(), admin],
+  // A fixture topic's pages (a FIXTURE_SITE=1 build, spec §5.8) are noindex and stay out of the sitemap.
+  integrations: [sitemap({ filter: (page) => !fixtureTopicNames().some((t) => page.includes(`/${t}/`)) }), admin],
   vite: { plugins: [tailwindcss()] },
 });

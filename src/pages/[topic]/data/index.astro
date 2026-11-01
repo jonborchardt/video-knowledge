@@ -5,18 +5,18 @@ import Base from '../../../layouts/Base.astro';
 import Chart from '../../../components/Chart.astro';
 import DataTableView from '../../../components/DataTableView.astro';
 import ReportHeader from '../../../components/ReportHeader.astro';
-import { commissionKey, commissionOf, site } from '../../../config/site';
+import { commissionKey, commissionOf, isFixtureTopic, site } from '../../../config/site';
 import { chartProblems, datasetChart } from '../../../modules/storyboard';
 import { dataRef, loadDatasets, type DataTable } from '../../../modules/evidence';
 import { breadcrumbJsonLd } from '../../../modules/website';
-import { siteGraph } from '../../../modules/website/site-graph';
-import { loadTopic, publicTopicNames, type Topic } from '../../../modules/evidence';
+import { siteGraph, siteTopicNames } from '../../../modules/website/site-graph';
+import { loadTopic, type Topic } from '../../../modules/evidence';
 import { citeHref, citeLabel, datasetSource, href } from '../../../lib/url';
 
 export function getStaticPaths() {
   const g = siteGraph();
   const live = (name: string) => loadDatasets(name).filter((d) => g.nodes.get(dataRef(name, d.id))?.public);
-  return publicTopicNames()
+  return siteTopicNames()
     .filter((name) => live(name).length > 0)
     .map((name) => ({ params: { topic: name }, props: { t: loadTopic(name), datasets: live(name) } }));
 }
@@ -36,6 +36,7 @@ const base = `/${t.name}/data`;
 ---
 
 <Base
+  noindex={isFixtureTopic(t.name)}
   title={`Data · ${t.label} · ${commission.name}`}
   description={`The figures behind the ${t.label} inquiry, as tables with the passages they come from, and CSV and JSON downloads.`}
   image={`/og/${brand}.jpg`}

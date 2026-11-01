@@ -1,12 +1,17 @@
 // The graph every public page builds from. The dev server sees the preview view (packaged stories too); a build sees
-// only what has a live video. Tests use `contentGraph()` (live) directly, since vitest runs with DEV true.
+// only what has a live video; a `FIXTURE_SITE=1` build (the fixture's preview deployment, spec §5.8) adds the fixture
+// topics with their packaged stories. Tests use `contentGraph()` (live) directly, since vitest runs with DEV true.
 import { contentGraph, type View } from './content-graph';
 import { ROOT } from '../../shared/io';
-import { publicTopicNames } from '../evidence';
+import { fixtureTopicNames, publicTopicNames } from '../evidence';
 
-export const siteView: View = import.meta.env.DEV ? 'preview' : 'live';
+export const fixtureSite = process.env.FIXTURE_SITE === '1';
+export const siteView: View = import.meta.env.DEV ? 'preview' : fixtureSite ? 'fixture' : 'live';
 
-export const siteGraph = () => contentGraph(ROOT, publicTopicNames(), siteView);
+/** The topics this build may page: the public ones, plus the fixture topics in a fixture build only. */
+export const siteTopicNames = (): string[] => [...publicTopicNames(), ...(fixtureSite ? fixtureTopicNames() : [])];
 
-/** Public topics whose inquiry has at least one public story in the site graph. */
-export const siteTopics = (g = siteGraph()): string[] => publicTopicNames().filter((t) => g.nodes.get(t)?.public);
+export const siteGraph = () => contentGraph(ROOT, siteTopicNames(), siteView);
+
+/** Topics whose inquiry has at least one public story in the site graph. */
+export const siteTopics = (g = siteGraph()): string[] => siteTopicNames().filter((t) => g.nodes.get(t)?.public);

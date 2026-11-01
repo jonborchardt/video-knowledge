@@ -1,0 +1,177 @@
+{
+  "topics": [
+    {
+      "id": "test-fixture",
+      "label": "Leap seconds",
+      "known": false,
+      "videos": 2,
+      "claims": [
+        {
+          "id": "test-fixture/every-leap-second-since-utc-began",
+          "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away",
+          "topic": "test-fixture",
+          "asserted": 1,
+          "denied": 0,
+          "tally": {
+            "right": 1,
+            "wrong": 0,
+            "partly": 0,
+            "untestable": 0,
+            "unknown": 0
+          },
+          "strongest": "source",
+          "effective": "right",
+          "confidence": 0.85,
+          "videos": [
+            "nist-leap-seconds"
+          ],
+          "note": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before: every one of the 27 steps added a second and none subtracted one.",
+          "source": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44",
+          "documents": [
+            "test-fixture/sources/iers-leap-second-dat.txt"
+          ]
+        },
+        {
+          "id": "test-fixture/leap-seconds-exist-because-earth-rotation",
+          "text": "Leap seconds exist because the Earth's rotation does not keep exact atomic time, so civil time is adjusted to stay within a second of it",
+          "topic": "test-fixture",
+          "asserted": 2,
+          "denied": 0,
+          "tally": {
+            "right": 1,
+            "wrong": 0,
+            "partly": 0,
+            "untestable": 0,
+            "unknown": 0
+          },
+          "strongest": "prior",
+          "effective": "right",
+          "confidence": 0.5,
+          "videos": [
+            "hpiers-obspm-bulletinc-guide",
+            "nist-leap-seconds"
+          ],
+          "note": "The definition of UTC: leap seconds keep UT1-UTC within 0.9 s; a mechanism statement no single table decides.",
+          "source": null,
+          "documents": []
+        }
+      ],
+      "commonlyWrong": [],
+      "surprises": [],
+      "contested": [],
+      "thinEvidence": [
+        {
+          "id": "test-fixture/leap-seconds-exist-because-earth-rotation",
+          "text": "Leap seconds exist because the Earth's rotation does not keep exact atomic time, so civil time is adjusted to stay within a second of it",
+          "topic": "test-fixture",
+          "asserted": 2,
+          "denied": 0,
+          "tally": {
+            "right": 1,
+            "wrong": 0,
+            "partly": 0,
+            "untestable": 0,
+            "unknown": 0
+          },
+          "strongest": "prior",
+          "effective": "right",
+          "confidence": 0.5,
+          "videos": [
+            "hpiers-obspm-bulletinc-guide",
+            "nist-leap-seconds"
+          ],
+          "note": "The definition of UTC: leap seconds keep UT1-UTC within 0.9 s; a mechanism statement no single table decides.",
+          "source": null,
+          "documents": []
+        }
+      ]
+    }
+  ],
+  "videos": [
+    {
+      "id": "hpiers-obspm-bulletinc-guide",
+      "title": "https://hpiers.obspm.fr/iers/bul/bulc/BULLETINC.GUIDE.html",
+      "channel": "hpiers.obspm.fr",
+      "topic": "test-fixture",
+      "watched": false,
+      "score": 1,
+      "scaled": 2,
+      "rating": null,
+      "assertions": 1,
+      "testable": 1,
+      "novelty": 0.25,
+      "redundancy": 0,
+      "thinEvidence": 1,
+      "worthWatching": "mixed",
+      "right": [
+        "test-fixture/leap-seconds-exist-because-earth-rotation"
+      ],
+      "wrong": [],
+      "lastJudged": "2026-10-31",
+      "supersededBy": null
+    },
+    {
+      "id": "nist-leap-seconds",
+      "title": "Leap second and UT1-UTC information",
+      "channel": "NIST",
+      "topic": "test-fixture",
+      "watched": false,
+      "score": 1,
+      "scaled": 2,
+      "rating": null,
+      "assertions": 2,
+      "testable": 2,
+      "novelty": 1.1,
+      "redundancy": 0,
+      "thinEvidence": 0.5,
+      "worthWatching": "new and sound",
+      "right": [
+        "test-fixture/every-leap-second-since-utc-began",
+        "test-fixture/leap-seconds-exist-because-earth-rotation"
+      ],
+      "wrong": [],
+      "lastJudged": "2026-10-31",
+      "supersededBy": null
+    }
+  ],
+  "channels": [
+    {
+      "channel": "NIST",
+      "videos": 1,
+      "mean": 2,
+      "harmful": 0,
+      "right": [
+        "test-fixture/every-leap-second-since-utc-began",
+        "test-fixture/leap-seconds-exist-because-earth-rotation"
+      ],
+      "wrong": []
+    },
+    {
+      "channel": "hpiers.obspm.fr",
+      "videos": 1,
+      "mean": 2,
+      "harmful": 0,
+      "right": [
+        "test-fixture/leap-seconds-exist-because-earth-rotation"
+      ],
+      "wrong": []
+    }
+  ],
+  "recap": [
+    {
+      "video": "hpiers-obspm-bulletinc-guide",
+      "title": "https://hpiers.obspm.fr/iers/bul/bulc/BULLETINC.GUIDE.html",
+      "claims": [
+        "test-fixture/leap-seconds-exist-because-earth-rotation"
+      ]
+    },
+    {
+      "video": "nist-leap-seconds",
+      "title": "Leap second and UT1-UTC information",
+      "claims": [
+        "test-fixture/every-leap-second-since-utc-began",
+        "test-fixture/leap-seconds-exist-because-earth-rotation"
+      ]
+    }
+  ]
+}

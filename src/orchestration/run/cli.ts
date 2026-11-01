@@ -1,10 +1,12 @@
 // npm run run -- <verb> ...
-//   story <topic> <story-id> [--approver "<name>"] [--notes-file <path>] [--until <stage>]
+//   story <topic> <story-id> [--approver "<name>"] [--notes-file <path>] [--until <stage>] [--fresh]
 //                                      drive one story from the board's ready to packaged (or to <stage>) unattended: each
 //                                      board step runs as a child process or a budgeted claude -p agent under its role's
 //                                      permission rules; journaled under the story's run/; one run per story (exit 3 when
 //                                      a live run holds it); a crash resumes with the same command. Exit 0 done, 1 halted
 //                                      (HALT <kind>: <why> then UNBLOCK: <what clears it>), 2 usage or refusal.
+//                                      --fresh (a fixture topic only): archive the production folder to
+//                                      topics/<topic>/history/<run id>/ first and run every stage again.
 //   status [--json]                    every run folder: running, halted (kind, why, unblock) or idle, and its spend.
 // Policy: automation.json (src/shared/automation.ts). Secrets: .env, loaded here and handed to each child by verb.
 import { readFileSync } from 'node:fs';
@@ -12,6 +14,7 @@ import { loadAutomation } from '../../shared/automation';
 import { approverProblem } from '../../shared/approver';
 import { loadDotEnv, ROOT, toJson } from '../../shared/io';
 import { PRODUCTION_STAGES, type ProductionStage } from '../production';
+import { archiveProduction, freshProblem } from './fresh';
 import { runStory } from './runner';
 import { renderStatus, statusOf } from './status';
 
@@ -48,11 +51,26 @@ switch (verb) {
     if (until && !PRODUCTION_STAGES.includes(until)) die(`--until must be one of ${PRODUCTION_STAGES.join(', ')}`);
     const notesFile = flag('--notes-file');
     const a = loadAutomation(ROOT);
+    let runId: string | undefined;
+    if (rest.includes('--fresh')) {
+      const problem = freshProblem(topic);
+      if (problem) die(problem);
+      try {
+        const f = archiveProduction(topic, storyId, ROOT);
+        runId = f.runId;
+        console.log(
+          `fresh run ${f.runId}: ${f.archived ? `archived the previous production to ${f.archived}` : 'no previous production'}`,
+        );
+      } catch (e) {
+        die((e as Error).message);
+      }
+    }
     const r = await runStory(topic, storyId, a, {
       approver: approver ?? `automated: run ${new Date().toISOString().slice(0, 10)}`,
       notes: notesFile ? readFileSync(notesFile, 'utf8') : undefined,
       until,
       root: ROOT,
+      ...(runId && { runId }),
     });
     if (r.outcome === 'held') die(`a live run holds ${topic} ${storyId}; nothing done`, 3);
     if (r.outcome === 'halted' && r.halt) {

@@ -1,0 +1,27 @@
+{
+  "stories": {
+    "decision:most-discussed-claims": {
+      "coherence": {
+        "score": 0.9,
+        "reason": "One question with one answer the official table settles: has a leap second ever been taken away? The second claim (why leap seconds exist) is background no study in the corpus checks; it is pruned so the story rests on the decided claim alone."
+      },
+      "claims": ["test-fixture/every-leap-second-since-utc-began"],
+      "question": "Has a leap second ever been taken away?",
+      "title": "Has a leap second ever been taken away?",
+      "alternates": ["Every leap second so far has been added", "Leap seconds: added, never removed"],
+      "whyWatch": "Clocks can in principle lose a second as well as gain one. The record says which has actually happened.",
+      "tension": "A negative leap second is allowed by the rules and talked about every few years; the question is whether one has ever been used.",
+      "evidenceNeeded": "The official table of every change to TAI-UTC since 1972, read step by step.",
+      "premise": "Since 1972 civil time has been kept in step with the Earth's rotation by leap seconds. The IERS table lists every one; it answers whether any was ever subtracted.",
+      "arc": {
+        "hook": "A clock can be told to skip a second or to repeat one. Which has happened?",
+        "evidence": "The IERS table of TAI-UTC: 28 values from 10 s in 1972 to 37 s in 2017, each one second more than the last.",
+        "resolution": "Every leap second so far was added; none was ever taken away.",
+        "takeaway": "The next change, whichever direction, will be announced in Bulletin C."
+      },
+      "qualificationsAccepted": true,
+      "audience": "A curious viewer with no background in timekeeping.",
+      "targetDurationSeconds": 15
+    }
+  }
+}

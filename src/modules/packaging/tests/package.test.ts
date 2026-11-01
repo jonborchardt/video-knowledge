@@ -87,6 +87,16 @@ describe('review package chapters', () => {
     expect(renderChecklist(pkg, t)).toContain(CHECKLIST[0]);
     expect(pkg.status).toBe('private review build');
     expect(pkg.title).toMatch(/^\[PRIVATE REVIEW\]/);
+    expect(pkg.fixtureRun).toBeUndefined();
+    // a fixture story's title carries its run id (`manual` when it was not started with --fresh)
+    const fx = reviewData(
+      { ...s, script: { ...s.script, topic: 'test-fixture' } },
+      { ...t, topic: 'test-fixture' },
+      report,
+      made,
+    );
+    expect(fx.title).toBe(`[PRIVATE REVIEW] [fixture manual] ${t.title}`);
+    expect(fx.fixtureRun).toBe('manual');
     expect(pkg.checklist).toContain(DRAFT_CHECK);
     expect(renderDescription(pkg, s, t, report)).toMatch(/^PRIVATE REVIEW BUILD/);
     expect(reviewMp4Name(join('t', 'scripts', 'x', 'video'))).toBe('x-review-private.mp4');

@@ -1,10 +1,9 @@
 import { dataRef, loadDatasets } from '../../../modules/evidence';
-import { siteGraph } from '../../../modules/website/site-graph';
-import { publicTopicNames } from '../../../modules/evidence';
+import { siteGraph, siteTopicNames } from '../../../modules/website/site-graph';
 
 export function getStaticPaths() {
   const g = siteGraph();
-  return publicTopicNames().flatMap((topic) =>
+  return siteTopicNames().flatMap((topic) =>
     loadDatasets(topic)
       .filter((d) => g.nodes.get(dataRef(topic, d.id))?.public)
       .map((d) => ({ params: { topic, id: d.id }, props: { table: d } })),
