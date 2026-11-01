@@ -65,7 +65,14 @@ One file per proposal, `proposals/<slug>.json`, with `status: "proposed"` and no
 ```
 
 - `sources`: eight or more popular videos or posts you actually found, `https` URLs, each once, with their titles as
-  shown. `studies`: four or more study, dataset or report URLs, `https`, each once, not a video.
+  shown. They must be sources the research pipeline can read: YouTube videos (`youtube.com/watch?v=`, with
+  captions) and web articles or blog posts whose text a plain fetch returns. TikTok, Instagram, X and other
+  app-only or login-walled posts cannot be fetched and count for nothing; name the YouTube video or the article that
+  makes the same claim instead. `studies`: four or more study, dataset or report URLs, `https`, each once, not a
+  video, and each one must bear on at least one of the listed claims (say which in the rationale when it is not
+  obvious): a paper on a neighbouring question pads the list and the reviewer will say so.
+- Claims a study or dataset can decide, as worded: a trend ("X is becoming popular"), a framing ("X feels free") or a
+  motive ("salespeople push X because of commissions") is not a claim for this list unless public data measures it.
 - A slug is a new file: never overwrite an existing proposal (the runner refuses it), never write a `.review.json`.
 - Valid JSON, written with the Write tool.
 - Final reply: the slugs written, one line each with the question, or "no proposal worth the channel" and what you
