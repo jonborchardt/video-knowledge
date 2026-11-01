@@ -593,6 +593,39 @@ run. What it never does: appear on the production site (`publicTopicNames()` lea
 `FIXTURE_SITE=1 npm run build` pages them, `noindex` and outside the sitemap), be picked or proposed by automation, or
 change a video's visibility (uploads are private; unlisted at most, on a person's explicit decision; never public).
 
+## Automation
+
+Milestone 2 runs the production unattended, behind flags in `automation.json` that are all off: merging the code
+changes nothing. Two verbs share the operating system's scheduler and the locks (spec: the control plane and the
+work plane):
+
+```
+npm run run -- tick                  # minutes: preflight, outbox, due resumes, stuck runs, halt emails, the digest
+npm run run -- work                  # one long job in the foreground (a resume, the production pick), then exit
+npm run run -- pick --dry-run        # the ranking, the cadence knobs and the choice, without starting it
+npm run run -- schedule --print      # the two Task Scheduler commands and the power lines, for you to run
+npm run run -- mail-test --await-reply   # one message through the outbox; your reply becomes a parsing fixture
+```
+
+The tick never runs a story; the work plane runs at most one job per instance, and the scheduler starts work
+instances in parallel so a render never delays the next pick: the locks (`runs.maxConcurrentStoryRuns`, one tick at
+a time) bound how many jobs run, not the scheduler. What arrives by email: one message per new halt (what, which
+column it holds, the one command, reply or edit that clears it; a resolved halt that recurs is sent again) and a
+weekly digest (live this week, in production, blocked with the unblock, what awaits you, parked items, unsent mail,
+the queue quantities and the week's spend against the caps). Every message goes through the outbox
+(`.automation/outbox.json`): the record and its Message-ID exist before the send, so a crash resends the same id;
+delivery is at least once, never exactly once, and nothing decides twice because of a copy.
+
+The cadence is configuration: `production.storiesPerWeek` (1), `perInstitutionPerWeek` (1), `maxAwaitingApproval`
+(2) and `runs.maxConcurrentStoryRuns` (1) bound the picks, the ready inventory and the approved topics are reported,
+never capped. A retryable halt (a hung render, a lost connection) resumes by backoff (15, 60, 240 minutes, then
+`retries-spent`); any other halt resumes as soon as the board's answer moved (you acted); a budget halt waits for the
+next ISO week. A run whose journal goes silent past `runs.stuckAfterMinutes` is killed and halted `timeout`.
+
+Mail needs a dedicated mailbox in `.env` (`MAIL_SMTP_HOST`, `MAIL_IMAP_HOST`, `MAIL_USER`, `MAIL_PASSWORD`; ports
+465 and 993 by default) over `nodemailer`, `imapflow` and `mailparser`; the replies that drive publishing arrive in
+phase 3. The admin page's Automation tab shows every run, halt, unblock and the week's picks.
+
 ## Reproducing a video
 
 A fresh checkout plus these makes a story's `topics/<topic>/scripts/<slug>/video/segment.mp4` again:

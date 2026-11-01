@@ -1,0 +1,92 @@
+---
+// The Automation tab of the admin page (dev server only): every run the runner knows (statusOf), each halt with its
+// unblock text and a Copy button, the last tick and work job, this week's picks against the cadence, the outbox's
+// unsent mail and the week's spend. Read through src/orchestration/index.ts only; nothing here decides anything.
+import { loadAutomation } from '../shared/automation';
+import { ROOT } from '../shared/io';
+import { automationView, statusOf } from '../orchestration';
+
+const a = loadAutomation(ROOT);
+const rows = statusOf(ROOT);
+const view = automationView(ROOT);
+const small = 'text-sm text-muted-foreground';
+const flags = Object.entries(a.enabled)
+  .map(([k, v]) => `${k}: ${v ? 'on' : 'off'}`)
+  .join(', ');
+---
+
+<section id="automation" class="mt-6" aria-labelledby="automation-h">
+  <h2 id="automation-h" class="text-title font-semibold">Automation</h2>
+  <p class={`mt-1 max-w-prose ${small}`}>
+    <code>automation.json</code>: {flags}. The tick ran {view.lastTick ?? 'never'}; the last work job was
+    {view.lastWork ? `${view.lastWork.kind} (${view.lastWork.outcome}) at ${view.lastWork.at}` : 'none'}. This week ({
+      view.week
+    }): {view.picks.length} of {a.production.storiesPerWeek} picks, {view.spendUsd.toFixed(2)} USD of {
+      a.agents.budgetUsd.perWeek
+    } USD. <code>npm run run -- schedule --print</code> prints the scheduler commands.
+  </p>
+  {view.preflight && <p class="mt-2 text-sm text-destructive">Preflight: {view.preflight.why}</p>}
+  <table class="mt-3 w-full text-sm">
+    <thead class="text-left text-xs text-muted-foreground uppercase">
+      <tr>
+        <th class="py-1 pr-3 font-medium">Story</th>
+        <th class="py-1 pr-3 font-medium">State</th>
+        <th class="py-1 pr-3 font-medium">Since</th>
+        <th class="py-1 pr-3 font-medium">Halt</th>
+        <th class="py-1 pr-3 font-medium">Unblock</th>
+        <th class="py-1 font-medium">Spent</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        rows.map((r) => (
+          <tr class="border-t align-top">
+            <td class="py-1 pr-3">
+              {r.topic} / {r.storyId}
+            </td>
+            <td class="py-1 pr-3">
+              {r.state}
+              {r.step && <span class={small}> ({r.step})</span>}
+            </td>
+            <td class={`py-1 pr-3 ${small}`}>{r.since ?? ''}</td>
+            <td class="py-1 pr-3">{r.halt ? `${r.halt.kind}: ${r.halt.why}` : ''}</td>
+            <td class="py-1 pr-3">
+              {r.halt && (
+                <span class="flex items-start gap-2">
+                  <pre class="text-xs whitespace-pre-wrap">{r.halt.unblock.text}</pre>
+                  <button type="button" class="rounded border px-1 text-xs" data-copy>
+                    Copy
+                  </button>
+                </span>
+              )}
+            </td>
+            <td class="py-1">{r.costUsd.toFixed(2)}</td>
+          </tr>
+        ))
+      }
+      {
+        rows.length === 0 && (
+          <tr>
+            <td colspan="6" class={`py-2 ${small}`}>
+              No runs yet.
+            </td>
+          </tr>
+        )
+      }
+    </tbody>
+  </table>
+  {
+    view.due.length > 0 && (
+      <p class={`mt-2 ${small}`}>
+        Due to resume: {view.due.map((d) => `${d.topic}/${d.storyId} (${d.why})`).join(', ')}.
+      </p>
+    )
+  }
+  {
+    view.unsent.length > 0 && (
+      <p class="mt-2 text-sm text-destructive">
+        Mail that could not be sent: {view.unsent.map((e) => `${e.kind} "${e.subject}"`).join('; ')}.
+      </p>
+    )
+  }
+</section>

@@ -48,7 +48,7 @@ const fakeImap = (files: string[]) => {
       log.push(`lock ${name}`);
       return { release: () => log.push('release') };
     }
-    async *fetch(range: { uid: string }, _q: unknown) {
+    async *fetch(range: { uid: string }) {
       log.push(`fetch ${range.uid}`);
       const first = Number(range.uid.split(':')[0]);
       // the server yields the last message even when the range starts past it, as IMAP's `n:*` does
