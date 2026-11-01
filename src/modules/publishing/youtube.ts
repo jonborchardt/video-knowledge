@@ -421,7 +421,7 @@ export function youtubeClient(creds: Credentials, fetchFn: typeof fetch = fetch)
             contentRating?: { ytRating?: string };
             regionRestriction?: { allowed?: string[]; blocked?: string[] };
           };
-          processingDetails?: { processingStatus?: string; fileAvailability?: string };
+          processingDetails?: { processingStatus?: string; fileDetailsAvailability?: string }; // the API's name
           fileDetails?: { fileSize?: string };
         }[];
       };
@@ -450,7 +450,7 @@ export function youtubeClient(creds: Credentials, fetchFn: typeof fetch = fetch)
         regionRestriction: cd.regionRestriction,
         hasCustomThumbnail: cd.hasCustomThumbnail,
         fileSize: fd.fileSize === undefined ? undefined : Number(fd.fileSize),
-        fileAvailability: v.processingDetails?.fileAvailability,
+        fileAvailability: v.processingDetails?.fileDetailsAvailability,
       };
     },
     async deleteCaptions(trackId) {

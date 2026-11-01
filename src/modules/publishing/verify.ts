@@ -229,7 +229,7 @@ export function verificationChecks(
     file: () =>
       !x.file
         ? k('file', 'skip', 'the packaged mp4 is not on disk')
-        : v.fileAvailability !== 'available' || v.fileSize === undefined
+        : v.fileSize === undefined // the API reports the size once the file details exist; no flag otherwise
           ? k('file', 'pending', 'the file details are not available yet; run verify again')
           : v.fileSize === x.file.size
             ? k('file', 'pass')

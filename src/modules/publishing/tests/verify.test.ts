@@ -144,6 +144,15 @@ describe('verificationChecks', () => {
     expect(check(verificationChecks(x, ok, [failed], 403, now), 'captions').result).toBe('fail');
   });
 
+  it('the file size alone settles the file check: the real API reports no availability flag once processed', () => {
+    const { fileAvailability: _a, ...noFlag } = ok;
+    void _a;
+    expect(check(verificationChecks(x, noFlag, [track], 403, now), 'file').result).toBe('pass');
+    expect(check(verificationChecks(x, { ...noFlag, fileSize: undefined }, [track], 403, now), 'file').result).toBe(
+      'pending',
+    );
+  });
+
   it('the uploaded file must be the packaged build', () => {
     expect(check(verificationChecks(x, { ...ok, fileSize: x.file!.size + 1 }, [track], 403, now), 'file').result).toBe(
       'fail',
