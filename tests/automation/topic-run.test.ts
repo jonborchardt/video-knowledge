@@ -259,6 +259,20 @@ describe('the topic runner (criterion 1)', () => {
     expect(r.costUsd).toBeCloseTo(2.1, 5);
   }, 240_000);
 
+  it("a merge agent that leaves collisions open after its rounds is followed by collide --resolve (the runner's last resort) and the run goes on", async () => {
+    const c = fresh({ collisionsOpen: true });
+    const r = await c.run();
+    expect(r.outcome, JSON.stringify(r.halt)).toBe('done');
+    const steps = c.journal().map((e) => e.step);
+    const merge = steps.findIndex((s) => /merge\.md/.test(s));
+    const resolve = steps.findIndex((s) => /^npm run evidence -- collide \S+ --resolve$/.test(s));
+    expect(merge).toBeGreaterThanOrEqual(0);
+    expect(resolve).toBe(merge + 1);
+    expect(c.journal()[merge].error).toMatch(/check-merges/);
+    expect(steps.slice(resolve + 1).some((s) => /^npm run merge-claims/.test(s))).toBe(true);
+    expect(readHalt(topicRunFolder(T, c.root))).toBeNull();
+  }, 240_000);
+
   it('a record that fails mid-batch is resumed with --from the next source, never re-recording the first', async () => {
     const c = fresh({ recordFailAt: 'bbbbbbbbbbb' });
     const r = await c.run();

@@ -404,6 +404,17 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
               record(n, s, out, 1);
             }
           }
+          if (failed && brief === 'merge.md' && /check-merges failed/.test(failed.error ?? '')) {
+            // the runner's last resort (spec 5.2): the collisions the merge agent left open after its rounds are
+            // merged into the existing claims they collide with, and the stage goes on to merge-claims and record
+            const s: Step = { kind: 'run', text: `npm run evidence -- collide ${topic} --resolve` };
+            const out = await exec(a, s, ctxOf(s, role));
+            record(n, s, out, 1);
+            const g = hooks.guard('child');
+            if (!g.ok) return halt('unexpected-edit', g.why, { kind: 'fix', text: 'the files were reverted' }, n);
+            if (out.ok) continue;
+            return halt('step-failed', `${s.text}: ${out.error}`, { kind: 'fix', text: `read ${dir}/steps` }, n);
+          }
           if (failed && brief !== 'studies.md' && brief !== 'revision-note.md')
             return halt(
               'step-failed',

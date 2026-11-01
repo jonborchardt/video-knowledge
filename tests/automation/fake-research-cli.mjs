@@ -4,7 +4,7 @@
 // store's assertions and claims, with an optional failure mid-batch once), record-sources (source verdicts, or a
 // refusal), report (report.json and public-record.json with open revisions), report note, stories discover (the
 // mode the config names), brand, topics claim. Run as `node fake-research-cli.mjs <cli> <args...>` in the root;
-// FAKE_RESEARCH_CONFIG names a JSON file: { recordFailAt?, refuseCited?, storiesMode?, openRevisions? }.
+// FAKE_RESEARCH_CONFIG names a JSON file: { recordFailAt?, refuseCited?, storiesMode?, openRevisions?, collisionsOpen? }.
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -77,6 +77,14 @@ switch (cli) {
           .join('\n') + '\n',
       );
       console.log(`${raw.length ? 1 : 0} group`);
+    } else if (verb === 'check-merges' && cfg.collisionsOpen && !existsSync(join(root, 'topics', topic, 'work', '.fake-collide-resolved'))) {
+      console.error(
+        'collision (1.00, watcher): "A near duplicate" is close to demo/existing; add it to merges.json (the same claim) or distinct.json (a different one)',
+      );
+      process.exit(2);
+    } else if (verb === 'collide' && args.includes('--resolve')) {
+      writeFileSync(join(root, 'topics', topic, 'work', '.fake-collide-resolved'), '');
+      console.log('0 new claims forced as distinct; 1 open collision (watcher), merged into the existing claims');
     } else console.log('RESULT: PASSED');
     process.exit(0);
   }
