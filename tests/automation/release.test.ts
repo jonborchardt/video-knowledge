@@ -22,8 +22,13 @@ import {
   recordShadowPerson,
   syncShadowFromLedger,
 } from '../../src/orchestration/run/release';
-import { type RunOptions, runStory } from '../../src/orchestration/run/runner';
-import { execStep } from '../../src/orchestration/run/steps';
+import { NOTES_PASS_FILE, type RunOptions, runStory } from '../../src/orchestration/run/runner';
+import { type StepContext, execStep } from '../../src/orchestration/run/steps';
+import { renderDigest } from '../../src/orchestration/run/digest';
+import type { Step } from '../../src/orchestration/production';
+import type { Automation } from '../../src/shared/automation';
+import { DEFAULTS } from '../../src/shared/automation';
+import type { Script } from '../../src/shared/types';
 import { releaseJobs } from '../../src/orchestration/run/work';
 import { type Fixture, afterFinal, cliRoot, syntheticProduction } from '../production-helpers';
 
@@ -553,16 +558,269 @@ describe('the draft by policy', () => {
     expect(publicUpdates(s.calls())).toEqual([]);
   }, 600_000);
 
-  it('agent, changes: the send-back is recorded by the agent on the draft and the loop waits for the notes pass', async () => {
+  it('agent, changes: the send-back is recorded by the agent on the draft, the notes pass fixes the scene, and a fresh agent reviews the new build (two sessions)', async () => {
     const s = draftStaged('changes', 'agent');
-    const r = await s.run({ env: s.env }, s.a);
+    // the second build (what the notes pass renders) is accepted by the second reviewer
+    const bytes2 = Buffer.alloc(4096, 8);
+    const build2 = sha(bytes2);
+    const scenario = JSON.parse(readFileSync(join(s.f.root, 'scenario.json'), 'utf8')) as { match: string }[];
+    scenario[0].match = `draft-review\\.md[\\s\\S]*Build: ${s.build}`;
+    scenario.push({
+      match: `draft-review\\.md[\\s\\S]*Build: ${build2}`,
+      ...{
+        actions: [
+          {
+            write: relative(s.f.root, s.reviewFile).replaceAll('\\', '/'),
+            text: JSON.stringify({
+              key: build2,
+              verdict: 'accept',
+              notes: [],
+              reviewer: 'fake-opus',
+              date: '2026-11-02',
+            }),
+          },
+        ],
+        cost: 0.5,
+      },
+    });
+    writeFileSync(join(s.f.root, 'scenario.json'), JSON.stringify(scenario));
+    const steps: string[] = [];
+    const finals: string[] = [];
+    const r = await s.run(
+      {
+        env: s.env,
+        exec: async (a, step, ctx) => {
+          steps.push(step.text.split('\n')[0]);
+          if (/video-fix\.md/.test(step.text)) {
+            // the fix agent stands in: the scene is redrawn into a new build with the same report
+            writeFileSync(join(s.f.dir, 'video', REVIEW_DIR, 'fixture.mp4'), bytes2);
+            const rp = join(s.f.dir, 'video', REVIEW_DIR, 'review.json');
+            writeFileSync(rp, toJson({ ...readJson<object>(rp)!, mp4Sha: build2 }));
+            return { kind: 'prompt', ok: true, exit: 0, ms: 1, costUsd: 0.2, sessionId: 'fix-1', error: null, log: '' };
+          }
+          if (/^npm run video -- check /.test(step.text))
+            return { kind: 'run', ok: true, exit: 0, ms: 1, costUsd: 0, sessionId: null, error: null, log: '' };
+          const m = /^npm run video -- final (\S+) (\S+) --approved-by "([^"]+)"$/.exec(step.text);
+          if (m) {
+            finals.push(m[3]);
+            afterFinal(s.f.dir, 'releasesha');
+            const bytes = Buffer.alloc(4096, 5);
+            writeFileSync(join(s.f.dir, 'video', REVIEW_DIR, 'fixture.mp4'), bytes);
+            const rp = join(s.f.dir, 'video', REVIEW_DIR, 'review.json');
+            writeFileSync(rp, toJson({ ...readJson<object>(rp)!, mp4Sha: sha(bytes) }));
+            const acc = runCli(
+              'publish',
+              ['accept-draft', m[1], m[2], '--by', m[3], '--build', build2, '--note', 'draft accepted by final'],
+              { cwd: s.f.root, env: s.env },
+            );
+            return {
+              kind: 'run',
+              ok: acc.status === 0,
+              exit: acc.status,
+              ms: 1,
+              costUsd: 0,
+              sessionId: null,
+              error: acc.status === 0 ? null : acc.stderr,
+              log: '',
+            };
+          }
+          return execStep(a, step, ctx);
+        },
+      },
+      s.a,
+    );
+    expect(r.halt?.kind, r.halt?.why).toBe('awaiting-person');
+    expect(r.halt?.unblock.text).toMatch(/reply OK/); // the release request: the round-two accept went to final
+    const cr = s.events().filter((e) => e.type === 'changes-requested');
+    expect(cr).toHaveLength(1);
+    expect(cr[0].by).toMatch(/^automated: draft-review by fake-opus/);
+    expect(cr[0].notes).toEqual([{ text: 'the figure on screen is wrong', seconds: 3, scene: 'sc2' }]);
+    // the notes pass: a scene note goes to the video fix and its check, never to the script writer
+    const fix = steps.findIndex((x) => /video-fix\.md/.test(x));
+    expect(fix).toBeGreaterThan(steps.findIndex((x) => /draft-review\.md/.test(x)));
+    expect(steps[fix + 1]).toMatch(/^npm run video -- check /);
+    expect(steps.some((x) => /script\.md/.test(x))).toBe(false);
+    expect(steps.filter((x) => /draft-review\.md/.test(x))).toHaveLength(2);
+    const sessions = readJournal(runDir(s.f.topic, s.f.story, s.f.root))
+      .filter((e) => /draft-review\.md/.test(e.step))
+      .map((e) => e.sessionId);
+    expect(new Set(sessions).size).toBe(2);
+    expect(finals).toHaveLength(1);
+    expect(s.events().find((e) => e.type === 'approved')).toMatchObject({ by: finals[0], build: build2 });
+    expect(s.events().filter((e) => e.type === 'uploaded' && e.buildStatus === 'draft')).toEqual([]);
+    expect(readJson<{ key: string }>(join(runDir(s.f.topic, s.f.story, s.f.root), NOTES_PASS_FILE))?.key).toContain(
+      s.build,
+    );
+  }, 600_000);
+
+  it('agent, changes twice: the second round halts awaiting-person with the last notes; no third review, no final', async () => {
+    const s = draftStaged('changes', 'agent');
+    const bytes2 = Buffer.alloc(4096, 8);
+    const steps: string[] = [];
+    const r = await s.run(
+      {
+        env: s.env,
+        exec: async (a, step, ctx) => {
+          steps.push(step.text.split('\n')[0]);
+          if (/video-fix\.md/.test(step.text)) {
+            writeFileSync(join(s.f.dir, 'video', REVIEW_DIR, 'fixture.mp4'), bytes2);
+            const rp = join(s.f.dir, 'video', REVIEW_DIR, 'review.json');
+            writeFileSync(rp, toJson({ ...readJson<object>(rp)!, mp4Sha: sha(bytes2) }));
+            return { kind: 'prompt', ok: true, exit: 0, ms: 1, costUsd: 0.2, sessionId: 'fix-1', error: null, log: '' };
+          }
+          if (/^npm run video -- check /.test(step.text))
+            return { kind: 'run', ok: true, exit: 0, ms: 1, costUsd: 0, sessionId: null, error: null, log: '' };
+          if (/draft-review\.md/.test(step.text)) {
+            // the fake reviewer: `changes` on every build it is shown
+            const build = /Build: (\S+)/.exec(step.text)![1];
+            writeFileSync(
+              s.reviewFile,
+              JSON.stringify({
+                key: build,
+                verdict: 'changes',
+                notes: [{ n: 1, text: `still wrong on ${build.slice(0, 4)}`, seconds: 3, scene: 'sc2' }],
+                reviewer: 'fake-opus',
+                date: '2026-11-02',
+              }),
+            );
+            return {
+              kind: 'prompt',
+              ok: true,
+              exit: 0,
+              ms: 1,
+              costUsd: 0.5,
+              sessionId: `rev-${build.slice(0, 4)}`,
+              error: null,
+              log: '',
+            };
+          }
+          return execStep(a, step, ctx);
+        },
+      },
+      s.a,
+    );
     expect(r.halt?.kind).toBe('awaiting-person');
-    expect(r.halt?.why).toMatch(/the figure on screen is wrong/);
-    const cr = s.events().find((e) => e.type === 'changes-requested');
-    expect(cr?.by).toMatch(/^automated: draft-review by fake-opus/);
-    expect(cr?.notes).toEqual([{ text: 'the figure on screen is wrong', seconds: 3, scene: 'sc2' }]);
+    expect(r.halt?.why).toMatch(/sent .* back twice|2 rounds/);
+    expect(r.halt?.why).toMatch(/still wrong on/);
+    expect(steps.filter((x) => /draft-review\.md/.test(x))).toHaveLength(2);
+    expect(steps.filter((x) => /video-fix\.md/.test(x))).toHaveLength(1);
+    expect(steps.some((x) => /video -- final/.test(x))).toBe(false);
+    expect(s.events().filter((e) => e.type === 'changes-requested')).toHaveLength(2);
     expect(s.events().filter((e) => e.type === 'uploaded')).toEqual([]);
   }, 600_000);
+
+  it("a person's change request on the review page is routed by the next run: sentence notes to a script writer after send-back, scene notes to the video fix; a second run does not repeat the pass", async () => {
+    const s = draftStaged('accept', 'person');
+    recordChangesRequested(s.f.topic, s.f.story, {
+      root: s.f.root,
+      by: 'Jon',
+      build: s.build,
+      notes: [
+        { text: 'say the year of the survey', sentence: 's3', seconds: 12 },
+        { text: 'the chart title is cut off', scene: 'sc2', seconds: 8 },
+      ],
+    });
+    const steps: string[] = [];
+    const prompts: string[] = [];
+    const stub = async (a: Automation, step: Step, ctx: StepContext) => {
+      steps.push(step.text.split('\n')[0]);
+      if (step.kind === 'prompt') {
+        prompts.push(step.text + (ctx.notes ? `\n${ctx.notes}` : ''));
+        return {
+          kind: 'prompt' as const,
+          ok: true,
+          exit: 0,
+          ms: 1,
+          costUsd: 0.1,
+          sessionId: 'p',
+          error: null,
+          log: '',
+        };
+      }
+      if (/^npm run video -- check /.test(step.text))
+        return { kind: 'run' as const, ok: true, exit: 0, ms: 1, costUsd: 0, sessionId: null, error: null, log: '' };
+      return execStep(a, step, ctx);
+    };
+    const r = await s.run({ env: s.env, exec: stub }, s.a);
+    expect(r.halt?.kind).toBe('awaiting-person');
+    const sendBack = steps.findIndex((x) => /^npm run script -- send-back /.test(x));
+    const writer = steps.findIndex((x) => /script\.md \(notes\)|script\.md/.test(x));
+    const fix = steps.findIndex((x) => /video-fix\.md/.test(x));
+    expect(sendBack).toBeGreaterThanOrEqual(0);
+    expect(writer).toBe(sendBack + 1);
+    expect(fix).toBeGreaterThan(writer);
+    expect(steps[fix + 1]).toMatch(/^npm run video -- check /);
+    expect(readJson<Script>(join(s.f.dir, 'script.json'))?.passStartRevision).toBe(1);
+    expect(prompts[0]).toMatch(/send-back pass/);
+    expect(prompts[0]).toMatch(/\[0:12 s3\] say the year of the survey/);
+    expect(prompts[0]).not.toMatch(/chart title/); // the scene note is the fix agent's
+    expect(prompts[1]).toMatch(/\[0:08 sc2\] the chart title is cut off/);
+    const n = steps.length;
+    const again = await s.run({ env: s.env, exec: stub }, s.a);
+    expect(again.halt?.kind).toBe('awaiting-person');
+    expect(steps.slice(n).some((x) => /send-back|script\.md|video-fix/.test(x))).toBe(false);
+  }, 600_000);
+
+  it('--notes-file by hand: the same routing from the text, one line per note', async () => {
+    const s = draftStaged('accept', 'person');
+    const steps: string[] = [];
+    const r = await s.run(
+      {
+        env: s.env,
+        notes: '[0:12 s3] say the year of the survey\n- shorter hook',
+        exec: async (a, step, ctx) => {
+          steps.push(step.text.split('\n')[0]);
+          if (step.kind === 'prompt')
+            return { kind: 'prompt', ok: true, exit: 0, ms: 1, costUsd: 0.1, sessionId: 'p', error: null, log: '' };
+          return execStep(a, step, ctx);
+        },
+      },
+      s.a,
+    );
+    expect(r.halt?.kind).toBe('awaiting-person');
+    expect(steps.filter((x) => /^npm run script -- send-back /.test(x))).toHaveLength(1);
+    expect(steps.some((x) => /script\.md/.test(x))).toBe(true);
+    expect(steps.some((x) => /video-fix\.md/.test(x))).toBe(false);
+    expect(readJson<Script>(join(s.f.dir, 'script.json'))?.passStartRevision).toBe(1);
+  }, 600_000);
+});
+
+describe('the digest reads the shadow record against the enabling criteria (spec 5.5)', () => {
+  it('six consecutive agreeing drafts with no disagree mark and no accepted draft sent back: may be enabled; else what is short', () => {
+    const root = staged({ shorts: 0 }).f.root;
+    const put = (
+      i: number,
+      agent: 'accept' | 'changes',
+      person: 'accept' | 'changes',
+      marks: ('agree' | 'disagree')[] = [],
+    ) => {
+      recordShadowAgent(root, {
+        story: 'heat-pumps/s',
+        build: `d${i}`,
+        agent: {
+          verdict: agent,
+          notes: marks.map((_, n) => ({ n: n + 1, text: `note ${n + 1}` })),
+          reviewer: 'r',
+          session: null,
+        },
+        at: `2026-11-${String(i).padStart(2, '0')}T00:00:00Z`,
+      });
+      recordShadowPerson(root, 'heat-pumps/s', `d${i}`, {
+        verdict: person,
+        marks: marks.map((mark, n) => ({ n: n + 1, mark })),
+      });
+    };
+    for (let i = 1; i <= 6; i++) put(i, 'accept', 'accept');
+    const ok = renderDigest([], { shadow: shadowAgreement(root) }, DEFAULTS).text;
+    expect(ok).toMatch(/Draft review shadow/);
+    expect(ok).toMatch(/6 of the last 6 drafts agreed/);
+    expect(ok).toMatch(/`review.draft: agent` may be enabled/);
+    put(7, 'changes', 'changes', ['agree', 'disagree']);
+    const short = renderDigest([], { shadow: shadowAgreement(root) }, DEFAULTS).text;
+    expect(short).toMatch(/not yet/);
+    expect(short).toMatch(/1 note marked disagree/);
+    expect(short).not.toMatch(/may be enabled/);
+  });
 });
 
 describe('shadowAgreement', () => {

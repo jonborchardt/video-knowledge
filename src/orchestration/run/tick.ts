@@ -23,6 +23,7 @@ import { type PreflightDeps, preflight } from './preflight';
 import { pollInbox } from './inbox';
 import { publishDue } from './publish-due';
 import { launchPaths, probeLaunches } from './launch';
+import { shadowAgreement } from './release';
 import { proposalsDigest } from './discovery-state';
 import { renderBatch } from './requests';
 import { type CliResult, runCli } from '../../shared/cli';
@@ -133,7 +134,7 @@ const preflightRow = (root: string, h: Halt): StatusRow => ({
 /** What the digest says beyond the status rows, by default: the proposals pending and parked (phase 4). */
 export const defaultDigestExtra =
   (root = ROOT) =>
-  (): DigestExtra => ({ proposals: proposalsDigest(root) });
+  (): DigestExtra => ({ proposals: proposalsDigest(root), shadow: shadowAgreement(root) });
 
 export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<TickReport> {
   const now = deps.now ?? Date.now;

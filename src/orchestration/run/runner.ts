@@ -6,8 +6,8 @@ import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
-import { readJson, ROOT, scriptDir, storySlug, writeJsonAtomic } from '../../shared/io';
-import { type BoardNext, boardNext, type ProductionStage, type Step } from '../production';
+import { ROOT, readJson, scriptDir, sha, storySlug, writeJsonAtomic } from '../../shared/io';
+import { type BoardNext, boardNext, type ProductionStage, type Step, stepsOf } from '../production';
 import {
   componentCheck as realComponentCheck,
   guard as realGuard,
@@ -31,7 +31,8 @@ import { envFor, execStep as realExecStep, parseRun, roleOf, type StepContext, t
 import { type ReleaseContext, releaseLoop } from './release';
 import { sendDraftRequest, sendReleaseRequest } from './requests';
 import type { MailTransport } from '../../shared/mail';
-import { currentBuild } from '../../modules/publishing';
+import { type ReviewNote, currentBuild, loadLedger, noteLine, openOutput } from '../../modules/publishing';
+import { parseNoteLine } from './replies';
 
 export interface RunHooks {
   snapshot?: () => void;
@@ -67,12 +68,91 @@ export interface RunOptions {
   policy?: ReleaseContext['policy'];
 }
 
+/** Under the story's run folder: the change request the last notes pass answered (its build and notes). */
+export const NOTES_PASS_FILE = 'notes-pass.json';
+export interface NotesPass {
+  key: string; // <build>|<sha of the notes>, or notes|<sha> for a --notes-file
+  build: string | null;
+  notes: ReviewNote[];
+  at: string;
+  steps: string[];
+}
+
+/** The change request the current build carries (the latest `changes-requested` on the main output, by anyone), or
+ *  null. The ledger is the one record of a send-back; the runner reads it and never decides the verdict. */
+export function pendingSendBack(
+  topic: string,
+  storyId: string,
+  root: string,
+): { key: string; build: string; notes: ReviewNote[]; by: string } | null {
+  try {
+    const o = openOutput(topic, storyId, { root });
+    if (o.state.status !== 'changes-requested' || !o.build) return null;
+    const ev = (loadLedger(topic, o.story, root)?.outputs[o.id]?.events ?? []).findLast(
+      (e) => e.type === 'changes-requested' && e.build === o.build!.sha,
+    );
+    if (!ev) return null;
+    const notes = ev.notes ?? [];
+    return { key: `${o.build.sha}|${sha(JSON.stringify(notes))}`, build: o.build.sha, notes, by: ev.by };
+  } catch {
+    return null; // no ledger, no output, a follow-up: nothing to route
+  }
+}
+
+/** Where each note goes (spec §7.3, the produce skill's notes pass): a note placed on a sentence, or on nothing, is
+ *  the script writer's (wording, cuts, order; the pass opens with `script -- send-back`); a note placed on a scene
+ *  only is the video fix's (the render, a graphic), checked by `video check`. The board takes over from there: a
+ *  changed script asks for its re-review, storyboard and lock, a changed render.json for a new render. */
+export function notesPassSteps(
+  topic: string,
+  storyId: string,
+  notes: ReviewNote[],
+): { steps: Step[]; notes: string }[] {
+  const script = notes.filter((n) => n.sentence || !n.scene);
+  const scene = notes.filter((n) => !n.sentence && n.scene);
+  const lines = (ns: ReviewNote[]) => ns.map((n) => `- ${noteLine(n)}`).join('\n');
+  const out: { steps: Step[]; notes: string }[] = [];
+  if (script.length)
+    out.push({
+      steps: [
+        { kind: 'run', text: `npm run script -- send-back ${topic} ${storyId}` },
+        ...stepsOf(
+          `agent: src/modules/script/briefs/script.md (notes) -> ${scriptRel(topic, storyId)}/script.json`,
+          topic,
+          storyId,
+        ),
+      ],
+      notes: lines(script),
+    });
+  if (scene.length)
+    out.push({
+      steps: stepsOf(
+        `agent: src/modules/video/briefs/video-fix.md, then npm run video -- check ${topic} ${storyId}`,
+        topic,
+        storyId,
+      ),
+      notes: lines(scene),
+    });
+  return out;
+}
+const scriptRel = (topic: string, storyId: string) =>
+  scriptDir(topic, storyId, '/r').slice('/r/'.length).replaceAll('\\', '/');
+/** A --notes-file's lines as placed notes (`[m:ss sc20 s31] text`, a list bullet allowed). */
+export const notesFromText = (text: string): ReviewNote[] =>
+  text
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .map(parseNoteLine);
+
 export interface RunResult {
   outcome: 'done' | 'halted' | 'held';
   stage: string;
   halt: Halt | null;
   iterations: number;
   costUsd: number;
+  /** The release loop asks the runner to produce again (a draft the agent sent back): never a run's final result. */
+  restart?: true;
 }
 
 const PERSON_HALTS = new Set(['revision-limit', 'story-left', 'no-institution', 'published']);
@@ -294,6 +374,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
   };
   /** One step of the release loop under this run's lock: the same child or agent execution, journal, guard and
    *  per-agent budget as a board step; a guard failure or an exhausted budget comes back as the halt itself. */
+  let passNotes: string | undefined; // the notes pass's notes, handed to its steps
   const runOne = async (step: Step, n: BoardNext): Promise<StepOutcome | RunResult> => {
     const role = roleOf(step);
     currentGrant = grantFor(role, { topic, storyId });
@@ -304,6 +385,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
       storyId,
       root,
       approver: o.approver,
+      notes: passNotes ?? o.notes,
       role,
       logPath,
       env: o.env,
@@ -405,8 +487,46 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
         : undefined),
     policy: o.policy,
   });
+  // the notes pass: a change request on the current build, or the notes given by hand, routed once per request
+  const notesPass = async (): Promise<RunResult | null> => {
+    const marker = readJson<NotesPass>(join(dir, NOTES_PASS_FILE));
+    const pending = pendingSendBack(topic, storyId, root);
+    const handNotes = o.notes?.trim() ? notesFromText(o.notes) : [];
+    const want =
+      pending ??
+      (handNotes.length ? { key: `notes|${sha(JSON.stringify(handNotes))}`, build: null, notes: handNotes } : null);
+    if (!want || marker?.key === want.key) return null;
+    const routes = notesPassSteps(topic, storyId, want.notes);
+    const n: BoardNext = { ...ask(topic, storyId, root), stage: 'packaged', next: 'notes pass' };
+    const done: string[] = [];
+    for (const route of routes) {
+      passNotes = route.notes;
+      for (const step of route.steps) {
+        const out = await runOne(step, { ...n, next: step.text });
+        if ('outcome' in out) return out;
+        done.push(step.text.split('\n')[0]);
+        if (!out.ok)
+          return halt(
+            out.error === 'timeout' ? 'timeout' : 'step-failed',
+            `notes pass: ${step.text.split('\n')[0]}: ${out.error}`,
+            { kind: 'run', text: `npm run run -- story ${topic} ${storyId}` },
+            n,
+          );
+      }
+    }
+    writeJsonAtomic(join(dir, NOTES_PASS_FILE), {
+      key: want.key,
+      build: want.build,
+      notes: want.notes,
+      at: stamp(),
+      steps: done,
+    } satisfies NotesPass);
+    return null;
+  };
   try {
     for (; iterations < a.runs.loopCap; iterations++) {
+      const routed = await notesPass();
+      if (routed) return routed;
       const n = ask(topic, storyId, root);
       lastBoard = n;
       if (n.done || (o.until && n.stage === o.until)) {
@@ -425,6 +545,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
           const committed = commitRelease(n);
           if (committed) return committed;
           if (rr.outcome === 'halted') return rr;
+          if (rr.restart) continue; // the draft-review agent sent the build back: the notes pass, then the board again
           return close(n);
         }
         return finish(n);
@@ -473,7 +594,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
           storyId,
           root,
           approver: o.approver,
-          notes: o.notes,
+          notes: passNotes ?? o.notes,
           role,
           logPath,
           env: o.env,

@@ -345,6 +345,17 @@ switch (cmd) {
   case 'lock':
     stageLock();
     break;
+  case 'send-back': {
+    // a notes pass starts here: the revision limit counts from the current revision (revisionsInPass)
+    const s = readJson<Script>(join(dir, FILES.script));
+    if (!s) throw new Error(`no ${join(dir, FILES.script)}`);
+    if (s.passStartRevision === s.revision) console.log(`send-back pass already open at revision ${s.revision}`);
+    else {
+      writeArtifact(dir, FILES.script, toJson({ ...s, passStartRevision: s.revision }));
+      console.log(`send-back pass opened at revision ${s.revision}`);
+    }
+    break;
+  }
   case 'storyboard': {
     const sb = stageStoryboard();
     process.exitCode = sb.status === 'blocked' ? 2 : 0;

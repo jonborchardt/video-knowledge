@@ -15,7 +15,7 @@ export interface DigestExtra {
   proposals?: { pending: string[]; parked: { slug: string; why: string }[] }; // phase 4
   parked?: { what: string; why: string }[]; // topics and stories (phase 5)
   studio?: { story: string; step: string; record: string }[]; // outstanding optional Studio steps (phase 3)
-  shadow?: { n: number; agree: number }; // draft-review shadow verdicts (phase 2)
+  shadow?: ShadowCriteria; // draft-review shadow verdicts against the enabling criteria (spec §5.5)
   unsent?: OutboxEntry[];
   queue?: { readyStories: number; approvedTopics: number; awaitingApproval: number };
   spend?: { weekUsd: number; perWeekUsd: number };
@@ -23,6 +23,32 @@ export interface DigestExtra {
 }
 
 const section = (title: string, lines: string[]): string[] => (lines.length ? ['', `## ${title}`, ...lines] : []);
+
+/** The shadow record's agreement figures (release.ts shadowAgreement). */
+export interface ShadowCriteria {
+  drafts: number;
+  agreed: number;
+  streak: number;
+  notesAgreed: number;
+  notesDisagreed: number;
+  acceptedThenSentBack: number;
+}
+export const SHADOW_STREAK = 6; // spec §5.5: six consecutive drafts agreed, no disagree mark, no accepted draft sent back
+/** One sentence a person reads before flipping `review.draft` to `agent` (register D7), and what is still short. */
+export function shadowSentence(s: ShadowCriteria): string {
+  const recent = Math.min(s.drafts, SHADOW_STREAK);
+  const head = `${s.streak >= SHADOW_STREAK ? SHADOW_STREAK : Math.min(s.streak, recent)} of the last ${recent} draft${recent === 1 ? '' : 's'} agreed`;
+  if (s.streak >= SHADOW_STREAK && s.acceptedThenSentBack === 0)
+    return `${head}, no note marked disagree, no agent-accepted draft sent back at release: \`review.draft: agent\` may be enabled (set it in automation.json; \`shadow\` restores this review).`;
+  const short = [
+    s.streak < SHADOW_STREAK &&
+      `${SHADOW_STREAK - s.streak} more agreeing draft${SHADOW_STREAK - s.streak === 1 ? '' : 's'} in a row`,
+    s.notesDisagreed > 0 && `${s.notesDisagreed} note${s.notesDisagreed === 1 ? '' : 's'} marked disagree`,
+    s.acceptedThenSentBack > 0 &&
+      `${s.acceptedThenSentBack} agent-accepted draft${s.acceptedThenSentBack === 1 ? '' : 's'} sent back at release`,
+  ].filter(Boolean);
+  return `${head} (${s.agreed} of ${s.drafts} overall); not yet: ${short.join(', ')}. \`review.draft\` stays as it is.`;
+}
 const h = (n: number) => (n === 1 ? '1 hour' : `${Math.round(n)} hours`);
 
 export function renderDigest(rows: StatusRow[], extra: DigestExtra, a: Automation): Omit<OutMail, 'messageId'> {
@@ -62,13 +88,7 @@ export function renderDigest(rows: StatusRow[], extra: DigestExtra, a: Automatio
       'Optional Studio steps outstanding',
       (extra.studio ?? []).map((s) => `- ${s.story}: ${s.step} (record it with: ${s.record})`),
     ),
-    ...(extra.shadow
-      ? [
-          '',
-          `## Draft review shadow`,
-          `The agent agreed with you on ${extra.shadow.agree} of ${extra.shadow.n} drafts.`,
-        ]
-      : []),
+    ...(extra.shadow ? ['', `## Draft review shadow`, shadowSentence(extra.shadow)] : []),
     ...section(
       'Mail that could not be sent',
       (extra.unsent ?? []).map((e) => `- ${e.kind} "${e.subject}" to ${e.to} (${e.attempts} attempts)`),

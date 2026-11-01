@@ -275,6 +275,15 @@ const failedChecks = (o: GroupOutput, root: string): string[] =>
 
 /** A step the runner turned into a halt (a guard failure, an exhausted budget): the loop ends with it. */
 export const halted = (x: object): x is RunResult => 'outcome' in x;
+/** The loop's answer when the draft-review agent sent the build back within the rounds: the runner produces again. */
+export const RESTART: RunResult = {
+  outcome: 'done',
+  stage: 'notes-pass',
+  halt: null,
+  iterations: 0,
+  costUsd: 0,
+  restart: true,
+};
 
 const cmd = (cli: string, args: string[]): Step => ({
   kind: 'run',
@@ -565,13 +574,18 @@ async function draftPass(
       scene: n.scene,
       sentence: n.sentence,
     }));
-    void rounds;
+    // bounded: the agent's send-backs on this output count as rounds (spec §7.3); within them the runner's notes
+    // pass produces again and a fresh agent reviews the new build; past them a person decides
+    const agentRounds = (loadLedger(topic, o.parent, root)?.outputs[o.id]?.events ?? []).filter(
+      (e) => e.type === 'changes-requested' && /^automated: draft-review/.test(e.by),
+    ).length;
+    if (agentRounds < rounds) return RESTART;
     return c.halt(
       'awaiting-person',
-      `the draft-review agent sent ${o.id} back: ${notes.map((n) => n.text).join('; ')}`,
+      `the draft-review agent sent ${o.id} back ${agentRounds === 2 ? 'twice' : `${agentRounds} times`} (${rounds} rounds): ${notes.map((n) => n.text).join('; ')}`,
       {
         kind: 'decide',
-        text: `send it back with the reviewer's notes: /produce ${topic} ${o.storyId}`,
+        text: `read video/draft-review.json and send it back with your own notes: /produce ${topic} ${o.storyId}`,
       },
     );
   }
@@ -586,7 +600,26 @@ async function reviewDraft(
   c: ReleaseContext,
 ): Promise<{ review: DraftReview; session: string | null } | string | RunResult> {
   const out = `topics/${topic}/scripts/${storySlug(storyId.split('/')[0])}${storyId.includes('/shorts/') ? `/shorts/${storyId.split('/').at(-1)}` : ''}/${DRAFT_REVIEW_FILE}`;
-  const [step] = stepsOf(`agent: ${DRAFT_REVIEW_BRIEF} -> ${out}`, topic, storyId);
+  const [first] = stepsOf(`agent: ${DRAFT_REVIEW_BRIEF} -> ${out}`, topic, storyId);
+  // the build under review, and the person's past disagreements as calibration (spec §5.5: notes not to raise)
+  const disagreed = readShadow(c.root)
+    .flatMap((e) =>
+      (e.person?.marks ?? [])
+        .filter((m) => m.mark === 'disagree')
+        .map((m) => e.agent.notes.find((n) => n.n === m.n)?.text)
+        .filter((t): t is string => !!t),
+    )
+    .slice(-10);
+  const step: Step = {
+    ...first,
+    text: [
+      first.text,
+      `Build: ${build}`,
+      ...(disagreed.length
+        ? ['Not to raise (the person disagreed with these notes on earlier drafts):', ...disagreed.map((t) => `- ${t}`)]
+        : []),
+    ].join('\n'),
+  };
   const r = await c.run(step, 'release');
   if (halted(r)) return r;
   if (!r.ok) return `the draft-review agent failed: ${r.error}`;
