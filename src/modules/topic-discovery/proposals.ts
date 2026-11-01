@@ -39,11 +39,13 @@ export interface Existing {
   questions: string[];
   commissions: string[];
 }
-/** The existing topics, story questions and commissions under a root. */
-export function existingOf(root = ROOT): Existing {
+/** The existing topics, the questions existing stories ask, the questions every other proposal asks (so a rejected
+ *  or parked subject is not proposed again under a new slug) and the commissions under a root. */
+export function existingOf(root = ROOT, except?: string): Existing {
   const dir = topicsDir(root);
   const topics = existsSync(dir) ? readdirSync(dir).filter((t) => existsSync(join(dir, t))) : [];
   const questions = topics.flatMap((t) => (loadStories(t, root)?.stories ?? []).map((s) => s.question));
+  for (const { proposal } of loadProposals(root)) if (proposal.slug !== except) questions.push(proposal.question);
   return { topics, questions, commissions: Object.keys(commissions) };
 }
 
@@ -108,7 +110,7 @@ export function validateProposal(p: unknown, existing: Existing, a: Automation['
     out.push(`institution must be one of ${existing.commissions.join(', ')} (got ${JSON.stringify(p.institution)})`);
   if (!str(p.question) || words(p.question) < 4) out.push('question must be one line of at least four words');
   else if (existing.questions.some((q) => normalise(q) === normalise(p.question as string)))
-    out.push(`question restates an existing story's question: ${p.question}`);
+    out.push(`question restates an existing story's or proposal's question: ${p.question}`);
   for (const k of ['rationale', 'fit'] as const)
     if (!str(p[k]) || words(p[k] as string) < MIN_WORDS) out.push(`${k} must be at least ${MIN_WORDS} words`);
   if (!Array.isArray(p.claims)) out.push('claims is not an array');
@@ -213,7 +215,7 @@ export function inspectProposal(slug: string, root = ROOT, a: Automation = loadA
   const proposal = readJson<Proposal>(proposalPath(slug, root));
   if (!proposal) return { status: 'missing', code: 'missing', findings: [`no ${output}`] };
   const review = readJson<ProposalReview>(reviewPath(slug, root));
-  const existing = existingOf(root);
+  const existing = existingOf(root, slug);
   // the proposal's own slug is not "an existing topic" once it has been researched into one
   const problems = validateProposal(
     proposal,

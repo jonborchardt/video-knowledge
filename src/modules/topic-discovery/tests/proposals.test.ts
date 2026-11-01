@@ -37,6 +37,9 @@ const fresh = () => {
   return root;
 };
 const put = (root: string, p: Proposal, r: ProposalReview | null = null) => {
+  // every proposal asks its own question (a repeated question is invalid by design)
+  if (p.question === good().question && p.slug !== good().slug)
+    p = { ...p, question: `Is ${p.slug} worth its price for a typical household?` };
   writeFileSync(proposalPath(p.slug, root), toJson(p));
   if (r) writeFileSync(reviewPath(p.slug, root), toJson(r));
 };

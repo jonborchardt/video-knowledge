@@ -19,3 +19,12 @@ export {
   validateReview,
   weakWhy,
 } from './proposals';
+export {
+  type Batch,
+  type BatchListed,
+  type Decision,
+  batchOf,
+  decideProposal,
+  isAutomated,
+  parkProposal,
+} from './decisions';

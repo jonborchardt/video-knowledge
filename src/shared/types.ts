@@ -821,7 +821,7 @@ export interface Proposal {
   decidedAt?: string;
   note?: string;
   via?: { channel: string; messageId?: string };
-  batch?: { id: string; sentAt: string; messageId: string };
+  batch?: { id: string; sentAt: string; messageId: string; previous?: string[] };
 }
 /** proposals/<slug>.review.json: the independent reviewer's verdict on one proposal (a fresh agent, never the proposer). */
 export interface ProposalReview {

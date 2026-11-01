@@ -96,8 +96,8 @@ export function grantFor(role: AgentRole, s: Subject): RoleGrant {
         ],
         shell: ['Bash(npm run evidence -- search *)', 'Bash(npm run evidence -- fetch-doc *)'],
       };
-    case 'discovery':
-      return { ...none, writable: [`proposals/${s.slug ?? ''}.json`] };
+    case 'discovery': // the slugs are the agent's to choose: new files only, so a decided proposal is never rewritten
+      return { ...none, writable: ['proposals/*.json'], newFilesOnly: ['proposals/*.json'] };
     case 'proposalReview':
       return { ...none, writable: [`proposals/${s.slug ?? ''}.review.json`] };
     case 'notes':

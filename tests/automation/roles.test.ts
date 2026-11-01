@@ -46,7 +46,10 @@ describe('roles (the agent permission table, as code)', () => {
     expect(c.shell).toEqual(['Bash(npm run evidence -- search *)', 'Bash(npm run evidence -- fetch-doc *)']);
   });
   it('discovery, proposalReview and notes write one file or nothing', () => {
-    expect(grantFor('discovery', { topic: 'x', slug: 'ev-range' }).writable).toEqual(['proposals/ev-range.json']);
+    expect(grantFor('discovery', { topic: 'x' })).toMatchObject({
+      writable: ['proposals/*.json'],
+      newFilesOnly: ['proposals/*.json'],
+    });
     expect(grantFor('proposalReview', { topic: 'x', slug: 'ev-range' }).writable).toEqual([
       'proposals/ev-range.review.json',
     ]);

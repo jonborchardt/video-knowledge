@@ -43,7 +43,11 @@ export function timeoutFor(a: Automation, cli: string, args: string[]): number {
 }
 
 const SECRET_KEY = /^(MAIL_|X_|AZURE_|YOUTUBE_|APPROVAL_|OPENAI_|ANTHROPIC_)/;
-const FAMILY: Record<string, RegExp | undefined> = { publish: /^(YOUTUBE_|APPROVAL_)/, social: /^X_/ };
+const FAMILY: Record<string, RegExp | undefined> = {
+  publish: /^(YOUTUBE_|APPROVAL_)/,
+  social: /^X_/,
+  topics: /^APPROVAL_/, // the batch id
+};
 
 /** The environment a child CLI gets: every secret family removed, then one family back by verb (`publish` →
  *  YouTube and the approval secret, `social` → X; no video verb: `final` narrates through a worker); every verb is told not to load .env itself (VK_NO_DOTENV), so a
@@ -105,6 +109,10 @@ export function validatorFor(step: Step, topic: string, storyId: string): { cli:
     case 'visual-review.md':
     case 'video-fix.md':
       return { cli: 'video', args: ['check', topic, storyId] };
+    case 'discover.md': // the new proposals (no review yet), whatever slugs the agent chose
+      return { cli: 'topics', args: ['validate', '--fresh'] };
+    case 'proposal-review.md': // `topic` carries the proposal's slug for this role
+      return { cli: 'topics', args: ['validate', topic, '--review'] };
     default:
       return null;
   }
@@ -119,6 +127,8 @@ export interface GuardHook {
 export interface StepContext {
   topic: string;
   storyId: string;
+  /** A proposal's slug (the proposal-review role's one file). */
+  slug?: string;
   root: string;
   approver: string;
   notes?: string;
@@ -242,7 +252,7 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
     return { ...base, ok, exit: c.exit, ms: c.ms, error, pid: c.pid };
   }
   // prompt: the agent, the guard, the validator, and the findings back to the same session
-  const subject: Subject = { topic: ctx.topic, storyId: ctx.storyId };
+  const subject: Subject = { topic: ctx.topic, storyId: ctx.storyId, ...(ctx.slug && { slug: ctx.slug }) };
   const validator = validatorFor(s, ctx.topic, ctx.storyId);
   let prompt = ctx.notes ? `${s.text}\n\nNotes:\n${ctx.notes}` : s.text;
   let resume: string | undefined;
