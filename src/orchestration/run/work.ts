@@ -6,6 +6,7 @@ import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { isFixtureTopic } from '../../config/site';
 import type { Automation } from '../../shared/automation';
+import type { MailTransport } from '../../shared/mail';
 import { ROOT, scriptDir, topicsDir } from '../../shared/io';
 import { loadDecisions, topicBoard } from '../production';
 import { RUN_DIR } from './journal';
@@ -37,6 +38,7 @@ export interface WorkDeps {
   runPick?: () => Promise<{ started?: string; why?: string; result?: RunResult }>;
   approver?: string;
   skip?: Job[]; // jobs this instance already found held
+  mail?: MailTransport | null; // the request mails of a release loop
 }
 
 export interface WorkReport {
@@ -97,7 +99,8 @@ export function releaseJobs(a: Automation, root = ROOT, isAlive: (pid: number) =
 export async function work(a: Automation, root = ROOT, deps: WorkDeps = {}): Promise<WorkReport> {
   const now = deps.now ?? Date.now;
   if (!a.enabled.work) return { outcome: 'disabled', job: null };
-  const run = deps.runStory ?? ((t, s, auto, approver) => runStory(t, s, auto, { approver, root }));
+  const run =
+    deps.runStory ?? ((t, s, auto, approver) => runStory(t, s, auto, { approver, root, mail: deps.mail ?? null }));
   const approver = deps.approver ?? `automated: work ${new Date(now()).toISOString().slice(0, 10)}`;
   const skip: Job[] = [...(deps.skip ?? [])];
   for (let attempt = 0; attempt < 2; attempt++) {

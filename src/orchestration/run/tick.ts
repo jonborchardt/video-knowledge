@@ -6,7 +6,10 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, statfsSync, unlinkSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
-import { ROOT, readJson, writeJsonAtomic } from '../../shared/io';
+import { MANIFEST_FILE, REVIEW_DIR, ROOT, readJson, scriptDir, writeJsonAtomic } from '../../shared/io';
+import type { ReleaseManifest } from '../../shared/types';
+import { loadLedger, requestOf } from '../../modules/publishing';
+import { renderReleaseRequest } from './requests';
 import type { MailTransport, OutMail } from '../../shared/mail';
 import type { DigestExtra } from './digest';
 import { sendDigestIfDue } from './digest';
@@ -61,7 +64,7 @@ export const freeGbOf = (path: string): number => {
 /** Re-renders a resendable outbox entry from the current state: a halt by its subject, the digest, a test. Request
  *  mails (phase 2) are rendered by their own module. */
 export const defaultRender =
-  (a: Automation, rows: () => StatusRow[], extra: () => DigestExtra = () => ({})) =>
+  (a: Automation, rows: () => StatusRow[], extra: () => DigestExtra = () => ({}), root = ROOT) =>
   (e: OutboxEntry): Omit<OutMail, 'messageId'> | null => {
     if (e.kind === 'halt') {
       const r = rows().find((x) => x.halt && renderHalt(x.topic, x.storyId, x.halt, a).subject === e.subject);
@@ -75,6 +78,15 @@ export const defaultRender =
         subject: e.subject,
         text: 'A resend of the mail test.',
       };
+    if (e.kind === 'release-request' && e.topic && e.storyId && e.request) {
+      // the same request, re-rendered from the manifest and ledger as they are now
+      const m = readJson<ReleaseManifest>(
+        join(scriptDir(e.topic, e.storyId, root), 'video', REVIEW_DIR, MANIFEST_FILE),
+      );
+      const ledger = loadLedger(e.topic, e.storyId, root);
+      const req = ledger && requestOf(ledger, e.request);
+      return m && req ? renderReleaseRequest(m, req, a) : null;
+    }
     return null;
   };
 
@@ -148,7 +160,7 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
         deps.mail,
         root,
         now,
-        deps.render ?? defaultRender(a, rowsNow, deps.digestExtra),
+        deps.render ?? defaultRender(a, rowsNow, deps.digestExtra, root),
       );
       if (resent.length) actions.push(`outbox: resent ${resent.length}`);
     }

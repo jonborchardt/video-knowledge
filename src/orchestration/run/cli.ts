@@ -101,11 +101,13 @@ switch (verb) {
         die((e as Error).message);
       }
     }
+    const cfg = mailConfigFromEnv();
     const r = await runStory(topic, storyId, a, {
       approver: approver ?? `automated: run ${new Date().toISOString().slice(0, 10)}`,
       notes: notesFile ? readFileSync(notesFile, 'utf8') : undefined,
       until,
       root: ROOT,
+      mail: cfg && a.approvals.to ? libraryTransport(cfg) : null, // no mailbox: the halt says what to do
       ...(runId && { runId }),
       ...(rest.includes('--no-commit') && { git: 'none' as const }),
     });
@@ -150,8 +152,10 @@ switch (verb) {
       );
       break;
     }
+    const wcfg = mailConfigFromEnv();
     const r = await work(a, ROOT, {
       pick: only && only !== 'pick' ? () => null : pick,
+      mail: wcfg && a.approvals.to ? libraryTransport(wcfg) : null,
       ...(only && { skip: [] as Job[] }),
     });
     console.log(

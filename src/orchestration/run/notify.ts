@@ -35,6 +35,8 @@ export interface OutboxEntry {
   subject: string;
   to: string;
   request?: string;
+  topic?: string;
+  storyId?: string;
   createdAt: string;
   sentAt: string | null;
   attempts: number;
@@ -59,7 +61,7 @@ export async function sendTracked(
   out: Omit<OutMail, 'messageId'>,
   kind: OutboxKind,
   root = ROOT,
-  extra: { request?: string; now?: () => number } = {},
+  extra: { request?: string; topic?: string; storyId?: string; now?: () => number } = {},
 ): Promise<{ messageId: string }> {
   const now = extra.now ?? Date.now;
   const messageId = messageIdOf(domainOf(out.from));
@@ -69,6 +71,8 @@ export async function sendTracked(
     subject: out.subject,
     to: out.to,
     ...(extra.request && { request: extra.request }),
+    ...(extra.topic && { topic: extra.topic }),
+    ...(extra.storyId && { storyId: extra.storyId }),
     createdAt: new Date(now()).toISOString(),
     sentAt: null,
     attempts: 1,

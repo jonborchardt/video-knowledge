@@ -29,6 +29,8 @@ import { alive, killTree } from './proc';
 import { grantFor } from './roles';
 import { envFor, execStep as realExecStep, parseRun, roleOf, type StepContext, type StepOutcome } from './steps';
 import { type ReleaseContext, releaseLoop } from './release';
+import { sendDraftRequest, sendReleaseRequest } from './requests';
+import type { MailTransport } from '../../shared/mail';
 import { currentBuild } from '../../modules/publishing';
 
 export interface RunHooks {
@@ -57,7 +59,9 @@ export interface RunOptions {
   argvOf?: StepContext['argvOf'];
   /** The nested run of one Short (the release loop's); the default is this runner to `packaged`. */
   runShort?: (shortStoryId: string) => Promise<RunResult>;
-  /** The draft and release request mails (phase 2 Task 6); absent: no mail, the halts say what to do. */
+  /** The mailbox the draft and release requests go through; absent: no mail, the halts say what to do. */
+  mail?: MailTransport | null;
+  /** Tests inject the senders; the default composes and sends through `mail`. */
   releaseMail?: ReleaseContext['mail'];
   /** Tests override automation.json's review.draft. */
   policy?: ReleaseContext['policy'];
@@ -358,7 +362,16 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
     halt: (kind, why, unblock, extra) => halt(kind, why, unblock, n, extra),
     done: () => ({ outcome: 'done', stage: n.stage, halt: null, iterations, costUsd: cost }),
     board: () => ask(topic, storyId, root),
-    mail: o.releaseMail,
+    mail:
+      o.releaseMail ??
+      (o.mail
+        ? {
+            draft: async (g, shadow) =>
+              void (await sendDraftRequest(topic, storyId, g, shadow, a, o.mail!, { root, now, env: o.env })),
+            release: async (m) =>
+              void (await sendReleaseRequest(topic, storyId, m, a, o.mail!, { root, now, env: o.env })),
+          }
+        : undefined),
     policy: o.policy,
   });
   try {
