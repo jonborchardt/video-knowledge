@@ -709,7 +709,7 @@ describe('the draft by policy', () => {
     expect(s.events().filter((e) => e.type === 'uploaded')).toEqual([]);
   }, 600_000);
 
-  it("a person's change request on the review page is routed by the next run: sentence notes to a script writer after send-back, scene notes to the video fix; a second run does not repeat the pass", async () => {
+  it("a person's change request on the review page is routed by the next run: sentence notes to a script writer after send-back, scene notes to the video fix; a second run does not repeat the pass (criterion 4)", async () => {
     const s = draftStaged('accept', 'person');
     recordChangesRequested(s.f.topic, s.f.story, {
       root: s.f.root,

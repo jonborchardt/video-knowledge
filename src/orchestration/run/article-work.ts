@@ -97,7 +97,7 @@ export async function articleWork(
     };
     hooks.snapshot();
     let stepNo = 0;
-    const ctxOf = (step: Step, role: StepContext['role']): StepContext => {
+    const ctxOf = (role: StepContext['role']): StepContext => {
       mkdirSync(join(dir, 'steps'), { recursive: true });
       return {
         topic,
@@ -164,14 +164,14 @@ export async function articleWork(
           '\n',
         ),
       };
-      const out = await exec(a, step, ctxOf(step, role));
+      const out = await exec(a, step, ctxOf(role));
       if (out.costUsd) addSpend(root, week, out.costUsd);
       record(step, out);
       return out;
     };
     const child = async (text: string): Promise<StepOutcome> => {
       const step: Step = { kind: 'run', text };
-      const out = await exec(a, step, ctxOf(step, 'writer'));
+      const out = await exec(a, step, ctxOf('writer'));
       record(step, out);
       const g = hooks.guard('child');
       return g.ok ? out : { ...out, ok: false, guardFailed: true, error: g.why };

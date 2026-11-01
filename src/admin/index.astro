@@ -125,7 +125,9 @@ const flow: Step[] = [
     d: [
       'the runner uploads the draft privately and',
       'emails you (review.draft: person or shadow);',
-      'reply OK or CHANGES:, or decide on the page',
+      'reply OK or CHANGES:, or decide on the page;',
+      'or an agent, by policy (agent: it accepts or',
+      'sends it back with notes, two rounds, then you)',
     ],
   },
   {
@@ -245,15 +247,32 @@ const flow: Step[] = [
     ],
   },
   {
-    you: true,
-    t: 'Correct a released article',
+    t: 'Scan for new evidence (monthly)',
     d: [
-      'board: changed (text or figure data moved),',
-      'stale (a cited finding was revised) or',
-      'blocked (a moved package fails it: writer);',
-      'article -- correct with --note records it in',
-      'public-record.json; a stale text that',
-      'stands: article -- reaffirm --note',
+      'the work plane (enabled.maintenance): a',
+      'new-sources.md agent per public topic, record-',
+      'sources, evidence -- scanned, report, a note per',
+      'revised finding, stories; a live video that',
+      'cites a revised finding: you decide its note',
+    ],
+  },
+  {
+    t: 'Reaffirm or correct a released article',
+    d: [
+      'stale (a cited finding was revised): a fresh',
+      'reviewer reaffirms it (recorded with its why)',
+      'or a writer corrects, a reviewer judges,',
+      'validate; a correction request mails you',
+    ],
+  },
+  {
+    you: true,
+    t: 'Approve the correction (reply or by hand)',
+    d: [
+      'OK releases it (article decide: the revision',
+      'in public-record.json); CHANGES: notes the',
+      'next writer pass; by hand: article -- correct',
+      '--note, or reaffirm --note for a text that stands',
     ],
   },
 ];

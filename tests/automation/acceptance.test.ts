@@ -1,5 +1,8 @@
 // Milestone 2 acceptance criteria (spec §13), by number in the titles; each phase appends its rows. Phase 1: 2 (the
 // weekly pick), 12 (a stuck halt notifies once) and the email row of 13 (an email survives its crash boundary once).
+// The others live beside the code they prove, named in their titles: 1 topic-run, 3 full-run, 4 release (the notes
+// pass), 5 decide, 6 inbox, 7 decide and publish-steps, 8 publish-steps, 9 launch, 10 article-work, 11 crash-render and
+// release, 13 reconcile, 14 containment, 15 planes, 16 quality, 17 duration; 18 is the fixture run in the report.
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';

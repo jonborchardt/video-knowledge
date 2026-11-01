@@ -104,6 +104,42 @@ const flags = Object.entries(a.enabled)
       </ul>
     )
   }
+  <h3 class="mt-4 font-semibold">Maintenance scans</h3>
+  {
+    view.scans.length === 0 ? (
+      <p class={`mt-1 ${small}`}>
+        No public topic yet; a scan runs per topic every schedule.maintenance.everyDays days.
+      </p>
+    ) : (
+      <ul class={`mt-1 list-disc pl-5 ${small}`}>
+        {view.scans.map((s) => (
+          <li>
+            {s.topic}:{' '}
+            {s.lastScan ? `last scan ${s.lastScan}, ${s.found} found, ${s.recorded} recorded` : 'never scanned'} (
+            <code>npm run run -- maintain {s.topic}</code> by hand)
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  <h3 class="mt-4 font-semibold">Article corrections awaiting your reply</h3>
+  {
+    view.corrections.length === 0 ? (
+      <p class={`mt-1 ${small}`}>None: no released article has a correction waiting.</p>
+    ) : (
+      <ul class={`mt-1 list-disc pl-5 ${small}`}>
+        {view.corrections.map((c) => (
+          <li>
+            {c.topic} / {c.storyId}: {c.request}, requested {c.at}, expires {c.expiresAt}; reply OK or CHANGES: to its
+            mail, or{' '}
+            <code>
+              npm run article -- decide {c.topic} {c.storyId} --request {c.request} --verdict ok --by "&lt;name&gt;"
+            </code>
+          </li>
+        ))}
+      </ul>
+    )
+  }
   <h3 class="mt-4 font-semibold">Launches</h3>
   {
     view.launches.length === 0 ? (

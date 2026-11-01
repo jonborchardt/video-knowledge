@@ -157,7 +157,7 @@ function requested(opts: { shorts?: string[]; paid?: boolean } = {}) {
 }
 
 describe('decideProblem', () => {
-  it('refuses an unknown, expired or decided request, a moved release, an automated name, a near schedule and a paid id outside the manifest', async () => {
+  it('refuses an unknown, expired or decided request, a moved release, an automated name, a near schedule and a paid id outside the manifest (criterion 5)', async () => {
     const s = requested();
     const l = s.ledger();
     const p = (a: Partial<Parameters<typeof decideProblem>[3]>, req = requestOf(l, s.req.request), m = s.m, at = now) =>
@@ -212,7 +212,7 @@ describe('decide', () => {
     expect(s.events().filter((e) => e.type === 'decided')).toHaveLength(1);
   });
 
-  it('schedule: the video is scheduled, the Shorts only approved', async () => {
+  it('schedule: the video is scheduled, the Shorts only approved (criterion 7, the decision)', async () => {
     const s = requested();
     const at = new Date(now.getTime() + 2 * 3600_000).toISOString();
     await decide(s.f.topic, s.f.story, s.args({ verdict: 'schedule', at }), s.deps());

@@ -53,6 +53,11 @@ Number the notes from 1; place each with `seconds` (the time in the video), `sce
 
 Final reply: the verdict and the notes.
 
+The runner may add two things under the brief line: `Build: <sha>` (the `key` you write: review that build, not an
+older package) and `Not to raise`, a list of notes the person marked disagree on earlier drafts. Do not raise their
+like: the person has said those are not changes. A different fault of the same kind (a wrong figure where they
+rejected a note about a colour) is still a note.
+
 ## Unattended runs
 
 When the runner hands you this brief (an unattended `claude -p` agent), you have no shell: do not run any command.

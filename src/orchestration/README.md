@@ -79,3 +79,23 @@ the notes agent's reply recorded through `report -- note`, a thin or storyless t
 (a digest line, no halt, no mail), the finish validated and committed on main touching the topic's own paths (and
 the proposal, the institution claim through `topics -- claim`, the brand assets). A research run's topic is
 untracked until that commit, so the guard's snapshot holds its files' content and restores an agent's overwrite.
+
+## Phase 6: maintenance and the delegated draft review
+
+`run/maintain.ts` is the scan job (`scanJobs`: the due public topic with the oldest scan, never the fixture, only with
+`enabled.maintenance`; `maintain` runs it: the new-sources agent, `record-sources`, `evidence -- scanned`, the report,
+a revision note per open revision, the stories, validate, one commit, then `articleWork`; a live video whose script
+cites a revised claim is halted `needs-person` on its own story and never rebuilt). `run/article-work.ts` is the
+article pass (spec 2 Maintenance, register D10): a released article the module inspects `stale` is reaffirmed by a
+fresh reviewer (recorded by `article reaffirm` with the reviewer's why) or corrected by a writer in correction mode,
+judged by a fresh reviewer, validated and requested from the person (`article request-correction`; the mail from
+`requests.ts` shows each sentence before and after; an unanswered request is renewed once expired; a correction
+failing after `CORRECTION_REVISIONS` halts `awaiting-person`); the inbox's `correction-request` branch applies `OK`
+and `CHANGES:` through `article decide`. Automation never releases a correction. `runner.ts` carries the notes pass:
+`pendingSendBack` reads the ledger's `changes-requested` on the current build (the review page's, the inbox's or the
+draft-review agent's), `notesPassSteps` routes each note by placement (sentence or unplaced: `script -- send-back`
+and a `script.md (notes)` writer; scene only: `video-fix.md` and `video -- check`), once per request
+(`run/notes-pass.json`); `release.ts` counts the agent's send-backs on the output as rounds
+(`review.draftReviewRounds`) and returns `RESTART` within them, names the build to the reviewer and quotes the
+person's `disagree` marks as what not to raise; `digest.ts` prints the shadow agreement against spec 5.5
+(`shadowSentence`). The tree guard leaves VS Code's `vscode-merge-base` key out of the `.git/config` canary.

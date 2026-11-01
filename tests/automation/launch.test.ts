@@ -167,7 +167,7 @@ const socialRun =
   };
 
 describe('launch', () => {
-  it('refuses a story whose video is not live, and lists no launch job for it', async () => {
+  it('refuses a story whose video is not live, and lists no launch job for it (criterion 9)', async () => {
     const c = clone({ live: false });
     const r = await launch(c.f.topic, c.f.story, a, c.deps(), c.f.root);
     expect(r.outcome).toBe('halted');

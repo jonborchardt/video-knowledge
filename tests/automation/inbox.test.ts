@@ -49,7 +49,7 @@ async function staged(opts: { expiresDays?: number } = {}) {
 }
 
 describe('pollInbox', () => {
-  it('applies OK once: the same reply delivered twice is one decided and one go-live', async () => {
+  it('applies OK once: the same reply delivered twice is one decided and one go-live (criterion 6)', async () => {
     const { s, mail, sent, subject, poll } = await staged();
     mail.deliver(reply(sent, 'OK', { subject }));
     const r1 = await poll();

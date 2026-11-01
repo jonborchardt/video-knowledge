@@ -441,7 +441,7 @@ X post, `releaseSha` over what you approve) and runs `publish request --channel 
 
 **Replying (phase 3).** The tick reads the mailbox and applies your reply to the request thread once, through
 `npm run publish -- decide` (the ledger key is the request id, so a copy or a crash never decides twice). The first
-line of your own text decides: `OK` (publish now; trailing words are fine), `OK at Thursday 15:00` / `OK at tomorrow
+line of your own text decides: `OK` on its own (publish now; an OK followed by anything else, "OK, but...", is asked about, not applied), `OK at Thursday 15:00` / `OK at tomorrow
 9am` / `OK at 2026-12-01 09:30` / `OK at in 2 hours` (schedule, in `schedule.timezone`, at least
 `approvals.scheduleLeadMinutes` ahead; a nearer time is answered with the earliest accepted), or `CHANGES:` with one
 note per line, each optionally placed `[m:ss sc20 s31]` (a note starting `short:<slug>` goes to that Short). `PAID OK`
@@ -713,7 +713,37 @@ outbox, the inbox (your replies, applied once each; `.automation/inbox.json` rec
 publications (a schedule past its time synced and verified, the Shorts of a published video live in order, an
 expired request renewed once), the deploy probes (one per pending launch, then the X post and the launch mail), the
 due resumes, stuck runs, halt mails, the digest. The admin page's Automation tab shows every run, halt, unblock, the
-week's picks, the open requests and their age, the launches and the Studio steps still to record.
+week's picks, the open requests and their age, the launches, the Studio steps still to record, each public topic's
+last maintenance scan and the article corrections awaiting your reply.
+
+**Maintenance (phase 6).** With `enabled.maintenance` on, the work plane runs a `scan` job per public topic every
+`schedule.maintenance.everyDays` days (`npm run run -- maintain <topic>` by hand): a `new-sources.md` agent looks for
+studies and reports published since the last scan (`topics/<topic>/maintenance.json`, written by `npm run evidence
+-- scanned`), `record-sources` records its verdicts (never `--replace-cited`), `npm run report` moves the findings, a
+`revision-note.md` agent drafts the note of each revised finding (`report -- note`), `stories discover` refreshes
+the candidates, validate, one commit. A finding a live video's script cites halts that story `needs-person` (the
+video is never rebuilt: you add a note to its description and `publish -- push`, or `npm run run -- clear`). Then
+the article pass: a released article a revision made stale is read by a fresh `article-review.md` agent in reaffirm
+mode; if the text stands, `article -- reaffirm` records that with the reviewer's why; if not, a writer corrects only
+what the finding touches, a fresh reviewer judges, `article -- validate` decides, and `article -- request-correction`
+writes `article-request.json` (an `ar-` id bound to the corrected text, signed with `APPROVAL_SECRET`) and one email
+shows you each sentence before and after with the evidence. Reply `OK` to release it (`article -- decide --verdict
+ok`, the correction by your name, a revision in `public-record.json`, the site refreshed by the launch job) or
+`CHANGES:` with one note per line for the next writer pass; a correction that still fails after three revisions
+halts `awaiting-person`. Automation never releases a correction.
+
+**Delegated draft review.** `review.draft` moves from `person` to `shadow` (the agent reviews beside you, its
+verdict decides nothing, both are recorded in `.automation/shadow.json`) and may move to `agent` once the digest's
+"Draft review shadow" line says so: six consecutive drafts where the agent's verdict matched yours, no note you
+marked `disagree` (`NOTES: 1 agree, 2 disagree` in a draft reply, or the review page), and no agent-accepted draft
+sent back at release. Set `"review": { "draft": "agent" }` in `automation.json`; `shadow` or `person` restores the
+draft step. Under `agent` a `changes` verdict is a send-back the runner answers itself: the notes pass routes each
+note to the artifact that owns it (a note placed on a sentence or on nothing opens a send-back pass on the script,
+`npm run script -- send-back`, and a fresh writer applies it; a note placed on a scene only goes to a `video-fix.md`
+agent and `video -- check`), the board renders the new build and a fresh agent reviews it, bounded by
+`review.draftReviewRounds` (2), then `awaiting-person`. The same pass answers your own `CHANGES:` on a draft or a
+release (the review page, the mail) and a `--notes-file`, once per request (`run/notes-pass.json`). The reviewer is
+shown the notes you marked `disagree` on earlier drafts as what not to raise.
 
 ## Reproducing a video
 
