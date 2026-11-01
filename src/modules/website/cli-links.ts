@@ -2,14 +2,17 @@
 //   freeze   write public-urls.json: every indexed page dist/ holds (run after npm run build); commit it
 //   cta <topic> <story-id>   what each call-to-action destination carries for the story, and its cta.json resolved
 //            (exit 2 on a file problem)
+//   cta approve <topic> <story-id> <cta id> --by <name>   a person's approval of one paid link, written into cta.json
+//            once (what a PAID OK reply runs; exit 2 on a refusal)
 //   check    request every outside URL the built site and the committed descriptions link (local, networked, never
 //            in CI); prints the failures and exits 1 on any
 // The build test fails when a URL in public-urls.json disappears without a topics/<topic>/moved.json entry.
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { contentGraph, distPages, related, storyNode } from './content-graph';
-import { type Cta, loadCta, resolveCtas } from './cta';
+import { type Cta, approveCommercial, loadCta, resolveCtas } from './cta';
 import { ROOT, topicsDir } from '../../shared/io';
+import { Refusal } from '../../shared/refusal';
 import { textUrls } from '../../lib/url';
 
 const DIST = join(ROOT, 'dist');
@@ -53,6 +56,22 @@ if (cmd === 'freeze') {
   console.log(`${urls.size} outside urls, ${failures.length} failing`);
   for (const f of failures.sort()) console.log(f);
   process.exit(failures.length ? 1 : 0);
+} else if (cmd === 'cta' && process.argv[3] === 'approve') {
+  // cta approve <topic> <story-id> <cta id> --by <name>: a person's approval of one paid link (D14), written once
+  const [topic, id, ctaIdArg] = process.argv.slice(4);
+  const by = process.argv[process.argv.indexOf('--by') + 1];
+  if (!topic || !id || !ctaIdArg || !by || process.argv.indexOf('--by') < 0) {
+    console.error('usage: npm run links -- cta approve <topic> <story-id> <cta id> --by <name>');
+    process.exit(1);
+  }
+  try {
+    const r = approveCommercial(topic, id, ctaIdArg, by);
+    console.log(`${r.existing ? 'already approved' : `approved by ${by}`}: ${r.url}`);
+  } catch (e) {
+    if (!(e instanceof Refusal)) throw e;
+    console.error(`refused: ${e.message}`);
+    process.exit(2);
+  }
 } else if (cmd === 'cta') {
   const [topic, id] = process.argv.slice(3);
   const g = contentGraph();
@@ -89,6 +108,8 @@ if (cmd === 'freeze') {
   for (const p of r.problems) console.log(`PROBLEM: ${p}`);
   process.exit(r.problems.length ? 2 : 0);
 } else {
-  console.error('usage: npm run links -- freeze | check | cta <topic> <story-id>');
+  console.error(
+    'usage: npm run links -- freeze | check | cta <topic> <story-id> | cta approve <topic> <story-id> <id> --by <name>',
+  );
   process.exit(1);
 }

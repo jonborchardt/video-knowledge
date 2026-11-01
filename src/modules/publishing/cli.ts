@@ -23,6 +23,10 @@
 //                                                             verified; the id signed with APPROVAL_SECRET from .env); prints the manifest and
 //                                                             the request; --renew once after it expired; --dry-run checks and prints only
 //   message-sent <topic> <story-id> --request <id> --message-id <id>   the request mail went out with that Message-ID
+//   decide <topic> <story-id> --request <id> --by <name> --verdict ok|schedule|changes [--at <ISO>] [--note <text> [--at-seconds n] [--scene id] [--sentence id]]* [--paid <cta id>]* --via <channel:messageId> [--dry-run]
+//                                                             a person's decision on the open request, against the manifest it bound: each paid link approved (links -- cta approve)
+//                                                             and the package rewritten, approved per output, pushed when behind, synced, the video live now or at the time
+//                                                             (the Shorts go live from the tick after it), then decided; every step idempotent, so an interrupted decide completes on the next call
 // Through the YouTube Data API (YOUTUBE_CLIENT_ID, YOUTUBE_CLIENT_SECRET and YOUTUBE_REFRESH_TOKEN or .youtube-token.json; README, Publishing):
 //   auth <topic> <story-id>                                   one-time consent in the browser; writes .youtube-token.json (gitignored)
 //   upload <topic> <story-id> [--output <id>] [--by <name>]   upload the packaged build (or the output's source) PRIVATELY with its thumbnail and
@@ -61,6 +65,7 @@ import {
   recordRequested,
   openOutput,
   openRequest,
+  requestOf,
   videoDirOf,
   recordFailed,
   recordPublished,
@@ -73,6 +78,8 @@ import {
 } from './publish';
 import { scriptDir, shortOf, storySlug } from '../../shared/io';
 import { goLive, push, sync, upload, verify } from './uploader';
+import { type DecideVerdict, decide } from './decide';
+import { runCli } from '../../shared/cli';
 import { TOKEN_FILE, YouTubeError, authorize, loadCredentials, youtubeClient } from './youtube';
 import { fakeAnonymous, fakeYoutubeClient } from './fake-youtube';
 
@@ -109,13 +116,17 @@ const VALUED = [
   '--request',
   '--message-id',
   '--via',
+  '--verdict',
+  '--paid',
+  '--at-seconds',
 ];
+const flags = (name: string) => rest.flatMap((a, i) => (a === name && rest[i + 1] !== undefined ? [rest[i + 1]] : []));
 const positional = rest.filter((a, i) => !a.startsWith('--') && !VALUED.includes(rest[i - 1]));
 const usage = () => {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 29)
+      .slice(0, 33)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -175,6 +186,27 @@ function placedNotes(args: string[]): ReviewNote[] {
         throw new Refusal(`--at needs the note's time in seconds, not ${value}`);
       notes[notes.length - 1].seconds = seconds;
     } else notes[notes.length - 1][name === '--scene' ? 'scene' : 'sentence'] = value;
+  }
+  return notes;
+}
+
+/** decide's notes: each `--note <text>`, placed by the `--at-seconds`, `--scene` and `--sentence` that follow it
+ *  (`--at` is the schedule's time here). */
+function decideNotes(args: string[]): ReviewNote[] {
+  const notes: ReviewNote[] = [];
+  for (let i = 0; i < args.length - 1; i++) {
+    const [name, value] = [args[i], args[i + 1]];
+    if (name === '--note') notes.push({ text: value });
+    else if (name === '--at-seconds' || name === '--scene' || name === '--sentence') {
+      if (!notes.length) throw new Refusal(`${name} places a note: put it after its --note`);
+      if (name === '--at-seconds') {
+        const seconds = Number(value);
+        if (value.trim() === '' || !Number.isFinite(seconds) || seconds < 0)
+          throw new Refusal(`--at-seconds needs the note's time in seconds, not ${value}`);
+        notes[notes.length - 1].seconds = seconds;
+      } else notes[notes.length - 1][name === '--scene' ? 'scene' : 'sentence'] = value;
+    } else continue;
+    i++;
   }
   return notes;
 }
@@ -334,6 +366,46 @@ async function main() {
         messageId: need('--message-id'),
       });
       break;
+    case 'decide': {
+      const verdict = need('--verdict');
+      if (!['ok', 'schedule', 'changes'].includes(verdict)) throw new Refusal('--verdict is ok, schedule or changes');
+      const v = via();
+      if (!v) throw new Refusal('decide needs --via <channel:messageId> (how the decision arrived)');
+      const o = openOutput(topic, storyId, { output });
+      const manifestOf = () => readJson<ReleaseManifest>(join(videoDirOf(o), REVIEW_DIR, MANIFEST_FILE));
+      const a = {
+        request: need('--request'),
+        by: flag('--by') ?? '',
+        verdict: verdict as DecideVerdict,
+        at: flag('--at'),
+        notes: decideNotes(rest),
+        paid: flags('--paid'),
+        via: v,
+      };
+      if (has('--dry-run')) {
+        const ledger = loadLedger(topic, storyId);
+        if (!ledger) throw new Refusal('no publish.json: nothing was requested');
+        const { decideProblem } = await import('./decide');
+        const problem = decideProblem(
+          ledger,
+          manifestOf(),
+          requestOf(ledger, a.request),
+          a,
+          new Date(),
+          loadAutomation(ROOT).approvals.scheduleLeadMinutes,
+        );
+        if (problem) throw new Refusal(problem);
+        console.log(`dry run: ${a.verdict} on ${a.request} by ${a.by} would be applied`);
+        break;
+      }
+      r = await decide(topic, storyId, a, {
+        ...api(),
+        run: (cli, args) => runCli(cli, args, { env: process.env }),
+        manifestOf,
+        scheduleLeadMinutes: loadAutomation(ROOT).approvals.scheduleLeadMinutes,
+      });
+      break;
+    }
     case 'auth': {
       const creds = loadCredentials(ROOT, process.env, { requireToken: false });
       await authorize(creds, ROOT, (url) => {

@@ -7,9 +7,10 @@ import { join } from 'node:path';
 import { toolOf } from '../../tools';
 import { loadArticleRelease } from '../article';
 import { absoluteOf, chainRoot, type Graph, matterPath } from './content-graph';
-import { readJson, ROOT, FILES, scriptDir, sha } from '../../shared/io';
+import { readJson, ROOT, FILES, scriptDir, sha, writeJsonAtomic } from '../../shared/io';
 import { absoluteUrl } from '../../lib/url';
 import { approverProblem } from '../../shared/approver';
+import { Refusal } from '../../shared/refusal';
 import { sentences } from '../../shared/sentences';
 import type { Script } from '../../shared/types';
 
@@ -69,6 +70,32 @@ export interface CtaResult {
 /** The stable id of a paid link: its type and url (what `links -- cta approve` and a `PAID OK` name). */
 export const ctaId = (c: Pick<Cta, 'type' | 'url'>): string => sha(`${c.type}|${c.url ?? ''}`);
 export const AWAITING_APPROVAL = "a paid link waits for a person's approval (PAID OK in the release reply)";
+
+/** A person's approval of one paid link (D14: `PAID OK` in the release reply, or `npm run links -- cta approve` by
+ *  hand), written into the matching entry of cta.json by its stable id, once; an approval already there stands
+ *  (`existing`). The website owns cta.json, so publishing's `decide` runs this as a child. */
+export function approveCommercial(
+  topic: string,
+  storyId: string,
+  id: string,
+  by: string,
+  root = ROOT,
+): { existing: boolean; url: string } {
+  const problem = approverProblem(by);
+  if (problem) throw new Refusal(problem.replace('--approved-by', '--by'));
+  if (by.trim().startsWith('automated:'))
+    throw new Refusal('a paid link is approved by a person, never an automated run');
+  const file = loadCta(topic, storyId, root);
+  if (!file) throw new Refusal(`no cta.json for ${topic} ${storyId}`);
+  const all = [file.primary, ...(file.secondary ?? [])];
+  const c = all.find((x) => ctaId(x) === id);
+  if (!c) throw new Refusal(`no paid link ${id} in ${ctaPath(topic, storyId, root)}`);
+  if (c.type !== 'commercial') throw new Refusal(`${id} is not a paid link (${c.type})`);
+  if (c.approvedBy?.trim()) return { existing: true, url: c.url! };
+  c.approvedBy = by.trim();
+  writeJsonAtomic(ctaPath(topic, storyId, root), file);
+  return { existing: false, url: c.url! };
+}
 
 /** The file's errors: each fails the build (a commercial entry without its disclosure or a person's approval, too). */
 function fileProblems(f: CtaFile): string[] {

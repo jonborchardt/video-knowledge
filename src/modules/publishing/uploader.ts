@@ -294,7 +294,11 @@ export const keptPrivate = (id: string, privacy: string): string =>
 
 /** Makes the approved upload public now, or schedules it (private with a publishAt) for `at`. Going public now is
  *  recorded only when the read-back says public: YouTube can keep an upload private whatever the write asked. */
-export async function goLive(topic: string, storyId: string, c: Ctx & { at?: string }): Promise<VerbResult> {
+export async function goLive(
+  topic: string,
+  storyId: string,
+  c: Ctx & { at?: string; via?: PublishEvent['via'] }, // via: the decision this applies (decide, the tick)
+): Promise<VerbResult> {
   const o = openOutput(topic, storyId, c);
   if (o.state.status === 'scheduled' || o.state.status === 'published')
     return { event: null, existing: true, message: `${o.id} is already ${o.state.status}: ${o.state.next}` };
@@ -312,7 +316,7 @@ export async function goLive(topic: string, storyId: string, c: Ctx & { at?: str
     await guarded(topic, storyId, c, 'go-live', () =>
       c.client.updateVideo(id, { status: { ...statusOf(o.out), privacyStatus: 'private', publishAt: at } }),
     );
-    return recordScheduled(topic, storyId, { ...c, at });
+    return recordScheduled(topic, storyId, { ...c, at, via: c.via });
   }
   await guarded(topic, storyId, c, 'go-live', () =>
     c.client.updateVideo(id, { status: { ...statusOf(o.out), privacyStatus: 'public' } }),
@@ -325,7 +329,7 @@ export async function goLive(topic: string, storyId: string, c: Ctx & { at?: str
       error: keptPrivate(id, v?.privacyStatus ?? 'missing'),
       retryable: false,
     });
-  return recordPublished(topic, storyId, { ...c, url: urlOf(id) });
+  return recordPublished(topic, storyId, { ...c, url: urlOf(id), via: c.via });
 }
 
 /** Reads the video back: a rejection or a deletion is a final failure, a scheduled video gone public is recorded,

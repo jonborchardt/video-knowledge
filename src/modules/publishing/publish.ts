@@ -1072,7 +1072,12 @@ const refuseGoLive = (o: ReturnType<typeof openOutput>, by: string) => {
   if (problem) throw new Refusal(problem);
 };
 
-export function recordScheduled(topic: string, storyId: string, a: VerbArgs & { at: string }): VerbResult {
+// `via`: how the decision behind a go-live or schedule arrived (decide and the tick set it; a hand-run verb leaves it unset)
+export function recordScheduled(
+  topic: string,
+  storyId: string,
+  a: VerbArgs & { at: string; via?: PublishEvent['via'] },
+): VerbResult {
   const o = openOutput(topic, storyId, a);
   if (o.state.status !== 'approved' && o.state.status !== 'scheduled')
     throw new Refusal(`the upload is ${o.state.status}, not approved: ${o.state.next}`);
@@ -1080,13 +1085,21 @@ export function recordScheduled(topic: string, storyId: string, a: VerbArgs & { 
   const t = Date.parse(a.at);
   if (Number.isNaN(t)) throw new Refusal(`--at ${a.at} is not an ISO date`);
   if (t <= (a.now ?? new Date()).getTime()) throw new Refusal(`--at ${a.at} is in the past`);
-  return write(o, { at: stamp(a), type: 'scheduled', by: a.by, id: o.state.id!, publishAt: a.at });
+  return write(o, {
+    at: stamp(a),
+    type: 'scheduled',
+    by: a.by,
+    id: o.state.id!,
+    publishAt: a.at,
+    ...(a.via && { via: a.via }),
+  });
 }
 
 export function recordPublished(
   topic: string,
   storyId: string,
-  a: VerbArgs & { url?: string; id?: string; observed?: boolean }, // observed: sync read it back public, a fact to record
+  // observed: sync read it back public, a fact to record
+  a: VerbArgs & { url?: string; id?: string; observed?: boolean; via?: PublishEvent['via'] },
 ): VerbResult {
   const o = openOutput(topic, storyId, a);
   if (o.state.status !== 'approved' && o.state.status !== 'scheduled')
@@ -1096,6 +1109,8 @@ export function recordPublished(
   const id = o.state.id ?? a.id ?? a.url ?? o.id;
   const e: PublishEvent = { at: stamp(a), type: 'published', by: a.by, id };
   if (a.url) e.url = a.url;
+  if (a.observed) e.note = 'observed public on read-back';
+  if (a.via) e.via = a.via;
   return write(o, e);
 }
 
