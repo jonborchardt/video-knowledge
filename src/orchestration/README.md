@@ -21,8 +21,10 @@ created. The mail transport is shared infrastructure (`src/shared/mail.ts`), wit
 
 ## Phase 3: approval by reply, publication and launch
 
-`run/replies.ts` is the reply grammar (spec §7.2: the first line of the person's own text decides; `ownText` drops
-quotes and signatures; `parseWhen` reads the schedule in the configured timezone); `run/inbox.ts` is the inbox
+`run/replies.ts` is the reply grammar (spec §7.2: the first line of the person's own text decides, and a release
+approval is unambiguous: `OK` alone, punctuation allowed, or `OK at <when>`; an OK with anything after it is a
+clarification, never a publication; `ownText` drops quotes and signatures; `parseWhen` reads the schedule in the
+configured timezone); `run/inbox.ts` is the inbox
 adapter (the thread and the request id both required, one `publish decide` per reply, one clarification for what it
 cannot read, `.automation/inbox.json` the record written after the verb; a draft reply writes `run/draft-accepted.json`
 for the release loop, which runs `video final` by the person's name); `run/publish-due.ts` is the tick's due step
@@ -36,6 +38,13 @@ a second work instance ends `held`), it waits while another story of the topic h
 the story's folder, the topic's top-level files and the site outputs. The tick's publication steps each run on their
 own (one that throws is an action line, the pass goes on); a reply whose `decide` fails leaves the message for the
 next poll and halts the story `step-failed`; a reply on a decided request is answered, never applied; a Short goes
-live only under a `decided` request, by its person; a failing verification is read three times, then halts; a Short's
-final failure halts the story. The orchestration imports publishing, website and social only through their
-`index.ts` and writes every effect through a CLI as a child.
+live only under a `decided` request, by its person; nothing retries forever: a sync after the scheduled time, a
+verification read of the video or a live Short, or a Short's retryable go-live that keeps failing is tried
+`MAX_TRIES` (3) times, counted in the story's `run/retries.json` since its marker, then halts `step-failed` once; a
+Short's final failure halts the story; a retryable halt of the release loop becomes `retries-spent` (not retryable,
+written once) after the backoff array. The probe takes the X post's outcome from the social module's record
+(`loadSocial`, `accountFor` for whether the institution is configured), never from the CLI's text, and tries a
+retryable failure on `POST_ATTEMPTS` (3) ticks; `deploy-timeout` is written once with a stable why (the probe's
+reason in its unblock text), so every terminal failure is one halt the status rows and the halt mail carry once.
+The orchestration imports publishing, website and social only through their `index.ts` and writes every effect
+through a CLI as a child.

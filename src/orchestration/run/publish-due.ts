@@ -4,6 +4,9 @@
 // failure is retried next tick, and the video is never touched again. A live Short whose description is behind
 // (its parent's link) is pushed. An open request past its expiry is renewed once, with a new mail through the
 // outbox; a second expiry is a person's (`request-expired`). Every effect is a publishing verb as a child.
+// Nothing here retries forever: a sync, a verification read or a Short's go-live that keeps failing is tried
+// MAX_TRIES times (counted under the story's run folder, since the ledger keeps one copy of an identical event),
+// then the story halts `step-failed` once, so the halt mail and `status` name it.
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
@@ -15,11 +18,27 @@ import type { CliResult } from '../../shared/cli';
 import { type Halt, readHalt, runDir, writeHalt } from './journal';
 import { sendReleaseRequest } from './requests';
 
-/** How many times a failing verification is read again after a publish before the story halts. */
-export const VERIFY_READS = 3;
-/** Under the story's run folder: the failing reads since the last publish (the ledger keeps one copy of an identical
- *  verification). */
-export const VERIFY_READS_FILE = 'verify-reads.json';
+/** How many times a failing publication step (a sync, a verification read, a Short's go-live) is tried before the
+ *  story halts for a person. */
+export const MAX_TRIES = 3;
+/** Under the story's run folder: the tries of each step since its marker (the publish, the schedule, the decision).
+ *  The ledger keeps one copy of an identical event, so repeats are counted here. */
+export const RETRIES_FILE = 'retries.json';
+type Retries = Record<string, { since: string; tries: number }>;
+const retriesPath = (dir: string) => join(dir, RETRIES_FILE);
+/** The tries of `key` so far since `since` (0 when the marker moved). */
+export function triesOf(dir: string, key: string, since: string): number {
+  const r = readJson<Retries>(retriesPath(dir))?.[key];
+  return r?.since === since ? r.tries : 0;
+}
+/** Records one more try of `key` since `since`; returns the new count. */
+export function countTry(dir: string, key: string, since: string): number {
+  const all = readJson<Retries>(retriesPath(dir)) ?? {};
+  const tries = triesOf(dir, key, since) + 1;
+  all[key] = { since, tries };
+  writeJsonAtomic(retriesPath(dir), all);
+  return tries;
+}
 
 export interface PublishDeps {
   now?: () => number;
@@ -57,48 +76,69 @@ export async function publishDue(a: Automation, root = ROOT, d: PublishDeps): Pr
     if (!ledger) continue;
     const main = openOutput(topic, storyId, { root });
     const tag = `${topic}/${storyId}`;
+    const dir = () => runDir(topic, storyId, root);
+    /** A person's halt, written once (the halt mail is keyed by its why); a different halt of the story is replaced. */
+    const haltOnce = (why: string, text: string) => {
+      if (readHalt(dir())?.why === why) return;
+      writeHalt(dir(), {
+        kind: 'step-failed',
+        stage: 'release',
+        why,
+        unblock: { kind: 'fix', text },
+        at: new Date(now()).toISOString(),
+        runId: 'tick',
+        board: { stage: 'release', next: 'a person' },
+      } satisfies Halt);
+    };
     if (main.state.status === 'scheduled') {
       const at = main.out.events.findLast((e) => e.type === 'scheduled')?.publishAt;
       if (at && Date.parse(at) <= now()) {
+        // a sync that keeps failing after the time (the API down, the video gone) is tried MAX_TRIES times, then a person's
+        if (triesOf(dir(), 'sync', at) >= MAX_TRIES) {
+          haltOnce(
+            `${main.id}: the sync after its scheduled time ${at} keeps failing (${MAX_TRIES} tries)`,
+            `read the video back (npm run publish -- sync ${topic} ${storyId}) and fix what it names`,
+          );
+          continue;
+        }
         const r = await run('publish', ['sync', topic, storyId, '--by', by]);
         actions.push(`${tag}: sync (${r.status})`);
-        if (r.status === 0 && openOutput(topic, storyId, { root }).state.live)
+        if (r.status !== 0) {
+          if (countTry(dir(), 'sync', at) >= MAX_TRIES)
+            haltOnce(
+              `${main.id}: the sync after its scheduled time ${at} keeps failing (${MAX_TRIES} tries)`,
+              `read the video back (npm run publish -- sync ${topic} ${storyId}) and fix what it names`,
+            );
+        } else if (openOutput(topic, storyId, { root }).state.live)
           await run('publish', ['verify', topic, storyId, '--by', by]);
       }
       continue;
     }
     if (main.state.live) {
-      const dir = runDir(topic, storyId, root);
-      const haltOnce = (why: string, text: string) => {
-        if (readHalt(dir)?.why === why) return;
-        writeHalt(dir, {
-          kind: 'step-failed',
-          stage: 'release',
-          why,
-          unblock: { kind: 'fix', text },
-          at: new Date(now()).toISOString(),
-          runId: 'tick',
-          board: { stage: 'release', next: 'a person' },
-        } satisfies Halt);
-      };
-      // a video that decide published is read back here (the launch needs a verification since); a failing read is
-      // tried three times, then the story halts for a person
-      const published = main.out.events.findLastIndex((e) => e.type === 'published');
-      const reads = main.out.events.slice(published).filter((e) => e.type === 'verified');
-      if (!reads.length || reads.at(-1)!.result === 'failed') {
-        // the ledger keeps one copy of an identical failing read, so the reads are counted beside the journal
-        const counterPath = join(dir, VERIFY_READS_FILE);
-        const publishedAt = main.out.events[published]?.at ?? '';
-        const counter = readJson<{ published: string; reads: number }>(counterPath);
-        const done = counter?.published === publishedAt ? counter.reads : 0;
-        if (done < VERIFY_READS) {
-          const r = await run('publish', ['verify', topic, storyId, '--by', by]);
-          actions.push(`${tag}: verify (${r.status})`);
-          writeJsonAtomic(counterPath, { published: publishedAt, reads: done + 1 });
+      // the video decide published, and every live Short, is read back here (the launch needs a verification since
+      // the publish); a failing read is tried MAX_TRIES times, then the story halts for a person
+      const liveOutputs: [string, string][] = [[main.id, storyId]];
+      for (const id of Object.keys(ledger.outputs)) {
+        if (!id.startsWith('short:')) continue;
+        if (openOutput(topic, storyId, { root, output: id }).state.live)
+          liveOutputs.push([id, `${storyId}/shorts/${id.slice('short:'.length)}`]);
+      }
+      for (const [id, cliStory] of liveOutputs) {
+        const o = openOutput(topic, storyId, { root, output: id });
+        const published = o.out.events.findLastIndex((e) => e.type === 'published');
+        const reads = o.out.events.slice(published).filter((e) => e.type === 'verified');
+        if (reads.length && reads.at(-1)!.result !== 'failed') continue;
+        const since = o.out.events[published]?.at ?? '';
+        const key = `verify|${id}`;
+        const done = triesOf(dir(), key, since);
+        if (done < MAX_TRIES) {
+          const r = await run('publish', ['verify', topic, cliStory, '--by', by]);
+          actions.push(`${id === main.id ? tag : `${topic}/${cliStory}`}: verify (${r.status})`);
+          countTry(dir(), key, since);
         } else
           haltOnce(
-            `${main.id}: the verification keeps failing after ${done} reads since the publish`,
-            `compare what YouTube holds with the package (npm run publish -- verify ${topic} ${storyId}) and fix it`,
+            `${id}: the verification keeps failing after ${done} reads since the publish`,
+            `compare what YouTube holds with the package (npm run publish -- verify ${topic} ${cliStory}) and fix it`,
           );
       }
       // the Shorts follow their video only under a person's decision on the request (spec 12), by that person
@@ -112,6 +152,7 @@ export async function publishDue(a: Automation, root = ROOT, d: PublishDeps): Pr
         const s = openOutput(topic, storyId, { root, output: id });
         const shortStory = `${storyId}/shorts/${id.slice('short:'.length)}`;
         const shortTag = `${topic}/${shortStory}`;
+        const goLiveFix = `fix it, then npm run publish -- go-live ${topic} ${shortStory} --by "<name>"`;
         if (s.state.live) {
           // a live Short whose description is behind: pushed once, then read back
           if (s.state.status === 'metadata-behind' && !s.state.failed) {
@@ -123,14 +164,22 @@ export async function publishDue(a: Automation, root = ROOT, d: PublishDeps): Pr
         }
         if (s.state.failed && !s.state.failed.retryable) {
           // a person's: said once, so the halt mail carries it
-          haltOnce(
-            `${id}: ${s.state.failed.step} failed: ${s.state.failed.error}`,
-            `fix it, then npm run publish -- go-live ${topic} ${shortStory} --by "<name>"`,
-          );
+          haltOnce(`${id}: ${s.state.failed.step} failed: ${s.state.failed.error}`, goLiveFix);
           continue;
         }
         if (!decided) {
           actions.push(`${tag}: ${id} waits: no decided request (a person makes it live)`);
+          continue;
+        }
+        // a retryable failure is retried once per tick, MAX_TRIES times since the decision, then a person's
+        const retryKey = `go-live|${id}`;
+        const spent = (tries: number) =>
+          haltOnce(
+            `${id}: go-live keeps failing after ${tries} tries: ${s.state.failed?.error ?? ''}`.trim(),
+            goLiveFix,
+          );
+        if (s.state.failed?.retryable && triesOf(dir(), retryKey, decided.at) >= MAX_TRIES) {
+          spent(triesOf(dir(), retryKey, decided.at));
           continue;
         }
         // its description gains the parent's link once the parent is live: pushed before it goes live
@@ -144,10 +193,12 @@ export async function publishDue(a: Automation, root = ROOT, d: PublishDeps): Pr
           actions.push(`${shortTag}: go-live${s.state.failed ? ' retry' : ''} (${r.status})`);
           const after = openOutput(topic, storyId, { root, output: id }).state;
           if (after.failed && !after.failed.retryable)
-            haltOnce(
-              `${id}: ${after.failed.step} failed: ${after.failed.error}`,
-              `fix it, then npm run publish -- go-live ${topic} ${shortStory} --by "<name>"`,
-            );
+            haltOnce(`${id}: ${after.failed.step} failed: ${after.failed.error}`, goLiveFix);
+          else if (after.failed?.retryable) {
+            const tries = countTry(dir(), retryKey, decided.at);
+            if (tries >= MAX_TRIES)
+              haltOnce(`${id}: go-live keeps failing after ${tries} tries: ${after.failed.error}`, goLiveFix);
+          }
           if (r.status === 0 && openOutput(topic, storyId, { root, output: id }).state.live)
             await run('publish', ['verify', topic, shortStory, '--by', by]);
           break; // in order, one per tick: the next after this one has been read back
@@ -160,8 +211,7 @@ export async function publishDue(a: Automation, root = ROOT, d: PublishDeps): Pr
     if (!latest || main.out.events.some((e) => e.type === 'decided' && e.request === latest.request)) continue;
     if (Date.parse(latest.expiresAt!) > now()) continue;
     if ((latest.renewed ?? 0) >= 1) {
-      const dir = runDir(topic, storyId, root);
-      if (readHalt(dir)?.kind !== 'request-expired') {
+      if (readHalt(dir())?.kind !== 'request-expired') {
         const h: Halt = {
           kind: 'request-expired',
           stage: 'release',
@@ -174,7 +224,7 @@ export async function publishDue(a: Automation, root = ROOT, d: PublishDeps): Pr
           runId: 'tick',
           board: { stage: 'release', next: 'a decision' },
         };
-        writeHalt(dir, h);
+        writeHalt(dir(), h);
       }
       actions.push(`${tag}: request-expired`);
       continue;

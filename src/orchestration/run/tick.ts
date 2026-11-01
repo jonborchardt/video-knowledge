@@ -48,6 +48,8 @@ export interface TickDeps {
   run?: (cli: string, args: string[]) => Promise<CliResult> | CliResult;
   /** The deploy probe's fetch; tests inject. */
   fetchFn?: typeof fetch;
+  /** The environment the publication steps read (the institution's X keys say whether it posts); the process's. */
+  env?: NodeJS.ProcessEnv;
 }
 
 export interface TickReport {
@@ -210,12 +212,13 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
             `inbox: ${inbox.fetched} fetched, ${inbox.applied.length} applied, ${inbox.clarified.length} clarified, ${inbox.refused.length} refused, ${inbox.failed.length} failed, ${inbox.ignored.length} ignored`,
           );
       });
+    const env = deps.env ?? process.env;
     await step('due publications', async () => {
-      actions.push(...(await publishDue(a, root, { now, run, mail: deps.mail, env: process.env })));
+      actions.push(...(await publishDue(a, root, { now, run, mail: deps.mail, env })));
     });
     // the deploy probes: one per pending launch, then the social post and the launch mail
     await step('deploy probes', async () => {
-      actions.push(...(await probeLaunches(a, root, { now, run, mail: deps.mail, fetchFn: deps.fetchFn })));
+      actions.push(...(await probeLaunches(a, root, { now, run, mail: deps.mail, fetchFn: deps.fetchFn, env })));
     });
     const rows = (deps.rows ?? (() => statusOf(root, deps.alive)))();
     const due = dueResumes(a, root, { now, rows, ask: deps.ask, alive: deps.alive });

@@ -15,6 +15,7 @@ const RETRYABLE_ERROR = /No audio was received|truncated|ECONN|ETIMEDOUT|Session
 
 /** A halt the tick may clear on its own, by backoff: a hung step, a stale lock, a step that failed on a transient. */
 export function retryable(h: Pick<Halt, 'kind' | 'why'> & { retryable?: boolean }): boolean {
+  if (h.kind === 'retries-spent') return false; // the retries are over: a person's, whatever flag the halt carried
   if (h.retryable) return true;
   if (h.kind === 'timeout' || h.kind === 'lock-stale') return true;
   return h.kind === 'step-failed' && RETRYABLE_ERROR.test(h.why);
@@ -53,8 +54,11 @@ export function dueResumes(a: Automation, root = ROOT, deps: ResumeDeps = {}): D
       const attempt = resumesSince(r.dir, h);
       const backoff = a.runs.retryBackoffMinutes;
       if (attempt >= backoff.length) {
+        // written once, without the retryable flag: one halt key, one mail, a date that stays put
+        const rest = { ...h };
+        delete rest.retryable;
         writeHalt(r.dir, {
-          ...h,
+          ...rest,
           kind: 'retries-spent',
           why: `${backoff.length} retries did not clear: ${h.why}`,
           unblock: { kind: 'fix', text: `${h.unblock.text} (after reading the step log)` },

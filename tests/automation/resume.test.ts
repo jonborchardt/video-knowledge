@@ -111,6 +111,25 @@ describe('dueResumes', () => {
     expect(h.why).toMatch(/3 retries/);
     expect(retryable(h)).toBe(false);
   });
+  it("a retryable step-failed halt (the release loop's) ends in a retries-spent that is not retryable and keeps its date", () => {
+    const root = fresh();
+    const dir = runDir(T, S, root);
+    const h = halt({ kind: 'step-failed', why: 'youtube: verify failed: 503', retryable: true, stage: 'release' });
+    for (let i = 0; i < 3; i++) {
+      appendJournal(dir, entry(T0 + min(i * 10), 'r', 'resume'));
+      appendJournal(dir, entry(T0 + min(i * 10 + 1), 'r', 'halt', 'step-failed'));
+    }
+    writeHalt(dir, h);
+    const t1 = T0 + min(100);
+    expect(dueResumes(a, root, { now: () => t1, rows: rows(root), ask: same })).toEqual([]);
+    const spent = readHalt(dir)!;
+    expect(spent.kind).toBe('retries-spent');
+    expect(spent.retryable).toBeUndefined();
+    expect(retryable(spent)).toBe(false); // so notifyHalts emails it, once
+    // a later tick leaves it as it is: the same halt, the same date (one halt key, one mail)
+    expect(dueResumes(a, root, { now: () => t1 + min(30), rows: rows(root), ask: same })).toEqual([]);
+    expect(readHalt(dir)).toEqual(spent);
+  });
   it('a finished stage or a halt of another kind resets the count', () => {
     const root = fresh();
     const dir = runDir(T, S, root);

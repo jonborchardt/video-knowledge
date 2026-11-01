@@ -112,6 +112,19 @@ describe('pollInbox', () => {
     expect(s.publicUpdates()).toHaveLength(1);
   });
 
+  it('a conditional OK ("OK, but hold off") publishes nothing: one clarification asking for a plain OK', async () => {
+    const { s, mail, sent, subject, poll } = await staged();
+    mail.deliver(reply(sent, 'OK, but hold off', { subject }));
+    const r = await poll();
+    expect(r.applied).toEqual([]);
+    expect(r.clarified).toEqual([s.request]);
+    expect(s.publicUpdates()).toHaveLength(0);
+    expect(s.events().some((e) => e.type === 'decided' || e.type === 'approved')).toBe(false);
+    expect(mail.sent).toHaveLength(2);
+    expect(mail.sent[1].text).toMatch(/"OK, but hold off" is not a plain OK/);
+    expect(mail.sent[1].text).toMatch(/The request stays open/);
+  });
+
   it('a crash between decide and the inbox record is completed on the next poll without a second go-live (criterion 13)', async () => {
     const { s, mail, sent, subject } = await staged();
     mail.deliver(reply(sent, 'OK', { subject }));

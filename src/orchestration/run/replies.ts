@@ -169,7 +169,7 @@ export function parseNoteLine(line: string): ReplyNote {
 export type Parsed = { decision: Decision } | { problem: string; hint: string };
 
 const HINT_RELEASE =
-  'Reply with one of these as the first line: OK (publish now); OK at Thursday 15:00 (schedule, your time); CHANGES: then one note per line. PAID OK or PAID OK 1 on its own line approves the paid links shown.';
+  'Reply with one of these as the first line, on its own: OK (publish now); OK at Thursday 15:00 (schedule, your time); CHANGES: then one note per line. PAID OK or PAID OK 1 on its own line approves the paid links shown. An OK with anything after it ("OK, but ...", "OK if ...", "OK?") is not applied: it is asked about instead.';
 const HINT_TOPICS = 'Reply with lines like: APPROVE <slug>; REJECT <slug>: <why>; APPROVE ALL; REJECT ALL: <why>.';
 
 /** Reads a person's own text. `kind` says which request it answers (what the hint lists). */
@@ -194,10 +194,16 @@ export function parseReply(
     if (!topics) return { problem: 'could not read the reply', hint: HINT_TOPICS };
     return { decision: { verdict: 'topics', topics } };
   }
-  if (/^ok\b/.test(lower) && !/\bat\b/.test(lower.slice(2, 6))) {
-    return { decision: { verdict: 'ok', ...extra } };
-  }
+  // a release approval is unambiguous: OK alone on the first line (punctuation allowed), or OK at <when>; an OK with
+  // anything else after it (a condition, a hold, a question) is asked about, never applied (conservative, not a
+  // reading of what the words mean)
+  if (/^ok[.!]*$/.test(lower)) return { decision: { verdict: 'ok', ...extra } };
   const at = /^ok\s+at\s+(.+)$/i.exec(first);
+  if (/^ok\b/.test(lower) && !at)
+    return {
+      problem: `"${first.slice(0, 60)}" is not a plain OK, so nothing was published; reply OK on its own to publish, or CHANGES: with what to change`,
+      hint: HINT_RELEASE,
+    };
   if (at) {
     const when = parseWhen(at[1].replace(/[.!]+$/, ''), a.schedule.timezone, now);
     if (when === null) return { problem: `could not read the time "${at[1]}"`, hint: HINT_RELEASE };

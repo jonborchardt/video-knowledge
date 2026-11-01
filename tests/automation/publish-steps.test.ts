@@ -110,9 +110,11 @@ describe('publishDue', () => {
     }
     // the ledger keeps one copy of an identical failing read; the reads are counted beside the journal
     expect(s.events().filter((e) => e.type === 'verified' && e.result === 'failed')).toHaveLength(1);
-    expect(readJson<{ reads: number }>(join(runDir(s.f.topic, s.f.story, s.f.root), 'verify-reads.json'))?.reads).toBe(
-      3,
-    );
+    expect(
+      readJson<Record<string, { tries: number }>>(join(runDir(s.f.topic, s.f.story, s.f.root), 'retries.json'))?.[
+        'verify|youtube'
+      ]?.tries,
+    ).toBe(3);
     const fourth = await publishDue(a, s.f.root, { now: () => T0.getTime() + 4 * 60_000, run: s.run, mail: null });
     expect(fourth.join('\n')).not.toMatch(/verify \(/); // the reads are spent: the halt, no fourth read
     expect(halt()).toMatchObject({ kind: 'step-failed' });
@@ -187,6 +189,74 @@ describe('publishDue', () => {
     expect(state(s, 'short:two').live).toBe(false);
     expect(s.publicUpdates('vid00000000')).toHaveLength(1);
     expect(s.publicUpdates('vid00000001')).toHaveLength(2);
+  });
+
+  it("a Short's go-live failing retryably every tick is tried three times, then the story halts step-failed once", async () => {
+    const s = stagedRelease(T0, { shorts: ['one'] });
+    stages.push(s);
+    expect((await decided(s, 'ok')).status).toBe(0);
+    const fs = readFakeState(s.fake);
+    fs.fail.push({ method: 'updateVideo', status: 503, reason: 'backendError', retryable: true, times: 9, after: 1 });
+    writeFakeState(s.fake, fs);
+    const halt = () =>
+      readJson<{ kind: string; why: string; at: string }>(join(runDir(s.f.topic, s.f.story, s.f.root), 'halt.json'));
+    for (let i = 1; i <= 3; i++) {
+      const acts = await publishDue(a, s.f.root, { now: () => T0.getTime() + i * 60_000, run: s.run, mail: null });
+      expect(acts.join('\n'), `tick ${i}`).toMatch(/shorts\/one: go-live( retry)? \(1\)/);
+    }
+    expect(s.publicUpdates('vid00000001')).toHaveLength(3);
+    expect(halt()).toMatchObject({ kind: 'step-failed' });
+    expect(halt()?.why).toMatch(/short:one: go-live keeps failing after 3 tries/);
+    const at = halt()!.at;
+    const fourth = await publishDue(a, s.f.root, { now: () => T0.getTime() + 4 * 60_000, run: s.run, mail: null });
+    expect(fourth.join('\n')).not.toMatch(/go-live/); // spent: no fourth try, the same halt
+    expect(s.publicUpdates('vid00000001')).toHaveLength(3);
+    expect(halt()!.at).toBe(at);
+  });
+
+  it('a sync that keeps failing after the scheduled time is tried three times, then the story halts step-failed', async () => {
+    const s = stagedRelease(T0, { shorts: [] });
+    stages.push(s);
+    const at = new Date(T0.getTime() + 3600_000).toISOString();
+    expect((await decided(s, 'schedule', at)).status).toBe(0);
+    const fs = readFakeState(s.fake);
+    fs.fail.push({ method: 'getVideo', status: 500, reason: 'backendError', retryable: true, times: 9 });
+    writeFakeState(s.fake, fs);
+    const late = T0.getTime() + 3600_000 + 60_000;
+    s.clock.now = new Date(late);
+    for (let i = 1; i <= 3; i++) {
+      const acts = await publishDue(a, s.f.root, { now: () => late + i * 60_000, run: s.run, mail: null });
+      expect(acts.join('\n'), `tick ${i}`).toMatch(/sync \(1\)/);
+    }
+    const halt = readJson<{ kind: string; why: string }>(join(runDir(s.f.topic, s.f.story, s.f.root), 'halt.json'));
+    expect(halt).toMatchObject({ kind: 'step-failed' });
+    expect(halt?.why).toMatch(/sync after its scheduled time .* keeps failing/);
+    const fourth = await publishDue(a, s.f.root, { now: () => late + 4 * 60_000, run: s.run, mail: null });
+    expect(fourth).toEqual([]);
+    expect(state(s, 'youtube').status).toBe('scheduled'); // the ledger is untouched: YouTube's state is unknown
+  });
+
+  it("a live Short's verification that keeps failing is read three times, then the story halts naming the Short", async () => {
+    const s = stagedRelease(T0, { shorts: ['one'] });
+    stages.push(s);
+    expect((await decided(s, 'ok')).status).toBe(0);
+    const fs = readFakeState(s.fake);
+    fs.videos.vid00000001.uploadStatus = 'failed'; // YouTube failed the Short's upload: its verification fails on upload
+    writeFakeState(s.fake, fs);
+    const t1 = T0.getTime() + 60_000;
+    const a1 = await publishDue(a, s.f.root, { now: () => t1, run: s.run, mail: null }); // the video's read, the Short live
+    expect(a1.join('\n')).toMatch(/shorts\/one: go-live \(0\)/);
+    expect(state(s, 'short:one').live).toBe(true);
+    expect(s.events('short:one').at(-1)).toMatchObject({ type: 'verified', result: 'failed' });
+    for (let i = 2; i <= 4; i++) {
+      const acts = await publishDue(a, s.f.root, { now: () => T0.getTime() + i * 60_000, run: s.run, mail: null });
+      expect(acts.join('\n'), `tick ${i}`).toMatch(/shorts\/one: verify \(1\)/);
+    }
+    const fifth = await publishDue(a, s.f.root, { now: () => T0.getTime() + 5 * 60_000, run: s.run, mail: null });
+    expect(fifth.join('\n')).not.toMatch(/verify/);
+    const halt = readJson<{ kind: string; why: string }>(join(runDir(s.f.topic, s.f.story, s.f.root), 'halt.json'));
+    expect(halt).toMatchObject({ kind: 'step-failed' });
+    expect(halt?.why).toMatch(/short:one: the verification keeps failing/);
   });
 
   it('a tick with the inbox and the due step over fakes completes in under 5 s', async () => {

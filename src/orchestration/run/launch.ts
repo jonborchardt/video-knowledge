@@ -11,6 +11,7 @@ import type { CliResult } from '../../shared/cli';
 import { ROOT, readJson, scriptDir, storySlug, topicDir, writeJsonAtomic } from '../../shared/io';
 import type { MailTransport } from '../../shared/mail';
 import { loadLedger, openOutput } from '../../modules/publishing';
+import { accountFor, loadSocial } from '../../modules/social';
 import { liveCheck } from '../../modules/website';
 import { type Halt, clearHalt, readHalt, runDir, writeHalt } from './journal';
 import { acquire, aliveLocks, readLock, release } from './lock';
@@ -34,9 +35,13 @@ export interface LaunchRecord {
   probes: number;
   liveAt: string | null;
   posted: boolean | 'not-configured' | null;
+  /** How many ticks ran `social -- post` for it (a retryable failure is tried again, POST_ATTEMPTS times). */
+  postAttempts?: number;
   emailed: boolean;
   halt?: Halt | null;
 }
+/** How many ticks try the X post before a retryable failure becomes the person's (`step-failed`). */
+export const POST_ATTEMPTS = 3;
 export const launchPath = (topic: string, storyId: string, root = ROOT) =>
   join(automationDir(root), LAUNCH_DIR, `${topic}--${storySlug(storyId)}.json`);
 /** The launch's lock folder: one launch of a story at a time, across work instances. */
@@ -318,6 +323,8 @@ export interface ProbeDeps {
   fetchFn?: typeof fetch;
   run: (cli: string, args: string[]) => Promise<CliResult> | CliResult;
   mail: MailTransport | null;
+  /** The environment the institution's X keys are read from (whether it is configured); the tick's process env. */
+  env?: NodeJS.ProcessEnv;
 }
 
 /** Tick step 5: one probe per pending launch (pushed, not yet live); confirmed, the social post when the policy
@@ -356,19 +363,23 @@ export async function probeLaunches(a: Automation, root = ROOT, d: ProbeDeps): P
       if (!probe.ok) {
         const since = rec.steps.validated ?? rec.startedAt;
         if (now() - Date.parse(since) > a.launch.deployTimeoutMinutes * 60_000) {
-          haltLaunch(root, rec, {
-            kind: 'deploy-timeout',
-            stage: 'launch',
-            why: `the deploy of ${tag} is not live after ${a.launch.deployTimeoutMinutes} minutes: ${probe.why}`,
-            unblock: {
-              kind: 'fix',
-              text: `check the deploy of ${pushed} (CI, Cloudflare); the next tick probes again`,
-            },
-            at: new Date(now()).toISOString(),
-            runId: 'tick',
-            board: { stage: 'launch', next: 'the deploy' },
-          });
-          actions.push(`${tag}: deploy-timeout`);
+          // written once: a stable why (the probe's reason, which changes between ticks, goes in the unblock text),
+          // so the halt keeps one key and one date across the ticks that keep probing, and is emailed once
+          if (rec.halt?.kind !== 'deploy-timeout' || !readHalt(runDir(rec.topic, rec.storyId, root)))
+            haltLaunch(root, rec, {
+              kind: 'deploy-timeout',
+              stage: 'launch',
+              why: `the deploy of ${tag} is not live after ${a.launch.deployTimeoutMinutes} minutes`,
+              unblock: {
+                kind: 'fix',
+                text: `check the deploy of ${pushed} (CI, Cloudflare): ${probe.why}; the next tick probes again`,
+              },
+              at: new Date(now()).toISOString(),
+              runId: 'tick',
+              board: { stage: 'launch', next: 'the deploy' },
+            });
+          else writeLaunch(root, rec);
+          actions.push(`${tag}: deploy-timeout (${probe.why})`);
         } else {
           writeLaunch(root, rec);
           actions.push(`${tag}: not live yet (probe ${rec.probes}): ${probe.why}`);
@@ -383,14 +394,20 @@ export async function probeLaunches(a: Automation, root = ROOT, d: ProbeDeps): P
       );
     }
     if (rec.posted === null) {
-      if (a.enabled.social && a.launch.social.video) {
-        // the post: not configured is journaled, a retryable failure is tried again next tick (the mail waits), a
-        // final failure halts step-failed; never a second post of the same text (the module reconciles)
+      // the post, when the policy says so and the institution has an account (the social read API, from the
+      // environment): the CLI is the effect; the outcome is the module's record (social.json), never the CLI's text.
+      // A record still `posting` (a retryable failure, a crash) is tried again next tick, POST_ATTEMPTS times, the
+      // mail waiting; a failed record, or the attempts spent, halts step-failed; the module posts one text once.
+      if (!(a.enabled.social && a.launch.social.video) || !accountFor(rec.topic, d.env ?? process.env))
+        rec.posted = 'not-configured';
+      else {
+        rec.postAttempts = (rec.postAttempts ?? 0) + 1;
         const r = await d.run('social', ['post', rec.topic, rec.storyId]);
-        if (/not configured/.test(r.stdout)) rec.posted = 'not-configured';
-        else if (r.status === 0) rec.posted = true;
-        else if (/retryable/.test(r.stdout)) {
-          actions.push(`${tag}: post retryable, again next tick`);
+        const p = loadSocial(rec.topic, rec.storyId, root)?.outputs.youtube?.posts.at(-1) ?? null;
+        const detail = p?.error ?? (r.stderr || r.stdout).trim().split('\n').at(-1) ?? 'no record';
+        if (p?.status === 'posted') rec.posted = true;
+        else if (p?.status !== 'failed' && rec.postAttempts < POST_ATTEMPTS) {
+          actions.push(`${tag}: post pending (attempt ${rec.postAttempts}), again next tick: ${detail}`);
           writeLaunch(root, rec);
           continue;
         } else {
@@ -398,7 +415,10 @@ export async function probeLaunches(a: Automation, root = ROOT, d: ProbeDeps): P
           haltLaunch(root, rec, {
             kind: 'step-failed',
             stage: 'launch',
-            why: `the X post of ${tag} failed: ${(r.stdout || r.stderr).trim().split('\n').at(-1)}`,
+            why:
+              p?.status === 'failed'
+                ? `the X post of ${tag} failed: ${detail}`
+                : `the X post of ${tag} did not go through in ${rec.postAttempts} attempts: ${detail}`,
             unblock: {
               kind: 'fix',
               text: `fix the keys or the account, then npm run social -- post ${rec.topic} ${rec.storyId}`,
@@ -409,7 +429,7 @@ export async function probeLaunches(a: Automation, root = ROOT, d: ProbeDeps): P
           });
         }
         actions.push(`${tag}: post ${rec.posted}`);
-      } else rec.posted = 'not-configured';
+      }
       writeLaunch(root, rec);
     }
     if (d.mail && !rec.emailed) {

@@ -18,7 +18,7 @@ import { readInbox } from '../../src/orchestration/run/inbox';
 import { launch, launchJobs, launchProblem, readLaunch } from '../../src/orchestration/run/launch';
 import { tick } from '../../src/orchestration/run/tick';
 import { work } from '../../src/orchestration/run/work';
-import { type Stage, gitOrigin, stagedRelease, sentRequest } from './publish-fake-cli';
+import { type Stage, X_TEST_ENV, gitOrigin, stagedRelease, sentRequest } from './publish-fake-cli';
 
 const stages: Stage[] = [];
 afterAll(() => stages.forEach((s) => s.f.cleanup()), 120_000);
@@ -89,7 +89,14 @@ async function scenario(opts: { x: boolean; shortFails?: boolean }) {
       : new Response('soon', { status: page.live ? 404 : 200 })) as unknown as typeof fetch;
   const ticks: string[][] = [];
   const oneTick = async () => {
-    const r = await tick(a, s.f.root, { mail, now: clock, preflight: okPre, run: s.run, fetchFn });
+    const r = await tick(a, s.f.root, {
+      mail,
+      now: clock,
+      preflight: okPre,
+      run: s.run,
+      fetchFn,
+      env: opts.x ? X_TEST_ENV : {}, // the institution's X keys, as .env would hold them (none: not configured)
+    });
     ticks.push(r.actions);
     return r;
   };
@@ -231,7 +238,7 @@ describe('phase 3 acceptance: OK at <time>, the Shorts, the launch, the probe, t
     const fs = readFakeState(s.fake);
     fs.fail.push({ method: 'updateVideo', status: 503, reason: 'backendError', retryable: true, times: 1, after: 2 });
     writeFakeState(s.fake, fs);
-    mail.deliver(reply(c.sent, c.subject, 'OK, looks great'));
+    mail.deliver(reply(c.sent, c.subject, 'OK'));
     const t1 = await c.oneTick();
     expect(c.state('youtube').live).toBe(true);
     expect(s.publicUpdates('vid00000000')).toHaveLength(1);

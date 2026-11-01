@@ -440,11 +440,19 @@ launch job (`npm run run -- launch <topic> <story-id>` by hand): `report -- seed
 `.automation/launch/<topic>--<slug>.json` so a crashed launch resumes at its step and never commits or pushes
 twice. The tick then probes the deploy once per pass (`npm run links -- live <topic> <story-id>`: the matter page
 answers 200 with the live video's id and the path is frozen), posts on X when the institution has an account and
-`enabled.social` is on (`npm run social -- post`; "not configured" otherwise), and sends the launch mail: the public
+`enabled.social` is on (`npm run social -- post`, the outcome read from the module's `social.json`, never from its
+output; "not configured" when the institution has no keys; a retryable failure tried on three ticks, then the story
+halts `step-failed`), and sends the launch mail: the public
 links, the X post, and the optional Studio steps YouTube keeps manual, each with the line that records it done:
 a Short's related video (`npm run publish -- updated <topic> <story-id>/shorts/<slug> --fields relatedVideo`), the
 end screen elements (`--fields endScreen`), the cards (`--fields cards`). A deploy not live after
-`launch.deployTimeoutMinutes` halts `deploy-timeout`.
+`launch.deployTimeoutMinutes` halts `deploy-timeout` once (the probes go on; the halt keeps its key and date, so it
+is mailed once). Nothing in the tick retries forever: a sync after the scheduled time, a verification read of the
+video or a live Short, or a Short's go-live that keeps failing is tried three times (`run/retries.json`), then the
+story halts `step-failed` for a person; a retryable halt of the release loop ends in `retries-spent` after the
+backoff array, which is a person's too. A release approval by mail is `OK` alone on the first line (punctuation
+allowed) or `OK at <when>`: an OK with anything after it (`OK, but hold off`, `OK if ...`, `OK?`) publishes nothing
+and gets one clarification.
 
 `show` prints the state, the composed upload metadata (with the `description:` to paste into Studio) and the event
 log. Every verb is idempotent (an event already

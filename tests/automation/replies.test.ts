@@ -51,10 +51,27 @@ describe('ids', () => {
 });
 
 describe('parseReply', () => {
-  it('OK, with trailing words', () => {
+  it('OK stands alone on the first line (punctuation allowed, later lines free)', () => {
     expect(ok('OK')).toEqual({ verdict: 'ok' });
-    expect(ok('OK, looks great!')).toEqual({ verdict: 'ok' });
+    expect(ok('OK!')).toEqual({ verdict: 'ok' });
     expect(ok('ok.\n\nthanks')).toEqual({ verdict: 'ok' });
+    expect(ok('  Ok  \n> quoted')).toEqual({ verdict: 'ok' });
+  });
+  it('a conditional, contradictory or uncertain OK never publishes: it asks for a plain OK', () => {
+    for (const text of [
+      'OK, but hold off',
+      'OK, not yet',
+      'OK if we fix the title',
+      'OK?',
+      'OK, looks great!',
+      'okay',
+    ]) {
+      const r = bad(text);
+      expect(r.problem, text).toMatch(/plain OK|could not read/);
+      expect(r.hint, text).toMatch(/\bOK\b/);
+    }
+    expect(bad('OK, but hold off').problem).toMatch(/"OK, but hold off"/);
+    expect(bad('OK at Thursday 15:00, but only if the title is fixed').problem).toMatch(/could not read the time/);
   });
   it('anything else is a problem whose hint names OK', () => {
     const r = bad('looks fine, go');

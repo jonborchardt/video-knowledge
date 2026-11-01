@@ -41,6 +41,15 @@ import type { XClient } from '../../src/modules/social/x';
 import { type Fixture, cliRoot, syntheticProduction } from '../production-helpers';
 
 export const SECRET = 'a-test-secret-of-some-length';
+/** An X account for the synthetic topic's institution (spending): the keys and a test handle, as .env would hold them. */
+export const X_TEST_ENV = {
+  X_SPENDING_API_KEY: 'test-api-key',
+  X_SPENDING_API_SECRET: 'test-api-secret',
+  X_SPENDING_ACCESS_TOKEN: 'test-access-token',
+  X_SPENDING_ACCESS_SECRET: 'test-access-secret',
+  X_SPENDING_USER_ID: '1',
+  X_SPENDING_HANDLE: '@CORSpendingTest',
+};
 export type Result = { status: number | null; stdout: string; stderr: string };
 /** What the tick's steps take: a child CLI run, awaited (the real one wraps a synchronous spawn). */
 export type Run = (cli: string, args: string[]) => Promise<Result>;

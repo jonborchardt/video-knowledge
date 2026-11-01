@@ -211,6 +211,7 @@ export function renderReleaseRequest(
     '  OK at Thursday 15:00    schedule it (your time)',
     '  CHANGES:                then one note per line',
     'and PAID OK (or PAID OK 1) on its own line to approve the paid links shown.',
+    'OK stands alone on its line: "OK, but ...", "OK if ..." or "OK?" publishes nothing and is asked about instead.',
     '',
     `This request expires ${req.expiresAt.slice(0, 10)}; a changed video, article or link voids it and you will get a new one.`,
     ...footer(a),
