@@ -3,9 +3,9 @@
 // halt when the ISO week rolled) and which running locks are stuck. Pure over the files; the work plane runs what is due.
 import type { Automation } from '../../shared/automation';
 import { ROOT } from '../../shared/io';
-import { type BoardNext, boardNext } from '../production';
+import { boardNext } from '../production';
 import { type Halt, readJournal, writeHalt } from './journal';
-import { readLock } from './lock';
+import { readLock, release } from './lock';
 import { alive as pidAlive, killTree } from './proc';
 import { type DueResume, isoWeek } from './schedule';
 import { type StatusRow, statusOf } from './status';
@@ -24,7 +24,7 @@ const resumesSince = (dir: string, h: Halt): number =>
 
 export interface ResumeDeps {
   now?: () => number;
-  ask?: (topic: string, storyId: string, root: string) => Pick<BoardNext, 'stage' | 'next'>;
+  ask?: (topic: string, storyId: string, root: string) => { stage: string; next: string };
   rows?: StatusRow[];
   alive?: (pid: number) => boolean;
 }
@@ -70,7 +70,7 @@ export function dueResumes(a: Automation, root = ROOT, deps: ResumeDeps = {}): D
 
 export interface StuckDeps {
   now?: () => number;
-  ask?: (topic: string, storyId: string, root: string) => Pick<BoardNext, 'stage' | 'next'>;
+  ask?: (topic: string, storyId: string, root: string) => { stage: string; next: string };
   rows?: StatusRow[];
   alive?: (pid: number) => boolean;
   kill?: (pid: number) => void;
@@ -102,6 +102,7 @@ export function stuckRows(
       const lock = readLock(r.dir);
       if (silent >= limit && lock) {
         kill(lock.pid);
+        release(r.dir, lock); // the dead run's lock: the halt shows at once and the story is free for a resume
         writeHalt(r.dir, {
           kind: 'timeout',
           stage: r.step ?? 'unknown',
