@@ -83,4 +83,16 @@ describe('preflight', () => {
     ).toEqual([expect.stringMatching(/watcher checkout is missing/)]);
     expect(preflight(a, 'r', { ...ok, watcherDir: () => null }).ok).toBe(true);
   });
+  it('with the work plane on, every commission with a claimed public topic needs a usable YouTube token', () => {
+    const work = { ...a, enabled: { ...a.enabled, work: true } };
+    const channels = () => [
+      { key: 'spending', problem: null },
+      { key: 'public-health', problem: 'no refresh token: run npm run publish -- auth --commission public-health' },
+    ];
+    const r = preflight(work, 'r', { ...ok, channels });
+    expect(r.problems).toEqual(['a commission has no YouTube token']);
+    expect(r.details).toEqual([expect.stringMatching(/public-health: no refresh token/)]);
+    expect(preflight(a, 'r', { ...ok, channels }).ok).toBe(true); // the work plane off: uploads never run
+    expect(preflight(work, 'r', { ...ok, channels: () => [{ key: 'spending', problem: null }] }).ok).toBe(true);
+  });
 });

@@ -8,7 +8,9 @@ import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
 import { MANIFEST_FILE, REVIEW_DIR, ROOT, readJson, scriptDir, writeJsonAtomic } from '../../shared/io';
 import type { ReleaseManifest } from '../../shared/types';
-import { loadLedger, requestOf } from '../../modules/publishing';
+import { loadLedger, requestOf, youtubeAuthProblem } from '../../modules/publishing';
+import { publicTopicNames } from '../../modules/evidence';
+import { commissions } from '../../config/site';
 import { checklistOf, renderReleaseRequest, urlsOf } from './requests';
 import type { MailTransport, OutMail } from '../../shared/mail';
 import type { DigestExtra } from './digest';
@@ -103,6 +105,14 @@ export const defaultRender =
     return null;
   };
 
+/** Every commission that claims a public topic, with its channel's credential problem if any. */
+export const channelsOf = (root = ROOT): { key: string; problem: string | null }[] => {
+  const pub = new Set(publicTopicNames());
+  return Object.entries(commissions)
+    .filter(([, c]) => c.topics.some((t) => pub.has(t)))
+    .map(([key]) => ({ key, problem: youtubeAuthProblem(key, root, process.env) }));
+};
+
 const preflightRow = (root: string, h: Halt): StatusRow => ({
   topic: 'automation',
   storyId: 'preflight',
@@ -130,6 +140,7 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
       env: process.env,
       freeGb: freeGbOf,
       launches: () => launchPaths(root),
+      channels: () => channelsOf(root),
       running: () =>
         (deps.rows ?? (() => statusOf(root, deps.alive)))()
           .filter((r) => r.state === 'running')

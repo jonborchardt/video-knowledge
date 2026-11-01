@@ -25,6 +25,9 @@ export interface PreflightDeps {
   running?: () => string[];
   tmpDir?: string;
   watcherDir?: (env: NodeJS.ProcessEnv, root: string) => string | null;
+  /** Every commission with a claimed public topic and why its YouTube credentials are unusable (null: usable);
+   *  checked while the work plane is on (its release loops upload). Phase 3: a channel per commission (D18). */
+  channels?: () => { key: string; problem: string | null }[];
 }
 
 const defaultWatcher = (env: NodeJS.ProcessEnv, root: string): string | null => {
@@ -87,5 +90,8 @@ export function preflight(a: Automation, root: string, deps: PreflightDeps): Pre
     );
   if (a.enabled.discovery && !(deps.watcherDir ?? defaultWatcher)(deps.env, root))
     problem('the watcher checkout is missing (../retire-sim/watcher or WATCHER_DIR): discovery needs it');
+  if (a.enabled.work)
+    for (const c of deps.channels?.() ?? [])
+      if (c.problem) problem('a commission has no YouTube token', `${c.key}: ${c.problem}`);
   return { ok: problems.length === 0, problems, details };
 }

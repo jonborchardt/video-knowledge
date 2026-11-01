@@ -444,6 +444,11 @@ Once, by a person (Google's console; nothing here can do it):
 5. `npm run publish -- auth <topic> <story-id>` opens the consent page and stores the refresh token in that same
    JSON file (mode 0600; without the path variable, in `.youtube-token.json`). A refresh token in `.env` as
    `YOUTUBE_REFRESH_TOKEN` is used instead when set.
+6. A second channel (another commission's) needs its own OAuth client file: save it under `.secrets/`, name it in
+   `.env` as `YOUTUBE_OAUTH_CREDENTIALS_PATH_<KEY>` (the commission key upper-cased, `-` as `_`, e.g.
+   `YOUTUBE_OAUTH_CREDENTIALS_PATH_PUBLIC_HEALTH`) and run `npm run publish -- auth <topic> <story-id>` once for a
+   topic of that commission (or `--commission <key>`); every publishing verb then uses that commission's channel for
+   its topics and the shared default for the rest, so the existing channel keeps working unchanged.
 
 What the API does and costs (https://developers.google.com/youtube/v3/determine_quota_cost, checked 2026-10-27 for
 list and set): `videos.insert` is 1 of 100 calls per project per day in its own quota bucket (since 2026-06-01);

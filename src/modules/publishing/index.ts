@@ -28,3 +28,4 @@ export {
 } from './publish';
 export { type PublicVideo, seekUrl, storyOutputs } from './outputs';
 export { uploadProblem } from './uploader';
+export { youtubeAuthProblem } from './youtube';

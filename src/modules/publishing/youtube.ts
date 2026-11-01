@@ -2,7 +2,9 @@
 // grant, the resumable upload protocol for videos and captions, thumbnails, update and list. Plain fetch, injectable
 // for tests; no googleapis. Every failure is a YouTubeError the uploader records as a `failed` ledger event.
 // Credentials: YOUTUBE_CLIENT_ID and YOUTUBE_CLIENT_SECRET in the environment (.env), the refresh token from
-// YOUTUBE_REFRESH_TOKEN or <root>/.youtube-token.json (written by `npm run publish -- auth`). Library layer.
+// YOUTUBE_REFRESH_TOKEN or <root>/.youtube-token.json (written by `npm run publish -- auth`). A commission with its
+// own channel names its own client file as YOUTUBE_OAUTH_CREDENTIALS_PATH_<KEY> (register D18); the rest share the
+// default. Library layer.
 import { mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { dirname, extname, join, resolve } from 'node:path';
@@ -11,6 +13,9 @@ import { ROOT, readJson } from '../../shared/io';
 export const SCOPE = 'https://www.googleapis.com/auth/youtube.force-ssl';
 export const TOKEN_FILE = '.youtube-token.json'; // the token store when YOUTUBE_OAUTH_CREDENTIALS_PATH is not set
 const CREDENTIALS_PATH_VAR = 'YOUTUBE_OAUTH_CREDENTIALS_PATH';
+/** The environment variable naming a commission's own OAuth client file: the key upper-cased, `-` as `_`. */
+export const credentialsVar = (commissionKey: string): string =>
+  `${CREDENTIALS_PATH_VAR}_${commissionKey.toUpperCase().replace(/-/g, '_')}`;
 const TOKEN_URL = 'https://oauth2.googleapis.com/token';
 const AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
 const API = 'https://www.googleapis.com/youtube/v3';
@@ -35,14 +40,16 @@ interface CredentialsFile {
 export function loadCredentials(
   root = ROOT,
   env: Record<string, string | undefined> = process.env,
-  opts: { requireToken?: boolean } = {},
+  opts: { requireToken?: boolean; commission?: string } = {}, // commission: its own file when named, else the default
 ): Credentials {
-  const named = env[CREDENTIALS_PATH_VAR];
+  const own = opts.commission ? credentialsVar(opts.commission) : null;
+  const namedVar = own && env[own] ? own : CREDENTIALS_PATH_VAR;
+  const named = env[namedVar];
   const store = named ? resolve(root, named) : join(root, TOKEN_FILE);
   const file = readJson<CredentialsFile>(store);
   if (named && !file)
     throw new Error(
-      `${CREDENTIALS_PATH_VAR} names ${named}, which does not exist: save the Desktop OAuth client's JSON from the Google Cloud console there (README, Publishing: YouTube)`,
+      `${namedVar} names ${named}, which does not exist: save the Desktop OAuth client's JSON from the Google Cloud console there (README, Publishing: YouTube)`,
     );
   const app = file?.installed ?? file?.web ?? file ?? {};
   const clientId = env.YOUTUBE_CLIENT_ID || app.client_id;
@@ -139,6 +146,27 @@ export async function accessToken(creds: Credentials, fetchFn: typeof fetch = fe
   return t.access_token;
 }
 
+/** Why a commission's channel cannot be used now (no client file, no refresh token), or null when it can. */
+export function youtubeAuthProblem(
+  commissionKey: string,
+  root = ROOT,
+  env: Record<string, string | undefined> = process.env,
+): string | null {
+  try {
+    loadCredentials(root, env, { commission: commissionKey });
+    return null;
+  } catch (e) {
+    return (e as Error).message;
+  }
+}
+
+/** Writes the refresh token into the token store (the client file, merged with what is there; mode 0600). */
+export function saveRefreshToken(store: string, refreshToken: string): void {
+  mkdirSync(dirname(store), { recursive: true });
+  const kept = readJson<Record<string, unknown>>(store) ?? {};
+  writeFileSync(store, JSON.stringify({ ...kept, refresh_token: refreshToken }, null, 1) + '\n', { mode: 0o600 });
+}
+
 /** The one-time desktop consent: a loopback server takes the code the browser brings back, the token file keeps the
  *  refresh token. `open` receives the consent URL (print it, or start the browser). */
 export function authorize(
@@ -176,12 +204,7 @@ export function authorize(
           throw new Error(
             'Google returned no refresh token; revoke the app at myaccount.google.com/permissions and run auth again',
           );
-        const store = creds.store ?? join(root, TOKEN_FILE);
-        mkdirSync(dirname(store), { recursive: true });
-        const kept = readJson<Record<string, unknown>>(store) ?? {};
-        writeFileSync(store, JSON.stringify({ ...kept, refresh_token: t.refresh_token }, null, 1) + '\n', {
-          mode: 0o600,
-        });
+        saveRefreshToken(creds.store ?? join(root, TOKEN_FILE), t.refresh_token);
         resolve();
       } catch (e) {
         reject(e);

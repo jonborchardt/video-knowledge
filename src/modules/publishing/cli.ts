@@ -28,7 +28,9 @@
 //                                                             and the package rewritten, approved per output, pushed when behind, synced, the video live now or at the time
 //                                                             (the Shorts go live from the tick after it), then decided; every step idempotent, so an interrupted decide completes on the next call
 // Through the YouTube Data API (YOUTUBE_CLIENT_ID, YOUTUBE_CLIENT_SECRET and YOUTUBE_REFRESH_TOKEN or .youtube-token.json; README, Publishing):
-//   auth <topic> <story-id>                                   one-time consent in the browser; writes .youtube-token.json (gitignored)
+//   auth <topic> <story-id> [--commission <key>]              one-time consent in the browser for the topic's commission (or the named one):
+//                                                             writes the refresh token into that commission's client file (YOUTUBE_OAUTH_CREDENTIALS_PATH_<KEY>
+//                                                             in .env) or, without one, the shared default (YOUTUBE_OAUTH_CREDENTIALS_PATH, else .youtube-token.json)
 //   upload <topic> <story-id> [--output <id>] [--by <name>]   upload the packaged build (or the output's source) PRIVATELY with its thumbnail and
 //                                                             captions, and record it; resumes an interrupted upload, never uploads the same build twice
 //   push <topic> <story-id> [--output <id>]                   send the composed title, description, tags, thumbnail and captions when they changed
@@ -44,6 +46,7 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { MANIFEST_FILE, REVIEW_DIR, loadDotEnv, ROOT, readJson, toJson } from '../../shared/io';
+import { commissionKey, commissionOf } from '../../config/site';
 import { secretFromEnv } from '../../shared/request';
 import type { ReleaseManifest } from '../../shared/types';
 import { loadAutomation } from '../../shared/automation';
@@ -119,6 +122,7 @@ const VALUED = [
   '--verdict',
   '--paid',
   '--at-seconds',
+  '--commission',
 ];
 const flags = (name: string) => rest.flatMap((a, i) => (a === name && rest[i + 1] !== undefined ? [rest[i + 1]] : []));
 const positional = rest.filter((a, i) => !a.startsWith('--') && !VALUED.includes(rest[i - 1]));
@@ -164,11 +168,16 @@ const via = ():
 };
 const common = () => ({ output, by: by() });
 // YOUTUBE_FAKE=<state file> (tests only; nothing in the repo sets it): a recording client over a JSON file
+/** The channel a topic publishes on: its commission's own credentials when it has them, else the shared default. */
+const commission = (): string | undefined => {
+  const c = commissionOf(topic);
+  return c ? commissionKey(c) : undefined;
+};
 const api = () => {
   const fake = process.env.YOUTUBE_FAKE;
   return fake
     ? { ...common(), client: fakeYoutubeClient(fake), anonymous: fakeAnonymous(fake) }
-    : { ...common(), client: youtubeClient(loadCredentials()) };
+    : { ...common(), client: youtubeClient(loadCredentials(ROOT, process.env, { commission: commission() })) };
 };
 
 /** request-changes' notes in order: each `--note <text>`, placed by the `--at <seconds>`, `--scene <id>` and
@@ -410,12 +419,15 @@ async function main() {
       break;
     }
     case 'auth': {
-      const creds = loadCredentials(ROOT, process.env, { requireToken: false });
+      const key = flag('--commission') ?? commission();
+      const creds = loadCredentials(ROOT, process.env, { requireToken: false, commission: key });
       await authorize(creds, ROOT, (url) => {
         console.log(`Grant access in the browser (opening it now):\n${url}`);
         if (process.platform === 'win32') spawnSync('rundll32', ['url.dll,FileProtocolHandler', url]); // no shell parsing of &
       });
-      console.log(`stored the refresh token in ${creds.store ?? TOKEN_FILE} (gitignored)`);
+      console.log(
+        `stored the refresh token for ${key ?? 'the default channel'} in ${creds.store ?? TOKEN_FILE} (gitignored)`,
+      );
       break;
     }
     case 'upload': {
