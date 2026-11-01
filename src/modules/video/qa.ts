@@ -161,10 +161,10 @@ export function videoChecks(p: Probe, tl: Timeline, duration?: [number, number])
 
 /** The narrated runtime (the unnarrated end scene excluded) against the story's target: blocking outside the
  *  tolerance of src/shared/duration.ts when a target is set, informational otherwise. */
-export function runtimeCheck(
-  p: Pick<Probe, 'duration'>,
-  tl: Pick<Timeline, 'fps' | 'scenes' | 'targetDurationSeconds'>,
-): Check {
+/** The timeline carries the storyboard's target when there is one; the field lives in the JSON, not in the Timeline
+ *  type: types.ts is in every component's import graph, and a change there moves every bespoke graphic's key. */
+export type TimelineTarget = { targetDurationSeconds?: number };
+export function runtimeCheck(p: Pick<Probe, 'duration'>, tl: Pick<Timeline, 'fps' | 'scenes'> & TimelineTarget): Check {
   const last = tl.scenes.at(-1);
   const end = last?.kind === 'close-card' ? last.duration / tl.fps : 0;
   const narrated = Math.max(0, p.duration - end);

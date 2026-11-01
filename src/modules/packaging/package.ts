@@ -165,7 +165,8 @@ export function chapters(seg: Segment, tl: Timeline): Chapter[] {
   if (list.length) list[0].seconds = 0;
   // YouTube ignores every chapter unless there are at least three, starting at 0:00, each at least 10 s long. A
   // micro or short story (src/shared/duration.ts) that cannot hold that simply has none; a longer one is a defect.
-  const band = bandOf(tl.targetDurationSeconds);
+  // the target rides in the timeline JSON, outside the Timeline type (types.ts is in every component's key)
+  const band = bandOf((tl as Timeline & { targetDurationSeconds?: number }).targetDurationSeconds);
   const brief = band === 'micro' || band === 'short';
   const short = list.filter((c, i) => i > 0 && c.seconds - list[i - 1].seconds < 10);
   if (brief && (list.length < 3 || short.length)) return [];

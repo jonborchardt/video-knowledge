@@ -135,7 +135,6 @@ export type Timeline = {
   fingerprints: { script: string; storyboard: string; narration: string; config: string; look: string }; // look: lookFingerprint (src/lib/look.ts)
   narration: { provider: string; voice: string; rate: string; licence: string };
   palette: KitPalette;
-  targetDurationSeconds?: number; // from the storyboard; QA's runtime check reads it (src/shared/duration.ts)
   /** A Short: the format eyebrow, the institution that publishes it (and its key for the seal), the parent story and
    *  its question (the end card's call to action), drawn by the frame. */
   short?: { format: string; commission: string; commissionKey: string | null; question: string; parent: string };

@@ -1,5 +1,5 @@
 // npm run run -- <verb> ...
-//   story <topic> <story-id> [--approver "<name>"] [--notes-file <path>] [--until <stage>] [--fresh] [--no-commit]
+//   story <topic> <story-id> [--approver "<name>"] [--notes-file <path>] [--until <stage>] [--fresh] [--no-commit] [--model <m>]
 //                                      drive one story from the board's ready to packaged (or to <stage>) unattended: each
 //                                      board step runs as a child process or a budgeted claude -p agent under its role's
 //                                      permission rules; journaled under the story's run/; one run per story (exit 3 when
@@ -7,6 +7,8 @@
 //                                      (HALT <kind>: <why> then UNBLOCK: <what clears it>), 2 usage or refusal.
 //                                      --fresh (a fixture topic only): archive the production folder to
 //                                      topics/<topic>/history/<run id>/ first and run every stage again.
+//                                      --model <m>: every role's model for this run (a test run with real agents uses a
+//                                      cheaper model than automation.json's production default).
 //                                      --no-commit: a supervised run on a feature branch; the finish validates and
 //                                      leaves the artifacts uncommitted for the person (the runner commits only on
 //                                      git.commitOn's branch).
@@ -23,7 +25,7 @@
 //                                      ten minutes for your reply and saves it under tests/fixtures/mail/.
 // Policy: automation.json (src/shared/automation.ts). Secrets: .env, loaded here and handed to each child by verb.
 import { readFileSync } from 'node:fs';
-import { loadAutomation } from '../../shared/automation';
+import { AGENT_ROLES, loadAutomation } from '../../shared/automation';
 import { approverProblem } from '../../shared/approver';
 import { loadDotEnv, ROOT, toJson } from '../../shared/io';
 import { PRODUCTION_STAGES, type ProductionStage } from '../production';
@@ -70,7 +72,17 @@ switch (verb) {
     const until = flag('--until') as ProductionStage | undefined;
     if (until && !PRODUCTION_STAGES.includes(until)) die(`--until must be one of ${PRODUCTION_STAGES.join(', ')}`);
     const notesFile = flag('--notes-file');
-    const a = loadAutomation(ROOT);
+    const loaded = loadAutomation(ROOT);
+    const model = flag('--model');
+    const a = model
+      ? {
+          ...loaded,
+          agents: {
+            ...loaded.agents,
+            models: Object.fromEntries(AGENT_ROLES.map((r) => [r, model])) as typeof loaded.agents.models,
+          },
+        }
+      : loaded;
     let runId: string | undefined;
     if (rest.includes('--fresh')) {
       const problem = freshProblem(topic);
