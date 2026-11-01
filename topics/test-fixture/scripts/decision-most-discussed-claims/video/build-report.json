@@ -2,7 +2,7 @@
  "topic": "test-fixture",
  "story": "decision:most-discussed-claims",
  "title": "Has a leap second ever been taken away?",
- "generatedAt": "2026-11-01T01:21:19.039Z",
+ "generatedAt": "2026-11-01T03:19:26.734Z",
  "command": "npm run video -- qa test-fixture decision:most-discussed-claims",
  "segment": {
   "scenes": [
@@ -15,16 +15,16 @@
    "s02"
   ],
   "kinds": {
-   "sc01": "question",
-   "sc02": "stat-tiles",
+   "sc01": "stat-tiles",
+   "sc02": "title",
    "end": "close-card"
   },
   "storyboardScenes": 2
  },
  "output": {
   "file": "topics/test-fixture/scripts/decision-most-discussed-claims/video/segment.mp4",
-  "sha": "8c7a157cb6",
-  "seconds": 33.536,
+  "sha": "19190fed19",
+  "seconds": 35.349,
   "width": 1920,
   "height": 1080,
   "fps": 30,
@@ -39,20 +39,20 @@
   "format": "mp3",
   "licence": "draft only: unofficial Microsoft Edge read-aloud API, no terms for published media",
   "publishable": false,
-  "seconds": 16.39,
-  "wordsPerMinute": 128,
+  "seconds": 18.7,
+  "wordsPerMinute": 144,
   "sentences": [
    {
     "id": "s01",
-    "seconds": 2.976,
-    "sha": "c2411a8477",
-    "words": 8
+    "seconds": 12.72,
+    "sha": "22df59f809",
+    "words": 23
    },
    {
     "id": "s02",
-    "seconds": 13.416,
-    "sha": "b2d9081752",
-    "words": 24
+    "seconds": 5.976,
+    "sha": "bda8d1f7f4",
+    "words": 18
    }
   ],
   "cost": "$0 (edge-tts, no key)"
@@ -60,11 +60,11 @@
  "rendering": {
   "architecture": "Remotion (React, frame-based) rendered scene by scene into cached chunks through @remotion/renderer; chunks concatenated and the narration track laid down with the ffmpeg in the Remotion compositor (loudnorm to -16 LUFS)",
   "seconds": 0,
-  "frames": 1006,
+  "frames": 1060,
   "cost": "$0 (local CPU)"
  },
  "music": {
-  "fingerprint": "27ff65bcb2",
+  "fingerprint": "2aed1fa7bf",
   "compositions": [
    {
     "id": "undertow",
@@ -91,27 +91,19 @@
   ],
   "cues": [
    {
-    "id": "opening",
-    "asset": "undertow/pulse",
-    "start": 0,
-    "end": 4.1,
-    "gain": -11,
-    "rmsDb": -43.1
-   },
-   {
     "id": "ending",
     "asset": "undertow/pulse",
-    "start": 4.1,
-    "end": 33.53333333333333,
+    "start": 0,
+    "end": 35.333333333333336,
     "gain": -11,
-    "rmsDb": -35.9
+    "rmsDb": -36
    }
   ],
   "levels": {
-   "peakDb": -3.6,
-   "musicPeakDb": -22.4,
-   "narrationPeakDb": -3.5,
-   "musicUnderSpeechDb": -18.4,
+   "peakDb": -3,
+   "musicPeakDb": -22.3,
+   "narrationPeakDb": -3.1,
+   "musicUnderSpeechDb": -17.6,
    "musicScale": 1
   }
  },
@@ -124,10 +116,10 @@
   ]
  },
  "fingerprints": {
-  "script": "9fd59570ce",
-  "storyboard": "2fbeda10fa",
-  "narration": "8d3f9ca428",
-  "config": "d16ce6e663",
+  "script": "efcf0861e8",
+  "storyboard": "620dd93836",
+  "narration": "4056de1b62",
+  "config": "129a2f5a9b",
   "look": "bf7e3cb00f"
  },
  "qa": {
@@ -136,7 +128,7 @@
    {
     "name": "mp4 decodable",
     "ok": true,
-    "detail": "33.536s"
+    "detail": "35.349s"
    },
    {
     "name": "video stream",
@@ -161,22 +153,22 @@
    {
     "name": "frame count",
     "ok": true,
-    "detail": "1006 frames, timeline 1006"
+    "detail": "1060 frames, timeline 1060"
    },
    {
     "name": "duration in range",
     "ok": true,
-    "detail": "33.54s in [32.5,34.5]"
+    "detail": "35.35s in [34.3,36.3]"
    },
    {
     "name": "duration matches timeline",
     "ok": true,
-    "detail": "33.536s vs 33.533s (1006 frames)"
+    "detail": "35.349s vs 35.333s (1060 frames)"
    },
    {
     "name": "runtime",
     "ok": true,
-    "detail": "17.5s narrated against a 15 s target"
+    "detail": "19.3s narrated against a 15 s target"
    },
    {
     "name": "audio stream",
@@ -191,12 +183,12 @@
    {
     "name": "audio length matches video",
     "ok": true,
-    "detail": "0.003s apart"
+    "detail": "0.016s apart"
    },
    {
     "name": "no clipping",
     "ok": true,
-    "detail": "peak -3.6 dB, mean -22.5 dB"
+    "detail": "peak -3.1 dB, mean -21.9 dB"
    },
    {
     "name": "no long silence",
@@ -241,12 +233,12 @@
    {
     "name": "fingerprints",
     "ok": true,
-    "detail": "script 9fd59570ce, storyboard 2fbeda10fa (locked)"
+    "detail": "script efcf0861e8, storyboard 620dd93836 (locked)"
    },
    {
     "name": "citations present",
     "ok": true,
-    "detail": "1 on-screen citations resolved"
+    "detail": "2 on-screen citations resolved"
    },
    {
     "name": "chart data matches storyboard",
@@ -266,32 +258,32 @@
    {
     "name": "music cues resolve",
     "ok": true,
-    "detail": "2 cues over 1 compositions"
+    "detail": "1 cues over 1 compositions"
    },
    {
     "name": "soundtrack mixed",
     "ok": true,
-    "detail": "2 cues, 2026-11-01T01:20:54.662Z"
+    "detail": "1 cues, 2026-11-01T03:18:59.418Z"
    },
    {
     "name": "mix is of this cue sheet",
     "ok": true,
-    "detail": "mix 27ff65bcb2, cue sheet 27ff65bcb2"
+    "detail": "mix 2aed1fa7bf, cue sheet 2aed1fa7bf"
    },
    {
     "name": "every cue sounded",
     "ok": true,
-    "detail": "2 cues audible where placed"
+    "detail": "1 cues audible where placed"
    },
    {
     "name": "music under the voice",
     "ok": true,
-    "detail": "-18.4 dB relative to speech (want -40 to -10)"
+    "detail": "-17.6 dB relative to speech (want -40 to -10)"
    },
    {
     "name": "mix under the ceiling",
     "ok": true,
-    "detail": "peak -3.6 dB, ceiling -1 dB"
+    "detail": "peak -3 dB, ceiling -1 dB"
    },
    {
     "name": "scene boundaries follow measured audio",
@@ -301,12 +293,12 @@
    {
     "name": "cues inside their sentences",
     "ok": true,
-    "detail": "1 cues"
+    "detail": "0 cues"
    },
    {
     "name": "final scene complete",
     "ok": true,
-    "detail": "ends 33.53s"
+    "detail": "ends 35.33s"
    },
    {
     "name": "no blank sections",
@@ -321,13 +313,12 @@
   ],
   "frames": [
    "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00001-first.png",
-   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00036-sc01-type.png",
-   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00062-sc01-mid.png",
-   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00121-sc01-end.png",
-   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00325-sc02-mid.png",
-   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00524-sc02-end.png",
-   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00766-end-mid.png",
-   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f01004-end-end.png"
+   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00200-sc01-mid.png",
+   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00398-sc01-end.png",
+   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00490-sc02-mid.png",
+   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00578-sc02-end.png",
+   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00820-end-mid.png",
+   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f01058-end-end.png"
   ],
   "contactSheet": "topics/test-fixture/scripts/decision-most-discussed-claims/video/contact-sheet.png"
  },

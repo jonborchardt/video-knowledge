@@ -1,27 +1,29 @@
 {
   "reviewer": "src/modules/script/briefs/script-review.md",
-  "model": "claude-opus-5",
+  "model": "claude-sonnet-5",
   "date": "2026-10-31",
   "revision": 1,
   "packageFingerprint": "5879ca5f47",
   "approved": {
-    "s01": "7aa4427c85",
-    "s02": "8e69fa0764"
+    "s01": "92ad9d6da8",
+    "s02": "906534a7bc"
   },
-  "findings": [
-    {
-      "sentence": "s02",
-      "assertion": "s02.a",
-      "fingerprint": "8e69fa0764",
-      "revision": 1,
-      "category": "missing-qualification",
-      "severity": "info",
-      "explanation": "The cited rows (L17-L44) end at the 1 January 2017 value of 37 seconds, so on their own they establish that 37 is the table's last value, not that it has held \"since 2017\". That reading comes from the rest of the same file: the header says the last line means no leap second was introduced since its date, the file is updated through Bulletin 72 of July 2026 and was retrieved on 2026-10-31. The sentence is true and the document establishes it, but not from the lines the cite names.",
-      "refs": [
-        "test-fixture/sources/iers-leap-second-dat.txt#L1-L10",
-        "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
-      ],
-      "suggestion": "Widen the cite to test-fixture/sources/iers-leap-second-dat.txt#L1-L44 so the \"since 2017\" reading is reproducible from the passage, or say \"37 at its last step, in 2017\"."
+  "findings": [],
+  "dispositions": {
+    "s01.a": {
+      "fingerprint": "92ad9d6da8",
+      "category": "wording",
+      "reason": "The IERS table's first row (L17: MJD 41317.0, 1 1 1972, 10) and last row (L44: MJD 57754.0, 1 1 2017, 37) are exactly 10 seconds on 1 January 1972 and 37 seconds on 1 January 2017; the sentence's looser 'in 1972'/'in 2017' phrasing names the same two dates."
+    },
+    "s01.b": {
+      "fingerprint": "92ad9d6da8",
+      "category": "wording",
+      "reason": "The 28 values on L17-L44 are the consecutive integers 10 through 37 in table order, so every successive pair differs by exactly one second with no gaps or repeats."
+    },
+    "s02.a": {
+      "fingerprint": "906534a7bc",
+      "category": "wording",
+      "reason": "The cited table is the IERS's complete record of TAI-UTC since 1972 (the file's own header: 'the whole file', updated through Bulletin 72); because it only ever steps upward by one second, no subtraction appears anywhere in the record, so the universal phrasing is the document's own scope, not an overclaim beyond it."
     }
-  ]
+  }
 }

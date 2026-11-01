@@ -5,14 +5,14 @@
 | Story | `decision:most-discussed-claims` (test-fixture) |
 | Revision | 1 (1 of at most 3 in this pass) |
 | Validation | **passed** (2026-11-01) |
-| Words / runtime | 35 words, about 0.3 min at 150 wpm |
-| Sentences | 2 (1 factual or attributed) |
-| Assertions | 1, 1 verified |
+| Words / runtime | 45 words, about 0.3 min at 150 wpm |
+| Sentences | 2 (2 factual or attributed) |
+| Assertions | 3, 3 verified |
 | Issues | 0 blocking, 0 warnings, 0 dispositioned |
 | Unreviewed sentences | 0 |
-| Scenes | 2, 0:17 (ok) |
+| Scenes | 2, 0:20 (ok) |
 | Evidence package | 5879ca5f47 (1 documents, 1 claims) |
-| Model | claude-opus-5 |
+| Model | claude-sonnet-5 |
 
 Automated validation says whether the narration is eligible for human editorial review; it does not establish truth.
 

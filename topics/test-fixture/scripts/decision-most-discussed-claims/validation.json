@@ -2,19 +2,19 @@
  "topic": "test-fixture",
  "story": "decision:most-discussed-claims",
  "revision": 1,
- "date": "2026-11-01T01:12:58.358Z",
+ "date": "2026-11-01T03:11:50.015Z",
  "status": "passed",
- "scriptFingerprint": "9fd59570ce",
+ "scriptFingerprint": "efcf0861e8",
  "packageFingerprint": "5879ca5f47",
  "wordsPerMinute": 150,
- "words": 35,
- "spokenWords": 42,
+ "words": 45,
+ "spokenWords": 51,
  "minutes": 0.3,
  "counts": {
   "sentences": 2,
-  "factual": 1,
-  "assertions": 1,
-  "verified": 1,
+  "factual": 2,
+  "assertions": 3,
+  "verified": 3,
   "blocking": 0,
   "warnings": 0,
   "dispositioned": 0,
@@ -24,40 +24,28 @@
  "sentences": [
   {
    "id": "s01",
-   "section": "hook",
-   "text": "Has a leap second ever been taken away?",
-   "type": "rhetorical",
-   "fingerprint": "7aa4427c85",
-   "words": 8,
-   "status": "verified",
-   "approved": true,
-   "assertions": [],
-   "issues": []
-  },
-  {
-   "id": "s02",
    "section": "answer",
-   "text": "The IERS table of atomic time against civil time only ever climbs: 10 seconds in 1972, 37 since 2017, 27 single-second steps up and not one back.",
+   "text": "The IERS table of TAI-UTC runs from 10 seconds in 1972 to 37 seconds in 2017, each value exactly one second more than the one before it.",
    "type": "factual",
-   "fingerprint": "8e69fa0764",
+   "fingerprint": "92ad9d6da8",
    "words": 27,
    "status": "verified",
    "approved": true,
    "assertions": [
     {
-     "id": "s02.a",
-     "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+     "id": "s01.a",
+     "text": "The IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017.",
      "kind": "fact",
      "status": "verified",
      "validation": {
-      "id": "s02.a",
-      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+      "id": "s01.a",
+      "text": "The IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017.",
       "kind": "fact",
-      "modality": "universal",
+      "modality": "plain",
       "status": "supported",
       "decision": "approved",
-      "review": false,
-      "verbatim": true,
+      "review": true,
+      "verbatim": false,
       "strength": 0.85,
       "independent": 1,
       "supporting": [
@@ -82,54 +70,181 @@
       "qualifying": [],
       "context": [],
       "problems": [],
-      "limitations": [],
+      "limitations": [
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
       "suggestions": [],
       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
      },
-     "issues": []
+     "issues": [
+      {
+       "sentence": "s01",
+       "category": "wording",
+       "severity": "info",
+       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+       "by": "deterministic",
+       "assertion": "s01.a"
+      }
+     ]
+    },
+    {
+     "id": "s01.b",
+     "text": "Each value in the table is exactly one second greater than the value before it.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s01.b",
+      "text": "Each value in the table is exactly one second greater than the value before it.",
+      "kind": "fact",
+      "modality": "plain",
+      "status": "supported",
+      "decision": "approved",
+      "review": true,
+      "verbatim": false,
+      "strength": 0.85,
+      "independent": 1,
+      "supporting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "test-fixture/every-leap-second-since-utc-began",
+         "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "iers-leap-second-dat.txt",
+        "verdict": "right",
+        "confidence": 0.85,
+        "note": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before: every one of the 27 steps added a second and none subtracted one.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "contradicting": [],
+      "qualifying": [],
+      "context": [],
+      "problems": [],
+      "limitations": [
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
+      "suggestions": [],
+      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
+     },
+     "issues": [
+      {
+       "sentence": "s01",
+       "category": "wording",
+       "severity": "info",
+       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+       "by": "deterministic",
+       "assertion": "s01.b"
+      }
+     ]
     }
    ],
-   "issues": [
+   "issues": []
+  },
+  {
+   "id": "s02",
+   "section": "answer",
+   "text": "No leap second has ever been subtracted from civil time; every one on record has only been added.",
+   "type": "factual",
+   "fingerprint": "906534a7bc",
+   "words": 18,
+   "status": "verified",
+   "approved": true,
+   "assertions": [
     {
-     "sentence": "s02",
-     "assertion": "s02.a",
-     "fingerprint": "8e69fa0764",
-     "revision": 1,
-     "category": "missing-qualification",
-     "severity": "info",
-     "explanation": "The cited rows (L17-L44) end at the 1 January 2017 value of 37 seconds, so on their own they establish that 37 is the table's last value, not that it has held \"since 2017\". That reading comes from the rest of the same file: the header says the last line means no leap second was introduced since its date, the file is updated through Bulletin 72 of July 2026 and was retrieved on 2026-10-31. The sentence is true and the document establishes it, but not from the lines the cite names.",
-     "refs": [
-      "test-fixture/sources/iers-leap-second-dat.txt#L1-L10",
-      "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
-     ],
-     "suggestion": "Widen the cite to test-fixture/sources/iers-leap-second-dat.txt#L1-L44 so the \"since 2017\" reading is reproducible from the passage, or say \"37 at its last step, in 2017\".",
-     "by": "review"
+     "id": "s02.a",
+     "text": "No leap second has ever been subtracted from civil time; every one on record has only been added.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s02.a",
+      "text": "No leap second has ever been subtracted from civil time; every one on record has only been added.",
+      "kind": "fact",
+      "modality": "universal",
+      "status": "supported",
+      "decision": "approved",
+      "review": true,
+      "verbatim": false,
+      "strength": 0.85,
+      "independent": 1,
+      "supporting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "test-fixture/every-leap-second-since-utc-began",
+         "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "iers-leap-second-dat.txt",
+        "verdict": "right",
+        "confidence": 0.85,
+        "note": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before: every one of the 27 steps added a second and none subtracted one.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "contradicting": [],
+      "qualifying": [],
+      "context": [],
+      "problems": [],
+      "limitations": [
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
+      "suggestions": [],
+      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
+     },
+     "issues": [
+      {
+       "sentence": "s02",
+       "category": "wording",
+       "severity": "info",
+       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+       "by": "deterministic",
+       "assertion": "s02.a"
+      }
+     ]
     }
-   ]
+   ],
+   "issues": []
   }
  ],
  "issues": [
   {
-   "sentence": "s02",
-   "assertion": "s02.a",
-   "fingerprint": "8e69fa0764",
-   "revision": 1,
-   "category": "missing-qualification",
+   "sentence": "s01",
+   "category": "wording",
    "severity": "info",
-   "explanation": "The cited rows (L17-L44) end at the 1 January 2017 value of 37 seconds, so on their own they establish that 37 is the table's last value, not that it has held \"since 2017\". That reading comes from the rest of the same file: the header says the last line means no leap second was introduced since its date, the file is updated through Bulletin 72 of July 2026 and was retrieved on 2026-10-31. The sentence is true and the document establishes it, but not from the lines the cite names.",
-   "refs": [
-    "test-fixture/sources/iers-leap-second-dat.txt#L1-L10",
-    "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
-   ],
-   "suggestion": "Widen the cite to test-fixture/sources/iers-leap-second-dat.txt#L1-L44 so the \"since 2017\" reading is reproducible from the passage, or say \"37 at its last step, in 2017\".",
-   "by": "review"
+   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+   "by": "deterministic",
+   "assertion": "s01.a"
+  },
+  {
+   "sentence": "s01",
+   "category": "wording",
+   "severity": "info",
+   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+   "by": "deterministic",
+   "assertion": "s01.b"
+  },
+  {
+   "sentence": "s02",
+   "category": "wording",
+   "severity": "info",
+   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+   "by": "deterministic",
+   "assertion": "s02.a"
   }
  ],
  "resolved": [],
  "history": [
   {
    "revision": 1,
-   "date": "2026-11-01T01:12:58.358Z",
+   "date": "2026-11-01T03:11:50.015Z",
    "status": "passed",
    "blocking": 0,
    "warnings": 0
