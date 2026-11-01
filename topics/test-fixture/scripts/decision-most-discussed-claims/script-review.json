@@ -1,0 +1,27 @@
+{
+  "reviewer": "src/modules/script/briefs/script-review.md",
+  "model": "claude-opus-5",
+  "date": "2026-10-31",
+  "revision": 1,
+  "packageFingerprint": "5879ca5f47",
+  "approved": {
+    "s01": "7aa4427c85",
+    "s02": "8e69fa0764"
+  },
+  "findings": [
+    {
+      "sentence": "s02",
+      "assertion": "s02.a",
+      "fingerprint": "8e69fa0764",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "info",
+      "explanation": "The cited rows (L17-L44) end at the 1 January 2017 value of 37 seconds, so on their own they establish that 37 is the table's last value, not that it has held \"since 2017\". That reading comes from the rest of the same file: the header says the last line means no leap second was introduced since its date, the file is updated through Bulletin 72 of July 2026 and was retrieved on 2026-10-31. The sentence is true and the document establishes it, but not from the lines the cite names.",
+      "refs": [
+        "test-fixture/sources/iers-leap-second-dat.txt#L1-L10",
+        "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+      ],
+      "suggestion": "Widen the cite to test-fixture/sources/iers-leap-second-dat.txt#L1-L44 so the \"since 2017\" reading is reproducible from the passage, or say \"37 at its last step, in 2017\"."
+    }
+  ]
+}

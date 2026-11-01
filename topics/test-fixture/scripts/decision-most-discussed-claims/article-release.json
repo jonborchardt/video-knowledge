@@ -1,0 +1,189 @@
+{
+ "topic": "test-fixture",
+ "story": "decision:most-discussed-claims",
+ "approvedBy": "automated: phase 1 fixture run started by Jonathan Borchardt",
+ "date": "2026-11-01",
+ "revision": 1,
+ "fingerprints": {
+  "article": "9bc837d113",
+  "package": "5879ca5f47",
+  "validation": "eab930424a"
+ },
+ "article": {
+  "topic": "test-fixture",
+  "story": "decision:most-discussed-claims",
+  "revision": 3,
+  "targetDurationSeconds": 15,
+  "generation": {
+   "model": "claude-opus-5",
+   "brief": "src/modules/article/briefs/article.md",
+   "date": "2026-10-31",
+   "wordsPerMinute": 150,
+   "evidencePackage": "5879ca5f47"
+  },
+  "meta": {
+   "headline": "Every leap second has been an addition, never a subtraction",
+   "seoTitle": "Has a leap second ever been taken away?",
+   "dek": {
+    "id": "meta.dek",
+    "text": "Has a leap second ever been taken away? The IERS record says no.",
+    "type": "factual",
+    "assertions": [
+     {
+      "id": "meta.dek.a1",
+      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+      "kind": "fact",
+      "claims": [
+       {
+        "id": "test-fixture/every-leap-second-since-utc-began",
+        "stance": "asserts"
+       }
+      ],
+      "evidence": [
+       {
+        "kind": "study",
+        "claim": "test-fixture/every-leap-second-since-utc-began",
+        "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+       }
+      ]
+     }
+    ]
+   },
+   "description": {
+    "id": "meta.description",
+    "text": "Every leap second so far was an addition, never a subtraction.",
+    "type": "factual",
+    "assertions": [
+     {
+      "id": "meta.description.a1",
+      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+      "kind": "fact",
+      "claims": [
+       {
+        "id": "test-fixture/every-leap-second-since-utc-began",
+        "stance": "asserts"
+       }
+      ],
+      "evidence": [
+       {
+        "kind": "study",
+        "claim": "test-fixture/every-leap-second-since-utc-began",
+        "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "sections": [
+   {
+    "name": "answer",
+    "heading": "Every step in the record added a second",
+    "blocks": [
+     {
+      "kind": "prose",
+      "sentences": [
+       {
+        "id": "s01",
+        "text": "The IERS table records the gap between atomic and civil time, and it has only ever widened.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s01.a1",
+          "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "test-fixture/every-leap-second-since-utc-began",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "test-fixture/every-leap-second-since-utc-began",
+            "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s02",
+        "text": "All twenty-seven steps added a second.",
+        "type": "factual",
+        "note": "The table's opening and closing figures are the size of the gap between atomic and civil time, not a count of leap seconds: the 27 steps between 10 seconds and 37 seconds are the leap seconds, and the figure block carries all three figures with their cite.",
+        "assertions": [
+         {
+          "id": "s02.a1",
+          "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "test-fixture/every-leap-second-since-utc-began",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "test-fixture/every-leap-second-since-utc-began",
+            "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "figure",
+      "ref": "decision-most-discussed-claims/sc02",
+      "caption": "The IERS table's opening value, its latest value, and the single-second steps between them."
+     }
+    ]
+   }
+  ]
+ },
+ "figures": {
+  "decision-most-discussed-claims/sc02": {
+   "chart": {
+    "type": "stat-tiles",
+    "title": "TAI minus UTC, as the IERS table records it",
+    "points": [
+     {
+      "label": "seconds in 1972",
+      "value": 10,
+      "unit": "count",
+      "display": "10",
+      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+     },
+     {
+      "label": "seconds in 2017",
+      "value": 37,
+      "unit": "count",
+      "display": "37",
+      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+     },
+     {
+      "label": "single-second steps up",
+      "value": 27,
+      "unit": "count",
+      "display": "27",
+      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+     }
+    ],
+    "note": "The opening and closing figures are the size of the gap between atomic and civil time, not a count of leap seconds: the table opens at 10 and reaches 37, so the 27 steps between them are the leap seconds. The tiles must not be read as repeated measurements of the same quantity, and the climb must not be drawn as a curve: the table gives values at irregular dates, not a rate."
+   }
+  }
+ },
+ "history": [
+  {
+   "revision": 1,
+   "date": "2026-11-01",
+   "approvedBy": "automated: phase 1 fixture run started by Jonathan Borchardt",
+   "fingerprint": "9bc837d113"
+  }
+ ],
+ "recordSeen": 0
+}

@@ -1,0 +1,389 @@
+{
+ "topic": "test-fixture",
+ "story": "decision:most-discussed-claims",
+ "revision": 3,
+ "date": "2026-11-01T01:48:11.373Z",
+ "status": "passed",
+ "scriptFingerprint": "a90bb24508",
+ "packageFingerprint": "5879ca5f47",
+ "wordsPerMinute": 150,
+ "words": 47,
+ "spokenWords": 47,
+ "minutes": 0.3,
+ "counts": {
+  "sentences": 4,
+  "factual": 4,
+  "assertions": 4,
+  "verified": 4,
+  "blocking": 0,
+  "warnings": 4,
+  "dispositioned": 0,
+  "unreviewed": 0
+ },
+ "revisionLimitReached": false,
+ "sentences": [
+  {
+   "id": "meta.dek",
+   "section": "answer",
+   "text": "Has a leap second ever been taken away? The IERS record says no.",
+   "type": "factual",
+   "fingerprint": "68d70ca0f6",
+   "words": 13,
+   "status": "verified",
+   "approved": true,
+   "assertions": [
+    {
+     "id": "meta.dek.a1",
+     "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "meta.dek.a1",
+      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+      "kind": "fact",
+      "modality": "universal",
+      "status": "supported",
+      "decision": "approved",
+      "review": false,
+      "verbatim": true,
+      "strength": 0.85,
+      "independent": 1,
+      "supporting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "test-fixture/every-leap-second-since-utc-began",
+         "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "iers-leap-second-dat.txt",
+        "verdict": "right",
+        "confidence": 0.85,
+        "note": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before: every one of the 27 steps added a second and none subtracted one.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "contradicting": [],
+      "qualifying": [],
+      "context": [],
+      "problems": [],
+      "limitations": [],
+      "suggestions": [],
+      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
+     },
+     "issues": []
+    }
+   ],
+   "issues": [
+    {
+     "sentence": "meta.dek",
+     "assertion": "meta.dek.a1",
+     "fingerprint": "68d70ca0f6",
+     "revision": 3,
+     "category": "overgeneralization",
+     "severity": "info",
+     "explanation": "The headline (\"Every leap second has been an addition, never a subtraction\") and the dek (\"The IERS record says no\") are unbounded: they answer for all time, including now. The cited lines L17-L44 are the table's 28 data rows and stop at 37 seconds on 1 January 2017, so on their own they establish that every one of the 27 steps up to that row added a second, not that nothing has happened since. What closes the gap is elsewhere in the same file: the header says the last line means no leap second was introduced since its date, the file is updated through IERS Bulletin 72 of July 2026 and it was retrieved on 2026-10-31. So the statements are true and this document establishes them, but not from the lines the cite names. Not blocking: the reader comes away believing exactly what the document supports, and the assertion's own wording (1972 to 2017, 27 steps) stays inside the cited rows. The same point applies to meta.description.",
+     "refs": [
+      "test-fixture/sources/iers-leap-second-dat.txt#L4-L10",
+      "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+     ],
+     "suggestion": "Widen the cite to test-fixture/sources/iers-leap-second-dat.txt#L1-L44 so the \"never since\" reading is reproducible from the passage the reader is sent to. The script reviewer raised the same point about s02 of script.json; a single widened cite on the shared assertion fixes both.",
+     "by": "review"
+    }
+   ]
+  },
+  {
+   "id": "meta.description",
+   "section": "answer",
+   "text": "Every leap second so far was an addition, never a subtraction.",
+   "type": "factual",
+   "fingerprint": "7e58120b81",
+   "words": 11,
+   "status": "verified",
+   "approved": true,
+   "assertions": [
+    {
+     "id": "meta.description.a1",
+     "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "meta.description.a1",
+      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+      "kind": "fact",
+      "modality": "universal",
+      "status": "supported",
+      "decision": "approved",
+      "review": false,
+      "verbatim": true,
+      "strength": 0.85,
+      "independent": 1,
+      "supporting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "test-fixture/every-leap-second-since-utc-began",
+         "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "iers-leap-second-dat.txt",
+        "verdict": "right",
+        "confidence": 0.85,
+        "note": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before: every one of the 27 steps added a second and none subtracted one.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "contradicting": [],
+      "qualifying": [],
+      "context": [],
+      "problems": [],
+      "limitations": [],
+      "suggestions": [],
+      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
+     },
+     "issues": []
+    }
+   ],
+   "issues": [
+    {
+     "sentence": "meta.description",
+     "assertion": "meta.description.a1",
+     "fingerprint": "7e58120b81",
+     "revision": 3,
+     "category": "overgeneralization",
+     "severity": "info",
+     "explanation": "\"Every leap second so far was an addition, never a subtraction\" reads to the present day; the cited rows end at 1 January 2017. \"So far\" is the right hedge and the file's header carries the record to July 2026, so the sentence is true and supported by the document, but the cited lines alone stop short of it. Recorded against this sentence as well as meta.dek because the description is the text a search result shows on its own, without the article's figure.",
+     "refs": [
+      "test-fixture/sources/iers-leap-second-dat.txt#L4-L10"
+     ],
+     "suggestion": "Same fix as the dek: widen the assertion's cite to L1-L44.",
+     "by": "review"
+    }
+   ]
+  },
+  {
+   "id": "s01",
+   "section": "answer",
+   "text": "The IERS table records the gap between atomic and civil time, and it has only ever widened.",
+   "type": "factual",
+   "fingerprint": "fcaa8ce4f8",
+   "words": 17,
+   "status": "verified",
+   "approved": true,
+   "assertions": [
+    {
+     "id": "s01.a1",
+     "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s01.a1",
+      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+      "kind": "fact",
+      "modality": "universal",
+      "status": "supported",
+      "decision": "approved",
+      "review": false,
+      "verbatim": true,
+      "strength": 0.85,
+      "independent": 1,
+      "supporting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "test-fixture/every-leap-second-since-utc-began",
+         "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "iers-leap-second-dat.txt",
+        "verdict": "right",
+        "confidence": 0.85,
+        "note": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before: every one of the 27 steps added a second and none subtracted one.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "contradicting": [],
+      "qualifying": [],
+      "context": [],
+      "problems": [],
+      "limitations": [],
+      "suggestions": [],
+      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
+     },
+     "issues": []
+    }
+   ],
+   "issues": [
+    {
+     "sentence": "s01",
+     "fingerprint": "fcaa8ce4f8",
+     "revision": 3,
+     "category": "structure",
+     "severity": "info",
+     "explanation": "The four open deterministic warnings (no hook, setup, investigation or takeaway section) are expected at this story's 15-second micro target, which asks for one paragraph. The article's single \"answer\" section with two sentences and the figure is the right proportion; adding sections to clear those warnings would pad it past the target. Recorded so the writer does not treat them as work to do.",
+     "suggestion": "Leave the structure warnings open.",
+     "by": "review"
+    }
+   ]
+  },
+  {
+   "id": "s02",
+   "section": "answer",
+   "text": "All twenty-seven steps added a second.",
+   "type": "factual",
+   "fingerprint": "adff0891c2",
+   "words": 6,
+   "status": "verified",
+   "approved": true,
+   "assertions": [
+    {
+     "id": "s02.a1",
+     "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s02.a1",
+      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+      "kind": "fact",
+      "modality": "universal",
+      "status": "supported",
+      "decision": "approved",
+      "review": false,
+      "verbatim": true,
+      "strength": 0.85,
+      "independent": 1,
+      "supporting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "test-fixture/every-leap-second-since-utc-began",
+         "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "iers-leap-second-dat.txt",
+        "verdict": "right",
+        "confidence": 0.85,
+        "note": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before: every one of the 27 steps added a second and none subtracted one.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "contradicting": [],
+      "qualifying": [],
+      "context": [],
+      "problems": [],
+      "limitations": [],
+      "suggestions": [],
+      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
+     },
+     "issues": []
+    }
+   ],
+   "issues": []
+  }
+ ],
+ "issues": [
+  {
+   "sentence": "-",
+   "category": "structure",
+   "severity": "warning",
+   "explanation": "no \"hook\" section",
+   "by": "deterministic"
+  },
+  {
+   "sentence": "-",
+   "category": "structure",
+   "severity": "warning",
+   "explanation": "no \"setup\" section",
+   "by": "deterministic"
+  },
+  {
+   "sentence": "-",
+   "category": "structure",
+   "severity": "warning",
+   "explanation": "no \"investigation\" section",
+   "by": "deterministic"
+  },
+  {
+   "sentence": "-",
+   "category": "structure",
+   "severity": "warning",
+   "explanation": "no \"takeaway\" section",
+   "by": "deterministic"
+  },
+  {
+   "sentence": "meta.dek",
+   "assertion": "meta.dek.a1",
+   "fingerprint": "68d70ca0f6",
+   "revision": 3,
+   "category": "overgeneralization",
+   "severity": "info",
+   "explanation": "The headline (\"Every leap second has been an addition, never a subtraction\") and the dek (\"The IERS record says no\") are unbounded: they answer for all time, including now. The cited lines L17-L44 are the table's 28 data rows and stop at 37 seconds on 1 January 2017, so on their own they establish that every one of the 27 steps up to that row added a second, not that nothing has happened since. What closes the gap is elsewhere in the same file: the header says the last line means no leap second was introduced since its date, the file is updated through IERS Bulletin 72 of July 2026 and it was retrieved on 2026-10-31. So the statements are true and this document establishes them, but not from the lines the cite names. Not blocking: the reader comes away believing exactly what the document supports, and the assertion's own wording (1972 to 2017, 27 steps) stays inside the cited rows. The same point applies to meta.description.",
+   "refs": [
+    "test-fixture/sources/iers-leap-second-dat.txt#L4-L10",
+    "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+   ],
+   "suggestion": "Widen the cite to test-fixture/sources/iers-leap-second-dat.txt#L1-L44 so the \"never since\" reading is reproducible from the passage the reader is sent to. The script reviewer raised the same point about s02 of script.json; a single widened cite on the shared assertion fixes both.",
+   "by": "review"
+  },
+  {
+   "sentence": "meta.description",
+   "assertion": "meta.description.a1",
+   "fingerprint": "7e58120b81",
+   "revision": 3,
+   "category": "overgeneralization",
+   "severity": "info",
+   "explanation": "\"Every leap second so far was an addition, never a subtraction\" reads to the present day; the cited rows end at 1 January 2017. \"So far\" is the right hedge and the file's header carries the record to July 2026, so the sentence is true and supported by the document, but the cited lines alone stop short of it. Recorded against this sentence as well as meta.dek because the description is the text a search result shows on its own, without the article's figure.",
+   "refs": [
+    "test-fixture/sources/iers-leap-second-dat.txt#L4-L10"
+   ],
+   "suggestion": "Same fix as the dek: widen the assertion's cite to L1-L44.",
+   "by": "review"
+  },
+  {
+   "sentence": "s01",
+   "fingerprint": "fcaa8ce4f8",
+   "revision": 3,
+   "category": "structure",
+   "severity": "info",
+   "explanation": "The four open deterministic warnings (no hook, setup, investigation or takeaway section) are expected at this story's 15-second micro target, which asks for one paragraph. The article's single \"answer\" section with two sentences and the figure is the right proportion; adding sections to clear those warnings would pad it past the target. Recorded so the writer does not treat them as work to do.",
+   "suggestion": "Leave the structure warnings open.",
+   "by": "review"
+  }
+ ],
+ "resolved": [],
+ "history": [
+  {
+   "revision": 1,
+   "date": "2026-11-01T01:29:45.243Z",
+   "status": "blocked",
+   "blocking": 1,
+   "warnings": 0
+  },
+  {
+   "revision": 2,
+   "date": "2026-11-01T01:40:11.980Z",
+   "status": "blocked",
+   "blocking": 1,
+   "warnings": 0
+  },
+  {
+   "revision": 3,
+   "date": "2026-11-01T01:48:11.373Z",
+   "status": "passed",
+   "blocking": 0,
+   "warnings": 4
+  }
+ ]
+}

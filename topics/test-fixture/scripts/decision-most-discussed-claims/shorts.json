@@ -1,0 +1,73 @@
+{
+ "topic": "test-fixture",
+ "story": "decision:most-discussed-claims",
+ "parentFingerprints": {
+  "script": "9fd59570ce",
+  "validation": "5c37796340",
+  "storyboard": "2fbeda10fa",
+  "package": "5879ca5f47",
+  "release": "5f53e2b89d"
+ },
+ "candidates": [
+  {
+   "key": "s02",
+   "scene": "sc02",
+   "section": "answer",
+   "sentences": [
+    "s02"
+   ],
+   "claims": [
+    "test-fixture/every-leap-second-since-utc-began"
+   ],
+   "cites": [
+    "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+   ],
+   "figures": [
+    "10",
+    "1972",
+    "37",
+    "2017",
+    "27"
+   ],
+   "chart": {
+    "type": "stat-tiles",
+    "title": "TAI minus UTC, as the IERS table records it",
+    "points": [
+     {
+      "label": "seconds in 1972",
+      "value": 10,
+      "unit": "count",
+      "display": "10",
+      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+     },
+     {
+      "label": "seconds in 2017",
+      "value": 37,
+      "unit": "count",
+      "display": "37",
+      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+     },
+     {
+      "label": "single-second steps up",
+      "value": 27,
+      "unit": "count",
+      "display": "27",
+      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+     }
+    ],
+    "note": "The opening and closing figures are the size of the gap between atomic and civil time, not a count of leap seconds: the table opens at 10 and reaches 37, so the 27 steps between them are the leap seconds. The tiles must not be read as repeated measurements of the same quantity, and the climb must not be drawn as a curve: the table gives values at irregular dates, not a rate."
+   },
+   "qualifications": [],
+   "reviewed": false,
+   "slug": null,
+   "format": null,
+   "hook": null,
+   "carries": [],
+   "readiness": "needs-review",
+   "blocking": [
+    "no entry in shorts-review.json (src/modules/shorts/briefs/shorts.md)"
+   ]
+  }
+ ],
+ "rejected": []
+}
