@@ -33,6 +33,7 @@ export interface Commission {
   handle?: string; // only once the channel exists
   youtube?: string;
   channelId?: string; // the public UC... id, for the Studio links on /admin
+  x?: string; // the institution's X handle, only once a person created the account (keys in .env, X_<KEY>_*)
   topics: string[];
   /** The miniature fixture topics this institution runs on its channel (spec §5.8): produced by the real pipeline,
    *  uploaded private, never a page of the production site, never picked or proposed by automation. */

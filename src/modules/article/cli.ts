@@ -22,7 +22,18 @@ import {
 import { articleStale } from './view';
 import { figureData, validateArticleIn } from './validation';
 import { corpusOf, loadTopic } from '../evidence';
-import { passageReader, readJson, toJson, writeArtifact, ROOT, FILES, scriptDir } from '../../shared/io';
+import {
+  MANIFEST_FILE,
+  REVIEW_DIR,
+  passageReader,
+  readJson,
+  toJson,
+  writeArtifact,
+  ROOT,
+  FILES,
+  scriptDir,
+} from '../../shared/io';
+import { runCli } from '../../shared/cli';
 import { loadPublicRecord, publicRecordPath, withArticleRevision } from '../../shared/public-record';
 import { Refusal } from '../../shared/refusal';
 import { loadReview } from '../stories';
@@ -60,6 +71,15 @@ function validate(): { a: Article; v: ScriptValidation } {
     script: readJson<Script>(p(FILES.script)),
   });
   return { a, v };
+}
+
+/** A release manifest beside the video (a release build packaged) binds the article's released text: packaging
+ *  rewrites it after a lock or a correction, as a child (the manifest is packaging's file). */
+function refreshManifest() {
+  if (!existsSync(join(dir, 'video', REVIEW_DIR, MANIFEST_FILE))) return;
+  const r = runCli('packaging', ['manifest', topic, storyId]);
+  if (r.status !== 0) throw new Error(`the release manifest could not be rewritten: ${(r.stderr || r.stdout).trim()}`);
+  console.log((r.stdout ?? '').trim());
 }
 
 /** lock and correct release only what passes now, after a review exists. */
@@ -106,6 +126,7 @@ function run() {
       // the revisions it has seen: any appended later makes it stale, the same day too
       writeArtifact(dir, ARTICLE_FILES.release, toJson({ ...r, recordSeen: loadPublicRecord(topic).revisions.length }));
       console.log(`released ${rel(p(ARTICLE_FILES.release))}: revision ${r.revision}, approved by ${r.approvedBy}`);
+      refreshManifest();
       return;
     }
     case 'correct': {

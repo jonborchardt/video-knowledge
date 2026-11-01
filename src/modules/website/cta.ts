@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { toolOf } from '../../tools';
 import { loadArticleRelease } from '../article';
 import { absoluteOf, chainRoot, type Graph, matterPath } from './content-graph';
-import { readJson, ROOT, FILES, scriptDir } from '../../shared/io';
+import { readJson, ROOT, FILES, scriptDir, sha } from '../../shared/io';
 import { absoluteUrl } from '../../lib/url';
 import { approverProblem } from '../../shared/approver';
 import { sentences } from '../../shared/sentences';
@@ -51,12 +51,24 @@ export interface ResolvedCta {
   node: string | null;
   disclosure: string | null;
 }
+/** A paid link of the file, approved or not: the release manifest numbers these for the person's `PAID OK`. */
+export interface CommercialCta {
+  id: string;
+  url: string;
+  text: string;
+  disclosure: string;
+  approvedBy: string | null;
+}
 export interface CtaResult {
   primary: ResolvedCta;
   secondary: ResolvedCta[];
   dropped: { cta: Cta; why: string }[];
   problems: string[];
+  commercial: CommercialCta[];
 }
+/** The stable id of a paid link: its type and url (what `links -- cta approve` and a `PAID OK` name). */
+export const ctaId = (c: Pick<Cta, 'type' | 'url'>): string => sha(`${c.type}|${c.url ?? ''}`);
+export const AWAITING_APPROVAL = "a paid link waits for a person's approval (PAID OK in the release reply)";
 
 /** The file's errors: each fails the build (a commercial entry without its disclosure or a person's approval, too). */
 function fileProblems(f: CtaFile): string[] {
@@ -71,8 +83,10 @@ function fileProblems(f: CtaFile): string[] {
       out.push(`${c.type} url must be https: ${c.url ?? '(none)'}`);
     if (c.type === 'commercial') {
       if (!c.disclosure?.trim()) out.push(`commercial link needs a disclosure: ${c.url}`);
+      // no approvedBy: the link waits for a person (dropped, listed in the manifest); a name that is not a person's
+      // (automated:, a placeholder) is a problem, never an approval
       const who = c.approvedBy?.trim() ?? '';
-      if (approverProblem(who) || who.startsWith('automated:'))
+      if (who && (approverProblem(who) || who.startsWith('automated:')))
         out.push(`commercial link needs a person's approvedBy: ${c.url}`);
     }
   }
@@ -89,7 +103,7 @@ export function resolveCtas(file: CtaFile | null, g: Graph, story: string, root 
     node: story,
     disclosure: null,
   };
-  if (!file) return { primary: fallback, secondary: [], dropped: [], problems: [] };
+  if (!file) return { primary: fallback, secondary: [], dropped: [], problems: [], commercial: [] };
   const problems = fileProblems(file);
   const tool = toolOf(topic, s.id);
   const release = loadArticleRelease(topic, s.id, root);
@@ -144,9 +158,13 @@ export function resolveCtas(file: CtaFile | null, g: Graph, story: string, root 
 
   const dropped: CtaResult['dropped'] = [];
   const kept = (c: Cta) => {
-    // A commercial entry with a file problem is never shown.
+    // A commercial entry with a file problem is never shown; one without a person's approval waits for it.
     if (c.type === 'commercial' && fileProblems({ primary: c }).length) {
       dropped.push({ cta: c, why: 'commercial link without its disclosure or approval' });
+      return null;
+    }
+    if (c.type === 'commercial' && !c.approvedBy?.trim()) {
+      dropped.push({ cta: c, why: AWAITING_APPROVAL });
       return null;
     }
     const r = resolve(c);
@@ -160,5 +178,14 @@ export function resolveCtas(file: CtaFile | null, g: Graph, story: string, root 
     primary = tool ? kept({ type: 'tool', text: 'Run the numbers yourself' }) : null;
   } else primary = kept(file.primary);
   const secondary = (file.secondary ?? []).slice(0, 2).flatMap((c) => kept(c) ?? []);
-  return { primary: primary ?? fallback, secondary, dropped, problems };
+  const commercial: CommercialCta[] = [file.primary, ...(file.secondary ?? [])]
+    .filter((c) => c.type === 'commercial' && c.url && c.disclosure?.trim())
+    .map((c) => ({
+      id: ctaId(c),
+      url: c.url!,
+      text: c.text,
+      disclosure: c.disclosure!,
+      approvedBy: c.approvedBy?.trim() || null,
+    }));
+  return { primary: primary ?? fallback, secondary, dropped, problems, commercial };
 }

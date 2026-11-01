@@ -8,3 +8,4 @@ export {
   keywordsOf,
   renderDescription,
 } from './package';
+export { buildManifest, loadManifest, manifestPath, removeManifest, writeManifest } from './manifest';

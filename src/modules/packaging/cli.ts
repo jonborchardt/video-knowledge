@@ -1,20 +1,24 @@
 // npm run video -- package <topic> <story-id>   (spawns: tsx src/modules/packaging/cli.ts package <topic> <story-id>)
 //   package <topic> <story-id>   the review package in video/review/: the mp4 (copied), working title, description with
 //                                measured chapters and sources, provenance, captions, checklist; a Short is also recorded
-//                                as an output of its parent's publish.json
+//                                as an output of its parent's publish.json; a release build also writes the release
+//                                manifest (video/review/release-manifest.json, spec §7.2), a draft removes it
+//   manifest <topic> <story-id>  rewrite the release manifest of a packaged release build from the files (no media
+//                                needed): the article lock and the release loop call it so the manifest never lags
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { buildReviewPackage } from './package';
+import { manifestPath, removeManifest, writeManifest } from './manifest';
 import { readJson, REVIEW_DIR, ROOT, scriptDir, shortOf } from '../../shared/io';
 import { runCli } from '../../shared/cli';
 import { type BuildReport, type Timeline, VIDEO_FILES, loadSegment, videoDir } from '../video';
 
 const [cmd, topic, storyId] = process.argv.slice(2);
-if (cmd !== 'package' || !topic || !storyId) {
+if ((cmd !== 'package' && cmd !== 'manifest') || !topic || !storyId) {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 5)
+      .slice(0, 7)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -63,10 +67,28 @@ function stagePackage() {
     if (r.status === 0) console.log(`recorded ${id} in ${short.parent}'s publish.json`);
     else if (!/exists/.test(out)) throw new Error(out.trim() || `publish add failed (${r.status})`);
   }
+  // the manifest binds the whole release group: the parent's is rewritten by its own package and by every Short's
+  const parent = short ? short.parent : storyId;
+  if (r.provenance.clearance.publishable || short) stageManifest(parent, !short);
+  else if (removeManifest(topic, storyId))
+    console.log(`removed ${rel(manifestPath(topic, storyId))} (a draft package)`);
+}
+
+/** The parent's manifest from the files; `must`: a release package without one is an error, else (a Short of a
+ *  draft parent) nothing. */
+function stageManifest(parent: string, must: boolean) {
+  const rp = readJson<{ status?: string }>(join(videoDir(topic, parent), REVIEW_DIR, 'review.json'));
+  if (rp?.status !== 'release build') {
+    if (must) throw new Error('a release package needs a release build');
+    return;
+  }
+  const r = writeManifest(topic, parent);
+  console.log(`${r} ${rel(manifestPath(topic, parent))}`);
 }
 
 try {
-  stagePackage();
+  if (cmd === 'manifest') stageManifest(shortOf(storyId)?.parent ?? storyId, true);
+  else stagePackage();
 } catch (e) {
   console.error(e instanceof Error ? e.message : e);
   process.exit(2);

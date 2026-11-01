@@ -21,6 +21,49 @@ export interface FreshRun {
   at: string;
   previous: string | null; // the run id this fresh run archived, when there was one
 }
+/** The release manifest (Milestone 2, spec §7.2): video/review/release-manifest.json, written by packaging for a
+ *  release build. What a person approves is what `releaseSha` binds (outputs, article, site, ctas without
+ *  approvedBy, institution); generatedAt, evidence and distribution are shown, not bound. */
+export interface ManifestCta {
+  type: string;
+  url: string;
+  text: string;
+}
+export interface ManifestOutput {
+  kind: 'youtube-video' | 'youtube-short';
+  mp4Sha: string;
+  buildReport: string; // sha of the build report the package was made from
+  metadataSha: string; // the composed upload metadata sha: what an upload or push sends
+  title: string;
+  description: string;
+  tags: string[];
+  chapters: { at: number; title: string }[];
+  thumbnailSha: string | null;
+  captionsSha: string | null;
+  seconds: number;
+  disclosurePresent: boolean;
+  source?: string; // a Short's folder, repo-relative
+  derivedFrom?: string; // a Short: the output it derives from
+}
+export interface ReleaseManifest {
+  generatedAt: string;
+  topic: string;
+  story: string;
+  institution: string; // the commission key
+  fixtureRun?: string; // a fixture story's run id (spec §5.8)
+  outputs: Record<string, ManifestOutput>;
+  article: { releaseSha: string; headline: string; words: number } | null;
+  site: { matterUrl: string; articleUrl: string | null; dataUrl: string | null };
+  ctas: {
+    primary: ManifestCta;
+    secondary: ManifestCta[];
+    commercial: (ManifestCta & { n: number; id: string; disclosure: string; approvedBy: string | null })[];
+  };
+  evidence: { claims: number; verdictsCited: number; publicRecordSha: string };
+  sequence: string[]; // the main output, then each Short in ledger order: the publication order
+  distribution: { x: { account: string; text: string } | null };
+  releaseSha: string;
+}
 /** Ready Short candidates per video; the reviewer picks by leaving the rest unkept. */
 export const MAX_SHORTS = 3;
 /** Questions one video may answer: the story's own plus its chain. */

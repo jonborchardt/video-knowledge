@@ -108,6 +108,8 @@ export const scriptDir = (topic: string, storyId: string, root = ROOT) => {
 };
 /** The folder under video/ that holds the review package. */
 export const REVIEW_DIR = 'review';
+/** The release manifest in video/review/ (packaging writes it; publishing reads it through the shared type). */
+export const MANIFEST_FILE = 'release-manifest.json';
 export const FILES = {
   pkg: 'evidence-package.json',
   script: 'script.json',

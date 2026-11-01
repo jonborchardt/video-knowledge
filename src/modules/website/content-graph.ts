@@ -198,6 +198,27 @@ export const absoluteOf = (g: Graph, id: string): string | null => {
   return u && (u.startsWith('/') ? absoluteUrl(u) : u);
 };
 
+/** The absolute public URLs a story's release will have (spec §5.6, the manifest): its matter page, the article
+ *  anchor when an article is released, the inquiry's data page when the article cites a dataset. Pure over the graph
+ *  with the story assumed live; throws for a story no claimed topic holds. */
+export function publicUrlsOf(
+  topic: string,
+  storyId: string,
+  root = ROOT,
+): { matterUrl: string; articleUrl: string | null; dataUrl: string | null } {
+  const node = storyNode(topic, storyId);
+  const g = contentGraph(root, [topic], 'live', [node]);
+  const s = g.stories.get(node);
+  if (!s) throw new Error(`no story ${node} in the content graph (is ${topic} claimed by an institution?)`);
+  const art = `${node}#article`;
+  const data = g.edges.some((e) => e.from === art && e.to.startsWith('data:') && g.nodes.get(e.to)?.public);
+  return {
+    matterUrl: absoluteUrl(matterPath(topic, s)),
+    articleUrl: absoluteOf(g, art),
+    dataUrl: data ? absoluteUrl(`/${topic}/data/`) : null,
+  };
+}
+
 /** A story node's chain: a follow-up resolves to its first question's node id, any other story to itself. */
 export const chainRoot = (g: Graph, id: string) => {
   const s = g.stories.get(id);
