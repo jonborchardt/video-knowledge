@@ -1,5 +1,5 @@
 // npm run run -- <verb> ...
-//   story <topic> <story-id> [--approver "<name>"] [--notes-file <path>] [--until <stage>] [--fresh]
+//   story <topic> <story-id> [--approver "<name>"] [--notes-file <path>] [--until <stage>] [--fresh] [--no-commit]
 //                                      drive one story from the board's ready to packaged (or to <stage>) unattended: each
 //                                      board step runs as a child process or a budgeted claude -p agent under its role's
 //                                      permission rules; journaled under the story's run/; one run per story (exit 3 when
@@ -7,6 +7,9 @@
 //                                      (HALT <kind>: <why> then UNBLOCK: <what clears it>), 2 usage or refusal.
 //                                      --fresh (a fixture topic only): archive the production folder to
 //                                      topics/<topic>/history/<run id>/ first and run every stage again.
+//                                      --no-commit: a supervised run on a feature branch; the finish validates and
+//                                      leaves the artifacts uncommitted for the person (the runner commits only on
+//                                      git.commitOn's branch).
 //   status [--json]                    every run folder: running, halted (kind, why, unblock) or idle, and its spend.
 // Policy: automation.json (src/shared/automation.ts). Secrets: .env, loaded here and handed to each child by verb.
 import { readFileSync } from 'node:fs';
@@ -71,6 +74,7 @@ switch (verb) {
       until,
       root: ROOT,
       ...(runId && { runId }),
+      ...(rest.includes('--no-commit') && { git: 'none' as const }),
     });
     if (r.outcome === 'held') die(`a live run holds ${topic} ${storyId}; nothing done`, 3);
     if (r.outcome === 'halted' && r.halt) {
