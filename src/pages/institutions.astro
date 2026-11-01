@@ -14,7 +14,9 @@ import { href } from '../lib/url';
 const graph = siteGraph();
 const names = new Set(siteTopics(graph));
 const institutions = Object.values(commissions).map((c) => {
-  const published = commissionTopics(c).filter((n) => names.has(n)).map((n) => loadTopic(n));
+  const published = commissionTopics(c)
+    .filter((n) => names.has(n))
+    .map((n) => loadTopic(n));
   // Featured: the first ready matter across the institution's inquiries in the one order (a live video first); a
   // follow-up is never featured on its own.
   const first = [...graph.nodes.values()]

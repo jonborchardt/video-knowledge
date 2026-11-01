@@ -18,4 +18,7 @@ export const siteGraph = () => contentGraph(ROOT, siteTopicNames(), siteView);
 export const siteTopics = (g = siteGraph()): string[] => siteTopicNames().filter((t) => g.nodes.get(t)?.public);
 
 /** The topics a commission's pages list: its public topics, plus its fixture topics in a fixture build. */
-export const commissionTopics = (c: Commission): string[] => [...c.topics, ...(fixtureSite ? (c.fixtureTopics ?? []) : [])];
+export const commissionTopics = (c: Commission): string[] => [
+  ...c.topics,
+  ...(fixtureSite ? (c.fixtureTopics ?? []) : []),
+];

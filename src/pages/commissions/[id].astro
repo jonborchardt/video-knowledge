@@ -17,7 +17,12 @@ export function getStaticPaths() {
   const names = new Set(siteTopics());
   return Object.entries(commissions).map(([id, c]) => ({
     params: { id },
-    props: { c, topics: commissionTopics(c).filter((n) => names.has(n)).map(loadTopic) },
+    props: {
+      c,
+      topics: commissionTopics(c)
+        .filter((n) => names.has(n))
+        .map(loadTopic),
+    },
   }));
 }
 const { c, topics } = Astro.props as { c: Commission; topics: Topic[] };
