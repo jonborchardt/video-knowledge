@@ -414,6 +414,8 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
       }
 
       for (const step of n.steps) {
+        // the clearance note stepsOf appends ("public release is blocked: ...") is information, not a person's step
+        if (step.kind === 'do' && /^Public release is blocked:/.test(step.text)) continue;
         if (step.kind === 'do') return halt('awaiting-person', step.text, { kind: 'decide', text: step.text }, n);
         // a forbidden flag is judged on the command the board asks for, never on diagnostic output
         const forbidden =

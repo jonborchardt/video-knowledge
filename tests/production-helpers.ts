@@ -249,41 +249,59 @@ export function syntheticProduction(upTo: FixtureStage, opts: { release?: boolea
 
   // 7. a passing full build with a soundtrack, and the review package made from it. No media: the board reads the
   // build report's summary and the review package's sha of it, never the mp4.
+  write('video/build-report.json', fixtureBuildReport(dir, release, sb, !!opts.release, root));
+  fixtureReviewFiles(dir, script.title, !!opts.release);
+  return fixture;
+}
+
+/** A passing full build's report for a locked fixture, as `npm run video -- spike` and `qa` would leave it: bound to
+ *  the release's fingerprints, render.json and the current look, with a soundtrack and every QA check passing. */
+export function fixtureBuildReport(
+  dir: string,
+  release: Release,
+  sb: { scenes: { id: string }[]; runtime: number },
+  isRelease: boolean,
+  root: string,
+  topic = TOPIC,
+): BuildSummary {
   const config = readJson<unknown>(join(dir, 'video', 'render.json'));
-  const report: BuildSummary = {
+  return {
     generatedAt: '2026-01-01',
     segment: { scenes: sb.scenes.map((s) => s.id) },
     output: { seconds: sb.runtime },
     narration: {
-      provider: opts.release ? 'azure' : 'edge',
+      provider: isRelease ? 'azure' : 'edge',
       voice: 'en-US-AndrewMultilingualNeural',
-      publishable: !!opts.release,
+      publishable: isRelease,
     },
     music: { compositions: [{ title: 'Fixture' }] },
-    clearance: opts.release
+    clearance: isRelease
       ? { narration: true, music: true, publishable: true, why: [] }
       : { narration: false, music: false, publishable: false, why: ['draft voice'] },
-    fingerprints: { ...release.fingerprints, config: sha(JSON.stringify(config)), look: lookFingerprint(TOPIC, root) },
+    fingerprints: { ...release.fingerprints, config: sha(JSON.stringify(config)), look: lookFingerprint(topic, root) },
     qa: { ok: true, checks: [{ name: 'fixture', ok: true }] },
   };
-  write('video/build-report.json', report);
+}
+
+/** The review package files of a fixture build, as `npm run video -- package` would write them (no media). */
+export function fixtureReviewFiles(dir: string, title: string, isRelease: boolean): void {
+  const write = (f: string, x: unknown) => writeFileSync(join(dir, f), typeof x === 'string' ? x : toJson(x));
   mkdirSync(join(dir, 'video', 'review'), { recursive: true });
   write('video/review/review.json', {
     generatedAt: '2026-01-01',
-    status: opts.release ? 'release build' : 'private review build',
+    status: isRelease ? 'release build' : 'private review build',
     buildReport: fileSha(join(dir, 'video', 'build-report.json')),
     mp4: 'fixture.mp4',
-    mp4Sha: opts.release ? 'releasesha' : 'draftsha',
+    mp4Sha: isRelease ? 'releasesha' : 'draftsha',
     thumbnailSha: 'thumbsha',
     captionsSha: 'capsha',
-    title: script.title,
+    title,
   });
-  write('video/review/description.txt', `${script.title}\n\nChapters\n0:00 Hook\n`);
+  write('video/review/description.txt', `${title}\n\nChapters\n0:00 Hook\n`);
   write(
     'video/review/captions.en.srt',
     '1\n00:00:00,000 --> 00:00:02,000\nDoes a heat pump really cost less to run?\n',
   );
-  return fixture;
 }
 
 export interface ShortFixture extends Fixture {

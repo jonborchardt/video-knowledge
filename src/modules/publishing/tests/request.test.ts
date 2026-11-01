@@ -163,6 +163,19 @@ describe('requestProblem (through recordRequested)', () => {
   });
 });
 
+describe('a fixture story is requested like any other (spec 5.8)', () => {
+  it('the manifest carries fixtureRun and the same checks apply', () => {
+    const f = staged([]);
+    const rp = join(f.dir, 'video', REVIEW_DIR, 'review.json');
+    writeFileSync(rp, toJson({ ...readJson<object>(rp)!, fixtureRun: '20261101-0307-8ee4' }));
+    writeManifest(f.topic, f.story, f.root);
+    expect(manifestOf(f).fixtureRun).toBe('20261101-0307-8ee4');
+    expect(() => request(f)).toThrow(/not uploaded/);
+    ready(f);
+    expect(request(f).event?.type).toBe('approval-requested');
+  });
+});
+
 describe('recordRequested', () => {
   it('writes the request once per release and prints the existing one on a repeat', () => {
     const f = staged();

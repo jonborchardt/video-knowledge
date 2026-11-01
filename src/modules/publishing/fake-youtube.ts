@@ -23,6 +23,7 @@ export interface FakeVideo {
   thumbnail: boolean;
   fileSize: number;
   gets: number;
+  session?: string; // the resumable session URI the upload used: a resumed session returns this video again
 }
 export interface FakeFailure {
   method: keyof YouTubeClient;
@@ -31,6 +32,9 @@ export interface FakeFailure {
   retryable: boolean;
   times: number; // how many more calls fail
   after?: number; // let this many calls of the method pass first
+  /** `crash`: the remote effect happens, then the process "dies" (a plain Error, not a YouTubeError) before any
+   *  record: the crash boundary of spec §4.5. Default: the call fails as YouTube would. */
+  kind?: 'api' | 'crash';
 }
 export interface FakeState {
   nextId: number;
@@ -59,13 +63,15 @@ export function fakeYoutubeClient(path: string): YouTubeClient {
     });
     const f = s.fail.find((x) => x.method === method && x.times > 0);
     if (f && (f.after ?? 0) > 0) f.after!--;
-    else if (f) {
+    else if (f && f.kind !== 'crash') {
       f.times -= 1;
       writeFakeState(path, s);
       throw new YouTubeError(`${f.reason}: planted failure`, f.status, f.reason, f.retryable);
     }
     const out = fn(s);
+    if (f && f.kind === 'crash') f.times -= 1;
     writeFakeState(path, s);
+    if (f && f.kind === 'crash') throw new Error(`crashed after ${method} (planted)`);
     return out;
   };
   const video = (s: FakeState, id: string): FakeVideo => {
@@ -74,11 +80,16 @@ export function fakeYoutubeClient(path: string): YouTubeClient {
     return v;
   };
   return {
-    async insertVideo({ file, snippet, status, onSession }) {
-      return call('insertVideo', [{ file, snippet, status }], (s) => {
-        onSession(`https://fake/upload/${s.nextId}`);
+    async insertVideo({ file, snippet, status, session, onSession }) {
+      return call('insertVideo', [{ file, snippet, status, session }], (s) => {
+        // a finished session returns the same video (YouTube answers the status query with it): never a second upload
+        const done = session && Object.entries(s.videos).find(([, v]) => v.session === session);
+        if (done) return { id: done[0] };
+        const uri = `https://fake/upload/${s.nextId}`;
+        onSession(uri);
         const id = fakeId(s.nextId++);
         s.videos[id] = {
+          session: uri,
           snippet,
           status,
           privacyStatus: status.privacyStatus ?? 'private',
