@@ -250,6 +250,49 @@ describe('launch', () => {
     expect(launches(c.f.root)).toHaveLength(1);
   });
 
+  it('with social on: a retryable post failure is tried again next tick before the mail; a final failure halts; a post is recorded once', async () => {
+    const c = clone();
+    await launch(c.f.topic, c.f.story, a, c.deps(), c.f.root);
+    const mail = new FakeMail();
+    const fetchFn = (async () => new Response('embed/vid00000000', { status: 200 })) as unknown as typeof fetch;
+    const social = { ...a, enabled: { ...a.enabled, social: true } };
+    const answers: { status: number; stdout: string }[] = [
+      { status: 1, stdout: 'RESULT: FAILED (retryable): X 503: down\n' },
+      { status: 0, stdout: 'RESULT: POSTED https://x.com/i/status/1\n' },
+    ];
+    const posts: string[] = [];
+    const run = (cli: string, args: string[]) => {
+      posts.push([cli, ...args].join(' '));
+      return { ...answers.shift()!, stderr: '' };
+    };
+    const a1 = await probeLaunches(social, c.f.root, { now: () => T0 + 60_000, run, mail, fetchFn });
+    expect(a1.join('\n')).toMatch(/post retryable/);
+    expect(readLaunch(c.f.topic, c.f.story, c.f.root)!.posted).toBeNull();
+    expect(mail.sent).toEqual([]); // the mail waits for the post to settle
+    const a2 = await probeLaunches(social, c.f.root, { now: () => T0 + 120_000, run, mail, fetchFn });
+    expect(a2.join('\n')).toMatch(/post true/);
+    expect(posts).toEqual([`social post ${c.f.topic} ${c.f.story}`, `social post ${c.f.topic} ${c.f.story}`]);
+    expect(readLaunch(c.f.topic, c.f.story, c.f.root)!.posted).toBe(true);
+    expect(mail.sent).toHaveLength(1);
+    expect(mail.sent[0].text).toMatch(/X: posted/);
+    // a final failure on another launch: the halt, the mail still sent (it says so)
+    const d = clone();
+    await launch(d.f.topic, d.f.story, a, d.deps(), d.f.root);
+    const m2 = new FakeMail();
+    const acts = await probeLaunches(social, d.f.root, {
+      now: () => T0 + 60_000,
+      run: () => ({ status: 1, stdout: 'RESULT: FAILED: X 401: bad keys\n', stderr: '' }),
+      mail: m2,
+      fetchFn,
+    });
+    expect(acts.join('\n')).toMatch(/post false/);
+    expect(readLaunch(d.f.topic, d.f.story, d.f.root)!.posted).toBe(false);
+    expect(readLaunch(d.f.topic, d.f.story, d.f.root)!.halt?.kind).toBe('step-failed');
+    expect(readHalt(runDir(d.f.topic, d.f.story, d.f.root))?.why).toMatch(/X 401/);
+    expect(m2.sent).toHaveLength(1);
+    expect(m2.sent[0].text).toMatch(/X: the post failed/);
+  });
+
   it('a stale page past the deploy timeout halts deploy-timeout and posts nothing', async () => {
     const c = clone();
     await launch(c.f.topic, c.f.story, a, c.deps(), c.f.root);

@@ -252,36 +252,64 @@ export async function probeLaunches(a: Automation, root = ROOT, d: ProbeDeps): P
   const actions: string[] = [];
   for (const rec of launches(root)) {
     const pushed = a.launch.push ? rec.pushed : rec.committed;
-    if (!pushed || rec.liveAt) continue;
+    if (!pushed) continue;
+    if (rec.liveAt && rec.posted !== null && (rec.emailed || !d.mail)) continue; // finished
     const tag = `${rec.topic}/${rec.storyId}`;
-    const probe = await liveCheck(rec.topic, rec.storyId, d.fetchFn, root);
-    rec.probes += 1;
-    if (!probe.ok) {
-      const since = rec.steps.validated ?? rec.startedAt;
-      if (now() - Date.parse(since) > a.launch.deployTimeoutMinutes * 60_000) {
-        haltLaunch(root, rec, {
-          kind: 'deploy-timeout',
-          stage: 'launch',
-          why: `the deploy of ${tag} is not live after ${a.launch.deployTimeoutMinutes} minutes: ${probe.why}`,
-          unblock: { kind: 'fix', text: `check the deploy of ${pushed} (CI, Cloudflare); the next tick probes again` },
-          at: new Date(now()).toISOString(),
-          runId: 'tick',
-          board: { stage: 'launch', next: 'the deploy' },
-        });
-        actions.push(`${tag}: deploy-timeout`);
-      } else {
-        writeLaunch(root, rec);
-        actions.push(`${tag}: not live yet (probe ${rec.probes})`);
+    if (!rec.liveAt) {
+      const probe = await liveCheck(rec.topic, rec.storyId, d.fetchFn, root);
+      rec.probes += 1;
+      if (!probe.ok) {
+        const since = rec.steps.validated ?? rec.startedAt;
+        if (now() - Date.parse(since) > a.launch.deployTimeoutMinutes * 60_000) {
+          haltLaunch(root, rec, {
+            kind: 'deploy-timeout',
+            stage: 'launch',
+            why: `the deploy of ${tag} is not live after ${a.launch.deployTimeoutMinutes} minutes: ${probe.why}`,
+            unblock: {
+              kind: 'fix',
+              text: `check the deploy of ${pushed} (CI, Cloudflare); the next tick probes again`,
+            },
+            at: new Date(now()).toISOString(),
+            runId: 'tick',
+            board: { stage: 'launch', next: 'the deploy' },
+          });
+          actions.push(`${tag}: deploy-timeout`);
+        } else {
+          writeLaunch(root, rec);
+          actions.push(`${tag}: not live yet (probe ${rec.probes})`);
+        }
+        continue;
       }
-      continue;
+      rec.liveAt = new Date(now()).toISOString();
+      haltLaunch(root, rec, null);
+      actions.push(`${tag}: live at ${probe.url}`);
     }
-    rec.liveAt = new Date(now()).toISOString();
-    haltLaunch(root, rec, null);
-    actions.push(`${tag}: live at ${probe.url}`);
     if (rec.posted === null) {
       if (a.enabled.social && a.launch.social.video) {
+        // the post: not configured is journaled, a retryable failure is tried again next tick (the mail waits), a
+        // final failure halts step-failed; never a second post of the same text (the module reconciles)
         const r = await d.run('social', ['post', rec.topic, rec.storyId]);
-        rec.posted = /not configured/.test(r.stdout) ? 'not-configured' : r.status === 0;
+        if (/not configured/.test(r.stdout)) rec.posted = 'not-configured';
+        else if (r.status === 0) rec.posted = true;
+        else if (/retryable/.test(r.stdout)) {
+          actions.push(`${tag}: post retryable, again next tick`);
+          writeLaunch(root, rec);
+          continue;
+        } else {
+          rec.posted = false;
+          haltLaunch(root, rec, {
+            kind: 'step-failed',
+            stage: 'launch',
+            why: `the X post of ${tag} failed: ${(r.stdout || r.stderr).trim().split('\n').at(-1)}`,
+            unblock: {
+              kind: 'fix',
+              text: `fix the keys or the account, then npm run social -- post ${rec.topic} ${rec.storyId}`,
+            },
+            at: new Date(now()).toISOString(),
+            runId: 'tick',
+            board: { stage: 'launch', next: 'the X post' },
+          });
+        }
         actions.push(`${tag}: post ${rec.posted}`);
       } else rec.posted = 'not-configured';
       writeLaunch(root, rec);
