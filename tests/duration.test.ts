@@ -9,7 +9,7 @@ import { buildPackage } from '../src/modules/script';
 import { discover } from '../src/modules/stories';
 import { videoChecks } from '../src/modules/video/qa';
 import type { Timeline } from '../src/modules/video/types';
-import { articleIssues } from '../src/modules/article/validation';
+import { articleIssues, validateArticle } from '../src/modules/article/validation';
 import { article } from '../src/modules/article/tests/article-helpers';
 import { discoverShorts, buildShortPackage } from '../src/modules/shorts';
 import { asTopic, corpus, fact, good, hashOf, pkg, plan, read, review, scene, sentence, t } from './script-helpers';
@@ -196,6 +196,23 @@ describe('downstream artifacts by band', () => {
     expect(cats(table, 15)).toContain('proportion');
     expect(cats(one, 60)).toContain('proportion'); // one paragraph is too few for short
     expect(cats(base, 60)).not.toContain('proportion');
+  });
+  it("an article is proportioned by its paragraphs, never by the script's words budget or target copy", () => {
+    // the first real fixture run blocked its article four times on "copy targetDurationSeconds from the package"
+    const base = article();
+    const one = { ...base, sections: [base.sections[1]] };
+    const v = validateArticle(one, corpus(), read, {
+      pkg: withTarget(pkg(), 15),
+      hashDoc: hashOf(pkg()),
+      review: null,
+      script: null,
+      figures: new Set(),
+    });
+    const cats = v.issues.map((i) => i.category);
+    expect(cats).not.toContain('duration');
+    expect(cats).not.toContain('words');
+    expect(cats).not.toContain('sections');
+    expect(cats).not.toContain('sentences');
   });
   it("the review's target rides on the story and the package", () => {
     const r = {

@@ -151,6 +151,7 @@ export interface ValidateOptions {
   pkg?: EvidencePackage | null;
   hashDoc?: DocHasher;
   pacing?: boolean; // false for prose that is read, not spoken (articles)
+  duration?: boolean; // false for an article: its proportion is its own (paragraphs), never the script's budget
 }
 
 const issue = (
@@ -163,7 +164,13 @@ const issue = (
 type ScriptSentence = ReturnType<typeof sentences>[number];
 
 /** Script-level checks: structure, the package the script was written from, and the cited documents' bytes. */
-function scriptIssues(script: Script, all: ScriptSentence[], pkg: EvidencePackage | null, hashDoc: DocHasher): Issue[] {
+function scriptIssues(
+  script: Script,
+  all: ScriptSentence[],
+  pkg: EvidencePackage | null,
+  hashDoc: DocHasher,
+  duration = true,
+): Issue[] {
   const top: Issue[] = [];
   const seen = new Set<string>();
   for (const s of all) {
@@ -173,7 +180,8 @@ function scriptIssues(script: Script, all: ScriptSentence[], pkg: EvidencePackag
   const names = sectionsFor(pkg);
   const target = script.targetDurationSeconds ?? pkg?.targetDurationSeconds;
   const plain = !pkg?.questions && !pkg?.short;
-  const banded = plain && bandOf(target) !== null && bandOf(target) !== 'standard' && bandOf(target) !== 'long';
+  const banded =
+    duration && plain && bandOf(target) !== null && bandOf(target) !== 'standard' && bandOf(target) !== 'long';
   // The band's section rules replace the five-section default for the plain form (duration.ts); a chain and a Short
   // keep their own vocabulary.
   for (const name of names)
@@ -197,7 +205,11 @@ function scriptIssues(script: Script, all: ScriptSentence[], pkg: EvidencePackag
         ),
       );
   });
-  if (pkg?.targetDurationSeconds !== undefined && script.targetDurationSeconds !== pkg.targetDurationSeconds)
+  if (
+    duration &&
+    pkg?.targetDurationSeconds !== undefined &&
+    script.targetDurationSeconds !== pkg.targetDurationSeconds
+  )
     top.push(
       issue(
         '-',
@@ -206,17 +218,18 @@ function scriptIssues(script: Script, all: ScriptSentence[], pkg: EvidencePackag
         `the package targets ${pkg.targetDurationSeconds} s; the script says ${script.targetDurationSeconds ?? 'nothing'}: copy targetDurationSeconds from the package`,
       ),
     );
-  for (const x of scriptProportion(
-    {
-      sections: script.sections.map((x) => x.name),
-      sentences: all.length,
-      spokenWords: all.reduce((n, x) => n + spokenWords(x.text), 0),
-      plain,
-    },
-    target,
-    script.generation?.wordsPerMinute || WPM_DEFAULT,
-  ))
-    top.push(issue('-', x.category, 'blocking', x.explanation));
+  if (duration)
+    for (const x of scriptProportion(
+      {
+        sections: script.sections.map((x) => x.name),
+        sentences: all.length,
+        spokenWords: all.reduce((n, x) => n + spokenWords(x.text), 0),
+        plain,
+      },
+      target,
+      script.generation?.wordsPerMinute || WPM_DEFAULT,
+    ))
+      top.push(issue('-', x.category, 'blocking', x.explanation));
   if (pkg && script.generation?.evidencePackage !== pkg.fingerprint)
     top.push(
       issue(
@@ -648,6 +661,7 @@ export function validateScript(
     pkg = null,
     hashDoc = docHasher(),
     pacing: paceIt = true,
+    duration = true,
   }: ValidateOptions = {},
 ): ScriptValidation {
   const wpm = script.generation?.wordsPerMinute || WPM_DEFAULT;
@@ -660,7 +674,7 @@ export function validateScript(
     pkg,
     ids: new Set(all.map((s) => s.id)),
   };
-  const top = scriptIssues(script, all, pkg, hashDoc);
+  const top = scriptIssues(script, all, pkg, hashDoc, duration);
   const merge = mergeReview(script, all, review, pkg, previous);
   top.push(...merge.issues);
   const band = bandOf(script.targetDurationSeconds ?? pkg?.targetDurationSeconds);

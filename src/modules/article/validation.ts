@@ -183,7 +183,7 @@ export function validateArticle(
   opts: ValidateOptions & { pkg: EvidencePackage; script: Script | null; figures: Set<string> },
 ): ScriptValidation {
   const script = articleAsScript(a);
-  const v = validateScript(script, t, read, { ...opts, pacing: false });
+  const v = validateScript(script, t, read, { ...opts, pacing: false, duration: false });
   const own = articleIssues(a, opts.pkg, read, opts);
   // Dispositions as validateScript applies them: a current review retires a warning at the sentence's fingerprint.
   const review = opts.review ?? null;
