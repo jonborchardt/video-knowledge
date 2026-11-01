@@ -117,6 +117,7 @@ describe('uploadProblem', () => {
     expect(uploadProblem(ok)).toBeNull();
     expect(uploadProblem({ ...ok, title: 'x'.repeat(101) })).toMatch(/title.*101.*100/);
     expect(uploadProblem({ ...ok, title: 'a <b>' })).toMatch(/title/);
+    expect(uploadProblem({ ...ok, description: 'see <name>' })).toMatch(/description.*< or >/); // the fixture's first real upload
     expect(uploadProblem({ ...ok, description: 'é'.repeat(2501) })).toMatch(/description.*5002.*5000/);
     expect(uploadProblem({ ...ok, tags: Array.from({ length: 51 }, () => 'tag tag!') })).toMatch(/tags.*560.*500/);
   });

@@ -468,7 +468,7 @@ describe('build report clearance and the board', () => {
       publishable: false,
       why: [
         expect.stringMatching(
-          /^narration is draft only: test voice; .*npm run video -- final demo decision:mlm-and-seminars --approved-by <name>/,
+          /^narration is draft only: test voice; .*npm run video -- final demo decision:mlm-and-seminars --approved-by "your name"/,
         ),
       ],
     });

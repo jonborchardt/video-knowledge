@@ -474,9 +474,15 @@ export function outputState(
     `npm run publish -- ${v} ${ctx.topic} ${ctx.story}${ctx.output === 'youtube' ? '' : ` --output ${ctx.output}`}${flags}`;
   const ev = output.events;
   const last = ev.findLast((e) => e.type !== 'verified') ?? null;
-  const failed = last?.type === 'failed' ? last : null;
   const uploads = ev.filter((e) => e.type === 'uploaded');
   const upload = uploads.at(-1) ?? null;
+  // a failure overlays the state while what it failed on stands: a re-packaged build or moved metadata is a new attempt
+  const failed =
+    last?.type === 'failed' &&
+    (!last.metadata || last.metadata === metadataSha) &&
+    (!last.build || last.build === (build?.sha ?? upload?.build))
+      ? last
+      : null;
   const id = upload?.id ?? null;
   // an approval on a draft build (a draft acceptance) counts for nothing here: only a release build is approved
   const approved = !!upload && upload.buildStatus !== 'draft' && approvalHolds(ev, upload.build!, ctx.title);
@@ -1152,6 +1158,8 @@ export function recordFailed(
   const e: PublishEvent = { at: stamp(a), type: 'failed', by: a.by, step: a.step, error: a.error };
   if (a.retryable !== undefined) e.retryable = a.retryable;
   if (o.state.id) e.id = o.state.id;
+  if (o.build) e.build = o.build.sha; // what it failed on: a new build or new metadata is a new attempt
+  if (o.metadata) e.metadata = o.metadata.sha;
   return write(o, e);
 }
 

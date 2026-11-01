@@ -66,6 +66,7 @@ export function uploadProblem(m: Pick<UploadMetadata, 'title' | 'description' | 
   if (m.title.length > LIMITS.title)
     return `title is ${m.title.length} characters, YouTube allows ${LIMITS.title}: set metadata.title in publish.json`;
   if (/[<>]/.test(m.title)) return 'title contains < or >, which YouTube refuses';
+  if (/[<>]/.test(m.description)) return 'description contains < or >, which YouTube refuses (invalidDescription)';
   const bytes = Buffer.byteLength(m.description, 'utf8');
   if (bytes > LIMITS.description)
     return `description is ${bytes} bytes, YouTube allows ${LIMITS.description}: npm run video -- package writes one that fits`;

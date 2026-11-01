@@ -329,6 +329,20 @@ describe('the structured step', () => {
       expect([s.step.verb, s.step.actor, s.step.retryable ?? false]).toEqual(EXPECTED[name]);
       expect(renderStep(s.step)).toBe(s.next);
     });
+  it('a failure overlays the step only while the build and metadata it failed on stand', () => {
+    const failed = ev('failed', {
+      step: 'upload',
+      error: 'invalid description',
+      retryable: false,
+      metadata: 'm1',
+      build: 'r1',
+    });
+    expect(outputState(out(failed), release, 'm1', ctx).step.failed?.error).toBe('invalid description');
+    expect(outputState(out(failed), release, 'm2', ctx).step.failed).toBeUndefined(); // re-packaged: a new attempt
+    expect(outputState(out(failed), { sha: 'r2', status: 'release' }, 'm1', ctx).step.failed).toBeUndefined();
+    const old = ev('failed', { step: 'upload', error: 'boom', retryable: true }); // an older ledger: no shas recorded
+    expect(outputState(out(old), release, 'm2', ctx).step.failed?.error).toBe('boom');
+  });
   it('a failure rides on the step with its retryability', () => {
     const s = states['failed retryable']();
     expect(s.step.failed).toEqual({ step: 'verify', error: 'quota', retryable: true });
