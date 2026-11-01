@@ -21,7 +21,6 @@ import { guard as realGuard, snapshot as realSnapshot, type TreeSnapshot } from 
 import type { Halt } from './journal';
 import { acquire, release } from './lock';
 import { automationDir, readOutbox, sendTracked } from './notify';
-import { alive } from './proc';
 import { renderBatch } from './requests';
 import { grantFor } from './roles';
 import { addSpend, isoWeek, type RunResult, weekSpend } from './runner';
@@ -33,7 +32,6 @@ import {
   type DiscoveryRecord,
   discoveryDir,
   discoveryHaltPath,
-  discoveryHalts,
   discoveryRecords,
   readDiscovery,
   writeDiscovery,

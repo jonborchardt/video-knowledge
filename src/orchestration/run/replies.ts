@@ -14,7 +14,14 @@ export interface Decision {
   at?: string; // ISO, schedule
   notes?: ReplyNote[];
   paid?: 'all' | number[];
-  topics?: { approve: string[] | 'all'; reject: { slug: string; note: string }[] | { all: string } };
+  topics?: {
+    approve: string[] | 'all';
+    reject: { slug: string; note: string }[] | { all: string };
+    /** APPROVE or REJECT lines that did not parse (a slug with spaces, a REJECT without its note): reported back. */
+    unknown?: string[];
+    /** Slugs named in APPROVE lines beside an APPROVE ALL (so one outside the batch is still reported). */
+    named?: string[];
+  };
   shadowMarks?: { n: number; mark: 'agree' | 'disagree' }[];
 }
 
@@ -270,6 +277,7 @@ function marksOf(lines: string[]): { n: number; mark: 'agree' | 'disagree' }[] |
 function topicsOf(lines: string[]): Decision['topics'] | null {
   const approve: string[] = [];
   const reject: { slug: string; note: string }[] = [];
+  const unknown: string[] = [];
   let all: 'approve' | { all: string } | null = null;
   for (const l of lines) {
     let m = /^approve all\b/i.exec(l);
@@ -289,9 +297,11 @@ function topicsOf(lines: string[]): Decision['topics'] | null {
     }
     m = /^reject\s+([a-z0-9-]+)\s*:\s*(.+)$/i.exec(l);
     if (m) reject.push({ slug: m[1].toLowerCase(), note: m[2].trim() });
+    else if (/^(approve|reject)\b/i.test(l)) unknown.push(l);
   }
-  if (all === 'approve') return { approve: 'all', reject };
-  if (all) return { approve, reject: all };
+  const extra = unknown.length ? { unknown } : {};
+  if (all === 'approve') return { approve: 'all', reject, ...extra, ...(approve.length ? { named: approve } : {}) };
+  if (all) return { approve, reject: all, ...extra };
   if (!approve.length && !reject.length) return null;
-  return { approve, reject };
+  return { approve, reject, ...extra };
 }

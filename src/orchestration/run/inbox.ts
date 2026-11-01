@@ -16,6 +16,7 @@ import { type OutboxEntry, automationDir, readOutbox, sendTracked } from './noti
 import { DRAFT_ACCEPTED_FILE, readShadow, recordShadowPerson } from './release';
 import { type Decision, batchIdIn, correctionIdIn, ownText, parseReply, requestIdIn } from './replies';
 import { draftRequests } from './requests';
+import { loadProposals } from '../../modules/topic-discovery';
 import { updateSchedule } from './schedule';
 
 export const INBOX_FILE = 'inbox.json';
@@ -265,8 +266,76 @@ export async function pollInbox(
       moved(topic, storyId);
       continue;
     }
-    // topic batches (phase 4) and corrections (phase 6) answer by their own ids
-    const other = batchIdIn(m.subject) ?? batchIdIn(own) ?? correctionIdIn(m.subject) ?? correctionIdIn(own);
+    if (thread.kind === 'batch') {
+      // a proposal batch (spec 5.1): APPROVE and REJECT lines through `topics approve|reject` by the approver, the
+      // batch id required in the subject or the own text; a slug outside the batch is reported back, never applied;
+      // APPROVE ALL and REJECT ALL expand over the batch's slugs only; the verbs are idempotent
+      const id = batchIdIn(m.subject) ?? batchIdIn(own);
+      if (!id || id !== thread.request) {
+        ignore(`the batch id in the reply (${id ?? 'none'}) is not the thread's (${thread.request})`);
+        continue;
+      }
+      const parsed = parseReply(own, a, new Date(now()), 'topics');
+      if ('problem' in parsed) {
+        await reply(`I could not read your reply to the proposal batch ${id}: ${parsed.problem}.\n\n${parsed.hint}`);
+        report.clarified.push(id);
+        done('clarified', id);
+        continue;
+      }
+      const t = parsed.decision.topics!;
+      const inBatch = loadProposals(root)
+        .filter((x) => x.proposal.batch?.id === id)
+        .map((x) => x.proposal.slug);
+      const approve = t.approve === 'all' ? [...new Set([...inBatch, ...(t.named ?? [])])] : t.approve;
+      const reject = Array.isArray(t.reject)
+        ? t.reject
+        : inBatch
+            .filter((s) => !approve.includes(s))
+            .map((slug) => ({ slug, note: (t.reject as { all: string }).all }));
+      const applied = { approve: [] as string[], reject: [] as string[] };
+      const skipped: string[] = [];
+      const refused: string[] = [];
+      const via = `email:${m.messageId}`;
+      for (const slug of approve) {
+        if (!inBatch.includes(slug)) {
+          skipped.push(`${slug}: not in batch ${id}`);
+          continue;
+        }
+        const r = await deps.run('topics', ['approve', slug, '--by', by, '--via', via]);
+        if (r.status === 0) applied.approve.push(slug);
+        else refused.push(`${slug}: ${(r.stderr || r.stdout).trim().replace(/^refused: /, '')}`);
+      }
+      for (const { slug, note } of reject) {
+        if (!inBatch.includes(slug)) {
+          skipped.push(`${slug}: not in batch ${id}`);
+          continue;
+        }
+        const r = await deps.run('topics', ['reject', slug, '--by', by, '--note', note, '--via', via]);
+        if (r.status === 0) applied.reject.push(slug);
+        else refused.push(`${slug}: ${(r.stderr || r.stdout).trim().replace(/^refused: /, '')}`);
+      }
+      if (skipped.length || refused.length || t.unknown?.length)
+        await reply(
+          [
+            `Your reply to the proposal batch ${id} was applied in part.`,
+            `Applied: ${[applied.approve.length ? `APPROVE ${applied.approve.join(', ')}` : '', applied.reject.length ? `REJECT ${applied.reject.join(', ')}` : ''].filter(Boolean).join('; ') || 'nothing'}`,
+            ...(skipped.length ? ['Skipped (not in this batch):', ...skipped.map((x) => `  - ${x}`)] : []),
+            ...(refused.length ? ['Refused:', ...refused.map((x) => `  - ${x}`)] : []),
+            ...(t.unknown?.length ? ['Lines I could not read:', ...t.unknown.map((x) => `  - ${x}`)] : []),
+            '',
+            'Reply with lines like: APPROVE <slug>; REJECT <slug>: <why>; APPROVE ALL; REJECT ALL: <why>.',
+          ].join('\n'),
+        );
+      const summary = `approve ${applied.approve.join(', ') || 'none'}; reject ${applied.reject.join(', ') || 'none'}`;
+      report.applied.push(`${id}: ${summary}`);
+      done(
+        `applied:topics approve=${applied.approve.join(',')} reject=${applied.reject.join(',')} skipped=${skipped.length} refused=${refused.length}`,
+        id,
+      );
+      continue;
+    }
+    // corrections (phase 6) answer by their own ids
+    const other = correctionIdIn(m.subject) ?? correctionIdIn(own);
     ignore(other ? `${other}: not handled in this phase` : 'not a request reply');
   }
   // a message left behind is fetched again next poll (the handled ones after it are skipped by their ids)
