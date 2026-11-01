@@ -1,5 +1,6 @@
 // Public API of the publishing module: the only file other capabilities (the board, the site, video) may import.
 export {
+  type ApprovalRequest,
   type Build,
   type Ledger,
   type OutputState,
@@ -16,7 +17,9 @@ export {
   mainOutput,
   noteLine,
   openOutput,
+  openRequest,
   outputStates,
+  requestOf,
   parentUrlOf,
   publishPath,
   renderStep,

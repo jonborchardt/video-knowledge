@@ -16,6 +16,12 @@
 //   unpublished | retracted <topic> <story-id> --note <text> [--by <name>]
 //   add <topic> <story-id> <output-id> --kind <kind> [--from <output>] [--source <file>]
 //                                                             a new output (youtube-video, youtube-short, blog-post, web-page, post, ...)
+//   request <topic> <story-id> --channel email [--by <name>] [--renew] [--dry-run]
+//                                                             ask a person to approve the release: writes approval-requested binding
+//                                                             video/review/release-manifest.json (every output uploaded private, pushed,
+//                                                             verified; the id signed with APPROVAL_SECRET from .env); prints the manifest and
+//                                                             the request; --renew once after it expired; --dry-run checks and prints only
+//   message-sent <topic> <story-id> --request <id> --message-id <id>   the request mail went out with that Message-ID
 // Through the YouTube Data API (YOUTUBE_CLIENT_ID, YOUTUBE_CLIENT_SECRET and YOUTUBE_REFRESH_TOKEN or .youtube-token.json; README, Publishing):
 //   auth <topic> <story-id>                                   one-time consent in the browser; writes .youtube-token.json (gitignored)
 //   upload <topic> <story-id> [--output <id>] [--by <name>]   upload the packaged build (or the output's source) PRIVATELY with its thumbnail and
@@ -31,7 +37,10 @@
 // be hand-edited.
 import { execFileSync, spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
-import { loadDotEnv, ROOT, toJson } from '../../shared/io';
+import { join } from 'node:path';
+import { MANIFEST_FILE, REVIEW_DIR, loadDotEnv, ROOT, readJson, toJson } from '../../shared/io';
+import { secretFromEnv } from '../../shared/request';
+import type { ReleaseManifest } from '../../shared/types';
 import { loadAutomation } from '../../shared/automation';
 import { Refusal } from '../../shared/refusal';
 import {
@@ -47,7 +56,10 @@ import {
   parentUrlOf,
   recordApproved,
   recordChangesRequested,
+  recordMessageSent,
+  recordRequested,
   openOutput,
+  videoDirOf,
   recordFailed,
   recordPublished,
   recordScheduled,
@@ -90,6 +102,9 @@ const VALUED = [
   '--build',
   '--scene',
   '--sentence',
+  '--channel',
+  '--request',
+  '--message-id',
 ];
 const positional = rest.filter((a, i) => !a.startsWith('--') && !VALUED.includes(rest[i - 1]));
 const usage = () => {
@@ -254,6 +269,34 @@ async function main() {
         source: flag('--source'),
       });
       console.log(`added ${positional[0]} (${flag('--kind')})`);
+      break;
+    case 'request': {
+      const channel = flag('--channel');
+      if (channel !== 'email') throw new Refusal('request needs --channel email (the one channel so far)');
+      const secret = secretFromEnv();
+      if (!secret)
+        throw new Refusal('APPROVAL_SECRET (at least 16 characters) in .env signs the request id; set it first');
+      const o = openOutput(topic, storyId, { output });
+      const manifest = readJson<ReleaseManifest>(join(videoDirOf(o), REVIEW_DIR, MANIFEST_FILE));
+      if (!manifest) throw new Refusal('no release manifest: npm run video -- package of a release build writes it');
+      r = recordRequested(topic, storyId, {
+        ...common(),
+        manifest,
+        secret,
+        expiresDays: loadAutomation(ROOT).approvals.expiresDays,
+        channel,
+        renew: has('--renew'),
+        dryRun: has('--dry-run'),
+      });
+      console.log(toJson(manifest).trim());
+      break;
+    }
+    case 'message-sent':
+      r = recordMessageSent(topic, storyId, {
+        ...common(),
+        request: need('--request'),
+        messageId: need('--message-id'),
+      });
       break;
     case 'auth': {
       const creds = loadCredentials(ROOT, process.env, { requireToken: false });

@@ -6,13 +6,14 @@
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve } from 'node:path';
 import type { BuildSummary } from '../../shared/build-report';
-import { lf, readJson, ROOT, sha, toJson, writeJsonAtomic } from '../../shared/io';
+import { fileSha, lf, readJson, ROOT, sha, toJson, writeJsonAtomic } from '../../shared/io';
 import { lookStale } from '../../shared/look';
 import { approverProblem } from '../../shared/approver';
 import { scriptDir, shortId, shortOf, storySlug, topicDir } from '../../shared/io';
 import { Refusal } from '../../shared/refusal';
-import type { StoriesFile } from '../../shared/types';
+import type { ReleaseManifest, StoriesFile } from '../../shared/types';
 import type { DraftPolicy } from '../../shared/automation';
+import { expired, expiryOf, requestId } from '../../shared/request';
 
 /** The one automated actor a draft decision may carry, and only under `review.draft: agent` (spec §7.3): the
  *  draft-review agent, named with its model and session so the ledger says who judged. */
@@ -32,6 +33,9 @@ export const EVENT_TYPES = [
   'failed',
   'retracted',
   'verified',
+  'approval-requested', // a release request binding the manifest's sha (Milestone 2, spec §7.2)
+  'decided', // a person's decision on a request, or its void/expiry; keyed by the request id
+  'message-sent', // the request mail's Message-ID, for the reply adapter
 ] as const;
 export type EventType = (typeof EVENT_TYPES)[number];
 export type Visibility = 'private' | 'unlisted' | 'public';
@@ -85,7 +89,19 @@ export interface PublishEvent {
   title?: string; // approved: the composed title the person approved with the build
   result?: Verdict; // verified
   checks?: LedgerCheck[]; // verified
+  request?: string; // approval-requested, decided, message-sent: the request id (rq-<12 hex>)
+  release?: string; // approval-requested: the manifest's releaseSha the request binds
+  outputs?: string[]; // approval-requested: every output of the release group, in publication order
+  expiresAt?: string; // approval-requested
+  channel?: 'email'; // approval-requested
+  renewed?: number; // approval-requested: how many renewals this request is (at most 1)
+  verdict?: DecisionVerdict; // decided
+  messageId?: string; // message-sent
+  via?: { channel: 'email' | 'review-page' | 'tick' | 'cli'; request?: string; messageId?: string; checklist?: string }; // how a person's decision arrived
+  paid?: string[]; // decided: the paid links approved (cta ids)
 }
+export type DecisionVerdict = 'ok' | 'schedule' | 'changes' | 'void' | 'expired';
+const DECISION_VERDICTS: DecisionVerdict[] = ['ok', 'schedule', 'changes', 'void', 'expired'];
 export interface OutputMetadata {
   title?: string;
   description?: string; // replaces the package's description
@@ -128,6 +144,9 @@ const REQUIRED: Record<EventType, (keyof PublishEvent)[]> = {
   failed: ['step', 'error'],
   retracted: ['note'],
   verified: ['id', 'result', 'checks'],
+  'approval-requested': ['request', 'release', 'outputs', 'expiresAt', 'channel'],
+  decided: ['request', 'verdict'],
+  'message-sent': ['request', 'messageId'],
 };
 const isRecord = (x: unknown): x is Record<string, unknown> => !!x && typeof x === 'object' && !Array.isArray(x);
 
@@ -180,6 +199,9 @@ export function ledgerProblems(x: unknown, video: string): string[] {
         if (e[k] === undefined || e[k] === '') out.push(`${where}.${k}: ${e.type} needs it`);
       if (e.result !== undefined && !VERDICTS.includes(e.result as Verdict))
         out.push(`${where}.result: ${JSON.stringify(e.result)} is not ${VERDICTS.join(', ')}`);
+      if (e.verdict !== undefined && !DECISION_VERDICTS.includes(e.verdict as DecisionVerdict))
+        out.push(`${where}.verdict: ${JSON.stringify(e.verdict)} is not ${DECISION_VERDICTS.join(', ')}`);
+      if (e.channel !== undefined && e.channel !== 'email') out.push(`${where}.channel: ${JSON.stringify(e.channel)}`);
       if (e.checks !== undefined) {
         if (!Array.isArray(e.checks)) out.push(`${where}.checks: not a list`);
         else
@@ -223,6 +245,12 @@ export function eventKey(e: PublishEvent): string | null {
       return 'retracted';
     case 'verified': // judged against the latest verification of the id, see appendEvent
       return `verified|${e.id}|${e.build}|${e.metadata}|${sha(JSON.stringify(e.checks))}`;
+    case 'approval-requested':
+      return `approval-requested|${e.request}`;
+    case 'decided':
+      return `decided|${e.request}`; // a request decides once, whatever the verdict
+    case 'message-sent':
+      return `message-sent|${e.request}|${e.messageId}`;
     case 'updated': // recordUpdated refuses an unchanged sha; A, B, A is three honest events
     case 'failed':
       return null;
@@ -791,7 +819,7 @@ function write(o: ReturnType<typeof openOutput>, e: PublishEvent, then?: (l: Led
   return { event: e, existing: false, message: `recorded ${describe(e)}` };
 }
 const describe = (e: PublishEvent) =>
-  `${e.type}${e.id ? ` ${e.id}` : ''}${e.build ? ` (build ${e.build})` : ''} at ${e.at} by ${e.by}`;
+  `${e.type}${e.id ? ` ${e.id}` : ''}${e.request ? ` ${e.request}` : ''}${e.build ? ` (build ${e.build})` : ''}${e.release ? ` (release ${e.release})` : ''} at ${e.at} by ${e.by}`;
 const stamp = (a: { now?: Date }) => (a.now ?? new Date()).toISOString();
 
 export function recordUploaded(
@@ -1124,6 +1152,204 @@ export function recordSimple(
   const e: PublishEvent = { at: stamp(a), type, by: a.by, note: a.note };
   if (o.state.id) e.id = o.state.id;
   return write(o, e);
+}
+
+// ---- the approval request (Milestone 2, spec §7.2) ---------------------------------------------------------------
+
+/** An open or past release request, as the adapter and the board read it. */
+export interface ApprovalRequest {
+  request: string;
+  release: string;
+  outputs: string[];
+  at: string;
+  expiresAt: string;
+  channel: 'email';
+  messageId?: string; // the latest request mail sent for it
+  renewed?: number;
+}
+const mainEvents = (ledger: Ledger): PublishEvent[] => ledger.outputs[mainOutput(ledger) ?? 'youtube']?.events ?? [];
+const toRequest = (e: PublishEvent, ev: PublishEvent[]): ApprovalRequest => {
+  const sent = ev.findLast((x) => x.type === 'message-sent' && x.request === e.request);
+  return {
+    request: e.request!,
+    release: e.release!,
+    outputs: e.outputs ?? [],
+    at: e.at,
+    expiresAt: e.expiresAt!,
+    channel: 'email',
+    ...(sent?.messageId && { messageId: sent.messageId }),
+    ...(e.renewed !== undefined && { renewed: e.renewed }),
+  };
+};
+export const requestDecided = (ev: PublishEvent[], request: string): boolean =>
+  ev.some((e) => e.type === 'decided' && e.request === request);
+/** The request by id, decided or not; null when unknown. */
+export function requestOf(ledger: Ledger, id: string): ApprovalRequest | null {
+  const ev = mainEvents(ledger);
+  const e = ev.find((x) => x.type === 'approval-requested' && x.request === id);
+  return e ? toRequest(e, ev) : null;
+}
+/** The latest request that is undecided and unexpired; with `releaseSha`, only when it binds that release. */
+export function openRequest(ledger: Ledger, releaseSha?: string, now: Date = new Date()): ApprovalRequest | null {
+  const ev = mainEvents(ledger);
+  const latest = ev.findLast((x) => x.type === 'approval-requested');
+  if (!latest || requestDecided(ev, latest.request!) || expired(latest.expiresAt!, now)) return null;
+  if (releaseSha && latest.release !== releaseSha) return null;
+  return toRequest(latest, ev);
+}
+
+/** What `requestProblem` needs besides the ledger and the manifest: the files as they are now. */
+export interface RequestContext {
+  states: Record<string, OutputState>;
+  metadataShaOf: (id: string) => string | null; // the composed upload metadata sha now
+  articleSha: string | null; // the sha of article-release.json now, null without an article
+  packaged: string[]; // every output with a current package: the main one and each packaged Short
+}
+/** Why the release group may not be asked for approval, or null: the manifest is current (every packaged output in
+ *  it, every metadata sha and the article's release sha as now), every output uploaded private with the manifest's
+ *  build, its metadata sent, verified since, the main build a release build, none live or scheduled. */
+export function requestProblem(
+  ledger: Ledger,
+  manifest: ReleaseManifest,
+  now: Date,
+  ctx: RequestContext,
+): string | null {
+  void now;
+  const main = mainOutput(ledger) ?? 'youtube';
+  const stale = 'the release manifest is stale: npm run packaging -- manifest <topic> <story-id> rewrites it';
+  if (!manifest.outputs[main]) return `the manifest has no ${main} output; ${stale}`;
+  for (const id of ctx.packaged)
+    if (!manifest.outputs[id]) return `${id} is packaged but not in the manifest; ${stale}`;
+  for (const [id, mo] of Object.entries(manifest.outputs)) {
+    const o = ledger.outputs[id];
+    if (!o) return `${id} is in the manifest but not in the ledger; ${stale}`;
+    if (ctx.metadataShaOf(id) !== mo.metadataSha) return `${id}: its metadata moved since the manifest; ${stale}`;
+    const up = o.events.findLast((e) => e.type === 'uploaded');
+    if (!up || up.build !== mo.mp4Sha) return `${id} (build ${mo.mp4Sha}) is not uploaded: npm run publish -- upload`;
+    if (up.visibility !== 'private') return `${id} was uploaded ${up.visibility}, not private`;
+    if (up.buildStatus === 'draft')
+      return `${id} is a draft build (edge voice); npm run video -- final makes the release build`;
+    if (lastSent(o)?.metadata !== mo.metadataSha)
+      return `${id}: the metadata on YouTube is behind: npm run publish -- push`;
+    const v = verificationSince(o);
+    if (v?.result !== 'passed')
+      return `${id} is not verified since its last send (${v?.result ?? 'no verification'}): npm run publish -- verify`;
+    const st = ctx.states[id];
+    if (!st) return `${id} has no state`;
+    if (st.live) return `${id} is live; a release is approved before it goes public`;
+    if (st.status === 'scheduled') return `${id} is scheduled already`;
+    if (st.status !== 'uploaded' && st.status !== 'approved') return `${id} is ${st.status}: ${st.next}`;
+  }
+  if (manifest.article && manifest.article.releaseSha !== ctx.articleSha)
+    return `the article was re-locked after the manifest (${manifest.article.releaseSha} is now ${ctx.articleSha ?? 'none'}); ${stale}`;
+  if (!manifest.article && ctx.articleSha) return `the manifest predates the article; ${stale}`;
+  return null;
+}
+
+/** The context from the files, for one story's release group. */
+export function requestContext(
+  topic: string,
+  storyId: string,
+  root = ROOT,
+): RequestContext & { main: ReturnType<typeof openOutput> } {
+  const main = openOutput(topic, storyId, { root });
+  const ids = Object.keys(main.ledger.outputs).filter(
+    (id) => id === main.id || (id.startsWith('short:') && !!main.ledger.outputs[id].source),
+  );
+  const opened = new Map(ids.map((id) => [id, openOutput(topic, storyId, { output: id, root })]));
+  const packaged = ids.filter((id) => !!opened.get(id)!.build);
+  const articleFile = join(main.dir, 'article-release.json');
+  return {
+    main,
+    states: Object.fromEntries([...opened].map(([id, o]) => [id, o.state])),
+    metadataShaOf: (id) => opened.get(id)?.metadata?.sha ?? null,
+    articleSha: existsSync(articleFile) ? fileSha(articleFile) : null,
+    packaged,
+  };
+}
+
+/** Writes `approval-requested` for the manifest's release: idempotent on an open request for the same release; a
+ *  different release voids the open one (`decided`, `void`); an expired one is renewed once with `renew` (`decided`,
+ *  `expired`, then the renewal), after which a person decides. `dryRun` checks and reports without writing. */
+export function recordRequested(
+  topic: string,
+  storyId: string,
+  a: VerbArgs & {
+    manifest: ReleaseManifest;
+    secret: string;
+    expiresDays: number;
+    channel: 'email';
+    renew?: boolean;
+    dryRun?: boolean;
+  },
+): VerbResult {
+  const now = a.now ?? new Date();
+  const ctx = requestContext(topic, storyId, a.root);
+  const o = ctx.main;
+  const problem = requestProblem(o.ledger, a.manifest, now, ctx);
+  if (problem) throw new Refusal(problem);
+  const release = a.manifest.releaseSha;
+  const ev = o.out.events;
+  const latest = ev.findLast((e) => e.type === 'approval-requested') ?? null;
+  let ledger = o.ledger;
+  let renewed: number | undefined;
+  const at = stamp(a);
+  if (latest && !requestDecided(ev, latest.request!)) {
+    if (latest.release === release) {
+      if (!expired(latest.expiresAt!, now))
+        return { event: latest, existing: true, message: `already recorded: ${describe(latest)} (open)` };
+      if (!a.renew)
+        throw new Refusal(
+          `request ${latest.request} expired at ${latest.expiresAt}; npm run publish -- request ${topic} ${storyId} --channel email --renew sends one more (once), then a person decides`,
+        );
+      if ((latest.renewed ?? 0) >= 1)
+        throw new Refusal(`request ${latest.request} was renewed once already and expired again; a person decides`);
+      renewed = (latest.renewed ?? 0) + 1;
+      ledger = appendEvent(ledger, o.id, {
+        at,
+        type: 'decided',
+        by: a.by,
+        request: latest.request,
+        verdict: 'expired',
+      }).ledger;
+    } else
+      ledger = appendEvent(ledger, o.id, {
+        at,
+        type: 'decided',
+        by: a.by,
+        request: latest.request,
+        verdict: 'void',
+        note: `the release moved from ${latest.release} to ${release}`,
+      }).ledger;
+  }
+  const e: PublishEvent = {
+    at,
+    type: 'approval-requested',
+    by: a.by,
+    request: requestId('rq', a.secret, release, at),
+    release,
+    outputs: a.manifest.sequence,
+    expiresAt: expiryOf(at, a.expiresDays),
+    channel: a.channel,
+    ...(renewed !== undefined && { renewed }),
+  };
+  if (a.dryRun) return { event: e, existing: false, message: `would record ${describe(e)} (dry run)` };
+  const r = appendEvent(ledger, o.id, e);
+  saveLedger(o.path, r.ledger);
+  return { event: e, existing: false, message: `recorded ${describe(e)}` };
+}
+
+/** The request mail's Message-ID against its request (the reply adapter matches replies by it). */
+export function recordMessageSent(
+  topic: string,
+  storyId: string,
+  a: VerbArgs & { request: string; messageId: string },
+): VerbResult {
+  const o = openOutput(topic, storyId, a);
+  if (!o.out.events.some((e) => e.type === 'approval-requested' && e.request === a.request))
+    throw new Refusal(`no request ${a.request} on ${o.id}`);
+  if (!a.messageId) throw new Refusal('message-sent needs --message-id');
+  return write(o, { at: stamp(a), type: 'message-sent', by: a.by, request: a.request, messageId: a.messageId });
 }
 
 /** Records a person's thumbnail as the output's: repo-relative path and sha (the file itself is gitignored). */

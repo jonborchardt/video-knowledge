@@ -37,11 +37,12 @@ export function cliArgv(name: string, args: string[]): [string, string[]] {
 export function runCli(
   name: string,
   args: string[],
-  opts: Pick<SpawnSyncOptions, 'cwd' | 'stdio'> = {},
+  opts: Pick<SpawnSyncOptions, 'cwd' | 'stdio' | 'env'> = {},
 ): SpawnSyncReturns<string> {
   const [exe, argv] = cliArgv(name, args);
   return spawnSync(exe, argv, {
     cwd: opts.cwd ?? ROOT,
+    ...(opts.env && { env: opts.env }),
     stdio: opts.stdio ?? ['ignore', 'pipe', 'pipe'],
     encoding: 'utf8',
     windowsHide: true,
