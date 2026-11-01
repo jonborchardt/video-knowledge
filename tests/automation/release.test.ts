@@ -7,12 +7,12 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { loadAutomation } from '../../src/shared/automation';
-import { MANIFEST_FILE, REVIEW_DIR, ROOT, readJson, sha, toJson } from '../../src/shared/io';
+import { MANIFEST_FILE, REVIEW_DIR, ROOT, readJson, sha, shortId, toJson } from '../../src/shared/io';
 import { discoverShorts, loadShortParent, shortsPath } from '../../src/modules/shorts';
 import { emptyFakeState, readFakeState, writeFakeState } from '../../src/modules/publishing/fake-youtube';
 import { addOutputTo, loadLedger, openOutput, recordChangesRequested } from '../../src/modules/publishing/publish';
 import { runCli } from '../../src/shared/cli';
-import { readJournal, runDir } from '../../src/orchestration/run/journal';
+import { type Halt, clearHalt, readJournal, runDir, writeHalt } from '../../src/orchestration/run/journal';
 import {
   readShadow,
   releasePending,
@@ -186,6 +186,97 @@ describe('the release loop over the fake YouTube', () => {
     expect(r.halt?.why).toMatch(/still fails after a push: tags/);
     expect(s.events().filter((e) => e.type === 'updated')).toHaveLength(1); // one push, not thirty
     expect(s.calls().filter((c) => c.method === 'updateVideo')).toHaveLength(1);
+  }, 600_000);
+
+  it("a Short produced in this pass clears its earlier halt: the parent goes on to the Short's draft (the fixture's stale halt)", async () => {
+    const s = staged({ shorts: 0 });
+    // shorts.json names one ready candidate whose folder holds an earlier run's halt and no package yet
+    writeFileSync(
+      shortsPath(s.f.topic, s.f.story, s.f.root),
+      toJson({
+        topic: s.f.topic,
+        story: s.f.story,
+        parentFingerprints: { script: '', validation: '', storyboard: '', package: '', release: null },
+        rejected: [],
+        candidates: [
+          {
+            key: 's02',
+            scene: 'sc2',
+            section: 'answer',
+            sentences: ['s02'],
+            claims: [],
+            cites: [],
+            figures: [],
+            chart: null,
+            qualifications: [],
+            reviewed: true,
+            slug: 'one',
+            format: 'ONE FIGURE FROM THE RECORD',
+            hook: 'One figure.',
+            carries: [],
+            readiness: 'ready',
+            blocking: [],
+          },
+        ],
+      }),
+    );
+    const shortDir = join(s.f.dir, 'shorts', 'one');
+    const stale: Halt = {
+      kind: 'no-progress',
+      stage: 'scored',
+      why: 'the board still says package',
+      unblock: { kind: 'fix', text: 'read the run' },
+      at: 'a',
+      runId: 'r',
+      board: { stage: 'scored', next: '' },
+    };
+    writeHalt(runDir(s.f.topic, shortId(s.f.story, 'one'), s.f.root), stale);
+    const ran: string[] = [];
+    const r = await s.run({
+      // the real discover would rewrite shorts.json from the synthetic script (no candidates): the step stands in
+      exec: async (a, step, ctx) =>
+        /shorts -- discover/.test(step.text)
+          ? { kind: 'run', ok: true, exit: 0, ms: 1, costUsd: 0, sessionId: null, error: null, log: '' }
+          : execStep(a, step, ctx),
+      runShort: async (sid) => {
+        ran.push(sid);
+        // the nested run packages the Short (a draft) and clears its halt, as runStory's finish does
+        mkdirSync(join(shortDir, 'video', REVIEW_DIR), { recursive: true });
+        writeFileSync(
+          join(shortDir, 'video', REVIEW_DIR, 'review.json'),
+          toJson({
+            generatedAt: 'd',
+            status: 'private review build',
+            buildReport: 'br',
+            mp4: 'short-one.mp4',
+            mp4Sha: 'x',
+            thumbnailSha: null,
+            captionsSha: null,
+            seconds: 7.5,
+            title: 'Short one',
+            chapters: [],
+            short: { parent: s.f.story, slug: 'one', format: 'ONE FIGURE FROM THE RECORD', fullVideo: null },
+          }),
+        );
+        writeFileSync(join(shortDir, 'video', REVIEW_DIR, 'description.txt'), 'Short one\n');
+        const bytes = Buffer.alloc(300, 2);
+        writeFileSync(join(shortDir, 'video', REVIEW_DIR, 'short-one.mp4'), bytes);
+        const rp = join(shortDir, 'video', REVIEW_DIR, 'review.json');
+        writeFileSync(rp, toJson({ ...readJson<object>(rp)!, mp4Sha: sha(bytes) }));
+        addOutputTo(s.f.topic, s.f.story, 'short:one', 'youtube-short', {
+          derivedFrom: 'youtube',
+          source: relative(s.f.root, shortDir).replaceAll('\\', '/'),
+          root: s.f.root,
+        });
+        clearHalt(runDir(s.f.topic, sid, s.f.root));
+        return { outcome: 'done', stage: 'packaged', halt: null, iterations: 1, costUsd: 0 };
+      },
+    });
+    expect(ran).toEqual([shortId(s.f.story, 'one')]);
+    expect(r.halt?.why).not.toMatch(/no-progress/);
+    expect(r.halt?.kind).toBe('awaiting-person');
+    expect(r.halt?.why).toMatch(/draft build .* of short:one is uploaded for review/);
+    expect(s.events('short:one').filter((e) => e.type === 'uploaded' && e.buildStatus === 'draft')).toHaveLength(1);
   }, 600_000);
 
   it("a Short's retryable upload failure halts only that Short; the video is not uploaded again", async () => {

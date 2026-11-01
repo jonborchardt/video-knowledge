@@ -14,6 +14,7 @@ import {
   ROOT,
   scriptDir,
   sha,
+  shortOf,
   toJson,
   topicDir,
   writeJsonAtomic,
@@ -238,6 +239,17 @@ export function reviewTitle(title: string, release: boolean): string {
   return `${(at > TITLE_MAX / 2 ? cut.slice(0, at) : cut).trimEnd()}…`;
 }
 
+/** A fixture story's run id: its own run/fresh.json, or its parent's for a Short (a nested run of a fresh run), else
+ *  `manual`; null for any other topic. */
+export function fixtureRunOf(topic: string, storyId: string, root = ROOT): string | null {
+  if (!isFixtureTopic(topic)) return null;
+  const own = readJson<FreshRun>(join(scriptDir(topic, storyId, root), FRESH_FILE))?.runId;
+  if (own) return own;
+  const short = shortOf(storyId);
+  const parent = short ? readJson<FreshRun>(join(scriptDir(topic, short.parent, root), FRESH_FILE))?.runId : null;
+  return parent ?? 'manual';
+}
+
 /** The package's data (review.json), pure: what the files below are rendered from. */
 export function reviewData(
   seg: Segment,
@@ -264,9 +276,7 @@ export function reviewData(
   ];
   const release = report.clearance.publishable;
   // A fixture story's title carries its run id so no fixture upload can pass for ordinary content (spec §5.8).
-  const fixtureRun = isFixtureTopic(tl.topic)
-    ? (readJson<FreshRun>(join(scriptDir(tl.topic, seg.script.story), FRESH_FILE))?.runId ?? 'manual')
-    : null;
+  const fixtureRun = fixtureRunOf(tl.topic, seg.script.story);
   const title = fixtureRun ? `[fixture ${fixtureRun}] ${tl.title}` : tl.title;
   return {
     generatedAt: made.generatedAt,

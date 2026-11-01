@@ -1,4 +1,7 @@
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { scriptDir } from '../../../shared/io';
 import { describe, expect, it } from 'vitest';
 import type { ShortBlock } from '../../../shared/types';
 import { site } from '../../../config/site';
@@ -19,6 +22,7 @@ import {
   renderReadme,
   reviewData,
   reviewInputProblem,
+  fixtureRunOf,
   reviewMp4Name,
   reviewTitle,
   thumbnailScene,
@@ -141,6 +145,26 @@ describe('review package chapters', () => {
     expect(renderChecklist(rel, t)).toContain('release build');
     expect(reviewMp4Name(join('t', 'scripts', 'x', 'video'), true)).toBe('x.mp4');
     expect(thumbnailScene(t)).toBeNull(); // the fixture has no title card
+  });
+});
+
+describe('a fixture run id', () => {
+  it("is the story's fresh.json, or its parent's for a Short, else manual (the fixture's Short packaged as manual)", () => {
+    const root = mkdtempSync(join(tmpdir(), 'vk-fixture-run-'));
+    try {
+      const parent = scriptDir('test-fixture', 'decision:x', root);
+      mkdirSync(join(parent, 'run'), { recursive: true });
+      expect(fixtureRunOf('test-fixture', 'decision:x', root)).toBe('manual');
+      writeFileSync(
+        join(parent, 'run', 'fresh.json'),
+        JSON.stringify({ runId: '20261101-0729-8f4e', at: 'a', previous: null }),
+      );
+      expect(fixtureRunOf('test-fixture', 'decision:x', root)).toBe('20261101-0729-8f4e');
+      expect(fixtureRunOf('test-fixture', 'decision:x/shorts/one', root)).toBe('20261101-0729-8f4e');
+      expect(fixtureRunOf('heat-pumps', 'decision:x', root)).toBeNull();
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });
 

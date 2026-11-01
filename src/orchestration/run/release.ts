@@ -590,7 +590,9 @@ async function shortsPass(
   const r = await shortsForParent(topic, storyId, sc);
   if (r.problem)
     return c.halt('step-failed', r.problem, { kind: 'fix', text: `npm run shorts -- discover ${topic} ${storyId}` });
-  const halted = r.halted.length ? r.halted : alreadyHalted;
+  // what is still halted after the pass: a Short this pass produced cleared its own halt
+  const halted = r.halted.length ? r.halted : shortsOwed(topic, storyId, c.root).halted;
+  void alreadyHalted;
   if (halted.length) {
     const h = halted[0];
     const retryable = ['timeout', 'lock-stale'].includes(h.halt.kind);
