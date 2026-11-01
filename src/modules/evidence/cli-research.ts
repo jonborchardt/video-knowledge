@@ -167,13 +167,25 @@ async function main() {
     case 'groups': {
       const topic = positional[0];
       if (!topic) throw new Refusal('groups needs a topic');
-      const next = JSON.parse(watcher(['next', '--json', '--store', store(topic)])) as {
-        extract?: { id: string; transcript: string; title?: string }[];
-      };
-      const entries = (next.extract ?? []).map((e) => ({
-        ...e,
-        chars: existsSync(join(root, e.transcript)) ? statSync(join(root, e.transcript)).size : 0,
-      }));
+      // the same entries and sizes topicNext derives: fetched records without assertions and with a transcript, sized
+      // by the cached transcript (topics/<topic>/store/transcripts/<id>.txt)
+      const videosDir = join(topicDir(topic, root), 'store', 'videos');
+      const recs = existsSync(videosDir)
+        ? readdirSync(videosDir).map((f) =>
+            readJson<{ id: string; title?: string; transcript?: string; assertions?: unknown }>(join(videosDir, f))!,
+          )
+        : [];
+      const entries = recs
+        .filter((r) => !r.assertions && r.transcript !== 'none')
+        .map((r) => {
+          const transcript = relTo(join(topicDir(topic, root), 'store', 'transcripts', `${r.id}.txt`));
+          return {
+            id: r.id,
+            title: r.title,
+            transcript,
+            chars: existsSync(join(root, transcript)) ? statSync(join(root, transcript)).size : 50_000,
+          };
+        });
       const groups = splitGroups(entries);
       const dir = work(topic);
       for (const f of readdirSync(dir)) if (/^grp\d+\.txt$/.test(f)) writeFileSync(join(dir, f), ''); // stale groups emptied

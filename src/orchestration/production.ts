@@ -1532,11 +1532,17 @@ const promptOf = (path: string, topic: string, story?: string, mode?: string, ou
     `Topic: ${topic}`,
     story && `Story: ${story}`,
     mode && /^sc\d+(,sc\d+)*$/.test(mode) && `Scenes: ${mode}`,
+    mode && /^grp\d+$/.test(mode) && `Group: ${mode.slice(3)}`,
+    mode && mode.startsWith('docs:') && `Documents: ${mode.slice(5).split(',').join(', ')}`,
     out && `Write: ${out}`,
     brief === 'script-review.md' && 'You did not write this script; review it independently.',
     brief === 'article-review.md' && 'You did not write this article; review it independently.',
     brief === 'visual-review.md' && 'You did not build these graphics; judge them independently.',
-    mode && !/^sc\d/.test(mode) && (MODES[mode] ?? `Mode: ${mode}`),
+    mode &&
+      !/^sc\d/.test(mode) &&
+      !/^grp\d/.test(mode) &&
+      !mode.startsWith('docs:') &&
+      (MODES[mode] ?? `Mode: ${mode}`),
     point && `Settle: ${point}`,
     'Finish by running the command the brief names, and stop when it passes.',
   ]
@@ -1552,7 +1558,7 @@ export function stepsOf(next: string, topic: string, story?: string): Step[] {
   const [main, blocked] = next.split('; public release is blocked: ');
   const steps = main.split(/,? then /).flatMap((part): Step[] => {
     if (part.startsWith('npm run ')) return [{ kind: 'run', text: part }];
-    const agent = /^agent: (src\/modules\/[\w-]+\/briefs\/\S+?\.md)(?: \(([\w,-]+)\))?(?: -> (\S+))?$/.exec(part);
+    const agent = /^agent: (src\/modules\/[\w-]+\/briefs\/\S+?\.md)(?: \(([\w,.:-]+)\))?(?: -> (\S+))?$/.exec(part);
     if (agent) return [{ kind: 'prompt', text: promptOf(agent[1], topic, story, agent[2], agent[3]) }];
     const settle = /^settle in story-review\.json: (.*)$/s.exec(part);
     if (settle)

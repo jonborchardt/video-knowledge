@@ -3,9 +3,16 @@
 // state only: nothing here decides a workflow stage (the board re-derives that from the artifacts).
 import { appendFileSync, existsSync, mkdirSync, readFileSync, unlinkSync } from 'node:fs';
 import { join } from 'node:path';
-import { ROOT, readJson, scriptDir, writeJsonAtomic } from '../../shared/io';
+import { ROOT, readJson, scriptDir, topicDir, writeJsonAtomic } from '../../shared/io';
 
 export const RUN_DIR = 'run';
+/** A topic run's operational folder: topics/<topic>/work/run/ (the runner's markers and journal; gitignored with work/). */
+export const TOPIC_RUN_DIR = 'run';
+export const topicRunDir = (topic: string, root = ROOT): string => {
+  const d = join(topicDir(topic, root), 'work', TOPIC_RUN_DIR);
+  mkdirSync(d, { recursive: true });
+  return d;
+};
 const JOURNAL = 'journal.jsonl';
 const HALT = 'halt.json';
 

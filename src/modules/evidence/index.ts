@@ -14,6 +14,8 @@ export {
   type Verdict,
 } from './topics';
 export { corpusOf } from './corpus';
+export { splitGroups } from './groups';
+export { thinness, type ThinCounts } from './thin';
 export { type DataTable, dataRef, datasetCsv, loadDatasets } from './datasets';
 export {
   FINDING_LABELS,
