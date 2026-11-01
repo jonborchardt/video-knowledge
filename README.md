@@ -58,7 +58,7 @@ never writes under `topics/`. `npm run topics -- show` prints the ranking.
 
 ## Adding a topic
 
-The agent does the reading and judging; the scripts do the bookkeeping. Steps 3–5 are written for Claude Code, which runs one agent per group of sources in parallel.
+The agent does the reading and judging; the scripts do the bookkeeping. Steps 3–5 are written for Claude Code, which runs one agent per group of sources in parallel. From Milestone 2 phase 5 the topic runner (`npm run run -- topic <topic>`, or the work plane for an approved proposal) runs these steps itself: the lists from `src/modules/evidence/briefs/collect.md`, the fetch, the groups (`npm run evidence -- groups`) and one `extract.md` agent per group, `dedupe`, a `merge.md` agent, `collide`, `merge-claims` and `record`, the studies from `studies.md` through `evidence -- fetch-doc` and `sources.md` agents, `record-sources`, `report` with a `revision-note.md` agent for the notes, the institution claim, the stories and their review; a topic too thin is parked with the reason. The manual path below stays the same steps by hand.
 
 1. **Lists.** Create `topics/<topic>/videos.txt` (and `blogs.txt` if any). Mark later additions with a `# --- Batch N, <how they were found>` line so it's clear which sources came from where.
 2. **Fetch.** `npm run watcher -- fetch topics/<topic>/videos.txt --store topics/<topic>/store`, then the same for `blogs.txt`. Videos without captions are reported and skipped. An article that comes out as junk can be attached by hand: `npm run watcher -- fetch --text <file> <id> --title "<t>" --url <u> --store topics/<topic>/store`.
