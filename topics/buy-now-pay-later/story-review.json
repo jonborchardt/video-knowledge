@@ -1,0 +1,74 @@
+{
+  "stories": {
+    "surprise:most-buy-now-pay-later-providers": {
+      "coherence": {
+        "score": 0.9,
+        "reason": "One claim, one specific, falsifiable question; three independent studies directly confirm it and the one qualifying source narrows scope without contradicting it."
+      },
+      "premise": "Before checking, the best guess was \"partly\": true of Klarna and Afterpay historically, but Affirm already reports and scoring models are being built to incorporate the data. Three independent sources confirm the finding directly: Fed SHED found that, at the time of its survey, most BNPL providers were not reporting loans to credit bureaus and even reported loans didn't factor into scores; KC Fed and CFPB separately corroborate that BNPL lenders typically don't furnish repayment data to the bureaus. CFPB's broader 2022 market report adds a narrower point -- it describes lenders' general non-furnishing of loan performance data, not a direct test of whether on-time repayment specifically builds a score -- a caveat the story carries rather than a reason to doubt the finding. 16 sources take a position on it.",
+      "arc": {
+        "resolution": "CFPB's own language is about lenders not furnishing loan data generally; it doesn't test on-time repayment's effect on a score directly, so the finding is accepted with that caveat rather than treated as a second independent confirmation.",
+        "takeaway": "Historically, paying a BNPL loan on time usually didn't build your credit score, because most providers simply weren't reporting to the bureaus -- a gap regulators and FICO are now moving to close."
+      },
+      "qualificationsAccepted": true
+    },
+    "decision:most-discussed-claims": {
+      "reject": "8 disparate claims (credit-score reporting, loan stacking, merchant fee funding, soft-check access, long-term interest rates, necessity spending, multi-loan carrying) bundled under a generic 'what should you do' frame don't converge on one specific decision a viewer actually faces -- it reads as a list of most-discussed claims, not an investigation. The claims with real evidence already have clearer single-claim treatments elsewhere (surprise:most-buy-now-pay-later-providers; gap:pay-four-buy-now-later-loans covers the unchecked fee claim). A genuine decision story would need one concrete choice built from a subset of these, not all eight at once."
+    },
+    "surprise:because-most-bnpl-loans-not-visible": {
+      "coherence": {
+        "score": 0.85,
+        "reason": "One claim, one question; the direct study is CFPB's own statement about its data being limited by non-reporting, and the qualifying source extends rather than contradicts it."
+      },
+      "premise": "Before checking, the best guess was \"partly\": directionally true that reporting gaps limit visibility, but Federal Reserve and CFPB surveys do capture meaningful aggregate data, so \"cannot measure\" overstates the gap. CFPB's own heavy-use report says directly that its data on multi-loan borrowers and total consumer debt is limited because lenders don't typically report BNPL loans to credit reporting companies. CFPB's broader 2022 market report adds that lenders also lack visibility into each other's BNPL exposure -- the same invisibility problem described from the industry's side rather than the regulator's -- a reasonable extension of the finding, not an independent confirmation of it. 5 sources take a position on it.",
+      "arc": {
+        "resolution": "The CFPB's direct statement is about its own data being limited by non-reporting; the market report's point about lenders not seeing each other's exposure is the same underlying gap viewed from inside the industry, a reasonable but not an independently tested extension to regulators' own measurement problem.",
+        "takeaway": "Because most BNPL lenders don't report to the credit bureaus, nobody -- regulators included -- has a reliable, complete count of how much BNPL debt is actually out there; the surveys that exist are a partial picture, not the full one."
+      },
+      "qualificationsAccepted": true
+    },
+    "conflict:large-share-buy-now-pay-later": {
+      "coherence": {
+        "score": 0.8,
+        "reason": "One claim, one question; the three studies genuinely disagree on the rate, which is a legitimate conflict story, but none clears the strength bar yet, so it's correct to wait on research rather than publish a weak comparison."
+      }
+    },
+    "gap:budgeting-bnpl-plan-same-way-you": {
+      "coherence": {
+        "score": 0.8,
+        "reason": "Single, well-formed claim; genuinely unstudied, and the sources shown are anecdote and advice rather than a measurement -- a fair gap story."
+      }
+    },
+    "gap:pay-four-buy-now-later-loans": {
+      "coherence": {
+        "score": 0.8,
+        "reason": "Single mechanism claim (merchant fees fund the interest-free loan) with no formal study verdict in the corpus despite wide, consistent corroboration from company insiders and reporters; fair to frame as a gap since the exact fee range is still an attributed claim, not a measured one."
+      }
+    },
+    "gap:buy-now-pay-later-companies-group": {
+      "coherence": {
+        "score": 0.8,
+        "reason": "Single claim about industry profitability; the sources cite real, disclosed losses but not the causal mechanism in the claim (losses and funding costs exceeding merchant-fee income), so 'gap' framing fits and the question (phrased as a request for evidence) doesn't overclaim the mechanism."
+      }
+    },
+    "gap:using-bnpl-single-large-planned-necessary": {
+      "coherence": {
+        "score": 0.75,
+        "reason": "Clear single claim; 'reasonable use' is partly a value judgment rather than a strictly testable fact, but the sources' recommendation is specific and actionable, so it still works as an 'is this common advice actually backed by evidence' gap story."
+      }
+    },
+    "gap:buy-now-pay-later-best-suited": {
+      "coherence": {
+        "score": 0.75,
+        "reason": "Clear single claim contrasting large planned purchases with small routine ones. Checked against gap:using-bnpl-single-large-planned-necessary for duplication: the two share no cited sources and ask distinct questions (safety of one big purchase vs. which spending pattern BNPL suits), so both stand as separate, non-duplicate gap stories."
+      }
+    },
+    "gap:new-fico-scoring-model-factors-bnpl": {
+      "coherence": {
+        "score": 0.8,
+        "reason": "Single, specific claim about a named scoring model change."
+      },
+      "research": "The AI-guess rationale names the evidence that would settle this -- FICO's 2025 announcement of the new scoring model and FICO's joint study with Affirm simulating its effects on users' scores -- but neither has been fetched and recorded as a study in this corpus. Fetching FICO's model documentation and the Affirm joint study (evidence -- fetch-doc) and running it through record-sources would turn this from an unchecked attribution into a decided claim."
+    }
+  }
+}
