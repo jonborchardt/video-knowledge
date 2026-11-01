@@ -2,7 +2,7 @@
 // runs in the clone as one resumable job with a progress record; a commit is never repeated and a push never forced;
 // the deploy confirmation is the tick's one probe per pass, followed by the social post and the launch email.
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
@@ -41,10 +41,42 @@ const a = {
 };
 
 /** A packaged release fixture turned into a git clone of a bare origin, its video live (published, verified). */
-function clone(opts: { live?: boolean } = {}) {
-  const f = syntheticProduction('packaged', { release: true });
-  fixtures.push(f);
-  cliRoot(f.root);
+function clone(opts: { live?: boolean; fixture?: boolean } = {}) {
+  const f0 = syntheticProduction('packaged', { release: true });
+  fixtures.push(f0);
+  cliRoot(f0.root);
+  // a fixture story: the synthetic production moved under the fixture topic, with its fresh run id and an earlier
+  // run's upload in the history (what the launch mail lists as superseded)
+  if (opts.fixture) renameSync(join(f0.root, 'topics', f0.topic), join(f0.root, 'topics', 'test-fixture'));
+  const f = opts.fixture ? { ...f0, topic: 'test-fixture', dir: f0.dir.replace(f0.topic, 'test-fixture') } : f0;
+  if (opts.fixture) {
+    mkdirSync(join(f.dir, 'run'), { recursive: true });
+    writeFileSync(join(f.dir, 'run', 'fresh.json'), toJson({ runId: '20261101-1200-abcd', at: 'x', previous: null }));
+    const old = join(f.root, 'topics', 'test-fixture', 'history', '20261031-0900-old1', 'scripts', 'x');
+    mkdirSync(old, { recursive: true });
+    writeFileSync(
+      join(old, 'publish.json'),
+      toJson({
+        video: `test-fixture/${f.story}`,
+        outputs: {
+          youtube: {
+            kind: 'youtube-video',
+            metadata: {},
+            events: [
+              {
+                at: '2026-10-31T09:00:00Z',
+                type: 'uploaded',
+                by: 'a',
+                build: 'b',
+                id: 'vid0000old1',
+                visibility: 'private',
+              },
+            ],
+          },
+        },
+      }),
+    );
+  }
   const git = (...args: string[]) =>
     execFileSync('git', args, { cwd: f.root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
   writeFileSync(join(f.root, '.gitignore'), '.automation/\ntopics/*/scripts/*/run/\nyoutube-fake.json\n');
@@ -97,8 +129,12 @@ function clone(opts: { live?: boolean } = {}) {
     git: (args: string[]) => git(...args),
     run: (cli: string, args: string[]) => {
       ran.push([cli, ...args].join(' '));
+      // the production build pages no fixture story, so its freeze never lists the fixture path
       if (cli === 'links' && args[0] === 'freeze')
-        writeFileSync(join(f.root, 'public-urls.json'), toJson([matterPathOf(f.topic, f.story, f.root), '/']));
+        writeFileSync(
+          join(f.root, 'public-urls.json'),
+          toJson(opts.fixture ? ['/'] : [matterPathOf(f.topic, f.story, f.root), '/']),
+        );
       if (cli === 'brand') writeFileSync(join(f.root, 'brand-out.txt'), 'x'); // outside the launch paths: never added
       return { status: 0, stdout: '', stderr: '' };
     },
@@ -291,6 +327,79 @@ describe('launch', () => {
     expect(readHalt(runDir(d.f.topic, d.f.story, d.f.root))?.why).toMatch(/X 401/);
     expect(m2.sent).toHaveLength(1);
     expect(m2.sent[0].text).toMatch(/X: the post failed/);
+  });
+
+  it('a fixture launch pushes main and then fixture/<run id>, once each across a crash; its two probes; its mail names the preview, the branch and the superseded uploads', async () => {
+    const c = clone({ fixture: true });
+    expect(c.f.topic).toBe('test-fixture');
+    const pushes: string[] = [];
+    let crash = true;
+    const deps = c.deps({
+      git: (args: string[]) => {
+        if (args[0] === 'push') {
+          pushes.push(args.join(' '));
+          if (crash && pushes.length === 2) throw new Error('killed before the branch push');
+        }
+        return c.git(...args);
+      },
+    });
+    const r = await launch(c.f.topic, c.f.story, a, deps, c.f.root);
+    expect(r.outcome).toBe('halted');
+    const rec = readLaunch(c.f.topic, c.f.story, c.f.root)!;
+    expect(rec.pushed).toBe(rec.committed);
+    expect(rec.fixtureBranch).toBeUndefined();
+    crash = false;
+    const r2 = await launch(c.f.topic, c.f.story, a, deps, c.f.root);
+    expect(r2.outcome).toBe('done');
+    expect(readLaunch(c.f.topic, c.f.story, c.f.root)!.fixtureBranch).toBe('fixture/20261101-1200-abcd');
+    expect(pushes.filter((p) => p.endsWith('refs/heads/main'))).toHaveLength(1);
+    expect(pushes.filter((p) => p.includes('refs/heads/fixture/20261101-1200-abcd'))).toHaveLength(2); // the crashed one, then the push
+    expect(c.originHead()).toBe(rec.committed);
+    expect(
+      execFileSync('git', ['rev-parse', 'fixture/20261101-1200-abcd'], { cwd: c.bare, encoding: 'utf8' }).trim(),
+    ).toBe(rec.committed);
+    // the probes: negative on the production host, positive on the preview host (the branch's URL)
+    const path = matterPathOf(c.f.topic, c.f.story, c.f.root)!;
+    const production = `https://commonwealthofreason.com${path}`;
+    const preview = `https://fixture-20261101-1200-abcd.vk.pages.dev${path}`;
+    const pages: Record<string, string> = {};
+    const fetchFn = (async (u: string | URL | Request) =>
+      pages[String(u)] !== undefined
+        ? new Response(pages[String(u)], { status: 200 })
+        : new Response('', { status: 404 })) as unknown as typeof fetch;
+    const mail = new FakeMail();
+    const fx = { ...a, launch: { ...a.launch, fixturePreviewUrl: 'https://{branch}.vk.pages.dev' } };
+    const run = () => ({ status: 0, stdout: 'not configured\n', stderr: '' });
+    const a1 = await probeLaunches(fx, c.f.root, { now: () => T0 + 60_000, run, mail, fetchFn });
+    expect(a1.join('\n')).toMatch(/not live yet/);
+    pages[production] = 'the fixture page, on the production site by mistake';
+    pages[preview] = 'embed/vid00000000';
+    const a2 = await probeLaunches(fx, c.f.root, { now: () => T0 + 120_000, run, mail, fetchFn });
+    expect(a2.join('\n')).toMatch(/on the production site/);
+    expect(mail.sent).toEqual([]);
+    delete pages[production];
+    const a3 = await probeLaunches(fx, c.f.root, { now: () => T0 + 180_000, run, mail, fetchFn });
+    expect(a3.join('\n')).toMatch(/live at https:\/\/fixture-20261101-1200-abcd\.vk\.pages\.dev/);
+    expect(mail.sent).toHaveLength(1);
+    const m = mail.sent[0].text;
+    expect(m).toContain(preview);
+    expect(m).toContain('git push origin --delete fixture/20261101-1200-abcd');
+    expect(m).toMatch(/superseded/i);
+    expect(m).toContain('vid0000old1'); // an earlier run's upload, listed with the Studio step that deletes it
+    expect(m).toMatch(/private again/);
+    // without a preview URL the positive probe is the local fallback, reported as such
+    const d = clone({ fixture: true });
+    await launch(d.f.topic, d.f.story, a, d.deps(), d.f.root);
+    const m2 = new FakeMail();
+    const a4 = await probeLaunches(a, d.f.root, {
+      now: () => T0 + 60_000,
+      run,
+      mail: m2,
+      fetchFn: (async () => new Response('', { status: 404 })) as unknown as typeof fetch,
+    });
+    expect(a4.join('\n')).toMatch(/local fallback/);
+    expect(m2.sent).toHaveLength(1);
+    expect(m2.sent[0].text).toMatch(/FIXTURE_SITE=1/);
   });
 
   it('a stale page past the deploy timeout halts deploy-timeout and posts nothing', async () => {

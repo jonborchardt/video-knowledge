@@ -6,7 +6,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { site } from '../../config/site';
 import { ROOT } from '../../shared/io';
-import { storyOutputs } from '../publishing';
+import { loadLedger, storyOutputs } from '../publishing';
 import { loadStories } from '../stories';
 import { matterPath } from './content-graph';
 
@@ -52,11 +52,14 @@ export async function liveCheck(
     return { ok: true, url, status: res.status };
   }
   if (res.status !== 200) return { ok: false, url, status: res.status, why: `answered ${res.status}` };
-  const video = storyOutputs(topic, storyId, root).video;
-  if (!video) return { ok: false, url, status: 200, why: 'the ledger has no live video to look for' };
+  // the id to look for: the public video, or (a fixture, unlisted at most) the ledger's published id
+  const id =
+    storyOutputs(topic, storyId, root).video?.id ??
+    loadLedger(topic, storyId, root)?.outputs.youtube?.events.findLast((e) => e.type === 'published')?.id ??
+    null;
+  if (!id) return { ok: false, url, status: 200, why: 'the ledger has no live video to look for' };
   const html = await res.text();
-  if (!html.includes(video.id))
-    return { ok: false, url, status: 200, why: `the page does not carry the video ${video.id} yet` };
+  if (!html.includes(id)) return { ok: false, url, status: 200, why: `the page does not carry the video ${id} yet` };
   if (opts.frozen !== false && !frozen(root, path))
     return { ok: false, url, status: 200, why: 'the path is not in public-urls.json (run npm run links -- freeze)' };
   return { ok: true, url, status: 200 };

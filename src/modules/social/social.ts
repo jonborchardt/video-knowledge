@@ -4,7 +4,7 @@
 // Optional per institution: no handle or keys means "not configured", never a halt. It never imports publishing's
 // verbs or the store; it reads the ledger through the publishing read API only.
 import { join } from 'node:path';
-import { commissionKey, commissionOf } from '../../config/site';
+import { commissionKey, commissionOf, isFixtureTopic } from '../../config/site';
 import { ROOT, readJson, scriptDir, sha, writeJsonAtomic } from '../../shared/io';
 import type { Inspection } from '../../shared/inspect';
 import { composePost } from '../../shared/social-text';
@@ -42,7 +42,8 @@ export function accountFor(
   const c = commissionOf(topic);
   if (!c) return null;
   const key = commissionKey(c);
-  const handle = c.x ?? env[`${envPrefix(key)}HANDLE`]?.trim() ?? null;
+  // a fixture topic never posts from the institution's public account: only a test account named beside its keys
+  const handle = (isFixtureTopic(topic) ? null : c.x) ?? env[`${envPrefix(key)}HANDLE`]?.trim() ?? null;
   const creds = credsFor(key, env);
   return handle && creds ? { key, handle, creds } : null;
 }

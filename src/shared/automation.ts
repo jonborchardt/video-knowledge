@@ -88,7 +88,14 @@ export interface Automation {
     minStudies: number;
     minDecided: number;
   };
-  launch: { push: boolean; deployTimeoutMinutes: number; social: { video: boolean; shorts: boolean } };
+  launch: {
+    push: boolean;
+    deployTimeoutMinutes: number;
+    social: { video: boolean; shorts: boolean };
+    /** The fixture's preview deployment (spec §5.8): the URL pattern of a branch build with FIXTURE_SITE=1, `{branch}`
+     *  the branch name slugified (`fixture-<run id>`); empty: the local fallback, reported as such. */
+    fixturePreviewUrl: string;
+  };
 }
 
 const models = Object.fromEntries(AGENT_ROLES.map((r) => [r, 'opus'])) as Record<AgentRole, string>;
@@ -131,7 +138,7 @@ export const DEFAULTS: Automation = {
   approvals: { to: '', from: '', approverName: '', expiresDays: 7, scheduleLeadMinutes: 30 },
   notifications: { to: '', digest: { weekday: 'monday', hour: 8 } },
   topics: { proposalsPerInstitution: 2, minOverall: 0.6, minSources: 40, minStudies: 12, minDecided: 0.5 },
-  launch: { push: true, deployTimeoutMinutes: 40, social: { video: true, shorts: false } },
+  launch: { push: true, deployTimeoutMinutes: 40, social: { video: true, shorts: false }, fixturePreviewUrl: '' },
 };
 
 // Keys whose values are an open map (any string key, numbers) rather than a fixed shape.

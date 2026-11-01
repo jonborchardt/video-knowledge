@@ -6,6 +6,7 @@
 import { existsSync, mkdirSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
+import { isFixtureTopic } from '../../config/site';
 import type { CliResult } from '../../shared/cli';
 import { ROOT, readJson, storySlug, writeJsonAtomic } from '../../shared/io';
 import type { MailTransport } from '../../shared/mail';
@@ -27,6 +28,7 @@ export interface LaunchRecord {
   committed: string | null; // the sha
   pushed: string | null; // the sha pushed to origin main
   fixtureBranch?: string | null; // a fixture story: the branch the same commit was pushed as (fixture/<run id>)
+  previewUrl?: string | null; // a fixture story: where the positive probe looked ('local fallback' without a preview URL)
   probes: number;
   liveAt: string | null;
   posted: boolean | 'not-configured' | null;
@@ -234,9 +236,27 @@ export async function launch(
       return fail(`git push failed: ${tail((e as Error).message)}`);
     }
   }
+  if (a.launch.push && isFixtureTopic(topic) && !record.fixtureBranch) {
+    // the fixture's preview deployment: the same commit as a branch the host builds with FIXTURE_SITE=1 (spec §5.8)
+    const branch = fixtureBranchOf(topic, storyId, root);
+    try {
+      d.git(['push', 'origin', `${record.committed}:refs/heads/${branch}`]);
+      record.fixtureBranch = branch;
+      save();
+    } catch (e) {
+      return fail(`git push of ${branch} failed: ${tail((e as Error).message)}`);
+    }
+  }
   haltLaunch(root, record, null);
   return { outcome: 'done', stage: 'launch', halt: null, iterations: 1, costUsd: 0, record };
 }
+
+/** The fixture's preview branch: `fixture/<run id>` from run/fresh.json (`manual` without one). */
+export const fixtureBranchOf = (topic: string, storyId: string, root = ROOT): string =>
+  `fixture/${readJson<{ runId: string }>(join(runDir(topic, storyId, root), 'fresh.json'))?.runId ?? 'manual'}`;
+/** The preview URL of a branch from the configured pattern (`{branch}` slugified), or null without a pattern. */
+export const previewUrlOf = (pattern: string, branch: string): string | null =>
+  pattern ? pattern.replace('{branch}', branch.replace(/[^a-z0-9]+/gi, '-').toLowerCase()) : null;
 
 export interface ProbeDeps {
   now?: () => number;
@@ -247,6 +267,26 @@ export interface ProbeDeps {
 
 /** Tick step 5: one probe per pending launch (pushed, not yet live); confirmed, the social post when the policy
  *  says so and the institution is configured, then the launch email once; past the timeout, `deploy-timeout`. */
+/** One pass of probing: a story's page on the public site; for a fixture, the negative probe there (no page, not
+ *  frozen) and the positive one on the preview host, or the local fallback without a preview URL (spec §5.8). */
+async function probeOf(
+  a: Automation,
+  rec: LaunchRecord,
+  fetchFn: typeof fetch | undefined,
+  root: string,
+): Promise<{ ok: boolean; url: string; why?: string; preview?: string | null }> {
+  if (!isFixtureTopic(rec.topic)) return liveCheck(rec.topic, rec.storyId, fetchFn, root);
+  const absent = await liveCheck(rec.topic, rec.storyId, fetchFn, root, { expectAbsent: true });
+  if (!absent.ok) return absent;
+  const preview = previewUrlOf(
+    a.launch.fixturePreviewUrl,
+    rec.fixtureBranch ?? fixtureBranchOf(rec.topic, rec.storyId, root),
+  );
+  if (!preview) return { ok: true, url: absent.url, preview: 'local fallback' };
+  const present = await liveCheck(rec.topic, rec.storyId, fetchFn, root, { baseUrl: preview, frozen: false });
+  return { ...present, preview: present.ok ? present.url : undefined };
+}
+
 export async function probeLaunches(a: Automation, root = ROOT, d: ProbeDeps): Promise<string[]> {
   const now = d.now ?? Date.now;
   const actions: string[] = [];
@@ -256,7 +296,7 @@ export async function probeLaunches(a: Automation, root = ROOT, d: ProbeDeps): P
     if (rec.liveAt && rec.posted !== null && (rec.emailed || !d.mail)) continue; // finished
     const tag = `${rec.topic}/${rec.storyId}`;
     if (!rec.liveAt) {
-      const probe = await liveCheck(rec.topic, rec.storyId, d.fetchFn, root);
+      const probe = await probeOf(a, rec, d.fetchFn, root);
       rec.probes += 1;
       if (!probe.ok) {
         const since = rec.steps.validated ?? rec.startedAt;
@@ -276,13 +316,16 @@ export async function probeLaunches(a: Automation, root = ROOT, d: ProbeDeps): P
           actions.push(`${tag}: deploy-timeout`);
         } else {
           writeLaunch(root, rec);
-          actions.push(`${tag}: not live yet (probe ${rec.probes})`);
+          actions.push(`${tag}: not live yet (probe ${rec.probes}): ${probe.why}`);
         }
         continue;
       }
       rec.liveAt = new Date(now()).toISOString();
+      if (probe.preview !== undefined) rec.previewUrl = probe.preview;
       haltLaunch(root, rec, null);
-      actions.push(`${tag}: live at ${probe.url}`);
+      actions.push(
+        `${tag}: live at ${probe.url}${probe.preview === 'local fallback' ? ' (preview: local fallback)' : ''}`,
+      );
     }
     if (rec.posted === null) {
       if (a.enabled.social && a.launch.social.video) {

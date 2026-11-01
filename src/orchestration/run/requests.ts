@@ -14,7 +14,9 @@ import { redact } from '../../shared/mail';
 import type { ReleaseManifest } from '../../shared/types';
 import { type ApprovalRequest, loadLedger, openRequest, stampOf, storyOutputs } from '../../modules/publishing';
 import { publicUrlsOf } from '../../modules/website';
-import { commissionOf } from '../../config/site';
+import { commissionOf, isFixtureTopic } from '../../config/site';
+import { readdirSync } from 'node:fs';
+import { topicDir } from '../../shared/io';
 import type { LaunchRecord } from './launch';
 import { readOutbox, secretsOf, sendTracked } from './notify';
 import type { ShadowEntry } from './release';
@@ -361,6 +363,52 @@ export async function sendDraftRequest(
 
 // ---- the launch mail (phase 3 Task 4) --------------------------------------------------------------------------
 
+/** A fixture launch's extra lines (spec §5.8): where the preview is, the branch and the command that deletes it,
+ *  the Studio step that sets the unlisted outputs private again, and the uploads of earlier runs to delete. */
+function fixtureLines(rec: LaunchRecord, root: string): string[] {
+  const ledger = loadLedger(rec.topic, rec.storyId, root);
+  const current = new Set(
+    Object.values(ledger?.outputs ?? {}).flatMap((o) =>
+      o.events.filter((e) => e.type === 'published').map((e) => e.id),
+    ),
+  );
+  const uploads = (l: { outputs: Record<string, { events: { type: string; id?: string }[] }> } | null) =>
+    Object.values(l?.outputs ?? {}).flatMap((o) =>
+      o.events.filter((e) => e.type === 'uploaded' && e.id).map((e) => e.id!),
+    );
+  const history = join(topicDir(rec.topic, root), 'history');
+  const earlier = existsSync(history)
+    ? readdirSync(history).flatMap((run) => {
+        const scripts = join(history, run, 'scripts');
+        return existsSync(scripts)
+          ? readdirSync(scripts).flatMap((slug) =>
+              uploads(readJson(join(scripts, slug, 'publish.json'))).map((id) => `${id} (run ${run})`),
+            )
+          : [];
+      })
+    : [];
+  const superseded = [
+    ...uploads(ledger)
+      .filter((id) => !current.has(id))
+      .map((id) => `${id} (this run, replaced)`),
+    ...earlier,
+  ];
+  return [
+    'This is a fixture run (spec 5.8): the outputs above are unlisted at most, never public.',
+    `Preview: ${rec.previewUrl && rec.previewUrl !== 'local fallback' ? rec.previewUrl : 'no preview URL configured (automation.json launch.fixturePreviewUrl); local fallback: FIXTURE_SITE=1 npm run build, then open dist/<the matter path>/index.html'}`,
+    ...(rec.fixtureBranch
+      ? [`Branch: ${rec.fixtureBranch}; when done: git push origin --delete ${rec.fixtureBranch}`]
+      : []),
+    `Set the unlisted outputs private again: Studio > Content > each video > Visibility > Private; then npm run publish -- updated ${rec.topic} ${rec.storyId} --fields visibility`,
+    ...(superseded.length
+      ? [
+          'Superseded uploads of earlier runs, to delete in Studio (Content > the video > Delete forever):',
+          ...superseded.map((s) => `- ${s}`),
+        ]
+      : ['No superseded uploads of earlier runs.']),
+  ];
+}
+
 /** The mail that closes a launch: the public links, the deploy URL, the X post (or "not configured"), and the
  *  optional Studio steps YouTube keeps manual, each with the line that records it done. */
 export function renderLaunched(rec: LaunchRecord, a: Automation, root = ROOT): Omit<OutMail, 'messageId'> {
@@ -399,6 +447,7 @@ export function renderLaunched(rec: LaunchRecord, a: Automation, root = ROOT): O
     '',
     `Deploy: ${rec.pushed ?? rec.committed ?? 'not pushed'}${rec.fixtureBranch ? ` (also pushed as ${rec.fixtureBranch})` : ''}; confirmed at ${rec.liveAt ?? 'not yet'} after ${rec.probes} probe${rec.probes === 1 ? '' : 's'}.`,
   );
+  if (isFixtureTopic(rec.topic)) lines.push('', ...fixtureLines(rec, root));
   return {
     from: a.approvals.from || a.notifications.to,
     to: a.notifications.to || a.approvals.to,

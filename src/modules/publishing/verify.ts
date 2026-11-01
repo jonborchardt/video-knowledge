@@ -67,7 +67,11 @@ export function expectedOf(o: ReturnType<typeof openOutput>): Expected | null {
   );
   const file = m.file ? join(o.root, m.file) : null;
   return {
-    visibility: o.state.live ? 'public' : scheduled ? 'private' : (upload?.visibility ?? 'private'),
+    visibility: o.state.live
+      ? (o.out.events.findLast((e) => e.type === 'published')?.visibility ?? 'public')
+      : scheduled
+        ? 'private'
+        : (upload?.visibility ?? 'private'),
     publishAt: scheduled,
     title: m.title,
     description: m.description,

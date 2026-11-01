@@ -1098,8 +1098,8 @@ export function recordScheduled(
 export function recordPublished(
   topic: string,
   storyId: string,
-  // observed: sync read it back public, a fact to record
-  a: VerbArgs & { url?: string; id?: string; observed?: boolean; via?: PublishEvent['via'] },
+  // observed: sync read it back public, a fact to record; visibility: a fixture's `unlisted` (public is the default)
+  a: VerbArgs & { url?: string; id?: string; observed?: boolean; via?: PublishEvent['via']; visibility?: Visibility },
 ): VerbResult {
   const o = openOutput(topic, storyId, a);
   if (o.state.status !== 'approved' && o.state.status !== 'scheduled')
@@ -1109,8 +1109,9 @@ export function recordPublished(
   const id = o.state.id ?? a.id ?? a.url ?? o.id;
   const e: PublishEvent = { at: stamp(a), type: 'published', by: a.by, id };
   if (a.url) e.url = a.url;
-  if (a.observed) e.note = 'observed public on read-back';
+  if (a.observed) e.note = `observed ${a.visibility ?? 'public'} on read-back`;
   if (a.via) e.via = a.via;
+  if (a.visibility && a.visibility !== 'public') e.visibility = a.visibility;
   return write(o, e);
 }
 

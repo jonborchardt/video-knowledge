@@ -612,6 +612,17 @@ run. What it never does: appear on the production site (`publicTopicNames()` lea
 `FIXTURE_SITE=1 npm run build` pages them, `noindex` and outside the sitemap), be picked or proposed by automation, or
 change a video's visibility (uploads are private; unlisted at most, on a person's explicit decision; never public).
 
+Through publication (phase 3): a fixture's release request says so, and an `OK` reply makes its video and Short
+**unlisted** (`go-live` sends `unlisted` for a fixture topic and never `public`; `sync` and `verify` read unlisted as
+its published state; the `published` event records the visibility). The launch job then runs the whole production
+sequence unchanged and pushes the same commit as `fixture/<run id>`, a branch the host builds with `FIXTURE_SITE=1`.
+Its deploy confirmation is two probes: negative on the production site (no page, the path not in `public-urls.json`)
+and positive on the preview URL from `automation.json` `launch.fixturePreviewUrl` (a pattern with `{branch}`, the
+branch name slugified; empty: the local fallback, `FIXTURE_SITE=1 npm run build` and the page in `dist/`, reported as
+such). The launch mail lists the preview URL, `git push origin --delete fixture/<run id>`, the Studio step that sets
+the outputs private again and the superseded uploads of earlier runs to delete. A fixture never posts from the
+institution's public X account: only from a test account named beside its keys (`X_<KEY>_HANDLE`).
+
 ## Automation
 
 Milestone 2 runs the production unattended, behind flags in `automation.json` that are all off: merging the code

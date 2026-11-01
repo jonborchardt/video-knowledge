@@ -6,6 +6,7 @@
 // or a quota refusal resumes the same YouTube video and never opens a second one. Library layer.
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { isFixtureTopic } from '../../config/site';
 import { ROOT, readJson, sha, toJson } from '../../shared/io';
 import { Refusal } from '../../shared/refusal';
 import {
@@ -318,19 +319,28 @@ export async function goLive(
     );
     return recordScheduled(topic, storyId, { ...c, at, via: c.via });
   }
+  // a fixture topic's output (spec §5.8, D20) goes unlisted at most, never public, on the same approval
+  const target = fixtureVisibility(topic) ?? 'public';
   await guarded(topic, storyId, c, 'go-live', () =>
-    c.client.updateVideo(id, { status: { ...statusOf(o.out), privacyStatus: 'public' } }),
+    c.client.updateVideo(id, { status: { ...statusOf(o.out), privacyStatus: target } }),
   );
   const v = await guarded(topic, storyId, c, 'go-live', () => c.client.getVideo(id));
-  if (v?.privacyStatus !== 'public')
+  if (v?.privacyStatus !== target)
     return recordFailed(topic, storyId, {
       ...c,
       step: 'go-live',
       error: keptPrivate(id, v?.privacyStatus ?? 'missing'),
       retryable: false,
     });
-  return recordPublished(topic, storyId, { ...c, url: urlOf(id), via: c.via });
+  return recordPublished(topic, storyId, {
+    ...c,
+    url: urlOf(id),
+    via: c.via,
+    ...(target !== 'public' && { visibility: target }),
+  });
 }
+/** The visibility a fixture topic's output may reach (`unlisted`), or null for any other topic (`public`). */
+const fixtureVisibility = (topic: string): 'unlisted' | null => (isFixtureTopic(topic) ? 'unlisted' : null);
 
 /** Reads the video back: a rejection or a deletion is a final failure, a scheduled video gone public is recorded,
  *  anything else is returned for the CLI to print. */
@@ -348,8 +358,14 @@ export async function sync(topic: string, storyId: string, c: Ctx): Promise<Verb
   };
   if (!v) return failed(`${id} is not on YouTube (deleted?); a person decides`);
   if (v.uploadStatus === 'rejected') return failed(`rejected: ${v.rejectionReason ?? 'no reason given'}`);
-  if (v.privacyStatus === 'public' && (o.state.status === 'scheduled' || o.state.status === 'approved'))
-    return recordPublished(topic, storyId, { ...c, url: urlOf(id), observed: true });
+  const reached = fixtureVisibility(topic) ?? 'public';
+  if (v.privacyStatus === reached && (o.state.status === 'scheduled' || o.state.status === 'approved'))
+    return recordPublished(topic, storyId, {
+      ...c,
+      url: urlOf(id),
+      observed: true,
+      ...(reached !== 'public' && { visibility: reached }),
+    });
   const publishAt = o.out.events.findLast((e) => e.type === 'scheduled' && e.id === id)?.publishAt;
   if (
     o.state.status === 'scheduled' &&
