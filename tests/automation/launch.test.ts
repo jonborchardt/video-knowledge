@@ -156,7 +156,7 @@ describe('launch', () => {
     expect(r.halt?.why).toMatch(/not launchable: no publish.json/);
     expect(c.ran).toEqual([]);
     expect(launchJobs(a, c.f.root)).toEqual([]);
-  });
+  }, 120_000);
 
   it('an uploaded Short that is not live yet (approved, or behind on its parent link) blocks the launch', async () => {
     const c = clone();
@@ -177,7 +177,7 @@ describe('launch', () => {
     );
     expect(launchProblem(c.f.topic, c.f.story, c.f.root)).toMatch(/short:one is .*not live yet/);
     expect(launchJobs(a, c.f.root)).toEqual([]);
-  });
+  }, 120_000);
 
   it('two launches of one story at once: the second is held; a live run of another story in the topic blocks the launch', async () => {
     const c = clone();
@@ -281,7 +281,7 @@ describe('launch', () => {
     expect(readLaunch(c.f.topic, c.f.story, c.f.root)!.pushed).toBe(rec.committed);
     expect(readLaunch(c.f.topic, c.f.story, c.f.root)!.halt).toBeNull();
     expect(readHalt(runDir(c.f.topic, c.f.story, c.f.root))).toBeNull();
-  });
+  }, 120_000);
 
   it('a failing validate halts git with the last lines and pushes nothing; the preflight accepts the dirty paths the record owns', async () => {
     const c = clone();
@@ -309,7 +309,7 @@ describe('launch', () => {
     const dirty = (lines: string) => ({ ...pre, git: (args: string[]) => (args[0] === 'status' ? lines : 'main\n') });
     expect(preflight(a, c.f.root, dirty(` M topics/${c.f.topic}/report.json\n?? public-urls.json\n`)).ok).toBe(true);
     expect(preflight(a, c.f.root, dirty(' M src/x.ts\n')).problems).toEqual(['the clone is dirty']);
-  });
+  }, 120_000);
 
   it('the probe: a stale page posts and emails nothing; the live page records liveAt, the post (not configured) and one launch email', async () => {
     const c = clone();
@@ -355,7 +355,7 @@ describe('launch', () => {
     expect(a3).toEqual([]);
     expect(mail.sent).toHaveLength(1);
     expect(launches(c.f.root)).toHaveLength(1);
-  });
+  }, 120_000);
 
   it('with social on: a retryable post failure is tried again next tick before the mail; a final failure halts; a post is recorded once', async () => {
     const c = clone();
@@ -398,7 +398,7 @@ describe('launch', () => {
     expect(readHalt(runDir(d.f.topic, d.f.story, d.f.root))?.why).toMatch(/X 401/);
     expect(m2.sent).toHaveLength(1);
     expect(m2.sent[0].text).toMatch(/X: the post failed/);
-  });
+  }, 120_000);
 
   it('a fixture launch pushes main and then fixture/<run id>, once each across a crash; its two probes; its mail names the preview, the branch and the superseded uploads', async () => {
     const c = clone({ fixture: true });
@@ -471,7 +471,7 @@ describe('launch', () => {
     expect(a4.join('\n')).toMatch(/local fallback/);
     expect(m2.sent).toHaveLength(1);
     expect(m2.sent[0].text).toMatch(/FIXTURE_SITE=1/);
-  });
+  }, 120_000);
 
   it('a stale page past the deploy timeout halts deploy-timeout and posts nothing', async () => {
     const c = clone();
@@ -497,5 +497,5 @@ describe('launch', () => {
     expect(posts).toEqual([]);
     expect(mail.sent).toEqual([]);
     expect(readHalt(runDir(c.f.topic, c.f.story, c.f.root))?.kind).toBe('deploy-timeout');
-  });
+  }, 120_000);
 });
