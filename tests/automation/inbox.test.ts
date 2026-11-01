@@ -173,6 +173,45 @@ describe('pollInbox', () => {
     expect(halt?.kind).toBe('request-expired');
   });
 
+  it('a decide that fails (exit 1) leaves the message for the next poll, halts the story step-failed, and the tick goes on', async () => {
+    const { s, mail, sent, subject } = await staged();
+    mail.deliver(reply(sent, 'OK', { subject }));
+    let fail = true;
+    const run: typeof s.run = async (cli, args) =>
+      fail && args[0] === 'decide'
+        ? { status: 1, stdout: '', stderr: 'YouTube kept vid00000000 private after go-live\n' }
+        : s.run(cli, args);
+    const r = await pollInbox(a, mail, s.f.root, { now: () => T0.getTime(), run });
+    expect(r.failed).toEqual([`${s.request}: YouTube kept vid00000000 private after go-live`]);
+    expect(readInbox(s.f.root).handled).toHaveLength(0);
+    const halt = readJson<{ kind: string; why: string }>(join(runDir(s.f.topic, s.f.story, s.f.root), 'halt.json'));
+    expect(halt).toMatchObject({ kind: 'step-failed' });
+    expect(halt?.why).toMatch(/publish decide .*kept vid00000000 private/);
+    expect(mail.sent).toHaveLength(1); // the halt mail is the tick's (notifyHalts), not the inbox's
+    fail = false;
+    const r2 = await pollInbox(a, mail, s.f.root, { now: () => T0.getTime(), run });
+    expect(r2.applied).toEqual([`${s.request}: ok`]);
+    expect(readJson(join(runDir(s.f.topic, s.f.story, s.f.root), 'halt.json'))).toBeNull(); // cleared on success
+  });
+
+  it('a later reply on a decided request is answered once and never applied; the same decision again is a copy', async () => {
+    const { s, mail, sent, subject, poll } = await staged();
+    mail.deliver(reply(sent, 'OK', { subject }));
+    await poll();
+    mail.deliver(reply(sent, 'CHANGES: the figure is wrong', { subject }));
+    const r = await poll();
+    expect(r.refused).toEqual([`${s.request}: already decided (ok)`]);
+    expect(s.events().some((e) => e.type === 'changes-requested')).toBe(false);
+    expect(mail.sent).toHaveLength(2);
+    expect(mail.sent[1].text).toMatch(/already decided.*ok/);
+    expect(readInbox(s.f.root).handled.map((h) => h.outcome)).toEqual(['applied:ok', 'refused:already decided (ok)']);
+    mail.deliver(reply(sent, 'OK', { subject }));
+    const r2 = await poll();
+    expect(r2.applied).toEqual([`${s.request}: ok`]); // a copy of the same decision: nothing to say
+    expect(mail.sent).toHaveLength(2);
+    expect(s.publicUpdates()).toHaveLength(1);
+  });
+
   it('CHANGES: with placed notes and PAID OK reach decide as arguments', async () => {
     const { s, mail, sent, subject, poll } = await staged();
     mail.deliver(reply(sent, 'CHANGES:\n[0:12 sc2 s3] the figure is wrong\nshort:one the caption is cut', { subject }));

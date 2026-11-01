@@ -193,17 +193,30 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
     const run =
       deps.run ??
       ((cli: string, args: string[]) => runCli(cli, args, { cwd: root, env: envFor(cli, args, process.env) }));
-    if (deps.mail) {
-      const inbox = await pollInbox(a, deps.mail, root, { now, run });
-      if (inbox.fetched)
-        actions.push(
-          `inbox: ${inbox.fetched} fetched, ${inbox.applied.length} applied, ${inbox.clarified.length} clarified, ${inbox.refused.length} refused, ${inbox.ignored.length} ignored`,
-        );
-    }
-    const published = await publishDue(a, root, { now, run, mail: deps.mail, env: process.env });
-    actions.push(...published);
+    // each publication step on its own: one that throws (a mailbox outage, a missing CLI) is reported as an
+    // action and the pass goes on to the rest (the halts, the digest)
+    const step = async (name: string, fn: () => Promise<void>) => {
+      try {
+        await fn();
+      } catch (e) {
+        actions.push(`${name} failed: ${(e as Error).message.split('\n')[0]}`);
+      }
+    };
+    if (deps.mail)
+      await step('inbox', async () => {
+        const inbox = await pollInbox(a, deps.mail!, root, { now, run });
+        if (inbox.fetched)
+          actions.push(
+            `inbox: ${inbox.fetched} fetched, ${inbox.applied.length} applied, ${inbox.clarified.length} clarified, ${inbox.refused.length} refused, ${inbox.failed.length} failed, ${inbox.ignored.length} ignored`,
+          );
+      });
+    await step('due publications', async () => {
+      actions.push(...(await publishDue(a, root, { now, run, mail: deps.mail, env: process.env })));
+    });
     // the deploy probes: one per pending launch, then the social post and the launch mail
-    actions.push(...(await probeLaunches(a, root, { now, run, mail: deps.mail, fetchFn: deps.fetchFn })));
+    await step('deploy probes', async () => {
+      actions.push(...(await probeLaunches(a, root, { now, run, mail: deps.mail, fetchFn: deps.fetchFn })));
+    });
     const rows = (deps.rows ?? (() => statusOf(root, deps.alive)))();
     const due = dueResumes(a, root, { now, rows, ask: deps.ask, alive: deps.alive });
     updateSchedule(root, (s) => ({ ...s, due }));

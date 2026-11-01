@@ -4,15 +4,17 @@
 // stopped at, a commit is never repeated and a push never forced. The deploy confirmation is the tick's: one probe
 // per pass; confirmed, the social post (when the institution has an account) and the launch email follow.
 import { existsSync, mkdirSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative } from 'node:path';
 import type { Automation } from '../../shared/automation';
 import { isFixtureTopic } from '../../config/site';
 import type { CliResult } from '../../shared/cli';
-import { ROOT, readJson, storySlug, writeJsonAtomic } from '../../shared/io';
+import { ROOT, readJson, scriptDir, storySlug, topicDir, writeJsonAtomic } from '../../shared/io';
 import type { MailTransport } from '../../shared/mail';
 import { loadLedger, openOutput } from '../../modules/publishing';
 import { liveCheck } from '../../modules/website';
 import { type Halt, clearHalt, readHalt, runDir, writeHalt } from './journal';
+import { acquire, aliveLocks, readLock, release } from './lock';
+import { alive } from './proc';
 import { automationDir, sendTracked } from './notify';
 import { storiesWithLedgers } from './publish-due';
 import { renderLaunched } from './requests';
@@ -37,6 +39,9 @@ export interface LaunchRecord {
 }
 export const launchPath = (topic: string, storyId: string, root = ROOT) =>
   join(automationDir(root), LAUNCH_DIR, `${topic}--${storySlug(storyId)}.json`);
+/** The launch's lock folder: one launch of a story at a time, across work instances. */
+export const launchLockDir = (topic: string, storyId: string, root = ROOT) =>
+  join(automationDir(root), LAUNCH_DIR, `${topic}--${storySlug(storyId)}.lock`);
 export const readLaunch = (topic: string, storyId: string, root = ROOT) =>
   readJson<LaunchRecord>(launchPath(topic, storyId, root));
 export function writeLaunch(root: string, r: LaunchRecord): void {
@@ -86,7 +91,28 @@ export function launchProblem(topic: string, storyId: string, root = ROOT): stri
     // an uploaded Short goes live before the launch (it is approved, scheduled, or behind on its parent link)
     if (s.state.id && !s.state.live) return `${id} is ${s.state.status}, not live yet`;
   }
+  // another story of the topic with a live run writes under the same topic folder: the launch waits for it
+  const mine = runDir(topic, storyId, root);
+  const other = aliveLocks(root, alive).find(
+    (dir) => dir !== mine && dir.replaceAll('\\', '/').includes(`/topics/${topic}/scripts/`),
+  );
+  if (other) return `${other.replaceAll('\\', '/').split('/').at(-2)} has a live run in this topic: the launch waits`;
   return null;
+}
+
+/** What the launch commits: this story's folder, the topic's derived files beside it (the report, the public record,
+ *  the stories), and the site outputs; never another story's folder. */
+export function launchStaged(topic: string, storyId: string, root = ROOT): string[] {
+  const rel = (p: string) => relative(root, p).replaceAll('\\', '/');
+  const dir = topicDir(topic, root);
+  const files = existsSync(dir)
+    ? readdirSync(dir, { withFileTypes: true })
+        .filter((e) => e.isFile())
+        .map((e) => rel(join(dir, e.name)))
+    : [];
+  return [rel(scriptDir(topic, storyId, root)), ...files, 'public', 'public-urls.json', 'brand'].filter((p) =>
+    existsSync(join(root, p)),
+  );
 }
 
 /** The launch jobs the work plane may start now: launchable stories without a finished or halted launch. */
@@ -94,6 +120,8 @@ export function launchJobs(a: Automation, root = ROOT): Job[] {
   const out: Job[] = [];
   for (const [topic, storyId] of storiesWithLedgers(root)) {
     if (launchProblem(topic, storyId, root)) continue;
+    const held = readLock(launchLockDir(topic, storyId, root));
+    if (held && alive(held.pid)) continue; // a work instance is launching it now
     const rec = readLaunch(topic, storyId, root);
     if (rec?.halt || readHalt(runDir(topic, storyId, root))) continue; // a person's
     if (rec && rec.committed && (rec.pushed || !a.launch.push)) continue; // launched
@@ -147,6 +175,38 @@ export async function launch(
     return r;
   };
   if (problem) return halted(`not launchable: ${problem}`, { kind: 'fix', text: problem }, null);
+  // one launch of a story at a time (spec 4.4): a second work instance finds the lock held and ends held
+  const lockDir = launchLockDir(topic, storyId, root);
+  const got = acquire(lockDir, 'launch', { now, staleMinutes: a.runs.lockStaleMinutes });
+  if ('held' in got)
+    return {
+      outcome: 'held',
+      stage: 'launch',
+      halt: null,
+      iterations: 0,
+      costUsd: 0,
+      record: readLaunch(topic, storyId, root),
+    };
+  try {
+    return await launchLocked(topic, storyId, a, d, root, now, halted);
+  } finally {
+    release(lockDir, got.lock);
+  }
+}
+
+async function launchLocked(
+  topic: string,
+  storyId: string,
+  a: Automation,
+  d: LaunchDeps,
+  root: string,
+  now: () => number,
+  halted: (
+    why: string,
+    unblock: Halt['unblock'],
+    record: LaunchRecord | null,
+  ) => RunResult & { record: LaunchRecord | null },
+): Promise<RunResult & { record: LaunchRecord | null }> {
   const record: LaunchRecord = readLaunch(topic, storyId, root) ?? {
     topic,
     storyId,
@@ -213,15 +273,9 @@ export async function launch(
     });
     if (why) return fail(why);
     try {
-      d.git(['add', '-A', '--', ...LAUNCH_PATHS(topic).filter((p) => existsSync(join(root, p)))]);
+      d.git(['add', '-A', '--', ...launchStaged(topic, storyId, root)]);
       const staged = d.git(['diff', '--cached', '--name-only']).trim();
-      if (staged)
-        d.git([
-          'commit',
-          '-q',
-          '-m',
-          `release(${topic}): ${storyId} is live\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>`,
-        ]);
+      if (staged) d.git(['commit', '-q', '-m', `release(${topic}): ${storyId} is live`]); // an automated commit: no author line
       record.committed = d.git(['rev-parse', 'HEAD']).trim();
       save();
     } catch (e) {

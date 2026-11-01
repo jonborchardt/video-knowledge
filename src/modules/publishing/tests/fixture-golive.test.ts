@@ -9,6 +9,7 @@ import { readJson, sha, toJson } from '../../../shared/io';
 import { Refusal } from '../../../shared/refusal';
 import { storyOutputs } from '../outputs';
 import { loadLedger, openOutput, recordApproved, recordUploaded } from '../publish';
+import { decideProblem } from '../decide';
 import { goLive, sync, verify } from '../uploader';
 import { expectedOf } from '../verify';
 import type { RemoteVideo, YouTubeClient } from '../youtube';
@@ -86,6 +87,37 @@ describe('a fixture output goes live', () => {
       anonymous: (async () => new Response('', { status: 200 })) as unknown as typeof fetch,
     });
     expect(v.checks.find((c) => c.name === 'privacy')).toMatchObject({ result: 'pass' });
+  });
+  it('is never scheduled: publishAt would make it public; go-live and decide refuse --at for a fixture topic', async () => {
+    const s = staged();
+    s.approve();
+    const at = new Date(now.getTime() + 2 * 3600_000).toISOString();
+    await expect(goLive(s.f.topic, s.f.story, { ...s.base, client: s.client, at })).rejects.toThrow(
+      /fixture.*never scheduled/,
+    );
+    expect(s.sent()).toEqual([]);
+    expect(s.events().some((e) => e.type === 'scheduled')).toBe(false);
+    const ledger = loadLedger(s.f.topic, s.f.story, s.f.root)!;
+    const req = {
+      request: 'rq-000000000000',
+      release: 'r',
+      outputs: ['youtube'],
+      at: now.toISOString(),
+      expiresAt: new Date(now.getTime() + 86400_000).toISOString(),
+      channel: 'email' as const,
+    };
+    const manifest = {
+      topic: s.f.topic,
+      releaseSha: 'r',
+      ctas: { commercial: [] },
+      fixtureRun: 'run1',
+    } as unknown as Parameters<typeof decideProblem>[1];
+    expect(
+      decideProblem(ledger, manifest, req, { request: req.request, by: 'Jon', verdict: 'schedule', at }, now, 30),
+    ).toMatch(/fixture.*never scheduled/);
+    expect(
+      decideProblem(ledger, manifest, req, { request: req.request, by: 'Jon', verdict: 'ok' }, now, 30),
+    ).toBeNull();
   });
   it('sync records an approved fixture video found unlisted as published (observed), with the visibility', async () => {
     const s = staged();

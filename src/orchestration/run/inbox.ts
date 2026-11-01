@@ -11,7 +11,7 @@ import type { CliResult } from '../../shared/cli';
 import { ROOT, readJson, scriptDir, writeJsonAtomic } from '../../shared/io';
 import type { InMail, MailTransport } from '../../shared/mail';
 import type { ReleaseManifest } from '../../shared/types';
-import { runDir } from './journal';
+import { type Halt, clearHalt, readHalt, runDir, writeHalt } from './journal';
 import { type OutboxEntry, automationDir, readOutbox, sendTracked } from './notify';
 import { DRAFT_ACCEPTED_FILE, readShadow, recordShadowPerson } from './release';
 import { type Decision, batchIdIn, correctionIdIn, ownText, parseReply, requestIdIn } from './replies';
@@ -46,6 +46,8 @@ export interface InboxReport {
   ignored: string[];
   clarified: string[];
   refused: string[];
+  /** Messages whose verb failed (exit 1): left for the next poll, the story halted step-failed. */
+  failed: string[];
 }
 
 /** The request thread a mail belongs to: the outbox entry whose Message-ID the reply names, a request mail or a
@@ -85,11 +87,13 @@ export async function pollInbox(
   const now = deps.now ?? Date.now;
   const file = readInbox(root);
   const got = await mail.fetchSince(file.lastUid);
-  const report: InboxReport = { fetched: got.length, applied: [], ignored: [], clarified: [], refused: [] };
+  const report: InboxReport = { fetched: got.length, applied: [], ignored: [], clarified: [], refused: [], failed: [] };
   const outbox = readOutbox(root);
   const by = a.approvals.approverName || address(a.approvals.to);
+  let maxUid = file.lastUid;
+  let leftAt: number | null = null; // the first message left for the next poll (its verb failed): fetched again
   for (const m of got) {
-    file.lastUid = Math.max(file.lastUid, m.uid);
+    maxUid = Math.max(maxUid, m.uid);
     if (file.handled.some((h) => h.messageId === m.messageId)) {
       writeInbox(root, file);
       continue;
@@ -166,7 +170,42 @@ export async function pollInbox(
         done(`refused:${why}`, id);
         continue;
       }
-      if (r.status !== 0) throw new Error(`publish decide failed: ${(r.stderr || r.stdout).trim()}`);
+      if (r.status !== 0) {
+        // the verb failed (YouTube refused, a crash): the message stays for the next poll, which runs the same
+        // idempotent verb again; the story halts step-failed so the person hears of it (the tick's halt mail)
+        const err = (r.stderr || r.stdout).trim().split('\n').at(-1) ?? 'exit 1';
+        const dir = runDir(topic, storyId, root);
+        const why = `publish decide ${id} failed: ${err}`;
+        if (readHalt(dir)?.why !== why)
+          writeHalt(dir, {
+            kind: 'step-failed',
+            stage: 'release',
+            why,
+            unblock: {
+              kind: 'fix',
+              text: `fix what it names, or run npm run publish -- decide ${topic} ${storyId} --request ${id} --by "<name>" --verdict ${d.verdict} by hand; the next tick tries the reply again`,
+            },
+            at: new Date(now()).toISOString(),
+            runId: 'tick',
+            board: { stage: 'release', next: 'the decision' },
+          } satisfies Halt);
+        report.failed.push(`${id}: ${err}`);
+        leftAt ??= m.uid;
+        continue;
+      }
+      // the request was decided before this reply: a different answer is told so and never applied; the same one
+      // is a copy of the decision (a resend, a second OK) and needs no answer
+      const earlier = /already recorded: decided \S+ \((\w+)\)/.exec(r.stdout)?.[1];
+      if (earlier && earlier !== d.verdict) {
+        await reply(
+          `The release request ${id} was already decided (${earlier}); this reply (${d.verdict}) was not applied. A change to a live release is a new output or a correction, by hand.`,
+        );
+        report.refused.push(`${id}: already decided (${earlier})`);
+        done(`refused:already decided (${earlier})`, id);
+        continue;
+      }
+      const dir = runDir(topic, storyId, root);
+      if (readHalt(dir)?.why.startsWith(`publish decide ${id} failed`)) clearHalt(dir);
       report.applied.push(`${id}: ${d.verdict}`);
       done(`applied:${d.verdict}`, id);
       moved(topic, storyId); // the work plane resumes the story's loop (the Shorts, the launch)
@@ -230,6 +269,8 @@ export async function pollInbox(
     const other = batchIdIn(m.subject) ?? batchIdIn(own) ?? correctionIdIn(m.subject) ?? correctionIdIn(own);
     ignore(other ? `${other}: not handled in this phase` : 'not a request reply');
   }
+  // a message left behind is fetched again next poll (the handled ones after it are skipped by their ids)
+  file.lastUid = leftAt === null ? maxUid : Math.max(file.lastUid, leftAt - 1);
   writeInbox(root, file);
   return report;
 }

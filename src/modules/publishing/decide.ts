@@ -5,6 +5,7 @@
 // the group, the push when the metadata is behind, a sync, then the main output's go-live now or at the time. The
 // Shorts are approved here and go live from the tick once the video is published (a derivative follows its parent).
 import { join } from 'node:path';
+import { isFixtureTopic } from '../../config/site';
 import { ROOT, readJson } from '../../shared/io';
 import { Refusal } from '../../shared/refusal';
 import { expired } from '../../shared/request';
@@ -52,13 +53,18 @@ export function decideProblem(
   a: Pick<DecideArgs, 'request' | 'by' | 'verdict' | 'at' | 'paid'>,
   now: Date,
   scheduleLeadMinutes: number,
+  completing = false, // the video is already live or scheduled under this request: a crashed decide finishing
 ): string | null {
   if (!req) return `unknown request ${a.request}`;
   const main = mainOutput(ledger) ?? 'youtube';
   if (requestDecided(ledger.outputs[main]?.events ?? [], req.request))
     return `request ${req.request} was decided already`;
-  if (expired(req.expiresAt, now)) return `request ${req.request} expired at ${req.expiresAt}; a new request is needed`;
+  if (!completing && expired(req.expiresAt, now))
+    return `request ${req.request} expired at ${req.expiresAt}; a new request is needed`;
   if (!manifest) return 'no release manifest on disk; npm run packaging -- manifest rewrites it';
+  // a fixture topic's output goes unlisted at most: a schedule (publishAt) would make it public (spec 5.8)
+  if (a.verdict === 'schedule' && (manifest.fixtureRun || isFixtureTopic(manifest.topic)))
+    return 'a fixture topic is never scheduled (publishAt would make it public): reply OK for unlisted at most';
   if (req.release !== manifest.releaseSha)
     return `the release changed since the request (${req.release} is now ${manifest.releaseSha}): a new request is needed`;
   if (a.by.trim().startsWith('automated:')) return 'a release is decided by a person, never by an automated run';
@@ -71,6 +77,15 @@ export function decideProblem(
   for (const id of a.paid ?? [])
     if (!manifest.ctas.commercial.some((c) => c.id === id)) return `paid link ${id} is not in the manifest`;
   return null;
+}
+
+/** The environment decide hands its children (the website's and packaging's verbs): no publishing, mail, voice or
+ *  social secret, and no .env reload (the runner's rule: a child holds only its verb's keys). */
+export function childEnv(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+  const out: NodeJS.ProcessEnv = {};
+  for (const [k, v] of Object.entries(env)) if (!/^(YOUTUBE_|APPROVAL_|AZURE_|MAIL_|X_)/.test(k)) out[k] = v;
+  out.VK_NO_DOTENV = '1';
+  return out;
 }
 
 export interface DecideDeps {
@@ -97,7 +112,19 @@ export async function decide(topic: string, storyId: string, a: DecideArgs, d: D
       message: `already recorded: decided ${a.request} (${existing.verdict}) by ${existing.by}`,
     };
   const req = requestOf(ledger0, a.request);
-  const problem = decideProblem(ledger0, d.manifestOf(), req, a, now, d.scheduleLeadMinutes);
+  // completing: an earlier decide of this request got past its first approval (so YouTube may already hold the
+  // effect): the rest is finished even once the request expired, never refused
+  const m0 = openOutput(topic, storyId, { root, output: main }).state;
+  const begun = ledger0.outputs[main].events.some((e) => e.type === 'approved' && e.via?.request === a.request);
+  const problem = decideProblem(
+    ledger0,
+    d.manifestOf(),
+    req,
+    a,
+    now,
+    d.scheduleLeadMinutes,
+    begun || m0.live || m0.status === 'scheduled',
+  );
   if (problem) throw new Refusal(problem);
   const manifest = d.manifestOf()!;
   const base = { root, now, by: a.by };

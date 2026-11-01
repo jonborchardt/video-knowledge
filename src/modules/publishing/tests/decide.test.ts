@@ -8,7 +8,7 @@ import { Refusal } from '../../../shared/refusal';
 import type { ReleaseManifest } from '../../../shared/types';
 import { writeManifest } from '../../packaging/manifest';
 import { ctaPath } from '../../website/cta';
-import { type DecideArgs, type DecideDeps, decide, decideProblem } from '../decide';
+import { type DecideArgs, type DecideDeps, childEnv, decide, decideProblem } from '../decide';
 import { emptyFakeState, fakeYoutubeClient, readFakeState, writeFakeState } from '../fake-youtube';
 import {
   addOutputTo,
@@ -291,6 +291,36 @@ describe('decide', () => {
     ).toEqual(['push', 'go-live']);
     expect(s.events().find((e) => e.type === 'decided')).toMatchObject({ paid: [id] });
     expect(s.events().some((e) => e.type === 'published')).toBe(true);
+  });
+
+  it('a decide that died after go-live is completed even once the request expired (the video is live)', async () => {
+    const s = requested();
+    writeFakeState(s.fake, {
+      ...readFakeState(s.fake),
+      fail: [{ method: 'updateVideo', status: 0, reason: 'crash', retryable: false, times: 1, kind: 'crash' }],
+    });
+    await expect(decide(s.f.topic, s.f.story, s.args(), s.deps())).rejects.toThrow(/crashed/);
+    const later = new Date(now.getTime() + 30 * 86400_000);
+    const r = await decide(s.f.topic, s.f.story, s.args({ now: later }), s.deps());
+    expect(r.existing).toBe(false);
+    expect(s.events().filter((e) => e.type === 'decided')).toHaveLength(1);
+    expect(s.events().filter((e) => e.type === 'published')).toHaveLength(1);
+    // a fresh (not completing) decide on an expired request is still refused
+    const t = requested();
+    await expect(decide(t.f.topic, t.f.story, t.args({ now: later }), t.deps())).rejects.toThrow(/expired/);
+  });
+
+  it("the children decide runs (links, video package) get no secret from decide's environment", () => {
+    const env = childEnv({
+      PATH: '/bin',
+      YOUTUBE_CLIENT_SECRET: 's',
+      APPROVAL_SECRET: 'a',
+      AZURE_SPEECH_KEY: 'k',
+      MAIL_PASSWORD: 'p',
+      X_SPENDING_API_SECRET: 'x',
+      HOME: 'h',
+    });
+    expect(env).toEqual({ PATH: '/bin', HOME: 'h', VK_NO_DOTENV: '1' });
   });
 
   it('a release that moved since the request (a re-packaged Short) is refused and writes nothing', async () => {

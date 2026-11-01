@@ -81,7 +81,7 @@ import {
 } from './publish';
 import { scriptDir, shortOf, storySlug } from '../../shared/io';
 import { goLive, push, sync, upload, verify } from './uploader';
-import { type DecideVerdict, decide } from './decide';
+import { type DecideVerdict, childEnv, decide } from './decide';
 import { runCli } from '../../shared/cli';
 import { TOKEN_FILE, YouTubeError, authorize, loadCredentials, youtubeClient } from './youtube';
 import { fakeAnonymous, fakeYoutubeClient } from './fake-youtube';
@@ -412,7 +412,7 @@ async function main() {
       }
       r = await decide(topic, storyId, a, {
         ...api(),
-        run: (cli, args) => runCli(cli, args, { env: process.env }),
+        run: (cli, args) => runCli(cli, args, { env: childEnv(process.env) }),
         manifestOf,
         scheduleLeadMinutes: loadAutomation(ROOT).approvals.scheduleLeadMinutes,
       });

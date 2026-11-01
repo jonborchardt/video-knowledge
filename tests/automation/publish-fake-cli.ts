@@ -293,8 +293,11 @@ export function fakePublishCli(
         }
         case 'sync':
           return done(await sync(topic, storyId, ctx));
-        case 'verify':
-          return done((await verify(topic, storyId, ctx)).result);
+        case 'verify': {
+          const v = await verify(topic, storyId, ctx);
+          const out = done(v.result);
+          return v.result.event?.result === 'failed' ? { ...out, status: 1 } : out; // exit 1 on a failed check
+        }
         case 'push':
           return done(await push(topic, storyId, ctx));
         case 'go-live':

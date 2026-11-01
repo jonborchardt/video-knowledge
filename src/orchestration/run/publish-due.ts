@@ -7,13 +7,19 @@
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
-import { MANIFEST_FILE, REVIEW_DIR, ROOT, readJson, scriptDir, topicsDir } from '../../shared/io';
+import { MANIFEST_FILE, REVIEW_DIR, ROOT, readJson, scriptDir, topicsDir, writeJsonAtomic } from '../../shared/io';
 import type { MailTransport } from '../../shared/mail';
 import type { ReleaseManifest } from '../../shared/types';
 import { type Ledger, loadLedger, openOutput, openRequest, requestOf } from '../../modules/publishing';
 import type { CliResult } from '../../shared/cli';
 import { type Halt, readHalt, runDir, writeHalt } from './journal';
 import { sendReleaseRequest } from './requests';
+
+/** How many times a failing verification is read again after a publish before the story halts. */
+export const VERIFY_READS = 3;
+/** Under the story's run folder: the failing reads since the last publish (the ledger keeps one copy of an identical
+ *  verification). */
+export const VERIFY_READS_FILE = 'verify-reads.json';
 
 export interface PublishDeps {
   now?: () => number;
@@ -62,14 +68,45 @@ export async function publishDue(a: Automation, root = ROOT, d: PublishDeps): Pr
       continue;
     }
     if (main.state.live) {
-      // a video that decide published is read back once here (the launch needs it verified since)
+      const dir = runDir(topic, storyId, root);
+      const haltOnce = (why: string, text: string) => {
+        if (readHalt(dir)?.why === why) return;
+        writeHalt(dir, {
+          kind: 'step-failed',
+          stage: 'release',
+          why,
+          unblock: { kind: 'fix', text },
+          at: new Date(now()).toISOString(),
+          runId: 'tick',
+          board: { stage: 'release', next: 'a person' },
+        } satisfies Halt);
+      };
+      // a video that decide published is read back here (the launch needs a verification since); a failing read is
+      // tried three times, then the story halts for a person
       const published = main.out.events.findLastIndex((e) => e.type === 'published');
-      if (!main.out.events.slice(published).some((e) => e.type === 'verified')) {
-        const r = await run('publish', ['verify', topic, storyId, '--by', by]);
-        actions.push(`${tag}: verify (${r.status})`);
+      const reads = main.out.events.slice(published).filter((e) => e.type === 'verified');
+      if (!reads.length || reads.at(-1)!.result === 'failed') {
+        // the ledger keeps one copy of an identical failing read, so the reads are counted beside the journal
+        const counterPath = join(dir, VERIFY_READS_FILE);
+        const publishedAt = main.out.events[published]?.at ?? '';
+        const counter = readJson<{ published: string; reads: number }>(counterPath);
+        const done = counter?.published === publishedAt ? counter.reads : 0;
+        if (done < VERIFY_READS) {
+          const r = await run('publish', ['verify', topic, storyId, '--by', by]);
+          actions.push(`${tag}: verify (${r.status})`);
+          writeJsonAtomic(counterPath, { published: publishedAt, reads: done + 1 });
+        } else
+          haltOnce(
+            `${main.id}: the verification keeps failing after ${done} reads since the publish`,
+            `compare what YouTube holds with the package (npm run publish -- verify ${topic} ${storyId}) and fix it`,
+          );
       }
-      const req = main.out.events.findLast((e) => e.type === 'approval-requested')?.request;
-      const via = `tick:${req ?? ''}`;
+      // the Shorts follow their video only under a person's decision on the request (spec 12), by that person
+      const decided = main.out.events.findLast(
+        (e) => e.type === 'decided' && (e.verdict === 'ok' || e.verdict === 'schedule'),
+      );
+      const via = `tick:${decided?.request ?? ''}`;
+      const actor = decided?.by ?? by;
       for (const id of Object.keys(ledger.outputs)) {
         if (!id.startsWith('short:')) continue;
         const s = openOutput(topic, storyId, { root, output: id });
@@ -84,7 +121,18 @@ export async function publishDue(a: Automation, root = ROOT, d: PublishDeps): Pr
           }
           continue;
         }
-        if (s.state.failed && !s.state.failed.retryable) continue; // a person's
+        if (s.state.failed && !s.state.failed.retryable) {
+          // a person's: said once, so the halt mail carries it
+          haltOnce(
+            `${id}: ${s.state.failed.step} failed: ${s.state.failed.error}`,
+            `fix it, then npm run publish -- go-live ${topic} ${shortStory} --by "<name>"`,
+          );
+          continue;
+        }
+        if (!decided) {
+          actions.push(`${tag}: ${id} waits: no decided request (a person makes it live)`);
+          continue;
+        }
         // its description gains the parent's link once the parent is live: pushed before it goes live
         if (s.state.status === 'metadata-behind') {
           const r = await run('publish', ['push', topic, shortStory, '--by', by]);
@@ -92,8 +140,14 @@ export async function publishDue(a: Automation, root = ROOT, d: PublishDeps): Pr
           if (r.status !== 0) break;
         }
         if (openOutput(topic, storyId, { root, output: id }).state.status === 'approved') {
-          const r = await run('publish', ['go-live', topic, shortStory, '--by', by, '--via', via]);
+          const r = await run('publish', ['go-live', topic, shortStory, '--by', actor, '--via', via]);
           actions.push(`${shortTag}: go-live${s.state.failed ? ' retry' : ''} (${r.status})`);
+          const after = openOutput(topic, storyId, { root, output: id }).state;
+          if (after.failed && !after.failed.retryable)
+            haltOnce(
+              `${id}: ${after.failed.step} failed: ${after.failed.error}`,
+              `fix it, then npm run publish -- go-live ${topic} ${shortStory} --by "<name>"`,
+            );
           if (r.status === 0 && openOutput(topic, storyId, { root, output: id }).state.live)
             await run('publish', ['verify', topic, shortStory, '--by', by]);
           break; // in order, one per tick: the next after this one has been read back

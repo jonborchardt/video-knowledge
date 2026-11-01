@@ -309,6 +309,10 @@ export async function goLive(
   if (problem) throw new Refusal(problem);
   const id = o.state.id;
   if (c.at) {
+    if (fixtureVisibility(topic))
+      throw new Refusal(
+        'a fixture topic is never scheduled: publishAt would make it public; go live for unlisted at most (spec 5.8)',
+      );
     const t = Date.parse(c.at);
     if (Number.isNaN(t)) throw new Refusal(`--at ${c.at} is not an ISO date`);
     if (t - (c.now ?? new Date()).getTime() < MIN_SCHEDULE_LEAD_MS)

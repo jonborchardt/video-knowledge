@@ -54,6 +54,33 @@ const halt = (extra: Partial<Halt> = {}): Halt => ({
 const same = () => ({ stage: 'review', next: 'watch it' });
 
 describe('tick', () => {
+  it('a step that throws (the inbox, a due publication, a probe) is reported as an action and the pass goes on', async () => {
+    const root = fresh();
+    const mail = new FakeMail();
+    mail.deliver({
+      uid: 1,
+      messageId: '<x@y>',
+      inReplyTo: null,
+      references: [],
+      from: 'jon@example.test',
+      subject: 'hi',
+      text: 'OK',
+      html: null,
+      date: 'd',
+    });
+    const r = await tick(on, root, {
+      mail,
+      now: () => T0,
+      preflight: okPre,
+      ask: same,
+      run: () => {
+        throw new Error('the publish CLI is missing');
+      },
+    });
+    expect(r.outcome).toBe('ok');
+    expect(r.actions.join('\n')).toMatch(/inbox: 1 fetched/); // an unrelated mail: ignored, no CLI ran
+    expect(readSchedule(root).lastTick).toBeTruthy();
+  });
   it('does nothing while disabled, and never runs a story', async () => {
     const root = fresh();
     const mail = new FakeMail();

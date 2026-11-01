@@ -16,6 +16,7 @@ import {
   LAUNCH_PATHS,
   launch,
   launchJobs,
+  launchLockDir,
   launchPaths,
   launchProblem,
   launches,
@@ -31,7 +32,7 @@ const bares: string[] = [];
 afterAll(() => {
   fixtures.forEach((f) => f.cleanup());
   bares.forEach((b) => rmSync(b, { recursive: true, force: true }));
-});
+}, 120_000);
 const T0 = Date.parse('2026-11-01T12:00:00Z');
 const a = {
   ...DEFAULTS,
@@ -178,8 +179,49 @@ describe('launch', () => {
     expect(launchJobs(a, c.f.root)).toEqual([]);
   });
 
+  it('two launches of one story at once: the second is held; a live run of another story in the topic blocks the launch', async () => {
+    const c = clone();
+    let release: () => void = () => undefined;
+    const slow = c.deps({
+      run: (cli: string, args: string[]) => {
+        c.ran.push([cli, ...args].join(' '));
+        if (cli === 'links') writeFileSync(join(c.f.root, 'public-urls.json'), toJson(['/']));
+        return { status: 0, stdout: '', stderr: '' };
+      },
+      validate: () => ({ ok: true, output: '' }),
+    });
+    const first = (async () => {
+      await new Promise<void>((r) => (release = r));
+      return launch(c.f.topic, c.f.story, a, slow, c.f.root);
+    })();
+    // the first holds the lock from its start; take it by hand to stand in for its slow build
+    const { acquire: take, release: give } = await import('../../src/orchestration/run/lock');
+    const got = take(launchLockDir(c.f.topic, c.f.story, c.f.root), 'launch', {});
+    expect('lock' in got).toBe(true);
+    const second = await launch(c.f.topic, c.f.story, a, c.deps(), c.f.root);
+    expect(second.outcome).toBe('held');
+    expect(c.ran).toEqual([]);
+    expect(launchJobs(a, c.f.root)).toEqual([]); // a held launch is not offered to another instance
+    if ('lock' in got) give(launchLockDir(c.f.topic, c.f.story, c.f.root), got.lock);
+    release();
+    expect((await first).outcome).toBe('done');
+    // another story of the topic with a live run: the launch waits
+    const d = clone();
+    const other = runDir(d.f.topic, 'decision:other', d.f.root);
+    writeFileSync(join(other, '..', 'script.json'), '{}'); // a story folder is one with a script
+    const { acquire: hold } = await import('../../src/orchestration/run/lock');
+    const held = hold(other, 'story', { pid: process.pid });
+    expect('lock' in held).toBe(true);
+    expect(launchProblem(d.f.topic, d.f.story, d.f.root)).toMatch(/decision-other.*live run/);
+    expect(launchJobs(a, d.f.root)).toEqual([]);
+  }, 120_000);
+
   it('runs the sequence once, commits the story and the site outputs on main, pushes once, and fills the record', async () => {
     const c = clone();
+    // another story's in-flight artifact in the same topic is never staged by this story's launch
+    const other = join(c.f.root, 'topics', c.f.topic, 'scripts', 'decision-other');
+    mkdirSync(other, { recursive: true });
+    writeFileSync(join(other, 'script.json'), '{"draft":true}\n');
     expect(launchJobs(a, c.f.root)).toEqual([
       { kind: 'launch', topic: c.f.topic, storyId: c.f.story, why: 'launch: the release group is live' },
     ]);
@@ -198,15 +240,18 @@ describe('launch', () => {
     expect(c.commits()).toBe(String(Number(before) + 1));
     expect(c.originHead()).toBe(rec.committed);
     expect(c.git('log', '-1', '--format=%s')).toContain(`release(${c.f.topic}): ${c.f.story} is live`);
+    expect(c.git('log', '-1', '--format=%B')).not.toMatch(/Co-Authored-By/); // an automated commit names no co-author
     expect(c.git('status', '--porcelain')).toMatch(/brand-out.txt/); // outside the launch's paths: left alone
+    expect(c.git('status', '--porcelain')).toMatch(/decision-other\//); // the other story's: left alone (untracked)
     expect(c.git('show', '--stat', '--format=', 'HEAD')).toContain('public-urls.json');
+    expect(c.git('show', '--stat', '--format=', 'HEAD')).toContain('report.json');
     expect(launchJobs(a, c.f.root)).toEqual([]); // launched: nothing left for the work plane
     // a second job finds everything done and repeats nothing
     const again = await launch(c.f.topic, c.f.story, a, c.deps(), c.f.root);
     expect(again.outcome).toBe('done');
     expect(c.ran).toHaveLength(4);
     expect(c.commits()).toBe(String(Number(before) + 1));
-  });
+  }, 120_000);
 
   it('killed after the commit and before the push record: the resumed job pushes that commit once and commits nothing new (criterion 13)', async () => {
     const c = clone();

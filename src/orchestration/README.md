@@ -31,5 +31,11 @@ one renewal of an expired request then `request-expired`); `run/launch.ts` is th
 work plane, `launch` with its record under `.automation/launch/`, the halt also in the story's run folder,
 `probeLaunches` for the tick: `links -- live`, the X post by policy, the launch mail from `requests.ts`
 `renderLaunched`; a fixture pushes `fixture/<run id>` and probes the production host negatively and the preview host
-positively). `npm run run -- launch` is the hand verb. The orchestration imports publishing, website and social only
-through their `index.ts` and writes every effect through a CLI as a child.
+positively). `npm run run -- launch` is the hand verb. One launch of a story runs at a time (`.automation/launch/<topic>--<slug>.lock`;
+a second work instance ends `held`), it waits while another story of the topic has a live run, and it stages only
+the story's folder, the topic's top-level files and the site outputs. The tick's publication steps each run on their
+own (one that throws is an action line, the pass goes on); a reply whose `decide` fails leaves the message for the
+next poll and halts the story `step-failed`; a reply on a decided request is answered, never applied; a Short goes
+live only under a `decided` request, by its person; a failing verification is read three times, then halts; a Short's
+final failure halts the story. The orchestration imports publishing, website and social only through their
+`index.ts` and writes every effect through a CLI as a child.
