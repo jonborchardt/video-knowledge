@@ -8,4 +8,12 @@ export {
   loadArticleRelease,
 } from './article';
 export { inspectArticle, validateArticleIn } from './validation';
+export { articleFingerprint } from './article';
+export {
+  ARTICLE_REQUEST_FILE,
+  type ArticleRequest,
+  articleRequestPath,
+  correctionProblem,
+  loadArticleRequest,
+} from './request';
 export { type ArticleView, articleView, releaseFigureDraws } from './view';

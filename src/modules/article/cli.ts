@@ -5,12 +5,19 @@
 //   correct <topic> <story-id> --approved-by "<name>" --note "<note>"  release changed text and record the correction
 //                                                                      as a revision in the topic's public-record.json
 //   reaffirm <topic> <story-id> --approved-by "<name>" --note "<why unchanged>"  a stale article's text stands
+//   request-correction <topic> <story-id> --by "<name>"                  a correction request (article-request.json) bound to
+//                                                                      article.json's fingerprint now (APPROVAL_SECRET; refused
+//                                                                      unless a review exists and validation passes); idempotent
+//   decide <topic> <story-id> --request <ar-id> --verdict ok|changes --by "<name>" [--note ...]* [--via <channel:id>]
+//                                                                      a person's decision on the open request: ok runs correct for
+//                                                                      the exact fingerprint; changes records the notes for the writer
 // lock and correct validate afresh and refuse (exit 2, nothing written) unless it passes; a real name or "automated: ...".
 // Both copy each figure's data into the release.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import {
   ARTICLE_FILES,
+  articleFingerprint,
   type Article,
   correctArticle,
   loadArticleRelease,
@@ -38,17 +45,25 @@ import { loadPublicRecord, publicRecordPath, withArticleRevision } from '../../s
 import { Refusal } from '../../shared/refusal';
 import { loadReview } from '../stories';
 import type { EvidencePackage, Script, ScriptValidation } from '../../shared/types';
+import { secretFromEnv } from '../../shared/request';
+import { approverProblem } from '../../shared/approver';
+import { type ArticleRequest, correctionProblem, loadArticleRequest, requestCorrection } from './request';
 
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
 const flag = (name: string) => {
   const i = rest.indexOf(name);
   return i >= 0 ? rest[i + 1] : undefined;
 };
-if (!['validate', 'show', 'lock', 'correct', 'reaffirm'].includes(cmd) || !topic || !storyId) {
+const flags = (name: string) => rest.flatMap((x, i) => (x === name && rest[i + 1] !== undefined ? [rest[i + 1]] : []));
+if (
+  !['validate', 'show', 'lock', 'correct', 'reaffirm', 'request-correction', 'decide'].includes(cmd) ||
+  !topic ||
+  !storyId
+) {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 9)
+      .slice(0, 15)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -133,6 +148,13 @@ function run() {
       const { a, v } = releasable();
       const prev = loadArticleRelease(topic, storyId);
       if (!prev) throw new Refusal(`nothing released yet: npm run article -- lock ${topic} ${storyId}`);
+      // a correction decided by reply names its request: it must bind the article as it is now (register D10)
+      const reqId = flag('--request');
+      const req = loadArticleRequest(topic, storyId);
+      if (reqId) {
+        const problem = correctionProblem(req, reqId, articleFingerprint(a), new Date());
+        if (problem) throw new Refusal(problem);
+      }
       const { release, revision } = correctArticle(
         prev,
         a,
@@ -148,9 +170,122 @@ function run() {
       const next = withArticleRevision(record, revision);
       if (next !== record) writeFileSync(publicRecordPath(topic), toJson(next));
       writeArtifact(dir, ARTICLE_FILES.release, toJson({ ...release, recordSeen: next.revisions.length }));
+      if (reqId && req) {
+        const via = flag('--via');
+        const [channel, ...detail] = (via ?? 'cli').split(':');
+        writeArtifact(
+          dir,
+          ARTICLE_FILES.request,
+          toJson({
+            ...req,
+            decided: {
+              verdict: 'ok',
+              by: flag('--approved-by') ?? '',
+              at: new Date().toISOString(),
+              via: { channel, ...(detail.length && { messageId: detail.join(':') }) },
+            },
+          } satisfies ArticleRequest),
+        );
+      }
       console.log(
         `released ${rel(p(ARTICLE_FILES.release))}: revision ${release.revision}, changed ${revision.sentences.join(', ')}; recorded in ${rel(publicRecordPath(topic))}`,
       );
+      refreshManifest();
+      return;
+    }
+    case 'request-correction': {
+      // the maintenance pass validated and reviewed the text just before; the request binds the file as it is
+      const a = readJson<Article>(p(ARTICLE_FILES.article));
+      if (!a) throw new Refusal(`no ${rel(p(ARTICLE_FILES.article))}`);
+      if (!readJson(p(ARTICLE_FILES.review)))
+        throw new Refusal(`no ${rel(p(ARTICLE_FILES.review))}; an independent agent reviews the correction first`);
+      if (!loadArticleRelease(topic, storyId))
+        throw new Refusal(`nothing released yet: a correction follows a release`);
+      const v = readJson<ScriptValidation>(p(ARTICLE_FILES.validation));
+      if (v?.status !== 'passed')
+        throw new Refusal(
+          `the article does not pass validation (${v?.status ?? 'not validated'}): npm run article -- validate ${topic} ${storyId}`,
+        );
+      const secret = secretFromEnv();
+      if (!secret) throw new Refusal('a request id needs APPROVAL_SECRET in .env');
+      const by = flag('--by') ?? '';
+      if (!by.trim()) throw new Refusal('request-correction needs --by <name>');
+      const fp = articleFingerprint(a);
+      const { request, existing } = requestCorrection(
+        loadArticleRequest(topic, storyId),
+        fp,
+        secret,
+        by,
+        new Date(),
+        7,
+      );
+      if (!existing) writeArtifact(dir, ARTICLE_FILES.request, toJson(request));
+      console.log(
+        `${existing ? 'already requested' : 'requested'}: ${request.request} for ${rel(p(ARTICLE_FILES.article))} (${fp}), expires ${request.expiresAt}`,
+      );
+      return;
+    }
+    case 'decide': {
+      const reqId = flag('--request');
+      const verdict = flag('--verdict');
+      const by = flag('--by') ?? '';
+      if (!reqId || !verdict || !['ok', 'changes'].includes(verdict))
+        throw new Refusal('decide needs --request <ar-id> --verdict ok|changes --by <name>');
+      const problem = approverProblem(by);
+      if (problem) throw new Refusal(problem);
+      if (/^automated:/i.test(by.trim())) throw new Refusal('only a person decides a correction (register D10)');
+      const a = readJson<Article>(p(ARTICLE_FILES.article));
+      if (!a) throw new Refusal(`no ${rel(p(ARTICLE_FILES.article))}`);
+      const req = loadArticleRequest(topic, storyId);
+      const wrong = correctionProblem(req, reqId, articleFingerprint(a), new Date());
+      if (wrong) {
+        if (req?.request === reqId && req.decided) {
+          console.log(`already decided: ${reqId} (${req.decided.verdict}) by ${req.decided.by}`);
+          return;
+        }
+        throw new Refusal(wrong);
+      }
+      const via = flag('--via');
+      const [channel, ...detail] = (via ?? 'cli').split(':');
+      const decided = {
+        verdict: verdict as 'ok' | 'changes',
+        by,
+        at: new Date().toISOString(),
+        via: { channel, ...(detail.length && { messageId: detail.join(':') }) },
+        ...(verdict === 'changes' && { notes: flags('--note') }),
+      };
+      if (verdict === 'changes') {
+        if (!decided.notes?.length) throw new Refusal('changes needs at least one --note');
+        writeArtifact(dir, ARTICLE_FILES.request, toJson({ ...req!, decided } satisfies ArticleRequest));
+        console.log(
+          `${reqId}: changes recorded (${decided.notes.length} note${decided.notes.length === 1 ? '' : 's'}); the next maintenance pass revises the article`,
+        );
+        return;
+      }
+      // ok: the correction itself, by the person, for the exact fingerprint, with the reviewer's words as the note
+      const review = readJson<{ findings?: { text: string }[]; summary?: string }>(p(ARTICLE_FILES.review));
+      const note = flag('--note') ?? review?.summary ?? 'corrected after a revised finding (approved by reply)';
+      const { a: art, v } = releasable();
+      const prev = loadArticleRelease(topic, storyId);
+      if (!prev) throw new Refusal('nothing released yet');
+      const { release, revision } = correctArticle(
+        prev,
+        art,
+        v,
+        by,
+        note,
+        today,
+        releaseFigures(art, figureData(topic, storyId)),
+      );
+      const record = loadPublicRecord(topic);
+      const next = withArticleRevision(record, revision);
+      if (next !== record) writeFileSync(publicRecordPath(topic), toJson(next));
+      writeArtifact(dir, ARTICLE_FILES.release, toJson({ ...release, recordSeen: next.revisions.length }));
+      writeArtifact(dir, ARTICLE_FILES.request, toJson({ ...req!, decided } satisfies ArticleRequest));
+      console.log(
+        `${reqId}: ok by ${by}; released ${rel(p(ARTICLE_FILES.release))}: revision ${release.revision}, changed ${revision.sentences.join(', ')}`,
+      );
+      refreshManifest();
       return;
     }
     case 'reaffirm': {

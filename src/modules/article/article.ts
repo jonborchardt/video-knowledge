@@ -21,6 +21,7 @@ import type {
 export type FigureData = { chart: ChartSpec } | { table: DataTable };
 
 export const ARTICLE_FILES = {
+  request: 'article-request.json',
   article: 'article.json',
   review: 'article-review.json',
   validation: 'article-validation.json',
