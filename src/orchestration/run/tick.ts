@@ -23,6 +23,8 @@ import { type PreflightDeps, preflight } from './preflight';
 import { pollInbox } from './inbox';
 import { publishDue } from './publish-due';
 import { launchPaths, probeLaunches } from './launch';
+import { proposalsDigest } from './discovery-state';
+import { renderBatch } from './requests';
 import { type CliResult, runCli } from '../../shared/cli';
 import { envFor } from './steps';
 import { alive, killTree } from './proc';
@@ -84,6 +86,7 @@ export const defaultRender =
       return r ? renderHalt(r.topic, r.storyId, r.halt!, a, { dir: r.dir }) : null;
     }
     if (e.kind === 'digest') return renderDigest(rows(), extra(), a);
+    if (e.kind === 'batch' && e.request) return renderBatch(root, e.request, a);
     if (e.kind === 'test')
       return {
         from: a.approvals.from || a.notifications.to,
@@ -127,8 +130,14 @@ const preflightRow = (root: string, h: Halt): StatusRow => ({
   costUsd: 0,
 });
 
+/** What the digest says beyond the status rows, by default: the proposals pending and parked (phase 4). */
+export const defaultDigestExtra =
+  (root = ROOT) =>
+  (): DigestExtra => ({ proposals: proposalsDigest(root) });
+
 export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<TickReport> {
   const now = deps.now ?? Date.now;
+  const digestExtra = deps.digestExtra ?? defaultDigestExtra(root);
   const actions: string[] = [];
   const dir = automationDir(root);
   const got = acquire(join(dir, TICK_LOCK), 'tick', { now, staleMinutes: a.runs.lockStaleMinutes, alive: deps.alive });
@@ -186,7 +195,7 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
         deps.mail,
         root,
         now,
-        deps.render ?? defaultRender(a, rowsNow, deps.digestExtra, root),
+        deps.render ?? defaultRender(a, rowsNow, digestExtra, root),
       );
       if (resent.length) actions.push(`outbox: resent ${resent.length}`);
     }
@@ -238,7 +247,7 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
       const fresh = (deps.rows ?? (() => statusOf(root, deps.alive)))(); // after the kills
       const sent = await notifyHalts(a, deps.mail, root, { now, rows: fresh });
       if (sent.length) actions.push(`emailed ${sent.length} halt${sent.length === 1 ? '' : 's'}`);
-      const slot = await sendDigestIfDue(a, deps.mail, now, root, fresh, deps.digestExtra?.() ?? {});
+      const slot = await sendDigestIfDue(a, deps.mail, now, root, fresh, digestExtra());
       if (slot) actions.push(`digest sent for ${slot}`);
     }
     updateSchedule(root, (s) => ({ ...s, lastTick: new Date(now()).toISOString() }));

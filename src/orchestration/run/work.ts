@@ -21,6 +21,7 @@ import { runCli } from '../../shared/cli';
 import { envFor } from './steps';
 import { execFileSync } from 'node:child_process';
 import { type DueResume, readSchedule, updateSchedule } from './schedule';
+import { discover, discoveryDeps, discoveryDir, discoveryDue } from './discovery';
 
 export type JobKind = 'launch' | 'resume' | 'release' | 'pick' | 'topic' | 'discovery' | 'scan';
 export interface Job {
@@ -45,6 +46,8 @@ export interface WorkDeps {
   /** Runs the production pick (records the pick before the start, signs with the pick's approver); default pickJob. */
   runPick?: () => Promise<{ started?: string; why?: string; result?: RunResult }>;
   approver?: string;
+  /** Runs the discovery job (phase 4); the default runs the agents and mails the batch. */
+  runDiscovery?: (a: Automation) => Promise<RunResult>;
   skip?: Job[]; // jobs this instance already found held
   mail?: MailTransport | null; // the request mails of a release loop
 }
@@ -78,7 +81,13 @@ export function nextJob(a: Automation, root = ROOT, deps: WorkDeps = {}): Job | 
     const p = deps.pick();
     if (p && !skip.some((s) => sameJob(s, p))) return p;
   }
-  // topic runs, discovery, scans: phases 4 to 6
+  // discovery (phase 4): the weekly slot, once, unless another instance holds it
+  if (discoveryDue(a, root, (deps.now ?? Date.now)())) {
+    const held = readLock(discoveryDir(root));
+    const job: Job = { kind: 'discovery', why: 'discovery: the weekly slot' };
+    if (!(held && (deps.alive ?? alive)(held.pid)) && !skip.some((s) => sameJob(s, job))) return job;
+  }
+  // topic runs and scans: phases 5 and 6
   return null;
 }
 
@@ -126,13 +135,15 @@ export async function work(a: Automation, root = ROOT, deps: WorkDeps = {}): Pro
     if (job.kind === 'pick' && !picked?.result) return { outcome: 'idle', job: null };
     const result =
       picked?.result ??
-      (job.kind === 'launch'
-        ? await (deps.runLaunch ?? ((t, s, auto) => launch(t, s, auto, launchDeps(root), root)))(
-            job.topic!,
-            job.storyId!,
-            a,
-          )
-        : await run(job.topic!, job.storyId!, a, approver));
+      (job.kind === 'discovery'
+        ? await (deps.runDiscovery ?? ((auto) => discover(auto, discoveryDeps(deps.mail ?? null), root)))(a)
+        : job.kind === 'launch'
+          ? await (deps.runLaunch ?? ((t, s, auto) => launch(t, s, auto, launchDeps(root), root)))(
+              job.topic!,
+              job.storyId!,
+              a,
+            )
+          : await run(job.topic!, job.storyId!, a, approver));
     if (result.outcome === 'held') {
       skip.push(job); // another instance owns it: try the next job once
       continue;

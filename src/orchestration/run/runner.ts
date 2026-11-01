@@ -105,7 +105,7 @@ interface BudgetFile {
 const budgetPath = (root: string) => join(root, AUTOMATION_DIR, 'budget.json');
 export const weekSpend = (root: string, week: string): number =>
   readJson<BudgetFile>(budgetPath(root))?.weeks[week] ?? 0;
-function addSpend(root: string, week: string, usd: number): void {
+export function addSpend(root: string, week: string, usd: number): void {
   const f = readJson<BudgetFile>(budgetPath(root)) ?? { weeks: {} };
   f.weeks[week] = (f.weeks[week] ?? 0) + usd;
   mkdirSync(join(root, AUTOMATION_DIR), { recursive: true });

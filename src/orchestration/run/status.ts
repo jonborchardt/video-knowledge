@@ -7,6 +7,7 @@ import { ROOT, topicsDir } from '../../shared/io';
 import { type Halt, readHalt, readJournal, RUN_DIR } from './journal';
 import { readLock } from './lock';
 import { alive } from './proc';
+import { discoveryHalts, discoveryHaltsDir } from './discovery-state';
 
 export interface StatusRow {
   topic: string;
@@ -63,6 +64,20 @@ export function statusOf(root = ROOT, isAlive: (pid: number) => boolean = alive)
       costUsd: journal.reduce((s, e) => s + (e.costUsd ?? 0), 0),
     });
   }
+  // the discovery job's halts (a proposal whose review never completed, an institution whose agent failed): rows
+  // under the pseudo-topic `proposals`, so the halt mail and the digest carry them like a story's
+  for (const h of discoveryHalts(root))
+    rows.push({
+      topic: 'proposals',
+      storyId: h.slug,
+      dir: discoveryHaltsDir(root),
+      state: 'halted',
+      since: h.halt.at,
+      step: null,
+      halt: h.halt,
+      lastFinish: null,
+      costUsd: 0,
+    });
   return rows;
 }
 

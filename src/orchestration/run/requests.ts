@@ -18,6 +18,8 @@ import { commissionOf, isFixtureTopic } from '../../config/site';
 import { readdirSync } from 'node:fs';
 import { topicDir } from '../../shared/io';
 import type { LaunchRecord } from './launch';
+import { loadProposals } from '../../modules/topic-discovery';
+import { discoveryRecords } from './discovery-state';
 import { readOutbox, secretsOf, sendTracked } from './notify';
 import type { ShadowEntry } from './release';
 import { envFor } from './steps';
@@ -453,6 +455,58 @@ export function renderLaunched(rec: LaunchRecord, a: Automation, root = ROOT): O
     from: a.approvals.from || a.notifications.to,
     to: a.notifications.to || a.approvals.to,
     subject: `[CoR live] ${title}`,
+    text: redact(lines.join('\n'), secretsOf()),
+  };
+}
+
+/** The weekly proposal batch (spec §5.1): per listed proposal its institution, question, rationale, the reviewer's
+ *  verdict in full, the overlap, both overalls and three sample sources; then the reply lines in words; then the
+ *  parked ones with their reason under "no reply needed". Rendered from the proposal files that carry the batch id
+ *  (and the slot's record for the parked list), so an outbox resend re-renders the same batch. */
+export function renderBatch(root: string, id: string, a: Automation): Omit<OutMail, 'messageId'> {
+  const all = loadProposals(root);
+  const listed = all.filter((x) => x.proposal.batch?.id === id);
+  const record = discoveryRecords(root).find((r) => r.batch?.id === id) ?? null;
+  const overall = (s: { evidence: number; checkability: number; depth: number; fit: number; novelty: number }) =>
+    (2 * s.evidence + 2 * s.checkability + s.depth + s.fit + s.novelty) / 7;
+  const lines: string[] = [
+    `${listed.length} topic proposal${listed.length === 1 ? '' : 's'} for your review. Each was written by one agent and reviewed by another; the weak ones are parked below and need no reply.`,
+  ];
+  for (const { proposal: p, review: r } of listed) {
+    lines.push(
+      '',
+      `## ${p.slug} (${p.institution})`,
+      `Question: ${p.question}`,
+      '',
+      `Why: ${p.rationale}`,
+      '',
+      `Reviewer: ${r?.verdict ?? 'no review'}`,
+      ...(r?.concerns.length ? ['Concerns:', ...r.concerns.map((c) => `  - ${c}`)] : []),
+      `Overlap: ${p.overlap.note}${p.overlap.topics.length ? ` (topics: ${p.overlap.topics.join(', ')})` : ''}${p.overlap.stories.length ? ` (stories: ${p.overlap.stories.join(', ')})` : ''}`,
+      `Scores: proposer ${overall(p.scores).toFixed(2)}, reviewer ${r ? overall(r.scores).toFixed(2) : '-'}`,
+      'Sample sources:',
+      ...p.sources.slice(0, 3).map((s) => `  - ${s.title}: ${s.url}`),
+    );
+  }
+  lines.push(
+    '',
+    'Reply with one line per decision (the subject carries the batch id):',
+    ...listed.map(({ proposal: p }) => `  APPROVE ${p.slug}`),
+    ...listed.map(({ proposal: p }) => `  REJECT ${p.slug}: <why>`),
+    '  APPROVE ALL',
+    '  REJECT ALL: <why>',
+    'An approved topic is researched over the following week and comes back as ready stories or is parked with the reason.',
+  );
+  const parked = record?.batch?.parked ?? [];
+  if (parked.length) lines.push('', 'Parked, no reply needed:', ...parked.map((x) => `  - ${x.slug}: ${x.why}`));
+  const unreviewed = record?.batch?.unreviewed ?? [];
+  if (unreviewed.length)
+    lines.push('', 'Waiting for an independent review (not in this batch):', ...unreviewed.map((s) => `  - ${s}`));
+  lines.push(...footer(a), `Batch ${id}`);
+  return {
+    from: a.approvals.from || a.notifications.to,
+    to: a.approvals.to || a.notifications.to,
+    subject: `[CoR topics] ${listed.length} proposal${listed.length === 1 ? '' : 's'} for your review (${id})`,
     text: redact(lines.join('\n'), secretsOf()),
   };
 }

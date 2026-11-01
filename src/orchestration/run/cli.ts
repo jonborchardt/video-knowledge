@@ -15,6 +15,10 @@
 //                                      --no-commit: a supervised run on a feature branch; the finish validates and
 //                                      leaves the artifacts uncommitted for the person (the runner commits only on
 //                                      git.commitOn's branch).
+//   discover [--institution <key>] [--dry-run]
+//                                      the weekly topic discovery by hand (costs agents): one discovery agent per
+//                                      institution with a channel, one independent review per proposal, the batch and its
+//                                      mail; --dry-run runs the agents and prints the batch, recording and mailing nothing.
 //   launch <topic> <story-id>          the launch job by hand (what the work plane runs once the release group is live and
 //                                      verified): report seed, brand, build, links freeze, validate, commit, push, resumable
 //                                      from its record under .automation/launch/; clears the launch's halt first.
@@ -46,6 +50,7 @@ import { renderStatus, statusOf } from './status';
 import { tick } from './tick';
 import { type Job, launchDeps, nextJob, scheduleText, work } from './work';
 import { launch } from './launch';
+import { discover, discoveryDeps } from './discovery';
 
 const usage = () =>
   readFileSync(new URL(import.meta.url), 'utf8')
@@ -137,6 +142,34 @@ switch (verb) {
     }
     const pushed = r.record?.pushed ? `, pushed ${r.record.pushed}` : '';
     console.log(`launched: committed ${r.record?.committed ?? 'nothing'}${pushed}; the tick probes the deploy`);
+    break;
+  }
+  case 'discover': {
+    // a person's manual discovery (costs one discovery agent per institution and one review agent per proposal);
+    // --dry-run runs the agents and prints the batch without recording, mailing or committing anything
+    const a = loadAutomation(ROOT);
+    const cfg = mailConfigFromEnv();
+    const dry = rest.includes('--dry-run');
+    const only = flag('--institution');
+    const r = await discover(
+      a,
+      {
+        ...discoveryDeps(cfg && a.approvals.to && !dry ? libraryTransport(cfg) : null),
+        dryRun: dry,
+        ...(only && { institutions: () => [only] }),
+      },
+      ROOT,
+    );
+    if (r.outcome === 'halted' && r.halt) {
+      console.log(`HALT ${r.halt.kind}: ${r.halt.why}`);
+      console.log(`UNBLOCK: ${r.halt.unblock.text}`);
+      process.exit(1);
+    }
+    if (r.outcome === 'held') die('another discovery is running', 3);
+    const rec = r.record;
+    console.log(
+      `discovery ${dry ? '(dry run) ' : ''}done: ${Object.keys(rec?.institutions ?? {}).length} institutions, ${Object.values(rec?.institutions ?? {}).reduce((n, i) => n + i.proposals.length, 0)} proposals, ${rec?.batch ? `batch ${rec.batch.id} with ${rec.batch.listed.length} listed and ${rec.batch.parked.length} parked` : 'no batch'}, ${rec?.costUsd.toFixed(2) ?? '0.00'} USD`,
+    );
     break;
   }
   case 'status': {

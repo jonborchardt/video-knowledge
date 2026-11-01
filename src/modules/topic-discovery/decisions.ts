@@ -31,7 +31,8 @@ export function decideProposal(p: Proposal, review: ProposalReview | null, d: De
       changed: false,
       message: `${p.slug}: already ${p.status} by ${p.decidedBy ?? 'unknown'} at ${p.decidedAt ?? '?'}`,
     };
-  const { parkedWhy: _parked, ...rest } = p;
+  const rest: Proposal = { ...p };
+  delete rest.parkedWhy;
   const next: Proposal = {
     ...rest,
     status: d.status,
@@ -117,7 +118,12 @@ export function batchOf(
   const slugs = listed.map((r) => r.slug);
   const id = secret ? requestId('pb', secret, slugs.join(','), at) : 'dry-run';
   for (const r of listed) {
-    const { overall: _o, proposerOverall: _p, reviewerOverall: _r, weak: _w, unreviewed: _u, ...proposal } = r;
+    const proposal: Proposal & Partial<Ranked> = { ...r };
+    delete proposal.overall;
+    delete proposal.proposerOverall;
+    delete proposal.reviewerOverall;
+    delete proposal.weak;
+    delete proposal.unreviewed;
     const previous = proposal.batch ? [...(proposal.batch.previous ?? []), proposal.batch.id] : [];
     files.push({
       ...(proposal as Proposal),

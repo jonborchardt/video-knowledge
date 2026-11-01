@@ -223,7 +223,13 @@ function main() {
         break;
       }
       for (const p of batch.files) save(p);
-      const { files: _files, ...out } = batch;
+      const out = {
+        id: batch.id,
+        at: batch.at,
+        listed: batch.listed,
+        parked: batch.parked,
+        unreviewed: batch.unreviewed,
+      };
       console.log(JSON.stringify({ ...out, invalid: invalid.map((i) => i.slug) }, null, 1));
       break;
     }
