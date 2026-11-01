@@ -95,6 +95,22 @@ describe('guard', () => {
     expect(g.restored).toEqual(['.env']);
     expect(r.read('.env')).toBe(original);
   });
+  it(".git/config: the IDE's merge-base bookkeeping passes, a hooksPath or url change is restored", () => {
+    const cfg = '.git/config';
+    const original = r.read(cfg);
+    const before = snapshot(r.root, { home: home() });
+    r.write(cfg, `${original}[branch "feat/x"]\n\tvscode-merge-base = origin/main\n`);
+    const ide = guard(before, r.root, writer().writable);
+    expect(ide.ok).toBe(true);
+    expect(ide.restored).toEqual([]);
+    expect(r.read(cfg)).toContain('vscode-merge-base'); // left as the IDE wrote it
+    const after = snapshot(r.root, { home: home() });
+    r.write(cfg, `${r.read(cfg)}[core]\n\thooksPath = /tmp/evil\n`);
+    const tampered = guard(after, r.root, writer().writable);
+    expect(tampered.ok).toBe(false);
+    expect(tampered.restored).toEqual([cfg]);
+    expect(r.read(cfg)).not.toContain('hooksPath');
+  });
   it('a changed user-level settings file is reported, not touched', () => {
     const h = home();
     const before = snapshot(r.root, { home: h });

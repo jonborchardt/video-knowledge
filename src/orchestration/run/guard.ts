@@ -135,6 +135,24 @@ const empty = (v: unknown): boolean =>
  *  start (counters, authored paths, a new project entry per cwd, keys in another order); of it only the
  *  permission-bearing parts count, canonically ordered, and a project entry that carries none counts for nothing. */
 function canaryContent(file: string): Buffer {
+  // .git/config: VS Code's git extension writes `vscode-merge-base` under a branch while a run is live; that key
+  // runs nothing, so neither it nor the section it opened is content the canary holds (a hooksPath, a url, a
+  // filter still is)
+  if (basename(file) === 'config' && /[\\/]\.git[\\/]config$/.test(file)) {
+    const lines = readFileSync(file, 'utf8')
+      .split('\n')
+      .filter((l) => !/^\s*vscode-merge-base\s*=/.test(l));
+    const out: string[] = [];
+    for (let i = 0; i < lines.length; i++) {
+      if (/^\s*\[/.test(lines[i])) {
+        let j = i + 1;
+        while (j < lines.length && !lines[j].trim()) j++;
+        if (j >= lines.length || /^\s*\[/.test(lines[j])) continue; // a section with no key left
+      }
+      out.push(lines[i]);
+    }
+    return Buffer.from(out.join('\n'));
+  }
   if (basename(file) !== '.claude.json') return readFileSync(file);
   try {
     const j = JSON.parse(readFileSync(file, 'utf8')) as Record<string, unknown>;
