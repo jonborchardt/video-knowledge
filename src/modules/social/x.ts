@@ -56,7 +56,7 @@ export function oauthHeader(
   const base = `${method.toUpperCase()}&${rfc3986(url)}&${rfc3986(normalized)}`;
   const key = `${rfc3986(c.apiSecret)}&${rfc3986(c.accessSecret)}`;
   const signature = createHmac('sha1', key).update(base).digest('base64');
-  const header = { ...oauth, oauth_signature: signature };
+  const header: Record<string, string> = { ...oauth, oauth_signature: signature };
   return (
     'OAuth ' +
     Object.keys(header)
