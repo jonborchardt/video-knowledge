@@ -4,6 +4,9 @@ export {
   type Ledger,
   type OutputState,
   type OutputStatus,
+  type OutputStep,
+  type StepActor,
+  type StepVerb,
   type PublishEvent,
   type ReviewNote,
   type UploadMetadata,
@@ -16,6 +19,7 @@ export {
   outputStates,
   parentUrlOf,
   publishPath,
+  renderStep,
   stampOf,
   uploadMetadataOf,
 } from './publish';

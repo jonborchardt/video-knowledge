@@ -365,7 +365,41 @@ export interface OutputState {
   uploadedBuild: string | null; // build of the last upload
   superseded: string[]; // ids of earlier uploads of other builds
   due: boolean; // scheduled and publishAt has passed
-  next: string; // the board's next line
+  step: OutputStep; // what moves it on, structured (the runner dispatches on it)
+  next: string; // the board's next line, rendered from the step (renderStep)
+}
+export type StepVerb =
+  | 'package'
+  | 'upload'
+  | 'approve'
+  | 'final'
+  | 'go-live'
+  | 'sync'
+  | 'push'
+  | 'verify'
+  | 'add'
+  | 'request'
+  | 'send-back'
+  | 'studio'
+  | 'none';
+export type StepActor = 'person' | 'automation' | 'youtube' | 'none';
+/** The output's next step as the ledger sees it (spec §9 F.2): the verb that moves it on and whose it is. The runner
+ *  dispatches on `verb` and `actor` and never parses `why`, the line a person reads; `args` are the flags that line
+ *  names for the verb. `blocked` names the output a derivative waits on; `failed` is the last event's failure, an
+ *  overlay the renderer wraps the line in, and `retryable` its retryability (or YouTube still processing). */
+export interface OutputStep {
+  verb: StepVerb;
+  args: string[];
+  actor: StepActor;
+  why: string;
+  retryable?: boolean;
+  blocked?: string;
+  failed?: { step: string; error: string; retryable: boolean };
+}
+/** The person's line for a step: its own `why`, wrapped in the failure overlay when there is one. */
+export function renderStep(s: OutputStep): string {
+  if (!s.failed) return s.why;
+  return `${s.failed.step} failed: ${s.failed.error}${s.failed.retryable ? `; retry it, then ${s.why}` : '; a person decides'}`;
 }
 export interface StateContext {
   topic: string;
@@ -385,6 +419,13 @@ export function approvalHolds(ev: PublishEvent[], build: string, title?: string 
 }
 /** The flow a kind follows: YouTube outputs are uploaded, watched and approved; anything else is made, approved, published. */
 export const flowOf = (kind: string): 'youtube' | 'generic' => (kind.startsWith('youtube') ? 'youtube' : 'generic');
+
+/** The latest verification since the last send (an upload or an update): what the release loop reads before it
+ *  asks for approval; null when none. */
+export const verificationSince = (o: Pick<Output, 'events'>): PublishEvent | null => {
+  const i = o.events.findLastIndex((e) => e.type === 'uploaded' || e.type === 'updated');
+  return o.events.slice(i + 1).findLast((e) => e.type === 'verified') ?? null;
+};
 
 /** Where one output stands, from its events in file order, against the build on disk and the metadata it would send. */
 export function outputState(
@@ -417,7 +458,9 @@ export function outputState(
   const live = generic ? out?.type === 'published' : !!published;
   const url = ev.findLast((e) => e.url && (e.id === id || !id))?.url ?? (id ? `https://youtu.be/${id}` : null);
   const sentSha = lastSent(output)?.metadata;
-  const base: Omit<OutputState, 'status' | 'next' | 'due'> = {
+  const metaBehind = !!metadataSha && !!sentSha && metadataSha !== sentSha;
+  const blocked = ctx.parentLive === false && output.derivedFrom ? output.derivedFrom : null;
+  const base: Omit<OutputState, 'status' | 'step' | 'next' | 'due'> = {
     live,
     failed,
     requested: requested?.type === 'changes-requested' ? requested : null,
@@ -426,53 +469,110 @@ export function outputState(
     uploadedBuild: upload?.build ?? null,
     superseded: upload ? uploads.filter((u) => u.build !== upload.build && u.id).map((u) => u.id!) : [],
   };
-  const done = (status: OutputStatus, next: string, due = false): OutputState => ({
-    ...base,
-    status,
-    due,
-    next: failed
-      ? `${failed.step} failed: ${failed.error}${failed.retryable ? `; retry it, then ${next}` : '; a person decides'}`
-      : next,
+  const step = (verb: StepVerb, actor: StepActor, why: string, args: string[] = []): OutputStep => ({
+    verb,
+    args,
+    actor,
+    why,
+    ...(blocked && { blocked }),
   });
+  // the automation's work before the person's step, on the same line: the metadata it owes, then a passing
+  // verification since the last send (pending: YouTube's turn, retried; failed: a push when a push can fix it)
+  const automated = (person: OutputStep): OutputStep => {
+    if (metaBehind) return { ...person, verb: 'push', actor: 'automation', args: [] };
+    const v = verificationSince(output);
+    if (v?.result === 'passed') return person;
+    if (v?.result === 'pending') return { ...person, verb: 'verify', actor: 'youtube', args: [], retryable: true };
+    if (v?.result === 'failed') {
+      if (
+        failedSince(output, METADATA_CHECKS) ||
+        captionsDue(output) ||
+        failedSince(output, ['restrictions'], FIXABLE_RESTRICTION)
+      )
+        return { ...person, verb: 'push', actor: 'automation', args: [] };
+      return { ...person, verb: 'verify', actor: 'person', args: [] };
+    }
+    return { ...person, verb: 'verify', actor: 'automation', args: [] };
+  };
+  const done = (status: OutputStatus, s: OutputStep, due = false): OutputState => {
+    const st: OutputStep = failed
+      ? {
+          ...s,
+          retryable: !!failed.retryable,
+          failed: { step: failed.step!, error: failed.error!, retryable: !!failed.retryable },
+        }
+      : s;
+    return { ...base, status, due, step: st, next: renderStep(st) };
+  };
   const short = ctx.output.startsWith('short:') ? shortId(ctx.story, ctx.output.slice('short:'.length)) : null;
-  const sendBack = `send it back with the reviewer's notes: /produce ${ctx.topic} ${short ?? ctx.story}`;
-  const first = ctx.parentLive === false && output.derivedFrom ? `publish ${output.derivedFrom} first; then ` : '';
+  const sendBack = step(
+    'send-back',
+    'person',
+    `send it back with the reviewer's notes: /produce ${ctx.topic} ${short ?? ctx.story}`,
+  );
+  const first = blocked ? `publish ${blocked} first; then ` : '';
+  const BY = ['--by', '"<name>"'];
 
-  if (ev.some((e) => e.type === 'retracted')) return done('retracted', 'retracted; nothing to do');
+  if (ev.some((e) => e.type === 'retracted'))
+    return done('retracted', step('none', 'none', 'retracted; nothing to do'));
   if (generic) {
     // No build, no private upload: the source file is made, a person approves it, it goes out. An upload is an optional
     // draft on the platform. Published needs approved; nothing is derived from the video's build.
     const anyApproved = ev.some((e) => e.type === 'approved');
     if (out?.type === 'published')
       return {
-        ...done('published', `live${out.url ? ` at ${out.url}` : ''}`),
+        ...done('published', step('none', 'none', `live${out.url ? ` at ${out.url}` : ''}`)),
         id: out.id ?? null,
         url: out.url ?? null,
       };
-    if (anyApproved) return done('approved', `${first}publish it, then ${verb('published', ' --url <url>')}`);
-    if (upload) return done('uploaded', `${first}review the draft, then ${verb('approve', ' --by "<name>"')}`);
+    if (anyApproved)
+      return done(
+        'approved',
+        step('studio', 'person', `${first}publish it, then ${verb('published', ' --url <url>')}`, ['--url', '<url>']),
+      );
+    if (upload)
+      return done(
+        'uploaded',
+        step('approve', 'person', `${first}review the draft, then ${verb('approve', ' --by "<name>"')}`, BY),
+      );
     return done(
       'not-uploaded',
-      `${first}make ${output.source ?? 'it'}, then ${verb('approve', ' --by "<name>"')} and ${verb('published', ' --url <url>')}`,
+      step(
+        'approve',
+        'person',
+        `${first}make ${output.source ?? 'it'}, then ${verb('approve', ' --by "<name>"')} and ${verb('published', ' --url <url>')}`,
+        BY,
+      ),
     );
   }
   if (!upload) {
     if (base.requested) return done('changes-requested', sendBack);
-    if (localApproved) return done('approved', `${verb('upload')}, then ${verb('go-live')}`);
+    if (localApproved)
+      return done('approved', step('upload', 'automation', `${verb('upload')}, then ${verb('go-live')}`));
     return done(
       'not-uploaded',
-      `${first}${build ? '' : `npm run video -- package ${ctx.topic} ${ctx.story}, then `}${verb('upload')}`,
+      build
+        ? step('upload', 'automation', `${first}${verb('upload')}`)
+        : step(
+            'package',
+            'automation',
+            `${first}npm run video -- package ${ctx.topic} ${ctx.story}, then ${verb('upload')}`,
+          ),
     );
   }
-  const behind = `the title, description, tags, thumbnail or captions changed since they were sent (${verb('push')})`;
+  const behind = step(
+    'push',
+    'automation',
+    `the title, description, tags, thumbnail or captions changed since they were sent (${verb('push')})`,
+  );
   if (live) {
-    if (metadataSha && sentSha && metadataSha !== sentSha) return done('metadata-behind', behind);
+    if (metaBehind) return done('metadata-behind', behind);
     const moved =
       build && build.sha !== upload.build
         ? `; the build on disk is ${build.sha}, a re-release is ${verb('add', ' youtube-2 --kind youtube-video')}`
         : '';
     const studio = output.kind === 'youtube-short' ? '; set the related video in YouTube Studio (not in the API)' : '';
-    return done('published', `live at ${url}${moved}${studio}`);
+    return done('published', step('none', 'none', `live at ${url}${moved}${studio}`));
   }
   // a schedule stands until it is unpublished: YouTube publishes it whatever the ledger decides about it since
   if (scheduled) {
@@ -480,33 +580,51 @@ export function outputState(
     return done(
       'scheduled',
       due
-        ? `was due ${scheduled.publishAt} (${verb('sync')})`
-        : `scheduled for ${scheduled.publishAt}; nothing until then`,
+        ? step('sync', 'automation', `was due ${scheduled.publishAt} (${verb('sync')})`)
+        : step('sync', 'youtube', `scheduled for ${scheduled.publishAt}; nothing until then`),
       due,
     );
   }
   if (build && build.sha !== upload.build)
     return done(
       'build-behind',
-      `a new ${build.status} build ${build.sha} is packaged (uploaded: ${upload.build}), then ${verb('upload')}`,
+      step(
+        'upload',
+        'automation',
+        `a new ${build.status} build ${build.sha} is packaged (uploaded: ${upload.build}), then ${verb('upload')}`,
+      ),
     );
   if (base.requested && !live) return done('changes-requested', sendBack);
   if (!build && !approved)
     return done(
       'uploaded',
-      `the review package is missing: npm run video -- package, then watch ${url} and record what follows`,
+      step(
+        'package',
+        'automation',
+        `the review package is missing: npm run video -- package, then watch ${url} and record what follows`,
+      ),
     );
   if (!approved) {
     const status = upload.buildStatus ?? build?.status ?? 'release';
+    const watch = `watch ${url} with video/review/checklist.md, then `;
     return done(
       'uploaded',
       status === 'draft'
-        ? `watch ${url} with video/review/checklist.md, then npm run video -- final ${ctx.topic} ${ctx.story} --approved-by "<name>"`
-        : `watch ${url} with video/review/checklist.md, then ${verb('approve', ' --by "<name>" --checked <n>')}`,
+        ? step('final', 'person', `${watch}npm run video -- final ${ctx.topic} ${ctx.story} --approved-by "<name>"`, [
+            '--approved-by',
+            '"<name>"',
+          ])
+        : automated(
+            step('approve', 'person', `${watch}${verb('approve', ' --by "<name>" --checked <n>')}`, [
+              ...BY,
+              '--checked',
+              '<n>',
+            ]),
+          ),
     );
   }
-  if (metadataSha && sentSha && metadataSha !== sentSha) return done('metadata-behind', behind);
-  return done('approved', verb('go-live', ' [--at <ISO>]'));
+  if (metaBehind) return done('metadata-behind', behind);
+  return done('approved', automated(step('go-live', 'person', verb('go-live', ' [--at <ISO>]'), ['[--at <ISO>]'])));
 }
 
 /** Every output's state, derivatives gated on the output they derive from being live. */

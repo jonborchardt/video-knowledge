@@ -62,6 +62,7 @@ import {
   loadLedger,
   mainOutput,
   outputStates,
+  renderStep,
   parentUrlOf,
   publishPath,
   uploadMetadataOf,
@@ -841,7 +842,7 @@ const articleStage: BoardStage = (c, s) => {
 /** What moves the main output on, from the ledger; or the way out when every youtube-video output is retracted. */
 const publishNext = (c: BoardContext) => {
   const main = mainOf(c.publish);
-  if (main) return main.state.next;
+  if (main) return renderStep(main.state.step); // publishing's structured step, rendered here
   // a packaged Short records itself in the parent's ledger when it is packaged; no entry means an older package
   if (c.short)
     return `npm run video -- package ${c.topic} ${c.storyId} (records short:${c.short.slug} in ${c.short.parent}'s publish.json)`;
