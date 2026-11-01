@@ -12,6 +12,13 @@ import { approverProblem } from '../../shared/approver';
 import { scriptDir, shortId, shortOf, storySlug, topicDir } from '../../shared/io';
 import { Refusal } from '../../shared/refusal';
 import type { StoriesFile } from '../../shared/types';
+import type { DraftPolicy } from '../../shared/automation';
+
+/** The one automated actor a draft decision may carry, and only under `review.draft: agent` (spec §7.3): the
+ *  draft-review agent, named with its model and session so the ledger says who judged. */
+export const DRAFT_REVIEW_ACTOR = /^automated: draft-review by [\w.-]+ session [\w-]+$/;
+const draftReviewer = (by: string, policy: DraftPolicy | undefined): boolean =>
+  policy === 'agent' && DRAFT_REVIEW_ACTOR.test(by.trim());
 
 const PUBLISH_FILE = 'publish.json';
 export const EVENT_TYPES = [
@@ -844,13 +851,19 @@ export function recordUploaded(
 export function recordApproved(
   topic: string,
   storyId: string,
-  a: VerbArgs & { note?: string; build?: string; accepted?: boolean; checked?: number },
+  // policy: automation.json review.draft, read by the CLI; it matters only for a draft acceptance (`accepted`)
+  a: VerbArgs & { note?: string; build?: string; accepted?: boolean; checked?: number; policy?: DraftPolicy },
 ): VerbResult {
   const problem = approverProblem(a.by);
   if (problem) throw new Refusal(problem.replace('--approved-by', '--by'));
-  // publication is authorised by a person: an automated run may lock a script, never approve a build
-  if (a.by.trim().startsWith('automated:'))
-    throw new Refusal('a build is approved by a person, never by an automated run');
+  // publication is authorised by a person: an automated run may lock a script, never approve a build; the one
+  // automated actor is the draft-review agent accepting a draft under the agent policy (never a release approval)
+  if (a.by.trim().startsWith('automated:') && !(a.accepted && draftReviewer(a.by, a.policy)))
+    throw new Refusal(
+      a.accepted
+        ? 'a draft is accepted by a person; an automated run never records an acceptance (the draft-review agent may, under review.draft: agent)'
+        : 'a build is approved by a person, never by an automated run',
+    );
   const o = openOutput(topic, storyId, a);
   if (a.checked !== undefined) {
     const list = reviewJsonOf(o)?.checklist ?? [];
@@ -890,15 +903,23 @@ export function recordApproved(
   return write(o, e);
 }
 
-/** Why `npm run publish -- accept-draft` refuses before recording, or null: the `--by` name (a person, never
- *  `automated:`), the `--build` sha (the mp4
- *  sha as review.json records it), then, once the output is open, an output already approved for publication (live,
- *  scheduled, or its release build on disk approved). `o` is null when only the arguments are checked. */
-export function acceptDraftProblem(by: string, build: string, o: ReturnType<typeof openOutput> | null): string | null {
+/** Why `npm run publish -- accept-draft` refuses before recording, or null: the `--by` name (a person; under
+ *  `review.draft: agent` also the draft-review agent, `automated: draft-review by <model> session <id>`), the
+ *  `--build` sha (the mp4 sha as review.json records it), then, once the output is open, an output already approved
+ *  for publication (live, scheduled, or its release build on disk approved). `o` is null when only the arguments
+ *  are checked. */
+export function acceptDraftProblem(
+  by: string,
+  build: string,
+  o: ReturnType<typeof openOutput> | null,
+  policy: DraftPolicy = 'person',
+): string | null {
   const problem = approverProblem(by);
   if (problem) return problem.replace('--approved-by', '--by');
-  if (by.trim().startsWith('automated:'))
-    return 'a draft is accepted by a person; an automated run never records an acceptance';
+  if (by.trim().startsWith('automated:') && !draftReviewer(by, policy))
+    return policy === 'agent'
+      ? 'under review.draft: agent a draft is accepted by the draft-review agent as "automated: draft-review by <model> session <id>", or by a person'
+      : 'a draft is accepted by a person; an automated run never records an acceptance (review.draft is not agent)';
   if (!/^[0-9a-f]{6,64}$/.test(build))
     return `--build needs the draft's mp4 sha as review.json records it${build ? `, not ${build}` : ''}`;
   if (!o) return null;
@@ -958,20 +979,24 @@ export function lookProblem(o: ReturnType<typeof openOutput>): string | null {
 const reviewJsonOf = (o: ReturnType<typeof openOutput>) =>
   readJson<{ checklist?: string[] }>(join(videoDirOf(o), 'review', 'review.json'));
 
-/** A person sends the current build back with notes; a later approval of the same build (or a new build) moves on. */
+/** A person sends the current build back with notes; a later approval of the same build (or a new build) moves on.
+ *  The draft-review agent (under `review.draft: agent`) may send a draft build back, never a release build. */
 export function recordChangesRequested(
   topic: string,
   storyId: string,
-  a: VerbArgs & { build: string; notes: ReviewNote[] },
+  a: VerbArgs & { build: string; notes: ReviewNote[]; policy?: DraftPolicy },
 ): VerbResult {
   const problem = approverProblem(a.by);
-  if (problem || a.by.trim().startsWith('automated:'))
+  const agent = draftReviewer(a.by, a.policy);
+  if (problem || (a.by.trim().startsWith('automated:') && !agent))
     throw new Refusal('a change request needs a person’s name (--by)');
   const notes = a.notes.filter((n) => n.text?.trim());
   if (!notes.length) throw new Refusal('a change request needs at least one note');
   const o = openOutput(topic, storyId, a);
   if (!o.build || o.build.sha !== a.build)
     throw new Refusal(`build ${a.build} is not the current build (${o.build?.sha ?? 'none'}); reload and review it`);
+  if (agent && o.build.status !== 'draft')
+    throw new Refusal('a release build is sent back by a person; the draft-review agent judges drafts only');
   if (o.state.live) throw new Refusal(`${o.id} is live; a re-release is a new output (npm run publish -- add)`);
   if (o.state.status === 'scheduled')
     throw new Refusal(`${o.id} is scheduled on YouTube; unschedule it in YouTube Studio first, then record it`);

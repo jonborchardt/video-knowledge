@@ -15,3 +15,5 @@ Video owns the media of a story: narration, the timeline, the Remotion render (s
 ## Target duration
 
 A story's optional `targetDurationSeconds` (set in `story-review.json`, carried by the package) proportions this stage by band through `src/shared/duration.ts`; the module's correctness checks do not change with it. See the Script rule in CLAUDE.md.
+
+`briefs/draft-review.md` (Milestone 2, spec §7.3) is the draft-review agent's brief: a fresh agent that did not make the video judges the draft from the review package, the frames, the captions and the storyboard, and writes `video/draft-review.json` (`{ key, verdict, notes, reviewer, session, date }`); the runner records its verdict beside the person's under `review.draft: shadow` and acts on it under `agent`. `final` accepts the agent's actor only under that policy, through `publish -- accept-draft`. The Azure key boundary of `final` is unchanged: the CLI forgets `AZURE_*` right after `.env` and only the per-sentence worker holds it (`tests/final-env.test.ts`).

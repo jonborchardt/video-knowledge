@@ -1108,7 +1108,7 @@ describe('a draft acceptance (what video final records)', () => {
     const D = afterFinal(f.dir, R);
     expect(() =>
       recordApproved(f.topic, f.story, { root: f.root, by: 'automated: x', now, build: D, accepted: true }),
-    ).toThrow(/approved by a person/);
+    ).toThrow(/accepted by a person/);
     expect(events(f)).toEqual([]);
   });
 
@@ -1252,7 +1252,7 @@ describe('npm run publish -- accept-draft (the CLI)', () => {
     expect(acceptDraftProblem('<your name>', D, null)).toMatch(/^--by needs a real name/);
     expect(acceptDraftProblem('Jon', D, null)).toBeNull();
     expect(acceptDraftProblem('automated: /produce run started by Jon', D, null)).toBe(
-      'a draft is accepted by a person; an automated run never records an acceptance',
+      'a draft is accepted by a person; an automated run never records an acceptance (review.draft is not agent)',
     );
     const f = fresh({ release: true, cliRoot: true });
     const a = { root: f.root, by: 'Jon', now: new Date('2026-10-26T00:00:00Z') };

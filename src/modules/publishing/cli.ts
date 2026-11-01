@@ -4,7 +4,8 @@
 //                                                             record an upload of the packaged build (public needs a prior approve; it also records published; --captions: the package's captions went up with it)
 //   approve <topic> <story-id> --by <name> --checked <n> [--note <text>]  approve the uploaded build, or the release build on disk, with n checklist items ticked (a draft is accepted by video final)
 //   accept-draft <topic> <story-id> --by <name> --build <sha> [--note <text>] [--output <id>] [--dry-run]
-//                                                             record that <name> accepted the draft build <sha> (what `npm run video -- final` records; a draft acceptance is never a publication approval and never lets go-live pass)
+//                                                             record that <name> accepted the draft build <sha> (what `npm run video -- final` records; a draft acceptance is never a publication approval and never lets go-live pass);
+//                                                             under automation.json review.draft "agent" the name may be the draft-review agent's, "automated: draft-review by <model> session <id>"
 //   thumbnail <topic> <story-id> <file>                       use this PNG/JPEG (under the script directory, e.g. video/publish/) as the output's thumbnail
 //   request-changes <topic> <story-id> --by <name> --note <text> [--at <seconds>] [--scene <id>] [--sentence <id>] [--note ...]
 //                                                             send the current build back; --at, --scene and --sentence place the note before them
@@ -31,6 +32,7 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { loadDotEnv, ROOT, toJson } from '../../shared/io';
+import { loadAutomation } from '../../shared/automation';
 import { Refusal } from '../../shared/refusal';
 import {
   type ReviewNote,
@@ -202,19 +204,23 @@ async function main() {
       break;
     }
     case 'accept-draft': {
+      // the draft review policy (automation.json review.draft) decides whether the draft-review agent's actor counts
       const by = flag('--by') ?? '';
       const build = flag('--build') ?? '';
+      const policy = loadAutomation(ROOT).review.draft;
       const p =
-        acceptDraftProblem(by, build, null) ?? acceptDraftProblem(by, build, openOutput(topic, storyId, { output }));
+        acceptDraftProblem(by, build, null, policy) ??
+        acceptDraftProblem(by, build, openOutput(topic, storyId, { output }), policy);
       if (p) throw new Refusal(p);
       if (has('--dry-run')) break; // the checks only: exit 0, nothing printed, nothing written
-      r = recordApproved(topic, storyId, { output, by, build, accepted: true, note: flag('--note') });
+      r = recordApproved(topic, storyId, { output, by, build, accepted: true, note: flag('--note'), policy });
       break;
     }
     case 'request-changes': {
       const notes = placedNotes(rest);
       const build = openOutput(topic, storyId, { output }).build?.sha ?? '';
-      r = recordChangesRequested(topic, storyId, { output, by: flag('--by') ?? '', build, notes });
+      const policy = loadAutomation(ROOT).review.draft;
+      r = recordChangesRequested(topic, storyId, { output, by: flag('--by') ?? '', build, notes, policy });
       break;
     }
     case 'thumbnail':
