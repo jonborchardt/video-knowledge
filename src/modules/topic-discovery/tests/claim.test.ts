@@ -22,7 +22,9 @@ describe('claimEdit', () => {
     const r = claimEdit(SITE, 'spending', 'ev-running-costs');
     expect('changed' in r && r.changed).toBe(true);
     const text = (r as { source: string }).source;
-    expect(text).toMatch(/topics: \['heat-pumps', 'inflation-2026', 'ev-running-costs'\]/);
+    // appended last to spending's literal, whatever that literal holds today (a live run claims topics into it)
+    expect(text).toMatch(/spending: \{[\s\S]*?topics: \['heat-pumps'[^\]]*, 'ev-running-costs'\]/);
+    expect(text.split("'ev-running-costs'").length).toBe(2);
     expect(claimedBy(text, 'ev-running-costs')).toBe('spending');
     const again = claimEdit(text, 'spending', 'ev-running-costs');
     expect(again).toEqual({ source: text, changed: false });
@@ -77,7 +79,7 @@ describe('npm run topics -- claim', () => {
     expect(ok.status, ok.stderr).toBe(0);
     expect(ok.stdout).toMatch(/claimed ev-running-costs for spending/);
     expect(ok.stdout).toMatch(/npm run brand/);
-    expect(d.site()).toMatch(/'inflation-2026', 'ev-running-costs'\]/);
+    expect(d.site()).toMatch(/spending: \{[\s\S]*?topics: \['heat-pumps'[^\]]*, 'ev-running-costs'\]/);
     const again = d.topics(['claim', 'ev-running-costs', 'spending']);
     expect(again.status).toBe(0);
     expect(again.stdout).toMatch(/already claimed/);
@@ -88,6 +90,6 @@ describe('npm run topics -- claim', () => {
     expect(forced.topics(['claim', 'ev-running-costs', 'dubious-returns', '--force']).status).toBe(2); // --force needs --by
     const f2 = forced.topics(['claim', 'ev-running-costs', 'dubious-returns', '--force', '--by', 'Jon']);
     expect(f2.status, f2.stderr).toBe(0);
-    expect(forced.site()).toMatch(/topics: \['get-rich-quick', 'ev-running-costs'\]/);
+    expect(forced.site()).toMatch(/topics: \['get-rich-quick'[^\]]*, 'ev-running-costs'\]/);
   }, 120_000);
 });
