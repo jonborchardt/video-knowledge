@@ -23,6 +23,7 @@ import {
   runDir,
   type RunHaltKind,
   writeHalt,
+  writeValidateLog,
 } from './journal';
 import { acquire, aliveLocks, heartbeat, type Lock, release, setChild } from './lock';
 import { alive, killTree } from './proc';
@@ -321,13 +322,15 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
         board,
       );
     const v = validate(envFor('validate', [], o.env ?? process.env));
-    if (!v.ok)
+    if (!v.ok) {
+      const log = writeValidateLog(dir, v.output);
       return halt(
         'step-failed',
         `npm run validate failed: ${v.output.trim().split('\n').slice(-5).join(' | ')}`,
-        { kind: 'fix', text: 'fix what validate reports, then npm run run -- story again' },
+        { kind: 'fix', text: `read ${log}; fix what validate reports, then npm run run -- story again` },
         board,
       );
+    }
     writeRunReport(topic, storyId, root, dir, readJournal(dir));
     const problem = o.git === 'none' ? null : commit(git, a, topic, storyId, storyRel, board.stage);
     if (problem)

@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { loadAutomation } from '../../src/shared/automation';
 import type { BoardNext, Step } from '../../src/orchestration/production';
-import { readHalt, readJournal, runDir } from '../../src/orchestration/run/journal';
+import { readHalt, readJournal, runDir, VALIDATE_LOG } from '../../src/orchestration/run/journal';
 import { readLock } from '../../src/orchestration/run/lock';
 import { alive } from '../../src/orchestration/run/proc';
 import { runStory, type RunOptions } from '../../src/orchestration/run/runner';
@@ -308,6 +308,23 @@ describe('runStory', () => {
     for (const k of ['AZURE_SPEECH_KEY', 'YOUTUBE_OAUTH_CREDENTIALS_PATH', 'OPENAI_API_KEY'])
       expect(seen![k]).toBeUndefined();
     expect(seen!.VK_NO_DOTENV).toBe('1');
+  });
+  it("a failing validate keeps its whole output in the run folder's validate.log and the unblock names it", async () => {
+    const root = newRoot();
+    const r = await run(root, {
+      ask: scripted([answer('packaged', 'done', [], null, true)]),
+      exec: async () => ok(),
+      validate: () => ({
+        ok: false,
+        output: `${'line\n'.repeat(40)}FAIL tests/x.test.ts > y\nAssertionError: expected 1 to be 2`,
+      }),
+    });
+    expect(r.halt?.kind).toBe('step-failed');
+    expect(r.halt?.why).toMatch(/npm run validate failed: .*AssertionError/);
+    expect(r.halt?.unblock.text).toMatch(/validate\.log/);
+    const log = readFileSync(join(runDir(T, S, root), VALIDATE_LOG), 'utf8');
+    expect(log.split('\n').length).toBeGreaterThan(40);
+    expect(log).toContain('FAIL tests/x.test.ts > y');
   });
   it('the tree is snapshotted before the first step, so the first child is guarded too', async () => {
     const root = newRoot();

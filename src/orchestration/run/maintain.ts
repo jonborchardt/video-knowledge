@@ -19,7 +19,16 @@ import { storyOutputs } from '../../modules/publishing';
 import type { Step } from '../production';
 import { type ArticleWorkDeps, articleWork } from './article-work';
 import { guard as realGuard, snapshot as realSnapshot, type TreeSnapshot } from './guard';
-import { type Halt, type JournalEntry, appendJournal, readHalt, runDir, topicRunDir, writeHalt } from './journal';
+import {
+  type Halt,
+  type JournalEntry,
+  appendJournal,
+  readHalt,
+  runDir,
+  topicRunDir,
+  writeHalt,
+  writeValidateLog,
+} from './journal';
 import { type Lock, acquire, heartbeat, release, setChild } from './lock';
 import { type RoleGrant, grantFor } from './roles';
 import { type RunResult, addSpend, isoWeek, runValidate, weekSpend } from './runner';
@@ -276,12 +285,14 @@ export async function maintain(
       });
     // 4. validated and committed before any article pass
     const v = (d.validate ?? ((env) => runValidate(root, env)))(envFor('validate', [], d.env ?? process.env));
-    if (!v.ok)
+    if (!v.ok) {
+      const log = writeValidateLog(dir, v.output);
       return halt(
         'step-failed',
         `npm run validate failed after the scan: ${v.output.trim().split('\n').slice(-5).join(' | ')}`,
-        { kind: 'fix', text: `fix what validate reports, then npm run run -- maintain ${topic}` },
+        { kind: 'fix', text: `read ${log}; fix what validate reports, then npm run run -- maintain ${topic}` },
       );
+    }
     if (d.git !== 'none') {
       try {
         git(['add', '-A', '--', `topics/${topic}`]);

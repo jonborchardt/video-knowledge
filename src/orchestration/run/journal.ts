@@ -1,13 +1,20 @@
 // The runner's own record of a story run, under the story's gitignored run/ folder: one journal line per step
 // attempt, the current halt (if any), and the halt kinds the runner adds beside the board's HALT_KINDS. Operational
 // state only: nothing here decides a workflow stage (the board re-derives that from the artifacts).
-import { appendFileSync, existsSync, mkdirSync, readFileSync, unlinkSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT, readJson, scriptDir, topicDir, writeJsonAtomic } from '../../shared/io';
 
 export const RUN_DIR = 'run';
 /** A topic run's operational folder: topics/<topic>/work/run/ (the runner's markers and journal; gitignored with work/). */
 export const TOPIC_RUN_DIR = 'run';
+/** Under a run folder: the whole output of the finish's `npm run validate` when it failed (the halt keeps five lines). */
+export const VALIDATE_LOG = 'validate.log';
+export function writeValidateLog(dir: string, output: string): string {
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, VALIDATE_LOG), output);
+  return `${dir.replaceAll('\\', '/')}/${VALIDATE_LOG}`;
+}
 export const topicRunDir = (topic: string, root = ROOT): string => {
   const d = join(topicDir(topic, root), 'work', TOPIC_RUN_DIR);
   mkdirSync(d, { recursive: true });

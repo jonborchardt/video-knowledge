@@ -34,6 +34,7 @@ import {
   readJournal,
   topicRunDir,
   writeHalt,
+  writeValidateLog,
 } from './journal';
 import { type Lock, acquire, heartbeat, release, setChild } from './lock';
 import { killTree } from './proc';
@@ -170,13 +171,15 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
     const g = hooks.guard('child');
     if (!g.ok) return halt('unexpected-edit', g.why, { kind: 'fix', text: 'the files were reverted' }, n);
     const v = validate(envFor('validate', [], o.env ?? process.env));
-    if (!v.ok)
+    if (!v.ok) {
+      const log = writeValidateLog(dir, v.output);
       return halt(
         'step-failed',
         `npm run validate failed: ${v.output.trim().split('\n').slice(-5).join(' | ')}`,
-        { kind: 'fix', text: `fix what validate reports, then npm run run -- topic ${topic}` },
+        { kind: 'fix', text: `read ${log}; fix what validate reports, then npm run run -- topic ${topic}` },
         n,
       );
+    }
     if (o.git !== 'none') {
       try {
         if (a.git.commitOn === 'main') {
