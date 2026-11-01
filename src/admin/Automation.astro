@@ -89,4 +89,59 @@ const flags = Object.entries(a.enabled)
       </p>
     )
   }
+  <h3 class="mt-4 font-semibold">Open release requests</h3>
+  {
+    view.requests.length === 0 ? (
+      <p class={`mt-1 ${small}`}>None: nothing awaits a decision by email.</p>
+    ) : (
+      <ul class={`mt-1 list-disc pl-5 ${small}`}>
+        {view.requests.map((r) => (
+          <li>
+            {r.topic} / {r.storyId}: {r.request}, sent {r.at} ({r.ageHours.toFixed(1)} h ago), expires {r.expiresAt};
+            reply OK, OK at &lt;when&gt; or CHANGES: to its mail, or decide on the review page
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  <h3 class="mt-4 font-semibold">Launches</h3>
+  {
+    view.launches.length === 0 ? (
+      <p class={`mt-1 ${small}`}>None yet: a launch job runs once a release group is live and verified.</p>
+    ) : (
+      <ul class={`mt-1 list-disc pl-5 ${small}`}>
+        {view.launches.map((l) => (
+          <li>
+            {l.topic} / {l.storyId}: {l.committed ? `committed ${l.committed.slice(0, 7)}` : 'not committed'}
+            {l.pushed ? `, pushed` : ''}
+            {l.fixtureBranch ? ` (and ${l.fixtureBranch})` : ''}
+            {l.liveAt
+              ? `, live at ${l.liveAt} after ${l.probes} probe${l.probes === 1 ? '' : 's'}`
+              : `, ${l.probes} probe${l.probes === 1 ? '' : 's'} so far`}
+            {l.posted === null
+              ? ''
+              : `, X: ${l.posted === 'not-configured' ? 'not configured' : l.posted ? 'posted' : 'failed'}`}
+            {l.emailed ? ', mailed' : ''}
+            {l.halt ? ` - halted ${l.halt.kind}: ${l.halt.why}` : ''}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  <h3 class="mt-4 font-semibold">Studio steps still to record</h3>
+  {
+    view.studio.length === 0 ? (
+      <p class={`mt-1 ${small}`}>
+        None outstanding (the optional related-video, end-screen and card steps of every launched story are recorded).
+      </p>
+    ) : (
+      <ul class={`mt-1 list-disc pl-5 ${small}`}>
+        {view.studio.map((s) => (
+          <li>
+            {s.topic} / {s.storyId}: {s.step}; when done: <code>{s.record}</code>
+          </li>
+        ))}
+      </ul>
+    )
+  }
 </section>

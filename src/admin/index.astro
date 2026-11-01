@@ -141,9 +141,13 @@ const flow: Step[] = [
   },
   {
     you: true,
-    planned: true,
     t: 'Approve any paid link',
-    d: ['a commercial entry in cta.json needs', 'its disclosure and your approvedBy;', 'never the primary over a tool'],
+    d: [
+      'a commercial entry in cta.json needs its',
+      'disclosure and your approvedBy: PAID OK (1, 3)',
+      'in the release reply, or links -- cta approve;',
+      'never the primary over a tool',
+    ],
   },
   {
     t: 'Find the Shorts',
@@ -197,30 +201,40 @@ const flow: Step[] = [
     ],
   },
   {
-    you: true,
     t: 'Launch them together',
     d: [
-      'upload the video and its Shorts (private);',
-      'go live (or schedule): the video, then its',
-      'Shorts; push / sync / verify; board: published',
+      'your reply becomes publish decide (the tick):',
+      'the video goes live or is scheduled, its',
+      'Shorts follow in order, pushed and verified;',
+      'or you: go-live / scheduled by hand',
+    ],
+  },
+  {
+    t: 'Refresh the site (the launch job)',
+    d: [
+      'the work plane, once the group is live and',
+      'verified: report -- seed, brand, build, links',
+      'freeze, validate, commit, push; resumable;',
+      'the tick probes the deploy (links -- live)',
+    ],
+  },
+  {
+    t: 'Post on X',
+    d: [
+      'the tick, once the page is live and the',
+      'institution has an X account and keys:',
+      'social -- post, once per output; else',
+      '"not configured" in the launch mail',
     ],
   },
   {
     you: true,
-    t: 'Refresh the site',
+    t: 'Link the Shorts (optional Studio steps)',
     d: [
-      'after go-live, the story joins the site:',
-      'npm run report -- seed <topic>, npm run',
-      'brand (cards, seals), commit; links freeze',
-    ],
-  },
-  {
-    you: true,
-    t: 'Link the Shorts',
-    d: [
-      'set each related video in YouTube Studio',
-      '(no API): updated --fields relatedVideo;',
-      "a Short's description links the live video",
+      'the launch mail lists them: each related',
+      'video, end screen elements, cards; record',
+      'each done with publish -- updated --fields',
+      'relatedVideo | endScreen | cards',
     ],
   },
   {
@@ -234,11 +248,6 @@ const flow: Step[] = [
       'public-record.json; a stale text that',
       'stands: article -- reaffirm --note',
     ],
-  },
-  {
-    planned: true,
-    t: 'Tweets (planned)',
-    d: ['posts for the X accounts in the brand', "kit's accounts.json; not built yet"],
   },
 ];
 const W = 330,

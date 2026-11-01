@@ -18,3 +18,18 @@ the digest in `digest.ts`, resume decisions and stuck detection in `resume.ts`, 
 `run/work.ts` runs one due long job (a resume, or the production pick in `pick.ts`) and exits; `run/view.ts` is the
 admin tab's model. Everything stays off until `automation.json` turns it on; the scheduler commands are printed, never
 created. The mail transport is shared infrastructure (`src/shared/mail.ts`), with `FakeMail` for every test.
+
+## Phase 3: approval by reply, publication and launch
+
+`run/replies.ts` is the reply grammar (spec §7.2: the first line of the person's own text decides; `ownText` drops
+quotes and signatures; `parseWhen` reads the schedule in the configured timezone); `run/inbox.ts` is the inbox
+adapter (the thread and the request id both required, one `publish decide` per reply, one clarification for what it
+cannot read, `.automation/inbox.json` the record written after the verb; a draft reply writes `run/draft-accepted.json`
+for the release loop, which runs `video final` by the person's name); `run/publish-due.ts` is the tick's due step
+(a schedule past its time, the Shorts of a published video in order with `--via tick:<request>`, a live Short's push,
+one renewal of an expired request then `request-expired`); `run/launch.ts` is the launch job (`launchJobs` for the
+work plane, `launch` with its record under `.automation/launch/`, the halt also in the story's run folder,
+`probeLaunches` for the tick: `links -- live`, the X post by policy, the launch mail from `requests.ts`
+`renderLaunched`; a fixture pushes `fixture/<run id>` and probes the production host negatively and the preview host
+positively). `npm run run -- launch` is the hand verb. The orchestration imports publishing, website and social only
+through their `index.ts` and writes every effect through a CLI as a child.

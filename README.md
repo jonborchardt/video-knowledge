@@ -415,9 +415,36 @@ privately, pushes, verifies, rewrites `video/review/release-manifest.json` (ever
 article's release sha, the public URLs, the calls to action with paid links numbered, the institution, the composed
 X post, `releaseSha` over what you approve) and runs `publish request --channel email`, which writes
 `approval-requested` and sends one email that is the whole publication, with the reply lines (`OK`, `OK at
-<when>`, `CHANGES:`, `PAID OK`). Nothing goes public from any of this; approval and go-live stay yours (the review
-page or the CLI until phase 3's reply adapter). `APPROVAL_SECRET` in `.env` (16+ characters) signs the request id.
+<when>`, `CHANGES:`, `PAID OK`). Nothing goes public from any of this; approval and go-live stay yours: your reply
+(or the review page, or the CLI) is the decision. `APPROVAL_SECRET` in `.env` (16+ characters) signs the request id.
 `show --json` prints every output's state with its structured step (`verb`, `actor`) and the open request.
+
+**Replying (phase 3).** The tick reads the mailbox and applies your reply to the request thread once, through
+`npm run publish -- decide` (the ledger key is the request id, so a copy or a crash never decides twice). The first
+line of your own text decides: `OK` (publish now; trailing words are fine), `OK at Thursday 15:00` / `OK at tomorrow
+9am` / `OK at 2026-12-01 09:30` / `OK at in 2 hours` (schedule, in `schedule.timezone`, at least
+`approvals.scheduleLeadMinutes` ahead; a nearer time is answered with the earliest accepted), or `CHANGES:` with one
+note per line, each optionally placed `[m:ss sc20 s31]` (a note starting `short:<slug>` goes to that Short). `PAID OK`
+on its own line approves every paid link the mail numbered, `PAID OK 1, 3` the numbered ones (written into
+`cta.json`, the package rewritten, the manifest's sha unchanged); `NOTES: 1 agree, 2 disagree` marks the shadow
+reviewer's notes. Anything else ("looks fine, go") gets one clarification mail naming the accepted lines, and the
+request stays open. `decide` applies it step by idempotent step with `decided` last: each paid link, one `approved`
+per output, a push when the metadata moved, a `sync`, then the video's go-live now or at the time; the Shorts are
+approved with it and go live from the tick after the video, in order. An expired request is renewed once by the
+tick (a fresh mail); a second expiry is yours (`request-expired`). By hand the same verb reads
+`npm run publish -- decide <topic> <story-id> --request <id> --by "<name>" --verdict ok|schedule|changes [--at <ISO>] [--note ... [--at-seconds n] [--scene id] [--sentence id]] [--paid <cta id>] --via cli`.
+
+**After go-live (phase 3).** Once the video is live and verified and every Short is live, the work plane runs the
+launch job (`npm run run -- launch <topic> <story-id>` by hand): `report -- seed`, `brand`, `build`, `links freeze`,
+`validate`, a commit of the story and the site outputs, `git push origin main`, each step recorded in
+`.automation/launch/<topic>--<slug>.json` so a crashed launch resumes at its step and never commits or pushes
+twice. The tick then probes the deploy once per pass (`npm run links -- live <topic> <story-id>`: the matter page
+answers 200 with the live video's id and the path is frozen), posts on X when the institution has an account and
+`enabled.social` is on (`npm run social -- post`; "not configured" otherwise), and sends the launch mail: the public
+links, the X post, and the optional Studio steps YouTube keeps manual, each with the line that records it done:
+a Short's related video (`npm run publish -- updated <topic> <story-id>/shorts/<slug> --fields relatedVideo`), the
+end screen elements (`--fields endScreen`), the cards (`--fields cards`). A deploy not live after
+`launch.deployTimeoutMinutes` halts `deploy-timeout`.
 
 `show` prints the state, the composed upload metadata (with the `description:` to paste into Studio) and the event
 log. Every verb is idempotent (an event already
@@ -653,8 +680,12 @@ never capped. A retryable halt (a hung render, a lost connection) resumes by bac
 next ISO week. A run whose journal goes silent past `runs.stuckAfterMinutes` is killed and halted `timeout`.
 
 Mail needs a dedicated mailbox in `.env` (`MAIL_SMTP_HOST`, `MAIL_IMAP_HOST`, `MAIL_USER`, `MAIL_PASSWORD`; ports
-465 and 993 by default) over `nodemailer`, `imapflow` and `mailparser`; the replies that drive publishing arrive in
-phase 3. The admin page's Automation tab shows every run, halt, unblock and the week's picks.
+465 and 993 by default) over `nodemailer`, `imapflow` and `mailparser`. The tick's pass, in order: preflight, the
+outbox, the inbox (your replies, applied once each; `.automation/inbox.json` records every handled message), the due
+publications (a schedule past its time synced and verified, the Shorts of a published video live in order, an
+expired request renewed once), the deploy probes (one per pending launch, then the X post and the launch mail), the
+due resumes, stuck runs, halt mails, the digest. The admin page's Automation tab shows every run, halt, unblock, the
+week's picks, the open requests and their age, the launches and the Studio steps still to record.
 
 ## Reproducing a video
 
