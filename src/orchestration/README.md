@@ -64,3 +64,18 @@ halts `no-progress` for its slug alone (`.automation/discovery/halts/`, a status
 `proposals`, so the halt mail and the digest carry it). `run/inbox.ts` applies a reply to the batch mail (thread and
 `pb-` id required) line by line through `topics approve|reject` by the approver; `APPROVE ALL` expands over the
 batch's slugs only; a slug outside the batch is reported back. The digest lists the proposals pending and parked.
+
+## Phase 5: the research pipeline
+
+`research.ts` is `topicNext` (spec 5.2): the research stage of a topic and its next step from the files alone
+(the approved proposal, the lists, the store, the batches and the runner's markers under `work/run/`, the documents,
+the report, the stories and their review), with `park` where the thresholds or the reviewer say the topic cannot
+proceed; `npm run board -- topic` prints it. `run/topic-runner.ts` is the topic runner (`npm run run -- topic`, the
+work plane's `topic` job for an approved proposal not yet researched, under `runs.maxConcurrentTopicRuns`): the
+story runner's loop over `topicNext`, the research agents under their role grants (parallel extraction and judging
+up to `maxParallelAgents`, each validated by its brief's verb and resumed on findings), `record` serial and resumed
+with `--from` after a partial failure, `record-sources` never with `--replace-cited` (a refusal is `needs-person`),
+the notes agent's reply recorded through `report -- note`, a thin or storyless topic parked through `topics -- park`
+(a digest line, no halt, no mail), the finish validated and committed on main touching the topic's own paths (and
+the proposal, the institution claim through `topics -- claim`, the brand assets). A research run's topic is
+untracked until that commit, so the guard's snapshot holds its files' content and restores an agent's overwrite.

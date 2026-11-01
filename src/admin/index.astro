@@ -39,45 +39,43 @@ const flow: Step[] = [
     ],
   },
   {
-    t: 'Extract the claims (watcher)',
+    t: 'Research the approved topic (topic runner)',
     d: [
-      'transcripts and posts to canonical claims,',
-      'one line, mechanism-level; an AI guess',
-      'counts for at most 0.5 confidence',
+      'npm run run -- topic, or the work plane: collect.md',
+      'lists the sources, the watcher fetches, extract.md',
+      'agents per group, merge.md, dedupe, collide, record',
     ],
   },
   {
     t: 'Judge them against studies',
     d: [
-      'record-sources: a verdict per claim with',
-      'its cited passage; npm run report writes',
-      'report.json (needs the watcher checkout)',
+      'studies.md saves documents (evidence -- fetch-doc),',
+      'sources.md agents judge, record-sources; too thin',
+      'after two empty rounds: parked with the reason',
     ],
   },
   {
-    you: true,
     t: 'Explain each revised finding',
     d: [
-      'npm run report lists claims whose label',
-      'or verdict changed; report -- note <topic>',
-      '<claim> "<note>"; no note fails the build',
+      'npm run report, then revision-note.md drafts a',
+      'note per changed finding (report -- note); you:',
+      'edit a note in the digest if it reads wrong',
     ],
   },
   {
-    you: true,
-    t: 'Claim the topic for an institution',
+    t: 'Claim the topic for its institution',
     d: [
-      'add it to commissions in site.ts (a channel',
-      'a person created, never an invented handle);',
-      'npm run brand; unclaimed topics never produce',
+      'npm run topics -- claim <topic> <commission>: the',
+      "proposal's institution into site.ts; npm run brand;",
+      'you: a person adds a new institution and its channel',
     ],
   },
   {
     t: 'Find the stories',
     d: [
       'stories discover: candidates + evidence audit;',
-      'stories.md agent: applicability, pruning,',
-      'chains; board: needs-research/-review/ready',
+      'stories.md agent: applicability, pruning, chains;',
+      'ready, or parked when the review keeps none',
     ],
   },
   {
