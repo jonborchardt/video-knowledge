@@ -1,6 +1,6 @@
 // The research verbs (spec §5.2; phase 5 Task 1): the YouTube results parser, the extraction groups, the exact
 // duplicate conversion, the collisions with an injected similarity, fetch-doc's refusals and its header, thinness.
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
