@@ -31,7 +31,7 @@ import {
 import { type Fixture, cliRoot, syntheticProduction } from '../../../../tests/production-helpers';
 
 const fixtures: Fixture[] = [];
-afterAll(() => fixtures.forEach((f) => f.cleanup()));
+afterAll(() => fixtures.forEach((f) => f.cleanup()), 120_000); // many temp roots: slow under full-suite load
 const SECRET = 'a-test-secret-of-some-length';
 const now = new Date('2026-10-30T12:00:00Z'); // before the real clock: the CLI test stamps events after these
 const base = <T extends object>(f: Fixture, extra: T = {} as T) => ({ root: f.root, by: 'automation', now, ...extra });

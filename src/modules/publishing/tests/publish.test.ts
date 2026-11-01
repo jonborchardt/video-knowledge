@@ -60,7 +60,7 @@ const tmp = mkdtempSync(join(tmpdir(), 'vk-publish-'));
 afterAll(() => rmSync(tmp, { recursive: true, force: true }));
 
 const fixtures: Fixture[] = [];
-afterAll(() => fixtures.forEach((f) => f.cleanup()));
+afterAll(() => fixtures.forEach((f) => f.cleanup()), 120_000); // many temp roots: slow under full-suite load
 /** A packaged synthetic production (`release`: the release build). With `cliRoot` the repo's CLIs run in its root,
  *  and a draft is named by a hex sha as a real build is (the fixture's are words): d0d0d0d0d0. */
 const fresh = ({ release = false, cliRoot: runsCli = false }: { release?: boolean; cliRoot?: boolean } = {}) => {

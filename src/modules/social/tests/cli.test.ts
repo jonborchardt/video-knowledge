@@ -9,7 +9,7 @@ import { socialPath } from '../social';
 import { type Fixture, cliRoot, syntheticProduction } from '../../../../tests/production-helpers';
 
 const fixtures: Fixture[] = [];
-afterAll(() => fixtures.forEach((f) => f.cleanup()));
+afterAll(() => fixtures.forEach((f) => f.cleanup()), 120_000); // many temp roots: slow under full-suite load
 
 function live() {
   const f = syntheticProduction('packaged', { release: true });

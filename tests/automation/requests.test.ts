@@ -29,7 +29,7 @@ import {
 import { type Fixture, cliRoot, syntheticProduction } from '../production-helpers';
 
 const fixtures: Fixture[] = [];
-afterAll(() => fixtures.forEach((f) => f.cleanup()));
+afterAll(() => fixtures.forEach((f) => f.cleanup()), 120_000); // many temp roots: slow under full-suite load
 const a = {
   ...DEFAULTS,
   approvals: { ...DEFAULTS.approvals, to: 'jon@example.test', from: 'automation@example.test', approverName: 'Jon' },

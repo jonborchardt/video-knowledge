@@ -13,7 +13,7 @@ import { buildManifest, loadManifest, manifestPath, removeManifest, writeManifes
 import { type Fixture, syntheticProduction } from '../../../../tests/production-helpers';
 
 const fixtures: Fixture[] = [];
-afterAll(() => fixtures.forEach((f) => f.cleanup()));
+afterAll(() => fixtures.forEach((f) => f.cleanup()), 120_000); // many temp roots: slow under full-suite load
 
 /** A packaged release fixture with two packaged Shorts registered in its ledger and a cta.json with a paid link. */
 function staged(opts: { release?: boolean; shorts?: string[]; cta?: object } = {}) {

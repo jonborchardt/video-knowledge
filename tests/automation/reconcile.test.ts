@@ -31,7 +31,7 @@ import { type Fixture, cliRoot, syntheticProduction } from '../production-helper
 import { stagedRelease } from './publish-fake-cli';
 
 const fixtures: Fixture[] = [];
-afterAll(() => fixtures.forEach((f) => f.cleanup()));
+afterAll(() => fixtures.forEach((f) => f.cleanup()), 120_000); // many temp roots: slow under full-suite load
 const SECRET = 'a-test-secret-of-some-length';
 const now = new Date('2026-10-30T12:00:00Z');
 

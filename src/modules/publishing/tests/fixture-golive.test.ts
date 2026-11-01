@@ -16,7 +16,7 @@ import type { RemoteVideo, YouTubeClient } from '../youtube';
 import { type Fixture, cliRoot, syntheticProduction } from '../../../../tests/production-helpers';
 
 const fixtures: Fixture[] = [];
-afterAll(() => fixtures.forEach((f) => f.cleanup()));
+afterAll(() => fixtures.forEach((f) => f.cleanup()), 120_000); // many temp roots: slow under full-suite load
 const now = new Date('2026-11-01T12:00:00Z');
 
 /** A packaged release of the fixture topic (the synthetic heat-pumps production moved under test-fixture), its

@@ -13,7 +13,7 @@ import type { StepOutcome } from '../../src/orchestration/run/steps';
 import { type ShortFixture, syntheticShort } from '../production-helpers';
 
 const fixtures: ShortFixture[] = [];
-afterAll(() => fixtures.forEach((f) => f.cleanup()));
+afterAll(() => fixtures.forEach((f) => f.cleanup()), 120_000); // many temp roots: slow under full-suite load
 const ok = (): StepOutcome => ({
   kind: 'run',
   ok: true,

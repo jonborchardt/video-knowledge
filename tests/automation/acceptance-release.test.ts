@@ -21,7 +21,7 @@ import { work } from '../../src/orchestration/run/work';
 import { type Stage, gitOrigin, stagedRelease, sentRequest } from './publish-fake-cli';
 
 const stages: Stage[] = [];
-afterAll(() => stages.forEach((s) => s.f.cleanup()));
+afterAll(() => stages.forEach((s) => s.f.cleanup()), 120_000);
 const T0 = new Date('2026-10-30T12:00:00Z'); // Friday 05:00 in Los Angeles
 const policy = (x = false) => ({
   ...DEFAULTS,

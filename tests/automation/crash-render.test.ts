@@ -15,7 +15,7 @@ import { runStory } from '../../src/orchestration/run/runner';
 import { type Fixture, cliRoot, fixtureBuildReport, syntheticProduction } from '../production-helpers';
 
 const fixtures: Fixture[] = [];
-afterAll(() => fixtures.forEach((f) => f.cleanup()));
+afterAll(() => fixtures.forEach((f) => f.cleanup()), 120_000); // many temp roots: slow under full-suite load
 const FAKE_RENDER = join(ROOT, 'tests', 'automation', 'fake-render.mjs');
 
 describe('a run killed mid-render (criterion 11)', () => {

@@ -17,7 +17,7 @@ import {
 import { type Fixture, afterFinal, cliRoot, syntheticProduction } from '../../../../tests/production-helpers';
 
 const fixtures: Fixture[] = [];
-afterAll(() => fixtures.forEach((f) => f.cleanup()));
+afterAll(() => fixtures.forEach((f) => f.cleanup()), 120_000); // many temp roots: slow under full-suite load
 const fresh = (release = false) => {
   const f = syntheticProduction('packaged', { release });
   fixtures.push(f);

@@ -28,7 +28,7 @@ import { releaseJobs } from '../../src/orchestration/run/work';
 import { type Fixture, afterFinal, cliRoot, syntheticProduction } from '../production-helpers';
 
 const fixtures: Fixture[] = [];
-afterAll(() => fixtures.forEach((f) => f.cleanup()));
+afterAll(() => fixtures.forEach((f) => f.cleanup()), 120_000); // many temp roots: slow under full-suite load
 const noGuard = {
   snapshot: () => {},
   guard: () => ({ ok: true, why: '', kept: [] as string[] }),

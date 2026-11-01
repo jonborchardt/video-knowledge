@@ -16,7 +16,7 @@ import { readSchedule } from '../../src/orchestration/run/schedule';
 import { type Stage, stagedRelease, sentRequest } from './publish-fake-cli';
 
 const stages: Stage[] = [];
-afterAll(() => stages.forEach((s) => s.f.cleanup()));
+afterAll(() => stages.forEach((s) => s.f.cleanup()), 120_000);
 const T0 = new Date('2026-10-30T12:00:00Z');
 const a = {
   ...DEFAULTS,
