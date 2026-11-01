@@ -1,18 +1,18 @@
 {
  "topic": "test-fixture",
  "story": "decision:most-discussed-claims",
- "approvedBy": "automated: phase 1 fixture fresh run started by Jonathan Borchardt",
+ "approvedBy": "automated: run 2026-11-01",
  "date": "2026-11-01",
  "revision": 1,
  "fingerprints": {
-  "article": "c5f656ef2e",
+  "article": "16ec3cc902",
   "package": "5879ca5f47",
-  "validation": "1bd48b9227"
+  "validation": "d299a11a95"
  },
  "article": {
   "topic": "test-fixture",
   "story": "decision:most-discussed-claims",
-  "revision": 2,
+  "revision": 1,
   "generation": {
    "model": "claude-sonnet-5",
    "brief": "src/modules/article/briefs/article.md",
@@ -21,16 +21,16 @@
    "evidencePackage": "5879ca5f47"
   },
   "meta": {
-   "headline": "Every leap second on record has been added, never subtracted",
-   "seoTitle": "Has a leap second ever been taken away?",
+   "headline": "Has a leap second ever been taken away?",
+   "seoTitle": "Leap Seconds: Added Every Time, Never Removed",
    "dek": {
     "id": "meta.dek",
-    "text": "Has a leap second ever been taken away? The IERS record says every one so far has been an addition, not a subtraction.",
+    "text": "The official leap-second record answers it directly: every adjustment since 1972 has added a second, and none has ever been taken away.",
     "type": "factual",
     "assertions": [
      {
-      "id": "meta.dek.a1",
-      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+      "id": "meta.dek.a",
+      "text": "Every leap second since UTC began in 1972 has added a second to civil time; none has ever been taken away.",
       "kind": "fact",
       "claims": [
        {
@@ -50,12 +50,12 @@
    },
    "description": {
     "id": "meta.description",
-    "text": "Every leap second since 1972 has added a second to civil time, and the IERS record shows none has ever been subtracted.",
+    "text": "Every leap second recorded since 1972 has added a second to civil time; none has ever been taken away, according to the official record.",
     "type": "factual",
     "assertions": [
      {
-      "id": "meta.description.a1",
-      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+      "id": "meta.description.a",
+      "text": "Every leap second since UTC began in 1972 has added a second to civil time; none has ever been taken away.",
       "kind": "fact",
       "claims": [
        {
@@ -77,19 +77,19 @@
   "sections": [
    {
     "name": "answer",
-    "heading": "Every entry in the record is a step up",
+    "heading": "Only ever added, never taken away",
     "blocks": [
      {
       "kind": "prose",
       "sentences": [
        {
         "id": "s01",
-        "text": "The IERS table records the gap between atomic and civil time; across every entry in it, that gap has only ever widened.",
+        "text": "The International Earth Rotation and Reference Systems Service keeps the one official table of every adjustment made to civil time since the current standard began in 1972.",
         "type": "factual",
         "assertions": [
          {
-          "id": "s01.a1",
-          "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+          "id": "s01.a",
+          "text": "The IERS table of TAI-UTC records every adjustment to civil time since 1 January 1972.",
           "kind": "fact",
           "claims": [
            {
@@ -109,12 +109,37 @@
        },
        {
         "id": "s02",
-        "text": "Every step in that record has added a second; none has ever taken one away.",
+        "text": "Its 28 entries move only one way, from 10 seconds in 1972 to 37 seconds in 2017, each one second more than the last.",
         "type": "factual",
         "assertions": [
          {
-          "id": "s02.a1",
-          "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+          "id": "s02.a",
+          "text": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "test-fixture/every-leap-second-since-utc-began",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "test-fixture/every-leap-second-since-utc-began",
+            "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s03",
+        "text": "So the record is clear: a leap second has only ever been added, never taken away.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s03.a",
+          "text": "Every one of the 27 steps in the IERS table added a second to civil time; none subtracted one.",
           "kind": "fact",
           "claims": [
            {
@@ -136,35 +161,35 @@
      },
      {
       "kind": "figure",
-      "ref": "decision-most-discussed-claims/sc01",
-      "caption": "The IERS table's first and most recent values; every value between them is exactly one second more than the one before it."
+      "ref": "decision-most-discussed-claims/sc02",
+      "caption": "The TAI-UTC value at the record's first and latest entries, with the steps between them, all moving the same direction."
      }
     ]
    }
   ]
  },
  "figures": {
-  "decision-most-discussed-claims/sc01": {
+  "decision-most-discussed-claims/sc02": {
    "chart": {
     "type": "stat-tiles",
-    "title": "TAI-UTC, start to most recent value",
+    "title": "TAI-UTC, first value to latest",
     "points": [
      {
-      "label": "1972",
+      "label": "1 January 1972",
       "value": 10,
       "unit": "count",
       "display": "10",
       "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
      },
      {
-      "label": "2017",
+      "label": "1 January 2017",
       "value": 37,
       "unit": "count",
       "display": "37",
       "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
      }
     ],
-    "note": "The table lists every value between these; each one is exactly one second more than the value before it. These tiles mark the endpoints, not the full run."
+    "note": "These tiles mark the table's first and last values; the rows between them each rise by exactly one second, never fall. Don't imply a smooth or constant rate between 1972 and 2017 — the steps land irregularly."
    }
   }
  },
@@ -172,8 +197,8 @@
   {
    "revision": 1,
    "date": "2026-11-01",
-   "approvedBy": "automated: phase 1 fixture fresh run started by Jonathan Borchardt",
-   "fingerprint": "c5f656ef2e"
+   "approvedBy": "automated: run 2026-11-01",
+   "fingerprint": "16ec3cc902"
   }
  ],
  "recordSeen": 0

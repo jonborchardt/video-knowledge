@@ -1,0 +1,63 @@
+{
+ "topic": "test-fixture",
+ "story": "decision:most-discussed-claims",
+ "parentFingerprints": {
+  "script": "2dbc2f40a7",
+  "validation": "586a96eb30",
+  "storyboard": "9178a43fd2",
+  "package": "5879ca5f47",
+  "release": "2db564c6ac"
+ },
+ "candidates": [
+  {
+   "key": "s02",
+   "scene": "sc02",
+   "section": "answer",
+   "sentences": [
+    "s02",
+    "s03"
+   ],
+   "claims": [
+    "test-fixture/every-leap-second-since-utc-began"
+   ],
+   "cites": [
+    "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+   ],
+   "figures": [
+    "28",
+    "10",
+    "37"
+   ],
+   "chart": {
+    "type": "stat-tiles",
+    "title": "TAI-UTC, first value to latest",
+    "points": [
+     {
+      "label": "1 January 1972",
+      "value": 10,
+      "unit": "count",
+      "display": "10",
+      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+     },
+     {
+      "label": "1 January 2017",
+      "value": 37,
+      "unit": "count",
+      "display": "37",
+      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+     }
+    ],
+    "note": "These tiles mark the table's first and last values; the rows between them each rise by exactly one second, never fall. Don't imply a smooth or constant rate between 1972 and 2017 — the steps land irregularly."
+   },
+   "qualifications": [],
+   "reviewed": true,
+   "slug": "leap-seconds-only-added",
+   "format": "THE COMMISSION FINDS",
+   "hook": "Every leap second on record has only ever been added, never undone.",
+   "carries": [],
+   "readiness": "ready",
+   "blocking": []
+  }
+ ],
+ "rejected": []
+}

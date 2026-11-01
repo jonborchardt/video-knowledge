@@ -1,29 +1,13 @@
 {
   "reviewer": "src/modules/script/briefs/script-review.md",
   "model": "claude-sonnet-5",
-  "date": "2026-10-31",
-  "revision": 1,
+  "date": "2026-11-01",
+  "revision": 2,
   "packageFingerprint": "5879ca5f47",
   "approved": {
-    "s01": "92ad9d6da8",
-    "s02": "906534a7bc"
+    "s01": "7aa4427c85",
+    "s02": "6b875b53ba",
+    "s03": "d3e247919d"
   },
-  "findings": [],
-  "dispositions": {
-    "s01.a": {
-      "fingerprint": "92ad9d6da8",
-      "category": "wording",
-      "reason": "The IERS table's first row (L17: MJD 41317.0, 1 1 1972, 10) and last row (L44: MJD 57754.0, 1 1 2017, 37) are exactly 10 seconds on 1 January 1972 and 37 seconds on 1 January 2017; the sentence's looser 'in 1972'/'in 2017' phrasing names the same two dates."
-    },
-    "s01.b": {
-      "fingerprint": "92ad9d6da8",
-      "category": "wording",
-      "reason": "The 28 values on L17-L44 are the consecutive integers 10 through 37 in table order, so every successive pair differs by exactly one second with no gaps or repeats."
-    },
-    "s02.a": {
-      "fingerprint": "906534a7bc",
-      "category": "wording",
-      "reason": "The cited table is the IERS's complete record of TAI-UTC since 1972 (the file's own header: 'the whole file', updated through Bulletin 72); because it only ever steps upward by one second, no subtraction appears anywhere in the record, so the universal phrasing is the document's own scope, not an overclaim beyond it."
-    }
-  }
+  "findings": []
 }

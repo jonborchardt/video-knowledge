@@ -2,14 +2,14 @@
  "topic": "test-fixture",
  "story": "decision:most-discussed-claims",
  "title": "Has a leap second ever been taken away?",
- "scriptFingerprint": "efcf0861e8",
+ "scriptFingerprint": "2dbc2f40a7",
  "scriptStatus": "passed",
  "wordsPerMinute": 150,
- "runtime": 20.4,
+ "runtime": 17.8,
  "generation": {
   "model": "claude-sonnet-5",
   "brief": "src/modules/storyboard/briefs/storyboard.md",
-  "date": "2026-10-31"
+  "date": "2026-11-01"
  },
  "assets": {},
  "status": "ok",
@@ -20,34 +20,67 @@
    "sentences": [
     "s01"
    ],
-   "purpose": "Show the viewer the full span of the IERS record and that it only ever grows, one second at a time.",
+   "purpose": "Put the question to the viewer before the record answers it.",
+   "visual": {
+    "category": "typography",
+    "description": "Dark field; the question types on in large serif, centred, word by word; hold on the settled line.",
+    "onScreenText": [
+     "Has a leap second ever been taken away?"
+    ]
+   },
+   "citations": [],
+   "direction": "Hard cut in; type the line on; hold half a second after the question mark settles.",
+   "pauseSeconds": 1,
+   "order": 1,
+   "narration": "Has a leap second ever been taken away?",
+   "words": 8,
+   "spokenWords": 8,
+   "timing": [
+    {
+     "id": "s01",
+     "start": 0,
+     "duration": 3.2,
+     "end": 3.2
+    }
+   ],
+   "start": 0,
+   "duration": 4.2,
+   "end": 4.2
+  },
+  {
+   "id": "sc02",
+   "sentences": [
+    "s02",
+    "s03"
+   ],
+   "purpose": "Show the record's two endpoints and state plainly that every step between them went the same way.",
    "visual": {
     "category": "data-chart",
-    "description": "Dark field; the IERS table of TAI-UTC values scrolls upward past the frame from 1972 to 2017, then settles into two large stat tiles side by side: 10 s / 1972 on the left, 37 s / 2017 on the right, with the intervening rows fading to a thin connecting line to show the steady climb.",
+    "description": "Dark field; two stat tiles settle side by side, 10 s / 1972 on the left and 37 s / 2017 on the right, with a thin rising line connecting them to stand in for the 28 steps in between; as the second sentence lands, the line's arrowhead ticks upward once and the words 'never down' set beneath it.",
     "onScreenText": [
      "10 seconds, 1972",
      "37 seconds, 2017"
     ],
     "chart": {
      "type": "stat-tiles",
-     "title": "TAI-UTC, start to most recent value",
+     "title": "TAI-UTC, first value to latest",
      "points": [
       {
-       "label": "1972",
+       "label": "1 January 1972",
        "value": 10,
        "unit": "count",
        "display": "10",
        "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
       },
       {
-       "label": "2017",
+       "label": "1 January 2017",
        "value": 37,
        "unit": "count",
        "display": "37",
        "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
       }
      ],
-     "note": "The table lists every value between these; each one is exactly one second more than the value before it. These tiles mark the endpoints, not the full run."
+     "note": "These tiles mark the table's first and last values; the rows between them each rise by exactly one second, never fall. Don't imply a smooth or constant rate between 1972 and 2017 — the steps land irregularly."
     }
    },
    "citations": [
@@ -56,58 +89,28 @@
      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
     }
    ],
-   "direction": "Table of TAI-UTC values scrolls upward from 1972 to 2017, settling on the two highlighted stat tiles; hold half a second on the settled tiles before the cut.",
-   "order": 1,
-   "narration": "The IERS table of TAI-UTC runs from 10 seconds in 1972 to 37 seconds in 2017, each value exactly one second more than the one before it.",
-   "words": 27,
-   "spokenWords": 33,
-   "timing": [
-    {
-     "id": "s01",
-     "start": 0,
-     "duration": 13.2,
-     "end": 13.2
-    }
-   ],
-   "start": 0,
-   "duration": 13.2,
-   "end": 13.2
-  },
-  {
-   "id": "sc02",
-   "sentences": [
-    "s02"
-   ],
-   "purpose": "State the answer plainly: no leap second has ever been subtracted, only added.",
-   "visual": {
-    "category": "typography",
-    "description": "Hard cut to a dark field; a single title line types on in large serif: 'Only ever added. Never subtracted.' Hold on the settled line.",
-    "onScreenText": [
-     "Only ever added. Never subtracted."
-    ]
-   },
-   "citations": [
-    {
-     "label": "IERS, Leap_Second.dat (Bulletin C 72)",
-     "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
-    }
-   ],
-   "direction": "Hard cut in; title types on; hold 1 s after the last word before the close card.",
+   "direction": "Hard cut from the question; tiles and connecting line settle together; hold on 'never down' before the close card.",
    "order": 2,
-   "narration": "No leap second has ever been subtracted from civil time; every one on record has only been added.",
-   "words": 18,
-   "spokenWords": 18,
+   "narration": "The IERS table lists 28 values, climbing from 10 seconds to 37 seconds without ever going down. Every one of those steps added a second; none has ever been taken away.",
+   "words": 31,
+   "spokenWords": 34,
    "timing": [
     {
      "id": "s02",
-     "start": 13.2,
-     "duration": 7.2,
-     "end": 20.4
+     "start": 4.2,
+     "duration": 8,
+     "end": 12.2
+    },
+    {
+     "id": "s03",
+     "start": 12.2,
+     "duration": 5.6,
+     "end": 17.8
     }
    ],
-   "start": 13.2,
-   "duration": 7.2,
-   "end": 20.4
+   "start": 4.2,
+   "duration": 13.6,
+   "end": 17.8
   }
  ],
  "targetDurationSeconds": 15

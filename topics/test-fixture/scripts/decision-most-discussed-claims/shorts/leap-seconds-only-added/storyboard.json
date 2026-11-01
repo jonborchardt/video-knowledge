@@ -1,0 +1,120 @@
+{
+ "topic": "test-fixture",
+ "story": "decision:most-discussed-claims/shorts/leap-seconds-only-added",
+ "title": "Every leap second on record has only ever been added, never undone.",
+ "scriptFingerprint": "225f67ece0",
+ "scriptStatus": "passed",
+ "wordsPerMinute": 150,
+ "runtime": 10.3,
+ "generation": {
+  "model": "claude-sonnet-5",
+  "brief": "src/modules/storyboard/briefs/storyboard.md",
+  "date": "2026-11-01"
+ },
+ "assets": {},
+ "status": "ok",
+ "issues": [],
+ "scenes": [
+  {
+   "id": "sc01",
+   "sentences": [
+    "s01",
+    "s02"
+   ],
+   "purpose": "State the rule, then let the IERS table's own range show it rising only, from 10 to 37.",
+   "visual": {
+    "category": "data-chart",
+    "description": "Dark field; two stat tiles land in sequence, 1972's 10 s offset first, then 2017's 37 s, both set on the same rising line so the climb reads as one direction.",
+    "chart": {
+     "type": "stat-tiles",
+     "title": "TAI-UTC offset, 1972 to 2017",
+     "points": [
+      {
+       "label": "1972",
+       "value": 10,
+       "unit": "count",
+       "display": "10 s",
+       "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+      },
+      {
+       "label": "2017",
+       "value": 37,
+       "unit": "count",
+       "display": "37 s",
+       "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+      }
+     ],
+     "note": "Each later value is one second more than the one before; none ever drops."
+    }
+   },
+   "citations": [
+    {
+     "label": "IERS, 2026",
+     "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+    }
+   ],
+   "direction": "Hard cut in on the hook line; the first tile lands on \"10\" as the table sentence starts, the second on \"37\" as it ends.",
+   "pauseSeconds": 0.3,
+   "order": 1,
+   "narration": "Leap seconds are only ever added. The IERS table lists 28 values.",
+   "words": 12,
+   "spokenWords": 13,
+   "timing": [
+    {
+     "id": "s01",
+     "start": 0,
+     "duration": 2.4,
+     "end": 2.4
+    },
+    {
+     "id": "s02",
+     "start": 2.4,
+     "duration": 2.8,
+     "end": 5.2
+    }
+   ],
+   "start": 0,
+   "duration": 5.5,
+   "end": 5.5
+  },
+  {
+   "id": "sc02",
+   "sentences": [
+    "s03",
+    "s04"
+   ],
+   "purpose": "Restate the rule in plain type, then hold for the Commission's end card.",
+   "visual": {
+    "category": "typography",
+    "description": "Plain type sets \"Never removed\" as the finding sentence lands, then holds through the pointer line while the frame fades to the end card.",
+    "onScreenText": [
+     "Never removed"
+    ]
+   },
+   "direction": "Cut to type on \"removed\"; hold through the close line; fade to the end card.",
+   "pauseSeconds": 0,
+   "order": 2,
+   "narration": "Each added a second; none was ever removed. See the full video.",
+   "words": 12,
+   "spokenWords": 12,
+   "timing": [
+    {
+     "id": "s03",
+     "start": 5.5,
+     "duration": 3.2,
+     "end": 8.7
+    },
+    {
+     "id": "s04",
+     "start": 8.7,
+     "duration": 1.6,
+     "end": 10.3
+    }
+   ],
+   "start": 5.5,
+   "duration": 4.8,
+   "end": 10.3
+  }
+ ],
+ "targetDurationSeconds": 7.5
+}
