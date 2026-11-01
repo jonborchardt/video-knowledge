@@ -92,6 +92,12 @@ describe('envFor (one key family per verb, nothing for the rest)', () => {
     expect(e.ANTHROPIC_API_KEY).toBeUndefined();
     expect(envFor('publish', ['upload'], { ...env, OPENAI_API_KEY: 'o' }).OPENAI_API_KEY).toBeUndefined();
   });
+  it("a child never inherits the runner's own node and tsx settings (a tsconfig path relative to another cwd broke a spawned CLI)", () => {
+    const e = envFor('validate', [], { ...env, NODE_OPTIONS: '--import x', TSX_TSCONFIG_PATH: 'tsconfig.json' });
+    expect(e.NODE_OPTIONS).toBeUndefined();
+    expect(e.TSX_TSCONFIG_PATH).toBeUndefined();
+    expect(e.PATH).toBe('/bin');
+  });
   it('no video verb gets the Azure key: final narrates through the worker, which loads .env itself', () => {
     const e = envFor('video', ['final', 't', 's'], env);
     expect(e.AZURE_SPEECH_KEY).toBeUndefined();

@@ -60,6 +60,9 @@ export function envFor(cli: string, args: string[], env: NodeJS.ProcessEnv = pro
   const out: NodeJS.ProcessEnv = {};
   for (const [k, v] of Object.entries(env)) {
     if (k === 'VK_AGENT' || k === 'VK_WRITABLE' || k === 'VK_SHELL') continue;
+    // the runner's own runtime (tsx's tsconfig path, node options) is not the child's: a child is `npm run <verb>`
+    // with its own tsx, and a test it spawns in a temp cwd broke on a tsconfig path relative to the repo
+    if (k === 'NODE_OPTIONS' || k.startsWith('TSX_')) continue;
     if (!SECRET_KEY.test(k) || keep?.test(k)) out[k] = v;
   }
   out.VK_NO_DOTENV = '1'; // the child never reloads .env: it holds exactly the keys above, handed by the runner
