@@ -17,7 +17,6 @@ import {
   recordVerified,
 } from '../../src/modules/publishing/publish';
 import { readOutbox } from '../../src/orchestration/run/notify';
-import { releaseGroup } from '../../src/orchestration/run/release';
 import {
   bodyOf,
   draftRequests,
@@ -123,7 +122,10 @@ describe('the release request mail', () => {
     expect(body).toContain('PENDING: reply PAID OK');
     expect(body).toContain('@CORSpending will post:');
     expect(body).toContain('Reply with one of these as the first line:');
-    expect(body).toContain('replying OK confirms every item');
+    expect(body).toContain('Replying OK confirms every item above');
+    const listed = renderReleaseRequest(manifest, req, a, { checklist: ['Opening: does it land?', 'Narration: clear?'] });
+    expect(bodyOf(listed.text)).toContain('1. Opening: does it land?');
+    expect(bodyOf(listed.text)).toContain('2. Narration: clear?');
     expect(body).not.toMatch(/rq-[0-9a-f]{12}/); // review focus 6: the id lives in the subject and the footer
     expect(m.text).toContain(`Request ${req.request}`);
     expect(m.attachments).toEqual([{ name: 'thumbnail.png', contentType: 'image/png', data: Buffer.from('png') }]);
@@ -162,6 +164,22 @@ describe('the release request mail', () => {
       await sendReleaseRequest(f.topic, f.story, manifest, a, mail, { root: f.root, now: () => now.getTime() }),
     ).toBeNull();
     expect(mail.sent).toHaveLength(1);
+    expect(mail.sent[0].text).toContain('1. '); // the checklist is listed, numbered
+  }, 120_000);
+
+  it('a crash between the send and the ledger record is completed from the outbox, not re-sent (review finding 8)', async () => {
+    const { f, manifest, req } = requested();
+    const mail = new FakeMail();
+    mail.failNext = 'after'; // delivered, then the crash before any record
+    await expect(sendReleaseRequest(f.topic, f.story, manifest, a, mail, { root: f.root, now: () => now.getTime(), env: { ...process.env, VK_NO_DOTENV: '1' } })).rejects.toThrow(/after/);
+    expect(mail.sent).toHaveLength(1);
+    const ev = loadLedger(f.topic, f.story, f.root)!.outputs.youtube.events;
+    expect(ev.some((e) => e.type === 'message-sent')).toBe(false);
+    const id = await sendReleaseRequest(f.topic, f.story, manifest, a, mail, { root: f.root, now: () => now.getTime(), env: { ...process.env, VK_NO_DOTENV: '1' } });
+    expect(id).toBe(mail.sent[0].messageId); // the record, from the outbox entry
+    expect(mail.sent).toHaveLength(1);
+    expect(openRequest(loadLedger(f.topic, f.story, f.root)!, undefined, now)?.messageId).toBe(id);
+    expect(req.request).toBe(readOutbox(f.root)[0].request);
   }, 120_000);
 });
 
@@ -193,20 +211,41 @@ describe('the draft request mail', () => {
     expect(renderDraftRequest(f.topic, f.story, v, a, []).text).not.toContain("reviewing agent's notes");
   });
 
+  it("a Short's draft mail names the Short, not its parent (review finding 3)", async () => {
+    const f = syntheticProduction('packaged', { release: true });
+    fixtures.push(f);
+    cliRoot(f.root);
+    const dir = join(f.dir, 'shorts', 'one', 'video', REVIEW_DIR);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, 'review.json'), toJson({ generatedAt: 'd', status: 'private review build', buildReport: 'br', mp4: 's.mp4', mp4Sha: 'shortdraft', thumbnailSha: null, captionsSha: null, seconds: 7.5, title: 'Short one', chapters: [], checklist: ['Short: readable at phone size?'], short: { parent: f.story, slug: 'one', format: 'ONE FIGURE FROM THE RECORD', fullVideo: null } }));
+    writeFileSync(join(dir, 'description.txt'), 'Short one\n');
+    addOutputTo(f.topic, f.story, 'short:one', 'youtube-short', { derivedFrom: 'youtube', source: relative(f.root, join(f.dir, 'shorts', 'one')).replaceAll('\\', '/'), root: f.root });
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'x', now, output: 'short:one', id: 'shortdraft1', visibility: 'private' });
+    const mail = new FakeMail();
+    const shortStory = `${f.story}/shorts/one`;
+    const id = await sendDraftRequest(f.topic, shortStory, 'shortdraft', 'https://youtu.be/shortdraft1', null, a, mail, { root: f.root, now: () => now.getTime() });
+    expect(id).toBeTruthy();
+    expect(mail.sent[0].subject).toBe('[CoR draft] Short one');
+    expect(mail.sent[0].text).toContain('https://youtu.be/shortdraft1');
+    expect(mail.sent[0].text).toContain(shortStory);
+    expect(mail.sent[0].text).toContain('1. Short: readable at phone size?');
+    expect(draftRequests(f.topic, shortStory, f.root)).toHaveProperty('shortdraft');
+    expect(draftRequests(f.topic, f.story, f.root)).toEqual({});
+  });
+
   it('is sent once per draft build through the outbox', async () => {
     const f = syntheticProduction('packaged');
     fixtures.push(f);
     cliRoot(f.root);
     recordUploaded(f.topic, f.story, { root: f.root, by: 'x', now, id: 'draft000001', visibility: 'private' });
-    const g = releaseGroup(f.topic, f.story, f.root)!;
     const mail = new FakeMail();
-    const id = await sendDraftRequest(f.topic, f.story, g, null, a, mail, { root: f.root, now: () => now.getTime() });
+    const id = await sendDraftRequest(f.topic, f.story, 'draftsha', 'https://youtu.be/draft000001', null, a, mail, { root: f.root, now: () => now.getTime() });
     expect(id).toMatch(/^<.+@/);
     expect(mail.sent).toHaveLength(1);
     expect(mail.sent[0].text).toContain('https://youtu.be/draft000001');
     expect(draftRequests(f.topic, f.story, f.root)).toEqual({ draftsha: { messageId: id, at: now.toISOString() } });
     expect(
-      await sendDraftRequest(f.topic, f.story, g, null, a, mail, { root: f.root, now: () => now.getTime() }),
+      await sendDraftRequest(f.topic, f.story, 'draftsha', 'https://youtu.be/draft000001', null, a, mail, { root: f.root, now: () => now.getTime() }),
     ).toBeNull();
     expect(mail.sent).toHaveLength(1);
     expect(readOutbox(f.root)[0]).toMatchObject({ kind: 'draft-request', topic: f.topic, storyId: f.story });

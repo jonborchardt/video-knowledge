@@ -163,7 +163,7 @@ describe('review actions', () => {
       ]);
     }));
 
-  it('while a release request is open the page refuses to approve and says to reply', () =>
+  it('while a release request is open the page shows it and still approves through the verb (review finding 4)', () =>
     run(syntheticProduction('packaged', { release: true }), async (f) => {
       const calls: string[][] = [];
       const fake = (args: string[]) => (calls.push(args), { status: 0, stdout: 'recorded it\n{}\n', stderr: '' });
@@ -184,14 +184,14 @@ describe('review actions', () => {
       );
       const v = reviewView(f.topic, f.story, f.root);
       expect(v.request).toMatchObject({ id: 'rq-0123456789ab', outputs: ['youtube'] });
-      expect(v.can.approve).toMatch(/release request \(rq-0123456789ab/);
+      expect(v.can.approve).toBe(true); // the one working path in phase 2: the page's approval, recorded via review-page
       const res = await handle(
         post('/', { by: 'Jon', build: 'releasesha' }),
         { topic: f.topic, action: 'approve', path: pathOf(f) },
         { root: f.root, run: fake },
       );
-      expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/error=a release request/);
-      expect(calls).toEqual([]);
+      expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/ok=/);
+      expect(calls[0]).toContain('--via');
     }));
 
   it('go-live needs the confirmation and a person', () =>

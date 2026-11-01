@@ -229,7 +229,9 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
     release(dir, lock);
     return { outcome: 'halted', stage: board.stage, halt: h, iterations, costUsd: cost };
   };
-  const finish = (board: BoardNext): RunResult => {
+  /** The production's end: the tree guarded, validated, reported and committed, the `finish` journal line; a halt
+   *  result when any of those fail, else null. `finish` closes the run after it; the release loop runs between. */
+  const settle = (board: BoardNext): RunResult | null => {
     const g = hooks.guard('child');
     if (!g.ok)
       return halt(
@@ -259,10 +261,26 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
         board,
       );
     journal({ stage: board.stage, next: board.next, step: 'finish', kind: 'finish', attempt: 0, costUsd: 0 });
+    return null;
+  };
+  const close = (board: BoardNext): RunResult => {
     clearHalt(dir);
     clearInterval(beat);
     release(dir, lock);
     return { outcome: 'done', stage: board.stage, halt: null, iterations, costUsd: cost };
+  };
+  const finish = (board: BoardNext): RunResult => settle(board) ?? close(board);
+  /** What the release loop added (the ledger, the Shorts, the manifest): committed on the loop's way out. */
+  const commitRelease = (board: BoardNext): RunResult | null => {
+    const problem = o.git === 'none' ? null : commit(git, a, topic, storyId, storyRel, 'release');
+    return problem
+      ? halt(
+          'git',
+          problem,
+          { kind: 'fix', text: `the files stand uncommitted in ${storyRel}; commit them by hand or fix git` },
+          board,
+        )
+      : null;
   };
 
   let lastBoard: BoardNext = {
@@ -366,8 +384,21 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
       o.releaseMail ??
       (o.mail
         ? {
-            draft: async (g, shadow) =>
-              void (await sendDraftRequest(topic, storyId, g, shadow, a, o.mail!, { root, now, env: o.env })),
+            draft: async (d, shadow) =>
+              void (await sendDraftRequest(
+                topic,
+                d.storyId,
+                d.build?.sha ?? '',
+                d.state.url ?? '',
+                shadow,
+                a,
+                o.mail!,
+                {
+                  root,
+                  now,
+                  env: o.env,
+                },
+              )),
             release: async (m) =>
               void (await sendReleaseRequest(topic, storyId, m, a, o.mail!, { root, now, env: o.env })),
           }
@@ -387,8 +418,14 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
           o.until !== 'packaged' &&
           currentBuild(scriptDir(topic, storyId, root))
         ) {
+          // the production is settled (validated, committed) before anything leaves the machine
+          const settled = settle(n);
+          if (settled) return settled;
           const rr = await releaseLoop(topic, storyId, a, releaseContext(n));
+          const committed = commitRelease(n);
+          if (committed) return committed;
           if (rr.outcome === 'halted') return rr;
+          return close(n);
         }
         return finish(n);
       }

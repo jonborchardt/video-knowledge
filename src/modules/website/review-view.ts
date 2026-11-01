@@ -187,9 +187,6 @@ export function reviewView(topic: string, storyId: string, root = ROOT): ReviewV
         outputs: open.outputs,
       }
     : null;
-  const requested = request
-    ? `a release request (${request.id}, ${request.ageHours} h old) is open for ${request.outputs.join(', ')}: reply OK, OK at <when> or CHANGES: to its email, or npm run publish -- decide (phase 3); this page approves again once it is decided or expired`
-    : null;
   // an older kit or theme: video final draws it again before approval (the page has no button for it)
   const stale = lookStale(vr, topic, root);
   const lookWhy = stale
@@ -205,7 +202,6 @@ export function reviewView(topic: string, storyId: string, root = ROOT): ReviewV
           : !pkg.qaOk
             ? 'QA failed on this build'
             : (lookWhy ??
-              requested ??
               (!o
                 ? 'no ledger entry yet: npm run video -- package records it'
                 : state!.status === 'approved' || state!.status === 'scheduled'

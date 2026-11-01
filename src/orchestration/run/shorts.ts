@@ -74,9 +74,37 @@ export async function shortsForParent(
   const halted: { id: string; halt: Halt }[] = [];
   for (const id of owed.produce) {
     const r = await c.runShort(id);
+    const at = new Date().toISOString();
+    const board = { stage: 'shorts', next: '' };
     if (r.outcome === 'done' && packaged(topic, id, c.root)) produced.push(id);
     else if (r.halt) halted.push({ id, halt: r.halt });
-    else halted.push({ id, halt: readHalt(join(scriptDir(topic, id, c.root), RUN_DIR))! });
+    else if (r.outcome === 'held')
+      // another run holds the Short (a person's /produce): the parent tries again later
+      halted.push({
+        id,
+        halt: {
+          kind: 'timeout',
+          stage: 'shorts',
+          why: `a live run holds ${id}; the Short is produced by it`,
+          unblock: { kind: 'run', text: `npm run run -- story ${topic} ${storyId}` },
+          at,
+          runId: 'parent',
+          board,
+        },
+      });
+    else
+      halted.push({
+        id,
+        halt: readHalt(join(scriptDir(topic, id, c.root), RUN_DIR)) ?? {
+          kind: 'step-failed',
+          stage: 'shorts',
+          why: `the run of ${id} ended without a package`,
+          unblock: { kind: 'fix', text: `read ${join(scriptDir(topic, id, c.root), RUN_DIR)}` },
+          at,
+          runId: 'parent',
+          board,
+        },
+      });
   }
   return { produced, halted, problem: null };
 }

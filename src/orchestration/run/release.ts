@@ -255,7 +255,7 @@ export interface ReleaseContext {
   board: () => BoardNext;
   /** Phase 2 Task 6: sends the draft or release request mail; absent until then, or without a mailbox. */
   mail?: {
-    draft: (g: ReleaseGroup, shadow: ShadowEntry | null) => Promise<void>;
+    draft: (o: GroupOutput, shadow: ShadowEntry | null) => Promise<void>;
     release: (manifest: ReleaseManifest) => Promise<void>;
   };
   policy?: DraftPolicy; // tests override automation.json's
@@ -279,7 +279,7 @@ const cmd = (cli: string, args: string[]): Step => ({
   kind: 'run',
   text: `npm run ${cli} -- ${args.map((x) => (/\s/.test(x) ? `"${x}"` : x)).join(' ')}`,
 });
-const q = (s: string) => s.replace(/"/g, "'");
+const q = (s: string) => s.replace(/"/g, "'").replace(/\s*\n\s*/g, ' '); // one line: the board's step is one line
 
 export async function releaseLoop(
   topic: string,
@@ -430,8 +430,8 @@ export async function releaseLoop(
       );
       if (halted(req)) return req;
       if (!req.ok) {
-        if (req.exit === 2) continue; // a refusal: the next pass reads what the ledger says is missing
-        return c.halt('step-failed', `publish request failed: ${req.error}`, {
+        // a refusal names what the loop could not provide (the usual one: no APPROVAL_SECRET in .env)
+        return c.halt('step-failed', `publish request ${req.exit === 2 ? 'refused' : 'failed'}: ${req.error}`, {
           kind: 'fix',
           text: `npm run publish -- request ${topic} ${storyId} --channel email`,
         });
@@ -495,7 +495,7 @@ async function draftPass(
       };
       recordShadowAgent(root, shadow);
     }
-    if (c.mail) await c.mail.draft(g, shadow);
+    if (c.mail) await c.mail.draft(main, shadow); // the output under review, a Short's own when it is the Short
     const url = main.state.url ?? '(not uploaded)';
     return c.halt('awaiting-person', `the draft build ${main.build!.sha} of ${main.id} is uploaded for review`, {
       kind: 'decide',
@@ -588,6 +588,7 @@ async function shortsPass(
 ): Promise<RunResult | null> {
   const sc: ShortsContext = { root: c.root, run: (s) => c.run(s, 'shorts'), runShort: c.runShort };
   const r = await shortsForParent(topic, storyId, sc);
+  if (r.stopped) return r.stopped; // the runner halted inside the pass (a guard, the budget): its halt stands
   if (r.problem)
     return c.halt('step-failed', r.problem, { kind: 'fix', text: `npm run shorts -- discover ${topic} ${storyId}` });
   // what is still halted after the pass: a Short this pass produced cleared its own halt

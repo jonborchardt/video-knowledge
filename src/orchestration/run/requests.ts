@@ -14,7 +14,7 @@ import { redact } from '../../shared/mail';
 import type { ReleaseManifest } from '../../shared/types';
 import { type ApprovalRequest, loadLedger, openRequest, stampOf } from '../../modules/publishing';
 import { readOutbox, secretsOf, sendTracked } from './notify';
-import type { ReleaseGroup, ShadowEntry } from './release';
+import type { ShadowEntry } from './release';
 import { envFor } from './steps';
 
 export const DRAFT_REQUEST_FILE = 'run/draft-request.json';
@@ -128,7 +128,12 @@ export function renderReleaseRequest(
   manifest: ReleaseManifest,
   req: ApprovalRequest,
   a: Automation,
-  opts: { thumbnail?: Buffer | null; urls?: Record<string, string | null>; secrets?: string[] } = {},
+  opts: {
+    thumbnail?: Buffer | null;
+    urls?: Record<string, string | null>;
+    secrets?: string[];
+    checklist?: string[]; // the main output's review checklist: listed, so OK affirms what the person read
+  } = {},
 ): Omit<OutMail, 'messageId'> {
   const clean = (s: string) => redact(s, opts.secrets ?? secretsOf());
   const main = manifest.outputs[manifest.sequence[0]];
@@ -192,7 +197,9 @@ export function renderReleaseRequest(
         ]
       : ['', 'No social post: the commission has no X account.']),
     '',
-    'The checklist you went through on the draft applies to this build; replying OK confirms every item.',
+    'The review checklist for this build:',
+    ...(opts.checklist?.length ? opts.checklist.map((c, i) => `  ${i + 1}. ${clean(c)}`) : ['  (none recorded)']),
+    'Replying OK confirms every item above.',
     '',
     'Reply with one of these as the first line:',
     '  OK                      publish now',
@@ -237,7 +244,12 @@ export async function sendReleaseRequest(
   const ledger = loadLedger(topic, storyId, root);
   const req = ledger && openRequest(ledger, manifest.releaseSha, new Date((deps.now ?? Date.now)()));
   if (!req) return null;
-  if (readOutbox(root).some((e) => e.request === req.request)) return null;
+  const sent = readOutbox(root).find((e) => e.request === req.request);
+  if (sent) {
+    // sent before: the ledger may lack the record (a crash between the send and it): complete it from the outbox
+    if (!req.messageId) recordSent(topic, storyId, req.request, sent.messageId, root, deps.env);
+    return req.messageId ? null : sent.messageId;
+  }
   const urls = Object.fromEntries(
     Object.keys(manifest.outputs).map((id) => {
       const up = ledger.outputs[id]?.events.findLast((e) => e.type === 'uploaded');
@@ -249,6 +261,7 @@ export async function sendReleaseRequest(
     thumbnail: existsSync(thumb) ? readFileSync(thumb) : null,
     urls,
     secrets: deps.secrets,
+    checklist: checklistOf(topic, storyId, root),
   });
   const { messageId } = await sendTracked(mail, out, 'release-request', root, {
     request: req.request,
@@ -256,6 +269,38 @@ export async function sendReleaseRequest(
     storyId,
     now: deps.now,
   });
+  recordSent(topic, storyId, req.request, messageId, root, deps.env);
+  return messageId;
+}
+
+/** The review checklist of the story's package, for the release mail. */
+export const checklistOf = (topic: string, storyId: string, root = ROOT): string[] =>
+  readJson<{ checklist?: string[] }>(join(scriptDir(topic, storyId, root), 'video', REVIEW_DIR, 'review.json'))
+    ?.checklist ?? [];
+/** The upload URLs of a manifest's outputs, from the ledger (for a resend as for the first send). */
+export function urlsOf(
+  topic: string,
+  storyId: string,
+  manifest: ReleaseManifest,
+  root = ROOT,
+): Record<string, string | null> {
+  const ledger = loadLedger(topic, storyId, root);
+  return Object.fromEntries(
+    Object.keys(manifest.outputs).map((id) => {
+      const up = ledger?.outputs[id]?.events.findLast((e) => e.type === 'uploaded');
+      return [id, up?.url ?? (up?.id ? `https://youtu.be/${up.id}` : null)];
+    }),
+  );
+}
+
+function recordSent(
+  topic: string,
+  storyId: string,
+  request: string,
+  messageId: string,
+  root: string,
+  env?: NodeJS.ProcessEnv,
+): void {
   const r = runCli(
     'publish',
     [
@@ -263,7 +308,7 @@ export async function sendReleaseRequest(
       topic,
       storyId,
       '--request',
-      req.request,
+      request,
       '--message-id',
       messageId,
       '--by',
@@ -271,11 +316,10 @@ export async function sendReleaseRequest(
     ],
     {
       cwd: root,
-      env: envFor('publish', [], deps.env ?? process.env),
+      env: envFor('publish', [], env ?? process.env),
     },
   );
   if (r.status !== 0) throw new Error(`publish message-sent failed: ${(r.stderr || r.stdout).trim()}`);
-  return messageId;
 }
 
 interface DraftRequests {
@@ -286,19 +330,19 @@ const draftRequestsPath = (topic: string, storyId: string, root: string) =>
 export const draftRequests = (topic: string, storyId: string, root = ROOT): DraftRequests =>
   readJson<DraftRequests>(draftRequestsPath(topic, storyId, root)) ?? {};
 
-/** Sends the draft request once per draft build (run/draft-request.json remembers). */
+/** Sends the draft request for one output under review (the video, or a Short by its own story id), once per draft
+ *  build (its run/draft-request.json remembers). */
 export async function sendDraftRequest(
   topic: string,
   storyId: string,
-  g: ReleaseGroup,
+  build: string,
+  url: string,
   shadow: ShadowEntry | null,
   a: Automation,
   mail: MailTransport,
   deps: SendDeps = {},
 ): Promise<string | null> {
   const root = deps.root ?? ROOT;
-  const build = g.main.build?.sha;
-  const url = g.main.state.url;
   if (!build || !url) return null;
   const sent = draftRequests(topic, storyId, root);
   if (sent[build]) return null;

@@ -57,6 +57,27 @@ describe('shortsOwed', () => {
   });
 });
 
+describe('a nested run that is held or ends without a package', () => {
+  it('is reported as a halt the parent can act on, never a crash (review finding 2)', async () => {
+    const f = syntheticShort('reviewed');
+    fixtures.push(f);
+    const id = shortId(f.parent, 'fixture-short');
+    const held = await shortsForParent(f.topic, f.parent, {
+      root: f.root,
+      run: async () => ok(),
+      runShort: async () => ({ outcome: 'held', stage: '', halt: null, iterations: 0, costUsd: 0 }),
+    });
+    expect(held.halted).toHaveLength(1);
+    expect(held.halted[0]).toMatchObject({ id, halt: { kind: 'timeout' } });
+    const empty = await shortsForParent(f.topic, f.parent, {
+      root: f.root,
+      run: async () => ok(),
+      runShort: async () => done(), // done, but no package on disk
+    });
+    expect(empty.halted[0]).toMatchObject({ id, halt: { kind: 'step-failed' } });
+  });
+});
+
 describe('shortsForParent', () => {
   it('discovers, runs each ready candidate once as a nested run, and reports a halted one without stopping', async () => {
     const f = syntheticShort('reviewed');

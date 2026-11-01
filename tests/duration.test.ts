@@ -191,6 +191,9 @@ describe('downstream artifacts by band', () => {
     expect(runtime(probe(11.9), spoken(7.5, [63, 96, 96, 57])).ok).toBe(true); // 10.4 s spoken
     expect(runtime(probe(11.9), spoken(7.5, [63, 96, 96, 57])).detail).toMatch(/10\.4s spoken/);
     expect(runtime(probe(11.9), spoken(7.5, [90, 96, 96, 57])).ok).toBe(false); // 11.3 s spoken
+    // a standard or long story keeps the frame span less the end card: holds are part of its runtime
+    expect(runtime(probe(900), spoken(600, [60 * 30 * 10])).ok).toBe(false); // 900 s of frames, 600 s target
+    expect(runtime(probe(900), spoken(600, [60 * 30 * 10])).detail).toMatch(/narrated/);
   });
   it('a micro article is one paragraph without tables; a short one two to four', () => {
     const base = article();

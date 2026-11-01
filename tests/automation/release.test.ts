@@ -319,6 +319,36 @@ describe('the release loop over the fake YouTube', () => {
     expect(s.calls().filter((c) => c.method === 'insertVideo')).toHaveLength(1);
   }, 600_000);
 
+  it('a run validates and commits when the story reaches packaged, and commits again what the release loop added (review finding 1)', async () => {
+    const s = staged({ shorts: 0 });
+    const calls: string[] = [];
+    const git = (args: string[]) => {
+      calls.push(`git ${args[0]}`);
+      if (args[0] === 'rev-parse') return 'main\n';
+      if (args[0] === 'diff') return 'topics/x\n';
+      return '';
+    };
+    const r = await s.run({ git, validate: () => (calls.push('validate'), { ok: true, output: '' }) });
+    expect(r.halt?.kind).toBe('awaiting-person');
+    const first = calls.indexOf('validate');
+    expect(first).toBeGreaterThanOrEqual(0);
+    expect(calls.indexOf('git commit')).toBeGreaterThan(first); // committed at packaged, before any upload
+    expect(calls.filter((c) => c === 'git commit')).toHaveLength(2); // and once more with the loop's ledger and request
+    expect(s.events().filter((e) => e.type === 'uploaded')).toHaveLength(1);
+    const j = readJournal(runDir(s.f.topic, s.f.story, s.f.root));
+    const finish = j.findIndex((e) => e.kind === 'finish');
+    const upload = j.findIndex((e) => /publish -- upload/.test(e.step));
+    expect(finish).toBeGreaterThanOrEqual(0);
+    expect(upload).toBeGreaterThan(finish);
+  }, 600_000);
+
+  it('a refused request halts naming the refusal, never no-progress (review finding 6)', async () => {
+    const s = staged({ shorts: 0 });
+    const r = await s.run({ env: { ...s.env, APPROVAL_SECRET: '' } });
+    expect(r.halt?.kind).toBe('step-failed');
+    expect(r.halt?.why).toMatch(/APPROVAL_SECRET/);
+  }, 600_000);
+
   it('the work plane lists the packaged story as a release job until it is halted or requested', async () => {
     const s = staged({ shorts: 0 });
     const job = { kind: 'release', topic: s.f.topic, storyId: s.f.story, why: 'release: youtube: upload' };

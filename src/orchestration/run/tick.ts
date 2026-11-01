@@ -9,7 +9,7 @@ import type { Automation } from '../../shared/automation';
 import { MANIFEST_FILE, REVIEW_DIR, ROOT, readJson, scriptDir, writeJsonAtomic } from '../../shared/io';
 import type { ReleaseManifest } from '../../shared/types';
 import { loadLedger, requestOf } from '../../modules/publishing';
-import { renderReleaseRequest } from './requests';
+import { checklistOf, renderReleaseRequest, urlsOf } from './requests';
 import type { MailTransport, OutMail } from '../../shared/mail';
 import type { DigestExtra } from './digest';
 import { sendDigestIfDue } from './digest';
@@ -85,7 +85,11 @@ export const defaultRender =
       );
       const ledger = loadLedger(e.topic, e.storyId, root);
       const req = ledger && requestOf(ledger, e.request);
-      return m && req ? renderReleaseRequest(m, req, a) : null;
+      if (!m || !req || m.releaseSha !== req.release) return null; // the release moved: a new request follows
+      return renderReleaseRequest(m, req, a, {
+        urls: urlsOf(e.topic, e.storyId, m, root),
+        checklist: checklistOf(e.topic, e.storyId, root),
+      });
     }
     return null;
   };
