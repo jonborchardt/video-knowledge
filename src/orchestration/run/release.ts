@@ -40,6 +40,8 @@ export const DRAFT_REVIEW_FILE = 'video/draft-review.json';
 
 export interface GroupOutput {
   id: string; // the ledger output id: youtube, short:<slug>
+  topic: string;
+  parent: string; // the story whose ledger holds the output
   storyId: string; // the story or Short id the CLIs take
   state: OutputState;
   step: OutputStep;
@@ -59,7 +61,7 @@ export function releaseGroup(topic: string, storyId: string, root = ROOT): Relea
   const main = openOutput(topic, storyId, { root });
   const one = (id: string, sid: string): GroupOutput => {
     const o = openOutput(topic, storyId, { root, output: id });
-    return { id, storyId: sid, state: o.state, step: o.state.step, build: o.build };
+    return { id, topic, parent: storyId, storyId: sid, state: o.state, step: o.state.step, build: o.build };
   };
   const m = one(main.id, storyId);
   const shorts = Object.entries(main.ledger.outputs)
@@ -259,6 +261,17 @@ export interface ReleaseContext {
   policy?: DraftPolicy; // tests override automation.json's
 }
 
+/** The latest verification of an output since its last send, from the ledger (the loop reads, never decides). */
+const verificationSince = (o: GroupOutput, root: string) => {
+  const ev = loadLedger(o.topic, o.parent, root)?.outputs[o.id]?.events ?? [];
+  const i = ev.findLastIndex((e) => e.type === 'uploaded' || e.type === 'updated');
+  return ev.slice(i + 1).findLast((e) => e.type === 'verified') ?? null;
+};
+const failedChecks = (o: GroupOutput, root: string): string[] =>
+  (verificationSince(o, root)?.checks ?? [])
+    .filter((c) => c.result === 'fail')
+    .map((c) => `${c.name}: ${c.detail ?? ''}`.trim());
+
 /** A step the runner turned into a halt (a guard failure, an exhausted budget): the loop ends with it. */
 export const halted = (x: object): x is RunResult => 'outcome' in x;
 
@@ -341,6 +354,20 @@ export async function releaseLoop(
     const auto = g.all.find(automated);
     if (auto) {
       const key = `${auto.id}|${auto.step.verb}|youtube`;
+      // a push answers a failed verification once per run: still failing after it, the automation cannot fix it
+      if (auto.step.verb === 'push' && verificationSince(auto, root)?.result === 'failed') {
+        const pushKey = `${auto.id}|push-after-failed-verify`;
+        if (attempted.has(pushKey))
+          return c.halt(
+            'awaiting-person',
+            `${auto.id}: the verification still fails after a push: ${failedChecks(auto, root).join('; ') || 'see the ledger'}`,
+            {
+              kind: 'decide',
+              text: `compare what YouTube holds with the package (npm run publish -- verify ${topic} ${auto.storyId}) and fix the package or the metadata`,
+            },
+          );
+        attempted.add(pushKey);
+      }
       if (auto.step.actor === 'youtube') {
         if (attempted.has(key))
           return c.halt(

@@ -169,7 +169,7 @@ export function verificationChecks(
     title: () => text('title', x.title, v.title),
     description: () =>
       text('description', lf(x.description).trim(), v.description === undefined ? undefined : lf(v.description).trim()),
-    tags: () => text('tags', x.tags, v.tags),
+    tags: () => text('tags', [...x.tags].sort(), v.tags === undefined ? undefined : [...v.tags].sort()), // YouTube keeps its own order
     category: () => text('category', x.category, v.categoryId),
     language: () => text('language', x.language, v.defaultLanguage),
     chapters: () =>

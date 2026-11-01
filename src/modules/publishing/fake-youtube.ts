@@ -43,6 +43,8 @@ export interface FakeState {
   fail: FakeFailure[];
   /** getVideo answers `processing` this many times per video before `succeeded` (YouTube still processing). */
   slowProcessing: number;
+  /** What getVideo returns as tags whatever was sent: YouTube's own order (`reverse`), or a fixed list. */
+  tagsHeld?: 'reverse' | string[];
 }
 
 export const emptyFakeState = (): FakeState => ({ nextId: 1, videos: {}, calls: [], fail: [], slowProcessing: 0 });
@@ -146,7 +148,7 @@ export function fakeYoutubeClient(path: string): YouTubeClient {
           processingStatus: processing,
           title: v.snippet.title,
           description: v.snippet.description,
-          tags: v.snippet.tags,
+          tags: s.tagsHeld === 'reverse' ? [...v.snippet.tags].reverse() : (s.tagsHeld ?? v.snippet.tags),
           categoryId: v.snippet.categoryId,
           defaultLanguage: v.snippet.defaultLanguage,
           license: 'youtube',

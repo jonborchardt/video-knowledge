@@ -178,6 +178,16 @@ describe('the release loop over the fake YouTube', () => {
     expect(s.events().find((e) => e.type === 'decided' && e.request === first.request)?.verdict).toBe('void');
   }, 600_000);
 
+  it('a verification that still fails after a push halts for the person instead of pushing again (the fixture ping-pong)', async () => {
+    const s = staged({ shorts: 0 });
+    writeFakeState(s.fake, { ...emptyFakeState(), tagsHeld: ['something else'] });
+    const r = await s.run();
+    expect(r.halt?.kind).toBe('awaiting-person');
+    expect(r.halt?.why).toMatch(/still fails after a push: tags/);
+    expect(s.events().filter((e) => e.type === 'updated')).toHaveLength(1); // one push, not thirty
+    expect(s.calls().filter((c) => c.method === 'updateVideo')).toHaveLength(1);
+  }, 600_000);
+
   it("a Short's retryable upload failure halts only that Short; the video is not uploaded again", async () => {
     const s = staged();
     writeFakeState(s.fake, {

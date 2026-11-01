@@ -54,6 +54,11 @@ const track: RemoteCaption = { id: 'c', language: 'en', trackKind: 'standard', s
 const check = (c: ReturnType<typeof verificationChecks>, name: string) => c.find((k) => k.name === name)!;
 
 describe('verificationChecks', () => {
+  it("tags in another order pass: YouTube returns them in its own order (the fixture's first real verify)", () => {
+    const reordered = { ...ok, tags: [...x.tags].reverse() };
+    expect(check(verificationChecks(x, reordered, [track], 401, now), 'tags').result).toBe('pass');
+    expect(check(verificationChecks(x, { ...ok, tags: ['other'] }, [track], 401, now), 'tags').result).toBe('fail');
+  });
   it('a video that matches the package passes every check', () => {
     const c = verificationChecks(x, ok, [track], 403, now);
     expect(c.map((k) => k.name)).toEqual([...CHECKS]);
