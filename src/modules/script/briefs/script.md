@@ -223,6 +223,10 @@ becomes an absolute one. The viewer sees nothing but this Short.
 - Never point back to a figure the Short has not spoken ("that 47 percent" with no 47 percent before it).
 - The storyboard will block past `short.maxSeconds` of estimated narration: say each thing once.
 
+## Target duration
+
+When the package carries `targetDurationSeconds`, copy it into `script.json` as `targetDurationSeconds` and write to that length: it is the authoritative duration constraint, and the band it falls in (`src/shared/duration.ts`: micro up to 20 s, short up to 90 s, standard up to 8 min, long) supplies the defaults the validator checks: the spoken-word budget (target x wpm / 60, within 35%), the sections of the plain form (a micro story is one `answer` section, a `hook` optional; a short story `hook`, `answer`, `takeaway`, with `setup` and `investigation` optional; standard and long all five) and the sentence count (micro 1 to 4, short 3 to 12). Nothing else changes: every factual sentence still carries its assertions, figures and quotations still trace to passages, and a shorter story is not a lesser one. Without a target, the paragraph above stands: as long as the story needs.
+
 ## Unattended runs
 
 When the runner hands you this brief (an unattended `claude -p` agent), you have no shell: do not run the commands

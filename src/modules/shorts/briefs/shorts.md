@@ -68,6 +68,10 @@ a conditional result never becomes an absolute one.** A viewer who sees only the
 - Final reply: how many candidates were kept and rejected, each kept Short's id, and the qualification
   you found hardest to carry.
 
+## Target duration
+
+A parent with `targetDurationSeconds` bounds its Shorts by band (`src/shared/duration.ts`): a micro parent (up to 20 s) yields at most one Short, targeted at the smaller of 8 s and half the parent; a short parent's Shorts target half the parent; a longer parent's follow today's rules. The Short's evidence package carries the resulting `targetDurationSeconds`, which its script, storyboard and QA read like any story's.
+
 ## Unattended runs
 
 When the runner hands you this brief (an unattended `claude -p` agent), you have no shell: do not run the commands

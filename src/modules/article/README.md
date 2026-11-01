@@ -10,3 +10,7 @@ Article owns editorial content through its lifecycle: drafting, review, validati
 - CLI: `npm run article -- validate|show|lock|correct|reaffirm <topic> <story-id>` (`cli.ts`).
 - Public API (`index.ts`): release and view readers for the site, inspect and validate for the board.
 - Read API (listed under `article` in `tests/boundaries.json`; read-only, nothing written): `loadArticleRelease(topic, storyId)` reads `article-release.json`, or null; `articleModified(release)` is the date the released text last changed, from a release already read; `releaseFigureDraws(release, docNames)` is what each figure draws, computed from the release's own snapshot (it throws on a release without one, never reads); `articleView(release, topic, record, repo, figures)` is the page model, a pure projection; `ArticleView` is its type.
+
+## Target duration
+
+A story's optional `targetDurationSeconds` (set in `story-review.json`, carried by the package) proportions this stage by band through `src/shared/duration.ts`; the module's correctness checks do not change with it. See the Script rule in CLAUDE.md.

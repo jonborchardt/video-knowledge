@@ -242,6 +242,10 @@ verdict, then either:
 Final reply: the deterministic result, the tables and figures you used, and the three sentences you are least
 sure the evidence supports as worded.
 
+## Target duration
+
+When the package carries `targetDurationSeconds`, the article is proportioned to it (`src/shared/duration.ts`): a micro story (up to 20 s) gets one paragraph, the claim and its evidence, and no table (a callout that carries a qualification is still written and does not count as a paragraph); a short story (up to 90 s) two to four paragraphs; a longer one today's article. The validator blocks the wrong proportion (`proportion`); coverage, provenance and every other check are the same whatever the target.
+
 ## Unattended runs
 
 When the runner hands you this brief (an unattended `claude -p` agent), you have no shell: do not run the commands

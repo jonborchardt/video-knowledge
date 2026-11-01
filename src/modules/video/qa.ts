@@ -11,6 +11,7 @@ import { type AudioStats, audioStats, lumaSamples } from './ffmpeg';
 import { ALL_KINDS, unsupportedAssets } from './kinds';
 import { type MixReport, type MusicConfig, musicFingerprint, resolveCues } from './music';
 import type { Segment } from './select';
+import { runtimeProblem } from '../../shared/duration';
 import { END_SCENE, buildTimeline } from './timeline';
 import { type NarrationManifest, SHORT_HARD_SECONDS, type Timeline } from './types';
 
@@ -153,8 +154,24 @@ export function videoChecks(p: Probe, tl: Timeline, duration?: [number, number])
       Math.abs(p.duration - expected) <= 1 / fps + TOLERANCE.frameSlack,
       `${p.duration.toFixed(3)}s vs ${expected.toFixed(3)}s (${tl.durationInFrames} frames)`,
     ),
+    runtimeCheck(p, tl),
   );
   return out;
+}
+
+/** The narrated runtime (the unnarrated end scene excluded) against the story's target: blocking outside the
+ *  tolerance of src/shared/duration.ts when a target is set, informational otherwise. */
+export function runtimeCheck(
+  p: Pick<Probe, 'duration'>,
+  tl: Pick<Timeline, 'fps' | 'scenes' | 'targetDurationSeconds'>,
+): Check {
+  const last = tl.scenes.at(-1);
+  const end = last?.kind === 'close-card' ? last.duration / tl.fps : 0;
+  const narrated = Math.max(0, p.duration - end);
+  const target = tl.targetDurationSeconds;
+  if (target === undefined) return check('runtime', true, `${narrated.toFixed(1)}s narrated, no target`);
+  const problem = runtimeProblem(narrated, target);
+  return check('runtime', !problem, problem ?? `${narrated.toFixed(1)}s narrated against a ${target} s target`);
 }
 
 /** The audio stream, its levels and silences, and every sentence's narration fitting its slot. */

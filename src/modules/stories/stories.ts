@@ -596,6 +596,9 @@ function frame(
     },
     readiness,
     readinessWhy,
+    ...(typeof r.targetDurationSeconds === 'number' && r.targetDurationSeconds > 0
+      ? { targetDurationSeconds: r.targetDurationSeconds }
+      : {}),
     blocking,
     reviewed,
     audit: { central, findings },

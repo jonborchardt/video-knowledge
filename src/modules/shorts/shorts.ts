@@ -6,6 +6,7 @@
 // elsewhere is said inside the Short. A candidate is never ready without it.
 import { join } from 'node:path';
 import { readJson, sha, toJson, ROOT, FILES, scriptDir } from '../../shared/io';
+import { BANDS, bandOf } from '../../shared/duration';
 import { nums } from '../../shared/numbers';
 import { releaseCheck, storyboardFingerprint } from '../../shared/release-check';
 import { validationFingerprint } from '../../shared/sentence-validation';
@@ -104,6 +105,9 @@ export function discoverShorts(parent: ShortParent, review: ShortsReviewFile | n
   const rejected: ShortsFile['rejected'] = [];
   const slugs = new Map<string, string>();
   let ready = 0;
+  // A micro parent carries at most one Short (src/shared/duration.ts); the cap never exceeds MAX_SHORTS.
+  const band = bandOf(pkg.targetDurationSeconds);
+  const cap = Math.min(MAX_SHORTS, band ? BANDS[band].shorts.max : MAX_SHORTS);
   // a lock that no longer matches the parent's script, package, validation or storyboard is no lock
   const stale = release
     ? [
@@ -157,7 +161,7 @@ export function discoverShorts(parent: ShortParent, review: ShortsReviewFile | n
     }
     if (!release) blocking.push('the parent is not locked (no release.json)');
     else if (stale.length) blocking.push(`the parent's lock is stale: ${stale[0]}`);
-    if (!blocking.length && ready >= MAX_SHORTS) blocking.push(`over the cap of ${MAX_SHORTS} ready shorts per video`);
+    if (!blocking.length && ready >= cap) blocking.push(`over the cap of ${cap} ready shorts per video`);
     const readiness: ShortReadiness = blocking.length ? 'needs-review' : 'ready';
     if (readiness === 'ready') ready++;
     candidates.push({
@@ -245,13 +249,17 @@ export function buildShortPackage(
     if (!c) throw new Error(`claim ${id} is not in the parent's package`);
     return c;
   });
-  const { fingerprint: _f, generatedAt: _g, questions: _q, chainWhy: _c, ...rest } = parent;
-  void [_f, _g, _q, _c];
+  const { fingerprint: _f, generatedAt: _g, questions: _q, chainWhy: _c, targetDurationSeconds: _t, ...rest } = parent;
+  void [_f, _g, _q, _c, _t];
+  // The Short's own target by the parent's band (half the parent, at most 8 s for a micro parent); none for today's rules.
+  const pb = bandOf(parent.targetDurationSeconds);
+  const target = pb && parent.targetDurationSeconds ? BANDS[pb].shorts.targetOf(parent.targetDurationSeconds) : null;
   const body: Omit<EvidencePackage, 'fingerprint' | 'generatedAt'> = {
     ...rest,
     story: `${shorts.story}/shorts/${candidate.slug}`,
     title: candidate.hook!,
     inputs: { parent: parent.fingerprint },
+    ...(target !== null && { targetDurationSeconds: target }),
     claims,
     short: {
       parent: shorts.story,

@@ -4,6 +4,7 @@
 // Approval needs both layers: no blocking issue, and a reviewer's approval of the sentence's current fingerprint.
 // A changed sentence changes its fingerprint, so a revision never inherits an approval.
 import { validate } from './evidence-gate';
+import { bandOf, pacingAllowed, scriptProportion } from './duration';
 import { type DocHasher, docHasher, sha, toJson } from './io';
 import { hasFigure, nums, spokenWords, wordsToDigits } from './numbers';
 import {
@@ -170,8 +171,13 @@ function scriptIssues(script: Script, all: ScriptSentence[], pkg: EvidencePackag
     seen.add(s.id);
   }
   const names = sectionsFor(pkg);
+  const target = script.targetDurationSeconds ?? pkg?.targetDurationSeconds;
+  const plain = !pkg?.questions && !pkg?.short;
+  const banded = plain && bandOf(target) !== null && bandOf(target) !== 'standard' && bandOf(target) !== 'long';
+  // The band's section rules replace the five-section default for the plain form (duration.ts); a chain and a Short
+  // keep their own vocabulary.
   for (const name of names)
-    if (!script.sections.some((x) => x.name === name))
+    if (!banded && !script.sections.some((x) => x.name === name))
       top.push(issue('-', 'structure', pkg?.questions ? 'blocking' : 'warning', `no "${name}" section`));
   for (const x of script.sections)
     if (!names.includes(x.name)) top.push(issue('-', 'structure', 'blocking', `unknown section "${x.name}"`));
@@ -191,6 +197,26 @@ function scriptIssues(script: Script, all: ScriptSentence[], pkg: EvidencePackag
         ),
       );
   });
+  if (pkg?.targetDurationSeconds !== undefined && script.targetDurationSeconds !== pkg.targetDurationSeconds)
+    top.push(
+      issue(
+        '-',
+        'duration',
+        'blocking',
+        `the package targets ${pkg.targetDurationSeconds} s; the script says ${script.targetDurationSeconds ?? 'nothing'}: copy targetDurationSeconds from the package`,
+      ),
+    );
+  for (const x of scriptProportion(
+    {
+      sections: script.sections.map((x) => x.name),
+      sentences: all.length,
+      spokenWords: all.reduce((n, x) => n + spokenWords(x.text), 0),
+      plain,
+    },
+    target,
+    script.generation?.wordsPerMinute || WPM_DEFAULT,
+  ))
+    top.push(issue('-', x.category, 'blocking', x.explanation));
   if (pkg && script.generation?.evidencePackage !== pkg.fingerprint)
     top.push(
       issue(
@@ -637,7 +663,13 @@ export function validateScript(
   const top = scriptIssues(script, all, pkg, hashDoc);
   const merge = mergeReview(script, all, review, pkg, previous);
   top.push(...merge.issues);
+  const band = bandOf(script.targetDurationSeconds ?? pkg?.targetDurationSeconds);
   const paced = paceIt ? pacing(all, wpm) : new Map<string, Issue[]>();
+  for (const [id, list] of paced)
+    paced.set(
+      id,
+      list.filter((x) => pacingAllowed(band, x.category)),
+    );
   const results = all.map((s) =>
     judgeSentence(
       s,
@@ -647,7 +679,7 @@ export function validateScript(
       review,
     ),
   );
-  // Runtime is reported, never targeted: a script is as long as its story needs (src/modules/script/briefs/script.md).
+  // Runtime is reported here; a target (duration.ts) proportions the narrative through scriptIssues, never the standards.
   const w = results.reduce((n, s) => n + s.words, 0);
   const sw = results.reduce((n, s) => n + spokenWords(s.text), 0);
   const mins = minutes(sw, wpm);

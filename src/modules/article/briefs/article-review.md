@@ -138,6 +138,10 @@ When the fix needs a passage the package does not have, say so in the finding. O
 Final reply: sentences approved, findings by severity, and the three findings that most change what the article
 can claim.
 
+## Target duration
+
+When the package carries `targetDurationSeconds`, judge the article's proportion to it (one paragraph for a micro story, two to four for a short one) as part of the wording, and hold the evidence to the same standard as for a long story: a callout that carries a qualification is never dropped to fit the length.
+
 ## Unattended runs
 
 When the runner hands you this brief (an unattended `claude -p` agent), you have no shell: do not run the commands
