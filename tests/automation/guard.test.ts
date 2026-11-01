@@ -158,6 +158,19 @@ describe('guard: child scope denies, pre-dirty files, home projection', () => {
       }),
     );
     expect(guard(before, r.root, writer().writable).ok).toBe(true);
+    // a rewrite that reorders the keys and adds a project entry carrying no permission (what a claude -p session in a
+    // new cwd leaves behind) is Claude Code's churn too: the first real fixture run halted on exactly this
+    writeFileSync(
+      cj,
+      JSON.stringify({
+        projects: {
+          'F:/elsewhere': { allowedTools: [], mcpServers: {}, hasTrustDialogAccepted: true },
+          [r.root]: { loggedAuthoredArtifactPaths: ['y'], allowedTools: [] },
+        },
+        numStartups: 3,
+      }),
+    );
+    expect(guard(before, r.root, writer().writable).ok).toBe(true);
     writeFileSync(
       cj,
       JSON.stringify({ ...base, projects: { [r.root]: { ...base.projects[r.root], allowedTools: ['Bash(*)'] } } }),

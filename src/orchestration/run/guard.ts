@@ -112,24 +112,46 @@ const readdirSafe = (d: string): string[] => {
   }
 };
 
+/** JSON with every object's keys sorted, so a rewrite that reorders keys hashes the same. */
+const canonical = (x: unknown): string =>
+  JSON.stringify(x, (_k, v) =>
+    v && typeof v === 'object' && !Array.isArray(v)
+      ? Object.fromEntries(
+          Object.entries(v as Record<string, unknown>).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)),
+        )
+      : v,
+  );
+const empty = (v: unknown): boolean =>
+  v === null ||
+  v === undefined ||
+  (Array.isArray(v) && v.length === 0) ||
+  (typeof v === 'object' && Object.keys(v as object).length === 0);
+
 /** What a canary's hash covers: the whole file, except `~/.claude.json`, which Claude Code itself rewrites on every
- *  start (counters, authored paths); of it only the permission-bearing parts count. */
+ *  start (counters, authored paths, a new project entry per cwd, keys in another order); of it only the
+ *  permission-bearing parts count, canonically ordered, and a project entry that carries none counts for nothing. */
 function canaryContent(file: string): Buffer {
   if (basename(file) !== '.claude.json') return readFileSync(file);
   try {
     const j = JSON.parse(readFileSync(file, 'utf8')) as Record<string, unknown>;
     const projects = (j.projects ?? {}) as Record<string, Record<string, unknown>>;
     const projection = {
-      mcpServers: j.mcpServers ?? null,
-      permissions: j.permissions ?? null,
+      mcpServers: empty(j.mcpServers) ? null : j.mcpServers,
+      permissions: empty(j.permissions) ? null : j.permissions,
       projects: Object.fromEntries(
-        Object.entries(projects).map(([k, p]) => [
-          k,
-          { allowedTools: p.allowedTools ?? null, mcpServers: p.mcpServers ?? null, hooks: p.hooks ?? null },
-        ]),
+        Object.entries(projects)
+          .map(([k, p]) => [
+            k,
+            {
+              allowedTools: empty(p.allowedTools) ? null : p.allowedTools,
+              mcpServers: empty(p.mcpServers) ? null : p.mcpServers,
+              hooks: empty(p.hooks) ? null : p.hooks,
+            },
+          ])
+          .filter(([, v]) => Object.values(v as Record<string, unknown>).some((x) => x !== null)),
       ),
     };
-    return Buffer.from(JSON.stringify(projection));
+    return Buffer.from(canonical(projection));
   } catch {
     return readFileSync(file);
   }
