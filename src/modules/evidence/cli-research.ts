@@ -20,6 +20,9 @@
 //   collide <topic> [--resolve]                   sets "f": true on the new claims distinct.json names; prints the rest of
 //                                                 the collisions; --resolve merges each remaining one into the existing
 //                                                 claim it collides with (merges.json), the runner's last resort
+//   scanned <topic> --found <n> --recorded <n> [--at <ISO>] [--model <m>] [--session <id>]
+//                                                 records one maintenance scan in topics/<topic>/maintenance.json (idempotent
+//                                                 for the same --at)
 //   thin <topic> [--json]                         whether the topic is thin (sources with captions, documents, decided
 //                                                 claims against automation.json topics.*); exit 0 either way
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
@@ -32,6 +35,7 @@ import { type Collision, collisions, similarityFn } from './collide';
 import { dedupeBatches } from './dedupe';
 import { fetchDoc, fetchDocProblem } from './fetch-doc';
 import { splitGroups } from './groups';
+import { appendScan, loadMaintenance, maintenancePath } from './maintenance';
 import { youtubeSearch } from './search';
 import { thinness } from './thin';
 import { relTo, watcher } from './watcher.mjs';
@@ -43,12 +47,16 @@ const flag = (name: string) => {
   return i >= 0 ? rest[i + 1] : undefined;
 };
 const has = (name: string) => rest.includes(name);
-const positional = rest.filter((x, i) => !x.startsWith('--') && !(i > 0 && ['--max', '--pages'].includes(rest[i - 1])));
+const positional = rest.filter(
+  (x, i) =>
+    !x.startsWith('--') &&
+    !(i > 0 && ['--max', '--pages', '--found', '--recorded', '--at', '--model', '--session'].includes(rest[i - 1])),
+);
 const usage = () => {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 25)
+      .slice(0, 28)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -304,6 +312,34 @@ async function main() {
         `${forced} new claim${forced === 1 ? '' : 's'} forced as distinct; ${open.length} open collision${open.length === 1 ? '' : 's'} (${from})${has('--resolve') ? ', merged into the existing claims' : ''}`,
       );
       for (const c of open) console.log(`  ${c.score.toFixed(2)}  "${c.claim}"  ~  ${c.against}`);
+      break;
+    }
+    case 'scanned': {
+      const topic = positional[0];
+      if (!topic) throw new Refusal('scanned needs a topic');
+      if (!existsSync(topicDir(topic, root))) throw new Refusal(`no topic ${topic}`);
+      const found = Number(flag('--found'));
+      const recorded = Number(flag('--recorded'));
+      if (!Number.isInteger(found) || !Number.isInteger(recorded) || found < 0 || recorded < 0)
+        throw new Refusal('scanned needs --found <n> and --recorded <n>');
+      const at = flag('--at') ?? new Date().toISOString();
+      if (Number.isNaN(Date.parse(at))) throw new Refusal(`--at is not a date: ${at}`);
+      const before = loadMaintenance(topic, root);
+      const next = appendScan(before, {
+        at,
+        found,
+        recorded,
+        ...(flag('--model') && { model: flag('--model') }),
+        ...(flag('--session') && { session: flag('--session') }),
+      });
+      if (next === before) {
+        console.log(`${topic}: the scan at ${at} is recorded already`);
+        break;
+      }
+      writeFileSync(maintenancePath(topic, root), toJson(next));
+      console.log(
+        `${topic}: scan at ${at} recorded (${found} found, ${recorded} recorded); last scan ${next.lastScan}`,
+      );
       break;
     }
     case 'thin': {

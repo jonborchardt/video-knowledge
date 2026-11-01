@@ -15,6 +15,7 @@ export {
 } from './topics';
 export { corpusOf } from './corpus';
 export { splitGroups } from './groups';
+export { MAINTENANCE_FILE, appendScan, loadMaintenance, maintenancePath, scanDue } from './maintenance';
 export type { ExtractionBatch } from './batches';
 export { thinness, type ThinCounts } from './thin';
 export { type DataTable, dataRef, datasetCsv, loadDatasets } from './datasets';

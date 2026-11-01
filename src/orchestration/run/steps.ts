@@ -121,7 +121,8 @@ export function validatorFor(step: Step, topic: string, storyId: string): { cli:
     }
     case 'merge.md':
       return { cli: 'evidence', args: ['check-merges', topic] };
-    case 'sources.md': {
+    case 'sources.md':
+    case 'new-sources.md': {
       const out = /^Write: (\S+)$/m.exec(step.text)?.[1];
       return out ? { cli: 'evidence', args: ['check-verdicts', out] } : null;
     }

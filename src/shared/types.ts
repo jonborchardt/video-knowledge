@@ -835,3 +835,18 @@ export interface ProposalReview {
   session?: string;
   date: string;
 }
+
+// ---- maintenance (Milestone 2, phase 6) ----------------------------------------------------------------------------
+
+/** One scan of a published topic for new evidence (topics/<topic>/maintenance.json). */
+export interface MaintenanceScan {
+  at: string;
+  found: number; // documents saved
+  recorded: number; // verdicts recorded
+  model?: string;
+  session?: string;
+}
+export interface MaintenanceFile {
+  lastScan: string | null;
+  scans: MaintenanceScan[];
+}
