@@ -5,6 +5,13 @@ description: Drive one story from ready to a private review package (the board's
 
 # Produce
 
+The runner is the executor of this loop: `npm run run -- story <topic> <story-id>` (`src/orchestration/run/`) runs the
+same board steps unattended, under per-role agent containment, then carries the packaged story through the release
+loop (the draft by policy, the Shorts, the private uploads, the approval request). This skill is the interactive
+fallback for a session: the same loop, with a person watching, and its agents run under the session's permissions
+rather than the runner's. Before starting, read `topics/<topic>/scripts/<slug>/run/lock.json`: a lock whose pid is
+alive means a runner holds the story; refuse, and say so. Publishing stays the runner's or a person's.
+
 The board is the state machine; you are the loop. `npm run board -- next <topic> <story> --json`
 says where the story is and what moves it on; you do that and ask again. All judgment lives in the
 briefs (`src/modules/<module>/briefs/`) and the fresh agents you hand them to; all bookkeeping lives in the CLIs.

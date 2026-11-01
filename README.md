@@ -405,6 +405,20 @@ they launch together: the video goes live first, its Shorts right after (`go-liv
 video once that is live (so its metadata is pushed once more); the related
 video is set in YouTube Studio (the API has no field for it).
 
+**The release loop (Milestone 2).** After `packaged`, `npm run run -- story` continues on its own: under
+`automation.json` `review.draft: person` or `shadow` it uploads the draft privately and emails you the link, the
+checklist and the findings at their moment (under `shadow` an agent reviews the same draft from its frames and QA
+report; its notes ride in the mail for comparison and its verdict decides nothing); you accept on the review page
+(`video final`) or, once phase 3 lands, by replying OK. Under `agent` the draft-review agent decides. Then the runner
+produces the Shorts (`shorts discover`, the shorts reviewer, a nested run per ready candidate), uploads every output
+privately, pushes, verifies, rewrites `video/review/release-manifest.json` (every output's media and metadata, the
+article's release sha, the public URLs, the calls to action with paid links numbered, the institution, the composed
+X post, `releaseSha` over what you approve) and runs `publish request --channel email`, which writes
+`approval-requested` and sends one email that is the whole publication, with the reply lines (`OK`, `OK at
+<when>`, `CHANGES:`, `PAID OK`). Nothing goes public from any of this; approval and go-live stay yours (the review
+page or the CLI until phase 3's reply adapter). `APPROVAL_SECRET` in `.env` (16+ characters) signs the request id.
+`show --json` prints every output's state with its structured step (`verb`, `actor`) and the open request.
+
 `show` prints the state, the composed upload metadata (with the `description:` to paste into Studio) and the event
 log. Every verb is idempotent (an event already
 recorded prints and exits 0) and refuses, without writing, what the files do not support (exit 2). The hand verbs

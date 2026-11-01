@@ -159,6 +159,30 @@ export function recordShadowPerson(
   writeShadow(root, entries);
   return true;
 }
+/** The person's half of each open shadow entry of this story, read from the ledger: an acceptance of that draft build
+ *  by a person (the review page's `video final`, or phase 3's OK reply) is `accept`, a person's change request on it
+ *  is `changes`. The per-note marks arrive with a reply's NOTES line (phase 3). Returns how many entries moved. */
+export function syncShadowFromLedger(root: string, topic: string, storyId: string): number {
+  const ledger = loadLedger(topic, storyId, root);
+  if (!ledger) return 0;
+  const ev =
+    ledger.outputs[Object.keys(ledger.outputs)[0] === 'youtube' ? 'youtube' : Object.keys(ledger.outputs)[0]].events;
+  let n = 0;
+  for (const e of readShadow(root)) {
+    if (e.person || e.story !== `${topic}/${storyId}`) continue;
+    const person = (x: { by: string }) => !x.by.trim().startsWith('automated:');
+    const accepted = ev.some((x) => x.type === 'approved' && x.build === e.build && person(x));
+    const sentBack = ev.findLast((x) => x.type === 'changes-requested' && x.build === e.build && person(x));
+    if (!accepted && !sentBack) continue;
+    recordShadowPerson(root, e.story, e.build, {
+      verdict: accepted ? 'accept' : 'changes',
+      ...(sentBack?.notes && { notes: sentBack.notes.map((note, i) => ({ n: i + 1, ...note })) }),
+    });
+    n++;
+  }
+  return n;
+}
+
 /** The agreement count the digest prints and the person reads before enabling `agent` (spec §5.5). */
 export function shadowAgreement(root = ROOT): {
   drafts: number;
@@ -257,6 +281,7 @@ export async function releaseLoop(
   // a retryable condition (YouTube processing, a retryable API failure) is attempted once per run: still there, the
   // loop halts retryable and the tick's backoff brings it back (never a no-progress halt, spec §10)
   const attempted = new Set<string>();
+  syncShadowFromLedger(root, topic, storyId); // the person's draft decision, if it came since the shadow review
   const verbStep = (o: GroupOutput): Step =>
     o.step.verb === 'package'
       ? cmd('video', ['package', topic, o.storyId])

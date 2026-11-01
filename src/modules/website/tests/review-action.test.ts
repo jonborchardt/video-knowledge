@@ -3,7 +3,17 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { addOutputTo, loadLedger, recordApproved, recordUploaded } from '../../publishing/publish';
+import {
+  addOutputTo,
+  appendEvent,
+  emptyLedger,
+  loadLedger,
+  publishPath,
+  recordApproved,
+  recordUploaded,
+  saveLedger,
+} from '../../publishing/publish';
+import { reviewView } from '../review-view';
 import { JOB_FILE, jobStatus, startJob } from '../review-job';
 import { handle, sameOrigin } from '../../../admin/review-action';
 import { storySlug } from '../../../shared/io';
@@ -146,9 +156,42 @@ describe('review actions', () => {
           '65',
           '--note',
           'keep the end',
+          '--via',
+          'review-page',
         ],
-        ['approve', f.topic, f.story, '--by', 'Jon', '--checked', '2'],
+        ['approve', f.topic, f.story, '--by', 'Jon', '--checked', '2', '--via', 'review-page'],
       ]);
+    }));
+
+  it('while a release request is open the page refuses to approve and says to reply', () =>
+    run(syntheticProduction('packaged', { release: true }), async (f) => {
+      const calls: string[][] = [];
+      const fake = (args: string[]) => (calls.push(args), { status: 0, stdout: 'recorded it\n{}\n', stderr: '' });
+      const ledger = loadLedger(f.topic, f.story, f.root) ?? emptyLedger(`${f.topic}/${f.story}`);
+      const at = new Date().toISOString();
+      saveLedger(
+        publishPath(f.topic, f.story, f.root),
+        appendEvent(ledger, 'youtube', {
+          at,
+          type: 'approval-requested',
+          by: 'automation',
+          request: 'rq-0123456789ab',
+          release: 'sha',
+          outputs: ['youtube'],
+          expiresAt: new Date(Date.now() + 86400_000).toISOString(),
+          channel: 'email',
+        }).ledger,
+      );
+      const v = reviewView(f.topic, f.story, f.root);
+      expect(v.request).toMatchObject({ id: 'rq-0123456789ab', outputs: ['youtube'] });
+      expect(v.can.approve).toMatch(/release request \(rq-0123456789ab/);
+      const res = await handle(
+        post('/', { by: 'Jon', build: 'releasesha' }),
+        { topic: f.topic, action: 'approve', path: pathOf(f) },
+        { root: f.root, run: fake },
+      );
+      expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/error=a release request/);
+      expect(calls).toEqual([]);
     }));
 
   it('go-live needs the confirmation and a person', () =>

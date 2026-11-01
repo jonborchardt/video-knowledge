@@ -76,7 +76,17 @@ export async function handle(
     switch (action as Action) {
       // the build is the current one (refused above otherwise), which is the one the verbs take
       case 'approve':
-        return verb(['approve', topic, storyId, '--by', by, '--checked', String(form.getAll('check').length)]);
+        return verb([
+          'approve',
+          topic,
+          storyId,
+          '--by',
+          by,
+          '--checked',
+          String(form.getAll('check').length),
+          '--via',
+          'review-page',
+        ]);
       case 'request-changes':
         return verb([
           'request-changes',
@@ -89,6 +99,8 @@ export async function handle(
             text,
             ...Object.entries(at).flatMap(([k, v]) => [PLACE[k as keyof typeof PLACE], String(v)]),
           ]),
+          '--via',
+          'review-page',
         ]);
       case 'accept-draft':
         return job('video final', ['video', 'final', topic, storyId, '--approved-by', by]);

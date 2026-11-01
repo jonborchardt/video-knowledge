@@ -2,7 +2,8 @@
 //   show <topic> <story-id> [--json]                          the build, every output's state and next step, the composed upload metadata (the description to paste into Studio), the event log; --json: the states with their structured steps and the open request
 //   uploaded <topic> <story-id> --id <youtube id> [--url <u>] [--visibility private|unlisted|public] [--captions] [--by <name>]
 //                                                             record an upload of the packaged build (public needs a prior approve; it also records published; --captions: the package's captions went up with it)
-//   approve <topic> <story-id> --by <name> --checked <n> [--note <text>]  approve the uploaded build, or the release build on disk, with n checklist items ticked (a draft is accepted by video final)
+//   approve <topic> <story-id> --by <name> --checked <n> [--note <text>] [--via review-page|email:<id>]
+//                                                             approve the uploaded build, or the release build on disk, with n checklist items ticked (a draft is accepted by video final); --via records how the decision arrived
 //   accept-draft <topic> <story-id> --by <name> --build <sha> [--note <text>] [--output <id>] [--dry-run]
 //                                                             record that <name> accepted the draft build <sha> (what `npm run video -- final` records; a draft acceptance is never a publication approval and never lets go-live pass);
 //                                                             under automation.json review.draft "agent" the name may be the draft-review agent's, "automated: draft-review by <model> session <id>"
@@ -107,6 +108,7 @@ const VALUED = [
   '--channel',
   '--request',
   '--message-id',
+  '--via',
 ];
 const positional = rest.filter((a, i) => !a.startsWith('--') && !VALUED.includes(rest[i - 1]));
 const usage = () => {
@@ -136,6 +138,16 @@ const need = (name: string) => {
   return v;
 };
 const output = flag('--output') ?? (shortArg ? `short:${shortArg.slug}` : undefined);
+/** `--via review-page` (the page), `--via email:<message id>` (phase 3's adapter); a hand-run verb records none. */
+const via = (): { channel: 'email' | 'review-page' | 'tick' | 'cli'; messageId?: string } | undefined => {
+  const v = flag('--via');
+  if (!v) return undefined;
+  const [channel, ...rest] = v.split(':');
+  if (!['email', 'review-page', 'tick', 'cli'].includes(channel))
+    throw new Refusal(`--via ${v}: email, review-page, tick or cli`);
+  const messageId = rest.join(':');
+  return { channel: channel as 'email' | 'review-page' | 'tick' | 'cli', ...(messageId && { messageId }) };
+};
 const common = () => ({ output, by: by() });
 // YOUTUBE_FAKE=<state file> (tests only; nothing in the repo sets it): a recording client over a JSON file
 const api = () => {
@@ -151,7 +163,7 @@ function placedNotes(args: string[]): ReviewNote[] {
   const notes: ReviewNote[] = [];
   for (let i = 0; i < args.length; i += 2) {
     const [name, value] = [args[i], args[i + 1]];
-    if (name === '--by' || name === '--output') continue;
+    if (name === '--by' || name === '--output' || name === '--via') continue;
     if (value === undefined) throw new Refusal(`${name} needs a value`);
     if (name === '--note') notes.push({ text: value });
     else if (name !== '--at' && name !== '--scene' && name !== '--sentence')
@@ -239,7 +251,7 @@ async function main() {
       const checked = Number(flag('--checked') ?? 0);
       if (!Number.isInteger(checked) || checked < 0)
         throw new Refusal('--checked needs the number of checklist items you ticked');
-      r = recordApproved(topic, storyId, { output, by: flag('--by') ?? '', note: flag('--note'), checked });
+      r = recordApproved(topic, storyId, { output, by: flag('--by') ?? '', note: flag('--note'), checked, via: via() });
       break;
     }
     case 'accept-draft': {
@@ -259,7 +271,7 @@ async function main() {
       const notes = placedNotes(rest);
       const build = openOutput(topic, storyId, { output }).build?.sha ?? '';
       const policy = loadAutomation(ROOT).review.draft;
-      r = recordChangesRequested(topic, storyId, { output, by: flag('--by') ?? '', build, notes, policy });
+      r = recordChangesRequested(topic, storyId, { output, by: flag('--by') ?? '', build, notes, policy, via: via() });
       break;
     }
     case 'thumbnail':

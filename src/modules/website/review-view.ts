@@ -8,7 +8,14 @@ import type { BuildSummary } from '../../shared/build-report';
 import { ROOT, readJson } from '../../shared/io';
 import { Refusal } from '../../shared/refusal';
 import { lookStale } from '../../shared/look';
-import { type OutputState, type OutputStatus, type PublishEvent, type ReviewNote, openOutput } from '../publishing';
+import {
+  type OutputState,
+  type OutputStatus,
+  type PublishEvent,
+  type ReviewNote,
+  openOutput,
+  openRequest,
+} from '../publishing';
 import { FILES, scriptDir, shortId, shortOf, storySlug, topicDir } from '../../shared/io';
 import type { ScriptValidation } from '../../shared/types';
 import { loadShorts } from '../shorts';
@@ -58,6 +65,8 @@ export interface ReviewView {
   output: string | null;
   history: { build: string; current: boolean; events: PublishEvent[] }[]; // newest first
   can: { approve: Can; requestChanges: Can; acceptDraft: Can; upload: Can; goLive: Can };
+  /** The open release request on this video's ledger (Milestone 2): decided by a reply to its email. */
+  request: { id: string; ageHours: number; expiresAt: string; outputs: string[] } | null;
 }
 
 interface TimelineLite {
@@ -168,6 +177,19 @@ export function reviewView(topic: string, storyId: string, root = ROOT): ReviewV
     : null;
 
   const state = o?.state ?? null;
+  const now = Date.now();
+  const open = o ? openRequest(o.ledger, undefined, new Date(now)) : null;
+  const request = open
+    ? {
+        id: open.request,
+        ageHours: Math.round((now - Date.parse(open.at)) / 36e5),
+        expiresAt: open.expiresAt,
+        outputs: open.outputs,
+      }
+    : null;
+  const requested = request
+    ? `a release request (${request.id}, ${request.ageHours} h old) is open for ${request.outputs.join(', ')}: reply OK, OK at <when> or CHANGES: to its email, or npm run publish -- decide (phase 3); this page approves again once it is decided or expired`
+    : null;
   // an older kit or theme: video final draws it again before approval (the page has no button for it)
   const stale = lookStale(vr, topic, root);
   const lookWhy = stale
@@ -183,6 +205,7 @@ export function reviewView(topic: string, storyId: string, root = ROOT): ReviewV
           : !pkg.qaOk
             ? 'QA failed on this build'
             : (lookWhy ??
+              requested ??
               (!o
                 ? 'no ledger entry yet: npm run video -- package records it'
                 : state!.status === 'approved' || state!.status === 'scheduled'
@@ -252,6 +275,7 @@ export function reviewView(topic: string, storyId: string, root = ROOT): ReviewV
     output: o?.id ?? null,
     history: o ? historyOf(o.out.events, pkg?.mp4Sha ?? null) : [],
     can,
+    request,
   };
 }
 

@@ -114,8 +114,12 @@ const flow: Step[] = [
   },
   {
     you: true,
-    t: 'Watch it on the review page',
-    d: ['QA and script findings at their moment;', 'send back with timestamped notes, or', 'accept the draft'],
+    t: 'Watch it: the draft email or the review page',
+    d: [
+      'the runner uploads the draft privately and',
+      'emails you (review.draft: person or shadow);',
+      'reply OK or CHANGES:, or decide on the page',
+    ],
   },
   {
     t: 'Voice redo (video final)',
@@ -142,29 +146,19 @@ const flow: Step[] = [
     d: ['a commercial entry in cta.json needs', 'its disclosure and your approvedBy;', 'never the primary over a tool'],
   },
   {
-    you: true,
-    t: 'Approve the release build',
-    d: [
-      'tick every checklist item; binds the mp4',
-      'and its title (a new title asks again);',
-      'a title or thumbnail edit: updated event',
-    ],
-  },
-  {
     t: 'Find the Shorts',
     d: [
-      'shorts discover on the locked video;',
-      'shorts.md agent: keep, hook, how each',
-      'qualification is carried; at most 3',
+      'the runner, once the video is packaged:',
+      'shorts discover; shorts.md agent: keep,',
+      'hook, how each qualification is carried',
     ],
   },
   {
-    you: true,
     t: 'Start each Short',
     d: [
-      '/produce <story>/shorts/<slug> with',
-      'your name, as for the video; Shorts are',
-      'made before the video launches',
+      'the runner, serially, at most 3, as a',
+      'nested run of <story>/shorts/<slug>;',
+      'or you: /produce it with your name',
     ],
   },
   {
@@ -176,9 +170,22 @@ const flow: Step[] = [
     ],
   },
   {
+    t: 'Upload, push, verify, request',
+    d: [
+      'the runner: each output private with its',
+      'thumbnail and captions, verified; the',
+      'release manifest; one email asks for approval',
+    ],
+  },
+  {
     you: true,
-    t: 'Review and approve each Short',
-    d: ['the same review page, send-back and', 'checklist as the video; its approval', 'binds its own build and title'],
+    t: 'Approve the release: the email or the review page',
+    d: [
+      'the whole publication in one email (every',
+      'private link, the article, the URLs, paid',
+      'links numbered); reply OK, OK at <when>,',
+      'CHANGES:, PAID OK; binds the manifest sha',
+    ],
   },
   {
     you: true,

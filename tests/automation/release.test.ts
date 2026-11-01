@@ -10,7 +10,7 @@ import { loadAutomation } from '../../src/shared/automation';
 import { MANIFEST_FILE, REVIEW_DIR, ROOT, readJson, sha, toJson } from '../../src/shared/io';
 import { discoverShorts, loadShortParent, shortsPath } from '../../src/modules/shorts';
 import { emptyFakeState, readFakeState, writeFakeState } from '../../src/modules/publishing/fake-youtube';
-import { addOutputTo, loadLedger, openOutput } from '../../src/modules/publishing/publish';
+import { addOutputTo, loadLedger, openOutput, recordChangesRequested } from '../../src/modules/publishing/publish';
 import { runCli } from '../../src/shared/cli';
 import { readJournal, runDir } from '../../src/orchestration/run/journal';
 import {
@@ -19,6 +19,7 @@ import {
   shadowAgreement,
   recordShadowAgent,
   recordShadowPerson,
+  syncShadowFromLedger,
 } from '../../src/orchestration/run/release';
 import { type RunOptions, runStory } from '../../src/orchestration/run/runner';
 import { execStep } from '../../src/orchestration/run/steps';
@@ -296,14 +297,26 @@ describe('the draft by policy', () => {
     expect(s.events().some((e) => /draft-review/.test(e.by))).toBe(false); // criterion 16's shadow row
     expect(s.events().filter((e) => e.type === 'changes-requested')).toEqual([]);
     expect(releasePending(s.f.topic, s.f.story, s.a, s.f.root)).toBeNull();
-    // the person's decision joins the entry (the review page's job, or phase 3's reply)
+    // the person's decision joins the entry from the ledger: here a change request on the draft by a person
+    recordChangesRequested(s.f.topic, s.f.story, {
+      root: s.f.root,
+      by: 'Jon',
+      build: s.build,
+      notes: [{ text: 'slower', seconds: 2 }],
+    });
+    expect(syncShadowFromLedger(s.f.root, s.f.topic, s.f.story)).toBe(1);
+    expect(readShadow(s.f.root)[0].person).toEqual({
+      verdict: 'changes',
+      notes: [{ n: 1, text: 'slower', seconds: 2 }],
+    });
+    expect(syncShadowFromLedger(s.f.root, s.f.topic, s.f.story)).toBe(0); // once
     expect(
       recordShadowPerson(s.f.root, `${s.f.topic}/${s.f.story}`, s.build, {
-        verdict: 'accept',
+        verdict: 'changes',
         marks: [{ n: 1, mark: 'disagree' }],
       }),
     ).toBe(true);
-    expect(shadowAgreement(s.f.root)).toMatchObject({ drafts: 1, agreed: 0, streak: 0, notesDisagreed: 1 });
+    expect(shadowAgreement(s.f.root)).toMatchObject({ drafts: 1, agreed: 1, streak: 0, notesDisagreed: 1 });
   }, 600_000);
 
   it('agent: no draft upload; final runs with the draft-review actor; the release build is uploaded, not approved', async () => {

@@ -77,6 +77,14 @@ const sentenceStarts = JSON.stringify(v.sentences.map((s) => [s.at.seconds, s.at
       )
     }
     {v.state && <p class={small}>Next: {v.state.next}</p>}
+    {
+      v.request && (
+        <p class={small}>
+          Release request <code class={mono}>{v.request.id}</code> open {v.request.ageHours} h for{' '}
+          {v.request.outputs.join(', ')}; expires {v.request.expiresAt.slice(0, 10)}: reply to its email.
+        </p>
+      )
+    }
   </header>
 
   {

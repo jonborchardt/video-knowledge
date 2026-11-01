@@ -880,7 +880,14 @@ export function recordApproved(
   topic: string,
   storyId: string,
   // policy: automation.json review.draft, read by the CLI; it matters only for a draft acceptance (`accepted`)
-  a: VerbArgs & { note?: string; build?: string; accepted?: boolean; checked?: number; policy?: DraftPolicy },
+  a: VerbArgs & {
+    note?: string;
+    build?: string;
+    accepted?: boolean;
+    checked?: number;
+    policy?: DraftPolicy;
+    via?: PublishEvent['via']; // how the person's decision arrived (the review page, an email, the CLI)
+  },
 ): VerbResult {
   const problem = approverProblem(a.by);
   if (problem) throw new Refusal(problem.replace('--approved-by', '--by'));
@@ -928,6 +935,7 @@ export function recordApproved(
   if (o.metadata?.title) e.title = o.metadata.title;
   if (uploaded?.id) e.id = uploaded.id;
   if (a.note) e.note = a.note;
+  if (a.via) e.via = a.via;
   return write(o, e);
 }
 
@@ -1012,7 +1020,7 @@ const reviewJsonOf = (o: ReturnType<typeof openOutput>) =>
 export function recordChangesRequested(
   topic: string,
   storyId: string,
-  a: VerbArgs & { build: string; notes: ReviewNote[]; policy?: DraftPolicy },
+  a: VerbArgs & { build: string; notes: ReviewNote[]; policy?: DraftPolicy; via?: PublishEvent['via'] },
 ): VerbResult {
   const problem = approverProblem(a.by);
   const agent = draftReviewer(a.by, a.policy);
@@ -1028,7 +1036,14 @@ export function recordChangesRequested(
   if (o.state.live) throw new Refusal(`${o.id} is live; a re-release is a new output (npm run publish -- add)`);
   if (o.state.status === 'scheduled')
     throw new Refusal(`${o.id} is scheduled on YouTube; unschedule it in YouTube Studio first, then record it`);
-  return write(o, { at: stamp(a), type: 'changes-requested', by: a.by, build: a.build, notes });
+  return write(o, {
+    at: stamp(a),
+    type: 'changes-requested',
+    by: a.by,
+    build: a.build,
+    notes,
+    ...(a.via && { via: a.via }),
+  });
 }
 
 /** Why `o` may not go public or be scheduled by `by`, or null: only a person does it, never with a draft upload (edge
