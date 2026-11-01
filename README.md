@@ -733,7 +733,8 @@ npm run report     # refresh topics/<topic>/report.json from the stores (needs t
 npm run stories -- discover <topic>   # refresh topics/<topic>/stories.json from the report and store
 npm run dev        # live preview at http://localhost:4321/ (DEPLOY_TARGET=pages for the /video-knowledge/ mirror)
 npm run build      # build dist/
-npm run validate   # typecheck + lint + format check + build + tests (what CI runs)
+npm run check      # incremental tsc --noEmit + cached eslint: the per-task check while iterating (.cache/, gitignored)
+npm run validate   # typecheck + lint + format check + build + tests (what CI runs): once on a phase's final candidate
 npm run format     # prettier --write
 npm run quality    # web-quality gate for site changes (build, static checks, browser suite); -- --audit for the full audit
 ```

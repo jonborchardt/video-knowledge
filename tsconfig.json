@@ -3,6 +3,8 @@
   "include": [".astro/types.d.ts", "src", "tests", "scripts/*.ts"],
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "incremental": true,
+    "tsBuildInfoFile": ".cache/tsbuildinfo"
   }
 }
