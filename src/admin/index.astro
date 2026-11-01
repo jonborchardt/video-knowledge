@@ -3,6 +3,7 @@
 // artifacts tabs), the external services, and the maps of the workflow and the site.
 import TabBar from '../components/TabBar.astro';
 import Automation from './Automation.astro';
+import Proposals from './Proposals.astro';
 import Board from './Board.astro';
 import Base from '../layouts/Base.astro';
 import ObjectsDiagram from './ObjectsDiagram.astro';
@@ -21,12 +22,20 @@ const row = 'flex items-center gap-2';
 type Step = { you?: boolean; planned?: boolean; t: string; d: string[] };
 const flow: Step[] = [
   {
-    you: true,
-    t: 'Pick a topic, queue its sources',
+    t: 'Propose topics (weekly)',
     d: [
-      'YouTube URLs or a queue file for the watcher;',
-      'a commission in site.ts claims the topic',
-      'so the site publishes it',
+      'npm run run -- discover (or the work plane when',
+      'enabled.discovery): an agent proposes per institution,',
+      'an independent agent reviews; the weak are parked',
+    ],
+  },
+  {
+    you: true,
+    t: 'Approve or reject proposals (reply or admin)',
+    d: [
+      'one batch mail a week: APPROVE <slug>, REJECT <slug>: <why>,',
+      'APPROVE ALL; or npm run topics -- approve|reject;',
+      'by hand still: videos.txt and a queue file for the watcher',
     ],
   },
   {
@@ -273,6 +282,7 @@ const tabs = [
   { id: 'pipeline', label: 'Pipeline' },
   { id: 'artifacts', label: 'Artifacts' },
   { id: 'automation', label: 'Automation' },
+  { id: 'proposals', label: 'Proposals' },
   { id: 'services', label: 'External services' },
   { id: 'path', label: 'Your path' },
   { id: 'flow', label: 'Every step' },
@@ -339,6 +349,8 @@ const fig = { width: 780, height: yOf(flow.length) };
   <Board />
 
   <Automation />
+
+  <Proposals />
 
   <section id="services" class="mt-6" aria-labelledby="services-h">
     <h2 id="services-h" class="text-title font-semibold">External services</h2>

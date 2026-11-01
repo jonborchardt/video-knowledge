@@ -48,3 +48,19 @@ retryable failure on `POST_ATTEMPTS` (3) ticks; `deploy-timeout` is written once
 reason in its unblock text), so every terminal failure is one halt the status rows and the halt mail carry once.
 The orchestration imports publishing, website and social only through their `index.ts` and writes every effect
 through a CLI as a child.
+
+## Phase 4: topic discovery
+
+`run/discovery.ts` is the weekly discovery job of the work plane (`enabled.discovery`, `schedule.discovery`; by hand
+`npm run run -- discover [--institution <key>] [--dry-run]`): per institution with a channel one `discover.md` agent
+under the discovery grant (new `proposals/*.json` only, validated by `topics -- validate --fresh` with the findings
+fed back), then one `proposal-review.md` agent per new proposal in a fresh session (one review file, validated by
+`topics -- validate <slug> --review`); then `topics -- batch` (the weak parked with the reviewer's reason, the strong
+listed per institution under one `pb-` id), one mail through the outbox (`requests.ts` `renderBatch`), `topics --
+sent` for the Message-ID, and `proposals/` committed on main in the clone. The slot is recorded in `schedule.json`
+before any agent runs and the record under `.automation/discovery/<slot>.json` grows step by step, so a crashed job
+resumes without a second batch, agent or mail (an unsent mail is the outbox flush's). A review that never completes
+halts `no-progress` for its slug alone (`.automation/discovery/halts/`, a status row under the pseudo-topic
+`proposals`, so the halt mail and the digest carry it). `run/inbox.ts` applies a reply to the batch mail (thread and
+`pb-` id required) line by line through `topics approve|reject` by the approver; `APPROVE ALL` expands over the
+batch's slugs only; a slug outside the batch is reported back. The digest lists the proposals pending and parked.

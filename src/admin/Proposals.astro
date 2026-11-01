@@ -1,0 +1,103 @@
+---
+// The Proposals tab of the admin page (dev server only, read-only; register D17): every topic proposal ranked with
+// its independent review, its status, its batch and age, and a Copy button for the decision commands. Decisions are
+// made by reply to the batch mail or with `npm run topics`; this page adds no action. Read through the module's
+// public API only.
+import { loadAutomation } from '../shared/automation';
+import { ROOT } from '../shared/io';
+import { loadProposals, rank } from '../modules/topic-discovery';
+
+const a = loadAutomation(ROOT);
+const all = loadProposals(ROOT);
+const ranked = rank(all, a.topics);
+const reviewOf = (slug: string) => all.find((x) => x.proposal.slug === slug)?.review ?? null;
+const small = 'text-sm text-muted-foreground';
+const days = (iso: string) => Math.floor((Date.now() - Date.parse(iso)) / 86_400_000);
+const firstSentence = (s: string) => s.split(/(?<=\.)\s/)[0];
+---
+
+<section id="proposals" class="mt-6" aria-labelledby="proposals-h">
+  <h2 id="proposals-h" class="text-title font-semibold">Proposals</h2>
+  <p class={`mt-1 max-w-prose ${small}`}>
+    Topic proposals per institution: an agent proposes, an independent agent reviews, code ranks and parks the weak
+    (under {a.topics.minOverall} on either side, or a reviewer's <code>fit: false</code>). Only you approve or reject:
+    reply to the batch mail, or copy a command below. Discovery runs weekly when <code>automation.json</code>{' '}
+    <code>enabled.discovery</code> is on ({a.enabled.discovery ? 'on' : 'off'}); <code
+      >npm run run -- discover --dry-run</code
+    > runs it by hand.
+  </p>
+  <table class="mt-3 w-full text-sm">
+    <thead class="text-left text-xs text-muted-foreground uppercase">
+      <tr>
+        <th class="py-1 pr-3 font-medium">Rank</th>
+        <th class="py-1 pr-3 font-medium">Proposal</th>
+        <th class="py-1 pr-3 font-medium">Institution</th>
+        <th class="py-1 pr-3 font-medium">Status</th>
+        <th class="py-1 pr-3 font-medium">Batch</th>
+        <th class="py-1 font-medium">Decide</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        ranked.map((r) => {
+          const review = reviewOf(r.slug);
+          return (
+            <tr class="border-t align-top">
+              <td class="py-1 pr-3">
+                {r.overall.toFixed(2)}
+                <span class={`block ${small}`}>
+                  proposer {r.proposerOverall.toFixed(2)}, reviewer {r.unreviewed ? '-' : r.reviewerOverall.toFixed(2)}
+                </span>
+              </td>
+              <td class="py-1 pr-3">
+                <span class="font-medium">{r.slug}</span>
+                <span class={`block ${small}`}>{r.question}</span>
+                {review && <span class={`block ${small}`}>Reviewer: {firstSentence(review.verdict)}</span>}
+              </td>
+              <td class="py-1 pr-3">{r.institution}</td>
+              <td class="py-1 pr-3">
+                {r.status}
+                {r.unreviewed && <span class={`block ${small}`}>no review yet</span>}
+                {r.weak && !r.unreviewed && r.status === 'proposed' && <span class={`block ${small}`}>weak</span>}
+                {r.status === 'parked' && <span class={`block ${small}`}>{r.parkedWhy}</span>}
+                {r.decidedBy && (
+                  <span class={`block ${small}`}>
+                    by {r.decidedBy} {r.decidedAt ? `on ${r.decidedAt.slice(0, 10)}` : ''}
+                  </span>
+                )}
+              </td>
+              <td class={`py-1 pr-3 ${small}`}>{r.batch ? `${r.batch.id}, ${days(r.batch.sentAt)} d ago` : ''}</td>
+              <td class="py-1">
+                {r.status !== 'approved' && r.status !== 'rejected' && !r.unreviewed && (
+                  <span class="flex flex-col items-start gap-1">
+                    <span class="flex items-start gap-2">
+                      <pre class="text-xs whitespace-pre-wrap">{`npm run topics -- approve ${r.slug} --by "<name>"`}</pre>
+                      <button type="button" class="rounded border px-2 text-xs" data-copy>
+                        Copy
+                      </button>
+                    </span>
+                    <span class="flex items-start gap-2">
+                      <pre class="text-xs whitespace-pre-wrap">{`npm run topics -- reject ${r.slug} --by "<name>" --note "<why>"`}</pre>
+                      <button type="button" class="rounded border px-2 text-xs" data-copy>
+                        Copy
+                      </button>
+                    </span>
+                  </span>
+                )}
+              </td>
+            </tr>
+          );
+        })
+      }
+      {
+        ranked.length === 0 && (
+          <tr>
+            <td colspan="6" class={`py-2 ${small}`}>
+              No proposals yet: the first discovery writes them under proposals/.
+            </td>
+          </tr>
+        )
+      }
+    </tbody>
+  </table>
+</section>

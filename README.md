@@ -36,6 +36,26 @@ topics/<topic>/
   work/        scratch for agent batches (gitignored)
 ```
 
+## Topics: proposals and decisions
+
+Before a topic is researched it is a **proposal** (`proposals/<slug>.json`, Milestone 2 phase 4; spec §5.1). On the
+configured weekday (`automation.json` `schedule.discovery`, when `enabled.discovery` is on; by hand:
+`npm run run -- discover [--institution <key>] [--dry-run]`, which costs agents) one agent per institution with a
+channel reads `npm run topics -- context <key>` (the remit, the existing topics and their story questions, every
+earlier proposal with its status) and writes new proposal files from `src/modules/topic-discovery/briefs/discover.md`:
+the question, why that institution, five or more checkable claims as the public makes them, eight or more popular
+sources, four or more studies or datasets, the overlap, five scores. A second agent in a fresh session reviews each
+one (`briefs/proposal-review.md`: fit, promise, checkability, honesty, its own scores; it may fail the proposal for
+substance). Code validates both files (`npm run topics -- validate`), ranks them on the mean of both overalls, parks
+every weak one (either side under `topics.minOverall`, or `fit: false`) with the reviewer's first concern, and
+`npm run topics -- batch` lists the strongest `topics.proposalsPerInstitution` per institution under one `pb-` id in
+one email. You reply `APPROVE <slug>`, `REJECT <slug>: <why>`, `APPROVE ALL` or `REJECT ALL: <why>` (or run
+`npm run topics -- approve|reject <slug> --by "<name>"`; the Proposals tab on `/admin` shows the ranking and the
+commands). Only a person decides; an `automated:` actor is refused. Parked proposals appear in the digest, never in
+the batch; a rejected or parked subject is never proposed again (its question is refused as a repeat). An approved
+proposal is what the research pipeline (phase 5) starts from; nothing in a proposal is researched, and a proposal
+never writes under `topics/`. `npm run topics -- show` prints the ranking.
+
 ## Adding a topic
 
 The agent does the reading and judging; the scripts do the bookkeeping. Steps 3–5 are written for Claude Code, which runs one agent per group of sources in parallel.
