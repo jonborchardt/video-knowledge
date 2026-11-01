@@ -224,6 +224,20 @@ export function fullVideoUrl(topic: string, parent: string): string | null {
   return last?.type === 'published' ? (last.url ?? (last.id ? `https://youtu.be/${last.id}` : null)) : null;
 }
 
+/** YouTube's title limit (publishing's uploadProblem refuses past it; a working title is trimmed here instead). */
+const TITLE_MAX = 100;
+/** The package title: the real title for a release build, else the private working title, trimmed at a word with an
+ *  ellipsis when the review prefix pushes it past YouTube's limit (the fixture's Short did: a hook within the brief's
+ *  limit under two prefixes). A release title is never trimmed: the limits check refuses it, a person shortens it. */
+export function reviewTitle(title: string, release: boolean): string {
+  if (release) return title;
+  const working = `[PRIVATE REVIEW] ${title}`;
+  if (working.length <= TITLE_MAX) return working;
+  const cut = working.slice(0, TITLE_MAX - 1);
+  const at = cut.lastIndexOf(' ');
+  return `${(at > TITLE_MAX / 2 ? cut.slice(0, at) : cut).trimEnd()}…`;
+}
+
 /** The package's data (review.json), pure: what the files below are rendered from. */
 export function reviewData(
   seg: Segment,
@@ -257,7 +271,7 @@ export function reviewData(
   return {
     generatedAt: made.generatedAt,
     status: release ? 'release build' : 'private review build',
-    title: release ? title : `[PRIVATE REVIEW] ${title}`,
+    title: reviewTitle(title, release),
     ...(fixtureRun && { fixtureRun }),
     mp4: made.mp4,
     mp4Sha: made.mp4Sha,

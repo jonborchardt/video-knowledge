@@ -7,5 +7,6 @@ export {
   descriptionLinks,
   keywordsOf,
   renderDescription,
+  reviewTitle,
 } from './package';
 export { buildManifest, loadManifest, manifestPath, removeManifest, writeManifest } from './manifest';

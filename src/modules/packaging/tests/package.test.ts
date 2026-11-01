@@ -20,6 +20,7 @@ import {
   reviewData,
   reviewInputProblem,
   reviewMp4Name,
+  reviewTitle,
   thumbnailScene,
 } from '../package';
 
@@ -140,6 +141,19 @@ describe('review package chapters', () => {
     expect(renderChecklist(rel, t)).toContain('release build');
     expect(reviewMp4Name(join('t', 'scripts', 'x', 'video'), true)).toBe('x.mp4');
     expect(thumbnailScene(t)).toBeNull(); // the fixture has no title card
+  });
+});
+
+describe('the working title fits YouTube', () => {
+  it("a draft's working title is trimmed to 100 characters at a word; a release title is never trimmed", () => {
+    // the fixture's Short: a 52-character hook under two prefixes ran to 101 characters and the package was refused
+    const hook = 'Leap seconds have only ever been added, never taken away from UTC';
+    const draft = reviewTitle(`[fixture 20261101-0729-8f4e] ${hook}`, false);
+    expect(draft.length).toBeLessThanOrEqual(100);
+    expect(draft.startsWith('[PRIVATE REVIEW] [fixture 20261101-0729-8f4e] Leap seconds')).toBe(true);
+    expect(draft.endsWith('…')).toBe(true);
+    expect(reviewTitle('Short', false)).toBe('[PRIVATE REVIEW] Short');
+    expect(reviewTitle(`[fixture 20261101-0729-8f4e] ${hook}`, true)).toBe(`[fixture 20261101-0729-8f4e] ${hook}`);
   });
 });
 
