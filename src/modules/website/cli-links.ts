@@ -4,6 +4,8 @@
 //            (exit 2 on a file problem)
 //   cta approve <topic> <story-id> <cta id> --by <name>   a person's approval of one paid link, written into cta.json
 //            once (what a PAID OK reply runs; exit 2 on a refusal)
+//   live <topic> <story-id>   one request to the story's matter page on the public site: RESULT: LIVE when it answers
+//            200 with the live video's id and the path is frozen, else RESULT: NOT LIVE (<why>) and exit 1
 //   check    request every outside URL the built site and the committed descriptions link (local, networked, never
 //            in CI); prints the failures and exits 1 on any
 // The build test fails when a URL in public-urls.json disappears without a topics/<topic>/moved.json entry.
@@ -11,6 +13,7 @@ import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { contentGraph, distPages, related, storyNode } from './content-graph';
 import { type Cta, approveCommercial, loadCta, resolveCtas } from './cta';
+import { liveCheck } from './live';
 import { ROOT, topicsDir } from '../../shared/io';
 import { Refusal } from '../../shared/refusal';
 import { textUrls } from '../../lib/url';
@@ -56,6 +59,17 @@ if (cmd === 'freeze') {
   console.log(`${urls.size} outside urls, ${failures.length} failing`);
   for (const f of failures.sort()) console.log(f);
   process.exit(failures.length ? 1 : 0);
+} else if (cmd === 'live') {
+  // live <topic> <story-id>: one request to the matter page on the public site; RESULT: LIVE or NOT LIVE (<why>)
+  const [topic, id] = process.argv.slice(3);
+  if (!topic || !id) {
+    console.error('usage: npm run links -- live <topic> <story-id>');
+    process.exit(1);
+  }
+  const r = await liveCheck(topic, id);
+  console.log(`${r.url}${r.status ? ` (${r.status})` : ''}`);
+  console.log(r.ok ? 'RESULT: LIVE' : `RESULT: NOT LIVE (${r.why})`);
+  process.exit(r.ok ? 0 : 1);
 } else if (cmd === 'cta' && process.argv[3] === 'approve') {
   // cta approve <topic> <story-id> <cta id> --by <name>: a person's approval of one paid link (D14), written once
   const [topic, id, ctaIdArg] = process.argv.slice(4);
@@ -109,7 +123,7 @@ if (cmd === 'freeze') {
   process.exit(r.problems.length ? 2 : 0);
 } else {
   console.error(
-    'usage: npm run links -- freeze | check | cta <topic> <story-id> | cta approve <topic> <story-id> <id> --by <name>',
+    'usage: npm run links -- freeze | check | cta <topic> <story-id> | cta approve <topic> <story-id> <id> --by <name> | live <topic> <story-id>',
   );
   process.exit(1);
 }

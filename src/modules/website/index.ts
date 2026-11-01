@@ -29,6 +29,7 @@ export {
   type CtaType,
   type ResolvedCta,
 } from './cta';
+export { type LiveCheck, liveCheck, matterPathOf } from './live';
 export { jobStatus, startJob } from './review-job';
 export { parseNotes, reviewMediaHref, reviewView, storyIdOfPath, type Finding, type ReviewView } from './review-view';
 export {
