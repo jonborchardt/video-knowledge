@@ -71,6 +71,23 @@ describe('parseReply', () => {
       expect(r.hint, text).toMatch(/\bOK\b/);
     }
     expect(bad('OK, but hold off').problem).toMatch(/"OK, but hold off"/);
+    // a later own-text line that contradicts the OK (a hold, a negation, a condition) never publishes either
+    for (const text of [
+      'OK\nhold off',
+      'OK\n\nActually, do not publish yet',
+      "OK\ndon't publish until Thursday",
+      'OK\nbut wait for the new thumbnail',
+      'OK\nnot yet',
+      'OK!\nStop, I found a typo',
+    ]) {
+      const r = bad(text);
+      expect(r.problem, text).toMatch(/contradicts|not a plain OK/);
+      expect(r.hint, text).toMatch(/\bOK\b/);
+    }
+    // ordinary trailing lines and the recognised extra lines stand
+    expect(ok('OK\nthanks, Jon')).toEqual({ verdict: 'ok' });
+    expect(ok('OK\nPAID OK\nNOTES: 1 agree')).toMatchObject({ verdict: 'ok', paid: 'all' });
+    expect(ok('OK\n\nLooking forward to it. Jon')).toEqual({ verdict: 'ok' });
     expect(bad('OK at Thursday 15:00, but only if the title is fixed').problem).toMatch(/could not read the time/);
   });
   it('anything else is a problem whose hint names OK', () => {

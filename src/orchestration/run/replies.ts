@@ -172,6 +172,11 @@ const HINT_RELEASE =
   'Reply with one of these as the first line, on its own: OK (publish now); OK at Thursday 15:00 (schedule, your time); CHANGES: then one note per line. PAID OK or PAID OK 1 on its own line approves the paid links shown. An OK with anything after it ("OK, but ...", "OK if ...", "OK?") is not applied: it is asked about instead.';
 const HINT_TOPICS = 'Reply with lines like: APPROVE <slug>; REJECT <slug>: <why>; APPROVE ALL; REJECT ALL: <why>.';
 
+/** Words that hold, negate or condition an approval when they follow an OK on a later line. A stoplist: any hit is a
+ *  clarification (one mail back), never a publication. */
+const CONTRADICTS =
+  /\b(hold|wait|don'?t|do not|not yet|stop|cancel|never ?mind|unless|instead|actually|until|but|on second thought|no longer)\b/i;
+
 /** Reads a person's own text. `kind` says which request it answers (what the hint lists). */
 export function parseReply(
   text: string,
@@ -197,7 +202,18 @@ export function parseReply(
   // a release approval is unambiguous: OK alone on the first line (punctuation allowed), or OK at <when>; an OK with
   // anything else after it (a condition, a hold, a question) is asked about, never applied (conservative, not a
   // reading of what the words mean)
-  if (/^ok[.!]*$/.test(lower)) return { decision: { verdict: 'ok', ...extra } };
+  if (/^ok[.!]*$/.test(lower)) {
+    // a later own-text line that holds, negates or conditions the OK is asked about instead of applied: a closed
+    // stoplist over the person's own lines (never the quote), not a reading of what they mean
+    const rest = nonEmpty.slice(1).filter((l) => !/^(paid ok|notes:)/i.test(l));
+    const contradiction = rest.find((l) => CONTRADICTS.test(l));
+    if (contradiction)
+      return {
+        problem: `your reply says OK and then "${contradiction.slice(0, 60)}", which contradicts it, so nothing was published; reply OK on its own to publish, or CHANGES: with what to change`,
+        hint: HINT_RELEASE,
+      };
+    return { decision: { verdict: 'ok', ...extra } };
+  }
   const at = /^ok\s+at\s+(.+)$/i.exec(first);
   if (/^ok\b/.test(lower) && !at)
     return {
