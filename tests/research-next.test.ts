@@ -351,6 +351,33 @@ describe('topicNext', () => {
     expect(third.park).toBeUndefined();
     expect(third.next).toContain('studies.md');
   });
+  it('claim: the claim `topics claim` writes into src/config/site.ts is read from disk, so the same process moves on (the real run looped claim, brand, claim)', () => {
+    const root = topic({
+      videos: ['https://www.youtube.com/watch?v=aaaaaaaaaaa'],
+      records: [{ id: 'a', assertions: [{ claim: 'c1', sourceVerdict: true }] }],
+      claims: ['c1'],
+      batches: [{ file: 'h1.json', recorded: true }],
+      documents: Array.from({ length: 12 }, (_, i) => ({ file: `d${i}.txt`, judged: true })),
+      report: 'current',
+      proposal: { institution: 'spending' },
+    });
+    mkdirSync(join(root, 'src', 'config'), { recursive: true });
+    const site = join(root, 'src', 'config', 'site.ts');
+    writeFileSync(
+      site,
+      `export const commissions = {\n  spending: {\n    name: 'S',\n    topics: ['heat-pumps'],\n  },\n};\n`,
+    );
+    const before = topicNext(T, root);
+    expect(before.stage).toBe('claim');
+    expect(before.next).toBe(`npm run topics -- claim ${T} spending, then npm run brand`);
+    writeFileSync(
+      site,
+      `export const commissions = {\n  spending: {\n    name: 'S',\n    topics: ['heat-pumps', '${T}'],\n  },\n};\n`,
+    );
+    const after = topicNext(T, root);
+    expect(after.stage).toBe('stories');
+  });
+
   it('report, claim, stories, review, ready', () => {
     const sufficient = {
       videos: ['https://www.youtube.com/watch?v=aaaaaaaaaaa'],

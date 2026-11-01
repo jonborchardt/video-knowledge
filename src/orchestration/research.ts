@@ -6,7 +6,8 @@
 // cannot close): the topic runner acts on it with `topics -- park`; nothing here parks or halts anything itself.
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { type Commission, commissionOf } from '../config/site';
+import { type Commission, commissionOf, commissions } from '../config/site';
+import { claimedBy } from '../modules/topic-discovery';
 import { type Automation, loadAutomation } from '../shared/automation';
 import { ROOT, readJson, sha, topicDir } from '../shared/io';
 import type { Proposal, PublicRecord } from '../shared/types';
@@ -106,7 +107,16 @@ export function topicNext(
   root = ROOT,
   opts: { owner?: (topic: string) => Commission | null; a?: Automation } = {},
 ): TopicNext {
-  const owner = opts.owner ?? commissionOf;
+  // the claim verb edits src/config/site.ts while this process runs: read the file, not only the compiled import
+  const owner =
+    opts.owner ??
+    ((t: string) => {
+      const imported = commissionOf(t);
+      if (imported) return imported;
+      const site = join(root, 'src', 'config', 'site.ts');
+      const key = existsSync(site) ? claimedBy(readFileSync(site, 'utf8'), t) : null;
+      return key ? (commissions[key] ?? null) : null;
+    });
   const a = opts.a ?? loadAutomation(root);
   const dir = topicDir(topic, root);
   const rel = `topics/${topic}`;
