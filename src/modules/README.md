@@ -53,11 +53,15 @@ Orchestration lives outside this folder: `src/orchestration/` (the board, `npm r
 
 - **Milestone 1 (done): module separation.** One module per capability behind a compiler-backed boundary test;
   derived board state; child-process CLIs as the write boundary.
-- **Milestone 2: autonomous operations.** Discover, research, produce, approve, publish, distribute and maintain
-  with minimal manual coordination. The question it answers: can a person approve a batch of topics, stop
-  thinking about the system for a week, and return to a set of well-researched, professionally produced releases
-  that need only their final decisions, with failures already identified and routine problems handled? Adds the
-  modules `topic-discovery` and `social` and an executor in orchestration; changes no boundary above.
+- **Milestone 2 (done in code): autonomous operations.** Discover, research, produce, approve, publish, distribute
+  and maintain with minimal manual coordination, behind flags that are all off until a person verifies and enables
+  each integration. The question it answers: can a person approve a batch of topics, stop thinking about the system
+  for a week, and return to a set of well-researched, professionally produced releases that need only their final
+  decisions, with failures already identified and routine problems handled? Added the modules `topic-discovery` and
+  `social` and the executor in orchestration; changed no boundary above.
+- **Milestone 3 (done): operational visibility.** The live admin page, the attempt records and usage rollups, the
+  objects and modules catalog, the readiness record and the runbook (`docs/OPERATIONS.md`); no new module, no new
+  architecture.
 - **A later milestone: business optimization.** Measure audience response, compare stories and institutions,
   optimize topic selection, test monetization, allocate production by results. Milestone 2 only keeps the
   identity every publication needs for that (institution, topic, story, format, date, channel, call to action)

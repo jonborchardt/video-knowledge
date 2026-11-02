@@ -9,12 +9,13 @@ The library lives in `../retire-sim/watcher`, which must be checked out next to 
 ## Milestones
 
 1. **Module separation** (done): every capability is a module under `src/modules/` behind a boundary test; the production board derives state from the files; module CLIs are the write boundary (`src/modules/README.md`).
-2. **Autonomous operations** (next): discover, research, produce, approve, publish, distribute and maintain with minimal manual coordination. The test: approve a batch of topics, stop thinking about the system for a week, and come back to well-researched, professionally produced releases that need only the final decisions, with failures already identified and routine problems handled. A person still creates institutions and channels, approves topics, reviews drafts until automated review earns trust, approves each exact release and every paid link, and resolves genuine exceptions.
-3. **Business optimization** (later): measure audience response, compare stories and institutions, optimize topic selection, test monetization, allocate production by results.
+2. **Autonomous operations** (done in code, Milestone 2): discover, research, produce, approve, publish, distribute and maintain with minimal manual coordination, behind flags in `automation.json` that are all off. The test: approve a batch of topics, stop thinking about the system for a week, and come back to well-researched, professionally produced releases that need only the final decisions, with failures already identified and routine problems handled. A person still creates institutions and channels, approves topics, reviews drafts until automated review earns trust, approves each exact release and every paid link, and resolves genuine exceptions. Each integration is **implemented**, then **verified** by a person against the real service, then **enabled**; `docs/OPERATIONS.md` is the runbook and its readiness table says which are proven.
+3. **Operational visibility** (Milestone 3): the admin page shows what runs now (actor, model, elapsed, reported cost, estimate), what is blocked and how to unblock it, what awaits a person, the activity and the readiness of every integration; the attempt records and the usage rollups behind it; the objects and modules catalog; the runbook. No new architecture.
+4. **Business optimization** (later): measure audience response, compare stories and institutions, optimize topic selection, test monetization, allocate production by results.
 
 ## Setup
 
-Node 22, `npm install`, and `pdftotext` (poppler) for step 5. The watcher checkout is only needed for the data scripts, not for building the site.
+Node 22, `npm install`, and `pdftotext` (poppler) for step 5. The watcher checkout is only needed for the data scripts, not for building the site. Operating the finished system (credentials, flags, starting and stopping, costs, approval mail, diagnosing, the fixture, publishing, maintenance, cleaning up) is `docs/OPERATIONS.md`; every command is described in `docs/COMMANDS.md`.
 
 ## One folder per topic, under topics/
 
@@ -361,9 +362,11 @@ agent step is owed; "blocked" means the gate says so. Each row names the next co
 machine: the stage is the first artifact that is missing or not current.
 
 The board has one card per video (a chain is one card listing its follow-up questions and total claims; follow-ups get
-no card), in a column for whoever acts next: needs research, needs review, ready to produce, in production (`/produce`
-is on it; the strip on the card shows the stage, red means it stopped and a person must act), your review (a private
-package is made), changes requested, uploaded, approved, scheduled, published and parked.
+no card), in a column for whoever acts next: needs research, needs review, ready to produce, in production (a run is on
+it; the strip on the card shows the stage, red means it stopped and a person must act), article, draft review, your
+review (a private package is made), changes requested, uploaded, approved, shorts, scheduled, published and parked. The
+Now cell is live: who acts on the story at this moment (an agent with its role and model, a CLI, a person), for how
+long, the run's reported cost and the history's estimate when five like it exist.
 
 The one hand-written input is `production.json` at the repo root, for planning decisions no artifact records:
 
@@ -429,7 +432,7 @@ video is set in YouTube Studio (the API has no field for it).
 `automation.json` `review.draft: person` or `shadow` it uploads the draft privately and emails you the link, the
 checklist and the findings at their moment (under `shadow` an agent reviews the same draft from its frames and QA
 report; its notes ride in the mail for comparison and its verdict decides nothing); you accept on the review page
-(`video final`) or, once phase 3 lands, by replying OK. Under `agent` the draft-review agent decides. Then the runner
+(`video final`) or by replying OK to the draft mail. Under `agent` the draft-review agent decides. Then the runner
 produces the Shorts (`shorts discover`, the shorts reviewer, a nested run per ready candidate), uploads every output
 privately, pushes, verifies, rewrites `video/review/release-manifest.json` (every output's media and metadata, the
 article's release sha, the public URLs, the calls to action with paid links numbered, the institution, the composed
@@ -712,9 +715,12 @@ Mail needs a dedicated mailbox in `.env` (`MAIL_SMTP_HOST`, `MAIL_IMAP_HOST`, `M
 outbox, the inbox (your replies, applied once each; `.automation/inbox.json` records every handled message), the due
 publications (a schedule past its time synced and verified, the Shorts of a published video live in order, an
 expired request renewed once), the deploy probes (one per pending launch, then the X post and the launch mail), the
-due resumes, stuck runs, halt mails, the digest. The admin page's Automation tab shows every run, halt, unblock, the
-week's picks, the open requests and their age, the launches, the Studio steps still to record, each public topic's
-last maintenance scan and the article corrections awaiting your reply.
+due resumes, stuck runs, halt mails, the digest. The admin page's Automation tab (live every 5 s while something runs)
+shows what awaits your action, what runs now (actor, role and model, elapsed, reported cost, estimate, cap), what is
+blocked (kind, why, retries, next retry, the unblock), what is queued or due, the recent activity, every run, the week's
+spend beside `budget.json`, the open requests, the launches, the Studio steps still to record, each public topic's last
+maintenance scan, the article corrections awaiting your reply and the readiness table (implemented, verified,
+enabled, per integration). `docs/OPERATIONS.md` is the runbook; `npm run run -- verified` records a verification.
 
 **Research (phase 5).** The work plane starts a topic run on an approved proposal only with `enabled.research` on: the
 approval authorises the topic, the flag authorises the spend (46 to 61 USD a topic in the real runs), so a work plane

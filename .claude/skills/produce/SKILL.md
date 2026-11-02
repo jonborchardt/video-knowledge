@@ -7,10 +7,14 @@ description: Drive one story from ready to a private review package (the board's
 
 The runner is the executor of this loop: `npm run run -- story <topic> <story-id>` (`src/orchestration/run/`) runs the
 same board steps unattended, under per-role agent containment, then carries the packaged story through the release
-loop (the draft by policy, the Shorts, the private uploads, the approval request). This skill is the interactive
-fallback for a session: the same loop, with a person watching, and its agents run under the session's permissions
-rather than the runner's. Before starting, read `topics/<topic>/scripts/<slug>/run/lock.json`: a lock whose pid is
-alive means a runner holds the story; refuse, and say so. Publishing stays the runner's or a person's.
+loop (the draft by policy, the Shorts, the private uploads, the approval request). It is authoritative for halts,
+caps, budgets, retries and the notes pass; the runbook is `docs/OPERATIONS.md`. This skill is the interactive
+fallback for a session: the same loop with a person watching, its agents under the session's permissions rather than
+the runner's. Prefer the runner (`--until packaged` stops before any upload; `--notes-file <path>` is the notes pass;
+`--no-commit` on a feature branch) and use this skill when a person wants to watch each step in a session.
+
+**The lock check.** Before starting, read `topics/<topic>/scripts/<slug>/run/lock.json`: a lock whose pid is alive
+means a runner holds the story; refuse, and say so. Publishing stays the runner's or a person's.
 
 The board is the state machine; you are the loop. `npm run board -- next <topic> <story> --json`
 says where the story is and what moves it on; you do that and ask again. All judgment lives in the
@@ -26,8 +30,8 @@ Notes:
 - <optional editor notes, one per line>
 ```
 
-- Refuse to start when `Approver:` is missing, blank, or a placeholder (`<your name>`, `<name>`,
-  anything in angle brackets). Starting the run is that person's sign-off for the lock; the release
+- **The approver rule.** Refuse to start when `Approver:` is missing, blank, or a placeholder (`<your name>`,
+  `<name>`, anything in angle brackets). Starting the run is that person's sign-off for the lock; the release
   records it as `automated: /produce run started by <name>`.
 - No notes: a fresh run or a resume. Notes: a send-back pass (below).
 
@@ -62,21 +66,13 @@ Repeat, at most 60 times:
      person's, never this run's. Go to Finish.
 4. Go to 1.
 
-What each halt kind means for you:
-
-| `halt.kind` | do |
-|---|---|
-| `missing`, `stale`, `review-pending`, `review-findings`, `storyboard-blocked`, `blocking-findings`, `lock` | follow the steps (`review-findings`: the reviewer holds sentences on warnings; the writer revises them, then the steps ask for a re-review) |
-| `needs-evidence` | the steps hand `src/modules/evidence/briefs/evidence.md` to a fresh agent; if it records nothing for a gap, Stop |
-| `needs-graphics` | one fresh `graphics.md` agent per listed scene (`Scenes: <id>`), then the check |
-| `graphics-review` | a fresh `visual-review.md` agent that built none of them; a `revise` verdict goes back to a graphics agent with the notes |
-| `render-check`, `qa-failed` | a fresh `video-fix.md` agent, then the command |
-| `revision-limit`, `story-left` | Stop |
-| `look-stale` | only at `packaged`, where `done` is true: the build's kit or theme is older and a person re-renders it with `video final`, never this run. Finish, and say so in the report |
-
-Caps (each one hit is a Stop, naming the cap): 60 loop iterations; 3 graphics revisions per scene
-(after the third, the builder may draw the scene as labelled text, and the report says so); 3
-`qa-failed` fixes; the same `next` three times in a row with nothing changed.
+The board's halt kinds and what each asks for are the runner's (`src/orchestration/production.ts` `HALT_KINDS`, the
+Objects tab's vocabulary on `/admin`): follow the steps the board names for each; `needs-graphics` is one fresh
+`graphics.md` agent per listed scene, `graphics-review` a fresh `visual-review.md` agent that built none of them,
+`render-check` and `qa-failed` a fresh `video-fix.md` agent then the command, `look-stale` at `packaged` is a person's
+`video final` (finish, and say so). The caps are the runner's too (`automation.json` `runs`: 60 loop iterations, 3
+graphics revisions per scene, 3 QA fixes, the same `next` three times with nothing changed): each one hit is a Stop
+naming the cap.
 
 A render or QA command whose output has not changed for 90 minutes is hung (a crashed browser never
 exits): kill its node and `chrome-headless-shell` processes and run the step again (cached chunks are
@@ -89,28 +85,20 @@ in the same turn by polling the output file the tool names, in one foreground Ba
 until it exits: `until grep -q "RESULT:" "<output file>"; do sleep 10; done` (or append `; echo exited=$?` to the
 command and grep for `exited=`). The run never ends its turn while a step is running.
 
-Never edit a review file, a validation or any derived file to get past a check, never soften a
-sentence because evidence is missing when evidence could be gathered, and never pass
-`--replace-cited` or `--force` to get unstuck.
+**The stop list.** Never edit a review file, a validation or any derived file to get past a check, never soften a
+sentence because evidence is missing when evidence could be gathered, never pass `--replace-cited` or `--force` to
+get unstuck, never publish, post, push or hold a secret, never write under `src/` except where the graphics brief
+says, and never run while a runner's lock on the story is alive.
 
 ## Notes pass (send-back)
 
 A reviewer's change request on the review page (`changes-requested` in `publish.json`) puts its notes in the board's
-send-back prompt, each `[m:ss scene sentence]` placed; treat them like any other notes.
-
-Route each note to the artifact that owns it, then run the Loop:
-
-- wording, cuts, order: set `passStartRevision` in `script.json` to its current `revision` (the pass
-  gets its own three revisions), then a fresh writer with `agent: src/modules/script/briefs/script.md (notes)`
-  and the notes; the board then asks for the re-review, storyboard, render check and lock again.
-- a graphic: a fresh `graphics.md` agent for that scene with the note, then `visual-review.md`. A component edit
-  does not change any fingerprint the build is bound to, so after the graphic is approved run
-  `npm run video -- spike <topic> <story>`, then `qa` and `package` again (the cached chunks of the other scenes are
-  reused).
-- music or pacing: edit `video/music.json` (cues over scene anchors, never seconds) or
-  `video/render.json` (cues, options) yourself.
-
-Notes never touch derived files. The lock is redone through the board's lock step.
+send-back prompt, each `[m:ss scene sentence]` placed. The runner's notes pass (`npm run run -- story ... --notes-file
+<path>`, or the request's own notes) routes them: wording, cuts and order to the script (`npm run script -- send-back`
+sets `passStartRevision`, then a fresh writer with `agent: src/modules/script/briefs/script.md (notes)`), a graphic to a
+fresh `graphics.md` agent for that scene then `visual-review.md`, music or pacing to `video/music.json` (cues over
+scene anchors, never seconds) or `video/render.json` (cues, options). In a session do the same by hand, then run the
+Loop. Notes never touch derived files. The lock is redone through the board's lock step.
 
 ## Several stories at once
 

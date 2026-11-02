@@ -1,6 +1,6 @@
 # evidence
 
-Evidence gathers and judges claims for a topic it is given; proposing or evaluating new topics is topic discovery (Milestone 2, not present) and never evidence's job.
+Evidence gathers and judges claims for a topic it is given; proposing or evaluating new topics is topic discovery (`src/modules/topic-discovery/`) and never evidence's job.
 
 - Inputs: `topics/<topic>/store/**` through the watcher, `sources/*.txt`, `data/*`, `site.json`, the agent batches `h*.json` (extraction) and `sv_*.json` (study verdicts).
 - Outputs: `report.json`, `applicability.json` (only `record-sources` writes it), and `public-record.json` through shared `public-record.ts`.

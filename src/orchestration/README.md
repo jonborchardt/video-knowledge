@@ -11,6 +11,47 @@ The runner (`run/`, `npm run run -- story | status`) is phase 0 of that: `runner
 Its only stored decision file is `production.json` (`queued`, `parked`); `automation.json` (Milestone 2) is policy, not state, and its operational files (`run/`, `.automation/`) are gitignored and decide no stage.
 The modules and their rules: `src/modules/README.md`.
 
+## Index
+
+| file (`src/orchestration/`)                                                                                          | what it is                                                                                               |
+| -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `production.ts`, `board.ts`, `index.ts`                                                                              | the board: derived stage, next step, halt kind, column; the one door the website reads through           |
+| `research.ts`                                                                                                        | `topicNext`: the research board of a topic                                                               |
+| `run/runner.ts`, `steps.ts`, `agent.ts`, `roles.ts`, `guard.ts`                                                      | phase 0: the story runner, one step, `claude -p`, the role grants, the tree guard                        |
+| `run/journal.ts`, `lock.ts`, `status.ts`, `usage.ts`, `live.ts`                                                      | the run's operational state and its read side (status rows, attempts, rollups, estimates, the live view) |
+| `run/release.ts`, `requests.ts`, `replies.ts`, `inbox.ts`, `publish-due.ts`, `launch.ts`                             | phases 2 and 3: the release loop, the mails, the reply grammar, the inbox, the due step, the launch      |
+| `run/tick.ts`, `work.ts`, `pick.ts`, `schedule.ts`, `resume.ts`, `preflight.ts`, `notify.ts`, `digest.ts`, `view.ts` | phase 1: the planes                                                                                      |
+| `run/discovery.ts`, `discovery-state.ts`                                                                             | phase 4                                                                                                  |
+| `run/topic-runner.ts`                                                                                                | phase 5                                                                                                  |
+| `run/maintain.ts`, `article-work.ts`                                                                                 | phase 6                                                                                                  |
+| `run/readiness.ts`, `run/fresh.ts`, `run/cli.ts`                                                                     | the readiness record and its verb; the fixture's `--fresh`; `npm run run`                                |
+
+## Phase 0: the story runner
+
+`run/runner.ts` is the loop over `boardNext` (`runStory`): it asks the board, runs each step through `steps.ts`
+(`execStep`: a `run` step is a module CLI as a timed child with only its verb's secrets, `envFor`; a `prompt` step
+is a budgeted `claude -p` agent under its role's grant, `agent.ts` and `roles.ts`, followed by the brief's validator,
+whose findings go back to the same session for `runs.validationRounds` rounds), journals every attempt
+(`journal.ts`: `run/journal.jsonl`, one line per step attempt; `halt.json`; the lock in `lock.ts` with the child's pid
+and step), halts with a kind and an unblock (`RUN_HALT_KINDS` beside the board's `HALT_KINDS`: `budget`, `timeout`,
+`no-progress`, `unexpected-edit`, `forbidden-flag`, `git`, ...), and finishes by validating and committing on
+`git.commitOn`'s branch (or leaves the tree with `--no-commit`). The tree guard (`guard.ts`) snapshots the tree before
+the first step and after every guard, reverts writes outside the role's files, restores held untracked files and
+canaries, and typechecks a graphics agent's components before a child loads them. `fresh.ts` archives a fixture
+production for `--fresh`. The runner never publishes, posts, pushes or sends mail on its own: the release loop
+(phase 2) does the uploads and the request through the publishing CLI, and only a person goes live.
+
+## Phase 2: the release loop
+
+`run/release.ts` continues a packaged story inside `npm run run -- story` (`releasePending`, `releaseJobs` for the
+work plane): the draft by policy (`review.draft`: `person` or `shadow` upload the draft privately and mail the draft
+request, `requests.ts`; `shadow` also records a `draft-review.md` agent's verdict in `.automation/shadow.json` with
+no effect; `agent` lets that agent accept or send back a draft, never a release), `video final` by the person's name
+once the draft is accepted, the Shorts (`shorts discover`, the shorts reviewer, a nested run per ready candidate,
+`run/shorts.ts`), every output uploaded private, pushed and verified, the release manifest, and `publish request
+--channel email`. It dispatches on publishing's `OutputStep` (`verb`, `actor`) and writes only through the CLIs; a
+retryable failure resumes by backoff, a person's step halts `awaiting-person`.
+
 ## Phase 1: the control plane and the work plane
 
 `run/tick.ts` is the scheduled short pass (preflight in `preflight.ts`, the outbox and halt emails in `notify.ts`,
@@ -99,3 +140,21 @@ and a `script.md (notes)` writer; scene only: `video-fix.md` and `video -- check
 (`review.draftReviewRounds`) and returns `RESTART` within them, names the build to the reviewer and quotes the
 person's `disagree` marks as what not to raise; `digest.ts` prints the shadow agreement against spec 5.5
 (`shadowSentence`). The tree guard leaves VS Code's `vscode-merge-base` key out of the `.git/config` canary.
+
+## Milestone 3: observability
+
+`run/usage.ts` is the read side of spend: the **attempt** (one `claude -p` call, recorded by `steps.ts` under
+`run/agents/<journal line>-<round>.json` with the alias asked for, every model version used with its tokens and cost,
+turns, api time, the cap and whether the cost overshot it; never the prompt or the reply) is the unit; `attempts()`
+lists every one once (records, older journal lines as unknown model, discovery records), `rollups()` sums per run,
+story, topic and week beside `budget.json` (the gap named), `estimate()` is the median of a role on one model version
+over five or more completed single-model attempts, informational only. `run/live.ts` is the live view the admin page
+polls (`/admin/live.json`, dev only): one row per story, Short and research, scan or discovery run with its column and
+stage from the board (`topicBoard`, the same `columnOf` and `stoppedOf`), its state from the lock and the halt, the
+agent step's role, model, elapsed, cost and estimate, a research run's parallel agents by pid, the jobs (running, the
+next job, due, scheduled, stuck), the owner's action list, the activity feed and the readiness table.
+`run/readiness.ts` holds the integration list (implemented in code, enabled from `automation.json`) and the one writer
+of `readiness.json` (`npm run run -- verified`, a person's act with evidence the verb checks). The topic runner's
+finish stages only what the run's own steps wrote (`touched.json`, `pre-dirty.json`); the scan and article passes
+check `perRun` before each agent; the correction request's Message-ID is recorded through `article -- sent`.
+`docs/OPERATIONS.md` is the runbook.
