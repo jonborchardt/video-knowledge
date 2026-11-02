@@ -274,6 +274,9 @@ export interface ScriptReviewFile {
   /** sentence id -> fingerprint approved: every assertion entailed by its passages, every factual claim covered. */
   approved: Record<string, string>;
   findings: ReviewFinding[];
+  /** A reaffirmation review of a released article (the maintenance pass's `Mode: reaffirm`): whether the released
+   *  text still holds as written after the revised finding, and why, in terms a person can check. */
+  reaffirm?: { ok: boolean; why: string };
   /** assertion id (or sentence id) -> why a deterministic warning there is a false positive or already carried by the
    *  narration, valid at that sentence fingerprint only; a list retires several categories on one sentence. Blocking
    *  issues cannot be dispositioned. */

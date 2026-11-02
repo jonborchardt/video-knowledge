@@ -239,6 +239,11 @@ verdict, then either:
   validation that has not passed and a placeholder approver. It adds a history entry with the note and moves the
   release date to today, which clears the stale banner; it records no public-record revision.
 
+When the runner hands you `Mode: correction` (the maintenance pass; the `Revised:` line names the claim and the
+revision's note), this is that revision: change only the sentences, tables and figures the revised finding
+touches, bump `revision`, keep every id, and leave everything else exactly as released. Never run `correct` or
+`reaffirm` yourself: a fresh reviewer judges the correction and a person releases it.
+
 Final reply: the deterministic result, the tables and figures you used, and the three sentences you are least
 sure the evidence supports as worded.
 

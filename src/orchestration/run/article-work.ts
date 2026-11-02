@@ -6,10 +6,10 @@
 // approves by reply, like a release: `article request-correction`). A correction is never released by automation;
 // a failing one after the writer's revisions halts `awaiting-person` on the story. Everything through the article
 // CLI as a child; the agents under the writer's and reviewer's grants for the story.
-import { existsSync, mkdirSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
-import { ROOT, readJson, scriptDir, writeJsonAtomic } from '../../shared/io';
+import { ROOT, readJson, scriptDir, topicDir, writeJsonAtomic } from '../../shared/io';
 import type { MailTransport } from '../../shared/mail';
 import type { ScriptReviewFile, ScriptValidation } from '../../shared/types';
 import {
@@ -20,7 +20,6 @@ import {
   loadArticleRelease,
   loadArticleRequest,
 } from '../../modules/article';
-import { loadStories } from '../../modules/stories';
 import type { Step } from '../production';
 import { guard as realGuard, snapshot as realSnapshot, type TreeSnapshot } from './guard';
 import { type Halt, type JournalEntry, appendJournal, readHalt, runDir, writeHalt } from './journal';
@@ -69,7 +68,7 @@ export async function articleWork(
   const stamp = () => new Date(now()).toISOString();
   const actions: string[] = [];
   const halted: string[] = [];
-  const stories = d.stories ?? (loadStories(topic, root)?.stories ?? []).map((s) => s.id);
+  const stories = d.stories ?? releasedStories(topic, root);
   for (const storyId of stories) {
     if (!loadArticleRelease(topic, storyId, root)) continue;
     const dir = runDir(topic, storyId, root);
@@ -238,7 +237,7 @@ export async function articleWork(
         });
         continue;
       }
-      const review = readJson<ScriptReviewFile & { reaffirm?: { ok: boolean; why: string } }>(
+      const review = readJson<ScriptReviewFile>(
         join(sdir, ARTICLE_FILES.review),
       );
       if (r.ok && review?.reaffirm?.ok) {
@@ -329,3 +328,14 @@ export const articleFingerprintOf = (topic: string, storyId: string, root = ROOT
 };
 export const hasRelease = (topic: string, storyId: string, root = ROOT) =>
   existsSync(join(scriptDir(topic, storyId, root), ARTICLE_FILES.release));
+
+/** Every story of the topic with a released article: the stories.json candidates may no longer list a produced
+ *  story once a finding it rests on was revised, and that article is the one most likely to need the pass. */
+export function releasedStories(topic: string, root = ROOT): string[] {
+  const scripts = join(topicDir(topic, root), 'scripts');
+  if (!existsSync(scripts)) return [];
+  return readdirSync(scripts).flatMap((folder) => {
+    const story = readJson<{ story?: string }>(join(scripts, folder, ARTICLE_FILES.release))?.story;
+    return story ? [story] : [];
+  });
+}

@@ -14,6 +14,7 @@ import { FakeMail } from '../../src/shared/mail';
 import { ARTICLE_FILES, type ArticleRelease, loadArticleRequest } from '../../src/modules/article';
 import { MLM } from '../script-helpers';
 import { articleWork } from '../../src/orchestration/run/article-work';
+import { renderCorrectionRequest } from '../../src/orchestration/run/requests';
 import { readHalt, runDir } from '../../src/orchestration/run/journal';
 import { type Fixture, cliRoot, syntheticProduction } from '../production-helpers';
 
@@ -129,7 +130,7 @@ function staged(opts: { revised: string | null; reaffirm?: boolean; validation?:
       ? [process.execPath, [FAKE_ARTICLE, ...args]]
       : cliArgv(cli, args);
   const mail = new FakeMail();
-  const run = () =>
+  const run = (over: { stories?: string[] | undefined } = {}) =>
     articleWork(f.topic, a, {
       now: () => T0,
       mail,
@@ -138,7 +139,7 @@ function staged(opts: { revised: string | null; reaffirm?: boolean; validation?:
       hooks: { snapshot: () => {}, guard: () => ({ ok: true, why: '', kept: [] }) },
       root: f.root,
       runId: 'm1',
-      stories: [f.story],
+      ...('stories' in over ? { stories: over.stories } : { stories: [f.story] }),
     });
   const calls = () => (existsSync(log) ? readFileSync(log, 'utf8').trim().split('\n') : []);
   const releaseNow = () => readJson<ArticleRelease>(join(f.dir, ARTICLE_FILES.release))!;
@@ -184,6 +185,32 @@ describe('articleWork (criterion 10)', () => {
     expect(c.mail.sent).toHaveLength(1);
     expect(c.calls().length).toBe(calls.length + 1); // the second pass: one validation, no writer, no reviewer
   }, 180_000);
+
+  it('without a story list, the pass finds every released article, even one stories.json no longer lists (review finding 3)', async () => {
+    const c = staged({ revised: MLM, reaffirm: true });
+    const sp = join(c.f.root, 'topics', c.f.topic, 'stories.json');
+    const stories = readJson<{ stories: { id: string }[] }>(sp)!;
+    writeFileSync(sp, toJson({ ...stories, stories: stories.stories.filter((s) => s.id !== c.f.story) }));
+    const r = await c.run({ stories: undefined });
+    expect(r.actions.join('\n')).toMatch(/article reaffirmed/);
+  }, 180_000);
+
+  it('the correction mail shows every unit that changed, a headline or a table as much as a sentence (review finding 8)', () => {
+    const c = staged({ revised: MLM, reaffirm: false });
+    const art = readJson<ArticleRelease>(join(c.f.dir, ARTICLE_FILES.release))!.article;
+    const changed = { ...art, meta: { ...art.meta, headline: `${art.meta.headline} (revised)` } };
+    writeFileSync(join(c.f.dir, ARTICLE_FILES.article), toJson(changed));
+    const req = {
+      request: 'ar-000000000001',
+      fingerprint: 'fp',
+      at: '2026-12-01T00:00:00Z',
+      expiresAt: '2026-12-08T00:00:00Z',
+      by: 'automated: maintenance t',
+    };
+    const m = renderCorrectionRequest(c.f.topic, c.f.story, req, a, c.f.root);
+    expect(m.text).toMatch(/- meta\.headline\n\s+was: .*\n\s+now: .*\(revised\)/);
+    expect(m.text).not.toMatch(/the text is unchanged/);
+  });
 
   it('a revision on a claim the article does not cite: nothing happens', async () => {
     const c = staged({ revised: 'demo/some-other-claim' });

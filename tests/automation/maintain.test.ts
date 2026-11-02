@@ -102,7 +102,7 @@ function staged(opts: { found?: boolean; live?: boolean; revised?: string[] } = 
     cli === 'evidence' && args[0] === 'scanned' ? cliArgv(cli, args) : [process.execPath, [FAKE_CLI, cli, ...args]];
   const mail = new FakeMail();
   const articleCalls: string[] = [];
-  const run = () =>
+  const run = (over: { validate?: () => { ok: boolean; output: string } } = {}) =>
     maintain(
       f.topic,
       a,
@@ -112,7 +112,7 @@ function staged(opts: { found?: boolean; live?: boolean; revised?: string[] } = 
         env,
         argvOf,
         git: 'none',
-        validate: () => ({ ok: true, output: '' }),
+        validate: over.validate ?? (() => ({ ok: true, output: '' })),
         hooks: { snapshot: () => {}, guard: () => ({ ok: true, why: '', kept: [] }) },
         articles: async (topic) => {
           articleCalls.push(topic);
@@ -170,6 +170,22 @@ describe('maintain', () => {
     const pr = readJson<{ revisions: { note: string }[] }>(join(c.f.root, 'topics', c.f.topic, 'public-record.json'))!;
     expect(pr.revisions.find((x) => x.note.includes('2026 survey'))).toBeTruthy();
   }, 240_000);
+
+  it('a scan halted after its verdicts were recorded resumes into the report, notes, stories and article pass without a second agent (review finding 4)', async () => {
+    const c = staged({ live: true });
+    const first = await c.run({ validate: () => ({ ok: false, output: 'planted failure' }) });
+    expect(first.outcome).toBe('halted');
+    expect(first.halt?.kind).toBe('step-failed');
+    const second = await c.run();
+    expect(second.outcome, JSON.stringify(second.halt)).toBe('done');
+    const steps = c.journal().map((e) => e.step);
+    expect(steps.filter((s) => /new-sources\.md/.test(s))).toHaveLength(1);
+    expect(steps.filter((s) => /^npm run record-sources -- /.test(s))).toHaveLength(1);
+    expect(steps.filter((s) => s === 'npm run report')).toHaveLength(2);
+    expect(c.articleCalls).toEqual([c.f.topic]);
+    expect(readJson<MaintenanceFile>(maintenancePath(c.f.topic, c.f.root))!.scans).toHaveLength(1);
+    expect(readHalt(runDir(c.f.topic, c.f.story, c.f.root))?.kind).toBe('needs-person');
+  }, 300_000);
 
   it('a scan that finds nothing new is journaled and records the scan, with no report, no article pass and no halt', async () => {
     const c = staged({ found: false, live: true });

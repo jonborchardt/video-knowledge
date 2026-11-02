@@ -263,11 +263,18 @@ function run() {
         return;
       }
       // ok: the correction itself, by the person, for the exact fingerprint, with the reviewer's words as the note
+      const prev = loadArticleRelease(topic, storyId);
+      if (!prev) throw new Refusal('nothing released yet');
+      if (articleFingerprint(prev.article) === articleFingerprint(a)) {
+        // the correction is out already (a crash after the release and before this record): the decision is
+        // recorded and nothing is released twice
+        writeArtifact(dir, ARTICLE_FILES.request, toJson({ ...req!, decided } satisfies ArticleRequest));
+        console.log(`${reqId}: ok by ${by}; the correction was already released as revision ${prev.revision}`);
+        return;
+      }
       const review = readJson<{ findings?: { text: string }[]; summary?: string }>(p(ARTICLE_FILES.review));
       const note = flag('--note') ?? review?.summary ?? 'corrected after a revised finding (approved by reply)';
       const { a: art, v } = releasable();
-      const prev = loadArticleRelease(topic, storyId);
-      if (!prev) throw new Refusal('nothing released yet');
       const { release, revision } = correctArticle(
         prev,
         art,

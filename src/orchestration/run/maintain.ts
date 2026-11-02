@@ -7,11 +7,11 @@
 // run's (`topics/<topic>/work/run/`), so a scan and a research run never overlap. A scan that records nothing is
 // journaled, not a halt.
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { isFixtureTopic } from '../../config/site';
 import type { Automation } from '../../shared/automation';
-import { ROOT, readJson, scriptDir, topicDir } from '../../shared/io';
+import { ROOT, readJson, scriptDir, topicDir, writeJsonAtomic } from '../../shared/io';
 import type { MailTransport } from '../../shared/mail';
 import type { PublicRecord, Script } from '../../shared/types';
 import { loadMaintenance, publicTopicNames, scanDue } from '../../modules/evidence';
@@ -37,6 +37,16 @@ import type { Job } from './work';
 
 export const NEW_SOURCES_BRIEF = 'src/modules/evidence/briefs/new-sources.md';
 export const REVISION_NOTE_BRIEF = 'src/modules/evidence/briefs/revision-note.md';
+/** Under the topic's run folder while a scan is open: what the agent found and whether it was recorded, so a
+ *  resume carries the first attempt's work through the steps that follow instead of asking an agent again. */
+export const SCAN_FILE = 'scan.json';
+interface ScanMarker {
+  date: string;
+  svFile: string;
+  found: number;
+  recorded: boolean;
+  at: string;
+}
 
 export interface MaintainDeps {
   now?: () => number;
@@ -206,29 +216,42 @@ export async function maintain(
   };
 
   try {
-    // 1. the scan agent
+    // 1. the scan agent (or, on a resume, the scan an earlier attempt made: its marker carries the agent's result
+    //    through the steps that follow, so a halt after the record never loses the report, notes or article pass)
+    const markerPath = join(dir, SCAN_FILE);
+    const resumed = readJson<ScanMarker>(markerPath);
     const docsBefore = countDocs(topic, root);
     const last = loadMaintenance(topic, root)?.lastScan ?? 'never';
-    const svFile = `topics/${topic}/work/sv_scan-${date}.json`;
-    const scan = await agent(NEW_SOURCES_BRIEF, [`Last scan: ${last}`, `Write: ${svFile}`], 'collect');
-    if (scan.guardFailed)
-      return halt('unexpected-edit', scan.error ?? 'the scan agent edited outside its files', {
-        kind: 'fix',
-        text: `read ${dir}`,
-      });
-    if (!scan.ok)
-      return halt(
-        /^budget/.test(scan.error ?? '') ? 'budget' : 'step-failed',
-        `the scan agent of ${topic} did not finish: ${scan.error}`,
-        { kind: 'run', text: `npm run run -- maintain ${topic}` },
-      );
-    const found = countDocs(topic, root) - docsBefore;
+    const svFile = resumed?.svFile ?? `topics/${topic}/work/sv_scan-${date}.json`;
+    let found = resumed?.found ?? 0;
+    let scanSession: string | null = null;
+    if (!resumed) {
+      const scan = await agent(NEW_SOURCES_BRIEF, [`Last scan: ${last}`, `Write: ${svFile}`], 'collect');
+      if (scan.guardFailed)
+        return halt('unexpected-edit', scan.error ?? 'the scan agent edited outside its files', {
+          kind: 'fix',
+          text: `read ${dir}`,
+        });
+      if (!scan.ok)
+        return halt(
+          /^budget/.test(scan.error ?? '') ? 'budget' : 'step-failed',
+          `the scan agent of ${topic} did not finish: ${scan.error}`,
+          { kind: 'run', text: `npm run run -- maintain ${topic}` },
+        );
+      found = countDocs(topic, root) - docsBefore;
+      scanSession = scan.sessionId;
+      writeJsonAtomic(markerPath, { date, svFile, found, recorded: false, at: stamp() } satisfies ScanMarker);
+    } else actions.push(`${topic}: resuming the scan of ${resumed.date}`);
     const verdicts = readJson<unknown[]>(join(root, svFile)) ?? [];
     actions.push(
       `${topic}: scan found ${found} document${found === 1 ? '' : 's'}, ${verdicts.length} verdict${verdicts.length === 1 ? '' : 's'}`,
     );
+    const finish = () => {
+      rmSync(markerPath, { force: true });
+      journal({ stage, next: '', step: 'finish', kind: 'finish', attempt: 0 });
+    };
     // 2. the verdicts recorded (never --replace-cited), the scan recorded
-    if (verdicts.length) {
+    if (verdicts.length && !resumed?.recorded) {
       const r = await child(`npm run record-sources -- ${topic} ${svFile}`);
       if (r.guardFailed) return halt('unexpected-edit', r.error ?? '', { kind: 'fix', text: `read ${dir}` });
       if (!r.ok && r.exit === 2)
@@ -242,8 +265,13 @@ export async function maintain(
           text: `npm run run -- maintain ${topic}`,
         });
     }
+    if (verdicts.length)
+      writeJsonAtomic(markerPath, {
+        ...(readJson<ScanMarker>(markerPath) ?? { date, svFile, found, at: stamp() }),
+        recorded: true,
+      } satisfies ScanMarker);
     const scanned = await child(
-      `npm run evidence -- scanned ${topic} --found ${found} --recorded ${verdicts.length} --at ${stamp()}${scan.sessionId ? ` --session ${scan.sessionId}` : ''}`,
+      `npm run evidence -- scanned ${topic} --found ${found} --recorded ${verdicts.length} --at ${stamp()}${scanSession ? ` --session ${scanSession}` : ''}`,
     );
     if (!scanned.ok)
       return halt('step-failed', `evidence scanned failed: ${scanned.error}`, {
@@ -252,7 +280,7 @@ export async function maintain(
       });
     if (!verdicts.length) {
       actions.push(`${topic}: nothing new recorded`);
-      journal({ stage, next: '', step: 'finish', kind: 'finish', attempt: 0 });
+      finish();
       clearInterval(beat);
       release(dir, lock);
       return { outcome: 'done', stage, halt: null, iterations: 1, costUsd: cost, actions };
@@ -269,6 +297,14 @@ export async function maintain(
         (r) => !r.note.trim(),
       );
     const revised = open().map((r) => r.id);
+    // what this scan revised, noted or not (a resumed scan's notes were written by its first attempt)
+    const revisedSince = [
+      ...new Set(
+        (readJson<PublicRecord>(join(topicDir(topic, root), 'public-record.json'))?.revisions ?? [])
+          .filter((r) => r.at.slice(0, 10) >= date)
+          .map((r) => r.id),
+      ),
+    ];
     if (revised.length) {
       const notes = await agent(REVISION_NOTE_BRIEF, [`Write: topics/${topic}/public-record.json`], 'notes');
       for (const line of (notes.text ?? '').split('\n')) {
@@ -331,7 +367,7 @@ export async function maintain(
           sec.sentences.flatMap((x) => (x.assertions ?? []).flatMap((as) => as.claims.map((c) => c.id))),
         ),
       );
-      const hit = revised.filter((id) => cited.has(id));
+      const hit = revisedSince.filter((id) => cited.has(id));
       if (!hit.length) continue;
       const sdir = runDir(topic, s.id, root);
       const why = `a cited finding was revised after publication (${hit.join(', ')}); the video is never rebuilt`;
@@ -350,7 +386,7 @@ export async function maintain(
         });
       actions.push(`${topic}/${s.id}: live video cites a revised finding (${hit.join(', ')}): needs-person`);
     }
-    journal({ stage, next: '', step: 'finish', kind: 'finish', attempt: 0 });
+    finish();
     clearInterval(beat);
     release(dir, lock);
     return { outcome: 'done', stage, halt: null, iterations: 1, costUsd: cost, actions };

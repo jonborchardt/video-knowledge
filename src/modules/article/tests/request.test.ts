@@ -39,6 +39,34 @@ describe('requestCorrection and correctionProblem', () => {
   });
 });
 
+describe('decide ok after the correction already went out (a crash before the record; review finding 9)', () => {
+  it('records the decision and releases nothing more when the released text is the requested text', () => {
+    const f = syntheticProduction('packaged');
+    fixtures.push(f);
+    cliRoot(f.root);
+    const env = { ...process.env, VK_NO_DOTENV: '1', APPROVAL_SECRET: SECRET };
+    const article = (args: string[]) =>
+      runCli('article', [args[0], f.topic, f.story, ...args.slice(1)], { cwd: f.root, env });
+    const release = readJson<ArticleRelease>(join(f.dir, ARTICLE_FILES.release))!;
+    writeFileSync(join(f.dir, ARTICLE_FILES.article), toJson(release.article)); // as released: the correction is out
+    writeFileSync(join(f.dir, ARTICLE_FILES.review), toJson({ packageFingerprint: 'x', approved: {}, findings: [] }));
+    writeFileSync(
+      join(f.dir, ARTICLE_FILES.validation),
+      toJson({ status: 'passed', sentences: [], issues: [], counts: {} }),
+    );
+    expect(article(['request-correction', '--by', 'automated: maintenance t1']).status).toBe(0);
+    const req = readJson<ArticleRequest>(articleRequestPath(f.topic, f.story, f.root))!;
+    const ok = article(['decide', '--request', req.request, '--verdict', 'ok', '--by', 'Jon', '--via', 'email:<m1@x>']);
+    expect(ok.status, ok.stderr).toBe(0);
+    expect(ok.stdout).toMatch(/already released/);
+    expect(readJson<ArticleRequest>(articleRequestPath(f.topic, f.story, f.root))!.decided).toMatchObject({
+      verdict: 'ok',
+      by: 'Jon',
+    });
+    expect(readJson<ArticleRelease>(join(f.dir, ARTICLE_FILES.release))!.revision).toBe(release.revision);
+  }, 120_000);
+});
+
 describe('npm run article -- request-correction and decide', () => {
   it('refuses without a review or a passing validation; requests once for the fingerprint; decide changes records the notes; a changed text voids the request', () => {
     const f = syntheticProduction('packaged');

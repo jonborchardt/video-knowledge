@@ -531,14 +531,27 @@ export function renderCorrectionRequest(
   const release = loadArticleRelease(topic, storyId, root);
   const now = readJson<Article>(join(dir, ARTICLE_FILES.article));
   const review = readJson<{ findings?: { text: string; severity: string }[] }>(join(dir, ARTICLE_FILES.review));
-  const sentencesOf = (x: Article | null | undefined) =>
-    new Map(
-      (x?.sections ?? []).flatMap((s) =>
-        s.blocks.flatMap((b) => (b.kind === 'prose' ? b.sentences.map((t) => [t.id, t.text] as const) : [])),
-      ),
-    );
-  const before = sentencesOf(release?.article);
-  const after = sentencesOf(now);
+  // every unit a person approves by id: the headline, the SEO title, the dek, the description, each heading, each
+  // sentence, and each table or figure (as its data), so a change to any of them is shown, not only prose
+  const unitsOf = (x: Article | null | undefined): Map<string, string> => {
+    const m = new Map<string, string>();
+    if (!x) return m;
+    m.set('meta.headline', x.meta.headline);
+    m.set('meta.seoTitle', x.meta.seoTitle);
+    m.set(x.meta.dek.id, x.meta.dek.text);
+    m.set(x.meta.description.id, x.meta.description.text);
+    for (const s of x.sections) {
+      m.set(`heading:${s.name}`, s.heading);
+      for (const b of s.blocks) {
+        if (b.kind === 'prose') for (const t of b.sentences) m.set(t.id, t.text);
+        else if (b.kind === 'table') m.set(b.id, `table ${JSON.stringify(b)}`);
+        else m.set(`${s.name}:figure:${b.ref}`, `figure ${b.ref}: ${b.caption}`);
+      }
+    }
+    return m;
+  };
+  const before = unitsOf(release?.article);
+  const after = unitsOf(now);
   const changed = [...after].filter(([id, text]) => before.get(id) !== text);
   const removed = [...before.keys()].filter((id) => !after.has(id));
   const urls = publicUrlsOf(topic, storyId, root);
@@ -548,7 +561,7 @@ export function renderCorrectionRequest(
     '',
     `Published at: ${urls.articleUrl ?? urls.matterUrl}`,
     '',
-    'What changes (sentence by sentence):',
+    'What changes (unit by unit):',
     ...changed.flatMap(([id, text]) => [
       `- ${id}`,
       `  was: ${clean(before.get(id) ?? '(new)')}`,

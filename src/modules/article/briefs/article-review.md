@@ -142,6 +142,21 @@ can claim.
 
 When the package carries `targetDurationSeconds`, judge the article's proportion to it (one paragraph for a micro story, two to four for a short one) as part of the wording, and hold the evidence to the same standard as for a long story: a callout that carries a qualification is never dropped to fit the length.
 
+## Reaffirm and correction modes (the maintenance pass)
+
+The runner hands you one of two modes when a finding a released article relies on was revised (the `Revised:` line
+names the claim and the revision's note):
+
+- `Mode: reaffirm`: judge whether the released text still holds as written. Read the revised finding and every
+  sentence that rests on it. Write `article-review.json` as usual (your approvals at the current fingerprints) and
+  add beside them `"reaffirm": { "ok": true | false, "why": "<one sentence a person can check>" }`: `ok: true`
+  only when nothing a reader sees must change; `ok: false` names what the new finding changes. Change no sentence.
+  If you say it stands, the runner records the reaffirmation under your words; if not, a writer corrects it and a
+  fresh reviewer judges the correction.
+- `Mode: correction`: the writer changed only what the revised finding touches. Review the changed sentences (and
+  any table or figure that moved) as in a re-review; approve what passes, find what does not. A correction is
+  released only by a person, after your review.
+
 ## Unattended runs
 
 When the runner hands you this brief (an unattended `claude -p` agent), you have no shell: do not run the commands
