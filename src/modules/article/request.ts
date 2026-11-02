@@ -51,6 +51,21 @@ export function requestCorrection(
   };
 }
 
+/** The request with the Message-ID of its mail (`article sent`): set once; the same id again changes nothing; a
+ *  different id, another request or no request is refused. The record belongs to this file, so the orchestration
+ *  calls the verb and never writes it. */
+export function markSent(
+  prev: ArticleRequest | null,
+  id: string,
+  messageId: string,
+): { request: ArticleRequest; changed: boolean } {
+  if (!prev) throw new Error('no correction request');
+  if (prev.request !== id) throw new Error(`the open request is ${prev.request}, not ${id}`);
+  if (prev.messageId === messageId) return { request: prev, changed: false };
+  if (prev.messageId) throw new Error(`request ${id} was already sent as ${prev.messageId}`);
+  return { request: { ...prev, messageId }, changed: true };
+}
+
 /** Why a decision on `id` may not be applied to the article as it is now, or null. */
 export function correctionProblem(
   req: ArticleRequest | null,

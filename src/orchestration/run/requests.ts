@@ -20,13 +20,7 @@ import { topicDir } from '../../shared/io';
 import type { LaunchRecord } from './launch';
 import { loadProposals } from '../../modules/topic-discovery';
 import { discoveryRecords } from './discovery-state';
-import {
-  ARTICLE_FILES,
-  type Article,
-  type ArticleRequest,
-  articleRequestPath,
-  loadArticleRelease,
-} from '../../modules/article';
+import { ARTICLE_FILES, type Article, type ArticleRequest, loadArticleRelease } from '../../modules/article';
 import { readOutbox, secretsOf, sendTracked } from './notify';
 import type { ShadowEntry } from './release';
 import { envFor } from './steps';
@@ -589,7 +583,9 @@ export function renderCorrectionRequest(
   };
 }
 
-/** Sends the correction request once per request id (the Message-ID recorded on the request file). */
+/** Sends the correction request once per request id (the outbox remembers), then records the Message-ID on the
+ *  request through `article sent` (the request file is the article module's; the orchestration never writes it). A
+ *  crash between the send and the verb is completed from the outbox entry on the next call, never re-sent. */
 export async function sendCorrectionRequest(
   topic: string,
   storyId: string,
@@ -599,6 +595,11 @@ export async function sendCorrectionRequest(
   deps: SendDeps = {},
 ): Promise<string | null> {
   const root = deps.root ?? ROOT;
+  const sent = readOutbox(root).find((e) => e.request === req.request);
+  if (sent) {
+    if (!req.messageId) await recordArticleSent(topic, storyId, req.request, sent.messageId, root, deps);
+    return req.messageId ? null : sent.messageId;
+  }
   if (req.messageId) return null;
   const { messageId } = await sendTracked(
     mail,
@@ -612,6 +613,21 @@ export async function sendCorrectionRequest(
       now: deps.now,
     },
   );
-  writeJsonAtomic(articleRequestPath(topic, storyId, root), { ...req, messageId });
+  await recordArticleSent(topic, storyId, req.request, messageId, root, deps);
   return messageId;
+}
+
+async function recordArticleSent(
+  topic: string,
+  storyId: string,
+  request: string,
+  messageId: string,
+  root: string,
+  deps: SendDeps,
+): Promise<void> {
+  const args = ['sent', topic, storyId, '--request', request, '--message-id', messageId];
+  const r = deps.run
+    ? await deps.run('article', args)
+    : runCli('article', args, { cwd: root, env: envFor('article', [], deps.env ?? process.env) });
+  if (r.status !== 0) throw new Error(`article sent failed: ${(r.stderr || r.stdout).trim()}`);
 }

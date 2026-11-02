@@ -11,6 +11,8 @@
 //   decide <topic> <story-id> --request <ar-id> --verdict ok|changes --by "<name>" [--note ...]* [--via <channel:id>]
 //                                                                      a person's decision on the open request: ok runs correct for
 //                                                                      the exact fingerprint; changes records the notes for the writer
+//   sent <topic> <story-id> --request <ar-id> --message-id <id>       the request mail went out with that Message-ID (idempotent;
+//                                                                      a different id for a sent request is refused)
 // lock and correct validate afresh and refuse (exit 2, nothing written) unless it passes; a real name or "automated: ...".
 // Both copy each figure's data into the release.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -47,7 +49,7 @@ import { loadReview } from '../stories';
 import type { EvidencePackage, Script, ScriptValidation } from '../../shared/types';
 import { secretFromEnv } from '../../shared/request';
 import { approverProblem } from '../../shared/approver';
-import { type ArticleRequest, correctionProblem, loadArticleRequest, requestCorrection } from './request';
+import { type ArticleRequest, correctionProblem, loadArticleRequest, markSent, requestCorrection } from './request';
 
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
 const flag = (name: string) => {
@@ -56,7 +58,7 @@ const flag = (name: string) => {
 };
 const flags = (name: string) => rest.flatMap((x, i) => (x === name && rest[i + 1] !== undefined ? [rest[i + 1]] : []));
 if (
-  !['validate', 'show', 'lock', 'correct', 'reaffirm', 'request-correction', 'decide'].includes(cmd) ||
+  !['validate', 'show', 'lock', 'correct', 'reaffirm', 'request-correction', 'decide', 'sent'].includes(cmd) ||
   !topic ||
   !storyId
 ) {
@@ -298,6 +300,20 @@ function run() {
         `${reqId}: ok by ${by}; released ${rel(p(ARTICLE_FILES.release))}: revision ${release.revision}, changed ${revision.sentences.join(', ')}`,
       );
       refreshManifest();
+      return;
+    }
+    case 'sent': {
+      const reqId = flag('--request');
+      const messageId = flag('--message-id');
+      if (!reqId || !messageId) throw new Refusal('sent needs --request <ar-id> --message-id <id>');
+      let marked: ReturnType<typeof markSent>;
+      try {
+        marked = markSent(loadArticleRequest(topic, storyId), reqId, messageId);
+      } catch (e) {
+        throw new Refusal((e as Error).message);
+      }
+      if (marked.changed) writeArtifact(dir, ARTICLE_FILES.request, toJson(marked.request));
+      console.log(`${marked.changed ? 'sent' : 'already sent'}: ${reqId} as ${messageId}`);
       return;
     }
     case 'reaffirm': {

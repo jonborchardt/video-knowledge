@@ -23,9 +23,12 @@ import {
   draftView,
   renderDraftRequest,
   renderReleaseRequest,
+  sendCorrectionRequest,
   sendDraftRequest,
   sendReleaseRequest,
 } from '../../src/orchestration/run/requests';
+import { ARTICLE_FILES, type ArticleRelease, type ArticleRequest, loadArticleRequest } from '../../src/modules/article';
+import { runCli } from '../../src/shared/cli';
 import { type Fixture, cliRoot, syntheticProduction } from '../production-helpers';
 
 const fixtures: Fixture[] = [];
@@ -304,4 +307,89 @@ describe('the draft request mail', () => {
     expect(mail.sent).toHaveLength(1);
     expect(readOutbox(f.root)[0]).toMatchObject({ kind: 'draft-request', topic: f.topic, storyId: f.story });
   });
+});
+
+describe('the correction request mail (M3 1.3: ownership of the sent record)', () => {
+  /** A released article with an open correction request written by the module's verb. */
+  function corrected() {
+    const f = syntheticProduction('packaged', { release: true });
+    fixtures.push(f);
+    cliRoot(f.root);
+    const env = { ...process.env, VK_NO_DOTENV: '1', APPROVAL_SECRET: SECRET };
+    const release = readJson<ArticleRelease>(join(f.dir, ARTICLE_FILES.release))!;
+    writeFileSync(join(f.dir, ARTICLE_FILES.article), toJson(release.article));
+    writeFileSync(join(f.dir, ARTICLE_FILES.review), toJson({ packageFingerprint: 'x', approved: {}, findings: [] }));
+    writeFileSync(
+      join(f.dir, ARTICLE_FILES.validation),
+      toJson({ status: 'passed', sentences: [], issues: [], counts: {} }),
+    );
+    const r = runCli('article', ['request-correction', f.topic, f.story, '--by', 'automated: maintenance t1'], {
+      cwd: f.root,
+      env,
+    });
+    expect(r.status, r.stderr).toBe(0);
+    const req = loadArticleRequest(f.topic, f.story, f.root)!;
+    const calls: string[][] = [];
+    // the module's verb, run for real, with every call recorded: the orchestration must never write the file itself
+    const run = (cli: string, args: string[]) => {
+      calls.push([cli, ...args]);
+      return runCli(cli, args, { cwd: f.root, env });
+    };
+    return { f, req, env, calls, run };
+  }
+  it('is sent once and its Message-ID is recorded through `article sent`, never by writing the request file', async () => {
+    const { f, req, env, calls, run } = corrected();
+    const mail = new FakeMail();
+    const id = await sendCorrectionRequest(f.topic, f.story, req, a, mail, {
+      root: f.root,
+      now: () => now.getTime(),
+      env,
+      run,
+    });
+    expect(mail.sent).toHaveLength(1);
+    expect(id).toBe(mail.sent[0].messageId);
+    expect(calls).toEqual([['article', 'sent', f.topic, f.story, '--request', req.request, '--message-id', id]]);
+    expect(loadArticleRequest(f.topic, f.story, f.root)!.messageId).toBe(id);
+    // again: nothing sent, nothing run
+    const again = await sendCorrectionRequest(
+      f.topic,
+      f.story,
+      loadArticleRequest(f.topic, f.story, f.root)!,
+      a,
+      mail,
+      {
+        root: f.root,
+        now: () => now.getTime(),
+        env,
+        run,
+      },
+    );
+    expect(again).toBeNull();
+    expect(mail.sent).toHaveLength(1);
+    expect(calls).toHaveLength(1);
+  }, 120_000);
+  it('a crash between the send and the verb is completed from the outbox: the same Message-ID recorded, no second mail', async () => {
+    const { f, req, env, calls, run } = corrected();
+    const mail = new FakeMail();
+    mail.failNext = 'after';
+    await expect(
+      sendCorrectionRequest(f.topic, f.story, req, a, mail, { root: f.root, now: () => now.getTime(), env, run }),
+    ).rejects.toThrow(/after/);
+    expect(mail.sent).toHaveLength(1);
+    expect(loadArticleRequest(f.topic, f.story, f.root)!.messageId).toBeUndefined();
+    expect(calls).toEqual([]);
+    const id = await sendCorrectionRequest(f.topic, f.story, req, a, mail, {
+      root: f.root,
+      now: () => now.getTime(),
+      env,
+      run,
+    });
+    expect(id).toBe(mail.sent[0].messageId);
+    expect(mail.sent).toHaveLength(1);
+    expect(calls).toHaveLength(1);
+    expect(loadArticleRequest(f.topic, f.story, f.root)!.messageId).toBe(id);
+    expect(readOutbox(f.root).find((e) => e.request === req.request)?.kind).toBe('correction-request');
+    const file = readJson<ArticleRequest>(join(f.dir, ARTICLE_FILES.request))!;
+    expect(file.messageId).toBe(id);
+  }, 120_000);
 });

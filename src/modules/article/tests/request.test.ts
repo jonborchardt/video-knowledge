@@ -9,7 +9,7 @@ import { readJson, toJson } from '../../../shared/io';
 import type { Article, ArticleRelease } from '../article';
 import { correctArticle } from '../article';
 import { ARTICLE_FILES, articleFingerprint } from '../article';
-import { type ArticleRequest, articleRequestPath, correctionProblem, requestCorrection } from '../request';
+import { type ArticleRequest, articleRequestPath, correctionProblem, markSent, requestCorrection } from '../request';
 import { type Fixture, cliRoot, syntheticProduction } from '../../../../tests/production-helpers';
 
 const fixtures: Fixture[] = [];
@@ -38,6 +38,51 @@ describe('requestCorrection and correctionProblem', () => {
     expect(correctionProblem(decided, r1.request.request, 'fp1', now)).toMatch(/was decided \(ok\) by Jon/);
     expect(requestCorrection(decided, 'fp1', SECRET, 'x', now, 7).existing).toBe(false); // a decided one is spent
   });
+});
+
+describe("markSent and the `sent` verb (M3 1.3: the request file is the module's; the mail record goes through the verb)", () => {
+  it('sets the Message-ID once; the same id again is a no-op; a different id, another request or no request is refused', () => {
+    const r1 = requestCorrection(null, 'fp1', SECRET, 'automated: maintenance x', now, 7).request;
+    const first = markSent(r1, r1.request, '<m1@x>');
+    expect(first.changed).toBe(true);
+    expect(first.request.messageId).toBe('<m1@x>');
+    const again = markSent(first.request, r1.request, '<m1@x>');
+    expect(again.changed).toBe(false);
+    expect(again.request).toEqual(first.request);
+    expect(() => markSent(first.request, r1.request, '<m2@x>')).toThrow(/already sent as <m1@x>/);
+    expect(() => markSent(first.request, 'ar-000000000000', '<m1@x>')).toThrow(/the open request is/);
+    expect(() => markSent(null, r1.request, '<m1@x>')).toThrow(/no correction request/);
+  });
+  it('the verb writes the id (exit 0), repeats idempotently (exit 0), and refuses a different id (exit 2, file unchanged)', () => {
+    const f = syntheticProduction('packaged');
+    fixtures.push(f);
+    cliRoot(f.root);
+    const env = { ...process.env, VK_NO_DOTENV: '1', APPROVAL_SECRET: SECRET };
+    const article = (args: string[]) =>
+      runCli('article', [args[0], f.topic, f.story, ...args.slice(1)], { cwd: f.root, env });
+    const release = readJson<ArticleRelease>(join(f.dir, ARTICLE_FILES.release))!;
+    writeFileSync(join(f.dir, ARTICLE_FILES.article), toJson(release.article));
+    writeFileSync(join(f.dir, ARTICLE_FILES.review), toJson({ packageFingerprint: 'x', approved: {}, findings: [] }));
+    writeFileSync(
+      join(f.dir, ARTICLE_FILES.validation),
+      toJson({ status: 'passed', sentences: [], issues: [], counts: {} }),
+    );
+    expect(article(['sent', '--request', 'ar-000000000000', '--message-id', '<m0@x>']).status).toBe(2); // no request yet
+    expect(article(['request-correction', '--by', 'automated: maintenance t1']).status).toBe(0);
+    const req = readJson<ArticleRequest>(articleRequestPath(f.topic, f.story, f.root))!;
+    const ok = article(['sent', '--request', req.request, '--message-id', '<m1@x>']);
+    expect(ok.status, ok.stderr).toBe(0);
+    expect(ok.stdout).toMatch(/sent/);
+    expect(readJson<ArticleRequest>(articleRequestPath(f.topic, f.story, f.root))!.messageId).toBe('<m1@x>');
+    const again = article(['sent', '--request', req.request, '--message-id', '<m1@x>']);
+    expect(again.status).toBe(0);
+    expect(again.stdout).toMatch(/already/);
+    const other = article(['sent', '--request', req.request, '--message-id', '<m2@x>']);
+    expect(other.status).toBe(2);
+    expect(other.stderr).toMatch(/already sent as <m1@x>/);
+    expect(readJson<ArticleRequest>(articleRequestPath(f.topic, f.story, f.root))!.messageId).toBe('<m1@x>');
+    expect(article(['sent', '--request', req.request]).status).toBe(2); // no --message-id
+  }, 120_000);
 });
 
 describe('a correction is released only under a person (register D10), enforced by the module', () => {
