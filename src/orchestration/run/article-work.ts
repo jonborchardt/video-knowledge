@@ -237,9 +237,7 @@ export async function articleWork(
         });
         continue;
       }
-      const review = readJson<ScriptReviewFile>(
-        join(sdir, ARTICLE_FILES.review),
-      );
+      const review = readJson<ScriptReviewFile>(join(sdir, ARTICLE_FILES.review));
       if (r.ok && review?.reaffirm?.ok) {
         const v = readJson<ScriptValidation>(join(sdir, ARTICLE_FILES.validation));
         if (v?.status === 'passed') {
