@@ -2,8 +2,8 @@
 
 Each capability is a folder here (`index.ts` public API, `cli.ts` the npm entry, `briefs/`, `tests/`, `README.md`).
 Boundaries are enforced by
-`tests/boundaries.test.ts` (config `tests/boundaries.json`); this table is the only place future ownership is recorded
-in code.
+`tests/boundaries.test.ts` (config `tests/boundaries.json`); this table is where ownership is recorded in code, and the
+admin page's Objects tab renders it (`src/admin/objects.ts`).
 
 | capability      | today                                                                                                                                                                                    | CLI                                                                                                         | briefs                                                                                                |
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
@@ -28,13 +28,13 @@ Orchestration lives outside this folder: `src/orchestration/` (the board, `npm r
 
 ## Responsibility boundaries
 
-1. **Topic discovery vs. evidence.** Topic discovery (future) identifies, evaluates, scores and deduplicates
+1. **Topic discovery vs. evidence.** Topic discovery identifies, evaluates, scores and deduplicates
    candidate topics; its output is a proposal (institution fit, rationale, potential claims, preliminary sources,
    research feasibility). Evidence owns substantive research: gathering sources, extracting claims, assessing
    studies, maintaining verdicts, generating reports, and is the only writer of the store. Topic discovery must
    never become a second evidence-research implementation.
 2. **Publishing vs. social.** Publishing owns YouTube-specific operations: uploads, release approval records,
-   scheduling, go-live, verification. Social (future) owns X-specific content and publication. No generalized
+   scheduling, go-live, verification. Social owns X-specific content and publication. No generalized
    publishing framework, no coupling between the two; orchestration coordinates them.
 3. **Article vs. website.** Article owns editorial content through its lifecycle: drafting, review, validation,
    corrections and reaffirmations when evidence changes (`article -- correct`, `reaffirm`). Website owns

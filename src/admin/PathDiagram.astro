@@ -103,17 +103,17 @@ const steps: Step[] = [
   },
   {
     col: 'Published',
-    who: 'planned',
-    t: 'Post about it',
-    d: 'No posting is built. A post is another output of the same ledger with the generic flow (make it, approve it, record where it went), so a hand-written post can already be recorded; the X accounts are in the brand kit’s accounts.json.',
-    run: `npm run publish -- add ${topic} ${story} x-1 --kind post\nnpm run publish -- approve ${topic} ${story} --output x-1 --by "<your name>"\nnpm run publish -- published ${topic} ${story} --output x-1 --url <post url>`,
-    done: 'the output x-1 reads published',
+    who: 'agent',
+    t: 'Post about it on X',
+    d: 'Built, off by default: once the launch job has the page live, the tick runs social -- post from the owning institution’s X account when automation.json enabled.social is on and the institution has a handle and keys in .env (X_<KEY>_*); otherwise the launch mail says "not configured". By hand it is the command below (--dry-run shows the text). The record is social.json beside the ledger, once per text; a fixture topic is never posted from a public account.',
+    run: `npm run social -- show ${topic} ${story}\nnpm run social -- post ${topic} ${story} --dry-run`,
+    done: 'social.json records the post id, or "not configured"',
   },
 ];
 const WHO = {
   you: { label: 'YOU', cls: 'bg-accent text-foreground' },
   agent: { label: 'AGENT / CLI', cls: 'bg-muted text-muted-foreground' },
-  planned: { label: 'PLANNED', cls: 'border border-dashed text-muted-foreground' },
+  planned: { label: 'PLANNED', cls: 'border border-dashed text-muted-foreground' }, // kept for a step not built yet
 };
 const small = 'text-sm text-muted-foreground';
 const badge = 'inline-block rounded-sm px-1.5 py-1 font-mono text-[11px] leading-none tracking-[.06em] uppercase';

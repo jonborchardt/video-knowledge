@@ -305,7 +305,7 @@ const tabs = [
   { id: 'flow', label: 'Every step' },
   { id: 'objects', label: 'Objects' },
   { id: 'sitemap', label: 'Site map' },
-  { id: 'plans', label: 'Plans 1 to 4' },
+  { id: 'plans', label: 'Plans 1 to 4 (historical)' },
 ];
 const fig = { width: 780, height: yOf(flow.length) };
 ---
@@ -421,9 +421,12 @@ const fig = { width: 780, height: yOf(flow.length) };
   <section id="flow" class="mt-6" aria-labelledby="flow-h">
     <h2 id="flow-h" class="text-title font-semibold">Every step of the workflow</h2>
     <p class={`mt-1 max-w-prose ${small}`}>
-      The full list behind Your path: what you do, and what the agents and CLIs do between your steps. A red row on the
-      board means /produce stopped (a revision limit, a story that left the list, a <code>stop:</code> step): fix what it
-      names and paste the same prompt again.
+      The full list behind Your path: what you do, and what the agents and CLIs do between your steps. Gold is yours;
+      the rest is an agent, a CLI or a service, and every automated step is a command you can run by hand. A red row on
+      the board means the run stopped (a revision limit, a story that left the list, a <code>stop:</code> step): fix what
+      it names and start it again (<code>npm run run -- story</code>, or the same /produce prompt). The Now cell of the
+      board and the Automation tab show what runs at this moment; an integration is proven only when the Readiness table
+      says a person verified it.
     </p>
     <svg
       class="mt-4 w-full max-w-3xl"
@@ -508,7 +511,12 @@ const fig = { width: 780, height: yOf(flow.length) };
   </section>
 
   <section id="plans" class="mt-6" aria-labelledby="plans-h">
-    <h2 id="plans-h" class="text-title font-semibold">What plans 1 to 4 added</h2>
+    <h2 id="plans-h" class="text-title font-semibold">What plans 1 to 4 added (historical, October 2026)</h2>
+    <p class={`mt-1 max-w-prose ${small}`}>
+      A record of the four site plans merged on 2026-10-25, not current instructions: Milestones 2 (autonomous
+      operation) and 3 (observability) came after. The current map is Your path and Every step; the runbook is
+      <code>docs/OPERATIONS.md</code>.
+    </p>
     <PlansDiagram />
   </section>
 </Base>

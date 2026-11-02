@@ -134,7 +134,7 @@ const COLUMN: Record<Column, { label: string; help: string; colour: string }> = 
   ready: { label: 'Ready to produce', help: 'start it with /produce', colour: 'text-success' },
   producing: {
     label: 'In production',
-    help: '/produce is on it; the strip shows the stage, red means it stopped and needs you',
+    help: 'a run is on it (npm run run -- story, or /produce); the strip shows the stage, red means it stopped and needs you',
     colour: '',
   },
   article: {
@@ -273,8 +273,11 @@ function ctaNotes(topic: string, id: string): string[] {
       >stories.json</code
     >, then the first production stage whose file is missing or not current (re-running the library on today's inputs
     must reproduce the file, the test <code>lock</code> applies). The strip in each row is the production stages: what has
-    run (filled), the stage it is at, and what is still to come; red means <code>/produce</code> stopped and a person must
-    act. Only <code>production.json</code> is hand-written (queued, parked), because no artifact records those.
+    run (filled), the stage it is at, and what is still to come; red means the run stopped and a person must act. The Now
+    cell is live (every 5 s while something runs): who acts on the story at this moment (an agent with its role and model,
+    a CLI, a person), for how long, the run's reported cost and the history's estimate when five like it exist. Only <code
+      >production.json</code
+    > is hand-written (queued, parked), because no artifact records those.
   </p>
   <form id="story-filter" class="grid gap-2 text-sm">
     <div class="flex flex-wrap items-center gap-2">

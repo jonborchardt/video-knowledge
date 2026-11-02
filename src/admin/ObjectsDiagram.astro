@@ -1,156 +1,12 @@
 ---
 // Every object the repo keeps, the file that holds it and how it points at the next one, laid out in the columns the
-// work moves through (identity, research, stories, script stage, video, publishing). Positions are computed from the
-// lists below; a new object is one entry and, if it points somewhere, one edge. The table under it is the content
-// graph's view of the same objects (src/modules/website/content-graph.ts).
-type Box = { id: string; t: string; d: string[]; you?: boolean };
-type Col = { title: string; dir: string; boxes: Box[] };
-const cols: Col[] = [
-  {
-    title: 'Identity',
-    dir: 'src/config/site.ts',
-    boxes: [
-      { id: 'inst', t: 'Institution', d: ['commissions in site.ts: a YouTube', 'channel and the topics it publishes'] },
-    ],
-  },
-  {
-    title: 'Research',
-    dir: 'topics/<topic>/',
-    boxes: [
-      { id: 'topic', t: 'Topic (inquiry)', d: ['store/topics.json: the watcher store;', 'never hand-edited'] },
-      {
-        id: 'source',
-        t: 'Source',
-        d: ['a video, post or study: store/videos/*.json', 'and its text in sources/*.txt'],
-      },
-      { id: 'claim', t: 'Claim', d: ['canonical, one line, mechanism-level;', 'shared by every source that makes it'] },
-      {
-        id: 'verdict',
-        t: 'Verdict',
-        d: ['per claim, cites a passage', '(<file>.txt#L10-L24); npm run record-sources'],
-      },
-      { id: 'report', t: 'Report', d: ['report.json by npm run report', '(needs the watcher checkout)'] },
-      {
-        id: 'record',
-        t: 'Public record',
-        d: ['public-record.json: exhibit numbers that', 'never renumber, revisions you explain'],
-        you: true,
-      },
-      {
-        id: 'dataset',
-        t: 'Dataset',
-        d: ['data/<id>.json: evidence numbers with', 'a cite per point; shown on /data/'],
-      },
-    ],
-  },
-  {
-    title: 'Stories',
-    dir: 'topics/<topic>/',
-    boxes: [
-      {
-        id: 'story',
-        t: 'Story = one question',
-        d: ['stories.json, derived: the question, the', 'claims that answer it, audit, readiness'],
-      },
-      {
-        id: 'sreview',
-        t: 'Story review',
-        d: ['story-review.json: the semantic pass,', 'pruning, chains (up to 3 questions)'],
-        you: true,
-      },
-      { id: 'decision', t: 'Decision', d: ['production.json: queued or parked,', 'with a note'], you: true },
-    ],
-  },
-  {
-    title: 'Script stage',
-    dir: 'topics/<topic>/scripts/<slug>/',
-    boxes: [
-      {
-        id: 'pkg',
-        t: 'Evidence package',
-        d: ['evidence-package.json: the claims,', 'passages and roles a writer may use'],
-      },
-      {
-        id: 'script',
-        t: 'Script',
-        d: ['script.json + script-review.json (another', 'agent) + validation; release.json locks'],
-      },
-      { id: 'sb', t: 'Storyboard', d: ['storyboard.json: scenes, chart points', 'with cites, timing per sentence'] },
-      {
-        id: 'article',
-        t: 'Article',
-        d: ['article.json + review + validation;', 'article-release.json is what the site shows'],
-      },
-      {
-        id: 'cta',
-        t: 'Calls to action',
-        d: ['cta.json from cta.md: destinations in the', 'content graph; a paid one needs your name'],
-      },
-    ],
-  },
-  {
-    title: 'Video',
-    dir: '.../<slug>/video/',
-    boxes: [
-      {
-        id: 'render',
-        t: 'Render plan',
-        d: ['render.json: scenes to kinds, cues;', 'bespoke graphics in src/modules/video/bespoke/'],
-      },
-      { id: 'build', t: 'Build', d: ['segment.mp4 named by its sha; build-report;', 'review/: the package you watch'] },
-      {
-        id: 'music',
-        t: 'Soundtrack',
-        d: ['music.json: cues over scene anchors;', 'music/<composition>/ cleared by hand'],
-      },
-      {
-        id: 'short',
-        t: 'Short',
-        d: ['shorts/<slug>/: a nested production from', 'one scene; shorts.json + shorts-review.json'],
-      },
-    ],
-  },
-  {
-    title: 'Publishing',
-    dir: '.../<slug>/publish.json',
-    boxes: [
-      {
-        id: 'ledger',
-        t: 'Ledger',
-        d: ['publish.json: per output an event log', '(uploaded, approved, scheduled, published)'],
-      },
-      {
-        id: 'yt',
-        t: 'YouTube video',
-        d: ['output youtube: private upload, then', 'go-live; a Short is output short:<slug>'],
-      },
-    ],
-  },
-];
-type Edge = { from: string; to: string; label: string };
-const edges: Edge[] = [
-  { from: 'inst', to: 'topic', label: 'publishes' },
-  { from: 'topic', to: 'source', label: 'has' },
-  { from: 'source', to: 'claim', label: 'makes' },
-  { from: 'verdict', to: 'claim', label: 'judges' },
-  { from: 'verdict', to: 'report', label: 'summed in' },
-  { from: 'report', to: 'record', label: 'numbered by' },
-  { from: 'claim', to: 'story', label: 'grouped into' },
-  { from: 'sreview', to: 'story', label: 'settles' },
-  { from: 'story', to: 'pkg', label: 'packaged as' },
-  { from: 'pkg', to: 'script', label: 'written from' },
-  { from: 'script', to: 'sb', label: 'planned as' },
-  { from: 'pkg', to: 'article', label: 'written from' },
-  { from: 'sb', to: 'render', label: 'drafts' },
-  { from: 'render', to: 'build', label: 'renders' },
-  { from: 'music', to: 'build', label: 'mixed into' },
-  { from: 'sb', to: 'short', label: 'one scene' },
-  { from: 'build', to: 'ledger', label: 'sha = build' },
-  { from: 'short', to: 'ledger', label: 'output' },
-  { from: 'ledger', to: 'yt', label: 'records' },
-  { from: 'dataset', to: 'source', label: 'cites' },
-  { from: 'cta', to: 'build', label: 'description links' },
-];
+// work moves through (proposals, identity, research, stories, script stage, video, publishing, operations). The data
+// is src/admin/objects.ts (one source for the diagram, the tables and tests/admin-reference.test.ts); a new object is
+// one entry there and, if it points somewhere, one edge. Each box links to its owner module in the catalog below; the
+// tables under the diagram give each object's owner, writer, validity and file, then the content graph's view of the
+// same objects (src/modules/website/content-graph.ts).
+import { type Box, cols, edges, moduleCatalog } from './objects';
+const modules = moduleCatalog();
 const W = 196,
   H = 66,
   GAP = 28, // between columns
@@ -355,9 +211,15 @@ const vocab: { obj: string; t: string; file: string; v: [string, string][] }[] =
     t: 'column (who acts next)',
     file: 'production.ts (COLUMNS)',
     v: [
-      ['needs-research, needs-review, ready', 'the story’s readiness; ready offers /produce'],
-      ['producing, your-review', '/produce is on it; the package is made, upload it'],
-      ['uploaded, changes-requested, approved, scheduled, published', 'the ledger’s state of the main output'],
+      ['needs-research, needs-review, ready', 'the story’s readiness; ready offers /produce or npm run run -- story'],
+      [
+        'producing, article, draft-review, your-review',
+        'the run is on it; the article is owed; a draft build awaits a review; the release package is made',
+      ],
+      [
+        'uploaded, changes-requested, approved, shorts, scheduled, published',
+        'the ledger’s state of the main output; shorts: an approved video waits for its Shorts',
+      ],
       ['parked', 'the decision, or a rejected story'],
     ],
   },
@@ -419,7 +281,7 @@ const small = 'text-sm text-muted-foreground';
   re-judges old claims.
 </p>
 <div class="mt-4 overflow-x-auto">
-  <svg class="w-full min-w-[72rem]" viewBox={`0 0 ${width} ${height}`} role="img" aria-labelledby="objects-title">
+  <svg class="w-full min-w-[110rem]" viewBox={`0 0 ${width} ${height}`} role="img" aria-labelledby="objects-title">
     <title id="objects-title">
       The objects of the repo and their relations, from institution and topic through claims, stories, scripts, video
       builds and the publishing ledger
@@ -451,7 +313,7 @@ const small = 'text-sm text-muted-foreground';
         c.boxes.map((b) => {
           const p = box(b.id);
           return (
-            <g>
+            <a href={`#module-${b.owner}`} aria-label={`${b.t}: owned by ${b.owner}`}>
               <rect
                 x={p.x}
                 y={p.y}
@@ -468,7 +330,7 @@ const small = 'text-sm text-muted-foreground';
                   {line}
                 </text>
               ))}
-            </g>
+            </a>
           );
         }),
       )
@@ -488,6 +350,115 @@ const small = 'text-sm text-muted-foreground';
       }
     </g>
   </svg>
+</div>
+
+<h3 class="mt-8 font-semibold">Each object: owner, writer, validity, file</h3>
+<p class={`mt-1 max-w-prose ${small}`}>
+  The same boxes as a table. The owner is the module whose code validates and changes the object; the writer is the CLI,
+  agent or person that writes it; the validity rule is what makes a file of that kind acceptable. Only objects that
+  exist are listed.
+</p>
+<div class="mt-3 overflow-x-auto">
+  <table class="w-full text-sm">
+    <thead class="text-left text-xs text-muted-foreground uppercase">
+      <tr>
+        <th class="py-1 pr-3 font-medium">Object</th>
+        <th class="py-1 pr-3 font-medium">Owner</th>
+        <th class="py-1 pr-3 font-medium">Written by</th>
+        <th class="py-1 pr-3 font-medium">Valid when</th>
+        <th class="py-1 font-medium">File</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        cols.flatMap((c) =>
+          c.boxes.map((b: Box) => (
+            <tr class="border-t align-top" id={`object-${b.id}`}>
+              <th scope="row" class="py-1 pr-3 text-left font-medium">
+                {b.t}
+                <div class="text-[11px] font-normal text-muted-foreground">{c.title}</div>
+              </th>
+              <td class="py-1 pr-3">
+                <a class="text-primary" href={`#module-${b.owner}`}>
+                  {b.owner}
+                </a>
+              </td>
+              <td class="py-1 pr-3 text-muted-foreground">{b.writer}</td>
+              <td class="py-1 pr-3 text-muted-foreground">{b.valid}</td>
+              <td class="py-1 font-mono text-xs">{b.file}</td>
+            </tr>
+          )),
+        )
+      }
+    </tbody>
+  </table>
+</div>
+
+<h3 class="mt-8 font-semibold">Modules</h3>
+<p class={`mt-1 max-w-prose ${small}`}>
+  Every implemented module (a folder under <code>src/modules/</code>), with its responsibility (its README's first
+  paragraph), the paths it owns (<code>src/modules/README.md</code>), its CLI and briefs, the names other capabilities
+  may read through its <code>index.ts</code> (<code>tests/boundaries.json</code>) and the objects it owns. Shared and
+  orchestration stand apart from the domain modules: shared holds contracts and io, orchestration holds derived state,
+  routing and, since Milestone 2, scheduling and execution; neither owns content.
+</p>
+<div class="mt-3 grid gap-3 lg:grid-cols-2">
+  {
+    modules.map((m) => (
+      <article
+        id={`module-${m.name}`}
+        class:list={[
+          'rounded-lg border p-3 text-card-foreground',
+          m.kind === 'module' ? 'bg-card' : 'border-l-4 border-l-primary bg-card',
+        ]}
+      >
+        <h4 class="font-semibold">
+          {m.name}
+          <span class="ml-2 font-mono text-[11px] font-normal text-muted-foreground uppercase">{m.kind}</span>
+        </h4>
+        <p class={`mt-1 ${small}`}>{m.responsibility}</p>
+        <dl class="mt-2 grid gap-1 text-xs">
+          <div>
+            <dt class="inline font-medium">Paths:</dt> <dd class="inline font-mono">{m.paths || m.readme}</dd>
+          </div>
+          {m.cli && (
+            <div>
+              <dt class="inline font-medium">CLI:</dt> <dd class="inline font-mono">{m.cli}</dd>
+            </div>
+          )}
+          {m.briefs && (
+            <div>
+              <dt class="inline font-medium">Briefs:</dt> <dd class="inline font-mono">{m.briefs}</dd>
+            </div>
+          )}
+          <div>
+            <dt class="inline font-medium">Read API:</dt>{' '}
+            <dd class="inline font-mono">
+              {m.readApi.length ? m.readApi.join(', ') : 'none (read through its CLI and files)'}
+            </dd>
+          </div>
+          <div>
+            <dt class="inline font-medium">Objects:</dt>{' '}
+            <dd class="inline">
+              {m.objects.length
+                ? m.objects.map((b, i) => (
+                    <>
+                      {i > 0 && ', '}
+                      <a class="text-primary" href={`#object-${b.id}`}>
+                        {b.t}
+                      </a>
+                    </>
+                  ))
+                : 'none of its own'}
+            </dd>
+          </div>
+          <div>
+            <dt class="inline font-medium">Docs:</dt> <dd class="inline font-mono">{m.readme}</dd>
+          </div>
+        </dl>
+      </article>
+    ))
+  }
 </div>
 
 <h3 class="mt-8 font-semibold">The same objects as the site sees them: the content graph</h3>
