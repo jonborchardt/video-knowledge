@@ -18,6 +18,7 @@ export {
   sendBackPromptOf,
   shortColumnOf,
   type ShortRow,
+  stoppedOf,
   type Step,
   stepsOf,
   type StoryRow,
@@ -37,3 +38,17 @@ export {
 } from './research';
 export { type StatusRow, statusOf } from './run/status';
 export { type AutomationView, automationView } from './run/view';
+// M3: the live view (what runs now, the owner's list, the activity, the readiness table), read by the admin page and
+// its /admin/live.json endpoint; nothing in it writes.
+export {
+  type Activity,
+  type LiveAgent,
+  type LiveHalt,
+  type LiveJobs,
+  type LiveRow,
+  type LiveView,
+  type OwnerItem,
+  liveView,
+} from './run/live';
+export { INTEGRATIONS, type Integration, type ReadinessRow, readinessView } from './run/readiness';
+export { type Estimate, type WeekRollup, estimate, rollups } from './run/usage';

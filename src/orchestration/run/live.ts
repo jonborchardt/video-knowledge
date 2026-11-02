@@ -10,9 +10,9 @@ import { MANIFEST_FILE, REVIEW_DIR, ROOT, readJson, scriptDir, scriptDirs } from
 import type { ReleaseManifest } from '../../shared/types';
 import { commissions } from '../../config/site';
 import { loadArticleRequest } from '../../modules/article';
-import { loadLedger, openOutput, openRequest } from '../../modules/publishing';
+import { currentBuild, loadLedger, openOutput, openRequest } from '../../modules/publishing';
 import { loadProposals } from '../../modules/topic-discovery';
-import { columnOf, shortColumnOf, topicBoard } from '../production';
+import { columnOf, shortColumnOf, stoppedOf, topicBoard } from '../production';
 import { discoveryDir, discoveryHalts, discoveryRecords } from './discovery-state';
 import {
   type AttemptRecord,
@@ -78,6 +78,8 @@ export interface LiveRow {
   agents: LiveAgent[];
   halt: LiveHalt | null;
   next: string;
+  /** The board's own verdict that /produce stopped and a person must act (`stoppedOf`): red in the strip. */
+  stopped: boolean;
   /** The runner's heartbeat is older than lockStaleMinutes while its pid lives: frozen, or a stale clock. */
   staleHeartbeat: boolean;
 }
@@ -141,6 +143,7 @@ export interface BoardRow {
   stage: string | null;
   next: string;
   institution: string | null;
+  stopped?: boolean;
 }
 export interface LiveDeps {
   now?: () => number;
@@ -172,10 +175,14 @@ function boardRows(root: string): (topic: string, storyId: string) => BoardRow |
     if (m) {
       const parent = b.stories.find((r) => r.story.id === m[1]);
       const sh = parent?.shorts.find((s) => s.id === storyId);
-      return sh ? { column: shortColumnOf(sh), stage: sh.production?.stage ?? null, next: sh.next, institution } : null;
+      return sh
+        ? { column: shortColumnOf(sh), stage: sh.production?.stage ?? null, next: sh.next, institution, stopped: false }
+        : null;
     }
     const r = b.stories.find((x) => x.story.id === storyId);
-    return r ? { column: columnOf(r), stage: r.production?.stage ?? null, next: r.next, institution } : null;
+    return r
+      ? { column: columnOf(r), stage: r.production?.stage ?? null, next: r.next, institution, stopped: stoppedOf(r) }
+      : null;
   };
 }
 
@@ -280,6 +287,7 @@ export function liveView(root = ROOT, deps: LiveDeps = {}): LiveView {
       agents,
       halt: h,
       next: b?.next ?? halt?.board.next ?? last?.next ?? '',
+      stopped: b?.stopped ?? false,
       staleHeartbeat,
     });
     if (live)
@@ -319,6 +327,7 @@ export function liveView(root = ROOT, deps: LiveDeps = {}): LiveView {
         at: d.halt.at,
       },
       next: d.halt.unblock.text,
+      stopped: false,
       staleHeartbeat: false,
     });
   const dlock = readLock(discoveryDir(root));
@@ -345,6 +354,7 @@ export function liveView(root = ROOT, deps: LiveDeps = {}): LiveView {
       agents: [],
       halt: null,
       next: '',
+      stopped: false,
       staleHeartbeat: false,
     });
     running.push({
@@ -516,33 +526,35 @@ export function liveView(root = ROOT, deps: LiveDeps = {}): LiveView {
         since: r.stepStartedAt ?? at,
       });
   }
-  // drafts of stories without a run folder: the board alone knows them
-  for (const s of scriptDirs(root)) {
-    const storyId = readJson<{ story?: string }>(join(s.dir, 'script.json'))?.story ?? s.slug;
-    const key = `${s.topic}/${storyId}`;
-    if (rows.some((r) => r.key === key)) continue;
-    const b = board(s.topic, storyId);
-    if (b?.column === 'draft-review')
-      owner.push({
-        kind: 'draft-review',
-        key: `draft:${key}`,
-        topic: s.topic,
-        storyId,
-        what: 'a draft awaits your review',
-        url: reviewUrl(s.topic, storyId, root),
-        reply: 'OK  (or: CHANGES: <what>) to the draft mail',
-        command: `npm run publish -- accept-draft ${s.topic} ${storyId} --by "<name>" --build <sha>`,
-        since: at,
-      });
+  // drafts of stories without a run folder: an uploaded draft build in the ledger (buildColumn's rule: uploaded or
+  // metadata-behind with a draft build is draft-review); a packaged draft not yet uploaded shows on the Board's row,
+  // whose column the board computes, and is listed here only once its run folder exists (asking the board for every
+  // story would cost the whole board on every poll)
+  for (const [topic, storyId] of storiesWithLedgers(root)) {
+    const key = `${topic}/${storyId}`;
+    if (owner.some((o) => o.key === `draft:${key}`)) continue;
+    try {
+      const main = openOutput(topic, storyId, { root });
+      const build = currentBuild(scriptDir(topic, storyId, root));
+      if (build?.status === 'draft' && ['uploaded', 'metadata-behind'].includes(main.state.status))
+        owner.push({
+          kind: 'draft-review',
+          key: `draft:${key}`,
+          topic,
+          storyId,
+          what: 'a draft awaits your review',
+          url: reviewUrl(topic, storyId, root),
+          reply: 'OK  (or: CHANGES: <what>) to the draft mail',
+          command: `npm run publish -- accept-draft ${topic} ${storyId} --by "<name>" --build ${build.sha}`,
+          since: main.out.events.findLast((e) => e.type === 'uploaded')?.at ?? at,
+        });
+    } catch {
+      /* a ledger without a main output */
+    }
   }
   owner.sort((x, y) => x.since.localeCompare(y.since));
 
-  let queued: Job | null;
-  try {
-    queued = nextJob(a, root, { now, alive });
-  } catch {
-    queued = null;
-  }
+  const queued = queuedJob(a, root, now, alive);
   const week = isoWeek(new Date(now()));
   const wk = roll.weeks[week] ?? {
     rolledUpUsd: 0,
@@ -570,6 +582,23 @@ export function liveView(root = ROOT, deps: LiveDeps = {}): LiveView {
     budget: a.agents.budgetUsd,
     week: { week, ...wk },
   };
+}
+
+/** The work plane's next job (a dry nextJob), remembered for a minute per root: it asks the board for every story
+ *  with a ledger (seconds), which a five-second poll cannot afford; the answer is the real one, a minute old at most. */
+const QUEUED_TTL_MS = 60_000;
+const queuedMemo = new Map<string, { at: number; job: Job | null }>();
+function queuedJob(a: Automation, root: string, now: () => number, alive: (pid: number) => boolean): Job | null {
+  const m = queuedMemo.get(root);
+  if (m && now() - m.at < QUEUED_TTL_MS) return m.job;
+  let job: Job | null;
+  try {
+    job = nextJob(a, root, { now, alive });
+  } catch {
+    job = null;
+  }
+  queuedMemo.set(root, { at: now(), job });
+  return job;
 }
 
 const SERVICE_EVENTS = new Set(['uploaded', 'published', 'unpublished', 'verified', 'scheduled', 'updated']);

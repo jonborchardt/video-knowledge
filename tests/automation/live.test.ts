@@ -159,6 +159,7 @@ describe('liveView rows', () => {
     expect(row.agents).toHaveLength(1);
     expect(row.agents[0]).toMatchObject({ role: 'writer', pid: 102 });
     expect(row.halt).toBeNull();
+    expect(row.stopped).toBe(false);
     expect(v.generatedAt).toBe(new Date(NOW).toISOString());
   });
   it('a running story between steps shows between-steps with the time since the last journal line; a CLI step is a cli step', () => {
@@ -297,6 +298,7 @@ describe('liveView rows', () => {
       (r) => r.storyId === f.story,
     )!;
     expect(row.institution).toBe('spending');
+    expect(typeof row.stopped).toBe('boolean'); // the board's stoppedOf, joined in
     expect(typeof row.column).toBe('string');
     expect(typeof row.stage).toBe('string');
     expect(row.state).toBe('idle');

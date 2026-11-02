@@ -1454,6 +1454,16 @@ export const COLUMNS = [
 ] as const;
 export type Column = (typeof COLUMNS)[number];
 /** The card's column, or null for a chain's follow-up question, which is answered on its first question's card. */
+/** /produce stopped on this video and a person must act (.claude/skills/produce/SKILL.md): a revision-limit or
+ *  story-left halt, a `stop:` next, or a failed publishing step. Red in the Board's strip; every other halt is its next
+ *  step. The one definition: the Board tab and the live view read it here. */
+export function stoppedOf(r: StoryRow): boolean {
+  return (
+    (!!r.production &&
+      (['revision-limit', 'story-left'].includes(r.production.halt?.kind ?? '') || r.next.startsWith('stop:'))) ||
+    !!mainState(r.production)?.failed
+  );
+}
 export function columnOf(r: StoryRow): Column | null {
   if (r.decision?.decision === 'parked') return 'parked';
   const c = buildColumn(r.production);

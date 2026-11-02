@@ -20,6 +20,8 @@ const admin = {
       injectRoute({ pattern: '/[topic]/register', entrypoint: './src/admin/register.astro' });
       injectRoute({ pattern: '/[topic]/scripts/[slug]', entrypoint: './src/admin/script.astro' });
       injectRoute({ pattern: '/[topic]/review/[...path]', entrypoint: './src/admin/review.astro', prerender: false });
+      // the live view the admin page polls (M3): what runs now, the owner's list, the activity; read-only JSON
+      injectRoute({ pattern: '/admin/live.json', entrypoint: './src/admin/live.json.ts', prerender: false });
       // the review page's media: the packaged build streamed from disk, never copied into public/ or dist/
       injectRoute({
         pattern: '/[topic]/review-media/[file]/[...path]',

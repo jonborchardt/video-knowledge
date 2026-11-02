@@ -15,13 +15,17 @@ import {
   COLUMNS,
   columnOf,
   type Health,
+  type LiveRow,
+  liveView,
   mainState,
   PRODUCTION_STAGES,
   type OutputView,
   shortColumnOf,
   type ShortRow,
   type StoryRow,
+  stoppedOf,
 } from '../orchestration';
+import { nowCellHtml } from './live-render';
 import { storyNode, loadCta, resolveCtas } from '../modules/website';
 import { siteGraph } from '../modules/website/site-graph';
 import { loadLedger } from '../modules/publishing';
@@ -30,6 +34,34 @@ import { href } from '../lib/url';
 
 const topics = board();
 const rows = topics.flatMap((t) => t.stories.map((s) => ({ ...s, topic: t.topic })));
+// The live view (M3): what runs now per story, joined into the Now cell; the client patches it by key every poll.
+const live = liveView();
+const liveRows = new Map(live.rows.map((r) => [r.key, r]));
+const liveKey = (r: Row) => `${r.topic.name}/${r.story.id}`;
+const idleRow = (r: Row, c: Column): LiveRow => ({
+  key: liveKey(r),
+  institution: null,
+  topic: r.topic.name,
+  storyId: r.story.id,
+  kind: 'video',
+  column: c,
+  stage: r.production?.stage ?? null,
+  state: ['uploaded', 'approved', 'scheduled', 'published'].includes(c) ? 'done' : 'idle',
+  step: null,
+  stepKind: null,
+  role: null,
+  model: null,
+  startedAt: null,
+  stepStartedAt: null,
+  elapsedMs: null,
+  costUsd: { run: 0, total: 0 },
+  estimate: null,
+  agents: [],
+  halt: null,
+  next: r.next,
+  stopped: stopped(r),
+  staleHeartbeat: false,
+});
 const productions = rows.filter((s) => s.production);
 // One row per video, in board order (who acts next), best first within a state; follow-ups ride on their chain.
 const videos = rows
@@ -48,6 +80,7 @@ const SORTABLE = [
   ['Evidence', 'num'],
   ['Claims', 'num'],
   ['State', 'num'],
+  ['Now', ''],
   ['Outputs', ''],
   ['Article', ''],
   ['Next', ''],
@@ -61,10 +94,7 @@ const followUps = (r: Row) =>
     .filter((s) => s?.partOf === r.story.id);
 // Halts /produce stops on (.claude/skills/produce/SKILL.md): a person must act; every other halt is its next step.
 // A failed publishing step is the same kind of stop: the ledger's last event says what went wrong.
-const stopped = (r: StoryRow) =>
-  (!!r.production &&
-    (['revision-limit', 'story-left'].includes(r.production.halt?.kind ?? '') || r.next.startsWith('stop:'))) ||
-  !!mainState(r.production)?.failed;
+const stopped = stoppedOf;
 const outputs = (r: StoryRow): OutputView[] => r.production?.publish?.outputs ?? [];
 // An output chip's colour: red when its last step failed, amber when the build or metadata on disk is ahead of the platform.
 const outputColour = (o: OutputView) =>
@@ -279,7 +309,12 @@ function ctaNotes(topic: string, id: string): string[] {
     }
   </form>
   <div class="mx-[calc(50%-50vw+1rem)] overflow-x-auto pb-3">
-    <table id="story-table" class="w-full min-w-[72rem] text-sm">
+    <table
+      id="story-table"
+      class="w-full min-w-[72rem] text-sm"
+      data-live-url={href('/admin/live.json')}
+      data-column-labels={JSON.stringify(Object.fromEntries(COLUMNS.map((c) => [c, COLUMN[c].label])))}
+    >
       <thead class="text-left text-xs text-muted-foreground uppercase">
         <tr>
           {
@@ -312,6 +347,7 @@ function ctaNotes(topic: string, id: string): string[] {
             return (
               <tr
                 class="border-t"
+                data-live-row={liveKey(r)}
                 data-state={c}
                 data-stopped={stopped(r) ? '' : undefined}
                 data-search={[
@@ -363,7 +399,11 @@ function ctaNotes(topic: string, id: string): string[] {
                 </td>
                 <td class="py-2 pr-3" data-sort={COLUMNS.indexOf(c)}>
                   <div class="grid w-40 gap-1">
-                    <span class:list={['font-medium', COLUMN[c].colour]} title={COLUMN[c].help}>
+                    <span
+                      class:list={['font-medium', COLUMN[c].colour]}
+                      title={COLUMN[c].help}
+                      data-live={`${liveKey(r)}.column`}
+                    >
                       {COLUMN[c].label}
                     </span>
                     {r.production && (
@@ -375,7 +415,12 @@ function ctaNotes(topic: string, id: string): string[] {
                         {r.production.stage} · {HEALTH[h].label} · r{r.production.versions.length || '0'}
                       </a>
                     )}
-                    <ol class="flex gap-px" aria-label="Production stages">
+                    <ol
+                      class="flex gap-px"
+                      aria-label="Production stages"
+                      data-live={`${liveKey(r)}.strip`}
+                      data-stages={PRODUCTION_STAGES.join(',')}
+                    >
                       {stripOf(r).map(({ s, state }) => (
                         <li
                           class:list={[
@@ -393,6 +438,10 @@ function ctaNotes(topic: string, id: string): string[] {
                       ))}
                     </ol>
                   </div>
+                </td>
+                <td class="py-2 pr-3" data-live={`${liveKey(r)}.now`}>
+                  {/* eslint-disable-next-line astro/no-set-html-directive -- live-render.ts escapes every value; the client patches the cell with the same renderer */}
+                  <div set:html={nowCellHtml(liveRows.get(liveKey(r)) ?? idleRow(r, c))} />
                 </td>
                 <td class="py-2 pr-3">
                   {outputs(r).length > 0 && (
@@ -968,9 +1017,16 @@ function ctaNotes(topic: string, id: string): string[] {
 </section>
 
 <script>
+  import { startLive } from './live-client';
   // The stories table: click a header to sort (numbers high first, text A-Z first; again to reverse), and the form
   // above it filters rows by text, state tags and whether /produce stopped.
   const table = document.getElementById('story-table') as HTMLTableElement;
+  // The live poll (M3): the Now cells, the strips and the Automation tab's lists are patched in place by key, so the
+  // sort, the filter, an open popover and the scroll position survive every refresh.
+  startLive(table.dataset.liveUrl!, {
+    stages: (table.querySelector<HTMLElement>('[data-stages]')?.dataset.stages ?? '').split(','),
+    labels: JSON.parse(table.dataset.columnLabels ?? '{}') as Record<string, string>,
+  });
   const body = table.tBodies[0];
   const heads = [...table.tHead!.rows[0].cells];
   const form = document.getElementById('story-filter') as HTMLFormElement;

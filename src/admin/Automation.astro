@@ -1,18 +1,37 @@
 ---
-// The Automation tab of the admin page (dev server only): every run the runner knows (statusOf), each halt with its
-// unblock text and a Copy button, the last tick and work job, this week's picks against the cadence, the outbox's
-// unsent mail and the week's spend. Read through src/orchestration/index.ts only; nothing here decides anything.
+// The Automation tab of the admin page (dev server only): what the owner must decide, what runs now (actor, model,
+// elapsed, cost, estimate, cap), what is blocked and why, what is queued or due, the recent activity, then the
+// operational records (the tick, the week's spend beside budget.json, the outbox, the release requests, the scans,
+// the corrections, the launches, the Studio steps) and the readiness table. Read through src/orchestration/index.ts
+// only; nothing here decides anything or acts: the lists name the command or the reply, a person runs it. The marked
+// elements (data-live, data-live-list) are patched in place by the Board's poll of /admin/live.json (live-client.ts),
+// rendered here and there by the same functions (live-render.ts).
 import { loadAutomation } from '../shared/automation';
 import { ROOT } from '../shared/io';
-import { automationView, statusOf } from '../orchestration';
+import { automationView, liveView, statusOf } from '../orchestration';
+import {
+  activityItemHtml,
+  activityKey,
+  blockedItemHtml,
+  jobsHtml,
+  ownerItemHtml,
+  readinessRowHtml,
+  runningRowHtml,
+  weekHtml,
+} from './live-render';
 
 const a = loadAutomation(ROOT);
-const rows = statusOf(ROOT);
 const view = automationView(ROOT);
+const live = liveView(ROOT);
+const runs = statusOf(ROOT);
+const running = live.rows.filter((r) => r.state === 'running' || r.state === 'between-steps');
+const blocked = live.rows.filter((r) => r.state === 'halted' && r.halt);
 const small = 'text-sm text-muted-foreground';
+const th = 'py-1 pr-3 font-medium';
 const flags = Object.entries(a.enabled)
   .map(([k, v]) => `${k}: ${v ? 'on' : 'off'}`)
   .join(', ');
+const b = a.agents.budgetUsd;
 ---
 
 <section id="automation" class="mt-6" aria-labelledby="automation-h">
@@ -21,66 +40,96 @@ const flags = Object.entries(a.enabled)
     <code>automation.json</code>: {flags}. The tick ran {view.lastTick ?? 'never'}; the last work job was
     {view.lastWork ? `${view.lastWork.kind} (${view.lastWork.outcome}) at ${view.lastWork.at}` : 'none'}. This week ({
       view.week
-    }): {view.picks.length} of {a.production.storiesPerWeek} picks, {view.spendUsd.toFixed(2)} USD of {
-      a.agents.budgetUsd.perWeek
-    } USD. <code>npm run run -- schedule --print</code> prints the scheduler commands.
+    }): {view.picks.length} of {a.production.storiesPerWeek} picks. <code>npm run run -- schedule --print</code> prints the
+    scheduler commands. Costs are labelled <em>reported</em> (what the CLI returned), <em>estimated</em> (the median of this
+    role on this model version, with the sample size) or <em>limit</em> (configuration: perAgent {b.perAgent}, perRun {
+      b.perRun
+    }, perTopic {b.perTopic}, perWeek {b.perWeek} USD; perAgent is the cap asked of the CLI and the pre-check's reservation,
+    not a ceiling: an overshoot is recorded). Live as of
+    <span class="font-mono" data-live="generatedAt">{live.generatedAt}</span>.
   </p>
+  {
+    [live].map((v) => (
+      <>
+        {/* eslint-disable-next-line astro/no-set-html-directive -- live-render.ts escapes every value; patched by the poll */}
+        <p class={`mt-1 max-w-prose ${small}`} data-live="week" set:html={weekHtml(v)} />
+      </>
+    ))
+  }
   {view.preflight && <p class="mt-2 text-sm text-destructive">Preflight: {view.preflight.why}</p>}
-  <table class="mt-3 w-full text-sm">
+
+  <h3 class="mt-4 font-semibold">Awaiting your action</h3>
+  <p class={`mt-1 ${small}`}>
+    What only a person decides, oldest first: where to decide it and the command that records the decision. No button
+    here acts; the review page and the mail replies are the protocol.
+  </p>
+  <ul class="mt-1 grid gap-2 text-sm" data-live-list="owner" data-empty="Nothing awaits you.">
+    {live.owner.length === 0 && <li class={small}>Nothing awaits you.</li>}
+    {
+      live.owner.map((o) => (
+        <>
+          {/* eslint-disable-next-line astro/no-set-html-directive -- live-render.ts escapes every value; patched by the poll */}
+          <li data-key={o.key} set:html={ownerItemHtml(o)} />
+        </>
+      ))
+    }
+  </ul>
+
+  <h3 class="mt-4 font-semibold">Running now</h3>
+  <table class="mt-1 w-full text-sm">
     <thead class="text-left text-xs text-muted-foreground uppercase">
       <tr>
-        <th class="py-1 pr-3 font-medium">Story</th>
-        <th class="py-1 pr-3 font-medium">State</th>
-        <th class="py-1 pr-3 font-medium">Since</th>
-        <th class="py-1 pr-3 font-medium">Halt</th>
-        <th class="py-1 pr-3 font-medium">Unblock</th>
-        <th class="py-1 font-medium">Spent</th>
+        <th class={th}>Run</th>
+        <th class={th}>State and step</th>
+        <th class={th}>Actor</th>
+        <th class={th}>Elapsed</th>
+        <th class={th}>Run cost</th>
+        <th class={th}>Estimate</th>
+        <th class="py-1 font-medium">Cap</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody data-live-list="running" data-empty="Nothing runs now." data-empty-cols="7">
       {
-        rows.map((r) => (
-          <tr class="border-t align-top">
-            <td class="py-1 pr-3">
-              {r.topic} / {r.storyId}
-            </td>
-            <td class="py-1 pr-3">
-              {r.state}
-              {r.step && <span class={small}> ({r.step})</span>}
-            </td>
-            <td class={`py-1 pr-3 ${small}`}>{r.since ?? ''}</td>
-            <td class="py-1 pr-3">{r.halt ? `${r.halt.kind}: ${r.halt.why}` : ''}</td>
-            <td class="py-1 pr-3">
-              {r.halt && (
-                <span class="flex items-start gap-2">
-                  <pre class="text-xs whitespace-pre-wrap">{r.halt.unblock.text}</pre>
-                  <button type="button" class="rounded border px-2 text-xs" data-copy>
-                    Copy
-                  </button>
-                </span>
-              )}
-            </td>
-            <td class="py-1">{r.costUsd.toFixed(2)}</td>
-          </tr>
-        ))
-      }
-      {
-        rows.length === 0 && (
+        running.length === 0 && (
           <tr>
-            <td colspan="6" class={`py-2 ${small}`}>
-              No runs yet.
+            <td colspan="7" class={`py-2 ${small}`}>
+              Nothing runs now.
             </td>
           </tr>
         )
       }
+      {
+        running.map((r) => (
+          <>
+            {/* eslint-disable-next-line astro/no-set-html-directive -- live-render.ts escapes every value; patched by the poll */}
+            <tr class="border-t align-top" data-key={r.key} set:html={runningRowHtml(r, live.budget)} />
+          </>
+        ))
+      }
     </tbody>
   </table>
+
+  <h3 class="mt-4 font-semibold">Blocked</h3>
+  <ul class="mt-1 grid gap-2 text-sm" data-live-list="blocked" data-empty="Nothing is blocked.">
+    {blocked.length === 0 && <li class={small}>Nothing is blocked.</li>}
+    {
+      blocked.map((r) => (
+        <>
+          {/* eslint-disable-next-line astro/no-set-html-directive -- live-render.ts escapes every value; patched by the poll */}
+          <li data-key={r.key} set:html={blockedItemHtml(r)} />
+        </>
+      ))
+    }
+  </ul>
+
+  <h3 class="mt-4 font-semibold">Queued and due</h3>
   {
-    view.due.length > 0 && (
-      <p class={`mt-2 ${small}`}>
-        Due to resume: {view.due.map((d) => `${d.topic}/${d.storyId} (${d.why})`).join(', ')}.
-      </p>
-    )
+    [live.jobs].map((j) => (
+      <>
+        {/* eslint-disable-next-line astro/no-set-html-directive -- live-render.ts escapes every value; patched by the poll */}
+        <div data-live="jobs" set:html={jobsHtml(j)} />
+      </>
+    ))
   }
   {
     view.unsent.length > 0 && (
@@ -89,6 +138,67 @@ const flags = Object.entries(a.enabled)
       </p>
     )
   }
+
+  <h3 class="mt-4 font-semibold">Recent activity</h3>
+  <p class={`mt-1 ${small}`}>
+    The last 100 entries across every journal and record, newest first: agent, code, person or service.
+  </p>
+  <ol class="mt-1 grid gap-0.5" data-live-list="activity" data-empty="No activity recorded yet.">
+    {live.activity.length === 0 && <li class={small}>No activity recorded yet.</li>}
+    {
+      live.activity.map((e) => (
+        <>
+          {/* eslint-disable-next-line astro/no-set-html-directive -- live-render.ts escapes every value; patched by the poll */}
+          <li data-key={activityKey(e)} set:html={activityItemHtml(e)} />
+        </>
+      ))
+    }
+  </ol>
+
+  <h3 class="mt-4 font-semibold">All runs</h3>
+  <p class={`mt-1 ${small}`}>
+    Every run folder the runner has left, running, halted or idle: when it last finished and what it has spent
+    (reported). The live sections above show what moves; this one keeps the rest discoverable.
+  </p>
+  <table class="mt-1 w-full text-sm">
+    <thead class="text-left text-xs text-muted-foreground uppercase">
+      <tr>
+        <th class={th}>Run</th>
+        <th class={th}>State</th>
+        <th class={th}>Since</th>
+        <th class={th}>Last finish</th>
+        <th class="py-1 font-medium">Spent</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        runs.map((r) => (
+          <tr class="border-t align-top">
+            <td class="py-1 pr-3">
+              {r.topic} / {r.storyId}
+            </td>
+            <td class="py-1 pr-3">
+              {r.state}
+              {r.halt && <span class={small}> ({r.halt.kind})</span>}
+            </td>
+            <td class={`py-1 pr-3 ${small}`}>{r.since ?? ''}</td>
+            <td class={`py-1 pr-3 ${small}`}>{r.lastFinish ?? ''}</td>
+            <td class="py-1 font-mono tabular-nums">{r.costUsd.toFixed(2)} USD</td>
+          </tr>
+        ))
+      }
+      {
+        runs.length === 0 && (
+          <tr>
+            <td colspan="5" class={`py-2 ${small}`}>
+              No runs yet.
+            </td>
+          </tr>
+        )
+      }
+    </tbody>
+  </table>
+
   <h3 class="mt-4 font-semibold">Open release requests</h3>
   {
     view.requests.length === 0 ? (
@@ -180,4 +290,33 @@ const flags = Object.entries(a.enabled)
       </ul>
     )
   }
+
+  <h3 class="mt-4 font-semibold">Readiness</h3>
+  <p class={`mt-1 max-w-prose ${small}`}>
+    Three states per integration, kept apart: <strong>implemented</strong> (the code exists and its tests pass),
+    <strong>verified</strong> (a person exercised it against the real service and recorded the evidence with
+    <code>npm run run -- verified &lt;integration&gt; --by "&lt;name&gt;" --evidence &lt;ref&gt;</code>, the only writer
+    of <code>readiness.json</code>), <strong>enabled</strong> (configured to run unattended in
+    <code>automation.json</code>). A green suite is not a verification, and a verification never enables anything.
+  </p>
+  <table class="mt-1 w-full text-sm">
+    <thead class="text-left text-xs text-muted-foreground uppercase">
+      <tr>
+        <th class={th}>Integration</th>
+        <th class={th}>Implemented</th>
+        <th class={th}>Verified</th>
+        <th class={th}>Enabled</th>
+      </tr>
+    </thead>
+    <tbody data-live-list="readiness">
+      {
+        live.readiness.map((r) => (
+          <>
+            {/* eslint-disable-next-line astro/no-set-html-directive -- live-render.ts escapes every value; patched by the poll */}
+            <tr class="border-t align-top" data-key={r.key} set:html={readinessRowHtml(r)} />
+          </>
+        ))
+      }
+    </tbody>
+  </table>
 </section>
