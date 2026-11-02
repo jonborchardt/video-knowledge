@@ -586,9 +586,10 @@ describe('the draft by policy', () => {
     writeFileSync(join(s.f.root, 'scenario.json'), JSON.stringify(scenario));
     const steps: string[] = [];
     const finals: string[] = [];
+    const claudeLog = join(s.f.root, 'claude-calls.log');
     const r = await s.run(
       {
-        env: s.env,
+        env: { ...s.env, FAKE_CLAUDE_LOG: claudeLog },
         exec: async (a, step, ctx) => {
           steps.push(step.text.split('\n')[0]);
           if (/video-fix\.md/.test(step.text)) {
@@ -651,6 +652,42 @@ describe('the draft by policy', () => {
     expect(readJson<{ key: string }>(join(runDir(s.f.topic, s.f.story, s.f.root), NOTES_PASS_FILE))?.key).toContain(
       s.build,
     );
+    // the pass's notes stay with the pass: the second reviewer's prompt carries none (review finding 5)
+    const prompts = readFileSync(claudeLog, 'utf8')
+      .trim()
+      .split('\n')
+      .map((l) => JSON.parse(l) as string[])
+      .map((argv) => argv[argv.indexOf('-p') + 1] ?? '');
+    const reviews = prompts.filter((p) => /draft-review\.md/.test(p));
+    expect(reviews).toHaveLength(2);
+    expect(reviews[1]).not.toMatch(/Notes:|figure on screen is wrong/);
+  }, 600_000);
+
+  it('agent, changes, and a notes pass that changes nothing: awaiting-person at once, never a spin to the loop cap (review finding 6)', async () => {
+    const s = draftStaged('changes', 'agent');
+    let validates = 0;
+    const steps: string[] = [];
+    const r = await s.run(
+      {
+        env: s.env,
+        validate: () => (validates++, { ok: true, output: '' }),
+        exec: async (a, step, ctx) => {
+          steps.push(step.text.split('\n')[0]);
+          if (/video-fix\.md/.test(step.text))
+            return { kind: 'prompt', ok: true, exit: 0, ms: 1, costUsd: 0.2, sessionId: 'fix-1', error: null, log: '' }; // nothing redrawn
+          if (/^npm run video -- check /.test(step.text))
+            return { kind: 'run', ok: true, exit: 0, ms: 1, costUsd: 0, sessionId: null, error: null, log: '' };
+          return execStep(a, step, ctx);
+        },
+      },
+      s.a,
+    );
+    expect(r.halt?.kind).toBe('awaiting-person');
+    expect(r.halt?.why).toMatch(/changed nothing/);
+    expect(steps.filter((x) => /draft-review\.md/.test(x))).toHaveLength(1);
+    expect(steps.filter((x) => /video-fix\.md/.test(x))).toHaveLength(1);
+    expect(validates).toBeLessThanOrEqual(2);
+    expect(s.events().filter((e) => e.type === 'changes-requested')).toHaveLength(1);
   }, 600_000);
 
   it('agent, changes twice: the second round halts awaiting-person with the last notes; no third review, no final', async () => {

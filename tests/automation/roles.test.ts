@@ -49,6 +49,7 @@ describe('roles (the agent permission table, as code)', () => {
     expect(grantFor('discovery', { topic: 'x' })).toMatchObject({
       writable: ['proposals/*.json'],
       newFilesOnly: ['proposals/*.json'],
+      deny: ['proposals/*.review.json'], // a writer never writes its reviewer's file (review finding 7)
     });
     expect(grantFor('proposalReview', { topic: 'x', slug: 'ev-range' }).writable).toEqual([
       'proposals/ev-range.review.json',

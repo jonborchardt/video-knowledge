@@ -22,6 +22,8 @@ export interface RoleGrant {
   derived: string[];
   /** Bash rules, in Claude Code's syntax; empty for every content role. */
   shell: string[];
+  /** Patterns the role may never write, even where `writable` matches (a writer's reviewer file). */
+  deny: string[];
   web: boolean;
 }
 
@@ -34,7 +36,7 @@ const SCENES = 'src/modules/video/remotion/scenes';
 const BESPOKE = 'src/modules/video/bespoke';
 
 export function grantFor(role: AgentRole, s: Subject): RoleGrant {
-  const none = { newFilesOnly: [], additiveOnly: [], derived: [], shell: [], web: true };
+  const none = { newFilesOnly: [], additiveOnly: [], derived: [], shell: [], deny: [], web: true };
   switch (role) {
     case 'writer':
       return {
@@ -68,6 +70,7 @@ export function grantFor(role: AgentRole, s: Subject): RoleGrant {
     case 'graphics': {
       const writer = grantFor('writer', s).writable;
       return {
+        deny: [],
         writable: [
           ...writer,
           `${SCENES}/*.tsx`,
@@ -99,7 +102,12 @@ export function grantFor(role: AgentRole, s: Subject): RoleGrant {
         shell: ['Bash(npm run evidence -- search *)', 'Bash(npm run evidence -- fetch-doc *)'],
       };
     case 'discovery': // the slugs are the agent's to choose: new files only, so a decided proposal is never rewritten
-      return { ...none, writable: ['proposals/*.json'], newFilesOnly: ['proposals/*.json'] };
+      return {
+        ...none,
+        writable: ['proposals/*.json'],
+        newFilesOnly: ['proposals/*.json'],
+        deny: ['proposals/*.review.json'], // its reviewer's file: a writer and its reviewer are different agents
+      };
     case 'proposalReview':
       return { ...none, writable: [`proposals/${s.slug ?? ''}.review.json`] };
     case 'notes':

@@ -162,6 +162,7 @@ async function discoverLocked(
             ? realGuard(snap, root, [...grant.writable, ...grant.derived], {
                 newFilesOnly: grant.newFilesOnly,
                 additiveOnly: grant.additiveOnly,
+                deny: grant.deny,
               })
             : realGuard(snap, root, [`${PROPOSALS_DIR}/**`]);
         snap = realSnapshot(root);

@@ -86,6 +86,17 @@ describe('guard', () => {
     expect(g.reverted).toEqual([idx]);
     expect(r.read(idx)).toBe(original);
   });
+  it("a discovery agent's new review file is reverted: the grant's deny beats its writable", () => {
+    const before = snapshot(r.root, { home: home() });
+    mkdirSync(join(r.root, 'proposals'), { recursive: true });
+    r.write('proposals/ev-range.json', '{}');
+    r.write('proposals/ev-range.review.json', '{}');
+    const d = grantFor('discovery', { topic: 'proposals' });
+    const g = guard(before, r.root, [...d.writable, ...d.derived], { newFilesOnly: d.newFilesOnly, deny: d.deny });
+    expect(g.kept).toEqual(['proposals/ev-range.json']);
+    expect(g.reverted).toEqual(['proposals/ev-range.review.json']);
+    expect(existsSync(join(r.root, 'proposals', 'ev-range.review.json'))).toBe(false);
+  });
   it('a changed .env canary is restored byte for byte', () => {
     const before = snapshot(r.root, { home: home() });
     const original = r.read('.env');
@@ -110,6 +121,13 @@ describe('guard', () => {
     expect(tampered.ok).toBe(false);
     expect(tampered.restored).toEqual([cfg]);
     expect(r.read(cfg)).not.toContain('hooksPath');
+    // a key on the section's own line is a section with a key, whatever the line filter thought (review finding 1)
+    const again = snapshot(r.root, { home: home() });
+    r.write(cfg, `${r.read(cfg)}[core] hooksPath = /tmp/evil\n`);
+    const oneLine = guard(again, r.root, writer().writable);
+    expect(oneLine.ok).toBe(false);
+    expect(oneLine.restored).toEqual([cfg]);
+    expect(r.read(cfg)).not.toContain('/tmp/evil');
   });
   it('a changed user-level settings file is reported, not touched', () => {
     const h = home();

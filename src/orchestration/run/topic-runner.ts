@@ -135,6 +135,7 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
             ? realGuard(snap, root, [...currentGrant.writable, ...currentGrant.derived], {
                 newFilesOnly: currentGrant.newFilesOnly,
                 additiveOnly: currentGrant.additiveOnly,
+                deny: currentGrant.deny,
               })
             : realGuard(snap, root, childWritable);
         snap = realSnapshot(root, { hold });

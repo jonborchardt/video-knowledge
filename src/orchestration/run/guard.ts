@@ -139,19 +139,16 @@ function canaryContent(file: string): Buffer {
   // runs nothing, so neither it nor the section it opened is content the canary holds (a hooksPath, a url, a
   // filter still is)
   if (basename(file) === 'config' && /[\\/]\.git[\\/]config$/.test(file)) {
-    const lines = readFileSync(file, 'utf8')
-      .split('\n')
-      .filter((l) => !/^\s*vscode-merge-base\s*=/.test(l));
-    const out: string[] = [];
-    for (let i = 0; i < lines.length; i++) {
-      if (/^\s*\[/.test(lines[i])) {
-        let j = i + 1;
-        while (j < lines.length && !lines[j].trim()) j++;
-        if (j >= lines.length || /^\s*\[/.test(lines[j])) continue; // a section with no key left
-      }
-      out.push(lines[i]);
+    // read as git reads it (a key may sit on the section's own line), minus the IDE's bookkeeping key
+    try {
+      const listed = execFileSync('git', ['config', '-f', file, '--list'], { encoding: 'utf8' })
+        .split('\n')
+        .filter((l) => l.trim() && !/^branch\.[^=]*\.vscode-merge-base=/.test(l))
+        .sort();
+      return Buffer.from(listed.join('\n'));
+    } catch {
+      return readFileSync(file);
     }
-    return Buffer.from(out.join('\n'));
   }
   if (basename(file) !== '.claude.json') return readFileSync(file);
   try {
@@ -183,8 +180,9 @@ export function snapshot(root: string, opts: { git?: Git; home?: string; hold?: 
   const git = opts.git ?? runGit;
   const canaries = new Map<string, { sha: string; content: Buffer | null }>();
   for (const f of canaryFiles(root, opts.home ?? homedir())) {
-    const buf = canaryContent(f);
-    canaries.set(f, { sha: sha(buf), content: buf.length <= HOLD_BYTES ? buf : null });
+    // the sha is over what the canary means (canaryContent); what is restored is the file as it was
+    const raw = readFileSync(f);
+    canaries.set(f, { sha: sha(canaryContent(f)), content: raw.length <= HOLD_BYTES ? raw : null });
   }
   const status = porcelain(root, git);
   const dirtySha = new Map<string, string>();

@@ -244,6 +244,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
             ? realGuard(snap, root, [...currentGrant.writable, ...currentGrant.derived], {
                 newFilesOnly: currentGrant.newFilesOnly,
                 additiveOnly: currentGrant.additiveOnly,
+                deny: currentGrant.deny,
               })
             : realGuard(snap, root, [`topics/${topic}/**`], { deny: CHILD_DENY });
         snap = realSnapshot(root);
@@ -502,20 +503,24 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
     const routes = notesPassSteps(topic, storyId, want.notes);
     const n: BoardNext = { ...ask(topic, storyId, root), stage: 'packaged', next: 'notes pass' };
     const done: string[] = [];
-    for (const route of routes) {
-      passNotes = route.notes;
-      for (const step of route.steps) {
-        const out = await runOne(step, { ...n, next: step.text });
-        if ('outcome' in out) return out;
-        done.push(step.text.split('\n')[0]);
-        if (!out.ok)
-          return halt(
-            out.error === 'timeout' ? 'timeout' : 'step-failed',
-            `notes pass: ${step.text.split('\n')[0]}: ${out.error}`,
-            { kind: 'run', text: `npm run run -- story ${topic} ${storyId}` },
-            n,
-          );
+    try {
+      for (const route of routes) {
+        passNotes = route.notes; // the route's notes go to the route's steps and to nothing after the pass
+        for (const step of route.steps) {
+          const out = await runOne(step, { ...n, next: step.text });
+          if ('outcome' in out) return out;
+          done.push(step.text.split('\n')[0]);
+          if (!out.ok)
+            return halt(
+              out.error === 'timeout' ? 'timeout' : 'step-failed',
+              `notes pass: ${step.text.split('\n')[0]}: ${out.error}`,
+              { kind: 'run', text: `npm run run -- story ${topic} ${storyId}` },
+              n,
+            );
+        }
       }
+    } finally {
+      passNotes = undefined;
     }
     writeJsonAtomic(join(dir, NOTES_PASS_FILE), {
       key: want.key,
@@ -548,7 +553,23 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
           const committed = commitRelease(n);
           if (committed) return committed;
           if (rr.outcome === 'halted') return rr;
-          if (rr.restart) continue; // the draft-review agent sent the build back: the notes pass, then the board again
+          if (rr.restart) {
+            // the draft-review agent sent the build back: the notes pass, then the board again; a send-back the pass
+            // already answered means the pass changed nothing, and a person decides rather than the loop spinning
+            const pend = pendingSendBack(topic, storyId, root);
+            const marker = readJson<NotesPass>(join(dir, NOTES_PASS_FILE));
+            if (pend && marker?.key === pend.key)
+              return halt(
+                'awaiting-person',
+                `the notes pass changed nothing: the draft-review agent sent build ${pend.build} back again with the same notes (${pend.notes.map((x) => x.text).join('; ')})`,
+                {
+                  kind: 'decide',
+                  text: `read video/draft-review.json and send it back with your own notes: /produce ${topic} ${storyId}`,
+                },
+                n,
+              );
+            continue;
+          }
           return close(n);
         }
         return finish(n);
