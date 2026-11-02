@@ -34,7 +34,7 @@ import {
 import { type Lock, acquire, heartbeat, release, setChild } from './lock';
 import { type RoleGrant, grantFor } from './roles';
 import { type RunResult, addSpend, isoWeek, runValidate, weekSpend, runSpend } from './runner';
-import { type StepContext, type StepOutcome, envFor, execStep as realExecStep, usageFields } from './steps';
+import { type StepContext, type StepOutcome, envFor, execStep as realExecStep, outcomeFields } from './steps';
 import type { Job } from './work';
 
 export const NEW_SOURCES_BRIEF = 'src/modules/evidence/briefs/new-sources.md';
@@ -176,12 +176,7 @@ export async function maintain(
       step: step.text.split('\n')[0].slice(0, 200),
       kind: step.kind,
       attempt: 1,
-      exit: out.exit,
-      ms: out.ms,
-      costUsd: out.costUsd,
-      sessionId: out.sessionId ?? undefined,
-      error: out.error ?? undefined,
-      ...usageFields(out),
+      ...outcomeFields(out),
     });
   const agent = async (brief: string, lines: string[], role: StepContext['role']): Promise<StepOutcome> => {
     // M3 1.5: the scan's own spend since its start (the journal since the last finish, a resumed scan included)

@@ -3,7 +3,6 @@
 // metadata push, verification, the manifest and the approval request, and halt where a person decides. It reads
 // the ledger through publishing's read API and writes only through the module CLIs, dispatching on each output's
 // structured step (verb and actor), never on prose. Operational state under .automation/shadow.json.
-import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Automation, DraftPolicy } from '../../shared/automation';
 import {
@@ -21,7 +20,6 @@ import {
   type Build,
   type OutputState,
   type OutputStep,
-  type ReviewNote,
   currentBuild,
   loadLedger,
   openOutput,
@@ -92,7 +90,7 @@ export function releasePending(
   const policy = a.review.draft;
   if (g.main.build?.status === 'draft') {
     if (policy === 'agent')
-      return draftReviewed(topic, storyId, g.main.build.sha, root) ? null : 'the draft review by the agent';
+      return draftReviewOf(topic, storyId, g.main.build.sha, root) ? null : 'the draft review by the agent';
     if (g.main.step.verb === 'upload' || g.main.step.verb === 'package')
       return `${g.main.id}: ${g.main.step.verb} the draft`;
     if (policy === 'shadow' && !shadowEntry(root, topic, storyId, g.main.build.sha)) return 'the shadow review';
@@ -168,8 +166,7 @@ export function recordShadowPerson(
 export function syncShadowFromLedger(root: string, topic: string, storyId: string): number {
   const ledger = loadLedger(topic, storyId, root);
   if (!ledger) return 0;
-  const ev =
-    ledger.outputs[Object.keys(ledger.outputs)[0] === 'youtube' ? 'youtube' : Object.keys(ledger.outputs)[0]].events;
+  const ev = ledger.outputs[Object.keys(ledger.outputs)[0]].events;
   let n = 0;
   for (const e of readShadow(root)) {
     if (e.person || e.story !== `${topic}/${storyId}`) continue;
@@ -236,8 +233,6 @@ export const draftReviewOf = (topic: string, storyId: string, build: string, roo
     ? r
     : null;
 };
-const draftReviewed = (topic: string, storyId: string, build: string, root: string) =>
-  !!draftReviewOf(topic, storyId, build, root);
 /** The actor the ledger records for the agent's decision (publishing's DRAFT_REVIEW_ACTOR). */
 export const draftReviewActor = (r: DraftReview, session: string | null) =>
   `automated: draft-review by ${r.reviewer.replace(/[^\w.-]/g, '-')} session ${(session ?? r.session ?? 'none').replace(/[^\w-]/g, '-')}`;
@@ -338,7 +333,7 @@ export async function releaseLoop(
     if (failed) {
       const f = failed.step.failed!;
       const key = `${failed.id}|${failed.step.verb}`;
-      if (f.retryable && automated(failed) && failed.step.actor === 'automation' && !attempted.has(key)) {
+      if (f.retryable && failed.step.actor === 'automation' && !attempted.has(key)) {
         attempted.add(key);
         const out = await c.run(verbStep(failed), 'release');
         if (halted(out)) return out;
@@ -407,7 +402,7 @@ export async function releaseLoop(
     // 5. the Shorts, before the request binds the group
     const owed = shortsOwed(topic, storyId, root);
     if (shortsPending(owed)) {
-      const r = await shortsPass(topic, storyId, c, owed.halted);
+      const r = await shortsPass(topic, storyId, c);
       if (r) return r;
       continue;
     }
@@ -509,17 +504,7 @@ async function draftPass(
     const accepted = readJson<{ build: string; by: string }>(
       join(runDir(topic, main.storyId, root), DRAFT_ACCEPTED_FILE),
     );
-    if (accepted && accepted.build === main.build!.sha) {
-      const fin = await c.run(cmd('video', ['final', topic, main.storyId, '--approved-by', accepted.by]), 'release');
-      if (halted(fin)) return fin;
-      if (!fin.ok)
-        return c.halt(
-          fin.error === 'timeout' ? 'timeout' : 'step-failed',
-          `video final failed for ${main.id}: ${fin.error}`,
-          { kind: 'run', text: `npm run run -- story ${topic} ${storyId}` },
-        );
-      return null;
-    }
+    if (accepted && accepted.build === main.build!.sha) return runFinal(c, topic, storyId, main, accepted.by);
     if (c.mail) await c.mail.draft(main, shadow); // the output under review, a Short's own when it is the Short
     const url = main.state.url ?? '(not uploaded)';
     return c.halt('awaiting-person', `the draft build ${main.build!.sha} of ${main.id} is uploaded for review`, {
@@ -530,7 +515,7 @@ async function draftPass(
   // agent: the Shorts first, so one package is reviewed
   const owed = shortsOwed(topic, storyId, root);
   if (shortsPending(owed)) {
-    const r = await shortsPass(topic, storyId, c, owed.halted);
+    const r = await shortsPass(topic, storyId, c);
     return r;
   }
   const rounds = a.review.draftReviewRounds;
@@ -547,17 +532,7 @@ async function draftPass(
       session = r.session;
     }
     const actor = draftReviewActor(review!, session);
-    if (review!.verdict === 'accept') {
-      const fin = await c.run(cmd('video', ['final', topic, o.storyId, '--approved-by', actor]), 'release');
-      if (halted(fin)) return fin;
-      if (!fin.ok)
-        return c.halt(
-          fin.error === 'timeout' ? 'timeout' : 'step-failed',
-          `video final failed for ${o.id}: ${fin.error}`,
-          { kind: 'run', text: `npm run run -- story ${topic} ${storyId}` },
-        );
-      return null;
-    }
+    if (review!.verdict === 'accept') return runFinal(c, topic, storyId, o, actor);
     const args = ['request-changes', topic, o.storyId, '--by', actor];
     for (const n of review!.notes) {
       args.push('--note', q(n.text));
@@ -568,12 +543,7 @@ async function draftPass(
     const rc = await c.run(cmd('publish', args), 'release');
     if (halted(rc)) return rc;
     // the notes pass (phase 3 routes each note to its artifact); until then, and past the rounds, a person's
-    const notes: ReviewNote[] = review!.notes.map((n) => ({
-      text: n.text,
-      seconds: n.seconds,
-      scene: n.scene,
-      sentence: n.sentence,
-    }));
+    const notes = review!.notes;
     // bounded: the agent's send-backs on this output count as rounds (spec §7.3); within them the runner's notes
     // pass produces again and a fresh agent reviews the new build; past them a person decides
     const agentRounds = (loadLedger(topic, o.parent, root)?.outputs[o.id]?.events ?? []).filter(
@@ -628,13 +598,27 @@ async function reviewDraft(
   return { review, session: r.sessionId };
 }
 
-/** The Shorts pass: produce what is owed; a halted Short halts the parent with that Short's own unblock. */
-async function shortsPass(
+/** `video final` by `by` for one output: the release build, or the halt its failure is. */
+async function runFinal(
+  c: ReleaseContext,
   topic: string,
   storyId: string,
-  c: ReleaseContext,
-  alreadyHalted: { id: string; halt: Halt }[],
+  out: { id: string; storyId: string },
+  by: string,
 ): Promise<RunResult | null> {
+  const fin = await c.run(cmd('video', ['final', topic, out.storyId, '--approved-by', by]), 'release');
+  if (halted(fin)) return fin;
+  if (!fin.ok)
+    return c.halt(
+      fin.error === 'timeout' ? 'timeout' : 'step-failed',
+      `video final failed for ${out.id}: ${fin.error}`,
+      { kind: 'run', text: `npm run run -- story ${topic} ${storyId}` },
+    );
+  return null;
+}
+
+/** The Shorts pass: produce what is owed; a halted Short halts the parent with that Short's own unblock. */
+async function shortsPass(topic: string, storyId: string, c: ReleaseContext): Promise<RunResult | null> {
   const sc: ShortsContext = { root: c.root, run: (s) => c.run(s, 'shorts'), runShort: c.runShort };
   const r = await shortsForParent(topic, storyId, sc);
   if (r.stopped) return r.stopped; // the runner halted inside the pass (a guard, the budget): its halt stands
@@ -642,7 +626,6 @@ async function shortsPass(
     return c.halt('step-failed', r.problem, { kind: 'fix', text: `npm run shorts -- discover ${topic} ${storyId}` });
   // what is still halted after the pass: a Short this pass produced cleared its own halt
   const halted = r.halted.length ? r.halted : shortsOwed(topic, storyId, c.root).halted;
-  void alreadyHalted;
   if (halted.length) {
     const h = halted[0];
     const retryable = ['timeout', 'lock-stale'].includes(h.halt.kind);
@@ -655,6 +638,3 @@ async function shortsPass(
   }
   return null;
 }
-
-export const packagedShort = (topic: string, id: string, root = ROOT) =>
-  existsSync(join(scriptDir(topic, id, root), 'video', REVIEW_DIR, 'review.json'));

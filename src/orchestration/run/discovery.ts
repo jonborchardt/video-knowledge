@@ -41,7 +41,6 @@ import {
   type DiscoveryRecord,
   discoveryDir,
   discoveryHaltPath,
-  discoveryRecords,
   readDiscovery,
   writeDiscovery,
   writeDiscoveryHalt,
@@ -421,8 +420,3 @@ async function discoverLocked(
 
 /** The real dependencies: the mailbox when configured, git in the clone, the process environment. */
 export const discoveryDeps = (mail: MailTransport | null): DiscoveryDeps => ({ mail, env: process.env });
-
-/** The batch mail re-rendered for an outbox resend: the record that carries the id, else null. */
-export function batchRecordOf(root: string, id: string): DiscoveryRecord | null {
-  return discoveryRecords(root).find((r) => r.batch?.id === id) ?? null;
-}

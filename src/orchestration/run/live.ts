@@ -275,7 +275,7 @@ export function liveView(root = ROOT, deps: LiveDeps = {}): LiveView {
       storyId: f.storyId,
       kind,
       column: b?.column ?? null,
-      stage: isTopicRun ? (lock ? (last?.stage ?? null) : (last?.stage ?? null)) : (b?.stage ?? null),
+      stage: isTopicRun ? (last?.stage ?? null) : (b?.stage ?? null),
       state: !live && !halt && b?.column && ['published', 'live'].includes(b.column) ? 'done' : state,
       step,
       stepKind: live ? stepKindOf(step, open.length > 0) : null,
@@ -401,12 +401,10 @@ export function liveView(root = ROOT, deps: LiveDeps = {}): LiveView {
       for (const e of o.events)
         activity.push({
           at: e.at,
-          actor: /^automated:|^automation$|^tick/.test(e.by)
-            ? SERVICE_EVENTS.has(e.type)
-              ? 'service'
-              : 'code'
-            : SERVICE_EVENTS.has(e.type)
-              ? 'service'
+          actor: SERVICE_EVENTS.has(e.type)
+            ? 'service'
+            : /^automated:|^automation$|^tick/.test(e.by)
+              ? 'code'
               : 'person',
           topic,
           storyId,
@@ -517,7 +515,7 @@ export function liveView(root = ROOT, deps: LiveDeps = {}): LiveView {
         command: r.halt.unblock,
         since: r.halt.at,
       });
-    if (r.column === 'draft-review' && !owner.some((o) => o.kind === 'draft-review' && o.key === `draft:${r.key}`))
+    if (r.column === 'draft-review')
       owner.push({
         kind: 'draft-review',
         key: `draft:${r.key}`,

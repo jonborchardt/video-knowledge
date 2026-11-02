@@ -35,7 +35,7 @@ import {
 import { type RoleGrant, grantFor } from './roles';
 import { addSpend, isoWeek, weekSpend } from './runner';
 import { sendCorrectionRequest } from './requests';
-import { type StepContext, type StepOutcome, execStep as realExecStep, usageFields } from './steps';
+import { type StepContext, type StepOutcome, execStep as realExecStep, outcomeFields } from './steps';
 
 export const ARTICLE_BRIEF = 'src/modules/article/briefs/article.md';
 export const ARTICLE_REVIEW_BRIEF = 'src/modules/article/briefs/article-review.md';
@@ -134,12 +134,7 @@ export async function articleWork(
         step: step.text.split('\n')[0].slice(0, 200),
         kind: step.kind,
         attempt: 1,
-        exit: out.exit,
-        ms: out.ms,
-        costUsd: out.costUsd,
-        sessionId: out.sessionId ?? undefined,
-        error: out.error ?? undefined,
-        ...usageFields(out),
+        ...outcomeFields(out),
       });
     const halt = (kind: Halt['kind'], why: string, unblock: Halt['unblock']) => {
       const h: Halt = {
@@ -355,8 +350,6 @@ export const articleFingerprintOf = (topic: string, storyId: string, root = ROOT
   const a = readJson<Article>(join(scriptDir(topic, storyId, root), ARTICLE_FILES.article));
   return a ? articleFingerprint(a) : null;
 };
-export const hasRelease = (topic: string, storyId: string, root = ROOT) =>
-  existsSync(join(scriptDir(topic, storyId, root), ARTICLE_FILES.release));
 
 /** Every story of the topic with a released article: the stories.json candidates may no longer list a produced
  *  story once a finding it rests on was revised, and that article is the one most likely to need the pass. */

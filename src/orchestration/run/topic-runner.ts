@@ -45,7 +45,7 @@ import { claimEdit, claimedBy } from '../../modules/topic-discovery';
 import {
   type StepContext,
   type StepOutcome,
-  usageFields,
+  outcomeFields,
   envFor,
   execStep as realExecStep,
   parseRun,
@@ -398,12 +398,7 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
       step: step.text.split('\n')[0].slice(0, 200),
       kind: step.kind,
       attempt: tries,
-      exit: out.exit,
-      ms: out.ms,
-      costUsd: out.costUsd,
-      sessionId: out.sessionId ?? undefined,
-      error: out.error ?? undefined,
-      ...usageFields(out),
+      ...outcomeFields(out),
     });
   /** `npm run record` with a resume: a partial failure (the log names the recorded sources) is retried from the next
    *  source of the batch file, up to timeoutsPerStep tries. */
@@ -537,17 +532,9 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
           const outs: StepOutcome[] = [];
           for (let j = 0; j < pending.length; j += a.runs.maxParallelAgents) {
             const slice = pending.slice(j, j + a.runs.maxParallelAgents);
-            for (const s of slice) {
-              const b = budgetProblem();
-              if (b)
-                return halt(
-                  'budget',
-                  b,
-                  { kind: 'decide', text: 'raise agents.budgetUsd or wait for the next week' },
-                  n,
-                );
-              void s;
-            }
+            const b = budgetProblem();
+            if (b)
+              return halt('budget', b, { kind: 'decide', text: 'raise agents.budgetUsd or wait for the next week' }, n);
             // the slice's journal lines are written in order right after it: agent k records under line base + k
             const base = nextLine(dir);
             const results = await Promise.all(

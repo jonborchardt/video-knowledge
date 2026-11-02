@@ -3,7 +3,7 @@
 // `pdftotext -layout` for a PDF and a tag-stripper for HTML, the `Source:` header line first. Pure checks here; the
 // download and the conversion in `fetchDoc`, injected for tests.
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { ROOT, topicDir } from '../../shared/io';
@@ -94,7 +94,3 @@ export async function fetchDoc(
   writeFileSync(path, text);
   return { path, lines: text.split('\n').length - 1, kind: isPdf ? 'pdf' : 'text' };
 }
-
-/** The `Source:` URL of a saved document, or null. */
-export const sourceUrlOf = (path: string): string | null =>
-  existsSync(path) ? (/^Source: (\S+)/.exec(readFileSync(path, 'utf8'))?.[1] ?? null) : null;

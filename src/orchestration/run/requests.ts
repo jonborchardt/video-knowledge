@@ -261,12 +261,7 @@ export async function sendReleaseRequest(
     if (!req.messageId) await recordSent(topic, storyId, req.request, sent.messageId, root, deps);
     return req.messageId ? null : sent.messageId;
   }
-  const urls = Object.fromEntries(
-    Object.keys(manifest.outputs).map((id) => {
-      const up = ledger.outputs[id]?.events.findLast((e) => e.type === 'uploaded');
-      return [id, up?.url ?? (up?.id ? `https://youtu.be/${up.id}` : null)];
-    }),
-  );
+  const urls = urlsOf(topic, storyId, manifest, root);
   const thumb = join(scriptDir(topic, storyId, root), 'video', REVIEW_DIR, 'thumbnail.png');
   const out = renderReleaseRequest(manifest, req, a, {
     thumbnail: existsSync(thumb) ? readFileSync(thumb) : null,
@@ -304,30 +299,30 @@ export function urlsOf(
   );
 }
 
-async function recordSent(
-  topic: string,
-  storyId: string,
-  request: string,
-  messageId: string,
-  root: string,
-  deps: SendDeps,
-): Promise<void> {
-  const args = [
-    'message-sent',
-    topic,
-    storyId,
-    '--request',
-    request,
-    '--message-id',
-    messageId,
-    '--by',
-    'automated: release request',
-  ];
+/** A module's verb as a child (or the injected runner), with only its verb's secrets; a failure throws. */
+async function recordVia(cli: string, args: string[], root: string, deps: SendDeps): Promise<void> {
   const r = deps.run
-    ? await deps.run('publish', args)
-    : runCli('publish', args, { cwd: root, env: envFor('publish', [], deps.env ?? process.env) });
-  if (r.status !== 0) throw new Error(`publish message-sent failed: ${(r.stderr || r.stdout).trim()}`);
+    ? await deps.run(cli, args)
+    : runCli(cli, args, { cwd: root, env: envFor(cli, [], deps.env ?? process.env) });
+  if (r.status !== 0) throw new Error(`${cli} ${args[0]} failed: ${(r.stderr || r.stdout).trim()}`);
 }
+const recordSent = (topic: string, storyId: string, request: string, messageId: string, root: string, deps: SendDeps) =>
+  recordVia(
+    'publish',
+    [
+      'message-sent',
+      topic,
+      storyId,
+      '--request',
+      request,
+      '--message-id',
+      messageId,
+      '--by',
+      'automated: release request',
+    ],
+    root,
+    deps,
+  );
 
 interface DraftRequests {
   [build: string]: { messageId: string; at: string };
@@ -617,17 +612,11 @@ export async function sendCorrectionRequest(
   return messageId;
 }
 
-async function recordArticleSent(
+const recordArticleSent = (
   topic: string,
   storyId: string,
   request: string,
   messageId: string,
   root: string,
   deps: SendDeps,
-): Promise<void> {
-  const args = ['sent', topic, storyId, '--request', request, '--message-id', messageId];
-  const r = deps.run
-    ? await deps.run('article', args)
-    : runCli('article', args, { cwd: root, env: envFor('article', [], deps.env ?? process.env) });
-  if (r.status !== 0) throw new Error(`article sent failed: ${(r.stderr || r.stdout).trim()}`);
-}
+) => recordVia('article', ['sent', topic, storyId, '--request', request, '--message-id', messageId], root, deps);

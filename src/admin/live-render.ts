@@ -31,8 +31,7 @@ const ACTOR: Record<NonNullable<LiveRow['stepKind']>, string> = {
   person: 'person',
   service: 'service',
 };
-const stateLabel = (r: LiveRow) =>
-  r.state === 'between-steps' ? 'between steps' : r.state === 'done' ? 'done' : r.state;
+const stateLabel = (r: LiveRow) => (r.state === 'between-steps' ? 'between steps' : r.state);
 
 /** The estimate line of an agent step: the history's median with its sample size, or why there is none. */
 export function estimateText(r: LiveRow): string {

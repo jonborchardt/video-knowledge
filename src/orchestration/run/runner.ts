@@ -36,7 +36,7 @@ import {
   roleOf,
   type StepContext,
   type StepOutcome,
-  usageFields,
+  outcomeFields,
 } from './steps';
 import { type ReleaseContext, releaseLoop } from './release';
 import { sendDraftRequest, sendReleaseRequest } from './requests';
@@ -438,12 +438,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
       step: step.text.split('\n')[0].slice(0, 200),
       kind: step.kind,
       attempt: 1,
-      exit: out.exit,
-      ms: out.ms,
-      costUsd: out.costUsd,
-      sessionId: out.sessionId ?? undefined,
-      error: out.error ?? undefined,
-      ...usageFields(out),
+      ...outcomeFields(out),
     });
     if (out.guardFailed)
       return halt(
@@ -713,12 +708,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
               (scenesOf(step.text).length ? ` Scenes: ${scenesOf(step.text).join(',')}` : ''),
             kind: step.kind,
             attempt: tries,
-            exit: out.exit,
-            ms: out.ms,
-            costUsd: out.costUsd,
-            sessionId: out.sessionId ?? undefined,
-            error: out.error ?? undefined,
-            ...usageFields(out),
+            ...outcomeFields(out),
           });
           if (
             step.kind === 'run' &&

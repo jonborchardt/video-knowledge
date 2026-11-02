@@ -87,6 +87,10 @@ const die = (msg: string, code = 2): never => {
   console.error(msg);
   process.exit(code);
 };
+const printHalt = (h: { kind: string; why: string; unblock: { text: string } }) => {
+  console.log(`HALT ${h.kind}: ${h.why}`);
+  console.log(`UNBLOCK: ${h.unblock.text}`);
+};
 
 loadDotEnv();
 
@@ -140,8 +144,7 @@ switch (verb) {
     });
     if (r.outcome === 'held') die(`a live run holds ${topic} ${storyId}; nothing done`, 3);
     if (r.outcome === 'halted' && r.halt) {
-      console.log(`HALT ${r.halt.kind}: ${r.halt.why}`);
-      console.log(`UNBLOCK: ${r.halt.unblock.text}`);
+      printHalt(r.halt);
       console.log(`stage ${r.stage}; ${r.iterations} iterations; ${r.costUsd.toFixed(2)} USD`);
       process.exit(1);
     }
@@ -154,8 +157,7 @@ switch (verb) {
     const a = loadAutomation(ROOT);
     const r = await launch(topic, storyId, a, launchDeps(ROOT), ROOT);
     if (r.outcome === 'halted' && r.halt) {
-      console.log(`HALT ${r.halt.kind}: ${r.halt.why}`);
-      console.log(`UNBLOCK: ${r.halt.unblock.text}`);
+      printHalt(r.halt);
       process.exit(1);
     }
     const pushed = r.record?.pushed ? `, pushed ${r.record.pushed}` : '';
@@ -171,8 +173,7 @@ switch (verb) {
     const r = await runTopic(topic, a, { root: ROOT });
     if (r.outcome === 'held') die('another run holds this topic', 3);
     if (r.outcome === 'halted' && r.halt) {
-      console.log(`HALT ${r.halt.kind}: ${r.halt.why}`);
-      console.log(`UNBLOCK: ${r.halt.unblock.text}`);
+      printHalt(r.halt);
       process.exit(1);
     }
     console.log(`done: ${topic} ${r.stage} (${r.iterations} steps, ${r.costUsd.toFixed(2)} USD)`);
@@ -188,8 +189,7 @@ switch (verb) {
     for (const line of r.actions) console.log(line);
     if (r.outcome === 'held') die('another run holds this topic', 3);
     if (r.outcome === 'halted' && r.halt) {
-      console.log(`HALT ${r.halt.kind}: ${r.halt.why}`);
-      console.log(`UNBLOCK: ${r.halt.unblock.text}`);
+      printHalt(r.halt);
       process.exit(1);
     }
     console.log(`scan done: ${topic} (${r.costUsd.toFixed(2)} USD)`);
@@ -238,8 +238,7 @@ switch (verb) {
       ROOT,
     );
     if (r.outcome === 'halted' && r.halt) {
-      console.log(`HALT ${r.halt.kind}: ${r.halt.why}`);
-      console.log(`UNBLOCK: ${r.halt.unblock.text}`);
+      printHalt(r.halt);
       process.exit(1);
     }
     if (r.outcome === 'held') die('another discovery is running', 3);

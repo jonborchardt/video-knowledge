@@ -31,6 +31,15 @@ export interface InboxFile {
   lastUid: number;
   handled: InboxRecord[];
 }
+/** A reply's notes as a verb's arguments; the time flag differs by verb. */
+const noteArgs = (notes: Decision['notes'] & object, at: '--at' | '--at-seconds'): string[] =>
+  notes.flatMap((n) => [
+    '--note',
+    n.text,
+    ...(n.seconds !== undefined ? [at, String(n.seconds)] : []),
+    ...(n.scene ? ['--scene', n.scene] : []),
+    ...(n.sentence ? ['--sentence', n.sentence] : []),
+  ]);
 const inboxPath = (root: string) => join(automationDir(root), INBOX_FILE);
 export const readInbox = (root = ROOT): InboxFile =>
   readJson<InboxFile>(inboxPath(root)) ?? { lastUid: 0, handled: [] };
@@ -86,6 +95,35 @@ export async function pollInbox(
   deps: InboxDeps,
 ): Promise<InboxReport> {
   const now = deps.now ?? Date.now;
+  /** A reply whose verb failed: the message stays for the next poll, which runs the same idempotent verb again; the
+   *  story halts step-failed once so the person hears of it (the tick's halt mail). Returns the error line. */
+  const verbFailed = (
+    r: CliResult,
+    topic: string,
+    storyId: string,
+    stage: string,
+    next: string,
+    what: string,
+    byHand: string,
+  ): string => {
+    const err = (r.stderr || r.stdout).trim().split('\n').at(-1) ?? 'exit 1';
+    const dir = runDir(topic, storyId, root);
+    const why = `${what}: ${err}`;
+    if (readHalt(dir)?.why !== why)
+      writeHalt(dir, {
+        kind: 'step-failed',
+        stage,
+        why,
+        unblock: {
+          kind: 'fix',
+          text: `fix what it names, or run ${byHand} by hand; the next tick tries the reply again`,
+        },
+        at: new Date(now()).toISOString(),
+        runId: 'tick',
+        board: { stage, next },
+      } satisfies Halt);
+    return err;
+  };
   const file = readInbox(root);
   const got = await mail.fetchSince(file.lastUid);
   const report: InboxReport = { fetched: got.length, applied: [], ignored: [], clarified: [], refused: [], failed: [] };
@@ -174,22 +212,15 @@ export async function pollInbox(
       if (r.status !== 0) {
         // the verb failed (YouTube refused, a crash): the message stays for the next poll, which runs the same
         // idempotent verb again; the story halts step-failed so the person hears of it (the tick's halt mail)
-        const err = (r.stderr || r.stdout).trim().split('\n').at(-1) ?? 'exit 1';
-        const dir = runDir(topic, storyId, root);
-        const why = `publish decide ${id} failed: ${err}`;
-        if (readHalt(dir)?.why !== why)
-          writeHalt(dir, {
-            kind: 'step-failed',
-            stage: 'release',
-            why,
-            unblock: {
-              kind: 'fix',
-              text: `fix what it names, or run npm run publish -- decide ${topic} ${storyId} --request ${id} --by "<name>" --verdict ${d.verdict} by hand; the next tick tries the reply again`,
-            },
-            at: new Date(now()).toISOString(),
-            runId: 'tick',
-            board: { stage: 'release', next: 'the decision' },
-          } satisfies Halt);
+        const err = verbFailed(
+          r,
+          topic,
+          storyId,
+          'release',
+          'the decision',
+          `publish decide ${id} failed`,
+          `npm run publish -- decide ${topic} ${storyId} --request ${id} --by "<name>" --verdict ${d.verdict}`,
+        );
         report.failed.push(`${id}: ${err}`);
         leftAt ??= m.uid;
         continue;
@@ -243,13 +274,16 @@ export async function pollInbox(
         report.applied.push(`${storyId}: draft ok`);
         done('applied:draft-ok');
       } else {
-        const args = ['request-changes', topic, storyId, '--by', by, '--via', `email:${m.messageId}`];
-        for (const n of d.notes ?? []) {
-          args.push('--note', n.text);
-          if (n.seconds !== undefined) args.push('--at', String(n.seconds));
-          if (n.scene) args.push('--scene', n.scene);
-          if (n.sentence) args.push('--sentence', n.sentence);
-        }
+        const args = [
+          'request-changes',
+          topic,
+          storyId,
+          '--by',
+          by,
+          '--via',
+          `email:${m.messageId}`,
+          ...noteArgs(d.notes ?? [], '--at'),
+        ];
         const r = await deps.run('publish', args);
         if (r.status === 2) {
           await reply(
@@ -378,22 +412,15 @@ export async function pollInbox(
         continue;
       }
       if (r.status !== 0) {
-        const err = (r.stderr || r.stdout).trim().split('\n').at(-1) ?? 'exit 1';
-        const dir = runDir(topic, storyId, root);
-        const why = `article decide ${id} failed: ${err}`;
-        if (readHalt(dir)?.why !== why)
-          writeHalt(dir, {
-            kind: 'step-failed',
-            stage: 'article',
-            why,
-            unblock: {
-              kind: 'fix',
-              text: `fix what it names, or run npm run article -- decide ${topic} ${storyId} --request ${id} --verdict ${d.verdict} --by "<name>" by hand; the next tick tries the reply again`,
-            },
-            at: new Date(now()).toISOString(),
-            runId: 'tick',
-            board: { stage: 'article', next: 'the correction' },
-          } satisfies Halt);
+        const err = verbFailed(
+          r,
+          topic,
+          storyId,
+          'article',
+          'the correction',
+          `article decide ${id} failed`,
+          `npm run article -- decide ${topic} ${storyId} --request ${id} --verdict ${d.verdict} --by "<name>"`,
+        );
         report.failed.push(`${id}: ${err}`);
         leftAt ??= m.uid;
         continue;
@@ -435,12 +462,7 @@ export function decideArgs(
 ): string[] {
   const args = ['decide', topic, storyId, '--request', request, '--by', by, '--verdict', d.verdict];
   if (d.verdict === 'schedule' && d.at) args.push('--at', d.at);
-  for (const n of d.notes ?? []) {
-    args.push('--note', n.text);
-    if (n.seconds !== undefined) args.push('--at-seconds', String(n.seconds));
-    if (n.scene) args.push('--scene', n.scene);
-    if (n.sentence) args.push('--sentence', n.sentence);
-  }
+  args.push(...noteArgs(d.notes ?? [], '--at-seconds'));
   if (d.paid) {
     const manifest = readJson<ReleaseManifest>(
       join(scriptDir(topic, storyId, root), 'video', 'review', 'release-manifest.json'),

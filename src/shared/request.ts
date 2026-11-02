@@ -11,8 +11,6 @@ export function requestId(prefix: RequestPrefix, secret: string, subject: string
   return `${prefix}-${createHmac('sha256', secret).update(`${subject}:${at}`).digest('hex').slice(0, 12)}`;
 }
 
-export const REQUEST_ID = /\b(rq|pb|ar)-[0-9a-f]{12}\b/;
-
 export const expired = (expiresAt: string, now: Date): boolean => Date.parse(expiresAt) <= now.getTime();
 
 /** `expiresAt` for a request made at `at`, `days` ahead. */

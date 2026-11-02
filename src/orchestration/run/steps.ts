@@ -37,18 +37,27 @@ export interface StepOutcome {
   overCap?: boolean;
 }
 
-/** The journal fields a prompt step's outcome carries (spread into the runner's journal line). */
-export function usageFields(
-  out: StepOutcome,
-): Pick<StepOutcome, 'modelRequested' | 'models' | 'turns' | 'apiMs' | 'rounds' | 'overCap'> {
-  if (out.kind !== 'prompt' || out.modelRequested === undefined) return {};
+/** The journal fields of a step's outcome (spread into the runner's journal line): the exit, time, cost, session and
+ *  error of every step, and a prompt step's usage. */
+export function outcomeFields(out: StepOutcome) {
+  const usage =
+    out.kind === 'prompt' && out.modelRequested !== undefined
+      ? {
+          modelRequested: out.modelRequested,
+          models: out.models,
+          turns: out.turns,
+          apiMs: out.apiMs,
+          rounds: out.rounds,
+          overCap: out.overCap,
+        }
+      : {};
   return {
-    modelRequested: out.modelRequested,
-    models: out.models,
-    turns: out.turns,
-    apiMs: out.apiMs,
-    rounds: out.rounds,
-    overCap: out.overCap,
+    exit: out.exit,
+    ms: out.ms,
+    costUsd: out.costUsd,
+    sessionId: out.sessionId ?? undefined,
+    error: out.error ?? undefined,
+    ...usage,
   };
 }
 
@@ -282,11 +291,12 @@ function runChild(
   });
 }
 
-const lastResult = (tail: string): string | null => {
-  const lines = tail.trim().split('\n');
-  for (let i = lines.length - 1; i >= 0; i--) if (lines[i].startsWith('RESULT:')) return lines[i].trim();
-  return null;
-};
+const lastResult = (tail: string): string | null =>
+  tail
+    .trim()
+    .split('\n')
+    .findLast((l) => l.startsWith('RESULT:'))
+    ?.trim() ?? null;
 
 export async function execStep(a: Automation, s: Step, ctx: StepContext): Promise<StepOutcome> {
   const base = { kind: s.kind, costUsd: 0, sessionId: null, log: ctx.logPath };
@@ -402,18 +412,25 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
     cost += last.costUsd;
     ms += last.ms;
     resume = last.sessionId ?? undefined;
-    const guarded = (why: string): StepOutcome => ({
+    /** This round's outcome: everything the round knows, then what differs. */
+    const result = (
+      ok: boolean,
+      exit: number | null,
+      error: string | null,
+      extra: Partial<StepOutcome> = {},
+    ): StepOutcome => ({
       ...base,
       ...usage(),
-      ok: false,
-      exit: last?.exit ?? null,
+      ok,
+      exit,
       ms,
       costUsd: cost,
       sessionId: last?.sessionId ?? null,
-      error: why,
-      guardFailed: true,
+      error,
       rounds: round + 1,
+      ...extra,
     });
+    const guarded = (why: string) => result(false, last?.exit ?? null, why, { guardFailed: true });
     const g = ctx.guard?.('agent') ?? { ok: true, why: '', kept: [] };
     if (!g.ok) return guarded(g.why);
     if (ctx.role === 'graphics' && ctx.componentCheck) {
@@ -423,32 +440,8 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
         if (!c.ok) return guarded(`component check failed: ${c.output}`);
       }
     }
-    if (!last.ok)
-      return {
-        ...base,
-        ...usage(),
-        ok: false,
-        exit: last.exit,
-        ms,
-        costUsd: cost,
-        sessionId: last.sessionId,
-        error: last.error ?? 'agent failed',
-        rounds: round + 1,
-        text: last.text,
-      };
-    if (!validator)
-      return {
-        ...base,
-        ...usage(),
-        ok: true,
-        exit: last.exit,
-        ms,
-        costUsd: cost,
-        sessionId: last.sessionId,
-        error: null,
-        rounds: round + 1,
-        text: last.text,
-      };
+    if (!last.ok) return result(false, last.exit, last.error ?? 'agent failed', { text: last.text });
+    if (!validator) return result(true, last.exit, null, { text: last.text });
     const [exe, argv] = (ctx.argvOf ?? cliArgv)(validator.cli, validator.args);
     const v = await runChild(exe, argv, {
       cwd: ctx.root,
@@ -462,31 +455,9 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
     const after = ctx.guard?.('child') ?? { ok: true, why: '' };
     if (!after.ok) return guarded(after.why);
     const findings = v.tail.trim().split('\n').slice(-40).join('\n');
-    if (v.exit === 0 && !v.timedOut)
-      return {
-        ...base,
-        ...usage(),
-        ok: true,
-        exit: v.exit,
-        ms,
-        costUsd: cost,
-        sessionId: last.sessionId,
-        error: null,
-        rounds: round + 1,
-        text: last.text,
-      };
+    if (v.exit === 0 && !v.timedOut) return result(true, v.exit, null, { text: last.text });
     if (round === a.runs.validationRounds || !resume)
-      return {
-        ...base,
-        ...usage(),
-        ok: false,
-        exit: v.exit,
-        ms,
-        costUsd: cost,
-        sessionId: last.sessionId,
-        error: `validator ${validator.cli} ${validator.args[0]} failed: ${findings}`,
-        rounds: round + 1,
-      };
+      return result(false, v.exit, `validator ${validator.cli} ${validator.args[0]} failed: ${findings}`);
     prompt = `The validator (npm run ${validator.cli} -- ${validator.args.join(' ')}) reports:\n${findings}\n\nFix the file you wrote and stop.`;
   }
   return {

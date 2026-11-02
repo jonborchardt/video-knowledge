@@ -3,7 +3,7 @@
 // and metadata (the video and each packaged Short registered in its ledger), the companion article's released text,
 // the public URLs the site will have, the calls to action (paid ones numbered, approved or not), the institution.
 // `releaseSha` binds exactly those; generatedAt, the evidence counts and the composed X post are shown, not bound.
-import { existsSync, readFileSync, unlinkSync } from 'node:fs';
+import { existsSync, unlinkSync } from 'node:fs';
 import { join } from 'node:path';
 import { commissionKey, commissionOf, site } from '../../config/site';
 import {
@@ -79,7 +79,7 @@ export function buildManifest(
   const ledger = loadLedger(topic, storyId, root);
   const main = 'youtube';
   const outputs: Record<string, ManifestOutput> = {};
-  const outputOf = (id: string, pkgDir: string, rp: ReviewPackage): ManifestOutput => {
+  const outputOf = (id: string, rp: ReviewPackage): ManifestOutput => {
     const o = openOutput(topic, storyId, { output: id, root });
     if (!o.metadata) throw new Error(`no metadata for ${id}`);
     const description = o.metadata.description;
@@ -99,15 +99,14 @@ export function buildManifest(
     };
     if (o.out.source) out.source = o.out.source;
     if (o.out.derivedFrom) out.derivedFrom = o.out.derivedFrom;
-    void pkgDir;
     return out;
   };
-  outputs[main] = outputOf(main, dir, review);
+  outputs[main] = outputOf(main, review);
   for (const [id, o] of Object.entries(ledger?.outputs ?? {})) {
     if (!id.startsWith('short:') || !o.source) continue;
     const rp = readJson<ReviewPackage>(join(root, o.source, 'video', REVIEW_DIR, 'review.json'));
     if (!rp) continue; // registered, not packaged now: not part of this release
-    outputs[id] = outputOf(id, join(root, o.source), rp);
+    outputs[id] = outputOf(id, rp);
   }
   const release = loadArticleRelease(topic, storyId, root);
   const article = release
@@ -223,9 +222,3 @@ export function removeManifest(topic: string, storyId: string, root = ROOT): boo
   unlinkSync(p);
   return true;
 }
-
-/** The text a manifest's description holds on disk (the review package's, before the ledger's overrides). */
-export const packagedDescription = (dir: string): string =>
-  existsSync(join(dir, 'video', REVIEW_DIR, 'description.txt'))
-    ? readFileSync(join(dir, 'video', REVIEW_DIR, 'description.txt'), 'utf8')
-    : '';

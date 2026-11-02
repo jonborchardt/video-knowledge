@@ -7,7 +7,6 @@ import type { SectionName } from './types';
 
 export type Band = 'micro' | 'short' | 'standard' | 'long';
 export type PacingCheck = 'slow-start' | 'number-dense' | 'repetition';
-export const PACING_CHECKS: readonly PacingCheck[] = ['slow-start', 'number-dense', 'repetition'];
 
 export interface BandRules {
   maxSeconds: number; // the band's upper bound (long has none)

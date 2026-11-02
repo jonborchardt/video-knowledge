@@ -3,7 +3,7 @@
 // send and the result after. Delivery is at least once, never exactly once: a resend carries the same id, and a
 // duplicate copy of any mail is harmless because its effect (a decision, a halt read) is keyed by the request or the
 // halt, not by the copy. Operational state only, under .automation/ (gitignored).
-import { existsSync, mkdirSync } from 'node:fs';
+import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
 import { ROOT, readJson, sha, writeJsonAtomic } from '../../shared/io';
@@ -213,5 +213,3 @@ export async function notifyHalts(
   writeJsonAtomic(notifiedPath(root), notified);
   return sent;
 }
-
-export const outboxExists = (root = ROOT): boolean => existsSync(join(root, AUTOMATION_DIR, OUTBOX_FILE));
