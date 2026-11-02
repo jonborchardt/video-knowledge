@@ -11,7 +11,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
-import { ROOT, readJson, topicDir, writeJsonAtomic } from '../../shared/io';
+import { ROOT, readJson, topicDir, writeJsonAtomic, sha } from '../../shared/io';
 import type { ExtractionBatch } from '../../modules/evidence';
 import {
   FETCHED_FILE,
@@ -41,6 +41,7 @@ import { type Lock, acquire, heartbeat, release, setChild } from './lock';
 import { killTree } from './proc';
 import { type RoleGrant, grantFor } from './roles';
 import { type RunResult, addSpend, isoWeek, runValidate, weekSpend } from './runner';
+import { claimEdit, claimedBy } from '../../modules/topic-discovery';
 import {
   type StepContext,
   type StepOutcome,
@@ -73,6 +74,15 @@ const FORBIDDEN = /--replace-cited|--force\b/;
 export const RECORDED_FILE = 'recorded.json';
 export const STUDIES_ROUNDS_FILE = 'studies-rounds.json';
 export const REVIEW_ROUNDS_FILE = 'review-rounds.json';
+/** M3 1.4, operation ownership: what the run's child steps changed outside the topic and the proposal (the brand
+ *  step's files with their sha after the step; whether `topics claim` ran), so the finish stages exactly that. */
+export const TOUCHED_FILE = 'touched.json';
+export interface Touched {
+  claimed: boolean;
+  paths: Record<string, string>; // repo path -> sha after the step that wrote it ('deleted' when it removed it)
+}
+/** M3 1.4, the initial snapshot: the paths dirty before the run first started; never staged by its finish. */
+export const PRE_DIRTY_FILE = 'pre-dirty.json';
 
 const readMarker = (dir: string): RecordedMarker =>
   readJson<RecordedMarker>(join(dir, RECORDED_FILE)) ?? { files: [], documents: [] };
@@ -103,12 +113,43 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
   const runId = o.runId ?? lock.runId;
   const stamp = () => new Date(now()).toISOString();
   const journal = (e: Omit<JournalEntry, 'at' | 'runId'>) => appendJournal(dir, { at: stamp(), runId, ...e });
-  const git = (args: string[]): string =>
+  const git = (args: string[], input?: string): string =>
     o.git === 'none'
       ? ''
       : o.git
         ? o.git(args)
-        : execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+        : execFileSync('git', args, {
+            cwd: root,
+            encoding: 'utf8',
+            stdio: [input === undefined ? 'ignore' : 'pipe', 'pipe', 'pipe'],
+            input,
+          });
+  /** Every dirty path (tracked changes and untracked files), posix. */
+  const dirtyPaths = (): string[] =>
+    git(['status', '--porcelain', '--untracked-files=all', '-z'])
+      .split('\0')
+      .filter((e) => e.length >= 4)
+      .map((e) => e.slice(3).replaceAll('\\', '/'));
+  const ownedAlways = (p: string) =>
+    p.startsWith(`topics/${topic}/`) || p === `proposals/${topic}.json` || p === `proposals/${topic}.review.json`;
+  const readTouched = (): Touched => readJson<Touched>(join(dir, TOUCHED_FILE)) ?? { claimed: false, paths: {} };
+  const shaOf = (p: string) => (existsSync(join(root, p)) ? sha(readFileSync(join(root, p))) : 'deleted');
+  /** Records what a child step changed outside the topic (the guard's child diff names them). */
+  const noteTouched = (kept: string[] | undefined) => {
+    const outside = (kept ?? []).filter((p) => !ownedAlways(p));
+    if (!outside.length) return;
+    const t = readTouched();
+    for (const p of outside) {
+      if (p === 'src/config/site.ts') t.claimed = true;
+      else t.paths[p] = shaOf(p);
+    }
+    writeJsonAtomic(join(dir, TOUCHED_FILE), t);
+  };
+  const childGuard = () => {
+    const g = hooks.guard('child');
+    noteTouched(g.kept);
+    return g;
+  };
   const validate = o.validate ?? ((env) => runValidate(root, env));
   let snap: TreeSnapshot | null = null;
   let currentGrant: RoleGrant = grantFor('extraction', { topic });
@@ -152,6 +193,8 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
         };
       }),
   };
+  if (o.git !== 'none' && !existsSync(join(dir, PRE_DIRTY_FILE)))
+    writeJsonAtomic(join(dir, PRE_DIRTY_FILE), { paths: dirtyPaths() });
   if (acquired.tookOver?.childPid) killTree(acquired.tookOver.childPid);
   if (readJournal(dir).length || acquired.tookOver)
     journal({
@@ -171,6 +214,7 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
   let lastKey: string | null = null;
   let attempt = 0;
   let lastNext: TopicNext = { topic, stage: 'proposal', next: '', steps: [], halt: null, done: false };
+  let preLeft: string[] = [];
   const approver = `automated: topic run ${runId}`;
 
   const halt = (kind: RunHaltKind, why: string, unblock: Halt['unblock'], n: TopicNext): RunResult => {
@@ -182,7 +226,7 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
     return { outcome: 'halted', stage: n.stage, halt: h, iterations, costUsd: cost };
   };
   const finish = (n: TopicNext): RunResult => {
-    const g = hooks.guard('child');
+    const g = childGuard();
     if (!g.ok) return halt('unexpected-edit', g.why, { kind: 'fix', text: 'the files were reverted' }, n);
     const v = validate(envFor('validate', [], o.env ?? process.env));
     if (!v.ok) {
@@ -206,12 +250,34 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
               n,
             );
         }
-        git([
-          'add',
-          '-A',
-          '--',
-          ...childWritable.map((p) => p.replace(/\/\*\*$/, '')).filter((p) => existsSync(join(root, p))),
-        ]);
+        // operation ownership and the initial snapshot: the topic's and the proposal's paths that were not dirty
+        // before the run; the brand step's own files, only if nobody touched them since; the claim's own line of
+        // site.ts (never a person's hunk). A person's concurrent edit to an owned path is refused, nothing staged.
+        const pre = new Set(readJson<{ paths: string[] }>(join(dir, PRE_DIRTY_FILE))?.paths ?? []);
+        const dirty = dirtyPaths();
+        const touched = readTouched();
+        const moved = Object.entries(touched.paths)
+          .filter(([p, was]) => shaOf(p) !== was)
+          .map(([p]) => p);
+        if (moved.length)
+          return halt(
+            'git',
+            `changed outside the run's steps since the run wrote them: ${moved.join(', ')}`,
+            {
+              kind: 'fix',
+              text: `separate your edit from the run's (commit or stash it), then npm run run -- topic ${topic}`,
+            },
+            n,
+          );
+        const stage = [
+          ...dirty.filter((p) => ownedAlways(p) && !pre.has(p)),
+          ...Object.keys(touched.paths).filter((p) => dirty.includes(p)),
+        ];
+        if (stage.length) git(['add', '-A', '--', ...stage]);
+        if (touched.claimed) stageClaim();
+        preLeft = dirty.filter(
+          (p) => pre.has(p) && (ownedAlways(p) || p in touched.paths || p === 'src/config/site.ts'),
+        );
         if (git(['diff', '--cached', '--name-only']).trim())
           git([
             'commit',
@@ -228,11 +294,40 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
         );
       }
     }
-    journal({ stage: n.stage, next: n.next, step: 'finish', kind: 'finish', attempt: 0 });
+    journal({
+      stage: n.stage,
+      next: n.next,
+      step: 'finish',
+      kind: 'finish',
+      attempt: 0,
+      error: preLeft.length ? `not staged (dirty before the run): ${preLeft.join(', ')}` : undefined,
+    });
     clearInterval(beat);
     release(dir, lock);
     return { outcome: 'done', stage: n.stage, halt: null, iterations, costUsd: cost };
   };
+  /** Stages the claim's own change to site.ts: HEAD's text with the claim applied, as a blob in the index, so a
+   *  person's other hunk in the working file is never committed by the run. A site.ts not in HEAD is staged whole. */
+  function stageClaim() {
+    const site = 'src/config/site.ts';
+    const working = readFileSync(join(root, site), 'utf8');
+    const commission = claimedBy(working, topic);
+    if (!commission) return;
+    let head: string | null = null;
+    try {
+      head = git(['show', `HEAD:${site}`]);
+    } catch {
+      head = null;
+    }
+    if (head === null) {
+      git(['add', '--', site]);
+      return;
+    }
+    const r = claimEdit(head, commission, topic);
+    if ('problem' in r || !r.changed) return;
+    const blob = git(['hash-object', '-w', '--stdin'], r.source).trim();
+    git(['update-index', '--add', '--cacheinfo', `100644,${blob},${site}`]);
+  }
   const ctxOf = (step: Step, role: ReturnType<typeof roleOf>): StepContext => {
     const logPath = join(dir, 'steps', `${++stepNo}.log`);
     mkdirSync(join(dir, 'steps'), { recursive: true });
@@ -468,7 +563,7 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
             const s: Step = { kind: 'run', text: `npm run evidence -- collide ${topic} --resolve` };
             const out = await exec(a, s, ctxOf(s, role));
             record(n, s, out, 1);
-            const g = hooks.guard('child');
+            const g = childGuard();
             if (!g.ok) return halt('unexpected-edit', g.why, { kind: 'fix', text: 'the files were reverted' }, n);
             if (out.ok) continue;
             return halt('step-failed', `${s.text}: ${out.error}`, { kind: 'fix', text: `read ${dir}/steps` }, n);
@@ -501,7 +596,7 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
           setChild(dir, lock, null);
           record(n, step, out, 1);
         }
-        const g = hooks.guard('child');
+        const g = childGuard();
         if (!g.ok) return halt('unexpected-edit', g.why, { kind: 'fix', text: 'the files were reverted' }, n);
         // a fetch exits 2 when some listed videos have no captions (recorded and skipped): the lists count as fetched
         // once the last list of the stage ran either way

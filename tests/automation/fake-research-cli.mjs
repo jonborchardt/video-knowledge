@@ -4,7 +4,8 @@
 // store's assertions and claims, with an optional failure mid-batch once), record-sources (source verdicts, or a
 // refusal), report (report.json and public-record.json with open revisions), report note, stories discover (the
 // mode the config names), brand, topics claim. Run as `node fake-research-cli.mjs <cli> <args...>` in the root;
-// FAKE_RESEARCH_CONFIG names a JSON file: { recordFailAt?, recordFailTimes?, refuseCited?, storiesMode?, openRevisions?, collisionsOpen? }.
+// FAKE_RESEARCH_CONFIG names a JSON file: { recordFailAt?, recordFailTimes?, refuseCited?, storiesMode?, openRevisions?,
+//   collisionsOpen?, brandWrites? (brand writes brand/spending/wordmark.svg and public/commissions/spending.png) }.
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -93,8 +94,17 @@ switch (cli) {
     process.exit(0);
   }
   // eslint-disable-next-line no-fallthrough -- process.exit above ends the case
-  case 'merge-claims':
   case 'brand':
+    if (cfg.brandWrites) {
+      mkdirSync(join(root, 'brand', 'spending'), { recursive: true });
+      mkdirSync(join(root, 'public', 'commissions'), { recursive: true });
+      writeFileSync(join(root, 'brand', 'spending', 'wordmark.svg'), '<svg>spending</svg>\n');
+      writeFileSync(join(root, 'public', 'commissions', 'spending.png'), 'png');
+    }
+    console.log('ok');
+    process.exit(0);
+  // eslint-disable-next-line no-fallthrough -- process.exit above ends the case
+  case 'merge-claims':
     console.log('ok');
     process.exit(0);
   // eslint-disable-next-line no-fallthrough -- process.exit above ends the case

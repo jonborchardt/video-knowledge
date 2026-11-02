@@ -86,7 +86,13 @@ const sv = () =>
 interface Scenario {
   studiesEmpty?: boolean;
   extractionWritesStore?: boolean;
+  /** The real site.ts in the fixture and no owner override: the claim stage runs `topics claim` and `brand`. */
+  claim?: boolean;
+  /** Edits a person made before the run: a second hunk in site.ts and another brand's kit. */
+  preDirty?: boolean;
 }
+const SITE = readFileSync(join(ROOT, 'src', 'config', 'site.ts'), 'utf8');
+const OTHER_KIT = 'brand/dubious-returns/kit.json';
 function fresh(cfg: Record<string, unknown> = {}, s: Scenario = {}) {
   const root = mkdtempSync(join(tmpdir(), 'vk-topic-run-'));
   roots.push(root);
@@ -102,6 +108,12 @@ function fresh(cfg: Record<string, unknown> = {}, s: Scenario = {}) {
     toJson({ ...proposal, status: 'approved', decidedBy: 'Jon', decidedAt: '2026-11-06T18:00:00Z' }),
   );
   writeFileSync(reviewPath(T, root), toJson(readJson<ProposalReview>(join(FIX, 'good.review.json'))!));
+  if (s.claim) {
+    mkdirSync(join(root, 'src', 'config'), { recursive: true });
+    writeFileSync(join(root, 'src', 'config', 'site.ts'), SITE);
+    mkdirSync(join(root, 'brand', 'dubious-returns'), { recursive: true });
+    writeFileSync(join(root, OTHER_KIT), '{"palette":"old"}\n');
+  }
   const git = (...args: string[]) =>
     execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
   git('init', '-q');
@@ -111,6 +123,11 @@ function fresh(cfg: Record<string, unknown> = {}, s: Scenario = {}) {
   git('config', 'user.name', 'test');
   git('add', '-A');
   git('commit', '-q', '-m', 'fixture');
+  if (s.preDirty) {
+    // a person's edits before the run: never the run's to commit
+    writeFileSync(join(root, 'src', 'config', 'site.ts'), SITE + '// a person was here\n');
+    writeFileSync(join(root, OTHER_KIT), '{"palette":"edited by a person"}\n');
+  }
   const scenario = join(root, 'scenario.json');
   const docs = s.studiesEmpty
     ? []
@@ -183,8 +200,11 @@ function fresh(cfg: Record<string, unknown> = {}, s: Scenario = {}) {
   // the topics verbs are the real CLI (they write the proposal); every other CLI is the fake
   const argvOf = (cli: string, args: string[]): [string, string[]] =>
     cli === 'topics' ? cliArgv(cli, args) : [process.execPath, [FAKE_CLI, cli, ...args]];
-  // the institution claim is the claim verb's own test (Task 5): here the topic reads as claimed
-  const ask: typeof topicNext = (t, r, o) => topicNext(t, r, { ...o, owner: () => ({ name: 'Spending' }) as never });
+  // the institution claim is the claim verb's own test (Task 5): here the topic reads as claimed, unless the scenario
+  // runs the claim stage for real (the commit-scope tests)
+  const ask: typeof topicNext = s.claim
+    ? topicNext
+    : (t, r, o) => topicNext(t, r, { ...o, owner: () => ({ name: 'Spending' }) as never });
   const run = (extra: Partial<Parameters<typeof runTopic>[2]> = {}) =>
     runTopic(T, a, {
       root,
@@ -374,4 +394,70 @@ describe('the topic runner (criterion 1)', () => {
     expect(r.halt?.kind).toBe('forbidden-flag');
     expect(c.journal().filter((e) => e.kind === 'run')).toHaveLength(0);
   });
+});
+
+describe('the finish commit stages what the run owns (M3 1.4: operation ownership and the initial snapshot)', () => {
+  it("a person's edits before the run (another brand's kit, a second hunk in site.ts) stay out of the research commit; the claim's own line and the brand step's files go in", async () => {
+    const c = fresh({ brandWrites: true }, { claim: true, preDirty: true });
+    const r = await c.run();
+    expect(r.outcome, JSON.stringify(r.halt)).toBe('done');
+    expect(c.stages()).toContain('claim');
+    expect(c.git('rev-list', '--count', 'main').trim()).toBe('2');
+    const touched = c.git('show', '--name-only', '--format=', 'HEAD').trim().split('\n');
+    expect(touched).toContain('src/config/site.ts');
+    expect(touched).toContain('brand/spending/wordmark.svg');
+    expect(touched).toContain('public/commissions/spending.png');
+    expect(touched).not.toContain(OTHER_KIT);
+    for (const p of touched)
+      expect(
+        p.startsWith(`topics/${T}/`) ||
+          p.startsWith('proposals/') ||
+          p === 'src/config/site.ts' ||
+          p.startsWith('brand/spending/') ||
+          p === 'public/commissions/spending.png',
+        p,
+      ).toBe(true);
+    // the committed site.ts carries the claim and not the person's hunk; the working tree keeps both edits
+    const committed = c.git('show', 'HEAD:src/config/site.ts');
+    expect(committed).toMatch(new RegExp(`spending: \\{[\\s\\S]*?topics: \\[[^\\]]*'${T}'`));
+    expect(committed).not.toContain('// a person was here');
+    const working = readFileSync(join(c.root, 'src', 'config', 'site.ts'), 'utf8');
+    expect(working).toContain('// a person was here');
+    expect(working).toContain(`'${T}'`);
+    const status = c.git('status', '--porcelain');
+    expect(status).toMatch(/ M src\/config\/site.ts/);
+    expect(status).toMatch(new RegExp(` M ${OTHER_KIT}`));
+    // the finish line names what it left alone
+    const finish = c.journal().find((e) => e.kind === 'finish')!;
+    expect(finish.error).toMatch(/src\/config\/site.ts/);
+  }, 240_000);
+
+  it('an edit made during the run to a path the run owns halts the finish as git, naming the path, and stages nothing', async () => {
+    const c = fresh({ brandWrites: true }, { claim: true });
+    const r = await c.run({
+      validate: () => {
+        // a person edits the brand step's own file while the run is live (after the step wrote it)
+        writeFileSync(join(c.root, 'brand', 'spending', 'wordmark.svg'), '<svg>edited meanwhile</svg>\n');
+        return { ok: true, output: '' };
+      },
+    });
+    expect(r.outcome).toBe('halted');
+    expect(r.halt?.kind).toBe('git');
+    expect(r.halt?.why).toContain('brand/spending/wordmark.svg');
+    expect(c.git('rev-list', '--count', 'main').trim()).toBe('1');
+    expect(c.git('diff', '--cached', '--name-only').trim()).toBe('');
+  }, 240_000);
+
+  it('a clean run with the claim stage commits exactly the owned files and nothing else is left staged', async () => {
+    const c = fresh({ brandWrites: true }, { claim: true });
+    const r = await c.run();
+    expect(r.outcome, JSON.stringify(r.halt)).toBe('done');
+    expect(c.git('rev-list', '--count', 'main').trim()).toBe('2');
+    const touched = c.git('show', '--name-only', '--format=', 'HEAD').trim().split('\n').sort();
+    expect(touched).toContain('src/config/site.ts');
+    expect(touched).toContain('brand/spending/wordmark.svg');
+    expect(touched).toContain('public/commissions/spending.png');
+    expect(touched.some((p) => p.startsWith(`topics/${T}/store/`))).toBe(true);
+    expect(c.git('status', '--porcelain').trim()).toBe('');
+  }, 240_000);
 });
