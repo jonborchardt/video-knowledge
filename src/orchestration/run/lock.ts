@@ -19,6 +19,8 @@ export interface Lock {
   /** The child or agent running now, so a takeover can kill it (Windows children outlive a killed parent). */
   childPid?: number;
   childStep?: string;
+  /** When the child or agent running now started (the live view's elapsed time). */
+  childAt?: string;
 }
 
 const pidAlive = (pid: number): boolean => {
@@ -92,6 +94,7 @@ export function setChild(dir: string, lock: Lock, childPid: number | null, child
     ...current,
     childPid: childPid ?? undefined,
     childStep: childPid === null ? undefined : (childStep ?? current.childStep),
+    childAt: childPid === null ? undefined : (current.childAt ?? new Date().toISOString()),
   });
 }
 
