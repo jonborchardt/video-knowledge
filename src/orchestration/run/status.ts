@@ -25,7 +25,7 @@ const dirsIn = (d: string): string[] =>
   existsSync(d) ? readdirSync(d).filter((n) => statSync(join(d, n)).isDirectory()) : [];
 
 /** Every story and Short folder under `root` that has a run/ folder: `topics/<t>/scripts/<slug>[/shorts/<slug>]`. */
-function runFolders(root: string): { topic: string; dir: string; storyId: string }[] {
+export function runFolders(root: string): { topic: string; dir: string; storyId: string }[] {
   const out: { topic: string; dir: string; storyId: string }[] = [];
   for (const topic of dirsIn(topicsDir(root))) {
     // a topic run (the research pipeline) keeps its run folder under work/
