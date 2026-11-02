@@ -1,0 +1,65 @@
+{
+ "topic": "test-fixture",
+ "story": "decision:most-discussed-claims",
+ "parentFingerprints": {
+  "script": "a98089c0ff",
+  "validation": "346756383f",
+  "storyboard": "f5eef711da",
+  "package": "5879ca5f47",
+  "release": "91fa2c1b7c"
+ },
+ "candidates": [
+  {
+   "key": "s02",
+   "scene": "sc02",
+   "section": "answer",
+   "sentences": [
+    "s02"
+   ],
+   "claims": [
+    "test-fixture/every-leap-second-since-utc-began"
+   ],
+   "cites": [
+    "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+   ],
+   "figures": [
+    "10",
+    "1972",
+    "37",
+    "27"
+   ],
+   "chart": {
+    "type": "stat-tiles",
+    "title": "TAI minus UTC",
+    "points": [
+     {
+      "label": "1972",
+      "value": 10,
+      "unit": "count",
+      "display": "10 s",
+      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+     },
+     {
+      "label": "2017",
+      "value": 37,
+      "unit": "count",
+      "display": "37 s",
+      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+     }
+    ],
+    "note": "The table's value only ever rises between these tiles; it never falls."
+   },
+   "qualifications": [],
+   "reviewed": false,
+   "slug": null,
+   "format": null,
+   "hook": null,
+   "carries": [],
+   "readiness": "needs-review",
+   "blocking": [
+    "no entry in shorts-review.json (src/modules/shorts/briefs/shorts.md)"
+   ]
+  }
+ ],
+ "rejected": []
+}

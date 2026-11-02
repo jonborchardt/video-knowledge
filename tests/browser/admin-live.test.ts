@@ -33,7 +33,9 @@ const ATTEMPT_LINE = 9_000_001;
 const attemptFile = attemptPath(run, ATTEMPT_LINE, 1);
 /** Real operational state of the fixture story: a live or halted run. The test never touches it. */
 const busy = existsSync(lockFile) || existsSync(haltFile);
-const skip = !!process.env.CI || busy || !existsSync(storyboard);
+/** Needs a real fixture production with its (gitignored) run folder: absent on a fresh clone, in CI and in the
+ *  rehearsal's throwaway copy, where the dev server and the fixture's run folder are not the point. */
+const skip = !!process.env.CI || busy || !existsSync(storyboard) || !existsSync(run);
 
 let server: ChildProcess | undefined;
 let browser: Browser | undefined;
