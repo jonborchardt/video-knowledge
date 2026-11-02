@@ -1,13 +1,13 @@
 {
  "topic": "test-fixture",
  "story": "decision:most-discussed-claims",
- "approvedBy": "automated: run 2026-11-01",
- "date": "2026-11-01",
+ "approvedBy": "automated: run 2026-11-02",
+ "date": "2026-11-02",
  "revision": 1,
  "fingerprints": {
-  "article": "16ec3cc902",
+  "article": "aa66455c5d",
   "package": "5879ca5f47",
-  "validation": "d299a11a95"
+  "validation": "e86023d30d"
  },
  "article": {
   "topic": "test-fixture",
@@ -21,16 +21,16 @@
    "evidencePackage": "5879ca5f47"
   },
   "meta": {
-   "headline": "Has a leap second ever been taken away?",
-   "seoTitle": "Leap Seconds: Added Every Time, Never Removed",
+   "headline": "Every leap second since 1972 has been added, none ever taken away",
+   "seoTitle": "Has a leap second ever been taken away?",
    "dek": {
     "id": "meta.dek",
-    "text": "The official leap-second record answers it directly: every adjustment since 1972 has added a second, and none has ever been taken away.",
+    "text": "The official record of every leap second since UTC began in 1972 shows each one adding a second to civil time; none has ever subtracted one.",
     "type": "factual",
     "assertions": [
      {
       "id": "meta.dek.a",
-      "text": "Every leap second since UTC began in 1972 has added a second to civil time; none has ever been taken away.",
+      "text": "Every leap second since UTC began in 1972 has added a second to civil time; none has ever subtracted one.",
       "kind": "fact",
       "claims": [
        {
@@ -50,12 +50,12 @@
    },
    "description": {
     "id": "meta.description",
-    "text": "Every leap second recorded since 1972 has added a second to civil time; none has ever been taken away, according to the official record.",
+    "text": "The IERS table of leap seconds runs only one way, from 10 seconds in 1972 to 37 seconds in 2017 — none has ever been subtracted.",
     "type": "factual",
     "assertions": [
      {
       "id": "meta.description.a",
-      "text": "Every leap second since UTC began in 1972 has added a second to civil time; none has ever been taken away.",
+      "text": "The IERS table of TAI-UTC runs from 10 seconds in 1972 to 37 seconds in 2017, rising at every step and never falling.",
       "kind": "fact",
       "claims": [
        {
@@ -77,19 +77,19 @@
   "sections": [
    {
     "name": "answer",
-    "heading": "Only ever added, never taken away",
+    "heading": "No leap second has ever been taken away",
     "blocks": [
      {
       "kind": "prose",
       "sentences": [
        {
         "id": "s01",
-        "text": "The International Earth Rotation and Reference Systems Service keeps the one official table of every adjustment made to civil time since the current standard began in 1972.",
+        "text": "The official leap-second record, kept by the International Earth Rotation and Reference Systems Service, has only ever moved one way: it opened at 10 seconds in 1972 and stands at 37 seconds as of 2017.",
         "type": "factual",
         "assertions": [
          {
           "id": "s01.a",
-          "text": "The IERS table of TAI-UTC records every adjustment to civil time since 1 January 1972.",
+          "text": "The IERS record of the gap between atomic time and civil time (TAI-UTC) opened at 10 seconds in 1972 and reached 37 seconds in 2017, rising at every step in between.",
           "kind": "fact",
           "claims": [
            {
@@ -109,37 +109,12 @@
        },
        {
         "id": "s02",
-        "text": "Its 28 entries move only one way, from 10 seconds in 1972 to 37 seconds in 2017, each one second more than the last.",
+        "text": "That settles whether a leap second has ever been subtracted: none has — every adjustment since UTC began has only added a second to civil time.",
         "type": "factual",
         "assertions": [
          {
           "id": "s02.a",
-          "text": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before.",
-          "kind": "fact",
-          "claims": [
-           {
-            "id": "test-fixture/every-leap-second-since-utc-began",
-            "stance": "asserts"
-           }
-          ],
-          "evidence": [
-           {
-            "kind": "study",
-            "claim": "test-fixture/every-leap-second-since-utc-began",
-            "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
-           }
-          ]
-         }
-        ]
-       },
-       {
-        "id": "s03",
-        "text": "So the record is clear: a leap second has only ever been added, never taken away.",
-        "type": "factual",
-        "assertions": [
-         {
-          "id": "s03.a",
-          "text": "Every one of the 27 steps in the IERS table added a second to civil time; none subtracted one.",
+          "text": "Every leap second since UTC began in 1972 has added a second to civil time; none has ever subtracted one.",
           "kind": "fact",
           "claims": [
            {
@@ -158,47 +133,18 @@
         ]
        }
       ]
-     },
-     {
-      "kind": "figure",
-      "ref": "decision-most-discussed-claims/sc02",
-      "caption": "The TAI-UTC value at the record's first and latest entries, with the steps between them, all moving the same direction."
      }
     ]
    }
   ]
  },
- "figures": {
-  "decision-most-discussed-claims/sc02": {
-   "chart": {
-    "type": "stat-tiles",
-    "title": "TAI-UTC, first value to latest",
-    "points": [
-     {
-      "label": "1 January 1972",
-      "value": 10,
-      "unit": "count",
-      "display": "10",
-      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
-     },
-     {
-      "label": "1 January 2017",
-      "value": 37,
-      "unit": "count",
-      "display": "37",
-      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
-     }
-    ],
-    "note": "These tiles mark the table's first and last values; the rows between them each rise by exactly one second, never fall. Don't imply a smooth or constant rate between 1972 and 2017 — the steps land irregularly."
-   }
-  }
- },
+ "figures": {},
  "history": [
   {
    "revision": 1,
-   "date": "2026-11-01",
-   "approvedBy": "automated: run 2026-11-01",
-   "fingerprint": "16ec3cc902"
+   "date": "2026-11-02",
+   "approvedBy": "automated: run 2026-11-02",
+   "fingerprint": "aa66455c5d"
   }
  ],
  "recordSeen": 0

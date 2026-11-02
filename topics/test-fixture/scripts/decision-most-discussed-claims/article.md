@@ -1,16 +1,14 @@
-# Has a leap second ever been taken away? [meta.headline fp=7aa4427c85]
+# Every leap second since 1972 has been added, none ever taken away [meta.headline fp=36f1074348]
 
-Story `decision:most-discussed-claims` (test-fixture), revision 1. SEO title: Leap Seconds: Added Every Time, Never Removed [meta.seoTitle fp=298b77ed78]. Validation: **passed**, 0 blocking, 4 warnings, 5/5 assertions verified.
+Story `decision:most-discussed-claims` (test-fixture), revision 1. SEO title: Has a leap second ever been taken away? [meta.seoTitle fp=7aa4427c85]. Validation: **passed**, 0 blocking, 4 warnings, 4/4 assertions verified.
 
-> The official leap-second record answers it directly: every adjustment since 1972 has added a second, and none has ever been taken away. [meta.dek ok fp=d3a47299d4]
+> The official record of every leap second since UTC began in 1972 shows each one adding a second to civil time; none has ever subtracted one. [meta.dek ok fp=dc55c9ebca]
 
-Description: Every leap second recorded since 1972 has added a second to civil time; none has ever been taken away, according to the official record. [meta.description ok fp=8f00b9f88e]
+Description: The IERS table of leap seconds runs only one way, from 10 seconds in 1972 to 37 seconds in 2017 — none has ever been subtracted. [meta.description ok fp=eb72491b05]
 
-## Only ever added, never taken away [heading:answer fp=c0543754b3]
+## No leap second has ever been taken away [heading:answer fp=fabd010cc9]
 
-The International Earth Rotation and Reference Systems Service keeps the one official table of every adjustment made to civil time since the current standard began in 1972. [s01 ok fp=d51c242060] Its 28 entries move only one way, from 10 seconds in 1972 to 37 seconds in 2017, each one second more than the last. [s02 ok fp=14c8e69095] So the record is clear: a leap second has only ever been added, never taken away. [s03 ok fp=d1306a0f78]
-
-Figure decision-most-discussed-claims/sc02: The TAI-UTC value at the record's first and latest entries, with the steps between them, all moving the same direction. [decision-most-discussed-claims/sc02 fp=fd631225a9]
+The official leap-second record, kept by the International Earth Rotation and Reference Systems Service, has only ever moved one way: it opened at 10 seconds in 1972 and stands at 37 seconds as of 2017. [s01 ok fp=2ff2d5cd10] That settles whether a leap second has ever been subtracted: none has — every adjustment since UTC began has only added a second to civil time. [s02 ok fp=3fc7aa95de]
 
 ## Open issues
 
@@ -22,4 +20,3 @@ Figure decision-most-discussed-claims/sc02: The TAI-UTC value at the record's fi
 - **info** meta.description (meta.description.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s01 (s01.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s02 (s02.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
-- **info** s03 (s03.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.

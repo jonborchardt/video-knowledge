@@ -2,7 +2,8 @@
   "topic": "test-fixture",
   "story": "decision:most-discussed-claims",
   "title": "Has a leap second ever been taken away?",
-  "revision": 2,
+  "revision": 1,
+  "targetDurationSeconds": 15,
   "generation": {
     "model": "claude-sonnet-5",
     "brief": "src/modules/script/briefs/script.md",
@@ -10,31 +11,22 @@
     "wordsPerMinute": 150,
     "evidencePackage": "5879ca5f47"
   },
-  "targetDurationSeconds": 15,
   "sections": [
-    {
-      "name": "hook",
-      "sentences": [
-        {
-          "id": "s01",
-          "text": "Has a leap second ever been taken away?",
-          "type": "rhetorical"
-        }
-      ]
-    },
     {
       "name": "answer",
       "sentences": [
         {
-          "id": "s02",
-          "text": "The IERS table lists 28 values, climbing from 10 seconds to 37 seconds without ever going down.",
+          "id": "s01",
+          "text": "The IERS table of TAI-UTC runs from 10 seconds to 37 seconds, each entry a second larger than the last.",
           "type": "factual",
           "assertions": [
             {
-              "id": "s02.a",
-              "text": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before.",
+              "id": "s01.a",
+              "text": "The IERS Leap_Second.dat table of TAI-UTC runs from 10 seconds in 1972 to 37 seconds in 2017, with each entry exactly one second larger than the previous.",
               "kind": "fact",
-              "claims": [{ "id": "test-fixture/every-leap-second-since-utc-began", "stance": "asserts" }],
+              "claims": [
+                { "id": "test-fixture/every-leap-second-since-utc-began", "stance": "asserts" }
+              ],
               "evidence": [
                 { "kind": "study", "claim": "test-fixture/every-leap-second-since-utc-began", "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44" }
               ]
@@ -42,15 +34,17 @@
           ]
         },
         {
-          "id": "s03",
-          "text": "Every one of those steps added a second; none has ever been taken away.",
+          "id": "s02",
+          "text": "That means every leap second has been added to civil time; none has ever been taken away.",
           "type": "factual",
           "assertions": [
             {
-              "id": "s03.a",
-              "text": "Every one of the 27 steps in the IERS table added a second to civil time; none subtracted one.",
+              "id": "s02.a",
+              "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away.",
               "kind": "fact",
-              "claims": [{ "id": "test-fixture/every-leap-second-since-utc-began", "stance": "asserts" }],
+              "claims": [
+                { "id": "test-fixture/every-leap-second-since-utc-began", "stance": "asserts" }
+              ],
               "evidence": [
                 { "kind": "study", "claim": "test-fixture/every-leap-second-since-utc-began", "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44" }
               ]

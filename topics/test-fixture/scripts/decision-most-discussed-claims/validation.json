@@ -1,17 +1,17 @@
 {
  "topic": "test-fixture",
  "story": "decision:most-discussed-claims",
- "revision": 2,
- "date": "2026-11-01T07:37:48.845Z",
+ "revision": 1,
+ "date": "2026-11-02T02:59:21.256Z",
  "status": "passed",
- "scriptFingerprint": "2dbc2f40a7",
+ "scriptFingerprint": "863fc4b5a5",
  "packageFingerprint": "5879ca5f47",
  "wordsPerMinute": 150,
- "words": 39,
- "spokenWords": 42,
+ "words": 37,
+ "spokenWords": 39,
  "minutes": 0.3,
  "counts": {
-  "sentences": 3,
+  "sentences": 2,
   "factual": 2,
   "assertions": 2,
   "verified": 2,
@@ -24,34 +24,22 @@
  "sentences": [
   {
    "id": "s01",
-   "section": "hook",
-   "text": "Has a leap second ever been taken away?",
-   "type": "rhetorical",
-   "fingerprint": "7aa4427c85",
-   "words": 8,
-   "status": "verified",
-   "approved": true,
-   "assertions": [],
-   "issues": []
-  },
-  {
-   "id": "s02",
    "section": "answer",
-   "text": "The IERS table lists 28 values, climbing from 10 seconds to 37 seconds without ever going down.",
+   "text": "The IERS table of TAI-UTC runs from 10 seconds to 37 seconds, each entry a second larger than the last.",
    "type": "factual",
-   "fingerprint": "6b875b53ba",
-   "words": 17,
+   "fingerprint": "742e838e59",
+   "words": 20,
    "status": "verified",
    "approved": true,
    "assertions": [
     {
-     "id": "s02.a",
-     "text": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before.",
+     "id": "s01.a",
+     "text": "The IERS Leap_Second.dat table of TAI-UTC runs from 10 seconds in 1972 to 37 seconds in 2017, with each entry exactly one second larger than the previous.",
      "kind": "fact",
      "status": "verified",
      "validation": {
-      "id": "s02.a",
-      "text": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before.",
+      "id": "s01.a",
+      "text": "The IERS Leap_Second.dat table of TAI-UTC runs from 10 seconds in 1972 to 37 seconds in 2017, with each entry exactly one second larger than the previous.",
       "kind": "fact",
       "modality": "plain",
       "status": "supported",
@@ -90,12 +78,12 @@
      },
      "issues": [
       {
-       "sentence": "s02",
+       "sentence": "s01",
        "category": "wording",
        "severity": "info",
        "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
        "by": "deterministic",
-       "assertion": "s02.a"
+       "assertion": "s01.a"
       }
      ]
     }
@@ -103,29 +91,29 @@
    "issues": []
   },
   {
-   "id": "s03",
+   "id": "s02",
    "section": "answer",
-   "text": "Every one of those steps added a second; none has ever been taken away.",
+   "text": "That means every leap second has been added to civil time; none has ever been taken away.",
    "type": "factual",
-   "fingerprint": "d3e247919d",
-   "words": 14,
+   "fingerprint": "9bf876f88c",
+   "words": 17,
    "status": "verified",
    "approved": true,
    "assertions": [
     {
-     "id": "s03.a",
-     "text": "Every one of the 27 steps in the IERS table added a second to civil time; none subtracted one.",
+     "id": "s02.a",
+     "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away.",
      "kind": "fact",
      "status": "verified",
      "validation": {
-      "id": "s03.a",
-      "text": "Every one of the 27 steps in the IERS table added a second to civil time; none subtracted one.",
+      "id": "s02.a",
+      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away.",
       "kind": "fact",
       "modality": "universal",
       "status": "supported",
       "decision": "approved",
-      "review": true,
-      "verbatim": false,
+      "review": false,
+      "verbatim": true,
       "strength": 0.85,
       "independent": 1,
       "supporting": [
@@ -150,22 +138,11 @@
       "qualifying": [],
       "context": [],
       "problems": [],
-      "limitations": [
-       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
-      ],
+      "limitations": [],
       "suggestions": [],
       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
      },
-     "issues": [
-      {
-       "sentence": "s03",
-       "category": "wording",
-       "severity": "info",
-       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
-       "by": "deterministic",
-       "assertion": "s03.a"
-      }
-     ]
+     "issues": []
     }
    ],
    "issues": []
@@ -173,34 +150,19 @@
  ],
  "issues": [
   {
-   "sentence": "s02",
+   "sentence": "s01",
    "category": "wording",
    "severity": "info",
    "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
    "by": "deterministic",
-   "assertion": "s02.a"
-  },
-  {
-   "sentence": "s03",
-   "category": "wording",
-   "severity": "info",
-   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
-   "by": "deterministic",
-   "assertion": "s03.a"
+   "assertion": "s01.a"
   }
  ],
  "resolved": [],
  "history": [
   {
    "revision": 1,
-   "date": "2026-11-01T07:31:15.353Z",
-   "status": "blocked",
-   "blocking": 1,
-   "warnings": 0
-  },
-  {
-   "revision": 2,
-   "date": "2026-11-01T07:37:48.845Z",
+   "date": "2026-11-02T02:59:21.256Z",
    "status": "passed",
    "blocking": 0,
    "warnings": 0

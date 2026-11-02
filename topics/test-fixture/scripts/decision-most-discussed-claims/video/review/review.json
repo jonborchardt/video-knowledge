@@ -1,14 +1,14 @@
 {
- "generatedAt": "2026-11-01T08:03:23.260Z",
- "status": "release build",
- "title": "[fixture 20261101-0729-8f4e] Has a leap second ever been taken away?",
- "fixtureRun": "20261101-0729-8f4e",
- "mp4": "decision-most-discussed-claims.mp4",
- "mp4Sha": "586ee071ae",
- "thumbnailSha": null,
- "captionsSha": "2bc3499b82",
- "seconds": 33.301,
- "buildReport": "ee46a40265",
+ "generatedAt": "2026-11-02T03:13:08.461Z",
+ "status": "private review build",
+ "title": "[PRIVATE REVIEW] [fixture 20261102-0252-a00f] Has a leap second ever been taken away?",
+ "fixtureRun": "20261102-0252-a00f",
+ "mp4": "decision-most-discussed-claims-review-private.mp4",
+ "mp4Sha": "a124e1c3a4",
+ "thumbnailSha": "03510b106b",
+ "captionsSha": "b500cf8460",
+ "seconds": 32.17,
+ "buildReport": "b6da5295bb",
  "chapters": [],
  "tags": [
   "Commission on Spending",
@@ -32,39 +32,33 @@
  },
  "provenance": {
   "narration": {
-   "provider": "azure",
+   "provider": "edge",
    "voice": "en-US-AndrewMultilingualNeural",
    "rate": "+0%",
-   "model": "neural",
-   "format": "wav",
-   "licence": "commercial: Azure AI Speech terms allow the generated audio in published media",
-   "publishable": true,
-   "seconds": 15.34,
+   "model": null,
+   "format": "mp3",
+   "licence": "draft only: unofficial Microsoft Edge read-aloud API, no terms for published media",
+   "publishable": false,
+   "seconds": 14.52,
    "wordsPerMinute": 153,
    "sentences": [
     {
      "id": "s01",
-     "seconds": 2.85,
-     "sha": "131063612d",
-     "words": 8
+     "seconds": 8.784,
+     "sha": "486ae08c02",
+     "words": 18
     },
     {
      "id": "s02",
-     "seconds": 7.7375,
-     "sha": "4169fd2638",
-     "words": 15
-    },
-    {
-     "id": "s03",
-     "seconds": 4.75,
-     "sha": "d223d47465",
-     "words": 14
+     "seconds": 5.736,
+     "sha": "e6877057de",
+     "words": 17
     }
    ],
-   "cost": "$0.0031 (estimated from characters)"
+   "cost": "$0 (edge-tts, no key)"
   },
   "music": {
-   "fingerprint": "6b6a77cd22",
+   "fingerprint": "a9eda4a5fd",
    "compositions": [
     {
      "id": "undertow",
@@ -91,35 +85,29 @@
    ],
    "cues": [
     {
-     "id": "opening",
-     "asset": "undertow/pulse",
-     "start": 0,
-     "end": 4.466666666666667,
-     "gain": -11,
-     "rmsDb": -42.2
-    },
-    {
      "id": "ending",
      "asset": "undertow/pulse",
-     "start": 4.466666666666667,
-     "end": 33.3,
+     "start": 0,
+     "end": 32.166666666666664,
      "gain": -11,
      "rmsDb": -35.9
     }
    ],
    "levels": {
-    "peakDb": -2.5,
+    "peakDb": -2.6,
     "musicPeakDb": -22.4,
-    "narrationPeakDb": -2.6,
-    "musicUnderSpeechDb": -18.3,
+    "narrationPeakDb": -2.8,
+    "musicUnderSpeechDb": -17.2,
     "musicScale": 1
    }
   },
   "clearance": {
-   "narration": true,
+   "narration": false,
    "music": true,
-   "publishable": true,
-   "why": []
+   "publishable": false,
+   "why": [
+    "narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, \"npm run video -- final test-fixture decision:most-discussed-claims --approved-by \"your name\"\" re-narrates it for release"
+   ]
   }
  },
  "qa": {
@@ -138,14 +126,16 @@
   "Transitions: does every scene change read as intended; nothing cut off, nothing held too long?",
   "Visual glitches: any flicker, overlapping text, clipped labels or wrong fonts (compare the contact sheet)?",
   "Conclusion: does the ending answer the question asked at the start, and does the black hold as the storyboard says?",
-  "Playback: compare the local MP4 with the YouTube transcode at 1080p and 480p for banding, blur on small text and audio level."
+  "Playback: compare the local MP4 with the YouTube transcode at 1080p and 480p for banding, blur on small text and audio level.",
+  "Release: the narration voice is draft-only until re-narrated under commercial terms; confirm nothing in this build is cleared for public release unless the build report says so."
  ],
  "files": [
-  "decision-most-discussed-claims.mp4",
+  "decision-most-discussed-claims-review-private.mp4",
   "README.md",
   "description.txt",
   "checklist.md",
   "build-report.md",
+  "thumbnail.png",
   "captions.en.srt",
   "links.json",
   "review.json"
