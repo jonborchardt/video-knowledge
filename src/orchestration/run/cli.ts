@@ -40,6 +40,12 @@
 //                                      run; this never creates a task.
 //   mail-test [--await-reply]          one message to notifications.to through the outbox; with the flag, waits up to
 //                                      ten minutes for your reply and saves it under tests/fixtures/mail/.
+//   verified <integration> --by <name> --evidence <ref>
+//                                      records your verification of one integration in readiness.json (the only writer):
+//                                      the evidence must name a record that exists (ledger:<topic>/<story>#<event>,
+//                                      journal:<topic>/<story>#<line>, run:<id>, launch:<topic>/<story>, scan:<topic>,
+//                                      social:<topic>/<story>, discovery:<slot>, tick:<ISO>, or a <Message-ID> the outbox
+//                                      or inbox holds); never an automated actor; it changes no flag.
 // Policy: automation.json (src/shared/automation.ts). Secrets: .env, loaded here and handed to each child by verb.
 import { readFileSync } from 'node:fs';
 import { AGENT_ROLES, loadAutomation } from '../../shared/automation';
@@ -61,6 +67,7 @@ import { discover, discoveryDeps } from './discovery';
 import { runTopic } from './topic-runner';
 import { maintain, maintainDeps } from './maintain';
 import { clearHalt, readHalt, runDir, appendJournal } from './journal';
+import { INTEGRATIONS, verify } from './readiness';
 
 const usage = () =>
   readFileSync(new URL(import.meta.url), 'utf8')
@@ -306,6 +313,25 @@ switch (verb) {
   case 'schedule': {
     if (!rest.includes('--print')) die(usage());
     console.log(scheduleText(loadAutomation(ROOT), ROOT));
+    break;
+  }
+  case 'verified': {
+    // a person's verification of one integration against the real service: evidence bound, no flag touched
+    const [integration] = rest;
+    const by = flag('--by');
+    const evidence = flag('--evidence');
+    if (!integration || !by || !evidence)
+      die(
+        `verified needs <integration> --by <name> --evidence <ref>; integrations: ${INTEGRATIONS.map((i) => i.key).join(', ')}`,
+      );
+    try {
+      const r = verify(ROOT, integration!, { by: by!, evidence: evidence! });
+      console.log(
+        `${r.changed ? 'verified' : 'already verified'} ${integration} (by ${r.record.by}, ${r.record.at}, evidence ${r.record.evidence}); enabling is a separate act in automation.json`,
+      );
+    } catch (e) {
+      die((e as Error).message);
+    }
     break;
   }
   case 'mail-test': {
