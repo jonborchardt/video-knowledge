@@ -37,6 +37,22 @@ describe('npm run run', () => {
     expect(rows.find((r) => r.storyId === 'decision-never-started')?.halt?.kind).toBe('budget');
     expect(rows.find((r) => r.storyId === `${S}/shorts/one`)?.halt?.kind).toBe('timeout');
   });
+  it("a run folder without script.json yet takes its story id from the topic's stories.json, so its row key is the board's (M3)", () => {
+    const r2 = mkdtempSync(join(tmpdir(), 'vk-cli-ids-'));
+    writeFileSync(join(r2, 'package.json'), '{"name":"video-knowledge"}');
+    mkdirSync(join(r2, 'topics', T), { recursive: true });
+    writeFileSync(
+      join(r2, 'topics', T, 'stories.json'),
+      JSON.stringify({ stories: [{ id: 'decision:just-started' }, { id: S }], rejected: [] }),
+    );
+    writeHalt(runDir(T, 'decision:just-started', r2), { ...halt, stage: 'script' });
+    writeHalt(runDir(T, 'decision:unknown-story', r2), { ...halt, stage: 'script' });
+    const ids = statusOf(r2, () => false)
+      .map((x) => x.storyId)
+      .sort();
+    expect(ids).toEqual(['decision-unknown-story', 'decision:just-started']); // listed, resolved; unlisted, the slug
+    rmSync(r2, { recursive: true, force: true });
+  });
   it('prints usage and exits 2 without a verb', () => {
     const r = runCli('run', [], { cwd: root });
     expect(r.status).toBe(2);

@@ -3,7 +3,7 @@
 // story whose writer never wrote script.json (a halt at `package`) and a Short's.
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { ROOT, topicsDir } from '../../shared/io';
+import { ROOT, readJson, storySlug, topicDir, topicsDir } from '../../shared/io';
 import { type Halt, readHalt, readJournal, RUN_DIR } from './journal';
 import { readLock } from './lock';
 import { alive } from './proc';
@@ -34,7 +34,7 @@ export function runFolders(root: string): { topic: string; dir: string; storyId:
     const scripts = join(topicsDir(root), topic, 'scripts');
     for (const slug of dirsIn(scripts)) {
       const dir = join(scripts, slug);
-      const id = idFromDir(dir, slug);
+      const id = idFromDir(dir, slug, topic, root);
       if (existsSync(join(dir, RUN_DIR))) out.push({ topic, dir, storyId: id });
       for (const short of dirsIn(join(dir, 'shorts'))) {
         const sdir = join(dir, 'shorts', short);
@@ -84,9 +84,10 @@ export function statusOf(root = ROOT, isAlive: (pid: number) => boolean = alive)
   return rows;
 }
 
-/** The story id a folder belongs to: its script.json names it; a folder without one (a run that halted before the
- *  writer wrote it) keeps its slug. */
-function idFromDir(dir: string, slug: string): string {
+/** The story id a folder belongs to: its script.json names it; a folder without one yet (a run between its first
+ *  step and the writer's file) is matched to the topic's stories.json by slug, so its row key is the board's from the
+ *  first step; a folder no story explains keeps its slug. */
+function idFromDir(dir: string, slug: string, topic: string, root: string): string {
   const script = join(dir, 'script.json');
   if (existsSync(script)) {
     try {
@@ -96,7 +97,8 @@ function idFromDir(dir: string, slug: string): string {
       /* fall through */
     }
   }
-  return slug;
+  const stories = readJson<{ stories?: { id: string }[] }>(join(topicDir(topic, root), 'stories.json'));
+  return stories?.stories?.find((s) => storySlug(s.id) === slug)?.id ?? slug;
 }
 
 export function renderStatus(rows: StatusRow[]): string {

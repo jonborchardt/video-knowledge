@@ -172,6 +172,15 @@ describe('liveView rows', () => {
     expect(between.elapsedMs).toBe(2 * 60_000);
     expect(between.stepKind).toBeNull();
     expect(between.estimate).toBeNull();
+    // an agent brief whose attempt record has already closed (the lock still names the step): still an agent step
+    lock(dir, 101, {
+      childPid: 102,
+      childStep: 'Read src/modules/script/briefs/script-review.md and follow it.',
+      childAt: ago(1),
+    });
+    const closing = liveView(root, deps()).rows.find((r) => r.key === `${T}/${S}`)!;
+    expect(closing.stepKind).toBe('agent');
+    expect(closing.role).toBe('reviewer');
     lock(dir, 101, { childPid: 102, childStep: 'npm run video -- render t s', childAt: ago(1) });
     const cli = liveView(root, deps()).rows.find((r) => r.key === `${T}/${S}`)!;
     expect(cli).toMatchObject({

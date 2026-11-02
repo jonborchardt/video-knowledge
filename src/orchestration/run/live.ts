@@ -190,7 +190,7 @@ const slugOf = (topic: string, storyId: string, root: string) => basename(script
 const reviewUrl = (topic: string, storyId: string, root: string) => `/${topic}/review/${slugOf(topic, storyId, root)}`;
 const stepKindOf = (step: string | null, agent: boolean): StepKind | null => {
   if (!step) return null;
-  if (agent) return 'agent';
+  if (agent || /briefs\//.test(step)) return 'agent'; // a brief is an agent's step, open attempt record or not
   if (/^npm run publish -- (upload|push|sync|verify|go-live)/.test(step)) return 'service';
   if (/^npm run /.test(step)) return 'cli';
   return 'person';
