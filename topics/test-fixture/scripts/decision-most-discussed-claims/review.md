@@ -5,12 +5,12 @@
 | Story | `decision:most-discussed-claims` (test-fixture) |
 | Revision | 1 (1 of at most 3 in this pass) |
 | Validation | **passed** (2026-11-02) |
-| Words / runtime | 37 words, about 0.3 min at 150 wpm |
-| Sentences | 2 (2 factual or attributed) |
-| Assertions | 2, 2 verified |
+| Words / runtime | 46 words, about 0.3 min at 150 wpm |
+| Sentences | 2 (1 factual or attributed) |
+| Assertions | 1, 1 verified |
 | Issues | 0 blocking, 0 warnings, 0 dispositioned |
 | Unreviewed sentences | 0 |
-| Scenes | 2, 0:17 (ok) |
+| Scenes | 2, 0:21 (ok) |
 | Evidence package | 5879ca5f47 (1 documents, 1 claims) |
 | Model | claude-sonnet-5 |
 

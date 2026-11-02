@@ -1,14 +1,16 @@
-# Every leap second since 1972 has been added, none ever taken away [meta.headline fp=36f1074348]
+# Every leap second on record has been an addition [meta.headline fp=8e9b01bd57]
 
 Story `decision:most-discussed-claims` (test-fixture), revision 1. SEO title: Has a leap second ever been taken away? [meta.seoTitle fp=7aa4427c85]. Validation: **passed**, 0 blocking, 4 warnings, 4/4 assertions verified.
 
-> The official record of every leap second since UTC began in 1972 shows each one adding a second to civil time; none has ever subtracted one. [meta.dek ok fp=dc55c9ebca]
+> Has a leap second ever been taken away? The IERS record says no: every one since 1972 has added a second to civil time. [meta.dek ok fp=ed5a3b3ab0]
 
-Description: The IERS table of leap seconds runs only one way, from 10 seconds in 1972 to 37 seconds in 2017 — none has ever been subtracted. [meta.description ok fp=eb72491b05]
+Description: No leap second has ever been subtracted: the IERS table records 27 straight additions from 1972 to 2017. [meta.description ok fp=15c2c518b5]
 
-## No leap second has ever been taken away [heading:answer fp=fabd010cc9]
+## Every step in the record adds a second [heading:answer fp=5851c5c369]
 
-The official leap-second record, kept by the International Earth Rotation and Reference Systems Service, has only ever moved one way: it opened at 10 seconds in 1972 and stands at 37 seconds as of 2017. [s01 ok fp=2ff2d5cd10] That settles whether a leap second has ever been subtracted: none has — every adjustment since UTC began has only added a second to civil time. [s02 ok fp=3fc7aa95de]
+The IERS table of TAI minus UTC, the record of every leap second since civil time began using them in 1972, climbs from 10 seconds to 37 seconds in 2017 without ever stepping back. [s01 ok fp=3147afb1d6] Across those 27 one-second steps, every single one added a second to civil time; none subtracted one, so a leap second has never been taken away. [s02 ok fp=1bfbd8cc75]
+
+Figure decision-most-discussed-claims/sc02: The IERS table's opening value, its latest value, and the single-second steps between them. [decision-most-discussed-claims/sc02 fp=a8d8c149dc]
 
 ## Open issues
 
@@ -16,7 +18,3 @@ The official leap-second record, kept by the International Earth Rotation and Re
 - **warning** - structure (deterministic): no "setup" section
 - **warning** - structure (deterministic): no "investigation" section
 - **warning** - structure (deterministic): no "takeaway" section
-- **info** meta.dek (meta.dek.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
-- **info** meta.description (meta.description.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
-- **info** s01 (s01.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
-- **info** s02 (s02.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.

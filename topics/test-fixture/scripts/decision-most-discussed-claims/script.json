@@ -7,47 +7,40 @@
   "generation": {
     "model": "claude-sonnet-5",
     "brief": "src/modules/script/briefs/script.md",
-    "date": "2026-11-01",
+    "date": "2026-11-02",
     "wordsPerMinute": 150,
     "evidencePackage": "5879ca5f47"
   },
   "sections": [
     {
-      "name": "answer",
+      "name": "hook",
       "sentences": [
         {
           "id": "s01",
-          "text": "The IERS table of TAI-UTC runs from 10 seconds to 37 seconds, each entry a second larger than the last.",
-          "type": "factual",
-          "assertions": [
-            {
-              "id": "s01.a",
-              "text": "The IERS Leap_Second.dat table of TAI-UTC runs from 10 seconds in 1972 to 37 seconds in 2017, with each entry exactly one second larger than the previous.",
-              "kind": "fact",
-              "claims": [
-                { "id": "test-fixture/every-leap-second-since-utc-began", "stance": "asserts" }
-              ],
-              "evidence": [
-                { "kind": "study", "claim": "test-fixture/every-leap-second-since-utc-began", "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44" }
-              ]
-            }
-          ]
-        },
+          "text": "Could a clock ever lose a second instead of gaining one?",
+          "type": "rhetorical"
+        }
+      ]
+    },
+    {
+      "name": "answer",
+      "sentences": [
         {
           "id": "s02",
-          "text": "That means every leap second has been added to civil time; none has ever been taken away.",
+          "text": "The IERS record of TAI minus UTC rises from 10 seconds in 1972 to 37 seconds now, in 27 one-second steps — every leap second has been added, and none has ever been taken away.",
           "type": "factual",
           "assertions": [
             {
               "id": "s02.a",
-              "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away.",
+              "text": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before: every one of the 27 steps added a second and none subtracted one.",
               "kind": "fact",
               "claims": [
                 { "id": "test-fixture/every-leap-second-since-utc-began", "stance": "asserts" }
               ],
               "evidence": [
                 { "kind": "study", "claim": "test-fixture/every-leap-second-since-utc-began", "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44" }
-              ]
+              ],
+              "qualifications": []
             }
           ]
         }

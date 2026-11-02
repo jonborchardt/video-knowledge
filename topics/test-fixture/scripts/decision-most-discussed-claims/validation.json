@@ -2,19 +2,19 @@
  "topic": "test-fixture",
  "story": "decision:most-discussed-claims",
  "revision": 1,
- "date": "2026-11-02T02:59:21.256Z",
+ "date": "2026-11-02T09:10:39.578Z",
  "status": "passed",
- "scriptFingerprint": "863fc4b5a5",
+ "scriptFingerprint": "a98089c0ff",
  "packageFingerprint": "5879ca5f47",
  "wordsPerMinute": 150,
- "words": 37,
- "spokenWords": 39,
+ "words": 46,
+ "spokenWords": 51,
  "minutes": 0.3,
  "counts": {
   "sentences": 2,
-  "factual": 2,
-  "assertions": 2,
-  "verified": 2,
+  "factual": 1,
+  "assertions": 1,
+  "verified": 1,
   "blocking": 0,
   "warnings": 0,
   "dispositioned": 0,
@@ -24,24 +24,36 @@
  "sentences": [
   {
    "id": "s01",
+   "section": "hook",
+   "text": "Could a clock ever lose a second instead of gaining one?",
+   "type": "rhetorical",
+   "fingerprint": "cadb3d24b7",
+   "words": 11,
+   "status": "verified",
+   "approved": true,
+   "assertions": [],
+   "issues": []
+  },
+  {
+   "id": "s02",
    "section": "answer",
-   "text": "The IERS table of TAI-UTC runs from 10 seconds to 37 seconds, each entry a second larger than the last.",
+   "text": "The IERS record of TAI minus UTC rises from 10 seconds in 1972 to 37 seconds now, in 27 one-second steps — every leap second has been added, and none has ever been taken away.",
    "type": "factual",
-   "fingerprint": "742e838e59",
-   "words": 20,
+   "fingerprint": "3d831777e0",
+   "words": 35,
    "status": "verified",
    "approved": true,
    "assertions": [
     {
-     "id": "s01.a",
-     "text": "The IERS Leap_Second.dat table of TAI-UTC runs from 10 seconds in 1972 to 37 seconds in 2017, with each entry exactly one second larger than the previous.",
+     "id": "s02.a",
+     "text": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before: every one of the 27 steps added a second and none subtracted one.",
      "kind": "fact",
      "status": "verified",
      "validation": {
-      "id": "s01.a",
-      "text": "The IERS Leap_Second.dat table of TAI-UTC runs from 10 seconds in 1972 to 37 seconds in 2017, with each entry exactly one second larger than the previous.",
+      "id": "s02.a",
+      "text": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before: every one of the 27 steps added a second and none subtracted one.",
       "kind": "fact",
-      "modality": "plain",
+      "modality": "universal",
       "status": "supported",
       "decision": "approved",
       "review": true,
@@ -78,71 +90,14 @@
      },
      "issues": [
       {
-       "sentence": "s01",
+       "sentence": "s02",
        "category": "wording",
        "severity": "info",
        "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
        "by": "deterministic",
-       "assertion": "s01.a"
+       "assertion": "s02.a"
       }
      ]
-    }
-   ],
-   "issues": []
-  },
-  {
-   "id": "s02",
-   "section": "answer",
-   "text": "That means every leap second has been added to civil time; none has ever been taken away.",
-   "type": "factual",
-   "fingerprint": "9bf876f88c",
-   "words": 17,
-   "status": "verified",
-   "approved": true,
-   "assertions": [
-    {
-     "id": "s02.a",
-     "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away.",
-     "kind": "fact",
-     "status": "verified",
-     "validation": {
-      "id": "s02.a",
-      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away.",
-      "kind": "fact",
-      "modality": "universal",
-      "status": "supported",
-      "decision": "approved",
-      "review": false,
-      "verbatim": true,
-      "strength": 0.85,
-      "independent": 1,
-      "supporting": [
-       {
-        "ref": {
-         "kind": "study",
-         "claim": "test-fixture/every-leap-second-since-utc-began",
-         "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
-        },
-        "cited": true,
-        "role": "supports",
-        "by": "iers-leap-second-dat.txt",
-        "verdict": "right",
-        "confidence": 0.85,
-        "note": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before: every one of the 27 steps added a second and none subtracted one.",
-        "applicability": "direct",
-        "basis": "heuristic",
-        "why": "the verdict bears on the claim as worded"
-       }
-      ],
-      "contradicting": [],
-      "qualifying": [],
-      "context": [],
-      "problems": [],
-      "limitations": [],
-      "suggestions": [],
-      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
-     },
-     "issues": []
     }
    ],
    "issues": []
@@ -150,19 +105,19 @@
  ],
  "issues": [
   {
-   "sentence": "s01",
+   "sentence": "s02",
    "category": "wording",
    "severity": "info",
    "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
    "by": "deterministic",
-   "assertion": "s01.a"
+   "assertion": "s02.a"
   }
  ],
  "resolved": [],
  "history": [
   {
    "revision": 1,
-   "date": "2026-11-02T02:59:21.256Z",
+   "date": "2026-11-02T09:10:39.578Z",
    "status": "passed",
    "blocking": 0,
    "warnings": 0

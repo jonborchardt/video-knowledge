@@ -5,32 +5,33 @@
  "date": "2026-11-02",
  "revision": 1,
  "fingerprints": {
-  "article": "aa66455c5d",
+  "article": "c66870c913",
   "package": "5879ca5f47",
-  "validation": "e86023d30d"
+  "validation": "bb060e923f"
  },
  "article": {
   "topic": "test-fixture",
   "story": "decision:most-discussed-claims",
   "revision": 1,
+  "targetDurationSeconds": 15,
   "generation": {
    "model": "claude-sonnet-5",
    "brief": "src/modules/article/briefs/article.md",
-   "date": "2026-11-01",
+   "date": "2026-11-02",
    "wordsPerMinute": 150,
    "evidencePackage": "5879ca5f47"
   },
   "meta": {
-   "headline": "Every leap second since 1972 has been added, none ever taken away",
+   "headline": "Every leap second on record has been an addition",
    "seoTitle": "Has a leap second ever been taken away?",
    "dek": {
     "id": "meta.dek",
-    "text": "The official record of every leap second since UTC began in 1972 shows each one adding a second to civil time; none has ever subtracted one.",
+    "text": "Has a leap second ever been taken away? The IERS record says no: every one since 1972 has added a second to civil time.",
     "type": "factual",
     "assertions": [
      {
-      "id": "meta.dek.a",
-      "text": "Every leap second since UTC began in 1972 has added a second to civil time; none has ever subtracted one.",
+      "id": "meta.dek.a1",
+      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
       "kind": "fact",
       "claims": [
        {
@@ -50,12 +51,12 @@
    },
    "description": {
     "id": "meta.description",
-    "text": "The IERS table of leap seconds runs only one way, from 10 seconds in 1972 to 37 seconds in 2017 — none has ever been subtracted.",
+    "text": "No leap second has ever been subtracted: the IERS table records 27 straight additions from 1972 to 2017.",
     "type": "factual",
     "assertions": [
      {
-      "id": "meta.description.a",
-      "text": "The IERS table of TAI-UTC runs from 10 seconds in 1972 to 37 seconds in 2017, rising at every step and never falling.",
+      "id": "meta.description.a1",
+      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
       "kind": "fact",
       "claims": [
        {
@@ -77,19 +78,19 @@
   "sections": [
    {
     "name": "answer",
-    "heading": "No leap second has ever been taken away",
+    "heading": "Every step in the record adds a second",
     "blocks": [
      {
       "kind": "prose",
       "sentences": [
        {
         "id": "s01",
-        "text": "The official leap-second record, kept by the International Earth Rotation and Reference Systems Service, has only ever moved one way: it opened at 10 seconds in 1972 and stands at 37 seconds as of 2017.",
+        "text": "The IERS table of TAI minus UTC, the record of every leap second since civil time began using them in 1972, climbs from 10 seconds to 37 seconds in 2017 without ever stepping back.",
         "type": "factual",
         "assertions": [
          {
-          "id": "s01.a",
-          "text": "The IERS record of the gap between atomic time and civil time (TAI-UTC) opened at 10 seconds in 1972 and reached 37 seconds in 2017, rising at every step in between.",
+          "id": "s01.a1",
+          "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
           "kind": "fact",
           "claims": [
            {
@@ -109,12 +110,13 @@
        },
        {
         "id": "s02",
-        "text": "That settles whether a leap second has ever been subtracted: none has — every adjustment since UTC began has only added a second to civil time.",
+        "text": "Across those 27 one-second steps, every single one added a second to civil time; none subtracted one, so a leap second has never been taken away.",
         "type": "factual",
+        "note": "The 10 s and 37 s endpoints are the size of the gap between atomic and civil time, not a count of leap seconds; the 27 steps between them are the leap seconds. The figure block below carries all three figures with their cite.",
         "assertions": [
          {
-          "id": "s02.a",
-          "text": "Every leap second since UTC began in 1972 has added a second to civil time; none has ever subtracted one.",
+          "id": "s02.a1",
+          "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
           "kind": "fact",
           "claims": [
            {
@@ -133,18 +135,47 @@
         ]
        }
       ]
+     },
+     {
+      "kind": "figure",
+      "ref": "decision-most-discussed-claims/sc02",
+      "caption": "The IERS table's opening value, its latest value, and the single-second steps between them."
      }
     ]
    }
   ]
  },
- "figures": {},
+ "figures": {
+  "decision-most-discussed-claims/sc02": {
+   "chart": {
+    "type": "stat-tiles",
+    "title": "TAI minus UTC",
+    "points": [
+     {
+      "label": "1972",
+      "value": 10,
+      "unit": "count",
+      "display": "10 s",
+      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+     },
+     {
+      "label": "2017",
+      "value": 37,
+      "unit": "count",
+      "display": "37 s",
+      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+     }
+    ],
+    "note": "The table's value only ever rises between these tiles; it never falls."
+   }
+  }
+ },
  "history": [
   {
    "revision": 1,
    "date": "2026-11-02",
    "approvedBy": "automated: run 2026-11-02",
-   "fingerprint": "aa66455c5d"
+   "fingerprint": "c66870c913"
   }
  ],
  "recordSeen": 0

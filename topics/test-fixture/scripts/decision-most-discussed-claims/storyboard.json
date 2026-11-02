@@ -2,14 +2,14 @@
  "topic": "test-fixture",
  "story": "decision:most-discussed-claims",
  "title": "Has a leap second ever been taken away?",
- "scriptFingerprint": "863fc4b5a5",
+ "scriptFingerprint": "a98089c0ff",
  "scriptStatus": "passed",
  "wordsPerMinute": 150,
- "runtime": 16.6,
+ "runtime": 21.4,
  "generation": {
   "model": "claude-sonnet-5",
   "brief": "src/modules/storyboard/briefs/storyboard.md",
-  "date": "2026-11-01"
+  "date": "2026-11-02"
  },
  "assets": {},
  "status": "ok",
@@ -20,95 +20,88 @@
    "sentences": [
     "s01"
    ],
-   "purpose": "Show the viewer the record's two endpoints before the conclusion is drawn from them.",
+   "purpose": "Put the two directions a leap second could go in front of the viewer before the record answers it.",
    "visual": {
-    "category": "data-chart",
-    "description": "Dark field; two stat tiles settle side by side, '10 s · 1972' on the left and '37 s · 2017' on the right; a thin line connects them, rising in one direction only, standing in for the table's other steps between them.",
+    "category": "typography",
+    "description": "Dark field. The question types on word by word in large serif. A thin clock-hand line under the text ticks one notch forward, hesitates, then ticks one notch back before settling forward again — a beat of doubt about which way time moves.",
     "onScreenText": [
-     "10 seconds, 1972",
-     "37 seconds, 2017"
-    ],
-    "chart": {
-     "type": "stat-tiles",
-     "title": "TAI-UTC, first value to latest",
-     "points": [
-      {
-       "label": "1 January 1972",
-       "value": 10,
-       "unit": "count",
-       "display": "10",
-       "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
-      },
-      {
-       "label": "1 January 2017",
-       "value": 37,
-       "unit": "count",
-       "display": "37",
-       "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
-      }
-     ],
-     "note": "These tiles mark the table's first and last values only; the rows between them each rise by exactly one second. Don't imply a smooth or constant rate between 1972 and 2017, and don't draw the other 26 steps as a curve."
-    }
+     "Could a clock ever lose a second instead of gaining one?"
+    ]
    },
-   "citations": [
-    {
-     "label": "IERS, Leap_Second.dat (Bulletin C 72)",
-     "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
-    }
-   ],
-   "direction": "Hard cut in; the two tiles and the connecting line settle together; hold briefly on the line's single upward direction.",
+   "direction": "Hard cut in on the first word; hold half a second after the hand settles forward.",
    "pauseSeconds": 1,
    "order": 1,
-   "narration": "The IERS table of TAI-UTC runs from 10 seconds to 37 seconds, each entry a second larger than the last.",
-   "words": 20,
-   "spokenWords": 22,
+   "narration": "Could a clock ever lose a second instead of gaining one?",
+   "words": 11,
+   "spokenWords": 11,
    "timing": [
     {
      "id": "s01",
      "start": 0,
-     "duration": 8.8,
-     "end": 8.8
+     "duration": 4.4,
+     "end": 4.4
     }
    ],
    "start": 0,
-   "duration": 9.8,
-   "end": 9.8
+   "duration": 5.4,
+   "end": 5.4
   },
   {
    "id": "sc02",
    "sentences": [
     "s02"
    ],
-   "purpose": "State the conclusion the record supports: every step in the table added a second, none subtracted one.",
+   "purpose": "Show the full written record so the answer rests on the table itself, not on the narrator's say-so.",
    "visual": {
-    "category": "typography",
-    "description": "Dark field; the line 'None has ever been taken away' types on in large serif, centred; 'taken away' holds and turns to the accent glow as the sentence ends.",
+    "category": "data-chart",
+    "description": "Two tiles side by side, connected by a single rising line. The left tile reads 1972 / 10 s; the right tile reads 2017 / 37 s. As the line draws from left to right it only ever climbs — it never dips — and the right tile brightens to the accent once the line reaches it.",
     "onScreenText": [
-     "None has ever been taken away."
-    ]
+     "Every step: added. None: taken away."
+    ],
+    "chart": {
+     "type": "stat-tiles",
+     "title": "TAI minus UTC",
+     "points": [
+      {
+       "label": "1972",
+       "value": 10,
+       "unit": "count",
+       "display": "10 s",
+       "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+      },
+      {
+       "label": "2017",
+       "value": 37,
+       "unit": "count",
+       "display": "37 s",
+       "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+      }
+     ],
+     "note": "The table's value only ever rises between these tiles; it never falls."
+    }
    },
    "citations": [
     {
-     "label": "IERS, Leap_Second.dat (Bulletin C 72)",
+     "label": "IERS, Leap_Second.dat",
      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
     }
    ],
-   "direction": "Hard cut from the tiles; the line types on word by word; hold on the settled statement before the close card.",
+   "direction": "Cut to the two tiles; the connecting line draws left to right as the narration reaches '37 seconds now'.",
    "order": 2,
-   "narration": "That means every leap second has been added to civil time; none has ever been taken away.",
-   "words": 17,
-   "spokenWords": 17,
+   "narration": "The IERS record of TAI minus UTC rises from 10 seconds in 1972 to 37 seconds now, in 27 one-second steps — every leap second has been added, and none has ever been taken away.",
+   "words": 35,
+   "spokenWords": 40,
    "timing": [
     {
      "id": "s02",
-     "start": 9.8,
-     "duration": 6.8,
-     "end": 16.6
+     "start": 5.4,
+     "duration": 16,
+     "end": 21.4
     }
    ],
-   "start": 9.8,
-   "duration": 6.8,
-   "end": 16.6
+   "start": 5.4,
+   "duration": 16,
+   "end": 21.4
   }
  ],
  "targetDurationSeconds": 15
