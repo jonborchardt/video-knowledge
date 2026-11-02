@@ -313,7 +313,7 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
     const working = readFileSync(join(root, site), 'utf8');
     const commission = claimedBy(working, topic);
     if (!commission) return;
-    let head: string | null = null;
+    let head: string | null;
     try {
       head = git(['show', `HEAD:${site}`]);
     } catch {

@@ -130,8 +130,8 @@ function staged(opts: { revised: string | null; reaffirm?: boolean; validation?:
       ? [process.execPath, [FAKE_ARTICLE, ...args]]
       : cliArgv(cli, args);
   const mail = new FakeMail();
-  const run = (over: { stories?: string[] | undefined } = {}) =>
-    articleWork(f.topic, a, {
+  const run = (over: { stories?: string[] | undefined; a?: typeof a } = {}) =>
+    articleWork(f.topic, over.a ?? a, {
       now: () => T0,
       mail,
       env,
@@ -223,6 +223,33 @@ describe('articleWork (criterion 10)', () => {
     expect(r).toEqual({ actions: [], halted: [] });
     expect(c.mail.sent).toEqual([]);
     expect(c.calls().filter((x) => !x.startsWith('validate'))).toEqual([]);
+  }, 180_000);
+
+  it('M3 1.5: the pass checks perRun over its own journal since its start before each agent: the third agent halts budget with the figures, nothing mailed', async () => {
+    const c = staged({ revised: MLM, reaffirm: false });
+    const tight = { ...a, agents: { ...a.agents, budgetUsd: { ...a.agents.budgetUsd, perAgent: 0.5, perRun: 1.0 } } };
+    const r = await c.run({ a: tight });
+    // the reaffirm reviewer (0.3) and the correction writer (0.4) ran; the correction reviewer would exceed the run
+    expect(r.halted).toHaveLength(1);
+    expect(r.halted[0]).toMatch(/budget/);
+    const h = readHalt(runDir(c.f.topic, c.f.story, c.f.root))!;
+    expect(h.kind).toBe('budget');
+    expect(h.why).toMatch(/pass 0\.70 of 1 USD/);
+    expect(h.why).toMatch(/the next agent may cost 0\.5/);
+    const prompts = readJournal(runDir(c.f.topic, c.f.story, c.f.root)).filter((e) => e.kind === 'prompt');
+    expect(prompts).toHaveLength(2);
+    expect(c.mail.sent).toEqual([]);
+    expect(loadArticleRequest(c.f.topic, c.f.story, c.f.root)).toBeNull();
+  }, 180_000);
+  it('M3 1.5: the week check still applies before the first agent', async () => {
+    const c = staged({ revised: MLM, reaffirm: true });
+    const { addSpend, isoWeek } = await import('../../src/orchestration/run/runner');
+    addSpend(c.f.root, isoWeek(new Date(T0)), 199.8);
+    const r = await c.run();
+    expect(r.halted).toHaveLength(1);
+    expect(readHalt(runDir(c.f.topic, c.f.story, c.f.root))?.kind).toBe('budget');
+    expect(readHalt(runDir(c.f.topic, c.f.story, c.f.root))?.why).toMatch(/week 199\.80 of 200 USD/);
+    expect(readJournal(runDir(c.f.topic, c.f.story, c.f.root)).filter((e) => e.kind === 'prompt')).toHaveLength(0);
   }, 180_000);
 
   it('a correction that keeps failing validation halts awaiting-person after three revisions', async () => {

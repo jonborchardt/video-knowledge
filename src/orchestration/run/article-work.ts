@@ -22,7 +22,16 @@ import {
 } from '../../modules/article';
 import type { Step } from '../production';
 import { guard as realGuard, snapshot as realSnapshot, type TreeSnapshot } from './guard';
-import { type Halt, type JournalEntry, appendJournal, nextLine, readHalt, runDir, writeHalt } from './journal';
+import {
+  type Halt,
+  type JournalEntry,
+  appendJournal,
+  nextLine,
+  readHalt,
+  runDir,
+  writeHalt,
+  readJournal,
+} from './journal';
 import { type RoleGrant, grantFor } from './roles';
 import { addSpend, isoWeek, weekSpend } from './runner';
 import { sendCorrectionRequest } from './requests';
@@ -74,6 +83,13 @@ export async function articleWork(
     const dir = runDir(topic, storyId, root);
     const sdir = scriptDir(topic, storyId, root);
     const journal = (e: Omit<JournalEntry, 'at' | 'runId'>) => appendJournal(dir, { at: stamp(), runId, ...e });
+    // M3 1.5: this pass's spend (the journal since the pass started) is checked against perRun before each agent
+    const passStart = readJournal(dir).length;
+    const passSpend = () =>
+      readJournal(dir)
+        .slice(passStart)
+        .reduce((s, e) => s + (e.costUsd ?? 0), 0);
+    const BUDGET_UNBLOCK = { kind: 'decide' as const, text: 'raise agents.budgetUsd or wait for the next week' };
     let snap: TreeSnapshot | null = null;
     let grant: RoleGrant = grantFor('writer', { topic, storyId });
     const hooks = {
@@ -146,7 +162,9 @@ export async function articleWork(
       role: StepContext['role'],
     ): Promise<StepOutcome> => {
       const week = isoWeek(new Date(now()));
-      if (weekSpend(root, week) + a.agents.budgetUsd.perAgent > a.agents.budgetUsd.perWeek)
+      const perAgent = a.agents.budgetUsd.perAgent;
+      const spent = passSpend();
+      if (spent + perAgent > a.agents.budgetUsd.perRun || weekSpend(root, week) + perAgent > a.agents.budgetUsd.perWeek)
         return {
           kind: 'prompt',
           ok: false,
@@ -154,7 +172,7 @@ export async function articleWork(
           ms: 0,
           costUsd: 0,
           sessionId: null,
-          error: `budget: week ${weekSpend(root, week).toFixed(2)} of ${a.agents.budgetUsd.perWeek} USD`,
+          error: `budget: pass ${spent.toFixed(2)} of ${a.agents.budgetUsd.perRun} USD, week ${weekSpend(root, week).toFixed(2)} of ${a.agents.budgetUsd.perWeek} USD; the next agent may cost ${perAgent}`,
           log: '',
         };
       grant = grantFor(role, { topic, storyId });
@@ -231,6 +249,10 @@ export async function articleWork(
         [`Revised: ${inspection.findings.join('; ')}`, `Write: ${rel(sdir, root, ARTICLE_FILES.review)}`],
         'reviewer',
       );
+      if (/^budget/.test(r.error ?? '')) {
+        halt('budget', r.error!, BUDGET_UNBLOCK);
+        continue;
+      }
       if (r.guardFailed) {
         halt('unexpected-edit', r.error ?? 'the reviewer edited outside its files', {
           kind: 'fix',
@@ -280,6 +302,10 @@ export async function articleWork(
         ],
         'writer',
       );
+      if (/^budget/.test(w.error ?? '')) {
+        halt('budget', w.error!, BUDGET_UNBLOCK);
+        continue;
+      }
       state.revisions += 1;
       writeJsonAtomic(corrFile, state);
       if (w.guardFailed) {
@@ -300,6 +326,10 @@ export async function articleWork(
         [`Revised: ${inspection.findings.join('; ')}`, `Write: ${rel(sdir, root, ARTICLE_FILES.review)}`],
         'reviewer',
       );
+      if (/^budget/.test(r.error ?? '')) {
+        halt('budget', r.error!, BUDGET_UNBLOCK);
+        continue;
+      }
       if (r.guardFailed) {
         halt('unexpected-edit', r.error ?? 'the reviewer edited outside its files', {
           kind: 'fix',

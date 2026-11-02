@@ -29,10 +29,11 @@ import {
   topicRunDir,
   writeHalt,
   writeValidateLog,
+  readJournal,
 } from './journal';
 import { type Lock, acquire, heartbeat, release, setChild } from './lock';
 import { type RoleGrant, grantFor } from './roles';
-import { type RunResult, addSpend, isoWeek, runValidate, weekSpend } from './runner';
+import { type RunResult, addSpend, isoWeek, runValidate, weekSpend, runSpend } from './runner';
 import { type StepContext, type StepOutcome, envFor, execStep as realExecStep, usageFields } from './steps';
 import type { Job } from './work';
 
@@ -183,8 +184,15 @@ export async function maintain(
       ...usageFields(out),
     });
   const agent = async (brief: string, lines: string[], role: StepContext['role']): Promise<StepOutcome> => {
+    // M3 1.5: the scan's own spend since its start (the journal since the last finish, a resumed scan included)
+    // against perRun, and the week against perWeek, before each agent (the figures in the error, halted as budget)
     const week = isoWeek(new Date(now()));
-    if (weekSpend(root, week) + a.agents.budgetUsd.perAgent > a.agents.budgetUsd.perWeek)
+    const perAgent = a.agents.budgetUsd.perAgent;
+    const spentRun = runSpend(readJournal(dir));
+    if (
+      spentRun + perAgent > a.agents.budgetUsd.perRun ||
+      weekSpend(root, week) + perAgent > a.agents.budgetUsd.perWeek
+    )
       return {
         kind: 'prompt',
         ok: false,
@@ -192,7 +200,7 @@ export async function maintain(
         ms: 0,
         costUsd: 0,
         sessionId: null,
-        error: `budget: week ${weekSpend(root, week).toFixed(2)} of ${a.agents.budgetUsd.perWeek} USD`,
+        error: `budget: scan ${spentRun.toFixed(2)} of ${a.agents.budgetUsd.perRun} USD, week ${weekSpend(root, week).toFixed(2)} of ${a.agents.budgetUsd.perWeek} USD; the next agent may cost ${perAgent}`,
         log: '',
       };
     grant = grantFor(role, { topic });
@@ -309,6 +317,11 @@ export async function maintain(
     ];
     if (revised.length) {
       const notes = await agent(REVISION_NOTE_BRIEF, [`Write: topics/${topic}/public-record.json`], 'notes');
+      if (/^budget/.test(notes.error ?? ''))
+        return halt('budget', notes.error!, {
+          kind: 'decide',
+          text: 'raise agents.budgetUsd or wait for the next week',
+        });
       for (const line of (notes.text ?? '').split('\n')) {
         const m = /^(\S+\/\S+):\s+(.+)$/.exec(line.trim());
         if (m) await child(`npm run report -- note ${topic} ${m[1]} "${m[2].replace(/"/g, "'")}"`);

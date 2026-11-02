@@ -206,7 +206,7 @@ export function addSpend(root: string, week: string, usd: number): void {
 }
 
 /** Cost journaled for this story since its last finish (a resumed run keeps spending the same run budget). */
-const runSpend = (entries: JournalEntry[]): number => {
+export const runSpend = (entries: JournalEntry[]): number => {
   let sum = 0;
   for (const e of entries) {
     if (e.kind === 'finish') sum = 0;

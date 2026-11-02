@@ -102,10 +102,10 @@ function staged(opts: { found?: boolean; live?: boolean; revised?: string[] } = 
     cli === 'evidence' && args[0] === 'scanned' ? cliArgv(cli, args) : [process.execPath, [FAKE_CLI, cli, ...args]];
   const mail = new FakeMail();
   const articleCalls: string[] = [];
-  const run = (over: { validate?: () => { ok: boolean; output: string } } = {}) =>
+  const run = (over: { validate?: () => { ok: boolean; output: string }; a?: typeof a } = {}) =>
     maintain(
       f.topic,
-      a,
+      over.a ?? a,
       {
         now: () => NOW,
         mail,
@@ -192,6 +192,27 @@ describe('maintain', () => {
     expect(readJson<MaintenanceFile>(maintenancePath(c.f.topic, c.f.root))!.scans).toHaveLength(1);
     expect(readHalt(runDir(c.f.topic, c.f.story, c.f.root))?.kind).toBe('needs-person');
   }, 300_000);
+
+  it('M3 1.5: the scan checks perRun over its journal since its start before each agent: the notes agent halts budget with the figures', async () => {
+    const c = staged({ live: true });
+    const tight = { ...a, agents: { ...a.agents, budgetUsd: { ...a.agents.budgetUsd, perAgent: 0.5, perRun: 0.8 } } };
+    const r = await c.run({ a: tight });
+    expect(r.outcome).toBe('halted');
+    expect(r.halt?.kind).toBe('budget');
+    expect(r.halt?.why).toMatch(/scan 0\.50 of 0\.8 USD/);
+    expect(c.journal().filter((e) => e.kind === 'prompt')).toHaveLength(1); // the scan agent ran, the notes agent not
+    expect(c.articleCalls).toEqual([]);
+  }, 240_000);
+  it('M3 1.5: the week check still applies before the first agent of a scan', async () => {
+    const c = staged({ live: true });
+    const { addSpend, isoWeek } = await import('../../src/orchestration/run/runner');
+    addSpend(c.f.root, isoWeek(new Date(NOW)), 199.9);
+    const r = await c.run();
+    expect(r.outcome).toBe('halted');
+    expect(r.halt?.kind).toBe('budget');
+    expect(r.halt?.why).toMatch(/week 199\.90 of 200 USD/);
+    expect(c.journal().filter((e) => e.kind === 'prompt')).toHaveLength(0);
+  }, 240_000);
 
   it('a scan that finds nothing new is journaled and records the scan, with no report, no article pass and no halt', async () => {
     const c = staged({ found: false, live: true });
