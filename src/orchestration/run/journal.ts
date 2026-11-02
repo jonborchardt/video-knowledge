@@ -101,22 +101,25 @@ export interface AttemptRecord {
   sessionId: string | null;
   resumedFrom: string | null;
   pid?: number;
+  /** The run that made the attempt: part of the file name, so a crash and a resume that reach the same journal
+   *  line keep both records (absent on records written before it). */
+  runId?: string;
 }
 export const ATTEMPTS_DIR = 'agents';
-export const attemptPath = (dir: string, line: number, round: number) =>
-  join(dir, ATTEMPTS_DIR, `${line}-${round}.json`);
+export const attemptPath = (dir: string, line: number, round: number, runId?: string) =>
+  join(dir, ATTEMPTS_DIR, `${line}-${round}${runId ? `-${runId}` : ''}.json`);
 export function writeAttempt(dir: string, r: AttemptRecord): void {
   mkdirSync(join(dir, ATTEMPTS_DIR), { recursive: true });
-  writeJsonAtomic(attemptPath(dir, r.line, r.round), r);
+  writeJsonAtomic(attemptPath(dir, r.line, r.round, r.runId), r);
 }
-/** Every attempt record of a run folder, by line then round. */
+/** Every attempt record of a run folder, by line, round, then run. */
 export function readAttempts(dir: string): AttemptRecord[] {
   const d = join(dir, ATTEMPTS_DIR);
   if (!existsSync(d)) return [];
   return readdirSync(d)
-    .filter((n) => /^\d+-\d+\.json$/.test(n))
+    .filter((n) => /^\d+-\d+(-[\w.-]+)?\.json$/.test(n))
     .flatMap((n) => readJson<AttemptRecord>(join(d, n)) ?? [])
-    .sort((x, y) => x.line - y.line || x.round - y.round);
+    .sort((x, y) => x.line - y.line || x.round - y.round || (x.runId ?? '').localeCompare(y.runId ?? ''));
 }
 
 export function readJournal(dir: string): JournalEntry[] {

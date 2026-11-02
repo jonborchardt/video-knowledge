@@ -312,6 +312,22 @@ describe('execStep: prompt with the validator loop', () => {
     });
     expect(r.models[0].costUsd).toBe(0.7);
   });
+  it('two runs that reach the same journal line (a crash, then a resume) keep both attempt records (review finding 8)', async () => {
+    const run = join(tmp, 'run-f');
+    const sc = join(tmp, 's-two.json');
+    writeFileSync(sc, JSON.stringify([{ match: '.', actions: [], cost: 0.3 }]));
+    const env = { ...process.env, FAKE_CLAUDE_SCENARIO: sc };
+    await execStep(fake, prompt, ctx({ argvOf: fakeStep(), env, attempts: { dir: run, line: 4, runId: 'r1' } }));
+    await execStep(fake, prompt, ctx({ argvOf: fakeStep(), env, attempts: { dir: run, line: 4, runId: 'r2' } }));
+    expect(existsSync(join(run, 'agents', '4-1-r1.json'))).toBe(true);
+    expect(existsSync(join(run, 'agents', '4-1-r2.json'))).toBe(true);
+    const recs = readAttempts(run);
+    expect(recs.map((r) => [r.line, r.round, r.runId])).toEqual([
+      [4, 1, 'r1'],
+      [4, 1, 'r2'],
+    ]);
+    expect(recs.reduce((n, r) => n + r.costUsd, 0)).toBeCloseTo(0.6, 5);
+  });
   it('a spawn error is recorded too: exit null, no cost, no model used, the model requested', async () => {
     const run = join(tmp, 'run-e');
     const broken = { ...fake, agents: { ...fake.agents, command: join(tmp, 'no-such-claude') } };

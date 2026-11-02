@@ -22,6 +22,7 @@ import {
   writeHalt,
 } from '../../src/orchestration/run/journal';
 import { type LiveDeps, liveView } from '../../src/orchestration/run/live';
+import { jobsHtml } from '../../src/admin/live-render';
 import { addSpend, isoWeek } from '../../src/orchestration/run/runner';
 import { type Fixture, cliRoot, syntheticProduction } from '../production-helpers';
 
@@ -316,6 +317,35 @@ describe('liveView rows', () => {
 });
 
 describe('liveView owner list, jobs, activity, readiness', () => {
+  it('queued work is labelled by the flags: off, a dry-run candidate only; on, the job the work plane will start, the production pick included when its flag is on', () => {
+    const { root, story } = fresh();
+    story(S);
+    const pick = () => ({ kind: 'pick' as const, topic: T, storyId: S, why: 'production pick (0.80)' });
+    const off = liveView(root, deps({ pick })).jobs.queued;
+    expect(off.workEnabled).toBe(false);
+    expect(off.pickEnabled).toBe(false);
+    expect(off.pick).toBeNull(); // enabled.production is off: no pick is queued or even proposed as due
+    expect(jobsHtml({ running: [], queued: off, due: [], scheduled: [], stuck: [] })).toMatch(/work plane is off/);
+    const onA = { ...DEFAULTS, enabled: { ...DEFAULTS.enabled, work: true, production: true } };
+    const on = liveView(root, deps({ a: onA, pick })).jobs.queued;
+    expect(on.workEnabled).toBe(true);
+    expect(on.pickEnabled).toBe(true);
+    expect(on.pick).toEqual(pick());
+    expect(on.next).toEqual(pick()); // nothing else is due in this root, so the pick is the next job
+    const html = jobsHtml({ running: [], queued: on, due: [], scheduled: [], stuck: [] });
+    expect(html).toMatch(/Next job the work plane will start: pick heat-pumps \/ decision:x/);
+    expect(html).toMatch(/Production pick: on, due: pick heat-pumps \/ decision:x/);
+    expect(html).not.toMatch(/work plane is off/);
+    const workOnly = liveView(root, deps({ a: { ...DEFAULTS, enabled: { ...DEFAULTS.enabled, work: true } }, pick }))
+      .jobs.queued;
+    expect(workOnly.pickEnabled).toBe(false);
+    expect(workOnly.pick).toBeNull();
+    expect(workOnly.next).toBeNull();
+    expect(jobsHtml({ running: [], queued: workOnly, due: [], scheduled: [], stuck: [] })).toMatch(
+      /Production pick: off/,
+    );
+  });
+
   it('the owner list has one item per kind: a proposal batch, a draft, a release request, a paid link, a correction, an awaiting-person and a needs-person halt', () => {
     const { root, story } = fresh();
     const good = readJson<Proposal>(join(ROOT, 'tests', 'fixtures', 'proposals', 'good.json'))!;
@@ -532,7 +562,9 @@ describe('liveView owner list, jobs, activity, readiness', () => {
       },
     ]);
     expect(v.jobs.due).toEqual([]);
-    expect(v.jobs.queued === null || typeof v.jobs.queued.kind === 'string').toBe(true);
+    expect(v.jobs.queued.workEnabled).toBe(false); // DEFAULTS: every flag off
+    expect(v.jobs.queued.pickEnabled).toBe(false);
+    expect(v.jobs.queued.pick).toBeNull();
     expect(v.readiness.map((r) => r.key)).toContain('youtube-upload');
     expect(v.readiness.every((r) => r.verified === null)).toBe(true);
     expect(v.budget).toMatchObject({ perAgent: 8, perRun: 80, perTopic: 150, perWeek: 200 });

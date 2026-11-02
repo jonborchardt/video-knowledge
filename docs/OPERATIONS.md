@@ -143,15 +143,15 @@ Every halt has a kind and an unblock (`src/orchestration/run/journal.ts`, `RUN_H
 `HALT_KINDS`). Read the Blocked list or `npm run run -- status`; the step log is `run/steps/<n>.log`, the attempt
 record `run/agents/`, the validate output `run/validate.log`.
 
-| halt                                             | who       | what to do                                                                                                                         |
-| ------------------------------------------------ | --------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `timeout`, `lock-stale`, retryable `step-failed` | automatic | the tick resumes it by backoff (15, 60, 240 min); after that `retries-spent`, yours                                                |
-| `budget`                                         | you       | raise `agents.budgetUsd` or wait for the next ISO week; the tick resumes when the week rolls                                       |
-| `awaiting-person`, `needs-person`                | you       | the unblock names the reply, page or command; `npm run run -- clear <topic> <story> --by "<name>"` for a halt that needs no action |
-| `unexpected-edit`, `forbidden-flag`              | you       | an agent wrote outside its files (reverted) or the board asked for a flag the runner never passes: read the session, fix the cause |
-| `git`                                            | you       | the finish could not commit: a concurrent edit to a path the run wrote, the wrong branch; separate your edit, run again            |
-| `no-progress`, `cap`, `retries-spent`            | you       | read the step log; fix what it names; `npm run run -- story` again                                                                 |
-| `request-expired`, `deploy-timeout`              | you       | renew the request (`publish request --renew`) or check the host                                                                    |
+| halt                                             | who       | what to do                                                                                                                                                                                                                 |
+| ------------------------------------------------ | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `timeout`, `lock-stale`, retryable `step-failed` | automatic | the tick resumes it by backoff (15, 60, 240 min); after that `retries-spent`, yours                                                                                                                                        |
+| `budget`                                         | you       | raise `agents.budgetUsd` or wait for the next ISO week; the tick resumes when the week rolls                                                                                                                               |
+| `awaiting-person`, `needs-person`                | you       | the unblock names the reply, page or command; `npm run run -- clear <topic> <story> --by "<name>"` for a halt that needs no action                                                                                         |
+| `unexpected-edit`, `forbidden-flag`              | you       | an agent wrote outside its files (reverted) or the board asked for a flag the runner never passes: read the session, fix the cause                                                                                         |
+| `git`                                            | you       | the finish could not commit: a hand edit to a path the run wrote, a staged index that is not the run's, the wrong branch; separate your edit (your other edits in the topic folder are left unstaged and named), run again |
+| `no-progress`, `cap`, `retries-spent`            | you       | read the step log; fix what it names; `npm run run -- story` again                                                                                                                                                         |
+| `request-expired`, `deploy-timeout`              | you       | renew the request (`publish request --renew`) or check the host                                                                                                                                                            |
 
 Resume: the same command that started the run (`npm run run -- story|topic|maintain|launch`). The journal is
 operational state and decides no stage; the board re-derives the stage from the artifacts. A render or QA that hangs

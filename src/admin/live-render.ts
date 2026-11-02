@@ -143,10 +143,22 @@ export const activityKey = (e: Activity) => `${e.at}|${e.topic}|${e.storyId ?? '
 
 export function jobsHtml(j: LiveJobs): string {
   const lines: string[] = [];
+  const q = j.queued;
+  const jobText = (x: NonNullable<LiveJobs['queued']['next']>) =>
+    `${esc(x.kind)}${x.topic ? ` ${esc(x.topic)}${x.storyId ? ` / ${esc(x.storyId)}` : ''}` : ''} (${esc(x.why)})`;
   lines.push(
-    j.queued
-      ? `Next job the work plane would start: ${esc(j.queued.kind)}${j.queued.topic ? ` ${esc(j.queued.topic)}${j.queued.storyId ? ` / ${esc(j.queued.storyId)}` : ''}` : ''} (${esc(j.queued.why)})`
-      : 'Nothing queued for the work plane.',
+    q.workEnabled
+      ? q.next
+        ? `Next job the work plane will start: ${jobText(q.next)}`
+        : 'Nothing is queued for the work plane.'
+      : `The work plane is off (<code>automation.json</code> <code>enabled.work</code> false): nothing is queued or scheduled. Dry run: it would start ${q.next ? jobText(q.next) : 'nothing'} if enabled.`,
+  );
+  lines.push(
+    q.pickEnabled
+      ? q.pick
+        ? `Production pick: on, due: ${jobText(q.pick)}`
+        : 'Production pick: on, nothing due now.'
+      : 'Production pick: off (<code>enabled.production</code> false): no story is picked or proposed.',
   );
   if (j.due.length)
     lines.push(`Due to resume: ${j.due.map((d) => `${esc(d.topic)} / ${esc(d.storyId)} (${esc(d.why)})`).join(', ')}.`);

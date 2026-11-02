@@ -210,7 +210,7 @@ export interface StepContext {
   onSpawn?: (pid: number) => void;
   /** Where a prompt step records its attempts: the run folder and the journal line the runner will write for the
    *  step (`nextLine(dir)`; a parallel slice gets consecutive lines). Without it nothing is recorded. */
-  attempts?: { dir: string; line: number };
+  attempts?: { dir: string; line: number; runId?: string };
 }
 
 const RENDER_VERBS = new Set(['render', 'spike', 'final']);
@@ -336,6 +336,7 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
     const open: AttemptRecord = {
       line: ctx.attempts?.line ?? 0,
       round: round + 1,
+      ...(ctx.attempts?.runId && { runId: ctx.attempts.runId }),
       at: new Date().toISOString(),
       finishedAt: null,
       step: stepLine,

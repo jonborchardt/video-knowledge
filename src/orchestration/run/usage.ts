@@ -53,7 +53,7 @@ export interface Attempt {
 }
 
 const fromRecord = (r: AttemptRecord, dir: string, topic: string, storyId: string, runStart: number): Attempt => ({
-  key: `${dir}#${r.line}-${r.round}`,
+  key: `${dir}#${r.line}-${r.round}${r.runId ? `-${r.runId}` : ''}`,
   source: 'record',
   topic,
   storyId,

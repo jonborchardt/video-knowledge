@@ -182,7 +182,7 @@ export async function articleWork(
           '\n',
         ),
       };
-      const out = await exec(a, step, { ...ctxOf(role), attempts: { dir, line: nextLine(dir) } });
+      const out = await exec(a, step, { ...ctxOf(role), attempts: { dir, line: nextLine(dir), runId } });
       if (out.costUsd) addSpend(root, week, out.costUsd);
       record(step, out);
       return out;

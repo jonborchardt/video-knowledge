@@ -3,7 +3,7 @@
 // record resumed with --from after a partial failure, the parked paths (thin after two empty study rounds; a review
 // that keeps nothing), the research roles contained, a forbidden flag refused, and one commit touching one topic.
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
@@ -100,6 +100,9 @@ interface Scenario {
   preDirtyOwnKit?: boolean;
   /** An unrelated file a person staged (git add) before the run. */
   preStaged?: boolean;
+  /** A person's edit inside the topic folder while the run is live, made between steps when the board reaches
+   *  `stage`: a new file, or text appended to a file the run wrote earlier. */
+  editAt?: { stage: string; create?: string; appendTo?: string };
 }
 const OWN_KIT = 'brand/spending/wordmark.svg';
 const SITE = readFileSync(join(ROOT, 'src', 'config', 'site.ts'), 'utf8');
@@ -222,9 +225,19 @@ function fresh(cfg: Record<string, unknown> = {}, s: Scenario = {}) {
     cli === 'topics' ? cliArgv(cli, args) : [process.execPath, [FAKE_CLI, cli, ...args]];
   // the institution claim is the claim verb's own test (Task 5): here the topic reads as claimed, unless the scenario
   // runs the claim stage for real (the commit-scope tests)
-  const ask: typeof topicNext = s.claim
+  const base: typeof topicNext = s.claim
     ? topicNext
     : (t, r, o) => topicNext(t, r, { ...o, owner: () => ({ name: 'Spending' }) as never });
+  let edited = false;
+  const ask: typeof topicNext = (t, r, o) => {
+    const n = base(t, r, o);
+    if (s.editAt && !edited && n.stage === s.editAt.stage) {
+      edited = true;
+      if (s.editAt.create) writeFileSync(join(root, s.editAt.create), 'a person was writing notes\n');
+      if (s.editAt.appendTo) appendFileSync(join(root, s.editAt.appendTo), '# a person added this line\n');
+    }
+    return n;
+  };
   const run = (extra: Partial<Parameters<typeof runTopic>[2]> = {}) =>
     runTopic(T, a, {
       root,
@@ -497,6 +510,30 @@ describe('the finish commit stages what the run owns (M3 1.4: operation ownershi
     expect(r.outcome, JSON.stringify(r.halt)).toBe('done');
     expect(existsSync(join(topicRunFolder(T, c.root), PRE_DIRTY_FILE))).toBe(false);
     expect(existsSync(join(topicRunFolder(T, c.root), TOUCHED_FILE))).toBe(false);
+  }, 240_000);
+
+  it('a file a person adds inside the topic folder during the run is left out of the research commit, kept on disk and named', async () => {
+    const c = fresh({}, { editAt: { stage: 'stories', create: `topics/${T}/notes-by-a-person.md` } });
+    const r = await c.run();
+    expect(r.outcome, JSON.stringify(r.halt)).toBe('done');
+    const touched = c.git('show', '--name-only', '--format=', 'HEAD').trim().split('\n');
+    expect(touched).not.toContain(`topics/${T}/notes-by-a-person.md`);
+    expect(touched.some((p) => p.startsWith(`topics/${T}/store/`))).toBe(true);
+    expect(existsSync(join(c.root, 'topics', T, 'notes-by-a-person.md'))).toBe(true);
+    expect(c.git('status', '--porcelain')).toMatch(/\?\? topics\/ev-running-costs\/notes-by-a-person.md/);
+    const finish = c.journal().find((e) => e.kind === 'finish')!;
+    expect(finish.error).toMatch(/edited by hand during the run[^;]*notes-by-a-person\.md/);
+  }, 240_000);
+
+  it("a person's edit during the run to a file the run wrote halts the finish as git, commits nothing and keeps the edit", async () => {
+    const c = fresh({}, { editAt: { stage: 'stories', appendTo: `topics/${T}/videos.txt` } });
+    const r = await c.run();
+    expect(r.outcome).toBe('halted');
+    expect(r.halt?.kind).toBe('git');
+    expect(r.halt?.why).toContain(`topics/${T}/videos.txt`);
+    expect(c.git('rev-list', '--count', 'main').trim()).toBe('1');
+    expect(c.git('diff', '--cached', '--name-only').trim()).toBe('');
+    expect(readFileSync(join(c.root, 'topics', T, 'videos.txt'), 'utf8')).toContain('# a person added this line');
   }, 240_000);
 
   it('a clean run with the claim stage commits exactly the owned files and nothing else is left staged', async () => {

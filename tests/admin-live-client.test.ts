@@ -35,7 +35,13 @@ const row = (over: Partial<LiveRow> = {}): LiveRow => ({
 const view = (rows: LiveRow[], over: Partial<LiveView> = {}): LiveView => ({
   generatedAt: '2026-11-10T10:00:00.000Z',
   rows,
-  jobs: { running: [], queued: null, due: [], scheduled: [], stuck: [] },
+  jobs: {
+    running: [],
+    queued: { workEnabled: false, next: null, pickEnabled: false, pick: null },
+    due: [],
+    scheduled: [],
+    stuck: [],
+  },
   owner: [],
   activity: [],
   readiness: [],
@@ -115,7 +121,7 @@ describe('applyLive', () => {
             pid: 1,
           },
         ],
-        queued: null,
+        queued: { workEnabled: false, next: null, pickEnabled: false, pick: null },
         due: [],
         scheduled: [],
         stuck: [],

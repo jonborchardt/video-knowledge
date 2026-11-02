@@ -208,7 +208,7 @@ export async function maintain(
       kind: 'prompt',
       text: [`Read ${brief} and follow it.`, `Topic: ${topic}`, ...lines].join('\n'),
     };
-    const out = await exec(a, step, { ...ctxOf(step, role), attempts: { dir, line: nextLine(dir) } });
+    const out = await exec(a, step, { ...ctxOf(step, role), attempts: { dir, line: nextLine(dir), runId } });
     setChild(dir, lock, null);
     cost += out.costUsd;
     if (out.costUsd) addSpend(root, week, out.costUsd);

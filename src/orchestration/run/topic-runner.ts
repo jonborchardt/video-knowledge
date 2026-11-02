@@ -79,7 +79,12 @@ export const REVIEW_ROUNDS_FILE = 'review-rounds.json';
 export const TOUCHED_FILE = 'touched.json';
 export interface Touched {
   claimed: boolean;
-  paths: Record<string, string>; // repo path -> sha after the step that wrote it ('deleted' when it removed it)
+  /** Every path a step of the run wrote (the guard's diff after the step), with its sha then ('deleted' when it
+   *  removed it): the only paths the finish stages. */
+  paths: Record<string, string>;
+  /** Paths that changed between steps (the guard's diff before a step): a person's hand, never the run's. Excluded
+   *  from the commit; one the run also wrote halts the finish. */
+  foreign?: string[];
 }
 /** M3 1.4, the initial snapshot: the paths dirty before the run first started; never staged by its finish. */
 export const PRE_DIRTY_FILE = 'pre-dirty.json';
@@ -132,24 +137,33 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
       .map((e) => e.slice(3).replaceAll('\\', '/'));
   const ownedAlways = (p: string) =>
     p.startsWith(`topics/${topic}/`) || p === `proposals/${topic}.json` || p === `proposals/${topic}.review.json`;
-  const readTouched = (): Touched => readJson<Touched>(join(dir, TOUCHED_FILE)) ?? { claimed: false, paths: {} };
+  const readTouched = (): Touched =>
+    readJson<Touched>(join(dir, TOUCHED_FILE)) ?? { claimed: false, paths: {}, foreign: [] };
   const shaOf = (p: string) => (existsSync(join(root, p)) ? sha(readFileSync(join(root, p))) : 'deleted');
-  /** Records what a child step changed outside the topic (the guard's child diff names them). */
+  /** Records what a step wrote (the guard's diff right after it names the paths), with the sha it left. */
   const noteTouched = (kept: string[] | undefined) => {
-    const outside = (kept ?? []).filter((p) => !ownedAlways(p));
-    if (!outside.length) return;
+    if (!kept?.length) return;
     const t = readTouched();
-    for (const p of outside) {
+    for (const p of kept) {
       if (p === 'src/config/site.ts') t.claimed = true;
       else t.paths[p] = shaOf(p);
     }
     writeJsonAtomic(join(dir, TOUCHED_FILE), t);
   };
-  const childGuard = () => {
-    const g = hooks.guard('child');
+  /** Records what changed between steps (the guard's diff right before a step): not the run's, a person's. */
+  const noteForeign = (kept: string[] | undefined) => {
+    if (!kept?.length) return;
+    const t = readTouched();
+    t.foreign = [...new Set([...(t.foreign ?? []), ...kept])];
+    writeJsonAtomic(join(dir, TOUCHED_FILE), t);
+  };
+  /** The guard after a step, in either scope, with what it kept recorded as the step's. */
+  const guarded = (scope: 'agent' | 'child') => {
+    const g = hooks.guard(scope);
     noteTouched(g.kept);
     return g;
   };
+  const childGuard = () => guarded('child');
   const validate = o.validate ?? ((env) => runValidate(root, env));
   let snap: TreeSnapshot | null = null;
   let currentGrant: RoleGrant = grantFor('extraction', { topic });
@@ -215,6 +229,7 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
   let attempt = 0;
   let lastNext: TopicNext = { topic, stage: 'proposal', next: '', steps: [], halt: null, done: false };
   let preLeft: string[] = [];
+  let handLeft: string[] = [];
   const approver = `automated: topic run ${runId}`;
 
   const halt = (kind: RunHaltKind, why: string, unblock: Halt['unblock'], n: TopicNext): RunResult => {
@@ -226,7 +241,9 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
     return { outcome: 'halted', stage: n.stage, halt: h, iterations, costUsd: cost };
   };
   const finish = (n: TopicNext): RunResult => {
-    const g = childGuard();
+    // whatever changed since the last step's guard is not the run's
+    const g = hooks.guard('child');
+    noteForeign(g.kept);
     if (!g.ok) return halt('unexpected-edit', g.why, { kind: 'fix', text: 'the files were reverted' }, n);
     const v = validate(envFor('validate', [], o.env ?? process.env));
     if (!v.ok) {
@@ -256,13 +273,16 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
         const pre = new Set(readJson<{ paths: string[] }>(join(dir, PRE_DIRTY_FILE))?.paths ?? []);
         const dirty = dirtyPaths();
         const touched = readTouched();
+        const byHand = new Set(touched.foreign ?? []);
+        // a path the run wrote that a person also changed (between steps, or after the step wrote it) cannot be
+        // separated: the finish halts, stages nothing, and the person's edit stays on disk
         const moved = Object.entries(touched.paths)
-          .filter(([p, was]) => shaOf(p) !== was)
+          .filter(([p, was]) => byHand.has(p) || shaOf(p) !== was)
           .map(([p]) => p);
         if (moved.length)
           return halt(
             'git',
-            `changed outside the run's steps since the run wrote them: ${moved.join(', ')}`,
+            `edited by hand during the run, after the run wrote them: ${moved.join(', ')}`,
             {
               kind: 'fix',
               text: `separate your edit from the run's (commit or stash it), then npm run run -- topic ${topic}`,
@@ -278,16 +298,15 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
             { kind: 'fix', text: `commit or unstage them (git reset), then npm run run -- topic ${topic}` },
             n,
           );
-        const stage = [
-          ...dirty.filter((p) => ownedAlways(p) && !pre.has(p)),
-          ...Object.keys(touched.paths).filter((p) => dirty.includes(p) && !pre.has(p)),
-        ];
+        // only what the run's own steps wrote, and of that nothing a person had dirty before the run
+        const stage = Object.keys(touched.paths).filter((p) => dirty.includes(p) && !pre.has(p));
         // in batches: a large topic's first commit names thousands of files, past Windows' command-line limit
         for (let i = 0; i < stage.length; i += 50) git(['add', '-A', '--', ...stage.slice(i, i + 50)]);
         if (touched.claimed) stageClaim();
         preLeft = dirty.filter(
           (p) => pre.has(p) && (ownedAlways(p) || p in touched.paths || p === 'src/config/site.ts'),
         );
+        handLeft = dirty.filter((p) => byHand.has(p) && !pre.has(p));
         if (git(['diff', '--cached', '--name-only']).trim())
           git([
             'commit',
@@ -312,7 +331,13 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
       step: 'finish',
       kind: 'finish',
       attempt: 0,
-      error: preLeft.length ? `not staged (dirty before the run): ${preLeft.join(', ')}` : undefined,
+      error:
+        preLeft.length || handLeft.length
+          ? [
+              ...(preLeft.length ? [`not staged (dirty before the run): ${preLeft.join(', ')}`] : []),
+              ...(handLeft.length ? [`not staged (edited by hand during the run): ${handLeft.join(', ')}`] : []),
+            ].join('; ')
+          : undefined,
     });
     clearInterval(beat);
     release(dir, lock);
@@ -341,6 +366,8 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
     git(['update-index', '--add', '--cacheinfo', `100644,${blob},${site}`]);
   }
   const ctxOf = (step: Step, role: ReturnType<typeof roleOf>): StepContext => {
+    // what changed since the last guard is a person's: noted as foreign before the step can be blamed for it
+    noteForeign(hooks.guard('child').kept);
     const logPath = join(dir, 'steps', `${++stepNo}.log`);
     mkdirSync(join(dir, 'steps'), { recursive: true });
     return {
@@ -352,7 +379,7 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
       logPath,
       env: o.env,
       argvOf: o.argvOf,
-      guard: (scope) => hooks.guard(scope),
+      guard: (scope) => guarded(scope),
       onSpawn: (pid) => setChild(dir, lock, pid, step.text.split('\n')[0].slice(0, 120)),
     };
   };
@@ -391,6 +418,7 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
       out = await exec(a, { kind: 'run', text }, ctx);
       setChild(dir, lock, null);
       record(n, { kind: 'run', text }, out, tries);
+      childGuard(); // this try's writes are the run's, before the next try's guard could read them as a person's
       if (out.ok || out.exit === 2) break;
       const log = existsSync(ctx.logPath) ? readFileSync(ctx.logPath, 'utf8') : '';
       const done = [...log.matchAll(/^(\S+): \d+ claims, \d+ new$/gm)].map((m) => m[1]);
@@ -454,6 +482,7 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
         const out = await exec(a, step, ctxOf(step, 'extraction'));
         setChild(dir, lock, null);
         record(n, step, out, 1);
+        childGuard();
         if (!out.ok) return halt('step-failed', `${step.text}: ${out.error}`, { kind: 'run', text: step.text }, n);
         continue;
       }
@@ -501,6 +530,7 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
             const check: Step = { kind: 'run', text: `npm run ${v.cli} -- ${v.args.join(' ')}` };
             const out = await exec(a, check, ctxOf(check, role));
             record(n, check, out, 1);
+            childGuard();
             if (out.ok) skipped.push(s);
             else pending.push(s);
           }
@@ -525,7 +555,7 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
                 exec(a, s, {
                   ...ctxOf(s, role),
                   budgetUsd: a.agents.budgetUsd.perAgent,
-                  attempts: { dir, line: base + k },
+                  attempts: { dir, line: base + k, runId },
                 }),
               ),
             );
@@ -567,6 +597,7 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
               };
               const out = await exec(a, s, ctxOf(s, 'notes'));
               record(n, s, out, 1);
+              childGuard();
             }
           }
           if (failed && brief === 'merge.md' && /check-merges failed/.test(failed.error ?? '')) {

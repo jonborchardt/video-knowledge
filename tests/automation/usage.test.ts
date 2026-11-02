@@ -167,6 +167,24 @@ describe('attempts: every attempt exactly once', () => {
     expect(r.weeks[W].gapUsd).toBeCloseTo(0, 5);
     expect(r.weeks[W].unknownModel).toBe(1);
   });
+  it('two attempts of two runs at one journal line (a crash, then a resume) are both listed once and both summed; an old-format record still reads', () => {
+    const root = fresh();
+    const dir = runDir(T, S, root);
+    const l = appendJournal(dir, entry({ costUsd: 0.5 })); // the resumed run's line sums its own attempt only
+    writeAttempt(
+      dir,
+      record(l, 1, { runId: 'crashed', costUsd: 0.4, models: [model('claude-opus-4-1-20250805', 0.4)] }),
+    );
+    writeAttempt(
+      dir,
+      record(l, 1, { runId: 'resumed', costUsd: 0.5, models: [model('claude-opus-4-1-20250805', 0.5)] }),
+    );
+    writeAttempt(dir, record(l + 1, 1, { costUsd: 0.2, models: [model('claude-opus-4-1-20250805', 0.2)] })); // no runId: the old name
+    const all = attempts(root);
+    expect(all.map((a) => a.costUsd).sort()).toEqual([0.2, 0.4, 0.5]);
+    expect(new Set(all.map((a) => a.key)).size).toBe(3);
+    expect(rollups(root, all).byStory[`${T}/${S}`].totalUsd).toBeCloseTo(1.1, 5);
+  });
   it('an open record (the agent still running) is listed as unfinished with no cost; an orphan record (no journal line yet) still counts', () => {
     const root = fresh();
     const dir = runDir(T, S, root);

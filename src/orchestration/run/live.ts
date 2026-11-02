@@ -34,6 +34,7 @@ import { runFolders } from './status';
 import { roleOf } from './steps';
 import { type Attempt, type Estimate, type WeekRollup, attempts, estimate, rollups } from './usage';
 import { type Job, nextJob } from './work';
+import { pickJobIfDue } from './pick';
 import { isoWeek } from './runner';
 import { storiesWithLedgers } from './publish-due';
 
@@ -120,8 +121,9 @@ export interface LiveJobs {
     since: string;
     pid: number;
   }[];
-  /** What the work plane would start next (a dry nextJob), or null. */
-  queued: Job | null;
+  /** What the work plane holds: with `enabled.work` on, `next` is the job it will start; off, a dry-run candidate
+   *  only. The production pick counts only with `enabled.production` on (`pick`: the cadence's pick when due). */
+  queued: { workEnabled: boolean; next: Job | null; pickEnabled: boolean; pick: Job | null };
   due: { topic: string; storyId: string; why: string; at: string }[];
   scheduled: { key: string; topic: string; storyId: string; output: string; publishAt: string }[];
   stuck: { key: string; since: string; why: string }[];
@@ -151,6 +153,8 @@ export interface LiveDeps {
   a?: Automation;
   /** The board's answer for one story or Short (column, stage, next, institution); the default asks topicBoard. */
   boardRow?: (topic: string, storyId: string) => BoardRow | null;
+  /** The production pick when due (the default is pickJobIfDue); tests inject. Read only with enabled.production. */
+  pick?: () => Job | null;
 }
 
 const institutionOf = (topic: string): string | null =>
@@ -554,7 +558,7 @@ export function liveView(root = ROOT, deps: LiveDeps = {}): LiveView {
   }
   owner.sort((x, y) => x.since.localeCompare(y.since));
 
-  const queued = queuedJob(a, root, now, alive);
+  const queued = queuedJob(a, root, now, alive, deps.pick);
   const week = isoWeek(new Date(now()));
   const wk = roll.weeks[week] ?? {
     rolledUpUsd: 0,
@@ -587,18 +591,32 @@ export function liveView(root = ROOT, deps: LiveDeps = {}): LiveView {
 /** The work plane's next job (a dry nextJob), remembered for a minute per root: it asks the board for every story
  *  with a ledger (seconds), which a five-second poll cannot afford; the answer is the real one, a minute old at most. */
 const QUEUED_TTL_MS = 60_000;
-const queuedMemo = new Map<string, { at: number; job: Job | null }>();
-function queuedJob(a: Automation, root: string, now: () => number, alive: (pid: number) => boolean): Job | null {
-  const m = queuedMemo.get(root);
-  if (m && now() - m.at < QUEUED_TTL_MS) return m.job;
-  let job: Job | null;
+const queuedMemo = new Map<string, { at: number; value: LiveJobs['queued'] }>();
+function queuedJob(
+  a: Automation,
+  root: string,
+  now: () => number,
+  alive: (pid: number) => boolean,
+  pickFn?: () => Job | null,
+): LiveJobs['queued'] {
+  const workEnabled = a.enabled.work;
+  const pickEnabled = a.enabled.production;
+  const key = `${root}|${workEnabled}|${pickEnabled}`;
+  const m = queuedMemo.get(key);
+  if (m && now() - m.at < QUEUED_TTL_MS) return m.value;
+  let pick: Job | null = null;
+  let next: Job | null;
   try {
-    job = nextJob(a, root, { now, alive });
+    // the pick is a candidate only when production is on: nothing is queued or due from a flag that is off
+    const pickOnce = pickEnabled ? (pickFn ?? (() => pickJobIfDue(a, root, { now, alive }))) : null;
+    pick = pickOnce ? pickOnce() : null;
+    next = nextJob(a, root, { now, alive, ...(pickOnce && { pick: () => pick }) });
   } catch {
-    job = null;
+    next = null;
   }
-  queuedMemo.set(root, { at: now(), job });
-  return job;
+  const value = { workEnabled, next, pickEnabled, pick };
+  queuedMemo.set(key, { at: now(), value });
+  return value;
 }
 
 const SERVICE_EVENTS = new Set(['uploaded', 'published', 'unpublished', 'verified', 'scheduled', 'updated']);

@@ -426,7 +426,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
           n,
         );
       ctx.budgetUsd = perAgent;
-      ctx.attempts = { dir, line: nextLine(dir) }; // the journal line below is the next one
+      ctx.attempts = { dir, line: nextLine(dir), runId }; // the journal line below is the next one
     }
     const out = await exec(a, step, ctx);
     setChild(dir, lock, null);
@@ -695,7 +695,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
               n,
             );
           ctx.budgetUsd = perAgent; // the tree was snapshotted at the start and after every guard since
-          ctx.attempts = { dir, line: nextLine(dir) }; // the journal line below is the next one
+          ctx.attempts = { dir, line: nextLine(dir), runId }; // the journal line below is the next one
         }
         let out: StepOutcome;
         let tries = 0;
