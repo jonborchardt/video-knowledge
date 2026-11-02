@@ -43,7 +43,7 @@ for (const file of all)
     for (const x of b.as) {
       const text = x.n ?? x.n2;
       if (!text) continue;
-      if (x.n !== undefined && x.v !== undefined) created.add(text); // a creation carries a guess (check-batch)
+      if (x.v !== undefined) created.add(text); // the guess travels only with a creation (check-batch)
       if (!firstOf.has(text)) firstOf.set(text, x);
       const f = fields.get(text) ?? {};
       for (const k of CREATION_FIELDS) if (x[k] !== undefined && f[k] === undefined) f[k] = x[k];
