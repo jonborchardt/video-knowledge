@@ -22,11 +22,11 @@ import {
 } from '../../modules/article';
 import type { Step } from '../production';
 import { guard as realGuard, snapshot as realSnapshot, type TreeSnapshot } from './guard';
-import { type Halt, type JournalEntry, appendJournal, readHalt, runDir, writeHalt } from './journal';
+import { type Halt, type JournalEntry, appendJournal, nextLine, readHalt, runDir, writeHalt } from './journal';
 import { type RoleGrant, grantFor } from './roles';
 import { addSpend, isoWeek, weekSpend } from './runner';
 import { sendCorrectionRequest } from './requests';
-import { type StepContext, type StepOutcome, execStep as realExecStep } from './steps';
+import { type StepContext, type StepOutcome, execStep as realExecStep, usageFields } from './steps';
 
 export const ARTICLE_BRIEF = 'src/modules/article/briefs/article.md';
 export const ARTICLE_REVIEW_BRIEF = 'src/modules/article/briefs/article-review.md';
@@ -123,6 +123,7 @@ export async function articleWork(
         costUsd: out.costUsd,
         sessionId: out.sessionId ?? undefined,
         error: out.error ?? undefined,
+        ...usageFields(out),
       });
     const halt = (kind: Halt['kind'], why: string, unblock: Halt['unblock']) => {
       const h: Halt = {
@@ -163,7 +164,7 @@ export async function articleWork(
           '\n',
         ),
       };
-      const out = await exec(a, step, ctxOf(role));
+      const out = await exec(a, step, { ...ctxOf(role), attempts: { dir, line: nextLine(dir) } });
       if (out.costUsd) addSpend(root, week, out.costUsd);
       record(step, out);
       return out;

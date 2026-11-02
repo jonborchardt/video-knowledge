@@ -30,6 +30,7 @@ import {
   type RunHaltKind,
   TOPIC_RUN_DIR,
   appendJournal,
+  nextLine,
   clearHalt,
   readJournal,
   topicRunDir,
@@ -43,6 +44,7 @@ import { type RunResult, addSpend, isoWeek, runValidate, weekSpend } from './run
 import {
   type StepContext,
   type StepOutcome,
+  usageFields,
   envFor,
   execStep as realExecStep,
   parseRun,
@@ -267,6 +269,7 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
       costUsd: out.costUsd,
       sessionId: out.sessionId ?? undefined,
       error: out.error ?? undefined,
+      ...usageFields(out),
     });
   /** `npm run record` with a resume: a partial failure (the log names the recorded sources) is retried from the next
    *  source of the batch file, up to timeoutsPerStep tries. */
@@ -408,8 +411,16 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
                 );
               void s;
             }
+            // the slice's journal lines are written in order right after it: agent k records under line base + k
+            const base = nextLine(dir);
             const results = await Promise.all(
-              slice.map((s) => exec(a, s, { ...ctxOf(s, role), budgetUsd: a.agents.budgetUsd.perAgent })),
+              slice.map((s, k) =>
+                exec(a, s, {
+                  ...ctxOf(s, role),
+                  budgetUsd: a.agents.budgetUsd.perAgent,
+                  attempts: { dir, line: base + k },
+                }),
+              ),
             );
             setChild(dir, lock, null);
             results.forEach((out, k) => {

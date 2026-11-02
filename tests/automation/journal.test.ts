@@ -8,6 +8,7 @@ import {
   clearHalt,
   type Halt,
   type JournalEntry,
+  nextLine,
   readHalt,
   readJournal,
   RUN_DIR,
@@ -37,11 +38,21 @@ describe('journal', () => {
     appendJournal(d, entry({}));
     expect(readFileSync(join(d, 'journal.jsonl'), 'utf8').trim().split('\n')).toHaveLength(1);
   });
-  it('appends one line per entry and reads them back in order', () => {
+  it('appends one line per entry, returns its 1-based line number, and reads them back in order', () => {
     const d = join(tmp, 'j2');
-    appendJournal(d, entry({ attempt: 1 }));
-    appendJournal(d, entry({ attempt: 2 }));
+    expect(appendJournal(d, entry({ attempt: 1 }))).toBe(1);
+    expect(appendJournal(d, entry({ attempt: 2 }))).toBe(2);
+    expect(nextLine(d)).toBe(3);
     expect(readJournal(d).map((e) => e.attempt)).toEqual([1, 2]);
+  });
+  it('a journal line without the usage fields (every record before M3) reads as unknown model and tokens, never zero', () => {
+    const d = join(tmp, 'j5');
+    appendJournal(d, entry({ kind: 'prompt', costUsd: 0.4 }));
+    const [e] = readJournal(d);
+    expect(e.costUsd).toBe(0.4);
+    expect(e.models).toBeUndefined();
+    expect(e.modelRequested).toBeUndefined();
+    expect(e.turns).toBeUndefined();
   });
   it('a truncated last line (a kill mid-append) is skipped, the rest is read', () => {
     const d = join(tmp, 'j4');

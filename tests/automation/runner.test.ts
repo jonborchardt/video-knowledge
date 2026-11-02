@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { loadAutomation } from '../../src/shared/automation';
 import type { BoardNext, Step } from '../../src/orchestration/production';
-import { readHalt, readJournal, runDir, VALIDATE_LOG } from '../../src/orchestration/run/journal';
+import { readAttempts, readHalt, readJournal, runDir, VALIDATE_LOG } from '../../src/orchestration/run/journal';
 import { readLock } from '../../src/orchestration/run/lock';
 import { alive } from '../../src/orchestration/run/proc';
 import { runStory, type RunOptions } from '../../src/orchestration/run/runner';
@@ -88,6 +88,56 @@ describe('runStory', () => {
     expect(r.outcome).toBe('done');
     expect(readLock(runDir(T, S, root))).toBeNull();
     expect(readJournal(runDir(T, S, root)).some((e) => e.kind === 'finish')).toBe(true);
+  });
+  it('a prompt step journals the model asked for, every model used, turns and rounds, and records the attempt under its line', async () => {
+    const root = newRoot();
+    const scenario = join(root, 'scenario.json');
+    writeFileSync(
+      scenario,
+      JSON.stringify([{ match: '.', actions: [], cost: 0.25, turns: 4, model: 'fake-opus-20260101' }]),
+    );
+    const fake = { ...a, agents: { ...a.agents, command: `node ${FAKE_CLAUDE}` } };
+    const r = await runStory(T, S, fake, {
+      approver: 'automated: test',
+      root,
+      git: 'none',
+      validate: () => ({ ok: true, output: '' }),
+      hooks: noGuard,
+      env: { ...process.env, FAKE_CLAUDE_SCENARIO: scenario },
+      argvOf: () => [process.execPath, [FAKE_STEP]],
+      ask: scripted([
+        answer('package', 'npm run script -- package t s', [{ kind: 'run', text: 'npm run script -- package t s' }]),
+        answer('script', 'agent: script.md', [
+          { kind: 'prompt', text: 'Read src/modules/script/briefs/script.md and follow it.' },
+        ]),
+        answer('packaged', 'done', [], null, true),
+      ]),
+    });
+    expect(r.outcome).toBe('done');
+    const dir = runDir(T, S, root);
+    const journal = readJournal(dir);
+    const i = journal.findIndex((e) => e.kind === 'prompt');
+    const e = journal[i];
+    expect(e.modelRequested).toBe('opus');
+    expect(e.models).toEqual([
+      {
+        model: 'fake-opus-20260101',
+        canonical: 'fake-opus',
+        tokens: { input: 100, output: 20, cacheRead: 0, cacheCreate: 0 },
+        costUsd: 0.25,
+      },
+    ]);
+    expect(e.turns).toBe(4);
+    expect(e.rounds).toBe(1);
+    expect(e.overCap).toBe(false);
+    expect(e.costUsd).toBe(0.25);
+    // the run step before it carries no usage fields
+    expect(journal[i - 1].kind).toBe('run');
+    expect(journal[i - 1].models).toBeUndefined();
+    const recs = readAttempts(dir);
+    expect(recs).toHaveLength(1);
+    expect(recs[0]).toMatchObject({ line: i + 1, round: 1, role: 'writer', costUsd: 0.25, turns: 4 });
+    expect(recs[0].sessionId).toBe(e.sessionId);
   });
   it('halts awaiting-person on a stop: next and on a board halt a person resolves', async () => {
     for (const [next, halt] of [

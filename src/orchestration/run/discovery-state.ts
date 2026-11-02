@@ -6,6 +6,7 @@ import { existsSync, mkdirSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT, readJson, writeJsonAtomic } from '../../shared/io';
 import { loadProposals } from '../../modules/topic-discovery';
+import type { ModelUsage } from './agent';
 import type { Halt } from './journal';
 import { AUTOMATION_DIR } from './runner';
 
@@ -18,6 +19,12 @@ export interface AgentRun {
   costUsd: number;
   ok: boolean;
   error?: string;
+  /** M3 usage (absent on a record before it: unknown, never zero). The discovery job has no journal, so the record
+   *  is its attempt list. */
+  modelRequested?: string;
+  models?: ModelUsage[];
+  turns?: number | null;
+  ms?: number;
 }
 export interface InstitutionRun extends AgentRun {
   proposals: string[]; // the slugs the discovery agent wrote (new files)

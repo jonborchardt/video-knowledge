@@ -16,6 +16,7 @@ import {
 } from './guard';
 import {
   appendJournal,
+  nextLine,
   clearHalt,
   type Halt,
   type JournalEntry,
@@ -28,7 +29,15 @@ import {
 import { acquire, aliveLocks, heartbeat, type Lock, release, setChild } from './lock';
 import { alive, killTree } from './proc';
 import { grantFor } from './roles';
-import { envFor, execStep as realExecStep, parseRun, roleOf, type StepContext, type StepOutcome } from './steps';
+import {
+  envFor,
+  execStep as realExecStep,
+  parseRun,
+  roleOf,
+  type StepContext,
+  type StepOutcome,
+  usageFields,
+} from './steps';
 import { type ReleaseContext, releaseLoop } from './release';
 import { sendDraftRequest, sendReleaseRequest } from './requests';
 import type { MailTransport } from '../../shared/mail';
@@ -417,6 +426,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
           n,
         );
       ctx.budgetUsd = perAgent;
+      ctx.attempts = { dir, line: nextLine(dir) }; // the journal line below is the next one
     }
     const out = await exec(a, step, ctx);
     setChild(dir, lock, null);
@@ -433,6 +443,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
       costUsd: out.costUsd,
       sessionId: out.sessionId ?? undefined,
       error: out.error ?? undefined,
+      ...usageFields(out),
     });
     if (out.guardFailed)
       return halt(
@@ -684,6 +695,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
               n,
             );
           ctx.budgetUsd = perAgent; // the tree was snapshotted at the start and after every guard since
+          ctx.attempts = { dir, line: nextLine(dir) }; // the journal line below is the next one
         }
         let out: StepOutcome;
         let tries = 0;
@@ -706,6 +718,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
             costUsd: out.costUsd,
             sessionId: out.sessionId ?? undefined,
             error: out.error ?? undefined,
+            ...usageFields(out),
           });
           if (
             step.kind === 'run' &&

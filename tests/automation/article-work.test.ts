@@ -15,7 +15,7 @@ import { ARTICLE_FILES, type ArticleRelease, loadArticleRequest } from '../../sr
 import { MLM } from '../script-helpers';
 import { articleWork } from '../../src/orchestration/run/article-work';
 import { renderCorrectionRequest } from '../../src/orchestration/run/requests';
-import { readHalt, runDir } from '../../src/orchestration/run/journal';
+import { readAttempts, readHalt, readJournal, runDir } from '../../src/orchestration/run/journal';
 import { type Fixture, cliRoot, syntheticProduction } from '../production-helpers';
 
 const FAKE_CLAUDE = join(ROOT, 'tests', 'automation', 'fake-claude.mjs');
@@ -179,6 +179,11 @@ describe('articleWork (criterion 10)', () => {
     expect(m.text).toMatch(/Reply OK to release the correction/);
     expect(req.messageId).toBe(m.messageId);
     expect(c.releaseNow().revision).toBe(1); // not released: a person decides
+    // M3: the writer and the reviewer lines carry their usage; their attempts sit under the journal lines
+    const prompts = readJournal(runDir(c.f.topic, c.f.story, c.f.root)).filter((e) => e.kind === 'prompt');
+    expect(prompts.length).toBeGreaterThanOrEqual(2);
+    for (const e of prompts) expect(e.models?.[0]?.model).toBe('fake-sonnet');
+    expect(readAttempts(runDir(c.f.topic, c.f.story, c.f.root)).length).toBe(prompts.length);
     // the next pass finds the open request and changes nothing
     const again = await c.run();
     expect(again.actions.join('\n')).toMatch(/correction requested \(ar-.*awaiting the person/);

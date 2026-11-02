@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 // A stand-in for `claude -p` in tests. FAKE_CLAUDE_SCENARIO names a JSON file:
-//   [{ match: '<regex on the prompt>', actions: [{ copy, to } | { write, text }], cost, error?, result?, sleepMs?, dumpEnv? }]
+//   [{ match: '<regex on the prompt>', actions: [{ copy, to } | { write, text }], cost, error?, result?, sleepMs?,
+//      sleepAfterMs?, dumpEnv?, model?, tokens?, turns? }]
 // The first entry whose regex matches the prompt is applied (files relative to cwd), then a print-mode result JSON is
-// printed: { type: 'result', total_cost_usd, session_id, is_error, result, permission_denials: [] }.
+// printed with the real CLI's usage keys: { type: 'result', total_cost_usd, session_id, is_error, result, usage,
+// modelUsage (keyed by the scenario's model, default fake-sonnet), num_turns, duration_ms, duration_api_ms,
+// stop_reason, permission_denials: [] }. `sleepAfterMs` sleeps after printing (a hang after the result).
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 
@@ -30,15 +33,41 @@ if (entry.dumpEnv) writeFileSync(out(entry.dumpEnv), JSON.stringify(process.env,
 if (entry.sleepMs) await new Promise((r) => setTimeout(r, entry.sleepMs));
 if (entry.log) process.stderr.write(entry.log + '\n');
 
+const t = { input: 100, output: 20, cacheRead: 0, cacheCreate: 0, ...(entry.tokens ?? {}) };
+const model = entry.model ?? 'fake-sonnet';
+const cost = entry.cost ?? 0;
 process.stdout.write(
   JSON.stringify({
     type: 'result',
     subtype: entry.error ? 'error_during_execution' : 'success',
-    total_cost_usd: entry.cost ?? 0,
-    session_id: session,
     is_error: Boolean(entry.error),
+    duration_ms: 1000,
+    duration_api_ms: 800,
+    num_turns: entry.turns ?? 1,
+    stop_reason: entry.error ? null : 'end_turn',
+    total_cost_usd: cost,
+    session_id: session,
     result: entry.result ?? `fake agent: ${entry.match ?? 'no scenario'}`,
+    usage: {
+      input_tokens: t.input,
+      output_tokens: t.output,
+      cache_read_input_tokens: t.cacheRead,
+      cache_creation_input_tokens: t.cacheCreate,
+    },
+    modelUsage: {
+      [model]: {
+        inputTokens: t.input,
+        outputTokens: t.output,
+        cacheReadInputTokens: t.cacheRead,
+        cacheCreationInputTokens: t.cacheCreate,
+        webSearchRequests: 0,
+        costUSD: cost,
+        contextWindow: 200000,
+        canonicalModel: model.replace(/-\d{8}$/, ''),
+      },
+    },
     permission_denials: [],
   }) + '\n',
 );
+if (entry.sleepAfterMs) await new Promise((r) => setTimeout(r, entry.sleepAfterMs));
 process.exit(entry.error ? 1 : 0);

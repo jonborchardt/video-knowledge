@@ -18,7 +18,26 @@ export interface AgentRequest {
   resume?: string;
 }
 
-export interface AgentResult {
+/** One model's share of an invocation, as the CLI's `modelUsage` reports it: `model` is the version key (what an
+ *  estimate groups by), `canonical` the family name. Nothing here is attributed across models. */
+export interface ModelUsage {
+  model: string;
+  canonical: string;
+  tokens: { input: number; output: number; cacheRead: number; cacheCreate: number };
+  costUsd: number;
+}
+/** The usage and outcome metadata of one `claude -p` result; unknown stays null or empty, never zero. */
+export interface AgentUsage {
+  models: ModelUsage[];
+  turns: number | null;
+  apiMs: number | null;
+  stopReason: string | null;
+  subtype: string | null;
+  errors: string[];
+  isError: boolean;
+}
+
+export interface AgentResult extends AgentUsage {
   ok: boolean;
   costUsd: number;
   sessionId: string | null;
@@ -27,6 +46,12 @@ export interface AgentResult {
   exit: number | null;
   ms: number;
   denials: { tool: string; input: unknown }[];
+  /** The `--model` alias asked for (known even when nothing ran). */
+  modelRequested: string;
+  /** The `--max-budget-usd` passed: a request to the CLI and the pre-check's reservation, not a ceiling (observed to
+   *  overshoot), so a reported cost above it is `overCap` and recorded, never clipped. */
+  budgetUsd: number;
+  overCap: boolean;
 }
 
 export const UNATTENDED =
@@ -83,7 +108,7 @@ export function agentEnv(env: NodeJS.ProcessEnv, g: RoleGrant): NodeJS.ProcessEn
   return out;
 }
 
-interface PrintResult {
+export interface PrintResult {
   type?: string;
   subtype?: string;
   total_cost_usd?: number;
@@ -91,6 +116,47 @@ interface PrintResult {
   is_error?: boolean;
   result?: string;
   permission_denials?: { tool_name?: string; tool_input?: unknown }[];
+  num_turns?: number;
+  duration_ms?: number;
+  duration_api_ms?: number;
+  stop_reason?: string | null;
+  errors?: string[];
+  modelUsage?: Record<
+    string,
+    {
+      inputTokens?: number;
+      outputTokens?: number;
+      cacheReadInputTokens?: number;
+      cacheCreationInputTokens?: number;
+      costUSD?: number;
+      canonicalModel?: string;
+    }
+  >;
+}
+
+/** The usage the result reports, one entry per model; a result without `modelUsage` (an older record, a spawn
+ *  error) has `models: []` and null turns and time: unknown is unknown, never guessed as zero. */
+export function usageOf(res: PrintResult | null): AgentUsage {
+  const models: ModelUsage[] = Object.entries(res?.modelUsage ?? {}).map(([model, u]) => ({
+    model,
+    canonical: u.canonicalModel ?? model,
+    tokens: {
+      input: u.inputTokens ?? 0,
+      output: u.outputTokens ?? 0,
+      cacheRead: u.cacheReadInputTokens ?? 0,
+      cacheCreate: u.cacheCreationInputTokens ?? 0,
+    },
+    costUsd: u.costUSD ?? 0,
+  }));
+  return {
+    models,
+    turns: res?.num_turns ?? null,
+    apiMs: res?.duration_api_ms ?? null,
+    stopReason: res?.stop_reason ?? null,
+    subtype: res?.subtype ?? null,
+    errors: res?.errors ?? [],
+    isError: Boolean(res?.is_error),
+  };
 }
 
 /** The last JSON object on stdout (print mode writes one result; a wrapper may print lines before it). */
@@ -149,41 +215,30 @@ export async function runAgent(
       const ms = Date.now() - t0;
       const res = parseResult(stdout);
       const denials = (res?.permission_denials ?? []).map((d) => ({ tool: d.tool_name ?? '?', input: d.tool_input }));
-      if (timedOut)
-        return resolve({
-          ok: false,
-          costUsd: res?.total_cost_usd ?? 0,
-          sessionId: res?.session_id ?? null,
-          text: res?.result ?? '',
-          error: 'timeout',
-          exit,
-          ms,
-          denials,
-        });
-      if (spawnError)
-        return resolve({ ok: false, costUsd: 0, sessionId: null, text: '', error: spawnError, exit, ms, denials });
-      if (!res)
-        return resolve({
-          ok: false,
-          costUsd: 0,
-          sessionId: null,
-          text: stdout.trim(),
-          error: `no result (exit ${exit}): ${stderr.trim().slice(-500)}`,
-          exit,
-          ms,
-          denials,
-        });
-      const ok = exit === 0 && !res.is_error;
-      resolve({
-        ok,
-        costUsd: res.total_cost_usd ?? 0,
-        sessionId: res.session_id ?? null,
-        text: res.result ?? '',
-        error: ok ? null : (res.subtype ?? `exit ${exit}`),
+      const costUsd = res?.total_cost_usd ?? 0;
+      const base = {
+        ...usageOf(res),
+        costUsd,
+        sessionId: res?.session_id ?? null,
+        text: res?.result ?? '',
         exit,
         ms,
         denials,
-      });
+        modelRequested: a.agents.models[r.role],
+        budgetUsd: r.budgetUsd,
+        overCap: costUsd > r.budgetUsd,
+      };
+      if (timedOut) return resolve({ ...base, ok: false, error: 'timeout' });
+      if (spawnError) return resolve({ ...base, ok: false, error: spawnError });
+      if (!res)
+        return resolve({
+          ...base,
+          ok: false,
+          text: stdout.trim(),
+          error: `no result (exit ${exit}): ${stderr.trim().slice(-500)}`,
+        });
+      const ok = exit === 0 && !res.is_error;
+      resolve({ ...base, ok, error: ok ? null : (res.subtype ?? `exit ${exit}`) });
     };
     child.on('error', (e) => finish(null, e.message));
     child.on('close', (code) => finish(code));

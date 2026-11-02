@@ -12,7 +12,7 @@ import { FakeMail } from '../../src/shared/mail';
 import type { MaintenanceFile, Script } from '../../src/shared/types';
 import { maintenancePath } from '../../src/modules/evidence/maintenance';
 import { appendEvent, emptyLedger, loadLedger, publishPath, saveLedger } from '../../src/modules/publishing/publish';
-import { readHalt, readJournal, runDir, topicRunDir } from '../../src/orchestration/run/journal';
+import { readAttempts, readHalt, readJournal, runDir, topicRunDir } from '../../src/orchestration/run/journal';
 import { maintain, scanJobs } from '../../src/orchestration/run/maintain';
 import { type Fixture, cliRoot, syntheticProduction } from '../production-helpers';
 
@@ -148,6 +148,12 @@ describe('maintain', () => {
     expect(r.actions.join('\n')).toMatch(/scan found 1 document, 1 verdict/);
     const steps = c.journal().map((e) => e.step);
     expect(steps.some((s) => /new-sources\.md/.test(s))).toBe(true);
+    const scan = c.journal().find((e) => /new-sources\.md/.test(e.step))!;
+    expect(scan.models?.[0]?.model).toBe('fake-sonnet');
+    expect(scan.modelRequested).toBe('opus');
+    expect(
+      readAttempts(topicRunDir(c.f.topic, c.f.root)).some((x) => x.costUsd === scan.costUsd && x.role === 'collect'),
+    ).toBe(true);
     expect(steps.some((s) => /^npm run record-sources -- /.test(s))).toBe(true);
     expect(steps.some((s) => /^npm run evidence -- scanned /.test(s))).toBe(true);
     expect(steps.some((s) => s === 'npm run report')).toBe(true);

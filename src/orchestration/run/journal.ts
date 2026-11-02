@@ -1,9 +1,10 @@
 // The runner's own record of a story run, under the story's gitignored run/ folder: one journal line per step
 // attempt, the current halt (if any), and the halt kinds the runner adds beside the board's HALT_KINDS. Operational
 // state only: nothing here decides a workflow stage (the board re-derives that from the artifacts).
-import { appendFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT, readJson, scriptDir, topicDir, writeJsonAtomic } from '../../shared/io';
+import type { ModelUsage } from './agent';
 
 export const RUN_DIR = 'run';
 /** A topic run's operational folder: topics/<topic>/work/run/ (the runner's markers and journal; gitignored with work/). */
@@ -40,14 +41,82 @@ export interface JournalEntry {
   attempt: number;
   exit?: number | null;
   ms?: number;
+  /** The sum over the step's agent attempts (its validator rounds), as the attempt records hold them one by one. */
   costUsd?: number;
   sessionId?: string;
   error?: string;
+  /** M3 usage metadata of a prompt step (absent on every line before it: unknown, never zero). */
+  modelRequested?: string;
+  models?: ModelUsage[];
+  turns?: number;
+  apiMs?: number;
+  rounds?: number;
+  overCap?: boolean;
 }
 
-export function appendJournal(dir: string, e: JournalEntry): void {
+/** Appends one line and returns its 1-based line number (the key of the step's attempt records). */
+export function appendJournal(dir: string, e: JournalEntry): number {
   mkdirSync(dir, { recursive: true });
+  const line = nextLine(dir);
   appendFileSync(join(dir, JOURNAL), JSON.stringify(e) + '\n');
+  return line;
+}
+/** The line number the next appended entry gets. */
+export function nextLine(dir: string): number {
+  const p = join(dir, JOURNAL);
+  if (!existsSync(p)) return 1;
+  return (
+    readFileSync(p, 'utf8')
+      .split('\n')
+      .filter((l) => l.trim()).length + 1
+  );
+}
+
+/** One `claude -p` invocation (an attempt: a round of a step), recorded under `run/agents/<journal line>-<round>.json`
+ *  by the step as it runs: written open at spawn (no `finishedAt`), overwritten complete when the process ends.
+ *  Usage, outcome and error metadata only: never the prompt, the reply or stdout (the step log keeps the validator's
+ *  output). Failed, timed-out and resumed attempts are recorded like the rest; nothing prunes them. */
+export interface AttemptRecord {
+  line: number;
+  round: number;
+  at: string;
+  finishedAt: string | null;
+  step: string;
+  role: string;
+  modelRequested: string;
+  models: ModelUsage[];
+  effort: string;
+  turns: number | null;
+  costUsd: number;
+  budgetUsd: number;
+  overCap: boolean;
+  ms: number;
+  apiMs: number | null;
+  exit: number | null;
+  isError: boolean;
+  subtype: string | null;
+  stopReason: string | null;
+  errors: string[];
+  denials: string[];
+  sessionId: string | null;
+  resumedFrom: string | null;
+  pid?: number;
+}
+export const ATTEMPTS_DIR = 'agents';
+export const attemptPath = (dir: string, line: number, round: number) =>
+  join(dir, ATTEMPTS_DIR, `${line}-${round}.json`);
+export function writeAttempt(dir: string, r: AttemptRecord): void {
+  mkdirSync(join(dir, ATTEMPTS_DIR), { recursive: true });
+  writeJsonAtomic(attemptPath(dir, r.line, r.round), r);
+}
+/** Every attempt record of a run folder, by line then round. */
+export function readAttempts(dir: string): AttemptRecord[] {
+  const d = join(dir, ATTEMPTS_DIR);
+  if (!existsSync(d)) return [];
+  return readdirSync(d)
+    .filter((n) => /^\d+-\d+\.json$/.test(n))
+    .flatMap((n) => readJson<AttemptRecord>(join(d, n)) ?? [])
+    .sort((x, y) => x.line - y.line || x.round - y.round);
 }
 
 export function readJournal(dir: string): JournalEntry[] {

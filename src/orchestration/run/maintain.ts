@@ -23,6 +23,7 @@ import {
   type Halt,
   type JournalEntry,
   appendJournal,
+  nextLine,
   readHalt,
   runDir,
   topicRunDir,
@@ -32,7 +33,7 @@ import {
 import { type Lock, acquire, heartbeat, release, setChild } from './lock';
 import { type RoleGrant, grantFor } from './roles';
 import { type RunResult, addSpend, isoWeek, runValidate, weekSpend } from './runner';
-import { type StepContext, type StepOutcome, envFor, execStep as realExecStep } from './steps';
+import { type StepContext, type StepOutcome, envFor, execStep as realExecStep, usageFields } from './steps';
 import type { Job } from './work';
 
 export const NEW_SOURCES_BRIEF = 'src/modules/evidence/briefs/new-sources.md';
@@ -179,6 +180,7 @@ export async function maintain(
       costUsd: out.costUsd,
       sessionId: out.sessionId ?? undefined,
       error: out.error ?? undefined,
+      ...usageFields(out),
     });
   const agent = async (brief: string, lines: string[], role: StepContext['role']): Promise<StepOutcome> => {
     const week = isoWeek(new Date(now()));
@@ -198,7 +200,7 @@ export async function maintain(
       kind: 'prompt',
       text: [`Read ${brief} and follow it.`, `Topic: ${topic}`, ...lines].join('\n'),
     };
-    const out = await exec(a, step, ctxOf(step, role));
+    const out = await exec(a, step, { ...ctxOf(step, role), attempts: { dir, line: nextLine(dir) } });
     setChild(dir, lock, null);
     cost += out.costUsd;
     if (out.costUsd) addSpend(root, week, out.costUsd);

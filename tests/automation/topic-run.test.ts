@@ -13,7 +13,7 @@ import { ROOT, readJson, toJson } from '../../src/shared/io';
 import type { Proposal, ProposalReview } from '../../src/shared/types';
 import { proposalPath, reviewPath } from '../../src/modules/topic-discovery/proposals';
 import { loadStories } from '../../src/modules/stories';
-import { readHalt, readJournal } from '../../src/orchestration/run/journal';
+import { readAttempts, readHalt, readJournal } from '../../src/orchestration/run/journal';
 import { RECORDED_FILE, runTopic, topicRunFolder } from '../../src/orchestration/run/topic-runner';
 import { topicNext } from '../../src/orchestration/research';
 import { topicJobs } from '../../src/orchestration/run/work';
@@ -260,6 +260,22 @@ describe('the topic runner (criterion 1)', () => {
     expect(c.proposal().status).toBe('approved');
     expect(topicJobs(c.root, () => false)).toEqual([]); // researched: no job left
     expect(r.costUsd).toBeCloseTo(2.1, 5);
+    // M3: each prompt line carries the model asked for and every model used; one attempt record per line (parallel
+    // extraction agents included), at the line the journal gave the step
+    const all = c.journal();
+    for (const e of prompts) {
+      expect(e.modelRequested).toBe('opus');
+      expect(e.models?.[0]?.model).toBe('fake-sonnet');
+      expect(e.turns).toBe(1);
+    }
+    const recs = readAttempts(topicRunFolder(T, c.root));
+    expect(recs.map((x) => x.line).sort((x, y) => x - y)).toEqual(
+      all.flatMap((e, i) => (e.kind === 'prompt' ? [i + 1] : [])),
+    );
+    expect(recs.reduce((n, x) => n + x.costUsd, 0)).toBeCloseTo(
+      prompts.reduce((n, e) => n + (e.costUsd ?? 0), 0),
+      5,
+    );
   }, 240_000);
 
   it("a merge agent that leaves collisions open after its rounds is followed by collide --resolve (the runner's last resort) and the run goes on", async () => {

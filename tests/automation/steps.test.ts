@@ -5,6 +5,7 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { loadAutomation } from '../../src/shared/automation';
 import { alive } from '../../src/orchestration/run/proc';
 import { envFor, execStep, parseRun, roleOf, timeoutFor, validatorFor } from '../../src/orchestration/run/steps';
+import { type AttemptRecord, readAttempts } from '../../src/orchestration/run/journal';
 
 const tmp = mkdtempSync(join(tmpdir(), 'vk-steps-'));
 afterAll(() => rmSync(tmp, { recursive: true, force: true }));
@@ -222,6 +223,105 @@ describe('execStep: prompt with the validator loop', () => {
     expect(o.ok).toBe(false);
     expect(o.error).toMatch(/still wrong/);
     expect(readFileSync(log, 'utf8').trim().split('\n')).toHaveLength(1 + a.runs.validationRounds);
+  });
+  it('two validator rounds record two attempts under the journal line and one outcome whose cost and tokens are the sums', async () => {
+    const once = join(tmp, 'once-c');
+    const run = join(tmp, 'run-c');
+    const sc = join(tmp, 's-sum.json');
+    writeFileSync(
+      sc,
+      JSON.stringify([{ match: '.', actions: [], cost: 0.5, tokens: { input: 100, output: 20 }, turns: 3 }]),
+    );
+    const o = await execStep(
+      fake,
+      prompt,
+      ctx({
+        argvOf: fakeStep('--once-file', once),
+        env: { ...process.env, FAKE_CLAUDE_SCENARIO: sc },
+        attempts: { dir: run, line: 7 },
+      }),
+    );
+    expect(o.ok).toBe(true);
+    expect(o.rounds).toBe(2);
+    expect(o.costUsd).toBe(1);
+    expect(o.modelRequested).toBe('opus');
+    expect(o.models).toEqual([
+      {
+        model: 'fake-sonnet',
+        canonical: 'fake-sonnet',
+        tokens: { input: 200, output: 40, cacheRead: 0, cacheCreate: 0 },
+        costUsd: 1,
+      },
+    ]);
+    expect(o.turns).toBe(6);
+    expect(o.apiMs).toBe(1600);
+    expect(o.overCap).toBe(false);
+    expect(existsSync(join(run, 'agents', '7-1.json'))).toBe(true);
+    expect(existsSync(join(run, 'agents', '7-2.json'))).toBe(true);
+    const recs = readAttempts(run);
+    expect(recs.map((r) => [r.line, r.round])).toEqual([
+      [7, 1],
+      [7, 2],
+    ]);
+    const r1 = recs[0];
+    expect(r1).toMatchObject({
+      step: 'Read src/modules/script/briefs/script.md and follow it.',
+      role: 'writer',
+      modelRequested: 'opus',
+      effort: a.agents.effort,
+      turns: 3,
+      costUsd: 0.5,
+      budgetUsd: 8,
+      overCap: false,
+      exit: 0,
+      isError: false,
+      subtype: 'success',
+      stopReason: 'end_turn',
+      errors: [],
+      denials: [],
+      resumedFrom: null,
+    });
+    expect(r1.models[0].model).toBe('fake-sonnet');
+    expect(r1.sessionId).toBe(o.sessionId);
+    expect(r1.finishedAt).toBeTruthy();
+    expect(recs[1].resumedFrom).toBe(o.sessionId);
+    // usage, outcome and error metadata only: never the prompt, the reply or stdout
+    const raw = JSON.parse(readFileSync(join(run, 'agents', '7-1.json'), 'utf8')) as Record<string, unknown>;
+    for (const k of ['prompt', 'text', 'result', 'stdout', 'reply']) expect(raw).not.toHaveProperty(k);
+    expect(JSON.stringify(raw)).not.toContain('fake agent:');
+  });
+  it('a failed attempt (is_error) is recorded with its cost; the outcome carries the same', async () => {
+    const run = join(tmp, 'run-d');
+    const sc = join(tmp, 's-err.json');
+    writeFileSync(sc, JSON.stringify([{ match: '.', actions: [], cost: 0.7, error: true }]));
+    const o = await execStep(
+      fake,
+      prompt,
+      ctx({ argvOf: fakeStep(), env: { ...process.env, FAKE_CLAUDE_SCENARIO: sc }, attempts: { dir: run, line: 2 } }),
+    );
+    expect(o.ok).toBe(false);
+    expect(o.costUsd).toBe(0.7);
+    const [r] = readAttempts(run);
+    expect(r).toMatchObject({
+      line: 2,
+      round: 1,
+      costUsd: 0.7,
+      isError: true,
+      exit: 1,
+      subtype: 'error_during_execution',
+    });
+    expect(r.models[0].costUsd).toBe(0.7);
+  });
+  it('a spawn error is recorded too: exit null, no cost, no model used, the model requested', async () => {
+    const run = join(tmp, 'run-e');
+    const broken = { ...fake, agents: { ...fake.agents, command: join(tmp, 'no-such-claude') } };
+    const o = await execStep(broken, prompt, ctx({ argvOf: fakeStep(), attempts: { dir: run, line: 1 } }));
+    expect(o.ok).toBe(false);
+    const [r] = readAttempts(run);
+    expect(r).toMatchObject({ exit: null, costUsd: 0, models: [], modelRequested: 'opus' });
+    expect(r.finishedAt).toBeTruthy();
+    const open: AttemptRecord | undefined = readAttempts(join(tmp, 'nowhere'))[0];
+    expect(open).toBeUndefined();
   });
   it('the injected guard runs after every agent turn and a failing guard ends the step', async () => {
     const calls: string[] = [];

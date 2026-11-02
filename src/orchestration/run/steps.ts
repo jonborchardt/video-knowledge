@@ -8,7 +8,8 @@ import { join } from 'node:path';
 import type { AgentRole, Automation } from '../../shared/automation';
 import { cliArgv } from '../../shared/cli';
 import type { Step } from '../production';
-import { type AgentResult, runAgent, UNATTENDED } from './agent';
+import { type AgentResult, type ModelUsage, runAgent, UNATTENDED } from './agent';
+import { type AttemptRecord, writeAttempt } from './journal';
 import { killTree } from './proc';
 import type { Subject } from './roles';
 
@@ -27,6 +28,45 @@ export interface StepOutcome {
   rounds?: number;
   /** The agent's final reply (a notes agent's output is its reply). */
   text?: string;
+  /** M3: the usage over every attempt of a prompt step (the alias asked for, every model used with summed tokens and
+   *  cost, summed turns and api time, whether any attempt overshot its cap); absent on a run step. */
+  modelRequested?: string;
+  models?: ModelUsage[];
+  turns?: number;
+  apiMs?: number;
+  overCap?: boolean;
+}
+
+/** The journal fields a prompt step's outcome carries (spread into the runner's journal line). */
+export function usageFields(
+  out: StepOutcome,
+): Pick<StepOutcome, 'modelRequested' | 'models' | 'turns' | 'apiMs' | 'rounds' | 'overCap'> {
+  if (out.kind !== 'prompt' || out.modelRequested === undefined) return {};
+  return {
+    modelRequested: out.modelRequested,
+    models: out.models,
+    turns: out.turns,
+    apiMs: out.apiMs,
+    rounds: out.rounds,
+    overCap: out.overCap,
+  };
+}
+
+/** Per-model usage summed across attempts (one entry per model version; nothing is attributed across models). */
+export function sumModels(lists: ModelUsage[][]): ModelUsage[] {
+  const by = new Map<string, ModelUsage>();
+  for (const m of lists.flat()) {
+    const cur = by.get(m.model);
+    if (!cur) by.set(m.model, { ...m, tokens: { ...m.tokens } });
+    else {
+      cur.costUsd += m.costUsd;
+      cur.tokens.input += m.tokens.input;
+      cur.tokens.output += m.tokens.output;
+      cur.tokens.cacheRead += m.tokens.cacheRead;
+      cur.tokens.cacheCreate += m.tokens.cacheCreate;
+    }
+  }
+  return [...by.values()];
 }
 
 /** `npm run <cli> -- <args>` → the cli and its args, with `<approver>` filled in; anything else null. */
@@ -168,6 +208,9 @@ export interface StepContext {
   budgetUsd?: number;
   /** Told the pid of every child or agent as it spawns (the lock records it so a takeover can kill it). */
   onSpawn?: (pid: number) => void;
+  /** Where a prompt step records its attempts: the run folder and the journal line the runner will write for the
+   *  step (`nextLine(dir)`; a parallel slice gets consecutive lines). Without it nothing is recorded. */
+  attempts?: { dir: string; line: number };
 }
 
 const RENDER_VERBS = new Set(['render', 'spike', 'final']);
@@ -278,7 +321,44 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
   let cost = 0;
   let ms = 0;
   let last: AgentResult | null = null;
+  const results: AgentResult[] = [];
+  const budgetUsd = ctx.budgetUsd ?? a.agents.budgetUsd.perAgent;
+  const stepLine = s.text.split('\n')[0].slice(0, 200);
+  /** The usage over every attempt so far, spread into each outcome below. */
+  const usage = () => ({
+    modelRequested: a.agents.models[ctx.role],
+    models: sumModels(results.map((r) => r.models)),
+    turns: results.reduce((n, r) => n + (r.turns ?? 0), 0),
+    apiMs: results.reduce((n, r) => n + (r.apiMs ?? 0), 0),
+    overCap: results.some((r) => r.overCap),
+  });
   for (let round = 0; round <= a.runs.validationRounds; round++) {
+    const open: AttemptRecord = {
+      line: ctx.attempts?.line ?? 0,
+      round: round + 1,
+      at: new Date().toISOString(),
+      finishedAt: null,
+      step: stepLine,
+      role: ctx.role,
+      modelRequested: a.agents.models[ctx.role],
+      models: [],
+      effort: a.agents.effort,
+      turns: null,
+      costUsd: 0,
+      budgetUsd,
+      overCap: false,
+      ms: 0,
+      apiMs: null,
+      exit: null,
+      isError: false,
+      subtype: null,
+      stopReason: null,
+      errors: [],
+      denials: [],
+      sessionId: resume ?? null,
+      resumedFrom: resume ?? null,
+    };
+    const record = (r: AttemptRecord) => ctx.attempts && writeAttempt(ctx.attempts.dir, r);
     last = await runAgent(
       a,
       {
@@ -286,18 +366,44 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
         subject,
         prompt,
         cwd: ctx.root,
-        budgetUsd: ctx.budgetUsd ?? a.agents.budgetUsd.perAgent,
+        budgetUsd,
         timeoutMs: ctx.timeoutMs ?? a.runs.agentTimeoutMinutes * 60_000,
         appendSystem: UNATTENDED,
         resume,
       },
-      { env: ctx.env, spawn: ctx.spawn, onSpawn: ctx.onSpawn },
+      {
+        env: ctx.env,
+        spawn: ctx.spawn,
+        onSpawn: (pid) => {
+          record({ ...open, pid });
+          ctx.onSpawn?.(pid);
+        },
+      },
     );
+    results.push(last);
+    record({
+      ...open,
+      finishedAt: new Date().toISOString(),
+      models: last.models,
+      turns: last.turns,
+      costUsd: last.costUsd,
+      overCap: last.overCap,
+      ms: last.ms,
+      apiMs: last.apiMs,
+      exit: last.exit,
+      isError: last.isError,
+      subtype: last.subtype,
+      stopReason: last.stopReason,
+      errors: last.ok ? last.errors : [...last.errors, ...(last.error ? [last.error] : [])],
+      denials: last.denials.map((d) => d.tool),
+      sessionId: last.sessionId,
+    });
     cost += last.costUsd;
     ms += last.ms;
     resume = last.sessionId ?? undefined;
     const guarded = (why: string): StepOutcome => ({
       ...base,
+      ...usage(),
       ok: false,
       exit: last?.exit ?? null,
       ms,
@@ -319,6 +425,7 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
     if (!last.ok)
       return {
         ...base,
+        ...usage(),
         ok: false,
         exit: last.exit,
         ms,
@@ -331,6 +438,7 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
     if (!validator)
       return {
         ...base,
+        ...usage(),
         ok: true,
         exit: last.exit,
         ms,
@@ -356,6 +464,7 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
     if (v.exit === 0 && !v.timedOut)
       return {
         ...base,
+        ...usage(),
         ok: true,
         exit: v.exit,
         ms,
@@ -368,6 +477,7 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
     if (round === a.runs.validationRounds || !resume)
       return {
         ...base,
+        ...usage(),
         ok: false,
         exit: v.exit,
         ms,
@@ -380,6 +490,7 @@ export async function execStep(a: Automation, s: Step, ctx: StepContext): Promis
   }
   return {
     ...base,
+    ...usage(),
     ok: false,
     exit: last?.exit ?? null,
     ms,

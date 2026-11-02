@@ -25,10 +25,19 @@ import { renderBatch } from './requests';
 import { grantFor } from './roles';
 import { addSpend, isoWeek, type RunResult, weekSpend } from './runner';
 import { lastSlot, readSchedule, updateSchedule } from './schedule';
-import { type StepContext, envFor, execStep } from './steps';
+import { type StepOutcome, type StepContext, envFor, execStep } from './steps';
+
+/** The usage fields of the record's agent runs, from the step outcome. */
+const usageOf = (out: StepOutcome): Pick<AgentRun, 'modelRequested' | 'models' | 'turns' | 'ms'> => ({
+  modelRequested: out.modelRequested,
+  models: out.models,
+  turns: out.turns,
+  ms: out.ms,
+});
 import {
   type BatchRecord,
   DISCOVERY_DIR,
+  type AgentRun,
   type DiscoveryRecord,
   discoveryDir,
   discoveryHaltPath,
@@ -264,6 +273,7 @@ async function discoverLocked(
       inst.session = out.sessionId;
       inst.costUsd += out.costUsd;
       inst.ok = out.ok;
+      Object.assign(inst, usageOf(out));
       inst.proposals = proposalSlugs(root).filter((s) => !before.has(s));
       if (!out.ok) {
         inst.error = out.error ?? 'the discovery agent failed';
@@ -307,6 +317,7 @@ async function discoverLocked(
         costUsd: out.costUsd,
         ok,
         ...(ok ? {} : { error: out.error ?? 'no review written' }),
+        ...usageOf(out),
       };
       if (!ok && !dry)
         writeDiscoveryHalt(root, slug, {

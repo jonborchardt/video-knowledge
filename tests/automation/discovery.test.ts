@@ -193,6 +193,13 @@ describe('discovery', () => {
     expect(rec.emailed).toBe(true);
     expect(readSchedule(c.root).discovery?.lastSlot).toBe('2026-11-06');
     expect(rec.costUsd).toBeCloseTo(2.0, 5);
+    // the usage of each agent, per model (no journal here: the record is the attempt list)
+    expect(rec.institutions.spending.modelRequested).toBe('opus');
+    expect(rec.institutions.spending.models?.[0]).toMatchObject({ model: 'fake-sonnet', costUsd: 0.6 });
+    expect(rec.institutions.spending.turns).toBe(1);
+    expect(rec.institutions.spending.ms).toBeGreaterThan(0);
+    expect(reviews['cheap-flights'].models?.[0].model).toBe('fake-sonnet');
+    expect(reviews['cheap-flights'].modelRequested).toBe('opus');
     // the same slot is not due again; the next Friday is
     expect(discoveryDue(a, c.root, FRIDAY + 60_000)).toBe(false);
     expect(discoveryDue(a, c.root, FRIDAY + 7 * 24 * 3600_000)).toBe(true);
