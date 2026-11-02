@@ -36,12 +36,14 @@ for (const file of all) {
 // lean `l`, the force flag `f`); every later mention is a reference without them
 const CREATION_FIELDS = ['v', 'l', 'f'];
 const firstOf = new Map();
+const created = new Set(); // texts some mention creates; the rest refer to claims the store already has
 const fields = new Map(); // per text: the creation's fields, from whichever mention carries them
 for (const file of all)
   for (const b of file.batches)
     for (const x of b.as) {
       const text = x.n ?? x.n2;
       if (!text) continue;
+      if (x.n !== undefined && x.v !== undefined) created.add(text); // a creation carries a guess (check-batch)
       if (!firstOf.has(text)) firstOf.set(text, x);
       const f = fields.get(text) ?? {};
       for (const k of CREATION_FIELDS) if (x[k] !== undefined && f[k] === undefined) f[k] = x[k];
@@ -52,7 +54,7 @@ for (const file of all)
     for (const x of b.as) {
       const text = x.n ?? x.n2;
       if (!text) continue;
-      const creation = firstOf.get(text) === x;
+      const creation = created.has(text) && firstOf.get(text) === x;
       delete x.n;
       delete x.n2;
       for (const k of CREATION_FIELDS) delete x[k];

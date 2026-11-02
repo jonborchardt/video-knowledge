@@ -93,6 +93,27 @@ describe('merge-claims', () => {
     expect(h1[0].as[0].v).toEqual(['right', 0.5, 'g']);
     expect(h1[0].as[0].f).toBe(true);
     expect(h1[1].as[0].v).toBeUndefined();
+    // a text no mention creates refers to a claim already in the store: every mention stays a reference
+    const dir2 = mkdtempSync(join(tmpdir(), 'vk-merge-'));
+    roots.push(dir2);
+    writeFileSync(
+      join(dir2, 'merges.json'),
+      JSON.stringify({ 'Warranties are marked up.': '=Dealers mark up warranties.' }),
+    );
+    writeFileSync(
+      join(dir2, 'h2.json'),
+      JSON.stringify([
+        { video: 'd', sum: 's', as: [{ n: 'Warranties are marked up.', q: 'qd', v: ['right', 0.5, 'g'] }] },
+        { video: 'e', sum: 's', as: [{ n2: 'Dealers mark up warranties.', q: 'qe' }] },
+        { video: 'f', sum: 's', as: [{ n: 'Dealers mark up warranties.', q: 'qf' }] }, // an earlier rewrite's creation without a guess
+      ]),
+    );
+    run(dir2, ['h2.json']);
+    const h2 = read(dir2, 'h2.json');
+    expect(kinds(h2[0])).toEqual(['n2:Dealers mark up warranties.']);
+    expect(kinds(h2[1])).toEqual(['n2:Dealers mark up warranties.']);
+    expect(kinds(h2[2])).toEqual(['n2:Dealers mark up warranties.']);
+    expect(h2[0].as[0].v).toBeUndefined();
     // a second run changes nothing
     run(dir, ['h1.json']);
     expect(read(dir, 'h1.json')).toEqual(h1);
