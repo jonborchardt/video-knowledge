@@ -10,11 +10,11 @@ marks each one:
 
 Three states describe every integration, and they are kept apart (`src/orchestration/run/readiness.ts`):
 
-| state           | means                                                                                   | recorded where                                                   |
-| --------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| **Implemented** | the code exists and its tests pass                                                      | code (`INTEGRATIONS`), the test suite                            |
-| **Verified**    | a person exercised it against the real service and recorded the evidence               | `readiness.json`, written only by `npm run run -- verified`      |
-| **Enabled**     | configured to run unattended                                                            | `automation.json`                                                |
+| state           | means                                                                    | recorded where                                              |
+| --------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| **Implemented** | the code exists and its tests pass                                       | code (`INTEGRATIONS`), the test suite                       |
+| **Verified**    | a person exercised it against the real service and recorded the evidence | `readiness.json`, written only by `npm run run -- verified` |
+| **Enabled**     | configured to run unattended                                             | `automation.json`                                           |
 
 A green suite is never a verification, and a verification never enables anything. The Automation tab's Readiness
 table shows all three per integration; the `verified` column is the only one that comes from `readiness.json`.
@@ -39,14 +39,14 @@ Secrets live in the gitignored `.env` at the repo root (and `.secrets/`), never 
 The runner hands each child only its verb's family (`envFor` in `src/orchestration/run/steps.ts`) and strips every
 secret from an agent's environment.
 
-| service              | keys in `.env`                                                                              | used by                                       |
-| -------------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| YouTube Data API     | `YOUTUBE_OAUTH_CREDENTIALS_PATH` (a Desktop OAuth client JSON under `.secrets/`), per commission `YOUTUBE_OAUTH_CREDENTIALS_PATH_<KEY>` | `npm run publish -- auth|upload|push|go-live|sync|verify` |
-| Approval mail        | `MAIL_SMTP_HOST`, `MAIL_IMAP_HOST`, `MAIL_USER`, `MAIL_PASSWORD` (ports 465 and 993), `APPROVAL_SECRET` (16+ chars) | the tick's outbox and inbox, `publish request`, `article request-correction`, `topics batch` |
-| Azure AI Speech      | `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION`                                                   | `npm run video -- final` (the release voice, through `npm run tts-azure`) |
-| X                    | `X_<KEY>_API_KEY`, `_API_SECRET`, `_ACCESS_TOKEN`, `_ACCESS_SECRET`, `_USER_ID` (`_HANDLE` for a test account) | `npm run social -- post`                      |
-| Cloudflare           | `wrangler.jsonc`, the host's own deploy on push                                             | the launch job's push; `npm run links -- live` probes the result |
-| Claude Code          | the `claude` CLI on `PATH`, signed in                                                       | every agent step (`claude -p`)                |
+| service          | keys in `.env`                                                                                                                          | used by                                                                                      |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| YouTube Data API | `YOUTUBE_OAUTH_CREDENTIALS_PATH` (a Desktop OAuth client JSON under `.secrets/`), per commission `YOUTUBE_OAUTH_CREDENTIALS_PATH_<KEY>` | `npm run publish -- auth                                                                     | upload | push | go-live | sync | verify` |
+| Approval mail    | `MAIL_SMTP_HOST`, `MAIL_IMAP_HOST`, `MAIL_USER`, `MAIL_PASSWORD` (ports 465 and 993), `APPROVAL_SECRET` (16+ chars)                     | the tick's outbox and inbox, `publish request`, `article request-correction`, `topics batch` |
+| Azure AI Speech  | `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION`                                                                                               | `npm run video -- final` (the release voice, through `npm run tts-azure`)                    |
+| X                | `X_<KEY>_API_KEY`, `_API_SECRET`, `_ACCESS_TOKEN`, `_ACCESS_SECRET`, `_USER_ID` (`_HANDLE` for a test account)                          | `npm run social -- post`                                                                     |
+| Cloudflare       | `wrangler.jsonc`, the host's own deploy on push                                                                                         | the launch job's push; `npm run links -- live` probes the result                             |
+| Claude Code      | the `claude` CLI on `PATH`, signed in                                                                                                   | every agent step (`claude -p`)                                                               |
 
 The External services tab on `/admin` links each console. The one-time YouTube setup (consent screen, OAuth client,
 channel verification, `auth`) is in README.md under Publishing.
@@ -56,16 +56,16 @@ channel verification, `auth`) is in README.md under Publishing.
 `automation.json` is the automation policy (`src/shared/automation.ts`): a closed key set, validated at build, every
 `enabled.*` flag off by default. Agent permissions are code (`src/orchestration/run/roles.ts`), never configuration.
 
-| key                                            | what it decides                                                                           |
-| ---------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `enabled.tick`, `enabled.work`                 | whether a scheduled `tick` or `work` does anything at all                                 |
-| `enabled.production`, `enabled.research`, `enabled.discovery`, `enabled.maintenance`, `enabled.social` | which jobs the work plane may start, and whether a post goes out |
-| `review.draft`                                 | `person` (default), `shadow` (an agent reviews beside you, decides nothing), `agent`       |
-| `agents.models`, `agents.effort`               | the model alias per role (the CLI reports the model version it used)                      |
-| `agents.budgetUsd`                             | `perAgent` (the cap asked of the CLI per invocation and the pre-check's reservation; it can overshoot and the overshoot is recorded), `perRun`, `perTopic`, `perWeek` (the orchestration's checks before each agent) |
-| `runs.*`                                       | concurrency, caps, timeouts, backoff, stuck detection, free disk                          |
-| `approvals.*`, `notifications.*`               | who gets the mails, how long a request lives, the digest slot                             |
-| `schedule.*`, `production.*`, `topics.*`, `launch.*` | cadences and thresholds                                                              |
+| key                                                                                                    | what it decides                                                                                                                                                                                                      |
+| ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `enabled.tick`, `enabled.work`                                                                         | whether a scheduled `tick` or `work` does anything at all                                                                                                                                                            |
+| `enabled.production`, `enabled.research`, `enabled.discovery`, `enabled.maintenance`, `enabled.social` | which jobs the work plane may start, and whether a post goes out                                                                                                                                                     |
+| `review.draft`                                                                                         | `person` (default), `shadow` (an agent reviews beside you, decides nothing), `agent`                                                                                                                                 |
+| `agents.models`, `agents.effort`                                                                       | the model alias per role (the CLI reports the model version it used)                                                                                                                                                 |
+| `agents.budgetUsd`                                                                                     | `perAgent` (the cap asked of the CLI per invocation and the pre-check's reservation; it can overshoot and the overshoot is recorded), `perRun`, `perTopic`, `perWeek` (the orchestration's checks before each agent) |
+| `runs.*`                                                                                               | concurrency, caps, timeouts, backoff, stuck detection, free disk                                                                                                                                                     |
+| `approvals.*`, `notifications.*`                                                                       | who gets the mails, how long a request lives, the digest slot                                                                                                                                                        |
+| `schedule.*`, `production.*`, `topics.*`, `launch.*`                                                   | cadences and thresholds                                                                                                                                                                                              |
 
 Change it by hand, commit it. Nothing reads it but the planes and the CLIs; a wrong key fails the build.
 
@@ -75,7 +75,7 @@ Nothing runs unless a person starts it or a scheduler the person created calls t
 
 - `npm run run -- story <topic> <story-id> [--until <stage>] [--model <alias>] [--no-commit]` (writes the repo;
   external effect: model calls, narration, and after `packaged` the uploads and the request mail unless `--until
-  packaged`) drives one story. It commits only on `git.commitOn`'s branch; `--no-commit` leaves the artifacts for you.
+packaged`) drives one story. It commits only on `git.commitOn`'s branch; `--no-commit` leaves the artifacts for you.
 - `npm run run -- topic <topic>` (writes the repo; external effect: model calls, fetches) researches an approved
   proposal. `npm run run -- maintain <topic>`, `discover`, `launch` likewise; see 10 to 12.
 - `npm run run -- tick` (writes `.automation/`; external effect: mail, YouTube reads, the deploy probe, X) is the
@@ -143,15 +143,15 @@ Every halt has a kind and an unblock (`src/orchestration/run/journal.ts`, `RUN_H
 `HALT_KINDS`). Read the Blocked list or `npm run run -- status`; the step log is `run/steps/<n>.log`, the attempt
 record `run/agents/`, the validate output `run/validate.log`.
 
-| halt                                   | who         | what to do                                                                                       |
-| -------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------ |
-| `timeout`, `lock-stale`, retryable `step-failed` | automatic | the tick resumes it by backoff (15, 60, 240 min); after that `retries-spent`, yours              |
-| `budget`                               | you         | raise `agents.budgetUsd` or wait for the next ISO week; the tick resumes when the week rolls      |
-| `awaiting-person`, `needs-person`      | you         | the unblock names the reply, page or command; `npm run run -- clear <topic> <story> --by "<name>"` for a halt that needs no action |
-| `unexpected-edit`, `forbidden-flag`    | you         | an agent wrote outside its files (reverted) or the board asked for a flag the runner never passes: read the session, fix the cause |
-| `git`                                  | you         | the finish could not commit: a concurrent edit to a path the run wrote, the wrong branch; separate your edit, run again |
-| `no-progress`, `cap`, `retries-spent`  | you         | read the step log; fix what it names; `npm run run -- story` again                               |
-| `request-expired`, `deploy-timeout`    | you         | renew the request (`publish request --renew`) or check the host                                  |
+| halt                                             | who       | what to do                                                                                                                         |
+| ------------------------------------------------ | --------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `timeout`, `lock-stale`, retryable `step-failed` | automatic | the tick resumes it by backoff (15, 60, 240 min); after that `retries-spent`, yours                                                |
+| `budget`                                         | you       | raise `agents.budgetUsd` or wait for the next ISO week; the tick resumes when the week rolls                                       |
+| `awaiting-person`, `needs-person`                | you       | the unblock names the reply, page or command; `npm run run -- clear <topic> <story> --by "<name>"` for a halt that needs no action |
+| `unexpected-edit`, `forbidden-flag`              | you       | an agent wrote outside its files (reverted) or the board asked for a flag the runner never passes: read the session, fix the cause |
+| `git`                                            | you       | the finish could not commit: a concurrent edit to a path the run wrote, the wrong branch; separate your edit, run again            |
+| `no-progress`, `cap`, `retries-spent`            | you       | read the step log; fix what it names; `npm run run -- story` again                                                                 |
+| `request-expired`, `deploy-timeout`              | you       | renew the request (`publish request --renew`) or check the host                                                                    |
 
 Resume: the same command that started the run (`npm run run -- story|topic|maintain|launch`). The journal is
 operational state and decides no stage; the board re-derives the stage from the artifacts. A render or QA that hangs
@@ -178,7 +178,7 @@ recorded with `uploaded --id`, `scheduled --at`, `published`, `updated --fields`
 ## 12. Deployment, maintenance, corrections
 
 - **Launch** (external effect): once a release group is live and verified, the work plane runs `npm run run --
-  launch <topic> <story-id>`: `report -- seed`, `brand`, `build`, `links freeze`, `validate`, one commit, one push;
+launch <topic> <story-id>`: `report -- seed`, `brand`, `build`, `links freeze`, `validate`, one commit, one push;
   the tick probes the deploy (`npm run links -- live <topic> <story-id>`, read-only), posts on X by policy and sends
   the launch mail with the Studio steps left to record.
 - **Maintenance** (writes the repo; external effect: model calls, fetches): `npm run run -- maintain <topic>` runs
@@ -216,21 +216,21 @@ npm run run -- verified <integration> --by "<your name>" --evidence <ref>
 `discovery:<slot>`, `tick:<ISO>`, or a `<Message-ID>` the outbox or inbox holds. An automated actor and a dangling
 reference are refused; nothing else is written, and no flag changes.
 
-| integration                 | implemented | enabled by                | evidence                                  |
-| --------------------------- | ----------- | ------------------------- | ----------------------------------------- |
-| `youtube-upload`            | yes         | `enabled.work`            | `ledger:<topic>/<story>#uploaded`         |
-| `youtube-go-live`           | yes         | `enabled.tick`            | `ledger:<topic>/<story>#published`        |
-| `approval-mail-send`        | yes         | `enabled.tick`            | a `<Message-ID>` the outbox holds         |
-| `approval-mail-receive`     | yes         | `enabled.tick`            | a `<Message-ID>` the inbox handled        |
-| `decide-by-reply`           | yes         | `enabled.tick`            | `ledger:<topic>/<story>#decided`          |
-| `correction-by-reply`       | yes         | `enabled.tick`            | a `<Message-ID>` the inbox handled        |
-| `maintenance-scan`          | yes         | `enabled.maintenance`     | `scan:<topic>`                            |
-| `agent-draft-review-shadow` | yes         | `review.draft`            | `run:<run id>`                            |
-| `cloudflare-deploy-probe`   | yes         | `enabled.work`            | `launch:<topic>/<story>`                  |
-| `x-post`                    | yes         | `enabled.social`          | `social:<topic>/<story>`                  |
-| `scheduled-tasks`           | no (yours)  | none: your scheduler      | `tick:<ISO of a recorded tick>`           |
-| `research-pipeline`         | yes         | `enabled.research`        | `run:<run id>`                            |
-| `discovery`                 | yes         | `enabled.discovery`       | `discovery:<slot>`                        |
+| integration                 | implemented | enabled by            | evidence                           |
+| --------------------------- | ----------- | --------------------- | ---------------------------------- |
+| `youtube-upload`            | yes         | `enabled.work`        | `ledger:<topic>/<story>#uploaded`  |
+| `youtube-go-live`           | yes         | `enabled.tick`        | `ledger:<topic>/<story>#published` |
+| `approval-mail-send`        | yes         | `enabled.tick`        | a `<Message-ID>` the outbox holds  |
+| `approval-mail-receive`     | yes         | `enabled.tick`        | a `<Message-ID>` the inbox handled |
+| `decide-by-reply`           | yes         | `enabled.tick`        | `ledger:<topic>/<story>#decided`   |
+| `correction-by-reply`       | yes         | `enabled.tick`        | a `<Message-ID>` the inbox handled |
+| `maintenance-scan`          | yes         | `enabled.maintenance` | `scan:<topic>`                     |
+| `agent-draft-review-shadow` | yes         | `review.draft`        | `run:<run id>`                     |
+| `cloudflare-deploy-probe`   | yes         | `enabled.work`        | `launch:<topic>/<story>`           |
+| `x-post`                    | yes         | `enabled.social`      | `social:<topic>/<story>`           |
+| `scheduled-tasks`           | no (yours)  | none: your scheduler  | `tick:<ISO of a recorded tick>`    |
+| `research-pipeline`         | yes         | `enabled.research`    | `run:<run id>`                     |
+| `discovery`                 | yes         | `enabled.discovery`   | `discovery:<slot>`                 |
 
 The `verified` column is on `/admin#automation`, from `readiness.json`. An integration that is implemented and
 verified is still off until its flag is on; one that is enabled but never verified is running on faith, and the
