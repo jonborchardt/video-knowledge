@@ -49,6 +49,8 @@ export interface TopicNext {
 export interface RecordedMarker {
   files: string[]; // work/h1.json, work/sv_1.json
   documents: string[]; // sources/<file>.txt handed to a sources agent and recorded (verdict or none)
+  /** Source ids handed to an extraction agent (the group it read): extracted whether or not it found a claim. */
+  extracted?: string[];
 }
 export interface StudiesRounds {
   rounds: { at: string; added: number }[]; // one per studies agent run: the documents it added
@@ -174,7 +176,8 @@ export function topicNext(
   const marker = readJson<RecordedMarker>(join(work, TOPIC_RUN_DIR, 'recorded.json')) ?? { files: [], documents: [] };
   const batchFiles = files(work, /^h\d+\.json$/).sort((x, y) => Number(x.slice(1, -5)) - Number(y.slice(1, -5)));
   const unrecorded = batchFiles.filter((f) => !marker.files.includes(`work/${f}`));
-  const raw = records.filter((r) => !r.assertions && r.transcript !== 'none');
+  const handed = new Set(marker.extracted ?? []);
+  const raw = records.filter((r) => !r.assertions && r.transcript !== 'none' && !handed.has(r.id));
   if (raw.length && !unrecorded.length) {
     const entries = raw.map((r) => {
       const t = join(store, 'transcripts', `${r.id}.txt`);

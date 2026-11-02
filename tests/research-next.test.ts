@@ -1,7 +1,7 @@
 // topicNext (spec §5.2; phase 5 Task 3): the research stage of a topic and its next step, derived from the files
 // alone (the proposal, the lists, the store, the work folder, the sources, the report, the stories and their review),
 // with `park` where the topic cannot proceed and `done` only with a ready story or a parked proposal.
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
@@ -240,6 +240,19 @@ describe('topicNext', () => {
     expect(steps[1].text).toContain('Group: 1');
     expect(steps[2].text).toContain('Group: 2');
     expect(steps[1].text).toContain(`Write: topics/${T}/work/h1.json`);
+    // a source an extraction agent was handed (recorded.json extracted) is never grouped again, even without
+    // assertions: the agent found nothing in it (the real run looped extract, merge, extract on three such sources)
+    const root = topic({
+      videos: ['https://www.youtube.com/watch?v=aaaaaaaaaaa', 'https://www.youtube.com/watch?v=bbbbbbbbbbb'],
+      records: [{ id: 'a' }, { id: 'b', assertions: [{ claim: 'c1' }] }],
+      claims: ['c1'],
+      batches: [{ file: 'h1.json', recorded: true }],
+    });
+    const markerPath = join(root, 'topics', T, 'work', TOPIC_RUN_DIR, 'recorded.json');
+    const marker = JSON.parse(readFileSync(markerPath, 'utf8')) as { files: string[]; documents: string[] };
+    writeFileSync(markerPath, toJson({ ...marker, extracted: ['a'] }));
+    const after = topicNext(T, root);
+    expect(after.stage).not.toBe('extract');
   });
   it('merge: unrecorded batches run dedupe, the merge agent, collide, merge-claims and record per batch (the label on an empty store)', () => {
     const n = next(

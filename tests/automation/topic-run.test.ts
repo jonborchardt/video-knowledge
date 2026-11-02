@@ -225,9 +225,12 @@ describe('the topic runner (criterion 1)', () => {
     ]);
     const stories = loadStories(T, c.root)!;
     expect(stories.stories[0].readiness).toBe('ready');
-    const marker = readJson<{ files: string[]; documents: string[] }>(join(topicRunFolder(T, c.root), RECORDED_FILE))!;
+    const marker = readJson<{ files: string[]; documents: string[]; extracted: string[] }>(
+      join(topicRunFolder(T, c.root), RECORDED_FILE),
+    )!;
     expect(marker.files).toEqual(['work/h1.json', 'work/sv_1.json']);
     expect(marker.documents.sort()).toEqual(['d1.txt', 'd2.txt']);
+    expect(marker.extracted.length).toBeGreaterThan(0); // every source handed to an extraction agent, found or not
     // the store: every source extracted, the claims recorded, the study verdicts on them
     const store = readJson<{ topics: { claims: unknown[] }[] }>(join(c.root, 'topics', T, 'store', 'topics.json'))!;
     expect(store.topics[0].claims).toHaveLength(4);

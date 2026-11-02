@@ -18,8 +18,8 @@ const run = (dir: string, files: string[]) =>
     encoding: 'utf8',
   });
 const read = (dir: string, f: string) =>
-  JSON.parse(readFileSync(join(dir, f), 'utf8')) as { video: string; as: Record<string, string>[] }[];
-const kinds = (b: { as: Record<string, string>[] }) =>
+  JSON.parse(readFileSync(join(dir, f), 'utf8')) as { video: string; as: Record<string, unknown>[] }[];
+const kinds = (b: { as: Record<string, unknown>[] }) =>
   b.as.map((a) => (a.n ? `n:${a.n}` : a.n2 ? `n2:${a.n2}` : `c:${a.c}`));
 
 describe('merge-claims', () => {

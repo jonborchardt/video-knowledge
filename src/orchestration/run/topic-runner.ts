@@ -283,9 +283,26 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
   const markRecorded = (files: string[], documents: string[] = []) => {
     const m = readMarker(dir);
     writeMarker(dir, {
+      ...m,
       files: [...new Set([...m.files, ...files])],
       documents: [...new Set([...m.documents, ...documents])],
     });
+  };
+  /** The sources of the groups extraction agents read: extracted, whatever they found (never grouped again). */
+  const markExtracted = (steps: Step[]) => {
+    const ids = steps.flatMap((s) => {
+      const g = /^Group: (\d+)$/m.exec(s.text)?.[1];
+      const file = g && join(topicDir(topic, root), 'work', `grp${g}.txt`);
+      return file && existsSync(file)
+        ? readFileSync(file, 'utf8')
+            .split('\n')
+            .map((l) => l.split('\t')[0].trim())
+            .filter(Boolean)
+        : [];
+    });
+    if (!ids.length) return;
+    const m = readMarker(dir);
+    writeMarker(dir, { ...m, extracted: [...new Set([...(m.extracted ?? []), ...ids])] });
   };
 
   try {
@@ -382,6 +399,7 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
               n,
             );
           const failed = outs.find((x) => !x.ok);
+          if (brief === 'extract.md') markExtracted(group.filter((_, k) => outs[k]?.ok));
           if (brief === 'studies.md') {
             const r = readJson<StudiesRounds>(join(dir, STUDIES_ROUNDS_FILE)) ?? { rounds: [] };
             r.rounds.push({ at: stamp(), added: countDocs(topic, root) - docsBefore });
