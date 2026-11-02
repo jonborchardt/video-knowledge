@@ -42,10 +42,11 @@
 //                                      ten minutes for your reply and saves it under tests/fixtures/mail/.
 //   verified <integration> --by <name> --evidence <ref>
 //                                      records your verification of one integration in readiness.json (the only writer):
-//                                      the evidence must name a record that exists (ledger:<topic>/<story>#<event>,
-//                                      journal:<topic>/<story>#<line>, run:<id>, launch:<topic>/<story>, scan:<topic>,
-//                                      social:<topic>/<story>, discovery:<slot>, tick:<ISO>, or a <Message-ID> the outbox
-//                                      or inbox holds); never an automated actor; it changes no flag.
+//                                      the evidence must name a record of the kind that proves that integration (a ledger
+//                                      event of the named type, a reply decision, a <Message-ID> the outbox sent or the
+//                                      inbox applied, scan:<topic>, shadow:<topic>/<story>, launch:<topic>/<story>,
+//                                      social:<topic>/<story>, tick:<ISO>, run:<id> of a finished topic run,
+//                                      discovery:<slot>); never an automated actor; it changes no flag.
 // Policy: automation.json (src/shared/automation.ts). Secrets: .env, loaded here and handed to each child by verb.
 import { readFileSync } from 'node:fs';
 import { AGENT_ROLES, loadAutomation } from '../../shared/automation';

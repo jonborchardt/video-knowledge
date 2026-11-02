@@ -69,10 +69,11 @@ Repeat, at most 60 times:
 The board's halt kinds and what each asks for are the runner's (`src/orchestration/production.ts` `HALT_KINDS`, the
 Objects tab's vocabulary on `/admin`): follow the steps the board names for each; `needs-graphics` is one fresh
 `graphics.md` agent per listed scene, `graphics-review` a fresh `visual-review.md` agent that built none of them,
-`render-check` and `qa-failed` a fresh `video-fix.md` agent then the command, `look-stale` at `packaged` is a person's
-`video final` (finish, and say so). The caps are the runner's too (`automation.json` `runs`: 60 loop iterations, 3
-graphics revisions per scene, 3 QA fixes, the same `next` three times with nothing changed): each one hit is a Stop
-naming the cap.
+`render-check` and `qa-failed` a fresh `video-fix.md` agent then the command, `needs-evidence` a fresh
+`src/modules/evidence/briefs/evidence.md` agent (if it records nothing for a gap, Stop), `look-stale` at `packaged` is
+a person's `video final` (finish, and say so). The caps are the runner's too (`automation.json` `runs`: 60 loop
+iterations, 3 graphics revisions per scene (after the third, the builder may draw the scene as labelled text, and the
+report says so), 3 QA fixes, the same `next` three times with nothing changed): each one hit is a Stop naming the cap.
 
 A render or QA command whose output has not changed for 90 minutes is hung (a crashed browser never
 exits): kill its node and `chrome-headless-shell` processes and run the step again (cached chunks are

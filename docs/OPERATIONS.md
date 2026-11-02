@@ -39,14 +39,14 @@ Secrets live in the gitignored `.env` at the repo root (and `.secrets/`), never 
 The runner hands each child only its verb's family (`envFor` in `src/orchestration/run/steps.ts`) and strips every
 secret from an agent's environment.
 
-| service          | keys in `.env`                                                                                                                          | used by                                                                                      |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| YouTube Data API | `YOUTUBE_OAUTH_CREDENTIALS_PATH` (a Desktop OAuth client JSON under `.secrets/`), per commission `YOUTUBE_OAUTH_CREDENTIALS_PATH_<KEY>` | `npm run publish -- auth                                                                     | upload | push | go-live | sync | verify` |
-| Approval mail    | `MAIL_SMTP_HOST`, `MAIL_IMAP_HOST`, `MAIL_USER`, `MAIL_PASSWORD` (ports 465 and 993), `APPROVAL_SECRET` (16+ chars)                     | the tick's outbox and inbox, `publish request`, `article request-correction`, `topics batch` |
-| Azure AI Speech  | `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION`                                                                                               | `npm run video -- final` (the release voice, through `npm run tts-azure`)                    |
-| X                | `X_<KEY>_API_KEY`, `_API_SECRET`, `_ACCESS_TOKEN`, `_ACCESS_SECRET`, `_USER_ID` (`_HANDLE` for a test account)                          | `npm run social -- post`                                                                     |
-| Cloudflare       | `wrangler.jsonc`, the host's own deploy on push                                                                                         | the launch job's push; `npm run links -- live` probes the result                             |
-| Claude Code      | the `claude` CLI on `PATH`, signed in                                                                                                   | every agent step (`claude -p`)                                                               |
+| service          | keys in `.env`                                                                                                                          | used by                                                                                                                                      |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| YouTube Data API | `YOUTUBE_OAUTH_CREDENTIALS_PATH` (a Desktop OAuth client JSON under `.secrets/`), per commission `YOUTUBE_OAUTH_CREDENTIALS_PATH_<KEY>` | `npm run publish -- auth                                                                     \| upload \| push \| go-live \| sync \| verify` |
+| Approval mail    | `MAIL_SMTP_HOST`, `MAIL_IMAP_HOST`, `MAIL_USER`, `MAIL_PASSWORD` (ports 465 and 993), `APPROVAL_SECRET` (16+ chars)                     | the tick's outbox and inbox, `publish request`, `article request-correction`, `topics batch`                                                 |
+| Azure AI Speech  | `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION`                                                                                               | `npm run video -- final` (the release voice, through `npm run tts-azure`)                                                                    |
+| X                | `X_<KEY>_API_KEY`, `_API_SECRET`, `_ACCESS_TOKEN`, `_ACCESS_SECRET`, `_USER_ID` (`_HANDLE` for a test account)                          | `npm run social -- post`                                                                                                                     |
+| Cloudflare       | `wrangler.jsonc`, the host's own deploy on push                                                                                         | the launch job's push; `npm run links -- live` probes the result                                                                             |
+| Claude Code      | the `claude` CLI on `PATH`, signed in                                                                                                   | every agent step (`claude -p`)                                                                                                               |
 
 The External services tab on `/admin` links each console. The one-time YouTube setup (consent screen, OAuth client,
 channel verification, `auth`) is in README.md under Publishing.
@@ -211,26 +211,27 @@ When you have exercised an integration against the real service, record it (writ
 npm run run -- verified <integration> --by "<your name>" --evidence <ref>
 ```
 
-`<integration>` is one of the keys below; `--evidence` must name a record that exists: `ledger:<topic>/<story>#<event>`,
-`journal:<topic>/<story>#<line>`, `run:<run id>`, `launch:<topic>/<story>`, `scan:<topic>`, `social:<topic>/<story>`,
-`discovery:<slot>`, `tick:<ISO>`, or a `<Message-ID>` the outbox or inbox holds. An automated actor and a dangling
-reference are refused; nothing else is written, and no flag changes.
+`<integration>` is one of the keys below; `--evidence` must name a record of the kind that proves that integration (the
+evidence column): a ledger event of the named type (a reply decision carries `via: email` and a person's name), a
+`<Message-ID>` the outbox sent or the inbox applied, a scan, a shadow record with both verdicts, a live launch, a posted
+X record, a recorded tick, a finished topic run, a discovery slot. An automated actor, a dangling reference and a
+record of another kind are refused; nothing else is written, and no flag changes.
 
-| integration                 | implemented | enabled by            | evidence                           |
-| --------------------------- | ----------- | --------------------- | ---------------------------------- |
-| `youtube-upload`            | yes         | `enabled.work`        | `ledger:<topic>/<story>#uploaded`  |
-| `youtube-go-live`           | yes         | `enabled.tick`        | `ledger:<topic>/<story>#published` |
-| `approval-mail-send`        | yes         | `enabled.tick`        | a `<Message-ID>` the outbox holds  |
-| `approval-mail-receive`     | yes         | `enabled.tick`        | a `<Message-ID>` the inbox handled |
-| `decide-by-reply`           | yes         | `enabled.tick`        | `ledger:<topic>/<story>#decided`   |
-| `correction-by-reply`       | yes         | `enabled.tick`        | a `<Message-ID>` the inbox handled |
-| `maintenance-scan`          | yes         | `enabled.maintenance` | `scan:<topic>`                     |
-| `agent-draft-review-shadow` | yes         | `review.draft`        | `run:<run id>`                     |
-| `cloudflare-deploy-probe`   | yes         | `enabled.work`        | `launch:<topic>/<story>`           |
-| `x-post`                    | yes         | `enabled.social`      | `social:<topic>/<story>`           |
-| `scheduled-tasks`           | no (yours)  | none: your scheduler  | `tick:<ISO of a recorded tick>`    |
-| `research-pipeline`         | yes         | `enabled.research`    | `run:<run id>`                     |
-| `discovery`                 | yes         | `enabled.discovery`   | `discovery:<slot>`                 |
+| integration                 | implemented | enabled by            | evidence                                                           |
+| --------------------------- | ----------- | --------------------- | ------------------------------------------------------------------ |
+| `youtube-upload`            | yes         | `enabled.work`        | `ledger:<topic>/<story>#uploaded`                                  |
+| `youtube-go-live`           | yes         | `enabled.tick`        | `ledger:<topic>/<story>#published`                                 |
+| `approval-mail-send`        | yes         | `enabled.tick`        | a `<Message-ID>` the outbox holds                                  |
+| `approval-mail-receive`     | yes         | `enabled.tick`        | a `<Message-ID>` the inbox applied                                 |
+| `decide-by-reply`           | yes         | `enabled.tick`        | `ledger:<topic>/<story>#decided` (a reply: `via: email`, a person) |
+| `correction-by-reply`       | yes         | `enabled.tick`        | a `<Message-ID>` applied to an `ar-` request                       |
+| `maintenance-scan`          | yes         | `enabled.maintenance` | `scan:<topic>`                                                     |
+| `agent-draft-review-shadow` | yes         | `review.draft`        | `shadow:<topic>/<story>`                                           |
+| `cloudflare-deploy-probe`   | yes         | `enabled.work`        | `launch:<topic>/<story>`                                           |
+| `x-post`                    | yes         | `enabled.social`      | `social:<topic>/<story>`                                           |
+| `scheduled-tasks`           | no (yours)  | none: your scheduler  | `tick:<ISO of a recorded tick>`                                    |
+| `research-pipeline`         | yes         | `enabled.research`    | `run:<run id>` (a finished topic run)                              |
+| `discovery`                 | yes         | `enabled.discovery`   | `discovery:<slot>`                                                 |
 
 The `verified` column is on `/admin#automation`, from `readiness.json`. An integration that is implemented and
 verified is still off until its flag is on; one that is enabled but never verified is running on faith, and the

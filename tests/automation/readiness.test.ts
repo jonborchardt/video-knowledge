@@ -8,8 +8,8 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS, loadAutomation } from '../../src/shared/automation';
 import { runCli } from '../../src/shared/cli';
 import { ROOT, readJson, toJson } from '../../src/shared/io';
-import { appendEvent, emptyLedger, publishPath, saveLedger } from '../../src/modules/publishing/publish';
-import { appendJournal, runDir } from '../../src/orchestration/run/journal';
+import { appendEvent, emptyLedger, loadLedger, publishPath, saveLedger } from '../../src/modules/publishing/publish';
+import { appendJournal, runDir, topicRunDir } from '../../src/orchestration/run/journal';
 import { automationDir } from '../../src/orchestration/run/notify';
 import {
   INTEGRATIONS,
@@ -65,8 +65,47 @@ function fresh() {
         sentAt: '2026-11-09T00:00:01Z',
         attempts: 1,
       },
+      {
+        messageId: '<unsent@test>',
+        kind: 'release-request',
+        subject: 's',
+        to: 'jon@example.test',
+        createdAt: '2026-11-09T00:00:00Z',
+        sentAt: null,
+        attempts: 0,
+      },
     ]),
   );
+  // a posted X record, a topic run's journal with its finish, a story run's journal (not a topic run)
+  writeFileSync(
+    join(root, 'topics', T, 'scripts', 'decision-x', 'social.json'),
+    toJson({
+      outputs: {
+        youtube: {
+          posts: [{ at: '2026-11-09T00:00:00Z', account: '@x', text: 't', textSha: 's', id: '1', status: 'posted' }],
+        },
+      },
+    }),
+  );
+  const tdir = topicRunDir(T, root);
+  appendJournal(tdir, {
+    at: '2026-11-09T00:00:00.000Z',
+    runId: 'topic-r1',
+    stage: 'extract',
+    next: 'x',
+    step: 'x',
+    kind: 'prompt',
+    attempt: 1,
+  });
+  appendJournal(tdir, {
+    at: '2026-11-09T01:00:00.000Z',
+    runId: 'topic-r1',
+    stage: 'ready',
+    next: '',
+    step: 'finish',
+    kind: 'finish',
+    attempt: 0,
+  });
   return root;
 }
 
@@ -106,7 +145,7 @@ describe('INTEGRATIONS and readinessView', () => {
     expect(on.find((r) => r.key === 'agent-draft-review-shadow')!.enabled).toBe(true);
     expect(on.find((r) => r.key === 'x-post')!.enabledBy).toBe('enabled.social');
     // a verification changes no flag: verified and enabled stay independent
-    verify(root, 'x-post', { by: 'Jon', evidence: 'journal:heat-pumps/decision:x#1', now: NOW });
+    verify(root, 'x-post', { by: 'Jon', evidence: 'social:heat-pumps/decision:x', now: NOW });
     const after = readinessView(root, DEFAULTS);
     expect(after.find((r) => r.key === 'x-post')!.verified).toMatchObject({ by: 'Jon' });
     expect(after.find((r) => r.key === 'x-post')!.enabled).toBe(false);
@@ -122,18 +161,54 @@ describe('verify (the one writer of readiness.json)', () => {
     expect(() => verify(root, 'youtube-upload', { by: '<name>', evidence: ev, now: NOW })).toThrow(/name/);
     expect(() => verify(root, 'nope', { by: 'Jon', evidence: ev, now: NOW })).toThrow(/unknown integration/);
     expect(() =>
-      verify(root, 'youtube-upload', { by: 'Jon', evidence: 'ledger:heat-pumps/decision:x#verified', now: NOW }),
+      verify(root, 'youtube-upload', { by: 'Jon', evidence: 'ledger:heat-pumps/decision:x#uploaded', now: NOW }),
     ).toThrow(/no such record/);
-    expect(() =>
-      verify(root, 'youtube-upload', { by: 'Jon', evidence: 'journal:heat-pumps/decision:x#9', now: NOW }),
-    ).toThrow(/no such record/);
-    expect(() => verify(root, 'youtube-upload', { by: 'Jon', evidence: '<nope@test>', now: NOW })).toThrow(
+    expect(() => verify(root, 'research-pipeline', { by: 'Jon', evidence: 'run:no-such-run', now: NOW })).toThrow(
+      /no such record/,
+    );
+    expect(() => verify(root, 'approval-mail-send', { by: 'Jon', evidence: '<nope@test>', now: NOW })).toThrow(
       /no such record/,
     );
     expect(() => verify(root, 'youtube-upload', { by: 'Jon', evidence: 'because I say so', now: NOW })).toThrow(
       /evidence must name a record/,
     );
     expect(loadReadiness(root)).toEqual({});
+  });
+  it('refuses evidence that exists but does not prove the integration (review finding 6)', () => {
+    const root = fresh();
+    // an uploaded event is not a go-live; a scan is not a post; an unsent outbox entry is not a sent mail;
+    // a story run's journal is not a research run; a decided event written by automation is not a reply
+    expect(() =>
+      verify(root, 'youtube-upload', { by: 'Jon', evidence: 'ledger:heat-pumps/decision:x#published', now: NOW }),
+    ).toThrow(/does not prove youtube-upload/);
+    expect(() => verify(root, 'x-post', { by: 'Jon', evidence: 'scan:heat-pumps', now: NOW })).toThrow(
+      /does not prove x-post/,
+    );
+    expect(() => verify(root, 'approval-mail-send', { by: 'Jon', evidence: '<unsent@test>', now: NOW })).toThrow(
+      /does not prove approval-mail-send/,
+    );
+    expect(() => verify(root, 'research-pipeline', { by: 'Jon', evidence: 'run:r1', now: NOW })).toThrow(
+      /does not prove research-pipeline/,
+    );
+    saveLedger(
+      publishPath(T, S, root),
+      appendEvent(loadLedger(T, S, root)!, 'youtube', {
+        at: '2026-11-09T00:00:00Z',
+        type: 'decided',
+        by: 'automation',
+        request: 'rq-000000000001',
+        verdict: 'void',
+      }).ledger,
+    );
+    expect(() =>
+      verify(root, 'decide-by-reply', { by: 'Jon', evidence: 'ledger:heat-pumps/decision:x#decided', now: NOW }),
+    ).toThrow(/does not prove decide-by-reply/);
+    expect(loadReadiness(root)).toEqual({});
+    // and the right kind binds
+    expect(
+      verify(root, 'youtube-go-live', { by: 'Jon', evidence: 'ledger:heat-pumps/decision:x#published', now: NOW })
+        .changed,
+    ).toBe(true);
   });
   it('accepts evidence that exists (a ledger event, a journal line, a Message-ID the outbox holds), binds it, and repeats idempotently', () => {
     const root = fresh();
@@ -156,7 +231,7 @@ describe('verify (the one writer of readiness.json)', () => {
     expect(again.changed).toBe(false);
     expect(loadReadiness(root)['youtube-go-live'].at).toBe(NOW.toISOString()); // the first verification stands
     verify(root, 'approval-mail-send', { by: 'Jon', evidence: '<m1@test>', now: NOW });
-    verify(root, 'research-pipeline', { by: 'Jon', evidence: 'journal:heat-pumps/decision:x#1', now: NOW });
+    verify(root, 'research-pipeline', { by: 'Jon', evidence: 'run:topic-r1', now: NOW });
     expect(Object.keys(loadReadiness(root)).sort()).toEqual([
       'approval-mail-send',
       'research-pipeline',
@@ -175,18 +250,25 @@ describe('verify (the one writer of readiness.json)', () => {
   it('the verb: npm run run -- verified <integration> --by <name> --evidence <ref> (refusals exit 2)', () => {
     const root = fresh();
     const env = { ...process.env, VK_NO_DOTENV: '1' };
-    const bad = runCli('run', ['verified', 'x-post', '--by', 'automated: tick', '--evidence', '<m1@test>'], {
+    const bad = runCli(
+      'run',
+      ['verified', 'x-post', '--by', 'automated: tick', '--evidence', 'social:heat-pumps/decision:x'],
+      {
+        cwd: root,
+        env,
+      },
+    );
+    expect(bad.status).toBe(2);
+    expect(bad.stderr).toMatch(/person/);
+    const ok = runCli('run', ['verified', 'x-post', '--by', 'Jon', '--evidence', 'social:heat-pumps/decision:x'], {
       cwd: root,
       env,
     });
-    expect(bad.status).toBe(2);
-    expect(bad.stderr).toMatch(/person/);
-    const ok = runCli('run', ['verified', 'x-post', '--by', 'Jon', '--evidence', '<m1@test>'], { cwd: root, env });
     expect(ok.status, ok.stderr).toBe(0);
     expect(ok.stdout).toMatch(/verified x-post/);
     expect(readJson<Record<string, unknown>>(join(root, READINESS_FILE))!['x-post']).toMatchObject({
       by: 'Jon',
-      evidence: '<m1@test>',
+      evidence: 'social:heat-pumps/decision:x',
     });
     expect(loadAutomation(root).enabled.social).toBe(false); // verification never enables
   });

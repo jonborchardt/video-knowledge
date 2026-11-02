@@ -65,6 +65,13 @@ describe('the tracked docs', () => {
       }
     }
   });
+  it('no table row of the tracked docs breaks on a pipe inside a code span (review finding 14)', () => {
+    for (const d of DOCS)
+      for (const line of read(d).split('\n'))
+        if (line.startsWith('|'))
+          for (const code of line.matchAll(/`([^`]*)`/g))
+            expect(/[^\\]\|/.test(code[1]), `${d}: ${line.slice(0, 80)}`).toBe(false);
+  });
   it("the runbook's readiness table lists exactly the code's integrations, with each one's enabled-by key", () => {
     const ops = read('docs/OPERATIONS.md');
     const rows = [...ops.matchAll(/^\| `([a-z-]+)` +\| (yes|no[^|]*) +\| ([^|]+)\|/gm)].map((m) => ({

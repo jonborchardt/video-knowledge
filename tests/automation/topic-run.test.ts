@@ -14,7 +14,13 @@ import type { Proposal, ProposalReview } from '../../src/shared/types';
 import { proposalPath, reviewPath } from '../../src/modules/topic-discovery/proposals';
 import { loadStories } from '../../src/modules/stories';
 import { readAttempts, readHalt, readJournal } from '../../src/orchestration/run/journal';
-import { RECORDED_FILE, runTopic, topicRunFolder } from '../../src/orchestration/run/topic-runner';
+import {
+  PRE_DIRTY_FILE,
+  RECORDED_FILE,
+  TOUCHED_FILE,
+  runTopic,
+  topicRunFolder,
+} from '../../src/orchestration/run/topic-runner';
 import { topicNext } from '../../src/orchestration/research';
 import { topicJobs } from '../../src/orchestration/run/work';
 import { cliRoot } from '../production-helpers';
@@ -90,7 +96,12 @@ interface Scenario {
   claim?: boolean;
   /** Edits a person made before the run: a second hunk in site.ts and another brand's kit. */
   preDirty?: boolean;
+  /** The claiming commission's own kit file, committed and then edited by a person before the run. */
+  preDirtyOwnKit?: boolean;
+  /** An unrelated file a person staged (git add) before the run. */
+  preStaged?: boolean;
 }
+const OWN_KIT = 'brand/spending/wordmark.svg';
 const SITE = readFileSync(join(ROOT, 'src', 'config', 'site.ts'), 'utf8');
 const OTHER_KIT = 'brand/dubious-returns/kit.json';
 function fresh(cfg: Record<string, unknown> = {}, s: Scenario = {}) {
@@ -113,6 +124,10 @@ function fresh(cfg: Record<string, unknown> = {}, s: Scenario = {}) {
     writeFileSync(join(root, 'src', 'config', 'site.ts'), SITE);
     mkdirSync(join(root, 'brand', 'dubious-returns'), { recursive: true });
     writeFileSync(join(root, OTHER_KIT), '{"palette":"old"}\n');
+    if (s.preDirtyOwnKit) {
+      mkdirSync(join(root, 'brand', 'spending'), { recursive: true });
+      writeFileSync(join(root, OWN_KIT), '<svg>committed</svg>\n');
+    }
   }
   const git = (...args: string[]) =>
     execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
@@ -127,6 +142,11 @@ function fresh(cfg: Record<string, unknown> = {}, s: Scenario = {}) {
     // a person's edits before the run: never the run's to commit
     writeFileSync(join(root, 'src', 'config', 'site.ts'), SITE + '// a person was here\n');
     writeFileSync(join(root, OTHER_KIT), '{"palette":"edited by a person"}\n');
+  }
+  if (s.preDirtyOwnKit) writeFileSync(join(root, OWN_KIT), '<svg>edited by a person before the run</svg>\n');
+  if (s.preStaged) {
+    writeFileSync(join(root, 'notes.txt'), 'a person was writing notes\n');
+    git('add', 'notes.txt');
   }
   const scenario = join(root, 'scenario.json');
   const docs = s.studiesEmpty
@@ -446,6 +466,37 @@ describe('the finish commit stages what the run owns (M3 1.4: operation ownershi
     expect(r.halt?.why).toContain('brand/spending/wordmark.svg');
     expect(c.git('rev-list', '--count', 'main').trim()).toBe('1');
     expect(c.git('diff', '--cached', '--name-only').trim()).toBe('');
+  }, 240_000);
+
+  it("the claiming commission's own kit, dirty before the run, is not committed although the brand step rewrote it (review finding 2)", async () => {
+    const c = fresh({ brandWrites: true }, { claim: true, preDirtyOwnKit: true });
+    const r = await c.run();
+    expect(r.outcome, JSON.stringify(r.halt)).toBe('done');
+    const touched = c.git('show', '--name-only', '--format=', 'HEAD').trim().split('\n');
+    expect(touched).not.toContain(OWN_KIT);
+    expect(touched).toContain('public/commissions/spending.png');
+    expect(c.git('show', `HEAD:${OWN_KIT}`)).toBe('<svg>committed</svg>\n');
+    expect(c.git('status', '--porcelain')).toMatch(new RegExp(` M ${OWN_KIT}`));
+    const finish = c.journal().find((e) => e.kind === 'finish')!;
+    expect(finish.error).toContain(OWN_KIT);
+  }, 240_000);
+
+  it('an unrelated file a person staged before the run halts the finish as git and commits nothing (review finding 3)', async () => {
+    const c = fresh({ brandWrites: true }, { claim: true, preStaged: true });
+    const r = await c.run();
+    expect(r.outcome).toBe('halted');
+    expect(r.halt?.kind).toBe('git');
+    expect(r.halt?.why).toContain('notes.txt');
+    expect(c.git('rev-list', '--count', 'main').trim()).toBe('1');
+    expect(c.git('diff', '--cached', '--name-only').trim()).toBe('notes.txt'); // the person's staging is left as it was
+  }, 240_000);
+
+  it('a finished run leaves no snapshot files behind, so the next run of the topic starts from its own tree (review finding 5)', async () => {
+    const c = fresh({ brandWrites: true }, { claim: true });
+    const r = await c.run();
+    expect(r.outcome, JSON.stringify(r.halt)).toBe('done');
+    expect(existsSync(join(topicRunFolder(T, c.root), PRE_DIRTY_FILE))).toBe(false);
+    expect(existsSync(join(topicRunFolder(T, c.root), TOUCHED_FILE))).toBe(false);
   }, 240_000);
 
   it('a clean run with the claim stage commits exactly the owned files and nothing else is left staged', async () => {

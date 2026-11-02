@@ -3,7 +3,9 @@
 // artifacts change on disk (a lock and an open attempt for the script writer, then the reviewer; storyboard.json
 // moved aside so the board's stage is `storyboard`; a halt), and the row's Now cell, its state and its stage strip
 // and the Automation tab's running and blocked lists follow through /admin/live.json and the poll, with no navigation
-// and the interaction state intact. Only the fixture topic (spec 5.8) is touched, and everything is put back.
+// and the interaction state intact. Only the fixture topic (spec 5.8) is touched, and everything the test wrote is
+// removed; it never runs over a fixture run that is live or halted (their lock and halt are real operational state),
+// and never in CI (it needs the fixture's production on disk and a dev server at the root base).
 // Run through `npm run test:browser` (the browser project); needs `npx playwright install chromium` once.
 import { spawn, type ChildProcess } from 'node:child_process';
 import { existsSync, openSync, readdirSync, renameSync, rmSync, writeSync } from 'node:fs';
@@ -12,44 +14,47 @@ import { join } from 'node:path';
 import { chromium, request, type Browser, type Page } from 'playwright';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { FILES, ROOT, scriptDir, writeJsonAtomic } from '../../src/shared/io';
-import {
-  type AttemptRecord,
-  attemptPath,
-  nextLine,
-  runDir,
-  writeAttempt,
-  writeHalt,
-} from '../../src/orchestration/run/journal';
+import { type AttemptRecord, attemptPath, writeAttempt, writeHalt } from '../../src/orchestration/run/journal';
 import { killTree } from '../../src/orchestration/run/proc';
 
 const TOPIC = 'test-fixture';
 const STORY = 'decision:most-discussed-claims';
 const KEY = `${TOPIC}/${STORY}`;
 const dir = scriptDir(TOPIC, STORY);
-const run = runDir(TOPIC, STORY);
+const run = join(dir, 'run');
 const storyboard = join(dir, FILES.storyboard);
 const aside = `${storyboard}.live-test-aside`;
 const lockFile = join(run, 'lock.json');
 const haltFile = join(run, 'halt.json');
 const WRITER = 'Read src/modules/script/briefs/script.md and follow it.';
 const REVIEWER = 'Read src/modules/script/briefs/script-review.md and follow it.';
-let attemptFile = '';
+// a line no journal of this story will reach: the record is an orphan the test alone owns and removes
+const ATTEMPT_LINE = 9_000_001;
+const attemptFile = attemptPath(run, ATTEMPT_LINE, 1);
+/** Real operational state of the fixture story: a live or halted run. The test never touches it. */
+const busy = existsSync(lockFile) || existsSync(haltFile);
+const skip = !!process.env.CI || busy || !existsSync(storyboard);
 
 let server: ChildProcess | undefined;
 let browser: Browser | undefined;
 const PORT = 4331;
 const origin = `http://127.0.0.1:${PORT}`;
 const DEV_LOG = join(tmpdir(), 'vk-admin-live-dev.log');
+const created = new Set<string>(); // what this test wrote and may remove
 
-/** The dev server as a person runs it (`npm run dev`), on its own port; ready once the live endpoint answers. */
+/** The dev server as a person runs it (`npm run dev`), on its own port and at the root base; ready once the live
+ *  endpoint answers. */
 async function startDev(): Promise<ChildProcess> {
   const child = spawn(
     process.execPath,
     [join(ROOT, 'node_modules', 'astro', 'bin', 'astro.mjs'), 'dev', '--host', '127.0.0.1', '--port', String(PORT)],
     {
       cwd: ROOT,
-      // vitest's own variables would put Vite into test mode and the admin routes would not be served
-      env: Object.fromEntries(Object.entries(process.env).filter(([k]) => !/^(VITEST|VITE_|TEST$)/.test(k))),
+      // vitest's own variables would put Vite into test mode (the admin routes are not served); DEPLOY_TARGET
+      // would move the base under /video-knowledge/
+      env: Object.fromEntries(
+        Object.entries(process.env).filter(([k]) => !/^(VITEST|VITE_|TEST$|DEPLOY_TARGET$)/.test(k)),
+      ),
       stdio: ['ignore', 'pipe', 'pipe'],
       windowsHide: true,
     },
@@ -79,16 +84,20 @@ async function startDev(): Promise<ChildProcess> {
   throw new Error(`the dev server did not answer within the hook timeout; its log: ${DEV_LOG}`);
 }
 
-/** Everything this test writes, removed; the artifact it moved, put back (also from a crashed earlier run). */
+/** The artifact the test moved, put back (also from a crashed earlier run); only the files this test wrote, removed. */
 function restore() {
   if (existsSync(aside)) renameSync(aside, storyboard);
-  for (const f of [lockFile, haltFile, attemptFile]) if (f && existsSync(f)) rmSync(f, { force: true });
+  for (const f of created) if (existsSync(f)) rmSync(f, { force: true });
   const agents = join(run, 'agents');
   if (existsSync(agents) && readdirSync(agents).length === 0) rmSync(agents, { recursive: true, force: true });
 }
+const write = (file: string, value: unknown) => {
+  created.add(file);
+  writeJsonAtomic(file, value);
+};
 
 beforeAll(async () => {
-  expect(existsSync(storyboard), `the fixture story has no ${FILES.storyboard}`).toBe(true);
+  if (skip) return;
   restore();
   server = await startDev();
   browser = await chromium.launch();
@@ -100,7 +109,7 @@ afterAll(async () => {
 });
 
 const lock = (childStep: string | null) =>
-  writeJsonAtomic(lockFile, {
+  write(lockFile, {
     runId: 'live-test',
     pid: process.pid,
     host: 'test',
@@ -110,10 +119,8 @@ const lock = (childStep: string | null) =>
     ...(childStep && { childPid: process.pid, childStep, childAt: new Date().toISOString() }),
   });
 const openAttempt = (step: string, role: string) => {
-  const line = nextLine(run);
-  attemptFile = attemptPath(run, line, 1);
   const rec: AttemptRecord = {
-    line,
+    line: ATTEMPT_LINE,
     round: 1,
     at: new Date().toISOString(),
     finishedAt: null,
@@ -138,6 +145,7 @@ const openAttempt = (step: string, role: string) => {
     resumedFrom: null,
     pid: process.pid,
   };
+  created.add(attemptFile);
   writeAttempt(run, rec);
 };
 
@@ -148,7 +156,7 @@ const runningRow = (page: Page) => page.locator(`[data-live-list="running"] tr[d
 const blockedItem = (page: Page) => page.locator(`[data-live-list="blocked"] li[data-key="${KEY}"]`);
 const WAIT = { timeout: 45_000 }; // the idle cadence is 30 s; running, 5 s
 
-describe('the admin page follows the fixture story live, without a reload', () => {
+describe.skipIf(skip)('the admin page follows the fixture story live, without a reload', () => {
   it('Now cell, state, stage strip, running and blocked lists move while the filter, sort, popover and scroll stay', async () => {
     const page = await browser!.newPage({ viewport: { width: 1400, height: 900 } });
     const errors: string[] = [];
@@ -201,6 +209,7 @@ describe('the admin page follows the fixture story live, without a reload', () =
     // 4. the run halts: the row leaves the running list and enters the blocked list with its unblock
     rmSync(attemptFile, { force: true });
     rmSync(lockFile, { force: true });
+    created.add(haltFile);
     writeHalt(run, {
       kind: 'timeout',
       stage: 'script',

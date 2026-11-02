@@ -8,7 +8,7 @@
 // kept for a `record-sources` refusal on a cited pair and a topic without an approved proposal. The finish validates
 // and commits the topic's own paths (and the proposal, the institution claim, the brand assets) on main.
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
 import { ROOT, readJson, topicDir, writeJsonAtomic, sha } from '../../shared/io';
@@ -269,11 +269,21 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
             },
             n,
           );
+        // a person's staging is never the run's: an index that already holds changes is refused, left as it is
+        const foreign = git(['diff', '--cached', '--name-only']).trim();
+        if (foreign)
+          return halt(
+            'git',
+            `the index already holds staged changes that are not the run's: ${foreign.split('\n').join(', ')}`,
+            { kind: 'fix', text: `commit or unstage them (git reset), then npm run run -- topic ${topic}` },
+            n,
+          );
         const stage = [
           ...dirty.filter((p) => ownedAlways(p) && !pre.has(p)),
-          ...Object.keys(touched.paths).filter((p) => dirty.includes(p)),
+          ...Object.keys(touched.paths).filter((p) => dirty.includes(p) && !pre.has(p)),
         ];
-        if (stage.length) git(['add', '-A', '--', ...stage]);
+        // in batches: a large topic's first commit names thousands of files, past Windows' command-line limit
+        for (let i = 0; i < stage.length; i += 50) git(['add', '-A', '--', ...stage.slice(i, i + 50)]);
         if (touched.claimed) stageClaim();
         preLeft = dirty.filter(
           (p) => pre.has(p) && (ownedAlways(p) || p in touched.paths || p === 'src/config/site.ts'),
@@ -294,6 +304,8 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
         );
       }
     }
+    // the snapshot files belong to this run: the next run of the topic starts from its own tree
+    for (const f of [PRE_DIRTY_FILE, TOUCHED_FILE]) rmSync(join(dir, f), { force: true });
     journal({
       stage: n.stage,
       next: n.next,
