@@ -36,8 +36,8 @@ describe('merge-claims', () => {
           video: 'v1',
           sum: 's',
           as: [
-            { n: EARLY, q: 'q1' },
-            { n: 'Another claim.', q: 'q2' },
+            { n: EARLY, q: 'q1', v: ['partly', 0.4, 'early guess'] },
+            { n: 'Another claim.', q: 'q2', v: ['right', 0.5, 'g'] },
           ],
         },
       ]),
@@ -46,7 +46,7 @@ describe('merge-claims', () => {
       join(dir, 'h2.json'),
       JSON.stringify([
         { video: 'v2', sum: 's', as: [{ n2: LATE, q: 'q3' }] }, // references the canonical before it exists
-        { video: 'v3', sum: 's', as: [{ n: LATE, q: 'q4' }] },
+        { video: 'v3', sum: 's', as: [{ n: LATE, q: 'q4', v: ['right', 0.5, 'guess'], l: 'for' }] },
       ]),
     );
     run(dir, ['h1.json', 'h2.json']);
@@ -57,6 +57,11 @@ describe('merge-claims', () => {
     expect(kinds(h2[0])).toEqual([`n2:${LATE}`]);
     expect(kinds(h2[1])).toEqual([`n2:${LATE}`]);
     expect(h1[0].as[0].q).toBe('q1'); // the quote stays with its source
+    // the creation carries the AI guess and lean record needs; a reference carries none
+    expect(h1[0].as[0].v).toEqual(['right', 0.5, 'guess']);
+    expect(h1[0].as[0].l).toBe('for');
+    expect(h2[1].as[0].v).toBeUndefined();
+    expect(h2[1].as[0].l).toBeUndefined();
   });
 
   it('within one file, a reference that precedes its creation swaps roles with it; an existing-claim reuse is untouched', () => {
@@ -75,7 +80,7 @@ describe('merge-claims', () => {
             { n: 'Dealers mark up warranties.', q: 'qm' },
           ],
         },
-        { video: 'b', sum: 's', as: [{ n: T, q: 'qb' }] },
+        { video: 'b', sum: 's', as: [{ n: T, q: 'qb', v: ['right', 0.5, 'g'], f: true }] },
         { video: 'c', sum: 's', as: [{ n2: T, q: 'qc' }] },
       ]),
     );
@@ -85,7 +90,17 @@ describe('merge-claims', () => {
     expect(kinds(h1[0])).toEqual([`n:${T}`, 'c:dealer-markup']);
     expect(kinds(h1[1])).toEqual([`n2:${T}`]);
     expect(kinds(h1[2])).toEqual([`n2:${T}`]);
+    expect(h1[0].as[0].v).toEqual(['right', 0.5, 'g']);
+    expect(h1[0].as[0].f).toBe(true);
+    expect(h1[1].as[0].v).toBeUndefined();
     // a second run changes nothing
+    run(dir, ['h1.json']);
+    expect(read(dir, 'h1.json')).toEqual(h1);
+    // a creation that lost its guess to an earlier rewrite gets it back from the mention that still carries it
+    const broken = read(dir, 'h1.json');
+    delete broken[0].as[0].v;
+    broken[1].as[0].v = ['right', 0.5, 'g'];
+    writeFileSync(join(dir, 'h1.json'), JSON.stringify(broken));
     run(dir, ['h1.json']);
     expect(read(dir, 'h1.json')).toEqual(h1);
   });

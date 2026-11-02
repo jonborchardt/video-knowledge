@@ -32,22 +32,32 @@ for (const file of all) {
     });
   }
 }
-// the first mention in record order creates the claim
-const created = new Set();
+// the first mention in record order creates the claim and carries what a creation needs (the AI guess `v`, the
+// lean `l`, the force flag `f`); every later mention is a reference without them
+const CREATION_FIELDS = ['v', 'l', 'f'];
+const firstOf = new Map();
+const fields = new Map(); // per text: the creation's fields, from whichever mention carries them
 for (const file of all)
   for (const b of file.batches)
     for (const x of b.as) {
       const text = x.n ?? x.n2;
       if (!text) continue;
-      const first = !created.has(text);
-      created.add(text);
-      if (first && x.n2 !== undefined) {
-        delete x.n2;
-        Object.assign(x, { n: text, ...x });
-      } else if (!first && x.n !== undefined) {
-        delete x.n;
-        Object.assign(x, { n2: text, ...x });
-      }
+      if (!firstOf.has(text)) firstOf.set(text, x);
+      const f = fields.get(text) ?? {};
+      for (const k of CREATION_FIELDS) if (x[k] !== undefined && f[k] === undefined) f[k] = x[k];
+      fields.set(text, f);
+    }
+for (const file of all)
+  for (const b of file.batches)
+    for (const x of b.as) {
+      const text = x.n ?? x.n2;
+      if (!text) continue;
+      const creation = firstOf.get(text) === x;
+      delete x.n;
+      delete x.n2;
+      for (const k of CREATION_FIELDS) delete x[k];
+      if (creation) Object.assign(x, { n: text }, fields.get(text));
+      else x.n2 = text;
     }
 for (const file of all) {
   writeFileSync(file.f, JSON.stringify(file.batches, null, 1));
