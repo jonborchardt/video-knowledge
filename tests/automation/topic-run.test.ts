@@ -276,6 +276,21 @@ describe('the topic runner (criterion 1)', () => {
     expect(readHalt(topicRunFolder(T, c.root))).toBeNull();
   }, 240_000);
 
+  it('a run halted after the merge agent resumes without paying for it again: its merges.json passes check-merges, so the agent step is a checkpoint', async () => {
+    const c = fresh({ recordFailAt: 'bbbbbbbbbbb', recordFailTimes: 2 });
+    const first = await c.run();
+    expect(first.outcome).toBe('halted');
+    expect(first.halt?.kind).toBe('step-failed');
+    expect(first.halt?.why).toMatch(/record/);
+    const second = await c.run();
+    expect(second.outcome, JSON.stringify(second.halt)).toBe('done');
+    const j = c.journal();
+    expect(j.filter((e) => e.kind === 'prompt' && /merge\.md/.test(e.step))).toHaveLength(1);
+    const check = j.findIndex((e) => /^npm run evidence -- check-merges /.test(e.step) && e.exit === 0);
+    expect(check).toBeGreaterThan(j.findIndex((e) => e.kind === 'resume'));
+    expect(j.filter((e) => e.kind === 'prompt' && /extract\.md/.test(e.step))).toHaveLength(1); // h1 passes check-batch too
+  }, 240_000);
+
   it('a record that fails mid-batch is resumed with --from the next source, never re-recording the first', async () => {
     const c = fresh({ recordFailAt: 'bbbbbbbbbbb' });
     const r = await c.run();

@@ -40,7 +40,15 @@ import { type Lock, acquire, heartbeat, release, setChild } from './lock';
 import { killTree } from './proc';
 import { type RoleGrant, grantFor } from './roles';
 import { type RunResult, addSpend, isoWeek, runValidate, weekSpend } from './runner';
-import { type StepContext, type StepOutcome, envFor, execStep as realExecStep, parseRun, roleOf } from './steps';
+import {
+  type StepContext,
+  type StepOutcome,
+  envFor,
+  execStep as realExecStep,
+  parseRun,
+  roleOf,
+  validatorFor,
+} from './steps';
 
 export interface TopicRunOptions {
   root?: string;
@@ -67,6 +75,9 @@ export const REVIEW_ROUNDS_FILE = 'review-rounds.json';
 const readMarker = (dir: string): RecordedMarker =>
   readJson<RecordedMarker>(join(dir, RECORDED_FILE)) ?? { files: [], documents: [] };
 const writeMarker = (dir: string, m: RecordedMarker) => writeJsonAtomic(join(dir, RECORDED_FILE), m);
+/** Briefs whose output is a batch file its own check validates: on a resume the file stands for the agent's work
+ *  (never a review or a proposal: the board asks for those again on purpose). */
+const CHECKPOINT_BRIEFS = new Set(['extract.md', 'merge.md', 'sources.md', 'new-sources.md']);
 const docsOf = (text: string): string[] =>
   (/^Documents: (.+)$/m.exec(text)?.[1] ?? '')
     .split(',')
@@ -365,9 +376,26 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
             group.push(n.steps[++i]);
           const role = roleOf(step);
           currentGrant = grantFor(role, { topic });
+          // a checkpoint: a step whose output file is on disk and passes the brief's validator was finished before
+          // an interruption; it is not paid for again (the merge agent cost 5 USD per resume before this)
+          const pending: Step[] = [];
+          const skipped: Step[] = [];
+          for (const s of group) {
+            const outFile = /^Write: (\S+)$/m.exec(s.text)?.[1];
+            const v = CHECKPOINT_BRIEFS.has(brief ?? '') ? validatorFor(s, topic, '') : null;
+            if (!outFile || !v || !existsSync(join(root, outFile))) {
+              pending.push(s);
+              continue;
+            }
+            const check: Step = { kind: 'run', text: `npm run ${v.cli} -- ${v.args.join(' ')}` };
+            const out = await exec(a, check, ctxOf(check, role));
+            record(n, check, out, 1);
+            if (out.ok) skipped.push(s);
+            else pending.push(s);
+          }
           const outs: StepOutcome[] = [];
-          for (let j = 0; j < group.length; j += a.runs.maxParallelAgents) {
-            const slice = group.slice(j, j + a.runs.maxParallelAgents);
+          for (let j = 0; j < pending.length; j += a.runs.maxParallelAgents) {
+            const slice = pending.slice(j, j + a.runs.maxParallelAgents);
             for (const s of slice) {
               const b = budgetProblem();
               if (b)
@@ -399,7 +427,7 @@ export async function runTopic(topic: string, a: Automation, o: TopicRunOptions 
               n,
             );
           const failed = outs.find((x) => !x.ok);
-          if (brief === 'extract.md') markExtracted(group.filter((_, k) => outs[k]?.ok));
+          if (brief === 'extract.md') markExtracted([...skipped, ...pending.filter((_, k) => outs[k]?.ok)]);
           if (brief === 'studies.md') {
             const r = readJson<StudiesRounds>(join(dir, STUDIES_ROUNDS_FILE)) ?? { rounds: [] };
             r.rounds.push({ at: stamp(), added: countDocs(topic, root) - docsBefore });

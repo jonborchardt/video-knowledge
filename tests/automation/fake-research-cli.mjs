@@ -4,7 +4,7 @@
 // store's assertions and claims, with an optional failure mid-batch once), record-sources (source verdicts, or a
 // refusal), report (report.json and public-record.json with open revisions), report note, stories discover (the
 // mode the config names), brand, topics claim. Run as `node fake-research-cli.mjs <cli> <args...>` in the root;
-// FAKE_RESEARCH_CONFIG names a JSON file: { recordFailAt?, refuseCited?, storiesMode?, openRevisions?, collisionsOpen? }.
+// FAKE_RESEARCH_CONFIG names a JSON file: { recordFailAt?, recordFailTimes?, refuseCited?, storiesMode?, openRevisions?, collisionsOpen? }.
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -77,7 +77,11 @@ switch (cli) {
           .join('\n') + '\n',
       );
       console.log(`${raw.length ? 1 : 0} group`);
-    } else if (verb === 'check-merges' && cfg.collisionsOpen && !existsSync(join(root, 'topics', topic, 'work', '.fake-collide-resolved'))) {
+    } else if (
+      verb === 'check-merges' &&
+      cfg.collisionsOpen &&
+      !existsSync(join(root, 'topics', topic, 'work', '.fake-collide-resolved'))
+    ) {
       console.error(
         'collision (1.00, watcher): "A near duplicate" is close to demo/existing; add it to merges.json (the same claim) or distinct.json (a different one)',
       );
@@ -105,9 +109,10 @@ switch (cli) {
     for (const b of batches) {
       go ||= b.video === from;
       if (!go) continue;
-      const flag = join(root, '.fake-record-failed');
-      if (cfg.recordFailAt === b.video && !existsSync(flag)) {
-        writeFileSync(flag, 'once');
+      const flag = join(root, 'topics', topic, 'work', '.fake-record-failed');
+      const failed = existsSync(flag) ? Number(readFileSync(flag, 'utf8')) : 0;
+      if (cfg.recordFailAt === b.video && failed < (cfg.recordFailTimes ?? 1)) {
+        writeFileSync(flag, String(failed + 1));
         console.error('watcher: store write failed (planted)');
         process.exit(1);
       }
