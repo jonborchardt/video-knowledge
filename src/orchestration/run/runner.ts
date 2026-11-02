@@ -77,6 +77,9 @@ export interface NotesPass {
   notes: ReviewNote[];
   at: string;
   steps: string[];
+  /** Written at the start of the pass as false and at its end as true: a resume of a failed pass reruns its agents
+   *  but never `script -- send-back` again, so the writer's revision budget counts from where the pass opened. */
+  done: boolean;
 }
 
 /** The change request the current build carries (the latest `changes-requested` on the main output, by anyone), or
@@ -499,14 +502,25 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
     const want =
       pending ??
       (handNotes.length ? { key: `notes|${sha(JSON.stringify(handNotes))}`, build: null, notes: handNotes } : null);
-    if (!want || marker?.key === want.key) return null;
+    if (!want || (marker?.key === want.key && marker.done)) return null;
+    const reopened = marker?.key === want.key; // the same pass, interrupted: its send-back already opened the budget
     const routes = notesPassSteps(topic, storyId, want.notes);
     const n: BoardNext = { ...ask(topic, storyId, root), stage: 'packaged', next: 'notes pass' };
     const done: string[] = [];
+    if (!reopened)
+      writeJsonAtomic(join(dir, NOTES_PASS_FILE), {
+        key: want.key,
+        build: want.build,
+        notes: want.notes,
+        at: stamp(),
+        steps: [],
+        done: false,
+      } satisfies NotesPass);
     try {
       for (const route of routes) {
         passNotes = route.notes; // the route's notes go to the route's steps and to nothing after the pass
         for (const step of route.steps) {
+          if (reopened && /^npm run script -- send-back /.test(step.text)) continue;
           const out = await runOne(step, { ...n, next: step.text });
           if ('outcome' in out) return out;
           done.push(step.text.split('\n')[0]);
@@ -528,6 +542,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
       notes: want.notes,
       at: stamp(),
       steps: done,
+      done: true,
     } satisfies NotesPass);
     return null;
   };
@@ -558,7 +573,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
             // already answered means the pass changed nothing, and a person decides rather than the loop spinning
             const pend = pendingSendBack(topic, storyId, root);
             const marker = readJson<NotesPass>(join(dir, NOTES_PASS_FILE));
-            if (pend && marker?.key === pend.key)
+            if (pend && marker?.key === pend.key && marker.done)
               return halt(
                 'awaiting-person',
                 `the notes pass changed nothing: the draft-review agent sent build ${pend.build} back again with the same notes (${pend.notes.map((x) => x.text).join('; ')})`,

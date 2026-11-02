@@ -7,6 +7,7 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { runCli } from '../../../shared/cli';
 import { readJson, toJson } from '../../../shared/io';
 import type { Article, ArticleRelease } from '../article';
+import { correctArticle } from '../article';
 import { ARTICLE_FILES, articleFingerprint } from '../article';
 import { type ArticleRequest, articleRequestPath, correctionProblem, requestCorrection } from '../request';
 import { type Fixture, cliRoot, syntheticProduction } from '../../../../tests/production-helpers';
@@ -37,6 +38,36 @@ describe('requestCorrection and correctionProblem', () => {
     expect(correctionProblem(decided, r1.request.request, 'fp1', now)).toMatch(/was decided \(ok\) by Jon/);
     expect(requestCorrection(decided, 'fp1', SECRET, 'x', now, 7).existing).toBe(false); // a decided one is spent
   });
+});
+
+describe('a correction is released only under a person (register D10), enforced by the module', () => {
+  it('correctArticle and `correct` refuse an automated actor; a person releases; decide carries the person', () => {
+    const f = syntheticProduction('packaged');
+    fixtures.push(f);
+    cliRoot(f.root);
+    const env = { ...process.env, VK_NO_DOTENV: '1', APPROVAL_SECRET: SECRET };
+    const article = (args: string[]) =>
+      runCli('article', [args[0], f.topic, f.story, ...args.slice(1)], { cwd: f.root, env });
+    const release = readJson<ArticleRelease>(join(f.dir, ARTICLE_FILES.release))!;
+    const edited: Article = {
+      ...release.article,
+      meta: { ...release.article.meta, headline: `${release.article.meta.headline} (corrected)` },
+    };
+    writeFileSync(join(f.dir, ARTICLE_FILES.article), toJson(edited));
+    const v = { status: 'passed', sentences: [], issues: [], counts: {} } as unknown as Parameters<
+      typeof correctArticle
+    >[2];
+    expect(() => correctArticle(release, edited, v, 'automated: maintenance m1', 'a note', '2026-12-01', {})).toThrow(
+      /person/,
+    );
+    expect(() =>
+      correctArticle(release, edited, v, 'automated: draft-review by x session y', 'n', '2026-12-01', {}),
+    ).toThrow(/person/);
+    const r = article(['correct', '--approved-by', 'automated: maintenance m1', '--note', 'the survey year']);
+    expect(r.status).toBe(2);
+    expect(r.stderr).toMatch(/person/);
+    expect(readJson<ArticleRelease>(join(f.dir, ARTICLE_FILES.release))!.revision).toBe(release.revision);
+  }, 120_000);
 });
 
 describe('decide ok after the correction already went out (a crash before the record; review finding 9)', () => {

@@ -145,6 +145,11 @@ function run() {
       return;
     }
     case 'correct': {
+      // register D10, checked before anything is validated: a correction is a person's act (the module refuses too)
+      if (/^automated:/i.test((flag('--approved-by') ?? '').trim()))
+        throw new Refusal(
+          'only a person releases a correction (register D10); automation requests one and the person decides',
+        );
       const { a, v } = releasable();
       const prev = loadArticleRelease(topic, storyId);
       if (!prev) throw new Refusal(`nothing released yet: npm run article -- lock ${topic} ${storyId}`);

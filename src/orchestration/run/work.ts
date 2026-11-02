@@ -98,11 +98,12 @@ export function nextJob(a: Automation, root = ROOT, deps: WorkDeps = {}): Job | 
     const job: Job = { kind: 'discovery', why: 'discovery: the weekly slot' };
     if (!(held && (deps.alive ?? alive)(held.pid)) && !skip.some((s) => sameJob(s, job))) return job;
   }
-  // topic runs (phase 5): an approved proposal not yet researched, under the topic-run concurrency cap
+  // topic runs (phase 5): an approved proposal not yet researched, under the topic-run concurrency cap, only with
+  // enabled.research (approval authorises the topic; the flag authorises the spend)
   const topicRuns = statusOf(root, deps.alive ?? alive).filter(
     (r) => r.state === 'running' && r.storyId === 'research',
   ).length;
-  if (topicRuns < a.runs.maxConcurrentTopicRuns)
+  if (a.enabled.research && topicRuns < a.runs.maxConcurrentTopicRuns)
     for (const job of (deps.topics ?? (() => topicJobs(root, deps.alive ?? alive)))())
       if (!skip.some((s) => sameJob(s, job))) return job;
   // scans (phase 6): the public topic whose scan is oldest and due, one at a time, never while its topic runs

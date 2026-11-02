@@ -221,6 +221,12 @@ export function correctArticle(
   figures: Record<string, FigureData>,
 ): { release: ArticleRelease; revision: Extract<Revision, { kind: 'article' }> } {
   if (!note.trim()) throw new Refusal('a correction needs a --note');
+  // register D10: a correction of a released article is a person's act; automation may run the correction a person
+  // decided (decide ok carries that person's name), never approve one in its own name
+  if (/^automated:/i.test(approvedBy.trim()))
+    throw new Refusal(
+      'only a person releases a correction (register D10); automation requests one and the person decides',
+    );
   releasable(v, approvedBy);
   const fp = articleFingerprint(a);
   const before = new Map(unitsOf(prev.article));

@@ -716,6 +716,10 @@ due resumes, stuck runs, halt mails, the digest. The admin page's Automation tab
 week's picks, the open requests and their age, the launches, the Studio steps still to record, each public topic's
 last maintenance scan and the article corrections awaiting your reply.
 
+**Research (phase 5).** The work plane starts a topic run on an approved proposal only with `enabled.research` on: the
+approval authorises the topic, the flag authorises the spend (46 to 61 USD a topic in the real runs), so a work plane
+turned on for releases and resumes never starts research by itself.
+
 **Maintenance (phase 6).** With `enabled.maintenance` on, the work plane runs a `scan` job per public topic every
 `schedule.maintenance.everyDays` days (`npm run run -- maintain <topic>` by hand): a `new-sources.md` agent looks for
 studies and reports published since the last scan (`topics/<topic>/maintenance.json`, written by `npm run evidence

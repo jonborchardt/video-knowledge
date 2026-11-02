@@ -37,6 +37,9 @@ export interface Automation {
     work: boolean;
     production: boolean;
     discovery: boolean;
+    /** The research pipeline on approved proposals (paid agents, 46 to 61 USD a topic in the real runs): its own
+     *  switch, so the work plane can run releases and resumes without starting research. */
+    research: boolean;
     maintenance: boolean;
     social: boolean;
   };
@@ -101,7 +104,15 @@ export interface Automation {
 const models = Object.fromEntries(AGENT_ROLES.map((r) => [r, 'opus'])) as Record<AgentRole, string>;
 
 export const DEFAULTS: Automation = {
-  enabled: { tick: false, work: false, production: false, discovery: false, maintenance: false, social: false },
+  enabled: {
+    tick: false,
+    work: false,
+    production: false,
+    discovery: false,
+    research: false,
+    maintenance: false,
+    social: false,
+  },
   clone: null,
   git: { commitOn: 'main' },
   schedule: {

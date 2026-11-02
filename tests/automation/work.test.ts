@@ -26,6 +26,14 @@ const held = (): RunResult => ({ outcome: 'held', stage: '', halt: null, iterati
 const pick: Job = { kind: 'pick', topic: T, storyId: 'decision:p', why: 'production pick' };
 
 describe('nextJob', () => {
+  it('a topic job needs enabled.research as well as enabled.work; the other jobs do not', () => {
+    const root = fresh();
+    const topic: Job = { kind: 'topic', topic: 'ev-running-costs', why: 'research: the approved proposal' };
+    expect(nextJob(on, root, { pick: () => null, topics: () => [topic] })).toBeNull();
+    const research = { ...on, enabled: { ...on.enabled, research: true } };
+    expect(nextJob(research, root, { pick: () => null, topics: () => [topic] })).toEqual(topic);
+    expect(nextJob(on, root, { pick: () => pick, topics: () => [topic] })).toEqual(pick);
+  });
   it('a due resume beats the pick; the pick when nothing is due; null when idle', () => {
     const root = fresh();
     expect(nextJob(on, root, { pick: () => pick })).toEqual(pick);

@@ -4,7 +4,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { automationProblems, loadAutomation } from '../src/shared/automation';
+import { DEFAULTS, automationProblems, loadAutomation } from '../src/shared/automation';
 
 const tmp = mkdtempSync(join(tmpdir(), 'vk-automation-'));
 afterAll(() => rmSync(tmp, { recursive: true, force: true }));
@@ -41,6 +41,10 @@ describe('automation.json', () => {
     const a = loadAutomation(tmp, { runs: { loopCap: 10 } });
     expect(a.runs.loopCap).toBe(10);
     expect(a.runs.noProgressAttempts).toBe(3);
+  });
+  it('research has its own flag, off by default, so the work plane can run without starting paid research', () => {
+    expect(DEFAULTS.enabled.research).toBe(false);
+    expect(loadAutomation().enabled.research).toBe(false);
   });
   it('the committed file is valid and every feature is off', () => {
     const a = loadAutomation();

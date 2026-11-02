@@ -151,6 +151,10 @@ describe('fetch-doc', () => {
   it('refuses http, a path, a non-txt name and a missing topic', () => {
     const root = fresh();
     expect(fetchDocProblem('ev', 'http://x.test/a.pdf', 'a.txt', root)).toMatch(/https/);
+    // the topic is a slug: never a path that would land the text outside its topic (or the repo)
+    expect(fetchDocProblem('..', 'https://x.test/a.pdf', 'a.txt', root)).toMatch(/slug/);
+    expect(fetchDocProblem('../..', 'https://x.test/a.pdf', 'a.txt', root)).toMatch(/slug/);
+    expect(fetchDocProblem('ev/../x', 'https://x.test/a.pdf', 'a.txt', root)).toMatch(/slug/);
     expect(fetchDocProblem('ev', 'https://x.test/a.pdf', '../a.txt', root)).toMatch(/bare name/);
     expect(fetchDocProblem('ev', 'https://x.test/a.pdf', 'sub/a.txt', root)).toMatch(/bare name/);
     expect(fetchDocProblem('ev', 'https://x.test/a.pdf', 'a.pdf', root)).toMatch(/\.txt/);

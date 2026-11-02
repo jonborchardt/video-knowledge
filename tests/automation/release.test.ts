@@ -798,6 +798,65 @@ describe('the draft by policy', () => {
     expect(steps.slice(n).some((x) => /send-back|script\.md|video-fix/.test(x))).toBe(false);
   }, 600_000);
 
+  it('a notes pass that fails after the writer revised keeps its revision budget on resume: send-back runs once, passStartRevision stays', async () => {
+    const s = draftStaged('accept', 'person');
+    let writerRuns = 0;
+    const steps: string[] = [];
+    const exec = async (a: Automation, step: Step, ctx: StepContext) => {
+      steps.push(step.text.split('\n')[0]);
+      if (/script\.md/.test(step.text)) {
+        writerRuns++;
+        const sp = join(s.f.dir, 'script.json');
+        const script = readJson<Script>(sp)!;
+        if (writerRuns === 1) {
+          writeFileSync(sp, toJson({ ...script, revision: script.revision + 1 })); // the writer revised, then its validator failed
+          return {
+            kind: 'prompt' as const,
+            ok: false,
+            exit: 2,
+            ms: 1,
+            costUsd: 0.1,
+            sessionId: 'w1',
+            error: 'validator script validate failed: blocked',
+            log: '',
+          };
+        }
+        return {
+          kind: 'prompt' as const,
+          ok: true,
+          exit: 0,
+          ms: 1,
+          costUsd: 0.1,
+          sessionId: 'w2',
+          error: null,
+          log: '',
+        };
+      }
+      if (step.kind === 'prompt')
+        return {
+          kind: 'prompt' as const,
+          ok: true,
+          exit: 0,
+          ms: 1,
+          costUsd: 0.1,
+          sessionId: 'p',
+          error: null,
+          log: '',
+        };
+      return execStep(a, step, ctx);
+    };
+    const first = await s.run({ env: s.env, notes: '[0:12 s3] say the year of the survey', exec }, s.a);
+    expect(first.halt?.kind).toBe('step-failed');
+    expect(readJson<Script>(join(s.f.dir, 'script.json'))).toMatchObject({ revision: 2, passStartRevision: 1 });
+    const second = await s.run({ env: s.env, notes: '[0:12 s3] say the year of the survey', exec }, s.a);
+    // the stubbed reviewer never approves the revised script, so the board runs out of progress: the point is the
+    // pass itself, which ran its writer again without reopening the budget
+    expect(second.halt?.kind).not.toBe('step-failed');
+    expect(steps.filter((x) => /^npm run script -- send-back /.test(x))).toHaveLength(1);
+    expect(writerRuns).toBe(2);
+    expect(readJson<Script>(join(s.f.dir, 'script.json'))?.passStartRevision).toBe(1); // the pass's budget counts from where it opened
+  }, 600_000);
+
   it('--notes-file by hand: the same routing from the text, one line per note', async () => {
     const s = draftStaged('accept', 'person');
     const steps: string[] = [];

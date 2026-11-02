@@ -13,6 +13,7 @@ export const MAX_DOC_BYTES = 50 * 1024 * 1024;
 
 /** Why the verb refuses: a non-https URL, a file name with a path, not `.txt`, no topic folder. */
 export function fetchDocProblem(topic: string, url: string, file: string, root = ROOT): string | null {
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(topic)) return `the topic must be a slug (got ${topic})`;
   if (!/^https:\/\/\S+$/.test(url)) return `the URL must be https (got ${url})`;
   if (!/^[a-z0-9][a-z0-9._-]*\.txt$/i.test(file) || /[\\/]/.test(file) || file.includes('..'))
     return `the file must be a bare name ending in .txt under topics/${topic}/sources/ (got ${file})`;
