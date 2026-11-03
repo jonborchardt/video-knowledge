@@ -128,7 +128,7 @@ export function releaseJobs(a: Automation, root = ROOT, isAlive: (pid: number) =
     if (isFixtureTopic(topic)) continue; // the fixture is never selected by automation (spec §5.8)
     const tb = topicBoard(topic, root, decisions);
     for (const r of tb.stories) {
-      if (r.story.partOf || r.production?.stage !== 'packaged') continue;
+      if (r.story.partOf || r.production?.stage !== 'packaged' || r.decision?.decision === 'parked') continue;
       const dir = join(scriptDir(topic, r.story.id, root), RUN_DIR);
       if (existsSync(join(dir, 'halt.json'))) continue;
       const lock = readLock(dir);

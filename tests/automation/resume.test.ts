@@ -188,6 +188,19 @@ describe('dueResumes', () => {
       ),
     ).toEqual(['week-rolled']);
   });
+  it('a parked story is never due, even once the board moved (a person said leave it alone)', () => {
+    const root = fresh();
+    writeFileSync(
+      join(root, 'production.json'),
+      JSON.stringify({ [T + '/' + S]: { decision: 'parked', note: 'not for this channel', date: '2026-11-03' } }),
+    );
+    writeHalt(
+      runDir(T, S, root),
+      halt({ kind: 'awaiting-person', why: 'draft', unblock: { kind: 'decide', text: 'x' } }),
+    );
+    const moved = () => ({ stage: 'packaged', next: 'parked: not for this channel' });
+    expect(dueResumes(a, root, { now: () => T0 + min(1000), rows: rows(root), ask: moved })).toEqual([]);
+  });
   it('the fixture is never due, whatever its halt (it is excluded from every automatic selection)', () => {
     const root = fresh();
     const F = 'test-fixture';

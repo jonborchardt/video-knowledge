@@ -3,7 +3,7 @@
 // halt when the ISO week rolled) and which running locks are stuck. Pure over the files; the work plane runs what is due.
 import type { Automation } from '../../shared/automation';
 import { ROOT } from '../../shared/io';
-import { boardNext } from '../production';
+import { boardNext, loadDecisions } from '../production';
 import { type Halt, readJournal, writeHalt } from './journal';
 import { readLock, release } from './lock';
 import { alive as pidAlive, killTree } from './proc';
@@ -46,9 +46,11 @@ export function dueResumes(a: Automation, root = ROOT, deps: ResumeDeps = {}): D
   const rows = deps.rows ?? statusOf(root, deps.alive);
   const at = new Date(now()).toISOString();
   const due: DueResume[] = [];
+  const decisions = loadDecisions(root);
   for (const r of rows) {
     if (r.state !== 'halted' || !r.halt) continue;
     if (isFixtureTopic(r.topic)) continue; // the fixture is excluded from every automatic selection (spec 5.8)
+    if (decisions[`${r.topic}/${r.storyId}`]?.decision === 'parked') continue; // a person said leave it alone
     const h = r.halt;
     if (retryable(h)) {
       const attempt = resumesSince(r.dir, h);
