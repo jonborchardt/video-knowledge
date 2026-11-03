@@ -77,6 +77,13 @@ describe('work', () => {
     const r = await work(on, root, { runStory: async (_t, s) => (ran.push(s), held()), pick: () => null });
     expect(r.outcome).toBe('idle');
     expect(ran).toEqual(['decision:a']);
+    expect(readSchedule(root).due?.map((d) => [d.storyId, d.why])).toEqual([['decision:a', 'moved']]); // kept for the next pass
+    const launchOnly = await work(on, root, {
+      only: 'launch',
+      runStory: async (_t, s) => (ran.push(s), done()),
+      pick: () => null,
+    });
+    expect([launchOnly.outcome, ran.length]).toEqual(['idle', 1]); // --job launch runs no resume
     const r2 = await work(on, root, {
       runStory: async (_t, s) => (ran.push(s), s === 'decision:a' ? held() : done()),
       pick: () => pick,

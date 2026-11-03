@@ -64,7 +64,7 @@ import { candidates, pickJob, pickJobIfDue, pickState, rank } from './pick';
 import { runStory } from './runner';
 import { renderStatus, statusOf } from './status';
 import { tick } from './tick';
-import { type Job, launchDeps, nextJob, scheduleText, work } from './work';
+import { type Job, type JobKind, launchDeps, nextJob, scheduleText, work } from './work';
 import { launch } from './launch';
 import { discover, discoveryDeps } from './discovery';
 import { runTopic } from './topic-runner';
@@ -286,7 +286,7 @@ switch (verb) {
     const r = await work(a, ROOT, {
       pick: only && only !== 'pick' ? () => null : pick,
       mail: wcfg && a.approvals.to ? libraryTransport(wcfg) : null,
-      ...(only && { skip: [] as Job[] }),
+      ...(only && { skip: [] as Job[], only: only as JobKind }),
     });
     console.log(
       `RESULT: WORK ${r.job?.kind ?? 'none'} ${r.outcome}${r.job?.topic ? ` (${r.job.topic} ${r.job.storyId})` : ''}`,

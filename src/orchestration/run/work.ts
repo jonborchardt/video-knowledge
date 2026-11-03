@@ -60,6 +60,7 @@ export interface WorkDeps {
   /** Runs a scan job; the default is the maintenance job with real agents and CLIs. */
   runScan?: (topic: string, a: Automation) => Promise<RunResult>;
   skip?: Job[]; // jobs this instance already found held
+  only?: JobKind; // `work --job <kind>`: run a job of this kind or nothing
   mail?: MailTransport | null; // the request mails of a release loop
 }
 
@@ -165,7 +166,7 @@ export async function work(a: Automation, root = ROOT, deps: WorkDeps = {}): Pro
   const skip: Job[] = [...(deps.skip ?? [])];
   for (let attempt = 0; attempt < 2; attempt++) {
     const job = nextJob(a, root, { ...deps, skip });
-    if (!job) return { outcome: 'idle', job: null };
+    if (!job || (deps.only && job.kind !== deps.only)) return { outcome: 'idle', job: null };
     if (job.kind === 'resume')
       updateSchedule(root, (s) => ({
         ...s,
@@ -194,6 +195,15 @@ export async function work(a: Automation, root = ROOT, deps: WorkDeps = {}): Pro
               : await run(job.topic!, job.storyId!, a, approver));
     if (result.outcome === 'held') {
       skip.push(job); // another instance owns it: try the next job once
+      if (job.kind === 'resume')
+        // the due entry was taken above; the next pass needs it
+        updateSchedule(root, (s) => ({
+          ...s,
+          due: [
+            ...(s.due ?? []),
+            { topic: job.topic!, storyId: job.storyId!, why: 'moved', at: new Date(now()).toISOString() },
+          ],
+        }));
       continue;
     }
     updateSchedule(root, (s) => ({

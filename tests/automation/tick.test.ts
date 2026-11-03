@@ -9,7 +9,7 @@ import { scriptDir } from '../../src/shared/io';
 import { FakeMail } from '../../src/shared/mail';
 import { type Halt, appendJournal, readHalt, runDir, writeHalt } from '../../src/orchestration/run/journal';
 import { automationDir, readOutbox } from '../../src/orchestration/run/notify';
-import { readSchedule } from '../../src/orchestration/run/schedule';
+import { readSchedule, writeSchedule } from '../../src/orchestration/run/schedule';
 import { PREFLIGHT_HALT, TICK_LOCK, tick } from '../../src/orchestration/run/tick';
 
 const roots: string[] = [];
@@ -183,9 +183,14 @@ describe('tick', () => {
       alive: (pid: number) => pid === 777,
       kill: (pid: number) => void killed.push(pid),
     };
+    const queued = { topic: T, storyId: 'decision:c', why: 'moved' as const, at: new Date(T0).toISOString() }; // the inbox's, this pass
+    writeSchedule(root, { due: [queued] });
     const r = await tick(on, root, deps);
     expect(r.outcome).toBe('ok');
-    expect(readSchedule(root).due).toEqual([{ topic: T, storyId: S, why: 'backoff', at: new Date(T0).toISOString() }]);
+    expect(readSchedule(root).due).toEqual([
+      queued,
+      { topic: T, storyId: S, why: 'backoff', at: new Date(T0).toISOString() },
+    ]);
     expect(killed).toEqual([777]);
     expect(readHalt(dir)?.kind).toBe('timeout');
     // the new timeout halt of decision:b is emailed (the retryable one of decision:a too: a halt is a halt)

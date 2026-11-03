@@ -240,7 +240,11 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
     });
     const rows = (deps.rows ?? (() => statusOf(root, deps.alive)))();
     const due = dueResumes(a, root, { now, rows, ask: deps.ask, alive: deps.alive });
-    updateSchedule(root, (s) => ({ ...s, due }));
+    // merged over what the inbox queued this pass (a draft OK, a moved request): a replace lost those entries
+    updateSchedule(root, (s) => ({
+      ...s,
+      due: [...(s.due ?? []).filter((d) => !due.some((x) => x.topic === d.topic && x.storyId === d.storyId)), ...due],
+    }));
     if (due.length) actions.push(`due: ${due.map((d) => `${d.topic}/${d.storyId} (${d.why})`).join(', ')}`);
     const stuck = stuckRows(a, root, {
       now,
