@@ -1,0 +1,107 @@
+{
+  "about": "The state machines and the workflow: research stages of a topic, production stages of a story, the board's columns (who acts next), the halt kinds, and the 25-step workflow a person follows, with the person's steps marked.",
+  "generatedOn": "2026-11-02",
+  "authority": "src/orchestration/research.ts (RESEARCH_STAGES), src/orchestration/production.ts (PRODUCTION_STAGES, COLUMNS, HALT_KINDS, stoppedOf), src/orchestration/run/runner.ts (RUN_HALT_KINDS), src/admin/index.astro (flow)",
+  "principle": "State is derived at read from the committed artifacts; the board (production.ts) is the one state machine; every halt has a kind and a next step that names a command or a brief, so /produce and the runner never parse prose.",
+  "researchStages": {
+    "entity": "a topic (npm run board -- topic; npm run run -- topic)",
+    "stages": [
+      { "id": "proposal", "needs": "an approved proposals/<slug>.json (the one input the pipeline reads)" },
+      { "id": "lists", "needs": "videos.txt and blogs.txt (collect.md agent: evidence -- search)" },
+      { "id": "fetch", "needs": "the watcher fetched the videos into the store (npm run watcher)" },
+      { "id": "extract", "needs": "extract.md agents per group wrote work/h*.json; npm run record consumed them (recorded.json)" },
+      { "id": "merge", "needs": "merge.md wrote merges.json and distinct.json; npm run merge-claims; dedupe, collide" },
+      { "id": "studies", "needs": "studies.md fetched documents (fetch-doc), sources.md agents judged (sv_*.json), record-sources; thin after two empty rounds parks" },
+      { "id": "report", "needs": "npm run report wrote report.json; revision-note.md explains each revised finding (report -- note)" },
+      { "id": "claim", "needs": "npm run topics -- claim put the topic under its commission in site.ts; npm run brand" },
+      { "id": "stories", "needs": "npm run stories -- discover wrote stories.json (derived) and ran the evidence gate" },
+      { "id": "review", "needs": "stories.md reviewer wrote story-review.json (applicability, pruning, chains, targetDurationSeconds)" },
+      { "id": "ready", "terminal": true, "means": "at least one story is ready for production" },
+      { "id": "parked", "terminal": true, "means": "thin, or the review kept no story; topics -- park with the reasons; no mail, a digest line" }
+    ],
+    "halts": ["missing", "pending", "needs-person (a record-sources refusal on a cited pair, or no approved proposal)", "no-institution"]
+  },
+  "productionStages": {
+    "entity": "a story's video (npm run board -- next; npm run run -- story; /produce)",
+    "stages": [
+      { "id": "package", "artifact": "evidence-package.json", "by": "npm run script -- package (code, from the corpus)" },
+      { "id": "script", "artifact": "script.json", "by": "writer agent (script.md); sections hook, setup, investigation, answer, takeaway, or hook, question-N, close for a chain" },
+      { "id": "validate", "artifact": "validation.json", "by": "npm run script -- validate (assertions per claim, figures trace to passages, pacing, duration band)" },
+      { "id": "review", "artifact": "script-review.json", "by": "reviewer agent (script-review.md), approvals by fingerprint" },
+      { "id": "storyboard", "artifact": "storyboard.json", "by": "writer agent (storyboard.md): scenes with numeric chart points, cites, timing per sentence" },
+      { "id": "graphics", "artifact": "video/render.json, bespoke components, visual-review.json, render-check.json", "by": "graphics agent (graphics.md), visual reviewer (visual-review.md), npm run video -- check" },
+      { "id": "lock", "artifact": "release.json", "by": "npm run script -- lock (release-check.ts); an automated lock is approved by 'automated: /produce run started by <name>'" },
+      { "id": "locked", "means": "release.json exists, no render yet" },
+      { "id": "video", "artifact": "video/segment.mp4, timeline, frames, QA", "by": "npm run video -- init | narrate (edge-tts) | timeline | render (Remotion) | qa (fit guard, runtime)" },
+      { "id": "rendered", "means": "every scene rendered against the locked fingerprints, QA passed, no soundtrack yet" },
+      { "id": "scored", "artifact": "video/music.json, mix.json", "by": "npm run music -- cues; the PCM mixer in a full render" },
+      { "id": "article", "artifact": "article.json, article-review.json, article-release.json", "by": "writer (article.md), a different reviewer (article-review.md), npm run article -- validate | lock" },
+      { "id": "packaged", "artifact": "video/review/ (review.json, release-manifest.json, captions, description)", "by": "npm run video -- package; then the private upload and the review" }
+    ],
+    "afterPackaged": [
+      "draft upload (private) and the draft request by policy (review.draft: person | shadow | agent)",
+      "video final --approved-by (Azure voice, the release build; also the answer to look-stale)",
+      "shorts discover, shorts.md reviewer, a nested run per ready candidate (at most 3)",
+      "cta.md agent chooses the calls to action; a paid one needs a person",
+      "every output uploaded private, pushed, verified; packaging -- manifest; publish request --channel email",
+      "the person decides (OK, OK at <when>, CHANGES:, PAID OK); publish decide applies it: approved, push, sync, go-live or scheduled; Shorts follow in order",
+      "the launch job: report -- seed, brand, build, links freeze, validate, commit, push; the tick probes the deploy; the X post; the launch mail"
+    ],
+    "halts": [
+      "missing", "stale", "blocking-findings", "revision-limit", "needs-evidence", "review-pending", "review-findings",
+      "storyboard-blocked", "render-check", "needs-graphics", "graphics-review", "lock", "qa-failed", "look-stale",
+      "story-left", "no-institution", "published"
+    ],
+    "runHalts": ["budget", "timeout", "no-progress", "unexpected-edit", "forbidden-flag", "git", "awaiting-person", "step-failed", "retries-spent", "deploy-timeout", "needs-person"],
+    "stopped": "red on the board only for revision-limit, story-left, a stop: step or a failed publishing step; every other halt is its next step"
+  },
+  "boardColumns": {
+    "about": "one row per video; the column says who acts next; a chain's follow-up has no row; a Short's row sits under its parent",
+    "columns": [
+      { "id": "needs-research", "actor": "automation or a person", "means": "the story's evidence is not ready" },
+      { "id": "needs-review", "actor": "reviewer agent", "means": "candidates without a story-review entry" },
+      { "id": "ready", "actor": "the production pick or a person", "means": "a story may start" },
+      { "id": "producing", "actor": "the runner", "means": "package through scored" },
+      { "id": "article", "actor": "writer and reviewer agents", "means": "the companion article" },
+      { "id": "draft-review", "actor": "a person or, by policy, the draft-review agent", "means": "the private draft is up" },
+      { "id": "your-review", "actor": "a person", "means": "the release package awaits the decision" },
+      { "id": "changes-requested", "actor": "the runner (notes pass)", "means": "a send-back with notes" },
+      { "id": "uploaded", "actor": "a person", "means": "private upload, no approval yet" },
+      { "id": "approved", "actor": "the tick", "means": "approved, go-live pending" },
+      { "id": "shorts", "actor": "the runner", "means": "approved, Shorts still owed" },
+      { "id": "scheduled", "actor": "the tick", "means": "a time is set" },
+      { "id": "published", "actor": "nobody rebuilds it", "means": "live; a re-release is a new output" },
+      { "id": "parked", "actor": "a person", "means": "production.json parked, or a rejected story" }
+    ]
+  },
+  "workflow": {
+    "about": "the diagram on /admin (flow in src/admin/index.astro): what runs and where a person acts; the order is the order of a release",
+    "steps": [
+      { "n": 1, "t": "Propose topics (weekly)", "you": false, "runs": "run -- discover: an agent proposes per institution, an independent agent reviews, the weak are parked" },
+      { "n": 2, "t": "Approve or reject proposals", "you": true, "runs": "one batch mail a week; reply APPROVE/REJECT, or topics -- approve|reject" },
+      { "n": 3, "t": "Research the approved topic", "you": false, "runs": "run -- topic: collect, watcher fetch, extract per group, merge, dedupe, collide, record" },
+      { "n": 4, "t": "Judge them against studies", "you": false, "runs": "studies fetch-doc, sources agents judge, record-sources; thin parks" },
+      { "n": 5, "t": "Explain each revised finding", "you": false, "runs": "report, then a note per changed finding" },
+      { "n": 6, "t": "Claim the topic for its institution", "you": false, "runs": "topics -- claim into site.ts, brand; a person adds a new institution" },
+      { "n": 7, "t": "Find the stories", "you": false, "runs": "stories discover + evidence audit; stories.md review; ready or parked" },
+      { "n": 8, "t": "Start a ready story", "you": false, "runs": "the production pick, or a person: run -- story or /produce" },
+      { "n": 9, "t": "Read the blocked email, run the unblock", "you": true, "runs": "the tick mails each new halt once with the one command, reply or edit" },
+      { "n": 10, "t": "Script", "you": false, "runs": "evidence package; writer; different reviewer; validate; 3 revisions" },
+      { "n": 11, "t": "Storyboard, graphics, lock", "you": false, "runs": "storyboard.md; graphics.md per bespoke scene; visual-review.md; render check; lock" },
+      { "n": 12, "t": "Draft video", "you": false, "runs": "video init, music cues, edge voice, Remotion render, mix, QA" },
+      { "n": 13, "t": "Article", "you": false, "runs": "writer, different reviewer, validate, lock; the private package" },
+      { "n": 14, "t": "Watch it: the draft email or the review page", "you": true, "runs": "reply OK or CHANGES:, or decide on the page; or an agent by policy" },
+      { "n": 15, "t": "Voice redo (video final)", "you": false, "runs": "Azure neural voice, timeline, render, QA; the release package" },
+      { "n": 16, "t": "Choose the calls to action", "you": false, "runs": "cta.md agent; checked by cta.ts against the content graph" },
+      { "n": 17, "t": "Approve any paid link", "you": true, "runs": "PAID OK in the reply or links -- cta approve" },
+      { "n": 18, "t": "Find the Shorts", "you": false, "runs": "shorts discover; shorts.md agent" },
+      { "n": 19, "t": "Start and produce each Short", "you": false, "runs": "a nested run per candidate, at most 3, portrait 1080x1920" },
+      { "n": 20, "t": "Upload, push, verify, request", "you": false, "runs": "each output private; the release manifest; one email" },
+      { "n": 21, "t": "Approve the release", "you": true, "runs": "reply OK, OK at <when>, CHANGES:, PAID OK; or the review page; binds the manifest sha" },
+      { "n": 22, "t": "Launch them together", "you": false, "runs": "publish decide: go-live or schedule; Shorts follow in order" },
+      { "n": 23, "t": "Refresh the site (the launch job)", "you": false, "runs": "seed, brand, build, freeze, validate, commit, push; the tick probes the deploy; post on X" },
+      { "n": 24, "t": "Link the Shorts (Studio steps)", "you": true, "runs": "related video, end screen, cards; recorded with publish -- updated" },
+      { "n": 25, "t": "Scan for new evidence (monthly); reaffirm or correct; approve the correction", "you": true, "runs": "run -- maintain; a correction request mails the person; OK releases it" }
+    ]
+  }
+}

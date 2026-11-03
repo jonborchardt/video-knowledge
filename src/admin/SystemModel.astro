@@ -1,0 +1,730 @@
+---
+// The system on one page, drawn from the model: the module band (src/admin/objects.ts moduleCatalog), the editorial loop
+// and which modules and artifact columns each step touches (docs/system-model/system.json), the artifact columns as the
+// spine over every object and its relations (objects.ts cols and edges, the same data as the Objects tab), each
+// external service attached to the object it reads or writes with its readiness state (externals.json, readiness.json,
+// automation.json), and a person's acts on the edge they gate (actors.json). Nothing is placed by hand: a new object,
+// edge, service, act or loop step is one entry in those files. The look is the Commonwealth's kit (brand/cor/kit.json).
+import { join } from 'node:path';
+import { type Box, cols, edges, moduleCatalog } from './objects';
+import { readJson, ROOT } from '../shared/io';
+import { loadAutomation } from '../shared/automation';
+import { readinessView } from '../orchestration';
+import { site } from '../config/site';
+
+interface LoopStep {
+  step: string;
+  summary: string;
+  modules: string[];
+  columns: string[];
+}
+interface External {
+  id: string;
+  name: string;
+  attachesTo: string[];
+  readiness: string[];
+}
+interface Act {
+  act: string;
+  short?: string;
+  refusesAutomated: boolean;
+  gates?: { from: string; to: string };
+  at?: string;
+}
+const dir = join(ROOT, 'docs', 'system-model');
+const must = <T,>(f: string): T => {
+  const j = readJson<T>(join(dir, f));
+  if (!j) throw new Error(`SystemModel: ${f} missing`);
+  return j;
+};
+const { loop } = must<{ loop: LoopStep[] }>('system.json');
+const externals = must<{ services: External[] }>('externals.json').services;
+const acts = must<{ person: { acts: Act[] } }>('actors.json').person.acts.filter((a) => a.short && a.refusesAutomated);
+const kit = readJson<{ palette: { ground: string; accent: string; paper: string; ink: string } }>(
+  join(ROOT, 'brand', 'cor', 'kit.json'),
+)?.palette ?? { ground: '#000', accent: '#888', paper: '#fff', ink: '#333' };
+const ready = readinessView(ROOT, loadAutomation());
+const modules = moduleCatalog();
+const caps = modules.filter((m) => m.kind === 'module');
+const core = modules.filter((m) => m.kind !== 'module');
+
+// Geometry. The clusters of the lower graph set the width; everything above spans them.
+const W = 184,
+  H = 52,
+  ROW = 70,
+  LANE = 64, // between lanes of one cluster: room for an edge label
+  GAP = 88, // between clusters: room for a person's label on the edge
+  CAP = 6, // boxes per lane
+  PAD = 24,
+  EXT_W = 200,
+  EXT_GAP = 48,
+  R = 42, // a loop circle
+  TITLE_H = 104,
+  MOD_Y = 122,
+  MOD_H = 92,
+  SUM_Y = 248, // the first baseline of a step's summary
+  CY = SUM_Y + 56 + R, // a loop circle's centre
+  BB_Y = CY + R + 44, // the backbone (the column headers)
+  BB_H = 30,
+  GY = BB_Y + BB_H + 30; // the first row of boxes
+let cx = PAD + EXT_W + EXT_GAP;
+const clusters = cols.map((c) => {
+  const lanes = Math.ceil(c.boxes.length / CAP),
+    per = Math.ceil(c.boxes.length / lanes),
+    width = lanes * W + (lanes - 1) * LANE,
+    cl = { title: c.title, dir: c.dir, x: cx, width, lanes, per, boxes: c.boxes };
+  cx += width + GAP;
+  return cl;
+});
+const graphLeft = clusters[0].x,
+  graphRight = cx - GAP,
+  width = graphRight + PAD,
+  rows = Math.max(...clusters.map((c) => c.per)),
+  graphBottom = GY + (rows - 1) * ROW + H + 16,
+  LEGEND_Y = graphBottom + 26,
+  height = LEGEND_Y + 106;
+
+type Pos = { x: number; y: number; lane: number; lanes: number };
+const pos = new Map<string, Pos>();
+clusters.forEach((c) =>
+  c.boxes.forEach((b, i) => {
+    const lane = Math.floor(i / c.per),
+      row = i % c.per;
+    pos.set(b.id, { x: c.x + lane * (W + LANE), y: GY + row * ROW, lane, lanes: c.lanes });
+  }),
+);
+const at = (id: string): Pos => {
+  const p = pos.get(id);
+  if (!p) throw new Error(`SystemModel: no object ${id}`);
+  return p;
+};
+const clusterOf = (title: string) => {
+  const c = clusters.find((x) => x.title === title);
+  if (!c) throw new Error(`SystemModel: no column ${title}`);
+  return c;
+};
+
+// Who writes a box: a person (gold), an agent (ink bar) or code (ground bar); read from the catalog's writer line.
+const writerKind = (b: Box): 'person' | 'agent' | 'code' =>
+  b.you ? 'person' : /agent|\.md\b/i.test(b.writer) ? 'agent' : 'code';
+const barColour = { person: kit.accent, agent: kit.ink, code: kit.ground };
+
+type P = { x: number; y: number };
+const bez = (p0: P, p1: P, p2: P, p3: P, t: number): P => {
+  const u = 1 - t;
+  return {
+    x: u * u * u * p0.x + 3 * u * u * t * p1.x + 3 * u * t * t * p2.x + t * t * t * p3.x,
+    y: u * u * u * p0.y + 3 * u * u * t * p1.y + 3 * u * t * t * p2.y + t * t * t * p3.y,
+  };
+};
+const cubic = (p0: P, p1: P, p2: P, p3: P) => ({
+  d: `M${p0.x} ${p0.y} C${p1.x} ${p1.y} ${p2.x} ${p2.y} ${p3.x} ${p3.y}`,
+  m: bez(p0, p1, p2, p3, 0.5),
+});
+/** A path from box a to box b and the point its label sits at: a horizontal S between lanes or clusters, a short
+ *  vertical between neighbours in a lane, a loop out of the lane's left side otherwise, and, when a forward edge would
+ *  cross another lane's boxes, a run over the top of the clusters. */
+function connect(a: Pos, b: Pos, over = GY - 14) {
+  const ay = a.y + H / 2,
+    by = b.y + H / 2;
+  if (b.x >= a.x + W) {
+    if (a.lane < a.lanes - 1 || b.lane > 0) {
+      const x1 = a.x + W / 2,
+        x2 = b.x + W / 2;
+      return { d: `M${x1} ${a.y} V${over} H${x2} V${b.y - 2}`, m: { x: (x1 + x2) / 2, y: over } };
+    }
+    const mx = (a.x + W + b.x) / 2;
+    return cubic({ x: a.x + W, y: ay }, { x: mx, y: ay }, { x: mx, y: by }, { x: b.x - 2, y: by });
+  }
+  if (b.x + W <= a.x) {
+    const mx = (a.x + b.x + W) / 2;
+    return cubic({ x: a.x, y: ay }, { x: mx, y: ay }, { x: mx, y: by }, { x: b.x + W + 2, y: by });
+  }
+  if (Math.abs(b.y - a.y) <= ROW + 1) {
+    const down = b.y > a.y,
+      x = a.x + W / 2 + (down ? -28 : 28),
+      y1 = down ? a.y + H : a.y,
+      y2 = down ? b.y - 2 : b.y + H + 2;
+    return { d: `M${x} ${y1} V${y2}`, m: { x: x + 4, y: (y1 + y2) / 2 } };
+  }
+  return cubic({ x: a.x, y: ay }, { x: a.x - 56, y: ay }, { x: b.x - 56, y: by }, { x: b.x - 2, y: by });
+}
+const authority = (label: string) => /sha|bound|go-live/.test(label);
+const paths = edges.map((e) => ({ ...e, ...connect(at(e.from), at(e.to)), authority: authority(e.label) }));
+
+// External services: a pill each, attached to the object it reads or writes; its readiness dots from the table.
+const EXT_H = 28,
+  EXT_ROW = Math.min(36, Math.floor((graphBottom - GY) / externals.length));
+const ext = externals.map((e, i) => {
+  const y = GY + i * EXT_ROW,
+    rowsOf = ready.filter((r) => e.readiness.includes(r.key)),
+    state = rowsOf.length
+      ? {
+          implemented: rowsOf.some((r) => r.implemented),
+          verified: rowsOf.some((r) => r.verified),
+          enabled: rowsOf.some((r) => r.enabled),
+        }
+      : null,
+    links = e.attachesTo.map((id) => {
+      const t = at(id),
+        p0 = { x: PAD + EXT_W, y: y + EXT_H / 2 },
+        p3 = { x: t.x - 2, y: t.y + H / 2 },
+        mx = (p0.x + p3.x) / 2;
+      return cubic(p0, { x: mx, y: p0.y }, { x: mx, y: p3.y }, p3).d;
+    });
+  return { ...e, y, state, links };
+});
+
+// A person's acts: a gold diamond on the edge the decision sits on, or at the object it is written into.
+const gates = acts.map((a) => {
+  if (a.gates) {
+    const p = paths.find((e) => e.from === a.gates!.from && e.to === a.gates!.to);
+    if (!p) throw new Error(`SystemModel: no edge ${a.gates.from} -> ${a.gates.to} for "${a.act}"`);
+    return { short: a.short!, x: p.m.x, y: p.m.y, onEdge: true };
+  }
+  const t = at(a.at!);
+  return { short: a.short!, x: t.x + 10, y: t.y, onEdge: false };
+});
+
+// The loop: seven circles over the graph, each tied to the columns it writes.
+const span = (graphRight - graphLeft) / loop.length;
+const steps = loop.map((s, i) => ({
+  ...s,
+  cx: graphLeft + span * (i + 0.5),
+  ticks: s.columns.map((t) => {
+    const c = clusterOf(t);
+    return c.x + c.width / 2;
+  }),
+}));
+const wrap = (s: string, n: number): string[] => {
+  const out: string[] = [];
+  let line = '';
+  for (const w of s.split(' ')) {
+    if ((line + ' ' + w).trim().length > n && line) {
+      out.push(line);
+      line = w;
+    } else line = (line + ' ' + w).trim();
+  }
+  if (line) out.push(line);
+  return out;
+};
+
+// The module band: chips sized to their names.
+const chip = (name: string) => Math.max(60, Math.round(name.length * 7.2 + 24));
+let mx = 0;
+const chips = caps.map((m) => {
+  const w = chip(m.name),
+    x = mx;
+  mx += w + 8;
+  return { name: m.name, w, x };
+});
+const capsW = mx - 8,
+  coreW = core.reduce((s, m) => s + chip(m.name) + 8, 0) - 8,
+  coreX = graphLeft,
+  coreBoxW = Math.max(coreW + 32, 340),
+  capsX = graphRight - capsW - 32;
+const fh = 'font-family: var(--font-heading)',
+  fs = 'font-family: var(--font-sans)',
+  fm = 'font-family: var(--font-mono)';
+const boxes = cols.flatMap((c) => c.boxes);
+---
+
+<p class="mt-1 max-w-prose text-sm text-muted-foreground">
+  One page: the modules that do the work, the editorial loop and the artifact columns each step writes, every object the
+  repo keeps and how it points at the next (the same catalog as the Objects tab), each external service attached to the
+  object it touches with its readiness (implemented, verified, enabled), and a person's decisions on the edges they
+  gate. Drawn from <code>docs/system-model/*.json</code> and <code>src/admin/objects.ts</code>; nothing is placed by
+  hand.
+</p>
+<div class="mt-4 overflow-x-auto rounded-lg border">
+  <svg
+    class="w-full min-w-[120rem]"
+    viewBox={`0 0 ${width} ${height}`}
+    role="img"
+    aria-labelledby="model-title"
+    aria-describedby="model-desc"
+    style={`background: ${kit.paper}; color: ${kit.ink}`}
+  >
+    <title id="model-title">{site.name}: production system model</title>
+    <desc id="model-desc">
+      The module band, the seven-step loop (discover, research, stories, produce, approve, publish, maintain), the eight
+      artifact columns and every object with its relations, the external services attached to the objects they touch,
+      and the person's decisions on the edges they gate.
+    </desc>
+    <defs>
+      <marker id="m-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+        <path d="M0 0 L10 5 L0 10 z" fill={kit.ink}></path>
+      </marker>
+      <marker id="m-gold" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+        <path d="M0 0 L10 5 L0 10 z" fill={kit.accent}></path>
+      </marker>
+      <marker id="m-ext" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M0 0 L10 5 L0 10 z" fill={kit.ground}></path>
+      </marker>
+    </defs>
+
+    <!-- title band -->
+    <rect x="0" y="0" width={width} height={TITLE_H} fill={kit.ground}></rect>
+    <line x1={PAD} y1="46" x2={width / 2 - 330} y2="46" stroke={kit.accent} stroke-width="1.5"></line>
+    <line x1={width / 2 + 330} y1="46" x2={width - PAD} y2="46" stroke={kit.accent} stroke-width="1.5"></line>
+    <text
+      x={width / 2}
+      y="54"
+      text-anchor="middle"
+      fill={kit.accent}
+      style={`${fh}; font-size: 38px; font-weight: 700; letter-spacing: 0.08em`}>{site.name.toUpperCase()}</text
+    >
+    <text
+      x={width / 2}
+      y="78"
+      text-anchor="middle"
+      fill={kit.paper}
+      style={`${fh}; font-size: 19px; font-style: italic`}>Production System Model</text
+    >
+    <text x={width / 2} y="95" text-anchor="middle" fill={kit.paper} opacity="0.8" style={`${fs}; font-size: 12px`}
+      >{site.disclosure}</text
+    >
+
+    <!-- module band -->
+    <g style={`${fs}; font-size: 12px`}>
+      <rect
+        x={coreX}
+        y={MOD_Y}
+        width={coreBoxW}
+        height={MOD_H}
+        rx="8"
+        fill={kit.ground}
+        fill-opacity="0.06"
+        stroke={kit.accent}
+        stroke-width="1.2"></rect>
+      <text
+        x={coreX + 16}
+        y={MOD_Y + 20}
+        fill={kit.ground}
+        style="font-weight: 700; letter-spacing: 0.12em; font-size: 11px">ORCHESTRATION</text
+      >
+      {
+        (() => {
+          let x = coreX + 16;
+          return core.map((m) => {
+            const w = chip(m.name),
+              cxp = x;
+            x += w + 8;
+            return (
+              <g>
+                <rect x={cxp} y={MOD_Y + 30} width={w} height="26" rx="6" fill={kit.ground} />
+                <text x={cxp + w / 2} y={MOD_Y + 47} text-anchor="middle" fill={kit.paper} style="font-weight: 600">
+                  {m.name}
+                </text>
+              </g>
+            );
+          });
+        })()
+      }
+      <text x={coreX + 16} y={MOD_Y + 76} fill={kit.ink} style="font-size: 10.5px; font-style: italic"
+        >coordinates only: derives state, dispatches the next step</text
+      >
+      <rect
+        x={capsX}
+        y={MOD_Y}
+        width={capsW + 32}
+        height={MOD_H}
+        rx="8"
+        fill={kit.ground}
+        fill-opacity="0.06"
+        stroke={kit.accent}
+        stroke-width="1.2"></rect>
+      <text
+        x={capsX + 16}
+        y={MOD_Y + 20}
+        fill={kit.ground}
+        style="font-weight: 700; letter-spacing: 0.12em; font-size: 11px">CAPABILITY MODULES ({caps.length})</text
+      >
+      {
+        chips.map((c) => (
+          <g>
+            <rect x={capsX + 16 + c.x} y={MOD_Y + 30} width={c.w} height="26" rx="6" fill={kit.ground} />
+            <text
+              x={capsX + 16 + c.x + c.w / 2}
+              y={MOD_Y + 47}
+              text-anchor="middle"
+              fill={kit.paper}
+              style="font-weight: 600"
+            >
+              {c.name}
+            </text>
+          </g>
+        ))
+      }
+      <text x={capsX + 16} y={MOD_Y + 76} fill={kit.ink} style="font-size: 10.5px; font-style: italic"
+        >orchestration reads each through its index.ts and read API, and writes only through its CLI as a child process;
+        no module imports another's code (tests/boundaries.test.ts)</text
+      >
+      <path
+        d={`M${coreX + coreBoxW} ${MOD_Y + MOD_H / 2} H${capsX - 2}`}
+        fill="none"
+        stroke={kit.accent}
+        stroke-width="1.5"
+        stroke-dasharray="6 5"
+        marker-end="url(#m-gold)"></path>
+      <text
+        x={(coreX + coreBoxW + capsX) / 2}
+        y={MOD_Y + MOD_H / 2 - 6}
+        text-anchor="middle"
+        fill={kit.ink}
+        style="font-size: 10.5px; font-style: italic">index.ts to read, cli.ts to write</text
+      >
+    </g>
+
+    <!-- the loop -->
+    <g>
+      <rect
+        x={graphLeft - 10}
+        y={CY - R - 12}
+        width={graphRight - graphLeft + 20}
+        height={2 * R + 24}
+        rx={R + 12}
+        fill="none"
+        stroke={kit.accent}
+        stroke-width="8"
+        stroke-opacity="0.28"></rect>
+      <path
+        d={`M${steps[steps.length - 1].cx} ${CY - R - 12} A${R + 12} ${R + 12} 0 0 0 ${steps[steps.length - 1].cx} ${CY + R + 12} H${steps[0].cx} A${R + 12} ${R + 12} 0 0 1 ${steps[0].cx} ${CY - R - 12}`}
+        fill="none"
+        stroke={kit.accent}
+        stroke-width="2"
+        stroke-opacity="0.9"
+        stroke-dasharray="2 6"></path>
+      <text
+        x={(graphLeft + graphRight) / 2}
+        y={CY + R + 26}
+        text-anchor="middle"
+        fill={kit.accent}
+        style={`${fs}; font-size: 10px; font-weight: 700; letter-spacing: 0.16em`}
+        >MAINTAIN RETURNS THE LOOP TO DISCOVER</text
+      >
+      {
+        steps.map((s, i) => (
+          <g>
+            {i < steps.length - 1 && (
+              <line
+                x1={s.cx + R + 2}
+                y1={CY}
+                x2={steps[i + 1].cx - R - 3}
+                y2={CY}
+                stroke={kit.accent}
+                stroke-width="2.5"
+                marker-end="url(#m-gold)"
+              />
+            )}
+            {s.ticks.map((tx) => (
+              <line
+                x1={s.cx}
+                y1={CY + R}
+                x2={tx}
+                y2={BB_Y - 2}
+                stroke={kit.accent}
+                stroke-width="1"
+                stroke-opacity="0.7"
+              />
+            ))}
+            <circle cx={s.cx} cy={CY} r={R} fill={kit.paper} stroke={kit.accent} stroke-width="3" />
+            <circle
+              cx={s.cx}
+              cy={CY}
+              r={R - 6}
+              fill={kit.ground}
+              fill-opacity="0.06"
+              stroke={kit.ground}
+              stroke-width="1"
+            />
+            <text
+              x={s.cx}
+              y={CY + 5}
+              text-anchor="middle"
+              fill={kit.ground}
+              style={`${fh}; font-size: 15px; font-weight: 700`}
+            >
+              {s.step}
+            </text>
+            {wrap(s.summary, 34).map((line, j) => (
+              <text x={s.cx} y={SUM_Y + j * 12} text-anchor="middle" fill={kit.ink} style={`${fs}; font-size: 10.5px`}>
+                {line}
+              </text>
+            ))}
+            <text
+              x={s.cx}
+              y={SUM_Y + 40}
+              text-anchor="middle"
+              fill={kit.ground}
+              style={`${fm}; font-size: 9.5px; letter-spacing: 0.02em`}
+            >
+              {s.modules.join(' · ')}
+            </text>
+          </g>
+        ))
+      }
+    </g>
+
+    <!-- the backbone: the column headers, over their clusters -->
+    <text
+      x={graphLeft}
+      y={BB_Y - 10}
+      fill={kit.ground}
+      style={`${fs}; font-size: 11px; font-weight: 700; letter-spacing: 0.16em`}
+      >ARTIFACT BACKBONE: STATE IS FILES, DERIVED AT READ</text
+    >
+    <text x={graphRight} y={BB_Y - 10} text-anchor="end" fill={kit.ink} style={`${fs}; font-size: 10.5px`}
+      >{cols.length} columns · {boxes.length} objects · {edges.length} relations · {externals.length} external services ·
+      {gates.length}
+      decisions of a person</text
+    >
+    {
+      clusters.map((c) => (
+        <g>
+          <path
+            d={`M${c.x} ${BB_Y} H${c.x + c.width - 12} l12 ${BB_H / 2} l-12 ${BB_H / 2} H${c.x} l12 -${BB_H / 2} z`}
+            fill={kit.ground}
+          />
+          <text
+            x={c.x + c.width / 2}
+            y={BB_Y + 19}
+            text-anchor="middle"
+            fill={kit.paper}
+            style={`${fs}; font-size: 12px; font-weight: 700; letter-spacing: 0.06em`}
+          >
+            {c.title.toUpperCase()}
+          </text>
+          <rect
+            x={c.x - 8}
+            y={GY - 22}
+            width={c.width + 16}
+            height={graphBottom - GY + 22}
+            rx="8"
+            fill={kit.ground}
+            fill-opacity="0.045"
+            stroke={kit.ground}
+            stroke-opacity="0.18"
+          />
+          <text x={c.x} y={GY - 8} fill={kit.ink} style={`${fm}; font-size: 9px`}>
+            {c.dir}
+          </text>
+        </g>
+      ))
+    }
+
+    <!-- external services -->
+    <g style={`${fs}; font-size: 11px`}>
+      <text x={PAD} y={GY - 8} fill={kit.ground} style="font-weight: 700; letter-spacing: 0.14em; font-size: 11px"
+        >EXTERNAL SERVICES</text
+      >
+      <text x={PAD} y={BB_Y + 19} fill={kit.ink} style="font-size: 10px; font-style: italic"
+        >each attached to the object it touches</text
+      >
+      <g fill="none" stroke={kit.ground} stroke-opacity="0.5" stroke-width="1.1" stroke-dasharray="5 4">
+        {ext.flatMap((e) => e.links.map((d) => <path d={d} marker-end="url(#m-ext)" />))}
+      </g>
+      {
+        ext.map((e) => (
+          <g>
+            <rect
+              x={PAD}
+              y={e.y}
+              width={EXT_W}
+              height={EXT_H}
+              rx={EXT_H / 2}
+              fill={kit.paper}
+              stroke={kit.ground}
+              stroke-width="1.2"
+            />
+            <text x={PAD + 12} y={e.y + 18} fill={kit.ground} style="font-weight: 600">
+              {e.name.replace(/ \(.*$/, '').slice(0, 26)}
+            </text>
+            {e.state &&
+              (['implemented', 'verified', 'enabled'] as const).map((k, i) => (
+                <circle
+                  cx={PAD + EXT_W - 36 + i * 11}
+                  cy={e.y + EXT_H / 2}
+                  r="3.6"
+                  fill={e.state![k] ? kit.accent : kit.paper}
+                  stroke={kit.accent}
+                  stroke-width="1.2"
+                >
+                  <title>
+                    {k}: {e.state![k] ? 'yes' : 'no'}
+                  </title>
+                </circle>
+              ))}
+          </g>
+        ))
+      }
+    </g>
+
+    <!-- relations -->
+    <g fill="none">
+      {
+        paths.map((p) => (
+          <path
+            d={p.d}
+            stroke={p.authority ? kit.accent : kit.ink}
+            stroke-width={p.authority ? 2.4 : 1.2}
+            stroke-linejoin="round"
+            marker-end={p.authority ? 'url(#m-gold)' : 'url(#m-ink)'}
+          />
+        ))
+      }
+    </g>
+
+    <!-- objects -->
+    {
+      boxes.map((b) => {
+        const p = at(b.id),
+          k = writerKind(b);
+        return (
+          <g>
+            <rect
+              x={p.x}
+              y={p.y}
+              width={W}
+              height={H}
+              rx="6"
+              fill={kit.paper}
+              stroke={k === 'person' ? kit.accent : kit.ground}
+              stroke-width={k === 'person' ? 2 : 1.2}
+            />
+            <rect x={p.x} y={p.y + 6} width="4" height={H - 12} fill={barColour[k]} />
+            <text x={p.x + 12} y={p.y + 18} fill={kit.ground} style={`${fs}; font-size: 12px; font-weight: 700`}>
+              {b.t}
+            </text>
+            <text x={p.x + 12} y={p.y + 32} fill={kit.ink} style={`${fs}; font-size: 9px`}>
+              {b.d[0]}
+            </text>
+            <text x={p.x + 12} y={p.y + 44} fill={kit.ink} style={`${fs}; font-size: 9px`}>
+              {b.d[1]}
+            </text>
+          </g>
+        );
+      })
+    }
+
+    <!-- edge labels and the person's decisions -->
+    <g
+      style={`${fs}; font-size: 10px; font-style: italic; paint-order: stroke; stroke: ${kit.paper}; stroke-width: 3px`}
+    >
+      {
+        paths.map((p) => (
+          <text
+            x={p.m.x}
+            y={p.m.y - 5}
+            text-anchor="middle"
+            fill={p.authority ? kit.accent : kit.ink}
+            style={p.authority ? 'font-weight: 700; font-style: normal' : ''}
+          >
+            {p.label}
+          </text>
+        ))
+      }
+    </g>
+    <g style={`${fs}; font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em`}>
+      {
+        gates.map((g) => (
+          <g>
+            <rect
+              x={g.x - 8}
+              y={g.y - 8}
+              width="16"
+              height="16"
+              transform={`rotate(45 ${g.x} ${g.y})`}
+              fill={kit.accent}
+              stroke={kit.paper}
+              stroke-width="1.5"
+            />
+            <text
+              x={g.onEdge ? g.x : g.x - 10}
+              y={g.y + (g.onEdge ? 22 : -11)}
+              text-anchor={g.onEdge ? 'middle' : 'start'}
+              fill={kit.accent}
+              style={`paint-order: stroke; stroke: ${kit.paper}; stroke-width: 3px`}
+            >
+              PERSON: {g.short}
+            </text>
+          </g>
+        ))
+      }
+    </g>
+
+    <!-- legend -->
+    <g style={`${fs}; font-size: 11px`} transform={`translate(0 ${LEGEND_Y})`}>
+      <rect x="0" y="0" width={width} height={height - LEGEND_Y} fill={kit.ground}></rect>
+      <text x={PAD} y="22" fill={kit.accent} style={`${fh}; font-size: 14px; font-weight: 700; letter-spacing: 0.1em`}
+        >WHO WRITES WHAT</text
+      >
+      {
+        (
+          [
+            ['person', 'a person, by hand or by a decision verb that refuses an automated actor'],
+            ['agent', 'an agent (claude -p) under a role grant; a validator checks the file'],
+            ['code', 'a CLI verb (code), derived and never hand-edited'],
+          ] as const
+        ).map(([k, d], i) => (
+          <g transform={`translate(${PAD} ${34 + i * 17})`}>
+            <rect x="0" y="0" width="14" height="11" rx="2" fill={kit.paper} />
+            <rect x="0" y="1" width="3" height="9" fill={barColour[k]} />
+            <text x="22" y="10" fill={kit.paper}>
+              {d}
+            </text>
+          </g>
+        ))
+      }
+      <text
+        x={width * 0.42}
+        y="22"
+        fill={kit.accent}
+        style={`${fh}; font-size: 14px; font-weight: 700; letter-spacing: 0.1em`}>CONNECTIONS</text
+      >
+      {
+        (
+          [
+            [kit.paper, 1.2, '', 'from, label, to: one object points at the next'],
+            [kit.accent, 2.4, '', 'a binding by sha: the approval names the exact build and manifest'],
+            [kit.paper, 1.1, '5 4', 'an external service and the object it reads or writes'],
+            [kit.accent, 1, '', 'a loop step and the artifact columns it writes'],
+          ] as const
+        ).map(([c, w, dash, d], i) => (
+          <g transform={`translate(${width * 0.42} ${30 + i * 15})`}>
+            <line x1="0" y1="5" x2="34" y2="5" stroke={c} stroke-width={w} stroke-dasharray={dash || undefined} />
+            <text x="44" y="9" fill={kit.paper}>
+              {d}
+            </text>
+          </g>
+        ))
+      }
+      <text
+        x={width * 0.76}
+        y="22"
+        fill={kit.accent}
+        style={`${fh}; font-size: 14px; font-weight: 700; letter-spacing: 0.1em`}>READINESS</text
+      >
+      {
+        (
+          [
+            ['implemented', 'the code exists and its tests pass'],
+            ['verified', 'a person exercised it against the real service (readiness.json)'],
+            ['enabled', 'turned on in automation.json; every flag is off by default'],
+          ] as const
+        ).map(([k, d], i) => (
+          <g transform={`translate(${width * 0.76} ${34 + i * 17})`}>
+            <circle cx="6" cy="5" r="3.6" fill={kit.accent} stroke={kit.accent} />
+            <text x="22" y="10" fill={kit.paper}>
+              <tspan font-weight="700">{k}</tspan>: {d}
+            </text>
+          </g>
+        ))
+      }
+      <text x={PAD} y={height - LEGEND_Y - 8} fill={kit.paper} opacity="0.7" style={`${fm}; font-size: 9.5px`}
+        >docs/system-model/*.json · src/admin/objects.ts · brand/cor/kit.json · a diamond is a decision only a person
+        makes</text
+      >
+    </g>
+  </svg>
+</div>

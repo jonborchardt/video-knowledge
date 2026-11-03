@@ -7,6 +7,7 @@ import Proposals from './Proposals.astro';
 import Board from './Board.astro';
 import Base from '../layouts/Base.astro';
 import ObjectsDiagram from './ObjectsDiagram.astro';
+import SystemModel from './SystemModel.astro';
 import PathDiagram from './PathDiagram.astro';
 import { serviceGroups } from './services';
 import SiteMapDiagram from './SiteMapDiagram.astro';
@@ -302,6 +303,7 @@ const tabs = [
   { id: 'services', label: 'External services' },
   { id: 'path', label: 'Your path' },
   { id: 'flow', label: 'Every step' },
+  { id: 'model', label: 'System model' },
   { id: 'objects', label: 'Objects' },
   { id: 'sitemap', label: 'Site map' },
 ];
@@ -496,6 +498,11 @@ const fig = { width: 780, height: yOf(flow.length) };
         <text x={LOOP + 6} y={yOf(to) + H / 2 - 6}>send back with notes</text>
       </g>
     </svg>
+  </section>
+
+  <section id="model" class="mt-6" aria-labelledby="model-h">
+    <h2 id="model-h" class="text-title font-semibold">The system on one page</h2>
+    <SystemModel />
   </section>
 
   <section id="objects" class="mt-6" aria-labelledby="objects-h">

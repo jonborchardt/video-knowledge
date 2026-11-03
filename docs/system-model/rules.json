@@ -1,0 +1,87 @@
+{
+  "about": "The invariants worth drawing: each is a rule the code enforces (a validator, a refusal, a test), grouped by what it protects. These are the labels on the arrows and the locks on the boxes.",
+  "generatedOn": "2026-11-02",
+  "authority": "CLAUDE.md Rules; each rule names where it is enforced",
+  "groups": [
+    {
+      "id": "authority",
+      "title": "A person's authority is code, not policy",
+      "rules": [
+        { "rule": "Release approval, scheduling, go-live, paid links, topic approval, unpublishing, retraction, article correction and music clearance are a person's acts; the verbs refuse an automated: actor.", "where": "publish approve|go-live|decide, topics approve|reject, article correct, links cta approve" },
+        { "rule": "Only draft review is configurable (review.draft: person | shadow | agent); an agent may accept or send back a draft, never a release.", "where": "automation.json, release.ts" },
+        { "rule": "Every automated step is a CLI verb a person can run by hand; the manual workflow stays documented and rehearsed.", "where": "docs/COMMANDS.md, npm run rehearse" },
+        { "rule": "Every automation flag is off by default; a person verifies an integration against the real service (readiness.json) before enabling it; a passing suite never writes a verification and a verification never changes a flag.", "where": "automation.ts DEFAULTS, run -- verified" },
+        { "rule": "Scheduled tasks, power settings and the mailbox are the person's acts, never a run's.", "where": "schedule --print prints, never creates" }
+      ]
+    },
+    {
+      "id": "agents",
+      "title": "Agents write artifacts, never machinery",
+      "rules": [
+        { "rule": "An agent writes only the files its role grants (scripts, reviews, batches, proposals, components where the graphics brief says); never code outside those paths, configuration, settings or package.json; never a publish, post, push or secret.", "where": "roles.ts grantFor, DENIED_BASE, the tree guard" },
+        { "rule": "A writer and its reviewer are different agents; approvals are by sentence fingerprint, so a changed sentence is re-reviewed.", "where": "script-review.json, article-review.json, proposals/*.review.json deny" },
+        { "rule": "Every agent artifact is checked by a deterministic validator that fails closed; findings go back to the agent for a bounded number of rounds.", "where": "script -- validate, topics -- validate, evidence -- check-batch, runs.validationRounds" },
+        { "rule": "A writer pass has three revisions to clear its blocking findings; past that, revision-limit stops /produce and only a person's generation.corrective entry goes on.", "where": "production.ts validationHaltKind" },
+        { "rule": "Containment is protection, not isolation: unauthorised writes are detected and reverted and secrets stay out of agent processes, but agent-written code runs with the user's privileges, so unattended automation stays off until a person turns it on.", "where": "guard.ts, envFor" }
+      ]
+    },
+    {
+      "id": "evidence",
+      "title": "Evidence belongs to the claim",
+      "rules": [
+        { "rule": "A verdict on a claim counts for every source that makes it; adding a source never needs re-judging old claims.", "where": "the store: topics.json claims, videos/*.json sources" },
+        { "rule": "An AI guess counts for at most 0.5 confidence; a study verdict overrides it only when at least as confident; an AI guess never counts as verification; contextual evidence never decides.", "where": "evidence-gate.ts" },
+        { "rule": "Canonical claim text is one line, mechanism-level, no numbers that belong to one source; no personal data (the store is public).", "where": "extract.md, merge.md" },
+        { "rule": "Never hand-edit the store; only npm run record, record-sources, merge-claims and the watcher write it; passages enter the corpus only through record-sources.", "where": "topics/<topic>/store/, batches.ts" },
+        { "rule": "A factual sentence needs an assertion per claim it makes; figures, quotations and calculations trace to a cited passage; a script says each thing once.", "where": "sentence-validation.ts, release-check.ts" },
+        { "rule": "record-sources refuses a new verdict on a claim and document a script cites unless --replace-cited, which /produce never passes.", "where": "record-sources.mjs" },
+        { "rule": "The fiction never touches the evidence: the disclosure appears once per surface; no in-world mark may claim more than the verdicts do.", "where": "site.disclosure, brand" }
+      ]
+    },
+    {
+      "id": "state",
+      "title": "State is files in the repo, derived at read",
+      "rules": [
+        { "rule": "No database, queue, event bus, distributed orchestrator, stored workflow state machine, generic agent framework or generic publishing framework.", "where": "architecture principles" },
+        { "rule": "stories.json, shorts.json, validation.json, article.md, timeline, mix.json, review/ are derived: never hand-edited, byte-identical on a rerun; judgment lives only in *-review.json keyed by stable ids.", "where": "stories/cli.ts, shorts.ts, storyboard.ts" },
+        { "rule": "A decision carries who, when and the sha of what it binds: an approval binds the build (mp4 sha) and the composed title; a request binds releaseSha; a changed title or manifest asks again.", "where": "publish.json events, release-manifest.json" },
+        { "rule": "publish.json is the one append-only record of what publishing adds; its events are written only by npm run publish; a live video is never replaced.", "where": "publishing/ledger" },
+        { "rule": "public-record.json is written only by npm run report and article -- correct; every revision needs a note; a public URL never disappears (public-urls.json, moved.json).", "where": "public-record.ts, links -- freeze, the build test" },
+        { "rule": "Operational files (run/, .automation/) are gitignored and decide no stage; production.json holds queued and parked only.", "where": "orchestration README" }
+      ]
+    },
+    {
+      "id": "boundaries",
+      "title": "Module boundaries are a compiler-backed test",
+      "rules": [
+        { "rule": "A capability is a module (index.ts, cli.ts, briefs/, tests/, README.md); a new capability is a new module, never a folder inside another or a home in src/shared/.", "where": "src/modules/README.md" },
+        { "rule": "A capability never imports another's code, only src/shared/ and src/config/, and reads another's files through shared io; cross-module imports are only index.ts names listed in readApi; the read-API graph is acyclic; the exception list is empty and only shrinks.", "where": "tests/boundaries.test.ts, boundaries.json" },
+        { "rule": "Orchestration owns coordination only (derived state, routing, scheduling, execution, retries, budgets, notifications); it never judges content and never writes a module's artifact except through that module's CLI as a child process.", "where": "production.ts, steps.ts" },
+        { "rule": "A module exposes validate(...) and inspect(topic, story) -> missing | invalid | stale | ready with no workflow vocabulary; only the board maps an inspection to a halt kind and a next command. Publishing's OutputStep is the one named-verb exception.", "where": "src/shared/inspect.ts" },
+        { "rule": "Topic discovery is separate from evidence; publishing (YouTube) from social (X); article (editorial text) from website (rendering); institution, topic and story stay distinct.", "where": "responsibility boundaries 1 to 3" },
+        { "rule": "Find the repo root through ROOT in src/shared/io.ts, never process.cwd(); TOPICS and any join(..., 'topics', ...) live only in io.ts.", "where": "layoutOwner" }
+      ]
+    },
+    {
+      "id": "secrets",
+      "title": "Secrets stay outside git and outside agents",
+      "rules": [
+        { "rule": "Secrets live in the gitignored .env and .secrets/, never in the repo, a journal, an attempt record or an event.", "where": "docs/OPERATIONS.md section 2" },
+        { "rule": "The runner hands each child only its verb's secret family and strips every secret from an agent's environment; every role is denied Read(.env) and Read(.secrets/**).", "where": "envFor in steps.ts, DENIED_BASE" },
+        { "rule": "upload refuses before any byte unless the authenticated channel is the commission's; upload never sends anything but private; a lost upload session stops and asks.", "where": "publishing/upload" },
+        { "rule": "Request ids in approval mails are signed with APPROVAL_SECRET; a reply is applied once by thread and request id.", "where": "requests.ts, inbox.ts" }
+      ]
+    },
+    {
+      "id": "site",
+      "title": "The public site shows only what is live",
+      "rules": [
+        { "rule": "Only topics an institution claims and, in them, only stories with a live video are built; the dev server previews packaged stories; the fixture topic is never paged in production.", "where": "publicTopicNames, siteGraph, isFixtureTopic" },
+        { "rule": "Every link to a page is built from a content-graph node id, never a title; href() respects Astro's base.", "where": "urlOf, src/lib/url.ts" },
+        { "rule": "The site loads nothing from a third party; the admin pages exist only in dev; client JS is a short closed list.", "where": "tests/web-quality.json thirdParty, astro.config.mjs" },
+        { "rule": "A change to a public page ends with npm run quality (RESULT: PASSED); an exception names one rule, a narrow pattern and a reason; passing is never reported as WCAG conformance.", "where": "web-quality skill, tests/web-quality.test.ts" },
+        { "rule": "Every video draws from its institution's kit through theme (no literal colour, no ad hoc mark); a packaged build whose look is not the current one halts look-stale and is never approved.", "where": "theme.ts, lookFingerprint" }
+      ]
+    }
+  ]
+}

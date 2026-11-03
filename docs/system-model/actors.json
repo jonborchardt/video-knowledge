@@ -1,0 +1,299 @@
+{
+  "about": "Who acts: the person, the nine agent roles with exactly what each may write, the automation planes, and the test doubles. Authority is code: a person's acts are verbs that refuse an automated actor.",
+  "generatedOn": "2026-11-02",
+  "authority": "src/orchestration/run/roles.ts (grantFor, CONTENT_ROLES, DENIED_BASE), src/shared/automation.ts (AGENT_ROLES, DEFAULTS), CLAUDE.md",
+  "person": {
+    "name": "A person (the approver)",
+    "acts": [
+      {
+        "act": "approve or reject a topic proposal",
+        "how": "reply APPROVE <slug> / REJECT <slug>: <why> / APPROVE ALL to the batch mail, or npm run topics -- approve|reject",
+        "refusesAutomated": true,
+        "short": "topic approval",
+        "gates": {
+          "from": "batch",
+          "to": "proposal"
+        }
+      },
+      {
+        "act": "claim a topic for an institution and add a channel",
+        "how": "npm run topics -- claim; a new commission in src/config/site.ts by hand",
+        "refusesAutomated": true,
+        "short": "claims the topic",
+        "gates": {
+          "from": "proposal",
+          "to": "inst"
+        }
+      },
+      {
+        "act": "queue or park a story",
+        "how": "topics/<topic>/production.json (queued, parked with a note): the one hand-written planning input",
+        "refusesAutomated": true,
+        "short": "queue or park",
+        "at": "decision"
+      },
+      {
+        "act": "start a story",
+        "how": "/produce <topic> <story-id> with an Approver: line, or npm run run -- story; the production pick does it when enabled.production",
+        "refusesAutomated": false
+      },
+      {
+        "act": "accept the draft or send it back",
+        "how": "reply OK or CHANGES: to the draft mail, or the review page; by policy an agent may (review.draft: agent), never for a release",
+        "refusesAutomated": false
+      },
+      {
+        "act": "release approval",
+        "how": "reply OK / OK at <when> / CHANGES: / PAID OK to the release mail (publish decide), or the review page, or npm run publish -- approve",
+        "refusesAutomated": true,
+        "short": "release approval",
+        "gates": {
+          "from": "manifest",
+          "to": "approval"
+        }
+      },
+      {
+        "act": "schedule or go live",
+        "how": "publish decide --verdict schedule --at, or publish -- go-live | scheduled",
+        "refusesAutomated": true,
+        "short": "go-live or schedule",
+        "gates": {
+          "from": "approval",
+          "to": "yt"
+        }
+      },
+      {
+        "act": "approve a paid call to action",
+        "how": "PAID OK (n) in the reply or npm run links -- cta approve; needs a disclosure; never primary over a tool",
+        "refusesAutomated": true,
+        "short": "paid link",
+        "at": "cta"
+      },
+      {
+        "act": "release an article correction",
+        "how": "OK to the correction mail (article decide), or article -- correct --approved-by --note; reaffirm --note keeps a stale text",
+        "refusesAutomated": true,
+        "short": "article correction",
+        "gates": {
+          "from": "article",
+          "to": "areq"
+        }
+      },
+      {
+        "act": "unpublish or retract",
+        "how": "publish unpublished (Studio step recorded), a note in the description and publish -- push",
+        "refusesAutomated": true
+      },
+      {
+        "act": "verify an integration",
+        "how": "npm run run -- verified <integration> --by <name> --evidence <ref>; readiness.json",
+        "refusesAutomated": true,
+        "short": "verifies an integration",
+        "at": "readiness"
+      },
+      {
+        "act": "turn automation on",
+        "how": "automation.json enabled.* by hand, committed; create the scheduled tasks from schedule --print",
+        "refusesAutomated": true,
+        "short": "turns automation on",
+        "at": "policy"
+      },
+      {
+        "act": "clear music",
+        "how": "licence.cleared in music/<composition>/composition.json by hand",
+        "refusesAutomated": true,
+        "short": "clears music",
+        "at": "music"
+      },
+      {
+        "act": "record Studio steps",
+        "how": "publish -- updated --fields relatedVideo | endScreen | cards; uploaded --id when the API kept it private",
+        "refusesAutomated": true
+      }
+    ],
+    "gatesRule": "gates names the edge (objects.json) a person's decision sits on, at the object it is written into; short is the label the admin System model draws."
+  },
+  "agentRoles": [
+    {
+      "role": "writer",
+      "brief": "script.md, storyboard.md, article.md, cta.md, video (render.json, music.json)",
+      "writes": [
+        "scripts/<slug>/script.json",
+        "storyboard.json",
+        "article.json",
+        "cta.json",
+        "video/render.json",
+        "video/music.json"
+      ],
+      "shell": [],
+      "web": true,
+      "validator": "npm run script -- validate; article -- validate; links -- cta; video -- check",
+      "limit": "three revisions per pass to clear blocking findings; needsEvidence stops and asks"
+    },
+    {
+      "role": "reviewer",
+      "brief": "script-review.md, article-review.md, shorts.md, visual-review.md, stories.md (topic)",
+      "writes": [
+        "script-review.json",
+        "article-review.json",
+        "shorts-review.json",
+        "video/visual-review.json",
+        "video/draft-review.json",
+        "topics/<topic>/story-review.json"
+      ],
+      "shell": [],
+      "web": true,
+      "rule": "never the same agent as the writer; approvals are by sentence fingerprint"
+    },
+    {
+      "role": "graphics",
+      "brief": "graphics.md",
+      "writes": [
+        "the writer's files",
+        "src/modules/video/remotion/scenes/*.tsx (new files only)",
+        "src/modules/video/bespoke/<topic>-<slug>.ts",
+        "scenes/index.ts and bespoke/index.ts (additive only)"
+      ],
+      "shell": [
+        "npm run video -- frames",
+        "npm run video -- check"
+      ],
+      "web": false,
+      "rule": "the only role that writes code; the tree guard typechecks its components before any child loads them; every bespoke graphic needs a visual review"
+    },
+    {
+      "role": "extraction",
+      "brief": "extract.md, sources.md, merge.md",
+      "writes": [
+        "topics/<topic>/work/h*.json",
+        "sv_*.json",
+        "merges.json",
+        "distinct.json"
+      ],
+      "shell": [],
+      "web": true,
+      "validator": "evidence -- check-batch | check-merges; typed batches in batches.ts"
+    },
+    {
+      "role": "collect",
+      "brief": "collect.md, studies.md, new-sources.md",
+      "writes": [
+        "topics/<topic>/videos.txt",
+        "blogs.txt",
+        "sources/*.txt (through fetch-doc)",
+        "work/sv_*.json"
+      ],
+      "shell": [
+        "npm run evidence -- search",
+        "npm run evidence -- fetch-doc"
+      ],
+      "web": true,
+      "rule": "the only two verbs a collect agent may run"
+    },
+    {
+      "role": "discovery",
+      "brief": "discover.md",
+      "writes": [
+        "proposals/*.json (new files only)"
+      ],
+      "deny": [
+        "proposals/*.review.json"
+      ],
+      "shell": [],
+      "web": true,
+      "validator": "topics -- validate --fresh"
+    },
+    {
+      "role": "proposalReview",
+      "brief": "proposal-review.md",
+      "writes": [
+        "proposals/<slug>.review.json"
+      ],
+      "shell": [],
+      "web": true,
+      "validator": "topics -- validate <slug> --review"
+    },
+    {
+      "role": "draftReview",
+      "brief": "draft-review.md",
+      "writes": [
+        "video/draft-review.json"
+      ],
+      "shell": [],
+      "web": true,
+      "rule": "shadow: recorded, no effect; agent: may accept-draft or send back a draft build, never a release; two rounds then the person"
+    },
+    {
+      "role": "notes",
+      "brief": "revision-note.md",
+      "writes": [],
+      "shell": [],
+      "web": false,
+      "rule": "its reply becomes report -- note calls; it writes nothing"
+    }
+  ],
+  "everyRoleDenied": [
+    "Read(.env), Read(.env.*), Read(.secrets/**)",
+    "Edit(package.json), package-lock.json, automation.json, production.json",
+    "anything outside its writable list: the tree guard reverts it (unexpected-edit)"
+  ],
+  "agentFacts": {
+    "command": "claude -p, one call = one attempt record (models, tokens, cost, turns, api time, cap, overCap; never the prompt or reply)",
+    "models": "an alias per role in automation.json agents.models (default opus); tests and fixture runs use sonnet or haiku",
+    "budget": "perAgent cap asked of the CLI (it can overshoot), perRun, perTopic, perWeek checked before each agent; budget.json is the gate",
+    "validation": "every brief has a deterministic validator; findings go back to the same session for runs.validationRounds rounds"
+  },
+  "automation": {
+    "tick": {
+      "verb": "npm run run -- tick",
+      "what": "the control plane: preflight, outbox flush, inbox poll (decide, approve/reject, article decide), halt and digest mails, resume and stuck detection, the due step (schedules past time, Shorts in order, renewals), the launch probe and the X post; never runs a story",
+      "cadence": "every schedule.tickMinutes",
+      "flag": "enabled.tick"
+    },
+    "work": {
+      "verb": "npm run run -- work [--job]",
+      "what": "the work plane: one due long job then exit: a resume, the production pick, a topic run, a launch, a scan, the discovery job",
+      "flag": "enabled.work plus the job's own flag (production, research, discovery, maintenance)"
+    },
+    "pick": {
+      "verb": "npm run run -- pick",
+      "what": "starts a ready story with approver 'automated: production pick <date>, enabled by <approverName>'; skips partOf, parked, halted, unclaimed and fixture topics; cadence knobs: production.weekday, hour, storiesPerWeek, perInstitutionPerWeek, maxAwaitingApproval",
+      "flag": "enabled.production"
+    },
+    "storyRun": {
+      "verb": "npm run run -- story <topic> <story-id>",
+      "what": "the loop over boardNext: each step a module CLI child with only its verb's secrets, or a budgeted agent followed by its validator; journals, halts with a kind and an unblock, validates and commits"
+    },
+    "releaseLoop": {
+      "verb": "inside run -- story after packaged",
+      "what": "draft upload by policy, video final once accepted, the Shorts, every output uploaded private, pushed and verified, the release manifest, publish request --channel email; dispatches on publishing's OutputStep"
+    },
+    "topicRun": {
+      "verb": "npm run run -- topic <topic>",
+      "what": "the research pipeline over topicNext: collect, extract, merge, record, studies, judge, record-sources, report, notes, stories, review; parks thin topics",
+      "flag": "enabled.research"
+    },
+    "discovery": {
+      "verb": "npm run run -- discover",
+      "what": "weekly: one discover.md agent per institution, one proposal-review.md agent per proposal, topics -- batch, one mail",
+      "flag": "enabled.discovery"
+    },
+    "maintain": {
+      "verb": "npm run run -- maintain <topic>",
+      "what": "the scan (new-sources agent, record-sources, scanned, report, notes, stories, commit) then the article pass (reaffirm or correction request)",
+      "flag": "enabled.maintenance"
+    },
+    "launch": {
+      "verb": "npm run run -- launch <topic> <story-id>",
+      "what": "after go-live and verify: report -- seed, brand, build, links freeze, validate, commit, push; the tick probes the deploy and posts on X",
+      "flag": "enabled.work, launch.push"
+    },
+    "defaults": "every enabled.* flag is false; review.draft is person; nothing runs unattended until a person verifies and enables each integration"
+  },
+  "testDoubles": [
+    "YOUTUBE_FAKE (publishing)",
+    "X_FAKE (social)",
+    "FakeMail (src/shared/mail.ts)",
+    "the fixture topic test-fixture: the real pipeline on a 15 s story, private uploads, preview deploy only; never a test mode"
+  ]
+}

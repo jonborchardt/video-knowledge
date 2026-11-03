@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { ROOT } from '../src/shared/io';
 import { cols, edges, moduleCatalog } from '../src/admin/objects';
+import { INTEGRATIONS } from '../src/orchestration/run/readiness';
 
 const folders = readdirSync(join(ROOT, 'src', 'modules'), { withFileTypes: true })
   .filter((d) => d.isDirectory())
@@ -87,5 +88,55 @@ describe('the object boxes', () => {
     }
     // every module with objects is linked from them, and lists them back
     for (const m of catalog) for (const b of m.objects) expect(b.owner).toBe(m.name);
+  });
+});
+
+describe('the system model (docs/system-model, drawn by the admin System model tab)', () => {
+  const dir = join(ROOT, 'docs', 'system-model');
+  const read = (f: string) => JSON.parse(readFileSync(join(dir, f), 'utf8'));
+  const ids = new Set(boxes.map((b) => b.id));
+  it('every external service attaches to existing objects and names existing integrations', () => {
+    const keys = new Set(INTEGRATIONS.map((i) => i.key));
+    for (const s of read('externals.json').services as { id: string; attachesTo: string[]; readiness: string[] }[]) {
+      expect(s.attachesTo.length, s.id).toBeGreaterThan(0);
+      for (const id of s.attachesTo) expect(ids.has(id), `${s.id} -> ${id}`).toBe(true);
+      for (const k of s.readiness) expect(keys.has(k), `${s.id}: ${k}`).toBe(true);
+    }
+  });
+  it("every person's act gates an existing edge or object, and only acts that refuse automation are drawn", () => {
+    const acts = read('actors.json').person.acts as {
+      act: string;
+      short?: string;
+      refusesAutomated: boolean;
+      gates?: { from: string; to: string };
+      at?: string;
+    }[];
+    for (const a of acts.filter((x) => x.short)) {
+      expect(a.refusesAutomated, a.act).toBe(true);
+      if (a.gates)
+        expect(
+          edges.some((e) => e.from === a.gates!.from && e.to === a.gates!.to),
+          a.act,
+        ).toBe(true);
+      else expect(ids.has(a.at ?? ''), a.act).toBe(true);
+    }
+  });
+  it('every loop step names existing modules and columns, and the seven steps are in order', () => {
+    const names = new Set(catalog.map((m) => m.name));
+    const titles = new Set(cols.map((c) => c.title));
+    const loop = read('system.json').loop as { step: string; modules: string[]; columns: string[] }[];
+    expect(loop.map((s) => s.step)).toEqual([
+      'Discover',
+      'Research',
+      'Stories',
+      'Produce',
+      'Approve',
+      'Publish',
+      'Maintain',
+    ]);
+    for (const s of loop) {
+      for (const m of s.modules) expect(names.has(m), `${s.step}: ${m}`).toBe(true);
+      for (const c of s.columns) expect(titles.has(c), `${s.step}: ${c}`).toBe(true);
+    }
   });
 });

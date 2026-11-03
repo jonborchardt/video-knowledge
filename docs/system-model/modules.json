@@ -1,0 +1,806 @@
+{
+  "about": "The capabilities (one module each) as src/admin/objects.ts moduleCatalog() reads them from src/modules/README.md, each README and tests/boundaries.json. The dependency rules below are the boundary test (tests/boundaries.test.ts).",
+  "generatedFrom": [
+    "src/modules/README.md",
+    "tests/boundaries.json",
+    "src/modules/*/README.md"
+  ],
+  "generatedOn": "2026-11-02",
+  "rules": [
+    "A capability never imports another capability's code: only src/shared/ and src/config/.",
+    "It reads another capability's output files through shared io and shared types.",
+    "A capability may import another's index.ts only for names listed in its readApi (read-only, side-effect free); the read-API graph is acyclic.",
+    "The orchestrator (production.ts, board.ts) imports only a module's index.ts and never writes a module's artifact: a write is the owning module's CLI as a child process.",
+    "The website imports a module only through its index.ts and readApi, plus src/orchestration/index.ts.",
+    "src/shared/ imports no capability.",
+    "Browser-safe video files (remotion/, bespoke/, types, kinds, words, chart, cues, excerpt) import only other browser-safe entries, never node:*.",
+    "Every allowed exception is an exact edge in tests/boundaries.json with an until; the list is empty today and only shrinks."
+  ],
+  "dependencyKinds": {
+    "cli-child": "orchestration runs a module CLI as a child process (the only write path)",
+    "index": "an import of index.ts (orchestration, website)",
+    "readApi": "an import of named read-only exports",
+    "files": "a read of another module's output files through shared io",
+    "shared": "everything imports src/shared/ and src/config/"
+  },
+  "modules": [
+    {
+      "name": "shared",
+      "kind": "shared",
+      "responsibility": "src/shared/ (contracts, io, sentence validation, evidence gate, public record, look, build report, inspect), src/config/",
+      "paths": "src/shared/ (contracts, io, sentence validation, evidence gate, public record, look, build report, inspect), src/config/",
+      "cli": "",
+      "briefs": "",
+      "readApi": [],
+      "objects": [
+        {
+          "id": "inst",
+          "t": "Institution",
+          "d": [
+            "commissions in site.ts: a YouTube",
+            "channel and the topics it publishes"
+          ],
+          "you": true,
+          "owner": "shared",
+          "writer": "a person (topics claim adds the topic line)",
+          "valid": "only channels a person created; a topic is claimed by one commission; the fixture topic is fixtureTopics",
+          "file": "src/config/site.ts"
+        },
+        {
+          "id": "policy",
+          "t": "Automation policy",
+          "d": [
+            "automation.json: a closed key set, every",
+            "feature off by default; agent rules are code"
+          ],
+          "you": true,
+          "owner": "shared",
+          "writer": "a person",
+          "valid": "validated at build; agent permissions are never configuration (roles.ts); secrets stay in .env",
+          "file": "automation.json"
+        }
+      ],
+      "readme": "src/shared/"
+    },
+    {
+      "name": "orchestration",
+      "kind": "orchestration",
+      "responsibility": "Owns derived state: every topic's, story's and script's stage, computed from the committed artifacts alone (production.ts). Owns routing: for each story the stage, the next step (a command or a brief), the halt kind (HALT_KINDS) and the board column (COLUMNS, columnOf); publishing answers a structured next step (OutputStep: verb, actor, args, retryable); the board renders it (renderStep) and the runner dispatches on it. npm run board -- next <topic> <story-id> [--json] (board.ts) prints that answer; /produce (.claude/skills/produce/SKILL.md) is the executor of its steps. It reads each module through its index.ts (an inspect() where the module has one) and module files through src/shared/ io. The website reads it only through index.ts. It never writes a module's artifact, never judges content, and schedules nothing in Milestone 1. Milestone 2 adds the executor here (scheduling, execution of the board's steps as child processes and claude -p agents, retries, budgets, notifications, the approval mail adapter); those are coordination, and the two rules above still hold for them: a write is the owning module's CLI, and judgment is a brief handed to an agent. The runner (run/, npm run run -- story | status) is phase 0 of that: runner.ts is the loop over boardNext, steps.ts runs one step (a child with only its verb's secrets, or an agent followed by its validator), agent.ts and roles.ts spawn claude -p under per-role permission rules, guard.ts reverts writes outside a role's files and checks a graphics agent's components before a child loads them, journal.ts and lock.ts are its operational state under the story's gitignored run/, status.ts the read-only view the admin page may import through index.ts. It never publishes, posts, pushes or sends mail; it never imports a module file but its index.ts. Its only stored decision file is production.json (queued, parked); automation.json (Milestone 2) is policy, not state, and its operational files (run/, .automation/) are gitignored and decide no stage. The modules and their rules: src/modules/README.md.",
+      "paths": "src/orchestration/",
+      "cli": "src/orchestration/board.ts",
+      "briefs": ".claude/skills/produce/SKILL.md",
+      "readApi": [],
+      "objects": [
+        {
+          "id": "disc",
+          "t": "Discovery record",
+          "d": [
+            ".automation/discovery/<slot>.json: the agents,",
+            "their usage and cost, the batch, the mail"
+          ],
+          "owner": "orchestration",
+          "writer": "the discovery job (npm run run -- discover)",
+          "valid": "one record per weekly slot, written before any agent runs; a crash never doubles the batch or its mail",
+          "file": ".automation/discovery/<slot>.json"
+        },
+        {
+          "id": "markers",
+          "t": "Research run markers",
+          "d": [
+            "work/run/: recorded batches, extracted",
+            "groups, fetched lists, study and review rounds"
+          ],
+          "owner": "orchestration",
+          "writer": "the topic runner (npm run run -- topic)",
+          "valid": "a resumed run never records a batch twice; two empty study rounds park the topic as thin",
+          "file": "topics/<topic>/work/run/recorded.json, fetched.json, studies-rounds.json, review-rounds.json"
+        },
+        {
+          "id": "decision",
+          "t": "Decision",
+          "d": [
+            "production.json: queued or parked,",
+            "with a note"
+          ],
+          "you": true,
+          "owner": "orchestration",
+          "writer": "a person",
+          "valid": "queued and parked only; the one hand-written planning input",
+          "file": "topics/<topic>/production.json"
+        },
+        {
+          "id": "notes",
+          "t": "Notes pass",
+          "d": [
+            "run/notes-pass.json: a changes-requested",
+            "routed to the writer or to video-fix, once"
+          ],
+          "owner": "orchestration",
+          "writer": "the runner (npm run run -- story), from a request’s notes or --notes-file",
+          "valid": "once per request: a sentence or unplaced note to script -- send-back and the writer, a scene-only note to video-fix.md and video -- check",
+          "file": "scripts/<slug>/run/notes-pass.json"
+        },
+        {
+          "id": "shadow",
+          "t": "Shadow record",
+          "d": [
+            ".automation/shadow.json: the draft-review",
+            "agent’s verdict under review.draft: shadow"
+          ],
+          "owner": "orchestration",
+          "writer": "the release loop (draft-review.md agent)",
+          "valid": "no effect on any decision; the digest reads the agreement with the person and says whether agent may be enabled",
+          "file": ".automation/shadow.json"
+        },
+        {
+          "id": "launch",
+          "t": "Launch record",
+          "d": [
+            ".automation/launch/: seed, brand, build, freeze,",
+            "validate, commit, push, probes, liveAt, posted"
+          ],
+          "owner": "orchestration",
+          "writer": "the launch job (npm run run -- launch) and the tick’s probe",
+          "valid": "resumable step by step; live only once the deploy probe answers; the X post after that, or not-configured",
+          "file": ".automation/launch/<topic>-<slug>.json"
+        },
+        {
+          "id": "journal",
+          "t": "Run journal, halt, lock",
+          "d": [
+            "run/journal.jsonl: one line per step attempt;",
+            "halt.json: kind, why, unblock; lock.json: pid"
+          ],
+          "owner": "orchestration",
+          "writer": "the runners (story, topic, scan, article pass)",
+          "valid": "operational, gitignored, decides no stage; a halt names a command or a brief; a dead lock is taken over",
+          "file": "scripts/<slug>/run/, topics/<topic>/work/run/"
+        },
+        {
+          "id": "attempt",
+          "t": "Attempt record",
+          "d": [
+            "run/agents/<line>-<round>.json: one claude -p",
+            "call: models, tokens, cost, turns, exit"
+          ],
+          "owner": "orchestration",
+          "writer": "the step (steps.ts), open at spawn, complete at exit",
+          "valid": "usage and outcome only, never the prompt or the reply; failed and resumed kept; the unit every rollup and estimate sums",
+          "file": "scripts/<slug>/run/agents/<line>-<round>.json"
+        },
+        {
+          "id": "readiness",
+          "t": "Readiness record",
+          "d": [
+            "readiness.json: a person’s verification of an",
+            "integration, bound to evidence that exists"
+          ],
+          "you": true,
+          "owner": "orchestration",
+          "writer": "npm run run -- verified (a person; the only writer)",
+          "valid": "verification only; implemented is code, enabled is automation.json; a verification changes no flag",
+          "file": "readiness.json"
+        }
+      ],
+      "readme": "src/orchestration/README.md"
+    },
+    {
+      "name": "article",
+      "kind": "module",
+      "responsibility": "Article owns editorial content through its lifecycle: drafting, review, validation, corrections and reaffirmations when evidence changes (article -- correct, reaffirm). Website renders article-release.json and never decides whether a finding needs a correction.",
+      "paths": "src/modules/article/",
+      "cli": "src/modules/article/cli.ts",
+      "briefs": "article.md, article-review.md",
+      "readApi": [
+        "Article",
+        "ArticleRequest",
+        "ARTICLE_FILES",
+        "articleFingerprint",
+        "articleRequestPath",
+        "correctionProblem",
+        "loadArticleRequest",
+        "ArticleRelease",
+        "ArticleView",
+        "articleModified",
+        "articleView",
+        "loadArticleRelease",
+        "releaseFigureDraws"
+      ],
+      "objects": [
+        {
+          "id": "article",
+          "t": "Article",
+          "d": [
+            "article.json + review + validation;",
+            "article-release.json is what the site shows"
+          ],
+          "owner": "article",
+          "writer": "a writer agent (article.md); a different reviewer (article-review.md); lock, correct and reaffirm are the CLI’s",
+          "valid": "the script’s checks over its sentences plus coverage and overlap; only the release snapshot is rendered",
+          "file": "scripts/<slug>/article.json, article-review.json, article-validation.json, article-release.json"
+        },
+        {
+          "id": "areq",
+          "t": "Article request and correction",
+          "d": [
+            "article-request.json: ar-<id> bound to the",
+            "text’s fingerprint; OK by reply releases it"
+          ],
+          "owner": "article",
+          "writer": "npm run article -- request-correction (the pass), sent (the Message-ID), decide (a person)",
+          "valid": "bound to article.json’s fingerprint; a revision voids it; a correction is released only under a person’s name and appends a public-record revision",
+          "file": "scripts/<slug>/article-request.json"
+        }
+      ],
+      "readme": "src/modules/article/README.md"
+    },
+    {
+      "name": "brand",
+      "kind": "module",
+      "responsibility": "The brand kit builder: npm run brand (cli.ts, drawings in draw/draw.js, run in Remotion's headless Chrome).",
+      "paths": "src/modules/brand/, brand/",
+      "cli": "src/modules/brand/cli.ts",
+      "briefs": "",
+      "readApi": [],
+      "objects": [],
+      "readme": "src/modules/brand/README.md"
+    },
+    {
+      "name": "evidence",
+      "kind": "module",
+      "responsibility": "Evidence gathers and judges claims for a topic it is given; proposing or evaluating new topics is topic discovery (src/modules/topic-discovery/) and never evidence's job.",
+      "paths": "src/modules/evidence/ (topics.ts, corpus.ts, batches.ts, finding-label.ts, verdict-label.ts, cited.ts, datasets.ts, live-claims.ts)",
+      "cli": "src/modules/evidence/cli-report.ts, record.mjs, record-sources.mjs, watcher.mjs, merge-claims.mjs",
+      "briefs": "extract.md, sources.md, evidence.md, collect.md, studies.md, merge.md, revision-note.md",
+      "readApi": [
+        "loadMaintenance",
+        "scanDue",
+        "ExtractionBatch",
+        "splitGroups",
+        "thinness",
+        "ThinCounts",
+        "loadTopic",
+        "topicNames",
+        "publicTopicNames",
+        "fixtureTopicNames",
+        "VAL",
+        "Topic",
+        "corpusOf",
+        "loadDatasets",
+        "dataRef",
+        "findingLabel",
+        "ClaimView",
+        "DataTable",
+        "FindingLabel",
+        "SourceClaimView",
+        "SourceView",
+        "SurpriseView",
+        "Verdict",
+        "FINDING_LABELS",
+        "FINDING_TEXT",
+        "datasetCsv",
+        "labelCounts",
+        "verdictLabel"
+      ],
+      "objects": [
+        {
+          "id": "topic",
+          "t": "Topic (inquiry)",
+          "d": [
+            "store/topics.json: the watcher store;",
+            "never hand-edited"
+          ],
+          "owner": "evidence",
+          "writer": "npm run record, record-sources, the watcher CLI",
+          "valid": "the store is the only truth of claims and verdicts; a hand edit is reverted by the tree guard",
+          "file": "topics/<topic>/store/topics.json"
+        },
+        {
+          "id": "source",
+          "t": "Source",
+          "d": [
+            "a video, post or study: store/videos/*.json",
+            "and its text in sources/*.txt"
+          ],
+          "owner": "evidence",
+          "writer": "the watcher (fetch), evidence -- fetch-doc (a study)",
+          "valid": "a document saved only under sources/, https, a bare .txt name; a cite names a passage of it",
+          "file": "topics/<topic>/store/videos/*.json, sources/*.txt"
+        },
+        {
+          "id": "claim",
+          "t": "Claim",
+          "d": [
+            "canonical, one line, mechanism-level;",
+            "shared by every source that makes it"
+          ],
+          "owner": "evidence",
+          "writer": "npm run record from an extraction batch (h*.json)",
+          "valid": "one line, no numbers of one source; evidence belongs to the claim, so a new source never re-judges old claims",
+          "file": "topics/<topic>/store/topics.json (claims)"
+        },
+        {
+          "id": "verdict",
+          "t": "Verdict",
+          "d": [
+            "per claim, cites a passage",
+            "(<file>.txt#L10-L24); npm run record-sources"
+          ],
+          "owner": "evidence",
+          "writer": "npm run record-sources from a study batch (sv_*.json)",
+          "valid": "one per claim and document; a study overrides an AI guess only when at least as confident; a cited pair is replaced only with --replace-cited by a person",
+          "file": "topics/<topic>/store/topics.json (assertions), applicability.json"
+        },
+        {
+          "id": "report",
+          "t": "Report",
+          "d": [
+            "report.json by npm run report",
+            "(needs the watcher checkout)"
+          ],
+          "owner": "evidence",
+          "writer": "npm run report",
+          "valid": "derived from the store; the build and the board read it; a stale one is regenerated, never edited",
+          "file": "topics/<topic>/report.json"
+        },
+        {
+          "id": "record",
+          "t": "Public record",
+          "d": [
+            "public-record.json: exhibit numbers that",
+            "never renumber, revisions you explain"
+          ],
+          "you": true,
+          "owner": "evidence",
+          "writer": "npm run report (exhibits, revisions), article -- correct (an article revision); the note is a person’s (report -- note)",
+          "valid": "exhibits never renumber; every revision needs a note or the build test fails",
+          "file": "topics/<topic>/public-record.json"
+        },
+        {
+          "id": "dataset",
+          "t": "Dataset",
+          "d": [
+            "data/<id>.json: evidence numbers with",
+            "a cite per point; shown on /data/"
+          ],
+          "owner": "evidence",
+          "writer": "a person or an agent, through the data brief",
+          "valid": "every point cites a passage; a tool’s defaults cite a dataset",
+          "file": "topics/<topic>/data/<id>.json"
+        },
+        {
+          "id": "scan",
+          "t": "Maintenance scan",
+          "d": [
+            "maintenance.json: each scan, what it found",
+            "and recorded; due every everyDays days"
+          ],
+          "owner": "evidence",
+          "writer": "npm run evidence -- scanned (from the scan job)",
+          "valid": "one entry per scan with found and recorded counts; lastScan decides when the next is due",
+          "file": "topics/<topic>/maintenance.json"
+        }
+      ],
+      "readme": "src/modules/evidence/README.md"
+    },
+    {
+      "name": "packaging",
+      "kind": "module",
+      "responsibility": "Packaging owns the review package of a rendered video: titles, descriptions, captions, chapters, the placement of the calls to action in the description, and the release metadata. Video owns the media and QA; the YouTube limits check (uploadProblem) is publishing's and packaging only calls it.",
+      "paths": "src/modules/packaging/",
+      "cli": "src/modules/packaging/cli.ts",
+      "briefs": "",
+      "readApi": [
+        "loadManifest",
+        "manifestPath"
+      ],
+      "objects": [
+        {
+          "id": "manifest",
+          "t": "Release manifest",
+          "d": [
+            "release-manifest.json: the outputs, article,",
+            "calls to action and X text one sha binds"
+          ],
+          "owner": "packaging",
+          "writer": "npm run video -- package (a release build); packaging -- manifest rewrites it",
+          "valid": "releaseSha moves when an output is re-packaged, the article re-locked or a call to action changed, and voids the open request",
+          "file": "video/review/release-manifest.json"
+        }
+      ],
+      "readme": "src/modules/packaging/README.md"
+    },
+    {
+      "name": "publishing",
+      "kind": "module",
+      "responsibility": "Publishing owns YouTube only: uploads, release approvals, scheduling, go-live, read-back and verification, recorded in the per-story ledger. Social (X and others) is a separate Milestone 2 module and never part of this one.",
+      "paths": "src/modules/publishing/",
+      "cli": "src/modules/publishing/cli.ts",
+      "briefs": "",
+      "readApi": [
+        "loadLedger",
+        "mainOutput",
+        "uploadProblem",
+        "storyOutputs",
+        "currentBuild",
+        "PublicVideo",
+        "ReviewNote",
+        "UploadMetadata",
+        "Ledger",
+        "OutputState",
+        "OutputStatus",
+        "OutputStep",
+        "PublishEvent",
+        "emptyLedger",
+        "noteLine",
+        "openOutput",
+        "openRequest",
+        "requestOf",
+        "ApprovalRequest",
+        "publishPath",
+        "renderStep",
+        "seekUrl",
+        "stampOf"
+      ],
+      "objects": [
+        {
+          "id": "ledger",
+          "t": "Ledger",
+          "d": [
+            "publish.json: per output an event log",
+            "(uploaded, approved, scheduled, published)"
+          ],
+          "owner": "publishing",
+          "writer": "npm run publish (every verb idempotent); metadata may be hand-edited",
+          "valid": "append-only events; a public upload needs a prior approved for that build; only a person approves or goes live",
+          "file": "scripts/<slug>/publish.json"
+        },
+        {
+          "id": "yt",
+          "t": "YouTube video",
+          "d": [
+            "output youtube: private upload, then",
+            "go-live; a Short is output short:<slug>"
+          ],
+          "owner": "publishing",
+          "writer": "npm run publish -- upload, push, go-live, sync, verify (plain fetch, no googleapis)",
+          "valid": "upload sends private only; go-live needs approved; a Short goes live after its video; a live video is never replaced",
+          "file": "scripts/<slug>/publish.json (outputs)"
+        },
+        {
+          "id": "approval",
+          "t": "Approval request and decision",
+          "d": [
+            "approval-requested binds the manifest sha;",
+            "decided by OK, OK at <when>, CHANGES: or the page"
+          ],
+          "owner": "publishing",
+          "writer": "npm run publish -- request (automation), decide (a person, never automated:)",
+          "valid": "an rq- id signed with APPROVAL_SECRET; expired, decided or moved requests are refused; every step idempotent, decided last",
+          "file": "scripts/<slug>/publish.json (events)"
+        }
+      ],
+      "readme": "src/modules/publishing/README.md"
+    },
+    {
+      "name": "script",
+      "kind": "module",
+      "responsibility": "Script turns a reviewed story into the evidence package the writer may cite, validates the writer's script against it, and locks the approved fingerprints.",
+      "paths": "src/modules/script/ (evidence-package.ts, script-md.ts; validators in src/shared/)",
+      "cli": "src/modules/script/cli.ts",
+      "briefs": "script.md, script-review.md",
+      "readApi": [],
+      "objects": [
+        {
+          "id": "pkg",
+          "t": "Evidence package",
+          "d": [
+            "evidence-package.json: the claims,",
+            "passages and roles a writer may use"
+          ],
+          "owner": "script",
+          "writer": "npm run script -- package",
+          "valid": "built from stories.json and the store; its fingerprint binds the script; a moved package re-opens the review",
+          "file": "scripts/<slug>/evidence-package.json"
+        },
+        {
+          "id": "script",
+          "t": "Script",
+          "d": [
+            "script.json + script-review.json (another",
+            "agent) + validation; release.json locks"
+          ],
+          "owner": "script",
+          "writer": "a writer agent (script.md); a different reviewer (script-review.md); validate and lock are the CLI’s",
+          "valid": "every factual sentence carries an assertion; approvals by fingerprint; three revisions per pass; lock needs passed, storyboard ok, a real approver",
+          "file": "scripts/<slug>/script.json, script-review.json, validation.json, release.json"
+        }
+      ],
+      "readme": "src/modules/script/README.md"
+    },
+    {
+      "name": "shorts",
+      "kind": "module",
+      "responsibility": "Shorts finds which findings of a produced video can stand on their own as a vertical Short, and builds the Short's evidence package as a filter of the parent's.",
+      "paths": "src/modules/shorts/",
+      "cli": "src/modules/shorts/cli.ts",
+      "briefs": "shorts.md",
+      "readApi": [
+        "buildShortPackage",
+        "loadShorts",
+        "shortsPath"
+      ],
+      "objects": [
+        {
+          "id": "short",
+          "t": "Short",
+          "d": [
+            "shorts/<slug>/: a nested production from",
+            "one scene; shorts.json + shorts-review.json"
+          ],
+          "owner": "shorts",
+          "writer": "npm run shorts -- discover; the shorts.md agent reviews; the same CLIs produce it",
+          "valid": "shorts.json derived; at most 3 per video; its package is a filter of the parent’s; never touches the store",
+          "file": "scripts/<slug>/shorts.json, shorts-review.json, shorts/<slug>/"
+        }
+      ],
+      "readme": "src/modules/shorts/README.md"
+    },
+    {
+      "name": "social",
+      "kind": "module",
+      "responsibility": "X posts about a story's live outputs from the owning institution's account (Milestone 2, phase 3; spec §4.5's X row, §15). Optional per institution: an institution without an X handle or keys is \"not configured\", never a halt. Separate from publishing (YouTube): no coupling, no shared framework; the orchestration's launch probe runs post after the deploy is confirmed.",
+      "paths": "src/modules/social/ (social.ts the posts and their record, x.ts the X client)",
+      "cli": "src/modules/social/cli.ts",
+      "briefs": "",
+      "readApi": [
+        "loadSocial",
+        "socialPath",
+        "inspectPosts",
+        "accountFor"
+      ],
+      "objects": [
+        {
+          "id": "post",
+          "t": "X post",
+          "d": [
+            "social.json: an intent before the call, the",
+            "id after; once per text, never a fixture"
+          ],
+          "owner": "social",
+          "writer": "npm run social -- post (the launch probe when enabled.social)",
+          "valid": "refused while enabled.social is off or the output is not live; not configured without a handle and keys; one post per textSha",
+          "file": "scripts/<slug>/social.json"
+        }
+      ],
+      "readme": "src/modules/social/README.md"
+    },
+    {
+      "name": "stories",
+      "kind": "module",
+      "responsibility": "Stories turns a topic's judged claims into ranked candidate videos, each with its evidence audit, and merges the reviewer's semantic pass.",
+      "paths": "src/modules/stories/",
+      "cli": "src/modules/stories/cli.ts",
+      "briefs": "stories.md",
+      "readApi": [
+        "loadStories",
+        "storiesPath",
+        "chainOf",
+        "storyUrlSlug",
+        "loadReview",
+        "reviewPath",
+        "StoriesFile",
+        "groupSlug",
+        "storyTopicNames"
+      ],
+      "objects": [
+        {
+          "id": "story",
+          "t": "Story = one question",
+          "d": [
+            "stories.json, derived: the question, the",
+            "claims that answer it, audit, readiness"
+          ],
+          "owner": "stories",
+          "writer": "npm run stories -- discover",
+          "valid": "derived, never hand-edited; references only, no passage text; the evidence gate decides readiness and fails closed",
+          "file": "topics/<topic>/stories.json"
+        },
+        {
+          "id": "sreview",
+          "t": "Story review",
+          "d": [
+            "story-review.json: the semantic pass,",
+            "pruning, chains (up to 3 questions)"
+          ],
+          "you": true,
+          "owner": "stories",
+          "writer": "the stories.md agent, or a person",
+          "valid": "keyed by stable ids; names a current candidate; applicability may narrow, never widen; a chain never nests",
+          "file": "topics/<topic>/story-review.json"
+        }
+      ],
+      "readme": "src/modules/stories/README.md"
+    },
+    {
+      "name": "storyboard",
+      "kind": "module",
+      "responsibility": "Storyboard fills the planner's scenes with the script's own narration, times them, and checks every chart figure and on-screen citation against the evidence package.",
+      "paths": "src/modules/storyboard/ (storyboard.ts, chart-geometry.ts; types in src/shared/types.ts)",
+      "cli": "(driven by src/modules/script/cli.ts)",
+      "briefs": "storyboard.md",
+      "readApi": [
+        "pointProblems",
+        "chartProblems",
+        "datasetChart",
+        "buildStoryboard",
+        "renderStoryboardMd",
+        "barGeometry"
+      ],
+      "objects": [
+        {
+          "id": "sb",
+          "t": "Storyboard",
+          "d": [
+            "storyboard.json: scenes, chart points",
+            "with cites, timing per sentence"
+          ],
+          "owner": "storyboard",
+          "writer": "the storyboard.md agent; npm run script -- storyboard fills and checks it",
+          "valid": "no narration of its own; chart data is numeric points with a unit and a cite; assets registered by id",
+          "file": "scripts/<slug>/storyboard.json"
+        }
+      ],
+      "readme": "src/modules/storyboard/README.md"
+    },
+    {
+      "name": "topic-discovery",
+      "kind": "module",
+      "responsibility": "Topic proposals per institution (Milestone 2, phase 4; spec §5.1): an agent proposes, an independent agent reviews, code validates and ranks, weak proposals are parked with the reason, and only a person approves or rejects. Nothing here researches: no fetch, no store write, no file under topics/. The module never becomes a second evidence implementation (src/modules/README.md, boundary 1).",
+      "paths": "src/modules/topic-discovery/ (proposals.ts: validation, ranking, inspection of proposals/<slug>.json and its review)",
+      "cli": "src/modules/topic-discovery/cli.ts",
+      "briefs": "discover.md, proposal-review.md",
+      "readApi": [
+        "claimedBy",
+        "loadProposals",
+        "proposalPath",
+        "reviewPath",
+        "inspectProposal",
+        "rank",
+        "researched",
+        "Proposed",
+        "Ranked"
+      ],
+      "objects": [
+        {
+          "id": "proposal",
+          "t": "Proposal",
+          "d": [
+            "<slug>.json: a question for an institution,",
+            "proposed until a person approves or rejects"
+          ],
+          "owner": "topic-discovery",
+          "writer": "the discovery agent (discover.md): new files only",
+          "valid": "validateProposal: a question no story or earlier proposal asks; status moves only by topics approve|reject (a person) or park (code)",
+          "file": "proposals/<slug>.json"
+        },
+        {
+          "id": "preview",
+          "t": "Proposal review",
+          "d": [
+            "<slug>.review.json: an independent agent",
+            "judges fit and feasibility; parks the weak"
+          ],
+          "owner": "topic-discovery",
+          "writer": "the review agent (proposal-review.md), never the proposer",
+          "valid": "validateReview: one review per proposal; the batch parks on fit false or under topics.minOverall",
+          "file": "proposals/<slug>.review.json"
+        },
+        {
+          "id": "batch",
+          "t": "Proposal batch",
+          "d": [
+            "pb-<id> in each listed proposal: one mail",
+            "a week; APPROVE <slug> or REJECT by reply"
+          ],
+          "owner": "topic-discovery",
+          "writer": "npm run topics -- batch (code); sent records the Message-ID",
+          "valid": "a pb- id signed with APPROVAL_SECRET, listed per institution; a reply applies once per batch and slug",
+          "file": "proposals/<slug>.json (batch)"
+        }
+      ],
+      "readme": "src/modules/topic-discovery/README.md"
+    },
+    {
+      "name": "video",
+      "kind": "module",
+      "responsibility": "Video owns the media of a story: narration, the timeline, the Remotion render (scene chunks, the end card), the soundtrack mix, QA and the render check of its bespoke graphics. Packaging owns the review package made from it; publishing owns the ledger.",
+      "paths": "src/modules/video/ (remotion/, bespoke/, tts/, render-check.ts, final.ts), music/",
+      "cli": "src/modules/video/cli.ts, cli-music.ts",
+      "briefs": "graphics.md, visual-review.md, video-fix.md, strudel-bench.md",
+      "readApi": [
+        "loadSegment",
+        "renderCheckProblems",
+        "RENDER_CHECK",
+        "RenderCheckSummary",
+        "VIDEO_FILES",
+        "videoDir",
+        "Timeline",
+        "Segment",
+        "BuildReport"
+      ],
+      "objects": [
+        {
+          "id": "render",
+          "t": "Render plan",
+          "d": [
+            "render.json: scenes to kinds, cues;",
+            "bespoke graphics in src/modules/video/bespoke/"
+          ],
+          "owner": "video",
+          "writer": "npm run video -- init from the storyboard; a graphics agent registers bespoke kinds",
+          "valid": "every scene names a kind the registry accepts; a cue names a spoken word; an unsupported scene fails the build",
+          "file": "video/render.json, render-check.json, visual-review.json"
+        },
+        {
+          "id": "build",
+          "t": "Build",
+          "d": [
+            "segment.mp4 named by its sha; build-report;",
+            "review/: the package you watch"
+          ],
+          "owner": "video",
+          "writer": "npm run video -- spike (draft, edge voice) and final (release, Azure voice); package writes review/",
+          "valid": "QA RESULT: PASSED; the package refuses an mp4 whose sha QA did not check; a clearance is recorded, never implied",
+          "file": "video/segment.mp4, build-report.json, review/review.json"
+        },
+        {
+          "id": "music",
+          "t": "Soundtrack",
+          "d": [
+            "music.json: cues over scene anchors;",
+            "music/<composition>/ cleared by hand"
+          ],
+          "owner": "video",
+          "writer": "npm run music -- cues; import keeps licence.cleared, intensity and loop",
+          "valid": "cues over scene anchors, never seconds; the mix keeps the peak under the ceiling by turning the music down, never the narration",
+          "file": "video/music.json, mix.json; music/<composition>/composition.json"
+        }
+      ],
+      "readme": "src/modules/video/README.md"
+    },
+    {
+      "name": "website",
+      "kind": "module",
+      "responsibility": "Website owns rendering, the content graph and building and deploying the site. It renders article-release.json and never decides whether a finding needs a correction (article owns corrections and reaffirmations). The Astro folders (src/pages, components, layouts, styles, admin, tools) and astro.config.mjs are part of it and stay where Astro needs them; they import site-graph.ts directly.",
+      "paths": "src/modules/website/ (graph, SEO, CTA, review page model and job, rehearsal), src/pages, src/components, src/layouts, src/styles, src/admin, src/tools, astro.config.mjs",
+      "cli": "src/modules/website/cli-links.ts, cli-quality.ts, cli-rehearse.ts",
+      "briefs": "cta.md",
+      "readApi": [
+        "contentGraph",
+        "ctaPath",
+        "loadCta",
+        "matterPath",
+        "publicUrlsOf",
+        "resolveCtas",
+        "storyNode",
+        "CtaType"
+      ],
+      "objects": [
+        {
+          "id": "cta",
+          "t": "Calls to action",
+          "d": [
+            "cta.json from cta.md: destinations in the",
+            "content graph; a paid one needs your name"
+          ],
+          "owner": "website",
+          "writer": "an agent (cta.md); links -- cta approve records a person’s approval of a paid link",
+          "valid": "a destination whose value check fails is dropped; a commercial one needs a disclosure and a person’s approvedBy and is never primary",
+          "file": "scripts/<slug>/cta.json"
+        }
+      ],
+      "readme": "src/modules/website/README.md"
+    }
+  ]
+}

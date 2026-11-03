@@ -1,0 +1,159 @@
+{
+  "about": "The one-page view: what the system is, its layers, and how the other files in this folder fit. Start here.",
+  "generatedOn": "2026-11-02",
+  "authority": "editorial summary of CLAUDE.md, src/modules/README.md and src/orchestration/README.md; where a figure or name matters, the per-file JSON beside it is derived from code and wins",
+  "identity": {
+    "repo": "video-knowledge: the production tooling (TypeScript, Node, Astro, Remotion)",
+    "site": "Commonwealth of Reason (commonwealthofreason.com): a fictional state whose commissions publish real evidence reviews",
+    "disclosure": "The Commonwealth is fictional. The research is real.",
+    "channels": "each commission is a YouTube channel; only channels a person created have a handle",
+    "pitch": "Claims from YouTube videos and blog posts are judged against studies, turned into short evidence videos, companion articles and a public record site, by agents writing artifacts that deterministic validators check and a person approving every release."
+  },
+  "loop": [
+    {
+      "step": "Discover",
+      "summary": "an agent proposes per institution, another reviews; a person approves",
+      "modules": [
+        "topic-discovery"
+      ],
+      "columns": [
+        "Proposals"
+      ]
+    },
+    {
+      "step": "Research",
+      "summary": "collect, extract, merge, judge against studies, record, report",
+      "modules": [
+        "evidence"
+      ],
+      "columns": [
+        "Identity",
+        "Research"
+      ]
+    },
+    {
+      "step": "Stories",
+      "summary": "candidates and their evidence audit; a review makes them ready",
+      "modules": [
+        "stories"
+      ],
+      "columns": [
+        "Stories"
+      ]
+    },
+    {
+      "step": "Produce",
+      "summary": "package, script, review, storyboard, graphics, lock, render, score, article, package",
+      "modules": [
+        "script",
+        "storyboard",
+        "video",
+        "article",
+        "packaging",
+        "shorts",
+        "brand"
+      ],
+      "columns": [
+        "Script stage",
+        "Video"
+      ]
+    },
+    {
+      "step": "Approve",
+      "summary": "private upload; one email or the review page; a person decides",
+      "modules": [
+        "publishing",
+        "website"
+      ],
+      "columns": [
+        "Publishing"
+      ]
+    },
+    {
+      "step": "Publish",
+      "summary": "go-live or schedule, Shorts follow, the site rebuilt and deployed, an X post",
+      "modules": [
+        "publishing",
+        "website",
+        "social"
+      ],
+      "columns": [
+        "Publishing",
+        "Operations"
+      ]
+    },
+    {
+      "step": "Maintain",
+      "summary": "monthly scan for new evidence; reaffirm or correct released articles",
+      "modules": [
+        "evidence",
+        "article"
+      ],
+      "columns": [
+        "Research",
+        "Script stage"
+      ]
+    }
+  ],
+  "loopRule": "modules names the capability modules (modules.json) that do the step; columns the artifact columns (objects.json) it writes; orchestration drives every step.",
+  "layers": [
+    {
+      "id": "people",
+      "name": "A person",
+      "what": "approves topics, releases, schedules, paid links, corrections; verifies integrations; turns automation on",
+      "see": "actors.json#person"
+    },
+    {
+      "id": "agents",
+      "name": "Agents (claude -p)",
+      "what": "nine roles that write artifacts only (scripts, reviews, batches, proposals, components where the graphics brief allows), never machinery, never a secret, never a publish",
+      "see": "actors.json#agentRoles"
+    },
+    {
+      "id": "orchestration",
+      "name": "Orchestration",
+      "what": "the board (derived stage, next step, halt kind, column) and the executor (runner, tick, work plane, pick, release loop, inbox, launch, discovery, topic runner, maintenance); coordination only, every write a module CLI as a child",
+      "see": "modules.json (orchestration), flow.json"
+    },
+    {
+      "id": "modules",
+      "name": "Modules (capabilities)",
+      "what": "evidence, stories, script, storyboard, video, packaging, article, shorts, publishing, brand, website, topic-discovery, social, plus shared; each with index.ts (read API), cli.ts (the write path), briefs/, tests/, README.md",
+      "see": "modules.json"
+    },
+    {
+      "id": "artifacts",
+      "name": "Artifacts (state is files in the repo)",
+      "what": "proposals/, topics/<topic>/ (store, sources, scripts/<slug>/, video/, publish.json), src/config/site.ts, automation.json, readiness.json; derived at read, decisions carry who, when and a sha; no database, queue or stored workflow state",
+      "see": "objects.json"
+    },
+    {
+      "id": "externals",
+      "name": "External services",
+      "what": "YouTube Data API, Google OAuth, a mailbox (SMTP/IMAP), Azure AI Speech, edge-tts, OpenAI (optional), X API, Cloudflare Workers, GitHub Pages/Actions, Claude Code CLI, the watcher checkout, Europe PMC/arXiv/YouTube for research",
+      "see": "externals.json"
+    },
+    {
+      "id": "tech",
+      "name": "Technology",
+      "what": "TypeScript on Node via tsx; Astro + Tailwind site; Remotion + React renderer; ffmpeg and a PCM mixer; vitest, Playwright, axe, html-validate; eslint, prettier; nodemailer, imapflow, mailparser",
+      "see": "tech.json"
+    }
+  ],
+  "flows": {
+    "research": "proposal -> lists -> store (claims, verdicts) -> report -> stories",
+    "production": "evidence package -> script -> review -> storyboard -> graphics -> lock -> render -> soundtrack -> article -> review package",
+    "release": "private upload -> request (email binds the manifest sha) -> person decides -> go-live/schedule -> Shorts -> launch job (site) -> X post",
+    "maintenance": "scan -> record-sources -> report -> revision notes -> stories -> article reaffirm or correction request"
+  },
+  "files": {
+    "system.json": "this overview",
+    "modules.json": "the capabilities, their CLIs, briefs, read APIs and the boundary rules (derived from code)",
+    "objects.json": "every artifact by stage column, who writes it, what makes it valid, and the edges between them (derived from the admin Objects tab)",
+    "externals.json": "every external connection: direction, protocol, secrets, which verb, which flag, readiness state",
+    "actors.json": "the person, the nine agent roles, the automation planes, and what each may write",
+    "flow.json": "the stage machines: research stages, production stages, board columns, halt kinds, and the 24-step workflow with the person's steps marked",
+    "tech.json": "runtimes, frameworks, libraries, tests and quality gates",
+    "rules.json": "the invariants worth drawing: authority, evidence, derivation, secrets, boundaries"
+  }
+}
