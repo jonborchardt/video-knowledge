@@ -1,0 +1,57 @@
+{
+  "topic": "test-fixture",
+  "story": "decision:most-discussed-claims/shorts/ten-to-thirty-seven",
+  "title": "A 10-second gap in 1972 grew to 37 by 2017. The record only climbs.",
+  "revision": 1,
+  "generation": {
+    "model": "claude-sonnet-5",
+    "brief": "src/modules/script/briefs/script.md",
+    "date": "2026-11-03",
+    "wordsPerMinute": 150,
+    "evidencePackage": "a7319072a6"
+  },
+  "targetDurationSeconds": 7.5,
+  "sections": [
+    {
+      "name": "hook",
+      "sentences": [
+        {
+          "id": "s01",
+          "text": "A record that only climbs.",
+          "type": "rhetorical"
+        }
+      ]
+    },
+    {
+      "name": "finding",
+      "sentences": [
+        {
+          "id": "s02",
+          "text": "It ran from 10 in 1972 to 37 in 2017.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s02.a",
+              "text": "The IERS table of TAI-UTC lists values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before.",
+              "kind": "fact",
+              "claims": [{ "id": "test-fixture/every-leap-second-since-utc-began", "stance": "asserts" }],
+              "evidence": [
+                { "kind": "study", "claim": "test-fixture/every-leap-second-since-utc-began", "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "close",
+      "sentences": [
+        {
+          "id": "s03",
+          "text": "See the video.",
+          "type": "transitional"
+        }
+      ]
+    }
+  ]
+}

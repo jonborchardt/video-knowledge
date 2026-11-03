@@ -1,0 +1,138 @@
+{
+ "topic": "test-fixture",
+ "story": "decision:most-discussed-claims/shorts/ten-to-thirty-seven",
+ "revision": 1,
+ "date": "2026-11-03T04:38:24.876Z",
+ "status": "passed",
+ "scriptFingerprint": "1be51fb83b",
+ "packageFingerprint": "a7319072a6",
+ "wordsPerMinute": 150,
+ "words": 18,
+ "spokenWords": 24,
+ "minutes": 0.2,
+ "counts": {
+  "sentences": 3,
+  "factual": 1,
+  "assertions": 1,
+  "verified": 1,
+  "blocking": 0,
+  "warnings": 0,
+  "dispositioned": 0,
+  "unreviewed": 0
+ },
+ "revisionLimitReached": false,
+ "sentences": [
+  {
+   "id": "s01",
+   "section": "hook",
+   "text": "A record that only climbs.",
+   "type": "rhetorical",
+   "fingerprint": "78071faf30",
+   "words": 5,
+   "status": "verified",
+   "approved": true,
+   "assertions": [],
+   "issues": []
+  },
+  {
+   "id": "s02",
+   "section": "finding",
+   "text": "It ran from 10 in 1972 to 37 in 2017.",
+   "type": "factual",
+   "fingerprint": "c5c1546507",
+   "words": 10,
+   "status": "verified",
+   "approved": true,
+   "assertions": [
+    {
+     "id": "s02.a",
+     "text": "The IERS table of TAI-UTC lists values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s02.a",
+      "text": "The IERS table of TAI-UTC lists values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before.",
+      "kind": "fact",
+      "modality": "plain",
+      "status": "supported",
+      "decision": "approved",
+      "review": true,
+      "verbatim": false,
+      "strength": 0.85,
+      "independent": 1,
+      "supporting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "test-fixture/every-leap-second-since-utc-began",
+         "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "iers-leap-second-dat.txt",
+        "verdict": "right",
+        "confidence": 0.85,
+        "note": "The IERS table of TAI-UTC lists 28 values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before: every one of the 27 steps added a second and none subtracted one.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "contradicting": [],
+      "qualifying": [],
+      "context": [],
+      "problems": [],
+      "limitations": [
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
+      "suggestions": [],
+      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
+     },
+     "issues": [
+      {
+       "sentence": "s02",
+       "category": "wording",
+       "severity": "info",
+       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+       "by": "deterministic",
+       "assertion": "s02.a"
+      }
+     ]
+    }
+   ],
+   "issues": []
+  },
+  {
+   "id": "s03",
+   "section": "close",
+   "text": "See the video.",
+   "type": "transitional",
+   "fingerprint": "0964cfde92",
+   "words": 3,
+   "status": "verified",
+   "approved": true,
+   "assertions": [],
+   "issues": []
+  }
+ ],
+ "issues": [
+  {
+   "sentence": "s02",
+   "category": "wording",
+   "severity": "info",
+   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+   "by": "deterministic",
+   "assertion": "s02.a"
+  }
+ ],
+ "resolved": [],
+ "history": [
+  {
+   "revision": 1,
+   "date": "2026-11-03T04:38:24.876Z",
+   "status": "passed",
+   "blocking": 0,
+   "warnings": 0
+  }
+ ]
+}

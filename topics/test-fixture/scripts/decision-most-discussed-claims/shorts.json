@@ -1,0 +1,89 @@
+{
+ "topic": "test-fixture",
+ "story": "decision:most-discussed-claims",
+ "parentFingerprints": {
+  "script": "d2206ea3ad",
+  "validation": "0d1032121f",
+  "storyboard": "8a45bc3b58",
+  "package": "5879ca5f47",
+  "release": "0536101878"
+ },
+ "candidates": [
+  {
+   "key": "s01",
+   "scene": "sc01",
+   "section": "answer",
+   "sentences": [
+    "s01"
+   ],
+   "claims": [
+    "test-fixture/every-leap-second-since-utc-began"
+   ],
+   "cites": [
+    "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+   ],
+   "figures": [
+    "10",
+    "1972",
+    "37",
+    "2017"
+   ],
+   "chart": {
+    "type": "stat-tiles",
+    "title": "TAI minus UTC",
+    "points": [
+     {
+      "label": "1972",
+      "value": 10,
+      "unit": "count",
+      "display": "10 s",
+      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+     },
+     {
+      "label": "2017",
+      "value": 37,
+      "unit": "count",
+      "display": "37 s",
+      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+     }
+    ],
+    "note": "The table's value only ever rises between these tiles; it never falls."
+   },
+   "qualifications": [],
+   "reviewed": true,
+   "slug": "ten-to-thirty-seven",
+   "format": "ONE FIGURE FROM THE RECORD",
+   "hook": "A 10-second gap in 1972 grew to 37 by 2017. The official record only ever climbs.",
+   "carries": [],
+   "readiness": "ready",
+   "blocking": []
+  },
+  {
+   "key": "s02",
+   "scene": "sc02",
+   "section": "answer",
+   "sentences": [
+    "s02"
+   ],
+   "claims": [
+    "test-fixture/every-leap-second-since-utc-began"
+   ],
+   "cites": [
+    "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+   ],
+   "figures": [],
+   "chart": null,
+   "qualifications": [],
+   "reviewed": true,
+   "slug": "never-taken-away",
+   "format": "THE COMMISSION FINDS",
+   "hook": "Could a leap second ever be taken back? The record says it never has been.",
+   "carries": [],
+   "readiness": "needs-review",
+   "blocking": [
+    "over the cap of 1 ready shorts per video"
+   ]
+  }
+ ],
+ "rejected": []
+}
