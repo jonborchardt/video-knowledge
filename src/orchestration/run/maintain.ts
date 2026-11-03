@@ -291,7 +291,9 @@ export async function maintain(
       return { outcome: 'done', stage, halt: null, iterations: 1, costUsd: cost, actions };
     }
     // 3. the report, the notes, the stories
-    const report = await child('npm run report');
+    // this topic only: the global report would regenerate every topic with a store, and a parked research topic
+    // without a committed report is outside the scan's writable set (its new files were reverted: M3 phase 5)
+    const report = await child(`npm run report -- ${topic}`);
     if (!report.ok)
       return halt('step-failed', `npm run report failed: ${report.error}`, {
         kind: 'run',

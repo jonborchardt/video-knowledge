@@ -1,7 +1,8 @@
 // npm run report [-- <command>]
-//   (none)                        write topics/<topic>/report.json for every topic with a store (the watcher library),
-//                                 then keep its public-record.json: exhibit numbers, and a revision for each claim whose
-//                                 finding label or verdict changed; prints the revisions that need a note
+//   [<topic>]                     write topics/<topic>/report.json for every topic with a store (the watcher library),
+//                                 or for the one topic named, then keep its public-record.json: exhibit numbers, and a
+//                                 revision for each claim whose finding label or verdict changed; prints the revisions
+//                                 that need a note. A run that may write one topic only (the maintenance scan) names it.
 //   seed [topic]                  no watcher: exhibit numbers only, for every topic with a report (or one); runs anywhere
 //   note <topic> <claim> "<note>" explain the latest unexplained revision of a claim (exit 2 when there is none)
 // The watcher lives in ../retire-sim (or $WATCHER_DIR), so the default command only runs locally; commit the results.
@@ -42,13 +43,14 @@ if (cmd === 'note') {
     keep(topic, null);
     console.log('seeded', relTo(publicRecordPath(topic)));
   }
-} else if (cmd) {
-  console.error(`unknown command ${cmd}: (none), seed [topic], note <topic> <claim> "<note>"`);
+} else if (cmd && !existsSync(join(topicDir(cmd), 'store', 'topics.json'))) {
+  console.error(`unknown command ${cmd}: [<topic with a store>], seed [topic], note <topic> <claim> "<note>"`);
   process.exit(1);
 } else {
   const reported = new Set(topicNames());
   for (const d of readdirSync(topicsDir(), { withFileTypes: true })) {
     if (!d.isDirectory() || !existsSync(join(topicDir(d.name), 'store', 'topics.json'))) continue;
+    if (cmd && d.name !== cmd) continue; // one topic: a child allowed to write that topic alone
     const before = reported.has(d.name) ? claimStates(loadTopic(d.name)) : null;
     const path = join(topicDir(d.name), 'report.json');
     const old = existsSync(path) ? readFileSync(path, 'utf8') : null;

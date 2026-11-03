@@ -156,7 +156,7 @@ describe('maintain', () => {
     ).toBe(true);
     expect(steps.some((s) => /^npm run record-sources -- /.test(s))).toBe(true);
     expect(steps.some((s) => /^npm run evidence -- scanned /.test(s))).toBe(true);
-    expect(steps.some((s) => s === 'npm run report')).toBe(true);
+    expect(steps.some((s) => s === `npm run report -- ${c.f.topic}`)).toBe(true);
     expect(steps.some((s) => /revision-note\.md/.test(s))).toBe(true);
     expect(steps.some((s) => /^npm run report -- note /.test(s))).toBe(true);
     expect(steps.some((s) => /^npm run stories -- discover /.test(s))).toBe(true);
@@ -187,7 +187,7 @@ describe('maintain', () => {
     const steps = c.journal().map((e) => e.step);
     expect(steps.filter((s) => /new-sources\.md/.test(s))).toHaveLength(1);
     expect(steps.filter((s) => /^npm run record-sources -- /.test(s))).toHaveLength(1);
-    expect(steps.filter((s) => s === 'npm run report')).toHaveLength(2);
+    expect(steps.filter((s) => s === `npm run report -- ${c.f.topic}`)).toHaveLength(2);
     expect(c.articleCalls).toEqual([c.f.topic]);
     expect(readJson<MaintenanceFile>(maintenancePath(c.f.topic, c.f.root))!.scans).toHaveLength(1);
     expect(readHalt(runDir(c.f.topic, c.f.story, c.f.root))?.kind).toBe('needs-person');
@@ -220,7 +220,7 @@ describe('maintain', () => {
     expect(r.outcome).toBe('done');
     expect(r.actions.join('\n')).toMatch(/nothing new recorded/);
     const steps = c.journal().map((e) => e.step);
-    expect(steps.some((s) => s === 'npm run report')).toBe(false);
+    expect(steps.some((s) => s === `npm run report -- ${c.f.topic}`)).toBe(false);
     expect(c.articleCalls).toEqual([]);
     expect(readJson<MaintenanceFile>(maintenancePath(c.f.topic, c.f.root))!.scans[0]).toMatchObject({
       found: 0,
