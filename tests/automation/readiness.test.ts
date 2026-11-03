@@ -1,7 +1,7 @@
 // The readiness record (M3 2.5): the integrations are a code constant with their implemented fact and the configuration
 // key their enabled state is read from; readiness.json stores verification only, written by one person-only verb
 // whose evidence must name a record that exists; enabled is never stored and never implied by a verification.
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
@@ -271,5 +271,11 @@ describe('verify (the one writer of readiness.json)', () => {
       evidence: 'social:heat-pumps/decision:x',
     });
     expect(loadAutomation(root).enabled.social).toBe(false); // verification never enables
+  });
+  it('the record the verb writes is excluded from the format check, like every other code-written record', () => {
+    // `verify` writes readiness.json with the shared 1-space toJson; a run's settle step runs `npm run validate`, whose
+    // format check halted the fixture's release loop (step-failed) the first time a verification existed (M3 phase 5)
+    const ignored = readFileSync(join(ROOT, '.prettierignore'), 'utf8').split(/\r?\n/);
+    expect(ignored).toContain('readiness.json');
   });
 });
