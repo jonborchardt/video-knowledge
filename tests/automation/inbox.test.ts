@@ -255,6 +255,36 @@ describe('pollInbox', () => {
     expect(numbered.filter((x) => x === '--paid')).toHaveLength(Math.min(1, s.manifest.ctas.commercial.length));
   });
 
+  it('a reply on a story with a live run waits for the next poll (the ledger write would land in an agent step)', async () => {
+    const s = stagedRelease(T0);
+    stages.push(s);
+    const mail = new FakeMail();
+    const now = () => T0.getTime();
+    const { messageId } = await sendTracked(
+      mail,
+      { from: 'automation@example.test', to: 'jon@example.test', subject: '[CoR draft] a title', text: 'watch it' },
+      'draft-request',
+      s.f.root,
+      { topic: s.f.topic, storyId: s.f.story, now },
+    );
+    const { writeFileSync, mkdirSync } = await import('node:fs');
+    mkdirSync(runDir(s.f.topic, s.f.story, s.f.root), { recursive: true });
+    writeFileSync(
+      join(s.f.dir, 'run', 'draft-request.json'),
+      JSON.stringify({ x: { messageId, at: T0.toISOString() } }),
+    );
+    writeFileSync(
+      join(s.f.dir, 'run', 'lock.json'),
+      JSON.stringify({ runId: 'r1', pid: 777, host: 'h', startedAt: T0 }),
+    );
+    mail.deliver(reply(messageId, 'OK', { subject: 'Re: [CoR draft] a title' }));
+    const live = await pollInbox(a, mail, s.f.root, { now, run: s.run, alive: (pid) => pid === 777 });
+    expect([live.applied, live.ignored]).toEqual([[], []]);
+    expect(existsSync(join(s.f.dir, 'run', 'draft-accepted.json'))).toBe(false);
+    const later = await pollInbox(a, mail, s.f.root, { now, run: s.run, alive: () => false }); // the run is gone
+    expect(later.applied).toEqual([`${s.f.story}: draft ok`]);
+  });
+
   it('a draft reply: OK records the acceptance for the release loop; CHANGES: records the notes on the draft', async () => {
     const s = stagedRelease(T0);
     stages.push(s);

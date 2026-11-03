@@ -12,6 +12,7 @@ import { ROOT, readJson, scriptDir, writeJsonAtomic } from '../../shared/io';
 import type { InMail, MailTransport } from '../../shared/mail';
 import type { ReleaseManifest } from '../../shared/types';
 import { type Halt, clearHalt, readHalt, runDir, writeHalt } from './journal';
+import { aliveLocks } from './lock';
 import { type OutboxEntry, automationDir, readOutbox, sendTracked } from './notify';
 import { DRAFT_ACCEPTED_FILE, readShadow, recordShadowPerson } from './release';
 import { type Decision, batchIdIn, correctionIdIn, ownText, parseReply, requestIdIn } from './replies';
@@ -49,6 +50,7 @@ export interface InboxDeps {
   now?: () => number;
   /** Runs `npm run <cli> -- <args>` and waits (the tick spawns the repo's CLI with the verb's environment). */
   run: (cli: string, args: string[]) => Promise<CliResult> | CliResult;
+  alive?: (pid: number) => boolean; // tests inject; a live run's story is left for the next poll
 }
 export interface InboxReport {
   fetched: number;
@@ -125,6 +127,12 @@ export async function pollInbox(
     return err;
   };
   const file = readInbox(root);
+  /** A run of the story or of one of its Shorts is live: a ledger write now would land inside an agent step and
+   *  the tree guard would revert it (a Short halted unexpected-edit on 2026-11-03), so the reply waits a poll. */
+  const runLive = (topic: string, storyId: string) => {
+    const under = scriptDir(topic, storyId, root).replaceAll('\\', '/') + '/';
+    return aliveLocks(root, deps.alive).some((d) => d.replaceAll('\\', '/').startsWith(under));
+  };
   const got = await mail.fetchSince(file.lastUid);
   const report: InboxReport = { fetched: got.length, applied: [], ignored: [], clarified: [], refused: [], failed: [] };
   const outbox = readOutbox(root);
@@ -183,6 +191,10 @@ export async function pollInbox(
       }));
     if (thread.kind === 'release-request' && thread.topic && thread.storyId) {
       const { topic, storyId } = thread;
+      if (runLive(topic, storyId)) {
+        leftAt ??= m.uid;
+        continue;
+      }
       const id = requestIdIn(m.subject) ?? requestIdIn(own);
       if (!id || id !== thread.request) {
         ignore(`the request id in the reply (${id ?? 'none'}) is not the thread's (${thread.request})`);
@@ -245,6 +257,10 @@ export async function pollInbox(
     }
     if (thread.kind === 'draft-request' && thread.topic && thread.storyId) {
       const { topic, storyId } = thread;
+      if (runLive(topic, storyId)) {
+        leftAt ??= m.uid;
+        continue;
+      }
       const parsed = parseReply(own, a, new Date(now()), 'draft');
       if ('problem' in parsed || parsed.decision.verdict === 'schedule') {
         await reply(
