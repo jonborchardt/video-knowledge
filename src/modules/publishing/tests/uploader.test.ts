@@ -596,7 +596,7 @@ describe('goLive', () => {
     const client = fakeClient(); // getVideo answers privacyStatus 'private'
     await upload(f.topic, f.story, ctx(f, client));
     recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
-    const r = await goLive(f.topic, f.story, ctx(f, client));
+    const r = await goLive(f.topic, f.story, ctx(f, client, { wait: async () => undefined })); // six reads, no real waits
     expect(r.event).toMatchObject({ type: 'failed', step: 'go-live', retryable: false });
     expect(r.event!.error).toContain('YouTube Studio');
     expect(events(f).some((e) => e.type === 'published')).toBe(false);
