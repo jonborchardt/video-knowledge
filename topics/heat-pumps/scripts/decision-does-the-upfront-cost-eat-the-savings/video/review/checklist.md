@@ -1,6 +1,6 @@
 # Review checklist
 
-What a Heat Pump Really Costs to Install, and What Help Is Left, private review build 2026-10-28.
+What a Heat Pump Really Costs to Install, and What Help Is Left, private review build 2026-11-03.
 
 - [ ] Opening: does the cold open land before the music enters, and does the title card read cleanly?
 - [ ] Narration: is every sentence intelligible at normal volume on headphones and on a laptop speaker?

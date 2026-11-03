@@ -1,10 +1,10 @@
 # Build report: What a Heat Pump Really Costs to Install, and What Help Is Left
 
-heat-pumps / decision:does-the-upfront-cost-eat-the-savings, 2026-10-28T02:36:48.519Z. `npm run video -- spike heat-pumps decision:does-the-upfront-cost-eat-the-savings`
+heat-pumps / decision:does-the-upfront-cost-eat-the-savings, 2026-11-03T17:04:02.098Z. `npm run video -- qa heat-pumps decision:does-the-upfront-cost-eat-the-savings`
 
 **Segment.** 31 of 30 storyboard scenes (sc01 to end), 37 sentences. Kinds: sc01 title, sc02 question, sc03 question, sc04 quote, sc05 quote, sc06 list, sc07 stat-tiles, sc08 transition, sc09 stat-tiles, sc10 stat-tiles, sc11 excerpt, sc12 excerpt, sc13 stat-tiles, sc14 stat-tiles, sc15 excerpt, sc16 stat-tiles, sc17 list, sc18 question, sc19 quote, sc20 stat-tiles, sc21 excerpt, sc22 quote, sc23 excerpt, sc24 quote, sc25 excerpt, sc26 stat-tiles, sc27 stat-tiles, sc28 excerpt, sc29 list, sc30 list, end close-card.
 
-**Output.** topics/heat-pumps/scripts/decision-does-the-upfront-cost-eat-the-savings/video/segment.mp4: 406.21s, 1920x1080 @ 30 fps, h264 + aac, 12186 frames, rendered in 1959.8s ($0 (local CPU)).
+**Output.** topics/heat-pumps/scripts/decision-does-the-upfront-cost-eat-the-savings/video/segment.mp4: 406.21s, 1920x1080 @ 30 fps, h264 + aac, 12186 frames, rendered in 0s ($0 (local CPU)).
 
 **Narration.** edge / en-US-AndrewMultilingualNeural (rate +0%), mp3, 376.87s of speech at about 158 wpm, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only, not publishable.**
 
@@ -58,11 +58,11 @@ heat-pumps / decision:does-the-upfront-cost-eat-the-savings, 2026-10-28T02:36:48
 | evidence | undertow/texture | 20.6s | 371.9s | -13 dB | -40.3 dB |
 | ending | undertow/pulse | 371.9s | 406.2s | -11 dB | -35.9 dB |
 
-**Clearance.** **Not cleared for public release:** narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final heat-pumps decision:does-the-upfront-cost-eat-the-savings --approved-by <name>" re-narrates it for release. A passing build is technical completion only; a person approves the release.
+**Clearance.** **Not cleared for public release:** narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final heat-pumps decision:does-the-upfront-cost-eat-the-savings --approved-by "your name"" re-narrates it for release. A passing build is technical completion only; a person approves the release.
 
 **Fingerprints.** script 2a40a4627c, storyboard b8b42f19cb, narration d7ae4e328f, config e56775d378, look bf7e3cb00f, music cd7025c0e1.
 
-## QA: passed (36 of 36)
+## QA: passed (37 of 37)
 
 | Check | Result | Detail |
 |---|---|---|
@@ -74,6 +74,7 @@ heat-pumps / decision:does-the-upfront-cost-eat-the-savings, 2026-10-28T02:36:48
 | frame count | ok | 12186 frames, timeline 12186 |
 | duration in range | ok | 406.21s in [405.2,407.2] |
 | duration matches timeline | ok | 406.208s vs 406.200s (12186 frames) |
+| runtime | ok | 390.2s narrated, no target |
 | audio stream | ok | aac 48000 Hz x2 |
 | aac | ok | aac |
 | audio length matches video | ok | 0.008s apart |
@@ -107,7 +108,7 @@ Inspection frames: 66 in video/frames/; contact sheet topics/heat-pumps/scripts/
 
 ## Known limitations
 
-- NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; once the draft is accepted, "npm run video -- final <topic> <story-id> --approved-by <name>" re-narrates it with Azure for release
+- NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; once the draft is accepted, "npm run video -- final <topic> <story-id> --approved-by "your name"" re-narrates it with Azure for release
 - word boundaries from edge-tts group a numeral with the word before it; the span is split by letters, so a numeral cue can be a few frames early
 - system fonts (Georgia, Segoe UI): renders on another machine may set type differently
 - scene transitions are a short fade over the field; no cross-dissolve between scenes

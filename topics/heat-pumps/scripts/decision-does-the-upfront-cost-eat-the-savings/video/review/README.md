@@ -1,10 +1,10 @@
 # PRIVATE REVIEW BUILD: What a Heat Pump Really Costs to Install, and What Help Is Left
 
-Upload `decision-does-the-upfront-cost-eat-the-savings-review-private.mp4` to YouTube as a **private** video for review. Do not publish. Public release is blocked: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final heat-pumps decision:does-the-upfront-cost-eat-the-savings --approved-by <name>" re-narrates it for release.
+Upload `decision-does-the-upfront-cost-eat-the-savings-review-private.mp4` to YouTube as a **private** video for review. Do not publish. Public release is blocked: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final heat-pumps decision:does-the-upfront-cost-eat-the-savings --approved-by "your name"" re-narrates it for release.
 
 - Working title: [PRIVATE REVIEW] What a Heat Pump Really Costs to Install, and What Help Is Left
 - Duration: 6:46 (406.2s), 1920x1080 @ 30 fps
-- MP4 sha: 426274e1bf; build report 661cb67821; QA 36/36
+- MP4 sha: 426274e1bf; build report fd7e6437c4; QA 37/37
 - Description: `description.txt` (paste as is; chapters are measured from the timeline)
 - Checklist: `checklist.md`; build report: `build-report.md`; thumbnail: `thumbnail.png` (the title card); captions: `captions.en.srt`
 
