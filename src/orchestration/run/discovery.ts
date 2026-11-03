@@ -17,7 +17,7 @@ import { ROOT } from '../../shared/io';
 import type { MailTransport } from '../../shared/mail';
 import { PROPOSALS_DIR, loadProposals } from '../../modules/topic-discovery';
 import type { Step } from '../production';
-import { guard as realGuard, snapshot as realSnapshot, type TreeSnapshot } from './guard';
+import { guard as realGuard, snapshot as realSnapshot, type TreeSnapshot, guardWhy } from './guard';
 import type { Halt } from './journal';
 import { acquire, release } from './lock';
 import { automationDir, readOutbox, sendTracked } from './notify';
@@ -176,7 +176,7 @@ async function discoverLocked(
         snap = realSnapshot(root);
         return {
           ok: g.ok,
-          why: [...g.reverted.map((p) => `reverted ${p}`), ...g.restored.map((p) => `restored ${p}`)].join('; '),
+          why: guardWhy(g),
           kept: g.kept,
         };
       }),

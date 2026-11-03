@@ -263,6 +263,16 @@ export function guard(
   return result;
 }
 
+/** The guard's verdict as a halt's why: every path it reverted, restored or could only report (a canary outside the
+ *  repo, which no run may change and nothing can put back). Every pass uses this, so a reported canary never
+ *  yields an empty reason (M3 phase 5: a home settings file changed during a scan and the halt said nothing). */
+export const guardWhy = (g: GuardResult): string =>
+  [
+    ...g.reverted.map((p) => `reverted ${p}`),
+    ...g.restored.map((p) => `restored ${p}`),
+    ...g.reported.map((p) => `changed outside the repo: ${p}`),
+  ].join('; ');
+
 function deletesLines(git: Git, root: string, path: string): boolean {
   const out = git(['diff', '--numstat', '--', path], root).trim();
   if (!out) return false;

@@ -18,7 +18,7 @@ import { loadMaintenance, publicTopicNames, scanDue } from '../../modules/eviden
 import { storyOutputs } from '../../modules/publishing';
 import type { Step } from '../production';
 import { type ArticleWorkDeps, articleWork } from './article-work';
-import { guard as realGuard, snapshot as realSnapshot, type TreeSnapshot } from './guard';
+import { guard as realGuard, snapshot as realSnapshot, type TreeSnapshot, guardWhy } from './guard';
 import {
   type Halt,
   type JournalEntry,
@@ -135,7 +135,7 @@ export async function maintain(
         snap = realSnapshot(root, { hold });
         return {
           ok: g.ok,
-          why: [...g.reverted.map((p) => `reverted ${p}`), ...g.restored.map((p) => `restored ${p}`)].join('; '),
+          why: guardWhy(g),
           kept: g.kept,
         };
       }),

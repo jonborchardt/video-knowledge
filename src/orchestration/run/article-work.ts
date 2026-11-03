@@ -21,7 +21,7 @@ import {
   loadArticleRequest,
 } from '../../modules/article';
 import type { Step } from '../production';
-import { guard as realGuard, snapshot as realSnapshot, type TreeSnapshot } from './guard';
+import { guard as realGuard, snapshot as realSnapshot, type TreeSnapshot, guardWhy } from './guard';
 import {
   type Halt,
   type JournalEntry,
@@ -105,7 +105,7 @@ export async function articleWork(
           snap = realSnapshot(root);
           return {
             ok: g.ok,
-            why: [...g.reverted.map((p) => `reverted ${p}`), ...g.restored.map((p) => `restored ${p}`)].join('; '),
+            why: guardWhy(g),
             kept: g.kept,
           };
         }),

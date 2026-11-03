@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { CANARIES, componentCheck, guard, matchesAny, snapshot } from '../../src/orchestration/run/guard';
+import { CANARIES, componentCheck, guard, matchesAny, snapshot, guardWhy } from '../../src/orchestration/run/guard';
 import { grantFor } from '../../src/orchestration/run/roles';
 import { fixtureRepo, type FixtureRepo } from './helpers';
 
@@ -261,5 +261,20 @@ describe('componentCheck', () => {
         .ok,
     ).toBe(false);
     r.git('clean', '-fdq', 'src');
+  });
+});
+
+describe('guardWhy', () => {
+  it('names every reverted, restored and reported path, so a canary outside the repo never leaves an empty reason', () => {
+    expect(guardWhy({ ok: true, reverted: [], restored: [], reported: [], kept: ['a'] })).toBe('');
+    expect(
+      guardWhy({
+        ok: false,
+        reverted: ['src/x.ts'],
+        restored: ['.env'],
+        reported: ['C:/Users/j/.claude/settings.json'],
+        kept: [],
+      }),
+    ).toBe('reverted src/x.ts; restored .env; changed outside the repo: C:/Users/j/.claude/settings.json');
   });
 });

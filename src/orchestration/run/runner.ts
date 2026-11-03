@@ -13,6 +13,7 @@ import {
   guard as realGuard,
   snapshot as realSnapshot,
   type TreeSnapshot,
+  guardWhy,
 } from './guard';
 import {
   appendJournal,
@@ -262,11 +263,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
         snap = realSnapshot(root);
         return {
           ok: g.ok,
-          why: [
-            ...g.reverted.map((p) => `reverted ${p}`),
-            ...g.restored.map((p) => `restored ${p}`),
-            ...g.reported.map((p) => `changed outside the repo: ${p}`),
-          ].join('; '),
+          why: guardWhy(g),
           kept: g.kept,
         };
       }),
