@@ -9,7 +9,7 @@ import { loadReview } from '../../stories';
 import { buildPackage } from '../evidence-package';
 import { releaseCheck } from '../../../shared/release-check';
 import { sentences } from '../../../shared/sentences';
-import type { EvidencePackage, Release, Script, ScriptReviewFile } from '../../../shared/types';
+import type { EvidencePackage, Release, Script, ScriptReviewFile, ScriptValidation } from '../../../shared/types';
 import { validateScript } from '../../../shared/sentence-validation';
 import { chainOf, loadStories } from '../../stories';
 import { buildStoryboard } from '../../storyboard';
@@ -25,6 +25,16 @@ describe.skipIf(!dirs.length)('committed script packages', () => {
     const review = readJson<ScriptReviewFile>(join(dir, FILES.review));
     const plan = readJson<StoryboardPlan>(join(dir, FILES.storyboard));
     const release = readJson<Release>(join(dir, FILES.release));
+    // A story whose video is live is frozen (CLAUDE.md: a live video is never rebuilt): its committed package and lock
+    // stand while the store keeps growing, and drift under its script is the maintenance pass's and a person's
+    // (needs-person on a revised finding). So its package is not rebuilt against today's corpus here, and its lock is
+    // checked against the committed validation. Found by the first real maintenance scan (M3 phase 5): new evidence
+    // qualified a claim the live heat-pumps video cites.
+    const ledger = readJson<{ outputs?: Record<string, { events?: { type: string }[] }> }>(join(dir, 'publish.json'));
+    const live = Object.values(ledger?.outputs ?? {}).some((o) => {
+      const last = (o.events ?? []).findLast((e) => ['published', 'unpublished', 'retracted'].includes(e.type));
+      return last?.type === 'published';
+    });
     const t = loadTopic(topic);
     const read = passageReader();
     const validation = () =>
@@ -35,7 +45,7 @@ describe.skipIf(!dirs.length)('committed script packages', () => {
         hashDoc: docHasher(),
       });
 
-    it('the package rebuilds byte-for-byte without transcripts', () => {
+    it.skipIf(live)('the package rebuilds byte-for-byte without transcripts', () => {
       const file = loadStories(topic);
       const story = file!.stories.find((s) => s.id === script.story)!;
       const again = buildPackage(story, t, read, {
@@ -89,7 +99,9 @@ describe.skipIf(!dirs.length)('committed script packages', () => {
 
     it.skipIf(!release)('the release fingerprints match the committed files', () => {
       expect(release!.approvedBy).toMatch(/\S/);
-      expect(releaseCheck(release!, validation(), readJson<Storyboard>(join(dir, FILES.storyboard)))).toEqual([]);
+      // a live story's lock is compared with the validation it was locked on (committed), not with today's corpus
+      const v = live ? readJson<ScriptValidation>(join(dir, FILES.validation))! : validation();
+      expect(releaseCheck(release!, v, readJson<Storyboard>(join(dir, FILES.storyboard)))).toEqual([]);
     });
 
     it('no review finding points outside the repository', () => {
