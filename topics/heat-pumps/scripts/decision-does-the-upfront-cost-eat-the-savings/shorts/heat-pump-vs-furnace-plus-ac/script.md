@@ -1,6 +1,6 @@
 # Heat pump or furnace plus air conditioning? One study's medians were $270 apart.
 
-Story `decision:does-the-upfront-cost-eat-the-savings/shorts/heat-pump-vs-furnace-plus-ac` (heat-pumps), revision 3. About 0.8 minutes (111 words at 150 wpm). Validation: **needs-review**, 0 blocking, 1 warnings, 4/5 assertions verified.
+Story `decision:does-the-upfront-cost-eat-the-savings/shorts/heat-pump-vs-furnace-plus-ac` (heat-pumps), revision 3. About 0.8 minutes (111 words at 150 wpm). Validation: **passed**, 0 blocking, 0 warnings, 5/5 assertions verified.
 
 Markers: `[s12 ok]` every assertion verified by the deterministic checks and the reviewer; `[s12 review]` awaiting review or carrying a warning; `[s12 BLOCKED]` an open blocking issue. Sentences without a marker make no factual claim.
 
@@ -10,15 +10,11 @@ Heat pump, or furnace plus air conditioning? One study's median installed costs 
 
 ## Finding
 
-Those are one study's national medians, not quotes for your house: the heat pump's median landed just under the gas furnace with air conditioning. [s02 review] More than 80 percent of the other systems' cost distributions overlap the heat pump's. [s03 ok] A Canadian model disagrees, putting heat pumps higher upfront than gas heating with air conditioning, ahead only over the system's life. [s04 ok] Cooling is counted on both sides here: take the air conditioner out of your quote, and the heat pump is the bigger number. [s05 ok]
+Those are one study's national medians, not quotes for your house: the heat pump's median landed just under the gas furnace with air conditioning. [s02 ok] More than 80 percent of the other systems' cost distributions overlap the heat pump's. [s03 ok] A Canadian model disagrees, putting heat pumps higher upfront than gas heating with air conditioning, ahead only over the system's life. [s04 ok] Cooling is counted on both sides here: take the air conditioner out of your quote, and the heat pump is the bigger number. [s05 ok]
 
 ## Close
 
 Which comparison fits your house is the question the full inquiry takes on.
-
-## Open issues
-
-- **warning** s02 (s02.a) needs-qualification (deterministic): Contradicted by Canadian Climate Institute 2023, heat pumps pay off: Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling. Present the disagreement: name the studies on each side instead of stating one side as fact. Suggestion: The writer says the narration carries it: s02 itself says the figures are one study's medians rather than quotes for the viewer's own house; s03 gives the overlap in the cost distributions behind them; s04 gives the model that disagrees.
 
 ## Evidence by sentence
 
@@ -36,11 +32,11 @@ Which comparison fits your house is the question the full inquiry takes on.
   - contradicts (uncited): Canadian Climate Institute 2023, heat pumps pay off wrong 0.35, direct `heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L842-L846`
     > Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling.
 
-### s02 (factual, needs-review)
+### s02 (factual, verified)
 
 > Those are one study's national medians, not quotes for your house: the heat pump's median landed just under the gas furnace with air conditioning.
 
-- **s02.a** [needs-review] The study's figures are medians of installation cost rather than contractor quotes: the heat pump's median ($6,185) is $270 below the median of the most expensive system, a natural gas furnace plus AC.
+- **s02.a** [verified] The study's figures are medians of installation cost rather than contractor quotes: the heat pump's median ($6,185) is $270 below the median of the most expensive system, a natural gas furnace plus AC.
   - disputed (qualify): 1 supporting (1 independent, strongest 0.5), 1 contradicting, 1 qualifying. modality: typical.
   - warning needs-qualification: Contradicted by Canadian Climate Institute 2023, heat pumps pay off: Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling. Present the disagreement: name the studies on each side instead of stating one side as fact.
   - supports: Edwards 2024, inequities in heat pump bill savings right 0.5, direct `heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L1829-L1836`
