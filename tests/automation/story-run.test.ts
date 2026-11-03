@@ -123,7 +123,7 @@ describe('story run (integration)', () => {
       expect(resume?.error).toMatch(/took over/);
       // tsx binds the driver and its children on Windows, so the agent dies with the run here; when it survives (a
       // runner process that dies alone), the takeover kills it: runner.test.ts proves that path with a real orphan
-      for (const t0 = Date.now(); alive(orphan!) && Date.now() - t0 < 10_000; )
+      for (const t0 = Date.now(); alive(orphan!) && Date.now() - t0 < 10_000;)
         await new Promise((r) => setTimeout(r, 300)); // a loaded machine takes longer than one tick to reap it
       expect(alive(orphan!)).toBe(false); // either way, the dead run's storyboard agent is gone
       expect(stageBefore).toBe('storyboard');
