@@ -154,22 +154,14 @@
         "src/modules/video/bespoke/<topic>-<slug>.ts",
         "scenes/index.ts and bespoke/index.ts (additive only)"
       ],
-      "shell": [
-        "npm run video -- frames",
-        "npm run video -- check"
-      ],
+      "shell": ["npm run video -- frames", "npm run video -- check"],
       "web": false,
       "rule": "the only role that writes code; the tree guard typechecks its components before any child loads them; every bespoke graphic needs a visual review"
     },
     {
       "role": "extraction",
       "brief": "extract.md, sources.md, merge.md",
-      "writes": [
-        "topics/<topic>/work/h*.json",
-        "sv_*.json",
-        "merges.json",
-        "distinct.json"
-      ],
+      "writes": ["topics/<topic>/work/h*.json", "sv_*.json", "merges.json", "distinct.json"],
       "shell": [],
       "web": true,
       "validator": "evidence -- check-batch | check-merges; typed batches in batches.ts"
@@ -177,28 +169,16 @@
     {
       "role": "collect",
       "brief": "collect.md, studies.md, new-sources.md",
-      "writes": [
-        "topics/<topic>/videos.txt",
-        "blogs.txt",
-        "sources/*.txt (through fetch-doc)",
-        "work/sv_*.json"
-      ],
-      "shell": [
-        "npm run evidence -- search",
-        "npm run evidence -- fetch-doc"
-      ],
+      "writes": ["topics/<topic>/videos.txt", "blogs.txt", "sources/*.txt (through fetch-doc)", "work/sv_*.json"],
+      "shell": ["npm run evidence -- search", "npm run evidence -- fetch-doc"],
       "web": true,
       "rule": "the only two verbs a collect agent may run"
     },
     {
       "role": "discovery",
       "brief": "discover.md",
-      "writes": [
-        "proposals/*.json (new files only)"
-      ],
-      "deny": [
-        "proposals/*.review.json"
-      ],
+      "writes": ["proposals/*.json (new files only)"],
+      "deny": ["proposals/*.review.json"],
       "shell": [],
       "web": true,
       "validator": "topics -- validate --fresh"
@@ -206,9 +186,7 @@
     {
       "role": "proposalReview",
       "brief": "proposal-review.md",
-      "writes": [
-        "proposals/<slug>.review.json"
-      ],
+      "writes": ["proposals/<slug>.review.json"],
       "shell": [],
       "web": true,
       "validator": "topics -- validate <slug> --review"
@@ -216,9 +194,7 @@
     {
       "role": "draftReview",
       "brief": "draft-review.md",
-      "writes": [
-        "video/draft-review.json"
-      ],
+      "writes": ["video/draft-review.json"],
       "shell": [],
       "web": true,
       "rule": "shadow: recorded, no effect; agent: may accept-draft or send back a draft build, never a release; two rounds then the person"

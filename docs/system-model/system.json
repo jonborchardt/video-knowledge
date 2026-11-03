@@ -13,86 +13,44 @@
     {
       "step": "Discover",
       "summary": "an agent proposes per institution, another reviews; a person approves",
-      "modules": [
-        "topic-discovery"
-      ],
-      "columns": [
-        "Proposals"
-      ]
+      "modules": ["topic-discovery"],
+      "columns": ["Proposals"]
     },
     {
       "step": "Research",
       "summary": "collect, extract, merge, judge against studies, record, report",
-      "modules": [
-        "evidence"
-      ],
-      "columns": [
-        "Identity",
-        "Research"
-      ]
+      "modules": ["evidence"],
+      "columns": ["Identity", "Research"]
     },
     {
       "step": "Stories",
       "summary": "candidates and their evidence audit; a review makes them ready",
-      "modules": [
-        "stories"
-      ],
-      "columns": [
-        "Stories"
-      ]
+      "modules": ["stories"],
+      "columns": ["Stories"]
     },
     {
       "step": "Produce",
       "summary": "package, script, review, storyboard, graphics, lock, render, score, article, package",
-      "modules": [
-        "script",
-        "storyboard",
-        "video",
-        "article",
-        "packaging",
-        "shorts",
-        "brand"
-      ],
-      "columns": [
-        "Script stage",
-        "Video"
-      ]
+      "modules": ["script", "storyboard", "video", "article", "packaging", "shorts", "brand"],
+      "columns": ["Script stage", "Video"]
     },
     {
       "step": "Approve",
       "summary": "private upload; one email or the review page; a person decides",
-      "modules": [
-        "publishing",
-        "website"
-      ],
-      "columns": [
-        "Publishing"
-      ]
+      "modules": ["publishing", "website"],
+      "columns": ["Publishing"]
     },
     {
       "step": "Publish",
       "summary": "go-live or schedule, Shorts follow, the site rebuilt and deployed, an X post",
-      "modules": [
-        "publishing",
-        "website",
-        "social"
-      ],
-      "columns": [
-        "Publishing",
-        "Operations"
-      ]
+      "modules": ["publishing", "website", "social"],
+      "columns": ["Publishing", "Operations"]
     },
     {
       "step": "Maintain",
       "summary": "monthly scan for new evidence; reaffirm or correct released articles",
-      "modules": [
-        "evidence",
-        "article"
-      ],
-      "columns": [
-        "Research",
-        "Script stage"
-      ]
+      "modules": ["evidence", "article"],
+      "columns": ["Research", "Script stage"]
     }
   ],
   "loopRule": "modules names the capability modules (modules.json) that do the step; columns the artifact columns (objects.json) it writes; orchestration drives every step.",

@@ -9,16 +9,16 @@ code disagree, the code wins (each file names its `authority`).
 
 ## Files
 
-| file             | what it holds                                                                                                               | authority                                                                   |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| `system.json`    | the overview: identity, the one-line loop, the seven layers, the four flows, a map of the other files                       | editorial summary of CLAUDE.md and the module READMEs                       |
-| `modules.json`   | the 15 capabilities (name, responsibility, paths, CLI, briefs, read API, the objects each owns) and the boundary rules       | derived from `src/modules/README.md`, each README, `tests/boundaries.json`  |
-| `objects.json`   | every artifact in the column of the stage that makes it: owner, writer, validity rule, file; 33 edges between them          | derived from `src/admin/objects.ts` (the admin Objects tab)                 |
+| file             | what it holds                                                                                                               | authority                                                                    |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `system.json`    | the overview: identity, the one-line loop, the seven layers, the four flows, a map of the other files                       | editorial summary of CLAUDE.md and the module READMEs                        |
+| `modules.json`   | the 15 capabilities (name, responsibility, paths, CLI, briefs, read API, the objects each owns) and the boundary rules      | derived from `src/modules/README.md`, each README, `tests/boundaries.json`   |
+| `objects.json`   | every artifact in the column of the stage that makes it: owner, writer, validity rule, file; 33 edges between them          | derived from `src/admin/objects.ts` (the admin Objects tab)                  |
 | `externals.json` | every external connection: direction, protocol, secrets, verbs, guards, the flag that enables it, its readiness integration | `docs/OPERATIONS.md` section 2, `readiness.ts`, the env names the code reads |
-| `actors.json`    | the person's acts, the nine agent roles and exactly what each writes, the automation planes, the test doubles               | `roles.ts`, `automation.ts`                                                 |
-| `flow.json`      | the state machines: 12 research stages, 13 production stages, 14 board columns, the halt kinds, the 25-step workflow        | `research.ts`, `production.ts`, `runner.ts`, `src/admin/index.astro`        |
-| `tech.json`      | runtimes, frameworks, libraries, the test and quality gates                                                                 | `package.json`, `wrangler.jsonc`, the CI workflow                           |
-| `rules.json`     | the invariants, grouped: authority, agents, evidence, state, boundaries, secrets, site; each names where it is enforced      | CLAUDE.md Rules                                                             |
+| `actors.json`    | the person's acts, the nine agent roles and exactly what each writes, the automation planes, the test doubles               | `roles.ts`, `automation.ts`                                                  |
+| `flow.json`      | the state machines: 12 research stages, 13 production stages, 14 board columns, the halt kinds, the 25-step workflow        | `research.ts`, `production.ts`, `runner.ts`, `src/admin/index.astro`         |
+| `tech.json`      | runtimes, frameworks, libraries, the test and quality gates                                                                 | `package.json`, `wrangler.jsonc`, the CI workflow                            |
+| `rules.json`     | the invariants, grouped: authority, agents, evidence, state, boundaries, secrets, site; each names where it is enforced     | CLAUDE.md Rules                                                              |
 
 Regenerate the two derived files after a change to the admin catalog:
 

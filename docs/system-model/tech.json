@@ -3,44 +3,113 @@
   "generatedOn": "2026-11-02",
   "authority": "package.json, wrangler.jsonc, .github/workflows/pages.yml, astro.config.mjs, CLAUDE.md",
   "runtime": [
-    { "name": "Node.js + TypeScript (tsx)", "role": "every CLI (npm run <verb> is tsx src/modules/<module>/cli.ts); typecheck tsc --noEmit and astro check" },
-    { "name": "Node ESM scripts (.mjs)", "role": "the store's writers: watcher, record, record-sources, merge-claims (thin wrappers over the watcher checkout)" },
+    {
+      "name": "Node.js + TypeScript (tsx)",
+      "role": "every CLI (npm run <verb> is tsx src/modules/<module>/cli.ts); typecheck tsc --noEmit and astro check"
+    },
+    {
+      "name": "Node ESM scripts (.mjs)",
+      "role": "the store's writers: watcher, record, record-sources, merge-claims (thin wrappers over the watcher checkout)"
+    },
     { "name": "Python (VK_PYTHON)", "role": "edge_tts.py: the draft voice" },
-    { "name": "ffmpeg (FFMPEG_DIR, Remotion's bundled build)", "role": "chunk render, mux; the mix itself is PCM in src/modules/video/mix.ts because that ffmpeg has no afade, aloop or limiter" },
-    { "name": "Git", "role": "the state store: artifacts committed, decisions carry a sha; the tree guard snapshots and reverts" }
+    {
+      "name": "ffmpeg (FFMPEG_DIR, Remotion's bundled build)",
+      "role": "chunk render, mux; the mix itself is PCM in src/modules/video/mix.ts because that ffmpeg has no afade, aloop or limiter"
+    },
+    {
+      "name": "Git",
+      "role": "the state store: artifacts committed, decisions carry a sha; the tree guard snapshots and reverts"
+    }
   ],
   "site": [
-    { "name": "Astro 7", "role": "the static site (build-time rendering), the dev-only admin pages injected when command === 'dev', redirects from moved.json, sitemap" },
+    {
+      "name": "Astro 7",
+      "role": "the static site (build-time rendering), the dev-only admin pages injected when command === 'dev', redirects from moved.json, sitemap"
+    },
     { "name": "Tailwind CSS 4 (@tailwindcss/vite)", "role": "styles; brand faces self-hosted from brand/fonts/" },
-    { "name": "Content graph (src/modules/website/content-graph.ts)", "role": "every URL from a node id (urlOf), derived each build, never stored; public-urls.json freezes them" },
+    {
+      "name": "Content graph (src/modules/website/content-graph.ts)",
+      "role": "every URL from a node id (urlOf), derived each build, never stored; public-urls.json freezes them"
+    },
     { "name": "Cloudflare Workers static assets (wrangler.jsonc)", "role": "commonwealthofreason.com" },
     { "name": "GitHub Pages mirror (DEPLOY_TARGET=pages)", "role": "/video-knowledge/ on push via Actions" },
-    { "name": "Client JS", "role": "kept to the tab bar, claim search, video facade, board copy/sort/filter, review page seek/notes/job refresh, the calculators in src/tools/" }
+    {
+      "name": "Client JS",
+      "role": "kept to the tab bar, claim search, video facade, board copy/sort/filter, review page seek/notes/job refresh, the calculators in src/tools/"
+    }
   ],
   "video": [
-    { "name": "Remotion 4 + React 19", "role": "the renderer: Video.tsx, scenes in remotion/scenes (COMPONENTS), bespoke graphics per video, Portrait.tsx for Shorts; browser-safe files import no node:*" },
-    { "name": "kinds.ts", "role": "the closed map from storyboard scene to component (KindSpec); an unsupported scene fails the build" },
-    { "name": "theme.ts", "role": "the one home of colour: the owning institution's kit fills its roles; no literal colour in a component" },
-    { "name": "SceneView fit guard", "role": "checks every rendered frame: visible text that leaves the frame or runs into the citation fails the render" },
-    { "name": "componentVersion", "role": "the chunk cache key and each bespoke graphic's approval key: a hash of normalised sources read from the TypeScript AST" },
-    { "name": "edge-tts (draft), Azure AI Speech SDK (release), OpenAI (optional)", "role": "narration with word timings; cues name narration words" },
-    { "name": "PCM mixer (mix.ts, assemble.ts)", "role": "narration track, soundtrack cues over scene anchors, peak under the ceiling by turning the music down, never the narration" },
-    { "name": "Strudel bench", "role": "generative compositions imported as WAV (never committed), licence cleared by a person" }
+    {
+      "name": "Remotion 4 + React 19",
+      "role": "the renderer: Video.tsx, scenes in remotion/scenes (COMPONENTS), bespoke graphics per video, Portrait.tsx for Shorts; browser-safe files import no node:*"
+    },
+    {
+      "name": "kinds.ts",
+      "role": "the closed map from storyboard scene to component (KindSpec); an unsupported scene fails the build"
+    },
+    {
+      "name": "theme.ts",
+      "role": "the one home of colour: the owning institution's kit fills its roles; no literal colour in a component"
+    },
+    {
+      "name": "SceneView fit guard",
+      "role": "checks every rendered frame: visible text that leaves the frame or runs into the citation fails the render"
+    },
+    {
+      "name": "componentVersion",
+      "role": "the chunk cache key and each bespoke graphic's approval key: a hash of normalised sources read from the TypeScript AST"
+    },
+    {
+      "name": "edge-tts (draft), Azure AI Speech SDK (release), OpenAI (optional)",
+      "role": "narration with word timings; cues name narration words"
+    },
+    {
+      "name": "PCM mixer (mix.ts, assemble.ts)",
+      "role": "narration track, soundtrack cues over scene anchors, peak under the ceiling by turning the music down, never the narration"
+    },
+    {
+      "name": "Strudel bench",
+      "role": "generative compositions imported as WAV (never committed), licence cleared by a person"
+    }
   ],
   "automation": [
-    { "name": "Claude Code CLI (claude -p)", "role": "every agent step under a per-role grant; the attempt record is the unit of spend" },
+    {
+      "name": "Claude Code CLI (claude -p)",
+      "role": "every agent step under a per-role grant; the attempt record is the unit of spend"
+    },
     { "name": "nodemailer (SMTP 465)", "role": "the outbox: halt mails, digest, requests, batches, launch mail" },
     { "name": "imapflow + mailparser (IMAP 993)", "role": "the inbox adapter: replies applied once through the CLIs" },
-    { "name": "Windows scheduled tasks", "role": "the tick and the work plane; a person creates them from schedule --print" }
+    {
+      "name": "Windows scheduled tasks",
+      "role": "the tick and the work plane; a person creates them from schedule --print"
+    }
   ],
   "quality": [
-    { "name": "vitest (unit project)", "role": "npm test: boundaries, production, evidence, publishing, mail (FakeMail), web-quality, dist walk, accounts, docs, fixture topic" },
-    { "name": "vitest (browser project) + Playwright", "role": "npm run test:browser: the site suite (reflow 320-1440, keyboard, axe WCAG 2.2 A/AA, lab CLS, reduced motion) and the admin live test; Chromium locally, three engines in CI" },
-    { "name": "html-validate, axe-core", "role": "markup and accessibility in the web-quality gate (npm run quality: RESULT: PASSED)" },
-    { "name": "tests/boundaries.test.ts (compiler-backed)", "role": "the module boundary: capabilities, readApi, browserSafe, layoutOwner; the edges allowlist is empty" },
-    { "name": "eslint 10 + typescript-eslint, prettier 3 (astro, tailwind plugins)", "role": "npm run check (incremental), npm run validate (what CI runs: typecheck, lint, format, build, tests)" },
+    {
+      "name": "vitest (unit project)",
+      "role": "npm test: boundaries, production, evidence, publishing, mail (FakeMail), web-quality, dist walk, accounts, docs, fixture topic"
+    },
+    {
+      "name": "vitest (browser project) + Playwright",
+      "role": "npm run test:browser: the site suite (reflow 320-1440, keyboard, axe WCAG 2.2 A/AA, lab CLS, reduced motion) and the admin live test; Chromium locally, three engines in CI"
+    },
+    {
+      "name": "html-validate, axe-core",
+      "role": "markup and accessibility in the web-quality gate (npm run quality: RESULT: PASSED)"
+    },
+    {
+      "name": "tests/boundaries.test.ts (compiler-backed)",
+      "role": "the module boundary: capabilities, readApi, browserSafe, layoutOwner; the edges allowlist is empty"
+    },
+    {
+      "name": "eslint 10 + typescript-eslint, prettier 3 (astro, tailwind plugins)",
+      "role": "npm run check (incremental), npm run validate (what CI runs: typecheck, lint, format, build, tests)"
+    },
     { "name": "npm audit --omit=dev --audit-level=high", "role": "in CI" },
-    { "name": "npm run rehearse, docs/superpowers/plans/e2e.cjs", "role": "a go-live in a throwaway copy; the e2e rehearsal once per phase candidate" }
+    {
+      "name": "npm run rehearse, docs/superpowers/plans/e2e.cjs",
+      "role": "a go-live in a throwaway copy; the e2e rehearsal once per phase candidate"
+    }
   ],
   "verificationPolicy": "change-driven: focused tests and npm run check per task; npm run validate, the boundary test and the e2e rehearsal once on the final candidate of a phase or branch, never again after a fast-forward merge; /produce and the runner still validate before an automated commit"
 }

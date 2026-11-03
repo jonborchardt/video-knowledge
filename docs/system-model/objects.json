@@ -16,10 +16,7 @@
         {
           "id": "proposal",
           "t": "Proposal",
-          "d": [
-            "<slug>.json: a question for an institution,",
-            "proposed until a person approves or rejects"
-          ],
+          "d": ["<slug>.json: a question for an institution,", "proposed until a person approves or rejects"],
           "owner": "topic-discovery",
           "writer": "the discovery agent (discover.md): new files only",
           "valid": "validateProposal: a question no story or earlier proposal asks; status moves only by topics approve|reject (a person) or park (code)",
@@ -28,10 +25,7 @@
         {
           "id": "preview",
           "t": "Proposal review",
-          "d": [
-            "<slug>.review.json: an independent agent",
-            "judges fit and feasibility; parks the weak"
-          ],
+          "d": ["<slug>.review.json: an independent agent", "judges fit and feasibility; parks the weak"],
           "owner": "topic-discovery",
           "writer": "the review agent (proposal-review.md), never the proposer",
           "valid": "validateReview: one review per proposal; the batch parks on fit false or under topics.minOverall",
@@ -40,10 +34,7 @@
         {
           "id": "batch",
           "t": "Proposal batch",
-          "d": [
-            "pb-<id> in each listed proposal: one mail",
-            "a week; APPROVE <slug> or REJECT by reply"
-          ],
+          "d": ["pb-<id> in each listed proposal: one mail", "a week; APPROVE <slug> or REJECT by reply"],
           "owner": "topic-discovery",
           "writer": "npm run topics -- batch (code); sent records the Message-ID",
           "valid": "a pb- id signed with APPROVAL_SECRET, listed per institution; a reply applies once per batch and slug",
@@ -52,10 +43,7 @@
         {
           "id": "disc",
           "t": "Discovery record",
-          "d": [
-            ".automation/discovery/<slot>.json: the agents,",
-            "their usage and cost, the batch, the mail"
-          ],
+          "d": [".automation/discovery/<slot>.json: the agents,", "their usage and cost, the batch, the mail"],
           "owner": "orchestration",
           "writer": "the discovery job (npm run run -- discover)",
           "valid": "one record per weekly slot, written before any agent runs; a crash never doubles the batch or its mail",
@@ -70,10 +58,7 @@
         {
           "id": "inst",
           "t": "Institution",
-          "d": [
-            "commissions in site.ts: a YouTube",
-            "channel and the topics it publishes"
-          ],
+          "d": ["commissions in site.ts: a YouTube", "channel and the topics it publishes"],
           "you": true,
           "owner": "shared",
           "writer": "a person (topics claim adds the topic line)",
@@ -89,10 +74,7 @@
         {
           "id": "topic",
           "t": "Topic (inquiry)",
-          "d": [
-            "store/topics.json: the watcher store;",
-            "never hand-edited"
-          ],
+          "d": ["store/topics.json: the watcher store;", "never hand-edited"],
           "owner": "evidence",
           "writer": "npm run record, record-sources, the watcher CLI",
           "valid": "the store is the only truth of claims and verdicts; a hand edit is reverted by the tree guard",
@@ -101,10 +83,7 @@
         {
           "id": "source",
           "t": "Source",
-          "d": [
-            "a video, post or study: store/videos/*.json",
-            "and its text in sources/*.txt"
-          ],
+          "d": ["a video, post or study: store/videos/*.json", "and its text in sources/*.txt"],
           "owner": "evidence",
           "writer": "the watcher (fetch), evidence -- fetch-doc (a study)",
           "valid": "a document saved only under sources/, https, a bare .txt name; a cite names a passage of it",
@@ -113,10 +92,7 @@
         {
           "id": "claim",
           "t": "Claim",
-          "d": [
-            "canonical, one line, mechanism-level;",
-            "shared by every source that makes it"
-          ],
+          "d": ["canonical, one line, mechanism-level;", "shared by every source that makes it"],
           "owner": "evidence",
           "writer": "npm run record from an extraction batch (h*.json)",
           "valid": "one line, no numbers of one source; evidence belongs to the claim, so a new source never re-judges old claims",
@@ -125,10 +101,7 @@
         {
           "id": "verdict",
           "t": "Verdict",
-          "d": [
-            "per claim, cites a passage",
-            "(<file>.txt#L10-L24); npm run record-sources"
-          ],
+          "d": ["per claim, cites a passage", "(<file>.txt#L10-L24); npm run record-sources"],
           "owner": "evidence",
           "writer": "npm run record-sources from a study batch (sv_*.json)",
           "valid": "one per claim and document; a study overrides an AI guess only when at least as confident; a cited pair is replaced only with --replace-cited by a person",
@@ -137,10 +110,7 @@
         {
           "id": "report",
           "t": "Report",
-          "d": [
-            "report.json by npm run report",
-            "(needs the watcher checkout)"
-          ],
+          "d": ["report.json by npm run report", "(needs the watcher checkout)"],
           "owner": "evidence",
           "writer": "npm run report",
           "valid": "derived from the store; the build and the board read it; a stale one is regenerated, never edited",
@@ -149,10 +119,7 @@
         {
           "id": "record",
           "t": "Public record",
-          "d": [
-            "public-record.json: exhibit numbers that",
-            "never renumber, revisions you explain"
-          ],
+          "d": ["public-record.json: exhibit numbers that", "never renumber, revisions you explain"],
           "you": true,
           "owner": "evidence",
           "writer": "npm run report (exhibits, revisions), article -- correct (an article revision); the note is a person’s (report -- note)",
@@ -162,10 +129,7 @@
         {
           "id": "dataset",
           "t": "Dataset",
-          "d": [
-            "data/<id>.json: evidence numbers with",
-            "a cite per point; shown on /data/"
-          ],
+          "d": ["data/<id>.json: evidence numbers with", "a cite per point; shown on /data/"],
           "owner": "evidence",
           "writer": "a person or an agent, through the data brief",
           "valid": "every point cites a passage; a tool’s defaults cite a dataset",
@@ -174,10 +138,7 @@
         {
           "id": "markers",
           "t": "Research run markers",
-          "d": [
-            "work/run/: recorded batches, extracted",
-            "groups, fetched lists, study and review rounds"
-          ],
+          "d": ["work/run/: recorded batches, extracted", "groups, fetched lists, study and review rounds"],
           "owner": "orchestration",
           "writer": "the topic runner (npm run run -- topic)",
           "valid": "a resumed run never records a batch twice; two empty study rounds park the topic as thin",
@@ -186,10 +147,7 @@
         {
           "id": "scan",
           "t": "Maintenance scan",
-          "d": [
-            "maintenance.json: each scan, what it found",
-            "and recorded; due every everyDays days"
-          ],
+          "d": ["maintenance.json: each scan, what it found", "and recorded; due every everyDays days"],
           "owner": "evidence",
           "writer": "npm run evidence -- scanned (from the scan job)",
           "valid": "one entry per scan with found and recorded counts; lastScan decides when the next is due",
@@ -204,10 +162,7 @@
         {
           "id": "story",
           "t": "Story = one question",
-          "d": [
-            "stories.json, derived: the question, the",
-            "claims that answer it, audit, readiness"
-          ],
+          "d": ["stories.json, derived: the question, the", "claims that answer it, audit, readiness"],
           "owner": "stories",
           "writer": "npm run stories -- discover",
           "valid": "derived, never hand-edited; references only, no passage text; the evidence gate decides readiness and fails closed",
@@ -216,10 +171,7 @@
         {
           "id": "sreview",
           "t": "Story review",
-          "d": [
-            "story-review.json: the semantic pass,",
-            "pruning, chains (up to 3 questions)"
-          ],
+          "d": ["story-review.json: the semantic pass,", "pruning, chains (up to 3 questions)"],
           "you": true,
           "owner": "stories",
           "writer": "the stories.md agent, or a person",
@@ -229,10 +181,7 @@
         {
           "id": "decision",
           "t": "Decision",
-          "d": [
-            "production.json: queued or parked,",
-            "with a note"
-          ],
+          "d": ["production.json: queued or parked,", "with a note"],
           "you": true,
           "owner": "orchestration",
           "writer": "a person",
@@ -248,10 +197,7 @@
         {
           "id": "pkg",
           "t": "Evidence package",
-          "d": [
-            "evidence-package.json: the claims,",
-            "passages and roles a writer may use"
-          ],
+          "d": ["evidence-package.json: the claims,", "passages and roles a writer may use"],
           "owner": "script",
           "writer": "npm run script -- package",
           "valid": "built from stories.json and the store; its fingerprint binds the script; a moved package re-opens the review",
@@ -260,10 +206,7 @@
         {
           "id": "script",
           "t": "Script",
-          "d": [
-            "script.json + script-review.json (another",
-            "agent) + validation; release.json locks"
-          ],
+          "d": ["script.json + script-review.json (another", "agent) + validation; release.json locks"],
           "owner": "script",
           "writer": "a writer agent (script.md); a different reviewer (script-review.md); validate and lock are the CLI’s",
           "valid": "every factual sentence carries an assertion; approvals by fingerprint; three revisions per pass; lock needs passed, storyboard ok, a real approver",
@@ -272,10 +215,7 @@
         {
           "id": "sb",
           "t": "Storyboard",
-          "d": [
-            "storyboard.json: scenes, chart points",
-            "with cites, timing per sentence"
-          ],
+          "d": ["storyboard.json: scenes, chart points", "with cites, timing per sentence"],
           "owner": "storyboard",
           "writer": "the storyboard.md agent; npm run script -- storyboard fills and checks it",
           "valid": "no narration of its own; chart data is numeric points with a unit and a cite; assets registered by id",
@@ -284,10 +224,7 @@
         {
           "id": "article",
           "t": "Article",
-          "d": [
-            "article.json + review + validation;",
-            "article-release.json is what the site shows"
-          ],
+          "d": ["article.json + review + validation;", "article-release.json is what the site shows"],
           "owner": "article",
           "writer": "a writer agent (article.md); a different reviewer (article-review.md); lock, correct and reaffirm are the CLI’s",
           "valid": "the script’s checks over its sentences plus coverage and overlap; only the release snapshot is rendered",
@@ -296,10 +233,7 @@
         {
           "id": "areq",
           "t": "Article request and correction",
-          "d": [
-            "article-request.json: ar-<id> bound to the",
-            "text’s fingerprint; OK by reply releases it"
-          ],
+          "d": ["article-request.json: ar-<id> bound to the", "text’s fingerprint; OK by reply releases it"],
           "owner": "article",
           "writer": "npm run article -- request-correction (the pass), sent (the Message-ID), decide (a person)",
           "valid": "bound to article.json’s fingerprint; a revision voids it; a correction is released only under a person’s name and appends a public-record revision",
@@ -308,10 +242,7 @@
         {
           "id": "cta",
           "t": "Calls to action",
-          "d": [
-            "cta.json from cta.md: destinations in the",
-            "content graph; a paid one needs your name"
-          ],
+          "d": ["cta.json from cta.md: destinations in the", "content graph; a paid one needs your name"],
           "owner": "website",
           "writer": "an agent (cta.md); links -- cta approve records a person’s approval of a paid link",
           "valid": "a destination whose value check fails is dropped; a commercial one needs a disclosure and a person’s approvedBy and is never primary",
@@ -326,10 +257,7 @@
         {
           "id": "render",
           "t": "Render plan",
-          "d": [
-            "render.json: scenes to kinds, cues;",
-            "bespoke graphics in src/modules/video/bespoke/"
-          ],
+          "d": ["render.json: scenes to kinds, cues;", "bespoke graphics in src/modules/video/bespoke/"],
           "owner": "video",
           "writer": "npm run video -- init from the storyboard; a graphics agent registers bespoke kinds",
           "valid": "every scene names a kind the registry accepts; a cue names a spoken word; an unsupported scene fails the build",
@@ -338,10 +266,7 @@
         {
           "id": "build",
           "t": "Build",
-          "d": [
-            "segment.mp4 named by its sha; build-report;",
-            "review/: the package you watch"
-          ],
+          "d": ["segment.mp4 named by its sha; build-report;", "review/: the package you watch"],
           "owner": "video",
           "writer": "npm run video -- spike (draft, edge voice) and final (release, Azure voice); package writes review/",
           "valid": "QA RESULT: PASSED; the package refuses an mp4 whose sha QA did not check; a clearance is recorded, never implied",
@@ -350,10 +275,7 @@
         {
           "id": "music",
           "t": "Soundtrack",
-          "d": [
-            "music.json: cues over scene anchors;",
-            "music/<composition>/ cleared by hand"
-          ],
+          "d": ["music.json: cues over scene anchors;", "music/<composition>/ cleared by hand"],
           "owner": "video",
           "writer": "npm run music -- cues; import keeps licence.cleared, intensity and loop",
           "valid": "cues over scene anchors, never seconds; the mix keeps the peak under the ceiling by turning the music down, never the narration",
@@ -362,10 +284,7 @@
         {
           "id": "short",
           "t": "Short",
-          "d": [
-            "shorts/<slug>/: a nested production from",
-            "one scene; shorts.json + shorts-review.json"
-          ],
+          "d": ["shorts/<slug>/: a nested production from", "one scene; shorts.json + shorts-review.json"],
           "owner": "shorts",
           "writer": "npm run shorts -- discover; the shorts.md agent reviews; the same CLIs produce it",
           "valid": "shorts.json derived; at most 3 per video; its package is a filter of the parent’s; never touches the store",
@@ -374,10 +293,7 @@
         {
           "id": "notes",
           "t": "Notes pass",
-          "d": [
-            "run/notes-pass.json: a changes-requested",
-            "routed to the writer or to video-fix, once"
-          ],
+          "d": ["run/notes-pass.json: a changes-requested", "routed to the writer or to video-fix, once"],
           "owner": "orchestration",
           "writer": "the runner (npm run run -- story), from a request’s notes or --notes-file",
           "valid": "once per request: a sentence or unplaced note to script -- send-back and the writer, a scene-only note to video-fix.md and video -- check",
@@ -392,10 +308,7 @@
         {
           "id": "ledger",
           "t": "Ledger",
-          "d": [
-            "publish.json: per output an event log",
-            "(uploaded, approved, scheduled, published)"
-          ],
+          "d": ["publish.json: per output an event log", "(uploaded, approved, scheduled, published)"],
           "owner": "publishing",
           "writer": "npm run publish (every verb idempotent); metadata may be hand-edited",
           "valid": "append-only events; a public upload needs a prior approved for that build; only a person approves or goes live",
@@ -404,10 +317,7 @@
         {
           "id": "yt",
           "t": "YouTube video",
-          "d": [
-            "output youtube: private upload, then",
-            "go-live; a Short is output short:<slug>"
-          ],
+          "d": ["output youtube: private upload, then", "go-live; a Short is output short:<slug>"],
           "owner": "publishing",
           "writer": "npm run publish -- upload, push, go-live, sync, verify (plain fetch, no googleapis)",
           "valid": "upload sends private only; go-live needs approved; a Short goes live after its video; a live video is never replaced",
@@ -416,10 +326,7 @@
         {
           "id": "manifest",
           "t": "Release manifest",
-          "d": [
-            "release-manifest.json: the outputs, article,",
-            "calls to action and X text one sha binds"
-          ],
+          "d": ["release-manifest.json: the outputs, article,", "calls to action and X text one sha binds"],
           "owner": "packaging",
           "writer": "npm run video -- package (a release build); packaging -- manifest rewrites it",
           "valid": "releaseSha moves when an output is re-packaged, the article re-locked or a call to action changed, and voids the open request",
@@ -428,10 +335,7 @@
         {
           "id": "approval",
           "t": "Approval request and decision",
-          "d": [
-            "approval-requested binds the manifest sha;",
-            "decided by OK, OK at <when>, CHANGES: or the page"
-          ],
+          "d": ["approval-requested binds the manifest sha;", "decided by OK, OK at <when>, CHANGES: or the page"],
           "owner": "publishing",
           "writer": "npm run publish -- request (automation), decide (a person, never automated:)",
           "valid": "an rq- id signed with APPROVAL_SECRET; expired, decided or moved requests are refused; every step idempotent, decided last",
@@ -440,10 +344,7 @@
         {
           "id": "shadow",
           "t": "Shadow record",
-          "d": [
-            ".automation/shadow.json: the draft-review",
-            "agent’s verdict under review.draft: shadow"
-          ],
+          "d": [".automation/shadow.json: the draft-review", "agent’s verdict under review.draft: shadow"],
           "owner": "orchestration",
           "writer": "the release loop (draft-review.md agent)",
           "valid": "no effect on any decision; the digest reads the agreement with the person and says whether agent may be enabled",
@@ -452,10 +353,7 @@
         {
           "id": "launch",
           "t": "Launch record",
-          "d": [
-            ".automation/launch/: seed, brand, build, freeze,",
-            "validate, commit, push, probes, liveAt, posted"
-          ],
+          "d": [".automation/launch/: seed, brand, build, freeze,", "validate, commit, push, probes, liveAt, posted"],
           "owner": "orchestration",
           "writer": "the launch job (npm run run -- launch) and the tick’s probe",
           "valid": "resumable step by step; live only once the deploy probe answers; the X post after that, or not-configured",
@@ -464,10 +362,7 @@
         {
           "id": "post",
           "t": "X post",
-          "d": [
-            "social.json: an intent before the call, the",
-            "id after; once per text, never a fixture"
-          ],
+          "d": ["social.json: an intent before the call, the", "id after; once per text, never a fixture"],
           "owner": "social",
           "writer": "npm run social -- post (the launch probe when enabled.social)",
           "valid": "refused while enabled.social is off or the output is not live; not configured without a handle and keys; one post per textSha",
@@ -482,10 +377,7 @@
         {
           "id": "journal",
           "t": "Run journal, halt, lock",
-          "d": [
-            "run/journal.jsonl: one line per step attempt;",
-            "halt.json: kind, why, unblock; lock.json: pid"
-          ],
+          "d": ["run/journal.jsonl: one line per step attempt;", "halt.json: kind, why, unblock; lock.json: pid"],
           "owner": "orchestration",
           "writer": "the runners (story, topic, scan, article pass)",
           "valid": "operational, gitignored, decides no stage; a halt names a command or a brief; a dead lock is taken over",
@@ -494,10 +386,7 @@
         {
           "id": "attempt",
           "t": "Attempt record",
-          "d": [
-            "run/agents/<line>-<round>.json: one claude -p",
-            "call: models, tokens, cost, turns, exit"
-          ],
+          "d": ["run/agents/<line>-<round>.json: one claude -p", "call: models, tokens, cost, turns, exit"],
           "owner": "orchestration",
           "writer": "the step (steps.ts), open at spawn, complete at exit",
           "valid": "usage and outcome only, never the prompt or the reply; failed and resumed kept; the unit every rollup and estimate sums",
@@ -506,10 +395,7 @@
         {
           "id": "readiness",
           "t": "Readiness record",
-          "d": [
-            "readiness.json: a person’s verification of an",
-            "integration, bound to evidence that exists"
-          ],
+          "d": ["readiness.json: a person’s verification of an", "integration, bound to evidence that exists"],
           "you": true,
           "owner": "orchestration",
           "writer": "npm run run -- verified (a person; the only writer)",
@@ -519,10 +405,7 @@
         {
           "id": "policy",
           "t": "Automation policy",
-          "d": [
-            "automation.json: a closed key set, every",
-            "feature off by default; agent rules are code"
-          ],
+          "d": ["automation.json: a closed key set, every", "feature off by default; agent rules are code"],
           "you": true,
           "owner": "shared",
           "writer": "a person",
