@@ -53,6 +53,9 @@ export interface TickDeps {
   fetchFn?: typeof fetch;
   /** The environment the publication steps read (the institution's X keys say whether it posts); the process's. */
   env?: NodeJS.ProcessEnv;
+  /** `npm run run -- tick --preflight`: the preflight alone, evaluated as if enabled.tick and enabled.work were on
+   *  (what a live tick would stop on), printed and nothing else: no halt written, no mail, flags untouched. */
+  preflightOnly?: boolean;
 }
 
 export interface TickReport {
@@ -145,8 +148,9 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
   if ('held' in got) return { outcome: 'held', actions: [`tick: another tick is running (pid ${got.held.pid})`] };
   const lock = got.lock;
   try {
-    if (!a.enabled.tick) return { outcome: 'disabled', actions: ['tick: disabled'] };
-    const pre = preflight(a, root, {
+    if (!a.enabled.tick && !deps.preflightOnly) return { outcome: 'disabled', actions: ['tick: disabled'] };
+    const checked = deps.preflightOnly ? { ...a, enabled: { ...a.enabled, tick: true, work: true } } : a;
+    const pre = preflight(checked, root, {
       git: gitIn(root),
       claude: () => claudeAnswers(a.agents.command),
       env: process.env,
@@ -164,6 +168,10 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
           ),
       ...deps.preflight,
     });
+    if (deps.preflightOnly)
+      return pre.ok
+        ? { outcome: 'ok', actions: ['preflight ok (as if enabled.tick and enabled.work were on)'] }
+        : { outcome: 'preflight', actions: [`preflight failed: ${pre.problems.join('; ')}`, ...pre.details] };
     const haltPath = join(dir, PREFLIGHT_HALT);
     if (!pre.ok) {
       const at = new Date(now()).toISOString();

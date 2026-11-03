@@ -38,6 +38,7 @@ const okPre = {
   env: { MAIL_SMTP_HOST: 'a', MAIL_IMAP_HOST: 'b', MAIL_USER: 'u', MAIL_PASSWORD: 'p' },
   freeGb: () => 100,
   launches: () => [],
+  channels: () => [], // --preflight checks the channels as if enabled.work were on; the real ones need .env
 };
 const T = 'heat-pumps';
 const S = 'decision:a';
@@ -88,6 +89,20 @@ describe('tick', () => {
     expect(r).toEqual({ outcome: 'disabled', actions: ['tick: disabled'] });
     expect(mail.sent).toEqual([]);
     expect(existsSync(join(automationDir(root), 'schedule.json'))).toBe(false);
+  });
+  it('--preflight runs the preflight alone with the flags off, as if they were on, and writes nothing', async () => {
+    const root = fresh();
+    const mail = new FakeMail();
+    const noMail = { ...okPre, env: {} }; // the mail check applies only while enabled.tick is on
+    const r = await tick(DEFAULTS, root, { mail, now: () => T0, preflight: noMail, preflightOnly: true });
+    expect(r.outcome).toBe('preflight');
+    expect(r.actions[0]).toMatch(/preflight failed: mail is not configured.*notifications.to is empty/);
+    expect(mail.sent).toEqual([]);
+    expect(existsSync(join(automationDir(root), PREFLIGHT_HALT))).toBe(false);
+    expect(existsSync(join(automationDir(root), 'schedule.json'))).toBe(false);
+    const ok = await tick(on, root, { mail, now: () => T0, preflight: okPre, preflightOnly: true });
+    expect(ok).toEqual({ outcome: 'ok', actions: ['preflight ok (as if enabled.tick and enabled.work were on)'] });
+    expect(existsSync(join(automationDir(root), 'schedule.json'))).toBe(false); // no lastTick: nothing ran
   });
   it('a held tick lock exits at once', async () => {
     const root = fresh();

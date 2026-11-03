@@ -80,7 +80,8 @@ packaged`) drives one story. It commits only on `git.commitOn`'s branch; `--no-c
   proposal. `npm run run -- maintain <topic>`, `discover`, `launch` likewise; see 10 to 12.
 - `npm run run -- tick` (writes `.automation/`; external effect: mail, YouTube reads, the deploy probe, X) is the
   control plane's short pass; `npm run run -- work [--job <kind>] [--dry-run]` the work plane's one long job. Both do
-  nothing while their flag is off. `npm run run -- schedule --print` (read-only) prints the Task Scheduler or cron
+  nothing while their flag is off. `npm run run -- tick --preflight` (read-only but for one `claude -p` call) runs the
+  preflight alone as if `enabled.tick` and `enabled.work` were on and prints what a live tick would stop on. `npm run run -- schedule --print` (read-only) prints the Task Scheduler or cron
   commands and the power lines; creating the tasks is your act and is never done here.
 - **Stop** a run: close its terminal or kill its process; the lock's pid dies, the next start takes the lock over,
   kills a surviving child and resumes from what the board says. Never edit the tree while a run is live: the tree

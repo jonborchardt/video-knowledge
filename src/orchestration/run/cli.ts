@@ -30,8 +30,10 @@
 //                                      verified): report seed, brand, build, links freeze, validate, commit, push, resumable
 //                                      from its record under .automation/launch/; clears the launch's halt first.
 //   status [--json]                    every run folder: running, halted (kind, why, unblock) or idle, and its spend.
-//   tick                               the control plane (automation.json enabled.tick): one short pass: preflight,
+//   tick [--preflight]                 the control plane (automation.json enabled.tick): one short pass: preflight,
 //                                      outbox, due resumes, stuck runs, halt emails, the digest. Never runs a story.
+//                                      --preflight: the preflight alone, as if enabled.tick and enabled.work were on;
+//                                      prints what a live tick would stop on and writes nothing (exit 1 on a problem).
 //   work [--job <kind>] [--dry-run]    the work plane (enabled.work): one due long job in the foreground (a resume, the
 //                                      production pick), then exit; the locks bound how many run at once.
 //   pick [--dry-run]                   the production pick by hand: the ranking, the knobs, the choice; starts it
@@ -256,7 +258,8 @@ switch (verb) {
   case 'tick': {
     const a = loadAutomation(ROOT);
     const cfg = mailConfigFromEnv();
-    const r = await tick(a, ROOT, { mail: cfg ? libraryTransport(cfg) : null });
+    const preflightOnly = rest.includes('--preflight');
+    const r = await tick(a, ROOT, { mail: cfg && !preflightOnly ? libraryTransport(cfg) : null, preflightOnly });
     for (const line of r.actions) console.log(line);
     console.log(
       r.outcome === 'ok' || r.outcome === 'disabled' || r.outcome === 'held'
