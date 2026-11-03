@@ -10,7 +10,7 @@
 | Assertions | 5, 5 verified |
 | Issues | 0 blocking, 0 warnings, 0 dispositioned |
 | Unreviewed sentences | 0 |
-| Scenes | no storyboard yet |
+| Scenes | 5, 0:57 (ok) |
 | Evidence package | 20ae630b9e (15 documents, 2 claims) |
 | Model | claude-opus-5 |
 
