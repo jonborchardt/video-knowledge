@@ -6,7 +6,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
-import { ROOT, readJson, scriptDir, sha, storySlug, writeJsonAtomic } from '../../shared/io';
+import { ROOT, readJson, scriptDir, sha, shortOf, storySlug, writeJsonAtomic } from '../../shared/io';
 import { type BoardNext, boardNext, type ProductionStage, type Step, stepsOf } from '../production';
 import {
   componentCheck as realComponentCheck,
@@ -567,7 +567,8 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
           // the production is settled (validated, committed) before anything leaves the machine
           const settled = settle(n);
           if (settled) return settled;
-          const rr = await releaseLoop(topic, storyId, a, releaseContext(n));
+          // a Short resumed by its own id releases as part of its parent's group, never as a group of its own
+          const rr = await releaseLoop(topic, shortOf(storyId)?.parent ?? storyId, a, releaseContext(n));
           const committed = commitRelease(n);
           if (committed) return committed;
           if (rr.outcome === 'halted') return rr;
