@@ -8,7 +8,6 @@ import Board from './Board.astro';
 import Base from '../layouts/Base.astro';
 import ObjectsDiagram from './ObjectsDiagram.astro';
 import PathDiagram from './PathDiagram.astro';
-import PlansDiagram from './PlansDiagram.astro';
 import { serviceGroups } from './services';
 import SiteMapDiagram from './SiteMapDiagram.astro';
 
@@ -305,7 +304,6 @@ const tabs = [
   { id: 'flow', label: 'Every step' },
   { id: 'objects', label: 'Objects' },
   { id: 'sitemap', label: 'Site map' },
-  { id: 'plans', label: 'Plans 1 to 4 (historical)' },
 ];
 const fig = { width: 780, height: yOf(flow.length) };
 ---
@@ -508,15 +506,5 @@ const fig = { width: 780, height: yOf(flow.length) };
   <section id="sitemap" class="mt-6" aria-labelledby="sitemap-h">
     <h2 id="sitemap-h" class="text-title font-semibold">The site: what links where, and why</h2>
     <SiteMapDiagram />
-  </section>
-
-  <section id="plans" class="mt-6" aria-labelledby="plans-h">
-    <h2 id="plans-h" class="text-title font-semibold">What plans 1 to 4 added (historical, October 2026)</h2>
-    <p class={`mt-1 max-w-prose ${small}`}>
-      A record of the four site plans merged on 2026-10-25, not current instructions: Milestones 2 (autonomous
-      operation) and 3 (observability) came after. The current map is Your path and Every step; the runbook is
-      <code>docs/OPERATIONS.md</code>.
-    </p>
-    <PlansDiagram />
   </section>
 </Base>
