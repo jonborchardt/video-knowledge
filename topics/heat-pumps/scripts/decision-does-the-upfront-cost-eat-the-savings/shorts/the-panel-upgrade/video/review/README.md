@@ -1,10 +1,10 @@
-# PRIVATE REVIEW BUILD: In a 21-site field test, 38 percent of heat pump installs needed a new electrical panel
+# RELEASE BUILD: In a 21-site field test, 38 percent of heat pump installs needed a new electrical panel
 
-Upload `decision-does-the-upfront-cost-eat-the-savings-short-the-panel-upgrade-review-private.mp4` to YouTube as a **private** video for review. Do not publish. Public release is blocked: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/the-panel-upgrade --approved-by "your name"" re-narrates it for release.
+Upload `decision-does-the-upfront-cost-eat-the-savings-short-the-panel-upgrade.mp4` to YouTube as a **public** video: the build report says narration and music are cleared, and the person who ran the final build approved it (see its command line).
 
-- Working title: [PRIVATE REVIEW] In a 21-site field test, 38 percent of heat pump installs needed a new electrical…
-- Duration: 0:45 (45.6s), 1080x1920 @ 30 fps
-- MP4 sha: a791d81797; build report 58efe88c26; QA 33/33
+- Title: In a 21-site field test, 38 percent of heat pump installs needed a new electrical panel
+- Duration: 0:45 (45.9s), 1080x1920 @ 30 fps
+- MP4 sha: 734761ce42; build report 8d9ea324f3; QA 33/33
 - Description: `description.txt` (paste as is; chapters are measured from the timeline)
 - Checklist: `checklist.md`; build report: `build-report.md`; captions: `captions.en.srt`
 
@@ -13,12 +13,13 @@ Upload `decision-does-the-upfront-cost-eat-the-savings-short-the-panel-upgrade-r
 
 ## Provenance
 
-- Narration: edge / en-US-AndrewMultilingualNeural (rate +0%), 40.9s of speech, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only.**
+- Narration: azure / en-US-AndrewMultilingualNeural (rate +0%), 41.21s of speech, $0.0082 (estimated from characters). Licence: commercial: Azure AI Speech terms allow the generated audio in published media. Publishable.
 - Music: none (narration only).
-- Clearance: narration no, music n/a. Not cleared for public release.
+- Clearance: narration yes, music n/a. Cleared for public release.
 
-## After the review
+## After the upload
 
-1. Record the private upload: `npm run publish -- uploaded heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/the-panel-upgrade --id <youtube id> --visibility private`.
-2. Fix what the checklist found; a re-render keeps every cached scene the fix does not touch.
-3. Public release needs, besides approval: `npm run video -- final <topic> <story-id> --approved-by "<name>"` (the commercial voice), which packages the release build.
+1. Record it: `npm run publish -- uploaded heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/the-panel-upgrade --id <youtube id> --visibility private` (or `public` once approved).
+2. Watch the upload with the checklist, then approve this build: `npm run publish -- approve heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/the-panel-upgrade --by "<name>"`.
+3. Set it public or schedule it on YouTube, then `npm run publish -- published heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/the-panel-upgrade` (or `scheduled --at <ISO>`).
+4. Any later edit renders a draft again; a live video is never replaced: a re-release is a new output (`npm run publish -- add`).

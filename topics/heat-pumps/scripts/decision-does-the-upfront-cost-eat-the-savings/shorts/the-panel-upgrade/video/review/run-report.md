@@ -10,3 +10,7 @@ Unattended run (npm run run -- story), 2026-11-03T22:20:12.023Z to 2026-11-03T22
 - step-failed: npm run validate failed:        | ^ |     117| |     118| describe('uploadProblem', () => { |  | ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
 
 Total agent cost: 0.00 USD.
+
+## Release build
+
+- 2026-11-03: `npm run video -- final heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/the-panel-upgrade --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.
