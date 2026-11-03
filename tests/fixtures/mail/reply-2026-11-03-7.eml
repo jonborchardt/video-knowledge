@@ -1,0 +1,148 @@
+Delivered-To: automation@example.test
+Received: by 2002:a05:7022:fa01:b0:18f:43ac:42b7 with SMTP id sy1csp94677dlb;
+        Mon, 2 Nov 2026 17:33:25 -0800 (PST)
+X-Received: by 2002:a05:7301:1828:b0:36a:10d:afab with SMTP id 5a478bee46e88-36a42423d10mr19098518eec.25.1793669605292;
+        Mon, 02 Nov 2026 17:33:25 -0800 (PST)
+ARC-Seal: i=2; a=rsa-sha256; t=1793669605; cv=pass;
+        d=google.com; s=arc-20260327;
+        b=VEcGAKFkMSLxHvIbTsQAXaK5g9WpiTZsc1sXO+jqCHCNiy5546B7nhntY5dT+0AYoP
+         9+NQT66cfqypXMmgsrjqD8AnDnqbij/HNkealp/1Wfelbf0kTdd/ymUswUj1YTgt3pA1
+         ZpJvsFKYBbeihFumlg6u1ULRxp0k0gE2Oyz4PX3e2XXm5stES00pBbcU3516gf5e1N6E
+         Zek5OfWdBAQaftPyMHzXSyiyFqRaD6ie+kyNFCJ5Xj9mFecFCkjyunSc9Q6T31+xpvGL
+         VTQxjlFKu4wIrh1FAqf3zZzsF30HT9fqCIZ+Cmc4gh8qIeULZllyrD3hLiXdS9WGpeDc
+         L3dA==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :dkim-signature;
+        bh=8PzJdOqtnTUqnM0OiObXZgVW6IG6dhx+aFgMLFwAt5U=;
+        fh=BIxehIh+vOgqZDCkLad13qnsZof79S3if9sLwdaLbvs=;
+        b=AGTRiSSu6oZAQ6GA8K8PKsiHmy8NDKLNs3rMtnRbaOPtoMXhUkzvSVcGc/2+Jwh8HV
+         jHLju6ux12tNZLaxhg0ExTUy6hUL/WhRj8788vMAd/8bkqi7Q+z40nizBFPTicDG4/aj
+         SQGvNIDwqnkVBArMrcLenscm+pmhMwiU5ivpYHV4ox2fzoeNYyxVe5VmpZXdJgfi6d1x
+         DPzUzTdEbj6yE6FNCQPeHag+kiXQJaAYtrTblPuCiBSFtyeJ4mhSKGUFVRM4gpxCn1o3
+         rx4zpJyLd6CWGMoSh4pn2B1IMyX0RWX4fiWG7SYVc6TZGDqupzy+xEQHGb9S54EL2L7n
+         oxZw==;
+        dara=google.com
+ARC-Authentication-Results: i=2; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20260707 header.b=s65PnacH;
+       arc=pass (i=1);
+       spf=pass (google.com: domain of jon@example.test designates 209.85.220.41 as permitted sender) smtp.mailfrom=jon@example.test;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;
+       dara=pass header.i=@gmail.com
+Return-Path: <jon@example.test>
+Received: from mail-sor-f41.google.com (mail-sor-f41.google.com. [209.85.220.41])
+        by mx.google.com with SMTPS id 5a478bee46e88-36a50944d33sor1875643eec.20.2026.11.02.17.33.25
+        for <automation@example.test>
+        (Google Transport Security);
+        Mon, 02 Nov 2026 17:33:25 -0800 (PST)
+Received-SPF: pass (google.com: domain of jon@example.test designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20260707 header.b=s65PnacH;
+       arc=pass (i=1);
+       spf=pass (google.com: domain of jon@example.test designates 209.85.220.41 as permitted sender) smtp.mailfrom=jon@example.test;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;
+       dara=pass header.i=@gmail.com
+ARC-Seal: i=1; a=rsa-sha256; t=1793669605; cv=none;
+        d=google.com; s=arc-20260327;
+        b=D8x1xXuVuBQqfitHsSAtITQ7QkKePHISaTnU06UtTp17+jgbXbeS1dOYK7VjPWdEKz
+         7E9+5pp5I4qf4j+lS6ljt7X2K26c5v9NyVsuiMGVUVvTIvF1kuoEmhUYg/KI/m5cEOTp
+         35gQDdPwbidbXdx8BMoob2NzKR3q1isdlBMmDpMpAvoM8oiAfp0beopntV7owpLO4ux3
+         IzLCSFgjPyOpTiKv7oxSVShTeNP0tiNAH8CKI7y5QNA8HCQUlniXE9QAqC1etOfETfMm
+         S7kI4zwyvBZeJw9LCbzWFFO3534BwGUuYJku90m9P4d2t+BPeAk2ngYmL/vFgHjTEJyx
+         82dA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :dkim-signature;
+        bh=8PzJdOqtnTUqnM0OiObXZgVW6IG6dhx+aFgMLFwAt5U=;
+        fh=BIxehIh+vOgqZDCkLad13qnsZof79S3if9sLwdaLbvs=;
+        b=fSu9tD0tCTAN/PuKDyxieFV6TbJouhqRvaQnulCoSlP3B8CchIOL/RVwtpF2TmzTzb
+         OZF/RdVgSmEk+HsEmTttThv7TS8v012y3qiQG3XVWcJgUMAzg9Rt7KtJrPVSCObXHI0G
+         HbWjeo4yx//vSwoAzn49btjVFXZo0U7QUbmz4GxNodYCxIinhTUwVFllla7AG145XWxT
+         c2JycgEg17UsHE9BzkgLSOso5II7CqORdpdw1BeHZZSTV+xXVrgvV+sqfyXYxZThnJ5h
+         78ZRUV+8r4rhCG4zbb1uMbxWI1lOnFkyKLTJ8Wfb45BGSaYHMhKePLc65m9eUJ0sM4lX
+         vl9Q==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20260707; t=1793669605; x=1794274405; dara=google.com;
+        h=content-type:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=8PzJdOqtnTUqnM0OiObXZgVW6IG6dhx+aFgMLFwAt5U=;
+        b=s65PnacHp88P/k+yfZ6M4/cqUdEuvr0XWPPBhuvzN53FYyb+Ue9DUwO7hC/nqWRXPk
+         iqbXis+TZXjIzI/ORpEG23vQP59ZbwrvJdM/06sEPW2DeMgZqzahGaUjV1IVTssqM5aR
+         ++pSg5cjFQC/IAl90jaDaPK733HiikilFpYobPvOxmMfkBjZekn0sd/QsVVLHjiwTOP2
+         jPsM0lFh/vY+HLlbPYAeQIsxfPLvi7mJm8bCrxucTxLY+/Zw+i3f7+A9KdLLBaPj0fOa
+         M1dE1Ryu5J9eSBagrU/wmr6bkZ5MdN+0fGz/nToId8ERqi9Qf6RI4APV6vZDVIIwWqr9
+         2msA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1793669605; x=1794274405;
+        h=content-type:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=8PzJdOqtnTUqnM0OiObXZgVW6IG6dhx+aFgMLFwAt5U=;
+        b=CG4KVBkP5cb8E5Tg7Gxw2bHwDNpdrNDjcO2MXFPprTRSeOA9f9zv8heYePomV7uSwo
+         ZcjX8c1oK+guaYU+kiEFf/kPDpSXux80Eh40VvklOFIdQ+GiQmLMKoIQ70/2TEGjYsl5
+         Q8UsSHzBsmSjYWc/Z7+0LMyl9PJcvlWiOMoVH4NqeDdLTCYBUSQB5wsojRCwXxuFboex
+         0jbsoP14LNZo7ame+pcKK345tmry5EyKS/0hKUqdMXwoMSiQ0fnVITIBTdUv5f5jwyes
+         Q6jcL6WaZOuuHXPcLU/i+N5vkG+gdE732ujYQRjCy3Ez7uaq9Tm6GRD1gwZ9tVP8/1xq
+         oK3Q==
+X-Gm-Message-State: AFq9FYLsnEAtg9Rc7iNAqvLQBFZPWdlKNTd+nAn41ZiI14RxZReEQ5na
+	7Gt0BXa9uNgZ1eo3ogIUm/CFDNimqRB+UKDOfaxBlTdCQx1FYJMHMUn/8rxLes/isB1DtgOu0Qb
+	NxwAy8yz+n6CCePH+cmNmvtFsIO1Gc1nncn+O
+X-Gm-Gg: AYBFou3detwN4GD/QxH9+g7//S8NHQH80CTVfUG1enE9dgEpcJ8c1pLcm1NcFsm0CEG
+	8K+wjdOESgqYlFBJ6gMGq9QSxJbZGoWC4I15L2WRo3A+VSx7op9XQkRWoqKAN/xBD13lGXNMGVI
+	TCO0Am+zTixFh5P8Myv6DYiiqadLz/wbGrtnyzTFUTJb0IrFoD5QTOLhN0U052ElwRs0pHjhLyo
+	9SNFnGiwQ5h3ZxlOMb0qgAjRTX2jq9Z5NIkx1/66cK7nlvmkgT8z9J1DjVBr5lP6KHWyz4nNfCe
+	cweoAQfmQNyDuMqtJ8zeG/MaeWWSmyxvUwju0pEMlQGlR8TK5gy6AGLOCGB2ts3o7q14HFUht9A
+	AueddDFOQePaXi7CqDnpxchc6xNgpXQM6YUDyk5TqvJuWUozdbLJosZf2DKKNTPFdHg/4Ji/2Xq
+	Z0t2IpQE/m6c74hw==
+X-Received: by 2002:a05:7300:881c:b0:369:ec31:8fd5 with SMTP id
+ 5a478bee46e88-36a42225546mr19321560eec.3.1793669604745; Mon, 02 Nov 2026
+ 17:33:24 -0800 (PST)
+MIME-Version: 1.0
+References: <da9954cf-db3d-4e2c-9630-c22de9e62f16@gmail.com>
+In-Reply-To: <da9954cf-db3d-4e2c-9630-c22de9e62f16@gmail.com>
+From: Jonathan Borchardt <jon@example.test>
+Date: Mon, 2 Nov 2026 17:32:17 -0800
+X-Gm-Features: AclHuK-bpgiEDBoI8maWktuJXxdk-cF4pG3a_fDwGXFIpURE_s2gcytyvl51RaM
+Message-ID: <CAF-FjM5PORL2v4V32OqQDO7mVXQNZfyxVoOK5FZmdKbVj+3iDw@mail.gmail.com>
+Subject: Re: video-knowledge mail test 2026-11-03T01:31:25.882Z
+To: automation@example.test
+Content-Type: multipart/alternative; boundary="000000000000a2a92b065f553fb7"
+
+--000000000000a2a92b065f553fb7
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+go
+
+On Mon, Nov 2, 2026 at 5:32=E2=80=AFPM <automation@example.test> wro=
+te:
+
+> Reply to this message with any words; the reply is saved as a fixture
+> (addresses replaced).
+> Sent 2026-11-03T01:31:25.882Z.
+>
+
+
+--=20
+Jon
+
+--000000000000a2a92b065f553fb7
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">go</div><br><div class=3D"gmail_quote gmail_quote_containe=
+r"><div dir=3D"ltr" class=3D"gmail_attr">On Mon, Nov 2, 2026 at 5:32=E2=80=
+=AFPM &lt;<a href=3D"mailto:automation@example.test">commonwealthofr=
+eason@gmail.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" s=
+tyle=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);pad=
+ding-left:1ex">Reply to this message with any words; the reply is saved as =
+a fixture (addresses replaced).<br>
+Sent 2026-11-03T01:31:25.882Z.<br>
+</blockquote></div><div><br clear=3D"all"></div><div><br></div><span class=
+=3D"gmail_signature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_s=
+ignature">Jon<br></div>
+
+--000000000000a2a92b065f553fb7--
