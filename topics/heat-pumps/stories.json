@@ -3,8 +3,8 @@
  "basis": {
   "claims": 199,
   "sources": 119,
-  "studies": 27,
-  "candidates": 32
+  "studies": 29,
+  "candidates": 33
  },
  "stories": [
   {
@@ -22,6 +22,7 @@
    "evidenceAvailable": [
     "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: right (0.7, direct)",
     "Mass Save 2026, air-source heat pump rebates: right (0.35, direct)",
+    "desnz-2026-bus-evaluation-final.txt: partly (0.4, partial)",
     "RMI 2018, the economics of electrifying buildings: partly (0.5, direct)",
     "Wilson 2024 (NREL and LBNL), heat pumps for all?: partly (0.2, direct)",
     "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: wrong (0.55, direct)",
@@ -44,6 +45,7 @@
     "Cadmus 2016, ductless mini-split evaluation (MA and RI): partly (0.4, direct)",
     "Wilson 2024 (NREL and LBNL), heat pumps for all?: right (0.55, direct)",
     "Edwards 2024, inequities in heat pump bill savings: right (0.5, direct)",
+    "desnz-2026-bus-evaluation-final.txt: partly (0.5, partial)",
     "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: partly (0.55, direct)",
     "RMI 2018, the economics of electrifying buildings: partly (0.5, partial)",
     "Less 2021 (LBNL), cost of decarbonization retrofits: partly (0.4, direct)",
@@ -96,7 +98,7 @@
     "evidence": 1,
     "editorial": 0.91,
     "overall": 0.95,
-    "explanation": "editorial 0.91 = mean of coherence 0.85 (review), relevance 1 (65 sources, 49 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 1 (lean: pro-hype), depth 1 (11 studies, 7 claims, tension); evidence 1 = strongest Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff at 0.7 (direct) across 4 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "explanation": "editorial 0.91 = mean of coherence 0.85 (review), relevance 1 (65 sources, 49 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 1 (lean: pro-hype), depth 1 (12 studies, 7 claims, tension); evidence 1 = strongest Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff at 0.7 (direct) across 5 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "ready",
    "readinessWhy": "Coherent (0.85), central conclusion qualified with accepted qualifications, 7 essential findings verified, no pending review.",
@@ -154,6 +156,22 @@
        "ref": {
         "kind": "study",
         "claim": "heat-pumps/time-use-heat-pump-electricity-tariffs",
+        "cite": "heat-pumps/sources/desnz-2026-bus-evaluation-final.txt#L1848-L1851"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "desnz-2026-bus-evaluation-final.txt",
+       "verdict": "partly",
+       "confidence": 0.4,
+       "note": "Nearly half (46%) of property owners had switched electricity tariff since installing the system, mostly to cut bills, and rising uptake of time-of-use and dedicated heat pump tariffs was associated with a greater likelihood of reported bill reductions.",
+       "applicability": "partial",
+       "basis": "recorded",
+       "why": "an association in self-reported bill direction, not a measured cost comparison"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "heat-pumps/time-use-heat-pump-electricity-tariffs",
         "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L748-L755"
        },
        "cited": true,
@@ -186,13 +204,14 @@
      "context": [],
      "problems": [],
      "limitations": [
+      "desnz-2026-bus-evaluation-final.txt: Nearly half (46%) of property owners had switched electricity tariff since installing the system, mostly to cut bills, and rising uptake of time-of-use and dedicated heat pump tariffs was associated with a greater likelihood of reported bill reductions. [partial: an association in self-reported bill direction, not a measured cost comparison]",
       "RMI 2018, the economics of electrifying buildings: In RMI's models a tariff alone does not cut costs: a standard heat pump on Houston's Free Nights rate costs more than on a flat rate, and only flexible control on steep tariffs (3:1 TOU, Free Nights) saved about $1,000-2,000 over 15 years, while mild default TOU gave too little.",
       "Wilson 2024 (NREL and LBNL), heat pumps for all?: Where time-of-use rates exist there may be an opportunity to shift heat pump use off-peak and improve bill savings; not analysed."
      ],
      "suggestions": [
       "Add the qualification: the evidence supports a narrower or weaker statement."
      ],
-     "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.7), 2 qualifying."
+     "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.7), 3 qualifying."
     },
     "findings": [
      {
@@ -668,6 +687,22 @@
          "ref": {
           "kind": "study",
           "claim": "heat-pumps/switching-gas-heat-pump-raises-household",
+          "cite": "heat-pumps/sources/desnz-2026-bus-evaluation-final.txt#L2145-L2149"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "desnz-2026-bus-evaluation-final.txt",
+         "verdict": "partly",
+         "confidence": 0.5,
+         "note": "Of BUS property owners who replaced a gas boiler, 52% reported their total energy bills decreased; across all fuels replaced, 19% of those able to say reported an increase, so bills rise for a minority rather than typically (38% of oil replacements reported a decrease against 19% an increase).",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"rather than\")"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "heat-pumps/switching-gas-heat-pump-raises-household",
           "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1850-L1863"
          },
          "cited": true,
@@ -765,6 +800,7 @@
        ],
        "problems": [],
        "limitations": [
+        "desnz-2026-bus-evaluation-final.txt: Of BUS property owners who replaced a gas boiler, 52% reported their total energy bills decreased; across all fuels replaced, 19% of those able to say reported an increase, so bills rise for a minority rather than typically (38% of oil replacements reported a decrease against 19% an increase). [partial: the verdict note limits its own scope (\"rather than\")]",
         "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households switching from gas boilers see running costs about £190/yr higher on a standard tariff (about £83 after dropping the gas standing charge), so bills do rise modestly; but the same paper finds a heat pump time-of-use tariff saves about £318/yr, enough to reverse the rise.",
         "Wilson 2024 (NREL and LBNL), heat pumps for all?: With minimum-efficiency equipment most gas homes with AC see higher bills (only 38% positive), but with cold-climate high-efficiency units 99% see lower bills.",
         "RMI 2018, the economics of electrifying buildings: RMI finds that switching from gas raises energy costs in cold Chicago and Providence but lowers them (though not enough to repay capital) in Houston and Oakland, so it holds only in colder climates. [partial: the verdict note limits its own scope (\"though\")]",
@@ -775,7 +811,7 @@
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): no direct support, 5 qualifying, 1 context only."
+       "explanation": "qualified (qualify): no direct support, 6 qualifying, 1 context only."
       }
      },
      {
@@ -941,6 +977,22 @@
          "ref": {
           "kind": "study",
           "claim": "heat-pumps/time-use-heat-pump-electricity-tariffs",
+          "cite": "heat-pumps/sources/desnz-2026-bus-evaluation-final.txt#L1848-L1851"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "desnz-2026-bus-evaluation-final.txt",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "Nearly half (46%) of property owners had switched electricity tariff since installing the system, mostly to cut bills, and rising uptake of time-of-use and dedicated heat pump tariffs was associated with a greater likelihood of reported bill reductions.",
+         "applicability": "partial",
+         "basis": "recorded",
+         "why": "an association in self-reported bill direction, not a measured cost comparison"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "heat-pumps/time-use-heat-pump-electricity-tariffs",
           "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L748-L755"
          },
          "cited": true,
@@ -973,13 +1025,14 @@
        "context": [],
        "problems": [],
        "limitations": [
+        "desnz-2026-bus-evaluation-final.txt: Nearly half (46%) of property owners had switched electricity tariff since installing the system, mostly to cut bills, and rising uptake of time-of-use and dedicated heat pump tariffs was associated with a greater likelihood of reported bill reductions. [partial: an association in self-reported bill direction, not a measured cost comparison]",
         "RMI 2018, the economics of electrifying buildings: In RMI's models a tariff alone does not cut costs: a standard heat pump on Houston's Free Nights rate costs more than on a flat rate, and only flexible control on steep tariffs (3:1 TOU, Free Nights) saved about $1,000-2,000 over 15 years, while mild default TOU gave too little.",
         "Wilson 2024 (NREL and LBNL), heat pumps for all?: Where time-of-use rates exist there may be an opportunity to shift heat pump use off-peak and improve bill savings; not analysed."
        ],
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.7), 2 qualifying."
+       "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.7), 3 qualifying."
       }
      }
     ]
@@ -6514,6 +6567,190 @@
     "decision:what-happens-when-it-gets-cold",
     "conflict:heat-pump-costs-less-run-heating"
    ]
+  },
+  {
+   "id": "surprise:boiler-upgrade-scheme-grant-pays-500",
+   "kind": "surprise",
+   "title": "Is it really true that the UK Boiler Upgrade Scheme grant pays £7,500 toward a heat pump installation?",
+   "alternates": [
+    "What one study found about whether the UK Boiler Upgrade Scheme grant pays £7,500 toward a heat pump…",
+    "The evidence on the UK Boiler Upgrade Scheme grant pays £7,500 toward a heat pump… is not what you expect"
+   ],
+   "question": "Is it really true that the UK Boiler Upgrade Scheme grant pays £7,500 toward a heat pump installation?",
+   "whyWatch": "An informed guess said \"right\"; the study that checked it said \"partly\". The viewer gets to be wrong along with the experts, then corrected.",
+   "tension": "Expectation: The Boiler Upgrade Scheme has paid £7,500 for air-source heat pumps in England and Wales since October 2023, subject to eligibility. Finding: desnz-2026-bus-approved-grant-values.txt: Effective 21 July 2026 the Secretary of State's approved values pay £7,500 for an air-to-water or ground source heat pump in a property on the gas grid, £9,000 for either in an off-gas-grid property replacing oil or LPG, and £2,500 for any air-to-air heat pump, so £7,500 is the headline grant rather than the only one, and the notice covers England and Wales rather than the whole UK.",
+   "evidenceNeeded": "An independent study that confirms or limits the finding, on the same question.",
+   "evidenceAvailable": [
+    "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: right (0.7, direct)",
+    "desnz-2026-bus-approved-grant-values.txt: partly (0.85, partial)"
+   ],
+   "gaps": [
+    "Central conclusion needs review (qualified, qualify): desnz-2026-bus-approved-grant-values.txt: Effective 21 July 2026 the Secretary of State's approved values pay £7,500 for an air-to-water or ground source heat pump in a property on the gas grid, £9,000 for either in an off-gas-grid property replacing oil or LPG, and £2,500 for any air-to-air heat pump, so £7,500 is the headline grant rather than the only one, and the notice covers England and Wales rather than the whole UK. [partial: the verdict note limits its own scope (\"rather than\")]",
+    "Finding needs review (qualified): The UK Boiler Upgrade Scheme grant pays £7,500 toward a…",
+    "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff differs: The UK Boiler Upgrade Scheme started in May 2022 at £5,000 per air-source heat pump and rose to £7,500 from 23 October 2023."
+   ],
+   "premise": "Before checking, the best guess was \"right\": The Boiler Upgrade Scheme has paid £7,500 for air-source heat pumps in England and Wales since October 2023, subject to eligibility. desnz-2026-bus-approved-grant-values.txt: Effective 21 July 2026 the Secretary of State's approved values pay £7,500 for an air-to-water or ground source heat pump in a property on the gas grid, £9,000 for either in an off-gas-grid property replacing oil or LPG, and £2,500 for any air-to-air heat pump, so £7,500 is the headline grant rather than the only one, and the notice covers England and Wales rather than the whole UK. 6 sources take a position on it.",
+   "claims": [
+    "heat-pumps/boiler-upgrade-scheme-grant-pays-500"
+   ],
+   "related": [
+    "heat-pumps/boiler-upgrade-scheme-grant-covers-most",
+    "heat-pumps/boiler-upgrade-scheme-grant-requires-removing"
+   ],
+   "arc": {
+    "hook": "State the expectation everyone shares, with the sources that voice it.",
+    "conflict": "A study checked it and found something else.",
+    "evidence": "desnz-2026-bus-approved-grant-values.txt: Effective 21 July 2026 the Secretary of State's approved values pay £7,500 for an air-to-water or ground source heat pump in a property on the gas grid, £9,000 for either in an off-gas-grid property replacing oil or LPG, and £2,500 for any air-to-air heat pump, so £7,500 is the headline grant rather than the only one, and the notice covers England and Wales rather than the whole UK.",
+    "resolution": "Why the expectation was wrong, or what the sources were missing.",
+    "takeaway": "The corrected belief, with its limits."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "heuristic",
+    "explanation": "One claim, one question. Unreviewed."
+   },
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.64,
+    "curiosity": 0.8,
+    "stakes": 0.7,
+    "depth": 0.77,
+    "originality": 1,
+    "evidence": 0.81,
+    "editorial": 0.74,
+    "overall": 0.77,
+    "explanation": "editorial 0.74 = mean of coherence 0.8 (heuristic), relevance 0.64 (6 sources, 6 channels), curiosity 0.8 (surprise, a study overturned the guess), stakes 0.7 (lean: pro), depth 0.77 (2 studies, 1 claim, tension); evidence 0.81 = strongest Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff at 0.7 (direct) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-review",
+   "readinessWhy": "Usable if a reviewer resolves: Central conclusion needs review (qualified, qualify): desnz-2026-bus-approved-grant-values.txt: Effective 21 July 2026 the Secretary of State's approved values pay £7,500 for an air-to-water or ground source heat pump in a property on the gas grid, £9,000 for either in an off-gas-grid property replacing oil or LPG, and £2,500 for any air-to-air heat pump, so £7,500 is the headline grant rather than the only one, and the notice covers England and Wales rather than the whole UK. [partial: the verdict note limits its own scope (\"rather than\")] Finding needs review (qualified): The UK Boiler Upgrade Scheme grant pays £7,500 toward a…",
+   "blocking": [
+    "Central conclusion needs review (qualified, qualify): desnz-2026-bus-approved-grant-values.txt: Effective 21 July 2026 the Secretary of State's approved values pay £7,500 for an air-to-water or ground source heat pump in a property on the gas grid, £9,000 for either in an off-gas-grid property replacing oil or LPG, and £2,500 for any air-to-air heat pump, so £7,500 is the headline grant rather than the only one, and the notice covers England and Wales rather than the whole UK. [partial: the verdict note limits its own scope (\"rather than\")]",
+    "Finding needs review (qualified): The UK Boiler Upgrade Scheme grant pays £7,500 toward a…"
+   ],
+   "reviewed": false,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "The UK Boiler Upgrade Scheme grant pays £7,500 toward a heat pump installation",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0.7,
+     "independent": 1,
+     "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "heat-pumps/boiler-upgrade-scheme-grant-pays-500",
+        "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L325-L327"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff",
+       "verdict": "right",
+       "confidence": 0.7,
+       "note": "The UK Boiler Upgrade Scheme started in May 2022 at £5,000 per air-source heat pump and rose to £7,500 from 23 October 2023.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "heat-pumps/boiler-upgrade-scheme-grant-pays-500",
+        "cite": "heat-pumps/sources/desnz-2026-bus-approved-grant-values.txt#L82-L98"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "desnz-2026-bus-approved-grant-values.txt",
+       "verdict": "partly",
+       "confidence": 0.85,
+       "note": "Effective 21 July 2026 the Secretary of State's approved values pay £7,500 for an air-to-water or ground source heat pump in a property on the gas grid, £9,000 for either in an off-gas-grid property replacing oil or LPG, and £2,500 for any air-to-air heat pump, so £7,500 is the headline grant rather than the only one, and the notice covers England and Wales rather than the whole UK.",
+       "applicability": "partial",
+       "basis": "heuristic",
+       "why": "the verdict note limits its own scope (\"rather than\")"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "desnz-2026-bus-approved-grant-values.txt: Effective 21 July 2026 the Secretary of State's approved values pay £7,500 for an air-to-water or ground source heat pump in a property on the gas grid, £9,000 for either in an off-gas-grid property replacing oil or LPG, and £2,500 for any air-to-air heat pump, so £7,500 is the headline grant rather than the only one, and the notice covers England and Wales rather than the whole UK. [partial: the verdict note limits its own scope (\"rather than\")]"
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.7), 1 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "The UK Boiler Upgrade Scheme grant pays £7,500 toward a heat pump installation",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.7,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "heat-pumps/boiler-upgrade-scheme-grant-pays-500",
+          "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L325-L327"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff",
+         "verdict": "right",
+         "confidence": 0.7,
+         "note": "The UK Boiler Upgrade Scheme started in May 2022 at £5,000 per air-source heat pump and rose to £7,500 from 23 October 2023.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "heat-pumps/boiler-upgrade-scheme-grant-pays-500",
+          "cite": "heat-pumps/sources/desnz-2026-bus-approved-grant-values.txt#L82-L98"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "desnz-2026-bus-approved-grant-values.txt",
+         "verdict": "partly",
+         "confidence": 0.85,
+         "note": "Effective 21 July 2026 the Secretary of State's approved values pay £7,500 for an air-to-water or ground source heat pump in a property on the gas grid, £9,000 for either in an off-gas-grid property replacing oil or LPG, and £2,500 for any air-to-air heat pump, so £7,500 is the headline grant rather than the only one, and the notice covers England and Wales rather than the whole UK.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"rather than\")"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "desnz-2026-bus-approved-grant-values.txt: Effective 21 July 2026 the Secretary of State's approved values pay £7,500 for an air-to-water or ground source heat pump in a property on the gas grid, £9,000 for either in an off-gas-grid property replacing oil or LPG, and £2,500 for any air-to-air heat pump, so £7,500 is the headline grant rather than the only one, and the notice covers England and Wales rather than the whole UK. [partial: the verdict note limits its own scope (\"rather than\")]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.7), 1 qualifying."
+      }
+     }
+    ]
+   }
   },
   {
    "id": "conflict:real-world-heat-pump-efficiency-lower",
