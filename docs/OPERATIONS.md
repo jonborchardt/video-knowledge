@@ -74,8 +74,9 @@ Change it by hand, commit it. Nothing reads it but the planes and the CLIs; a wr
 Nothing runs unless a person starts it or a scheduler the person created calls the planes.
 
 - `npm run run -- story <topic> <story-id> [--until <stage>] [--model <alias>] [--no-commit]` (writes the repo;
-  external effect: model calls, narration, and after `packaged` the uploads and the request mail unless `--until
-packaged`) drives one story. It commits only on `git.commitOn`'s branch; `--no-commit` leaves the artifacts for you.
+  external effect: model calls, narration, and after `packaged` the private uploads, a draft-request mail for every
+  draft it uploads under `review.draft: person` or `shadow` (the video's and each Short's), and the release request
+  mail, unless `--until packaged`) drives one story. It commits only on `git.commitOn`'s branch; `--no-commit` leaves the artifacts for you.
 - `npm run run -- topic <topic>` (writes the repo; external effect: model calls, fetches) researches an approved
   proposal. `npm run run -- maintain <topic>`, `discover`, `launch` likewise; see 10 to 12.
 - `npm run run -- tick` (writes `.automation/`; external effect: mail, YouTube reads, the deploy probe, X) is the
