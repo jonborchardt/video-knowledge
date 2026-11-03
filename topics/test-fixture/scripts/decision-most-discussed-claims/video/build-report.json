@@ -2,8 +2,8 @@
  "topic": "test-fixture",
  "story": "decision:most-discussed-claims",
  "title": "Has a leap second ever been taken away?",
- "generatedAt": "2026-11-03T01:46:12.114Z",
- "command": "npm run video -- qa test-fixture decision:most-discussed-claims",
+ "generatedAt": "2026-11-03T03:50:54.528Z",
+ "command": "npm run video -- final test-fixture decision:most-discussed-claims --approved-by Jon",
  "segment": {
   "scenes": [
    "sc01",
@@ -23,8 +23,8 @@
  },
  "output": {
   "file": "topics/test-fixture/scripts/decision-most-discussed-claims/video/segment.mp4",
-  "sha": "c6c2498a30",
-  "seconds": 35.818,
+  "sha": "4b225935c4",
+  "seconds": 35.946,
   "width": 1920,
   "height": 1080,
   "fps": 30,
@@ -32,39 +32,39 @@
   "audio": "aac"
  },
  "narration": {
-  "provider": "edge",
+  "provider": "azure",
   "voice": "en-US-AndrewMultilingualNeural",
   "rate": "+0%",
-  "model": null,
-  "format": "mp3",
-  "licence": "draft only: unofficial Microsoft Edge read-aloud API, no terms for published media",
-  "publishable": false,
-  "seconds": 18.17,
-  "wordsPerMinute": 142,
+  "model": "neural",
+  "format": "wav",
+  "licence": "commercial: Azure AI Speech terms allow the generated audio in published media",
+  "publishable": true,
+  "seconds": 18.3,
+  "wordsPerMinute": 141,
   "sentences": [
    {
     "id": "s01",
-    "seconds": 11.856,
-    "sha": "974f9f7a6a",
+    "seconds": 11.85,
+    "sha": "a6e29b9f94",
     "words": 20
    },
    {
     "id": "s02",
-    "seconds": 6.312,
-    "sha": "73e7b1eba7",
+    "seconds": 6.45,
+    "sha": "348b9c9001",
     "words": 19
    }
   ],
-  "cost": "$0 (edge-tts, no key)"
+  "cost": "$0.0035 (estimated from characters)"
  },
  "rendering": {
   "architecture": "Remotion (React, frame-based) rendered scene by scene into cached chunks through @remotion/renderer; chunks concatenated and the narration track laid down with the ffmpeg in the Remotion compositor (loudnorm to -16 LUFS)",
-  "seconds": 0,
-  "frames": 1074,
+  "seconds": 152.3,
+  "frames": 1078,
   "cost": "$0 (local CPU)"
  },
  "music": {
-  "fingerprint": "c47fe63cc6",
+  "fingerprint": "44b36c7651",
   "compositions": [
    {
     "id": "undertow",
@@ -94,31 +94,29 @@
     "id": "ending",
     "asset": "undertow/pulse",
     "start": 0,
-    "end": 35.8,
+    "end": 35.93333333333333,
     "gain": -11,
     "rmsDb": -36
    }
   ],
   "levels": {
-   "peakDb": -1.7,
+   "peakDb": -1.5,
    "musicPeakDb": -22.3,
    "narrationPeakDb": -1.5,
-   "musicUnderSpeechDb": -17.6,
+   "musicUnderSpeechDb": -17.7,
    "musicScale": 1
   }
  },
  "clearance": {
-  "narration": false,
+  "narration": true,
   "music": true,
-  "publishable": false,
-  "why": [
-   "narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, \"npm run video -- final test-fixture decision:most-discussed-claims --approved-by \"your name\"\" re-narrates it for release"
-  ]
+  "publishable": true,
+  "why": []
  },
  "fingerprints": {
   "script": "d2206ea3ad",
   "storyboard": "8a45bc3b58",
-  "narration": "407cc77b05",
+  "narration": "099c87d2b2",
   "config": "129a2f5a9b",
   "look": "bf7e3cb00f"
  },
@@ -128,7 +126,7 @@
    {
     "name": "mp4 decodable",
     "ok": true,
-    "detail": "35.818s"
+    "detail": "35.946s"
    },
    {
     "name": "video stream",
@@ -153,22 +151,22 @@
    {
     "name": "frame count",
     "ok": true,
-    "detail": "1074 frames, timeline 1074"
+    "detail": "1078 frames, timeline 1078"
    },
    {
     "name": "duration in range",
     "ok": true,
-    "detail": "35.82s in [34.8,36.8]"
+    "detail": "35.95s in [34.9,36.9]"
    },
    {
     "name": "duration matches timeline",
     "ok": true,
-    "detail": "35.818s vs 35.800s (1074 frames)"
+    "detail": "35.946s vs 35.933s (1078 frames)"
    },
    {
     "name": "runtime",
     "ok": true,
-    "detail": "18.2s spoken against a 15 s target"
+    "detail": "18.3s spoken against a 15 s target"
    },
    {
     "name": "audio stream",
@@ -183,12 +181,12 @@
    {
     "name": "audio length matches video",
     "ok": true,
-    "detail": "0.018s apart"
+    "detail": "0.013s apart"
    },
    {
     "name": "no clipping",
     "ok": true,
-    "detail": "peak -1.7 dB, mean -22.1 dB"
+    "detail": "peak -1.5 dB, mean -22 dB"
    },
    {
     "name": "no long silence",
@@ -263,12 +261,12 @@
    {
     "name": "soundtrack mixed",
     "ok": true,
-    "detail": "1 cues, 2026-11-03T01:45:46.477Z"
+    "detail": "1 cues, 2026-11-03T03:50:42.254Z"
    },
    {
     "name": "mix is of this cue sheet",
     "ok": true,
-    "detail": "mix c47fe63cc6, cue sheet c47fe63cc6"
+    "detail": "mix 44b36c7651, cue sheet 44b36c7651"
    },
    {
     "name": "every cue sounded",
@@ -278,12 +276,12 @@
    {
     "name": "music under the voice",
     "ok": true,
-    "detail": "-17.6 dB relative to speech (want -40 to -10)"
+    "detail": "-17.7 dB relative to speech (want -40 to -10)"
    },
    {
     "name": "mix under the ceiling",
     "ok": true,
-    "detail": "peak -1.7 dB, ceiling -1 dB"
+    "detail": "peak -1.5 dB, ceiling -1 dB"
    },
    {
     "name": "scene boundaries follow measured audio",
@@ -298,7 +296,7 @@
    {
     "name": "final scene complete",
     "ok": true,
-    "detail": "ends 35.80s"
+    "detail": "ends 35.93s"
    },
    {
     "name": "no blank sections",
@@ -315,19 +313,23 @@
    "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00001-first.png",
    "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00202-sc01-mid.png",
    "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00402-sc01-end.png",
-   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00499-sc02-mid.png",
-   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00592-sc02-end.png",
-   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00834-end-mid.png",
-   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f01072-end-end.png"
+   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00501-sc02-mid.png",
+   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00596-sc02-end.png",
+   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f00838-end-mid.png",
+   "F:\\github\\video-knowledge\\topics\\test-fixture\\scripts\\decision-most-discussed-claims\\video\\frames\\f01076-end-end.png"
   ],
   "contactSheet": "topics/test-fixture/scripts/decision-most-discussed-claims/video/contact-sheet.png"
  },
  "limitations": [
-  "NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; once the draft is accepted, \"npm run video -- final <topic> <story-id> --approved-by \"your name\"\" re-narrates it with Azure for release",
-  "word boundaries from edge-tts group a numeral with the word before it; the span is split by letters, so a numeral cue can be a few frames early",
+  "narration licence: commercial: Azure AI Speech terms allow the generated audio in published media",
   "system fonts (Georgia, Segoe UI): renders on another machine may set type differently",
   "scene transitions are a short fade over the field; no cross-dissolve between scenes",
   "automated QA checks integrity and consistency, not editorial quality: a person reviews the contact sheet and the video before any publication decision",
   "music levels are measured, not heard: a person judges the balance and the continuity in the review pass"
- ]
+ ],
+ "replaces": {
+  "sha": "2889413734",
+  "status": "release",
+  "narrationPublishable": true
+ }
 }

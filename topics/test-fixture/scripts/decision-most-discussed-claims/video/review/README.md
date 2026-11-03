@@ -1,10 +1,10 @@
-# PRIVATE REVIEW BUILD: Has a leap second ever been taken away?
+# RELEASE BUILD: Has a leap second ever been taken away?
 
-Upload `decision-most-discussed-claims-review-private.mp4` to YouTube as a **private** video for review. Do not publish. Public release is blocked: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final test-fixture decision:most-discussed-claims --approved-by "your name"" re-narrates it for release.
+Upload `decision-most-discussed-claims.mp4` to YouTube as a **public** video: the build report says narration and music are cleared, and the person who ran the final build approved it (see its command line).
 
-- Working title: [PRIVATE REVIEW] [fixture 20261103-0134-c6bc] Has a leap second ever been taken away?
-- Duration: 0:35 (35.8s), 1920x1080 @ 30 fps
-- MP4 sha: c6c2498a30; build report f0ea130189; QA 37/37
+- Title: [fixture 20261103-0134-c6bc] Has a leap second ever been taken away?
+- Duration: 0:35 (35.9s), 1920x1080 @ 30 fps
+- MP4 sha: 4b225935c4; build report 5eaf8f891e; QA 37/37
 - Description: `description.txt` (paste as is; chapters are measured from the timeline)
 - Checklist: `checklist.md`; build report: `build-report.md`; thumbnail: `thumbnail.png` (the title card); captions: `captions.en.srt`
 
@@ -13,13 +13,14 @@ Upload `decision-most-discussed-claims-review-private.mp4` to YouTube as a **pri
 
 ## Provenance
 
-- Narration: edge / en-US-AndrewMultilingualNeural (rate +0%), 18.17s of speech, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only.**
+- Narration: azure / en-US-AndrewMultilingualNeural (rate +0%), 18.3s of speech, $0.0035 (estimated from characters). Licence: commercial: Azure AI Speech terms allow the generated audio in published media. Publishable.
 - Music: Undertow (undertow), strudel-bench f63f2c5 (songs/undertow.strudel not yet committed) at https://github.com/jonborchardt/strudel-bench, source songs/undertow.strudel c7fbeafb07, 84 bpm D:minor. Cleared; no samples. original composition; every voice is a built-in oscillator or synth patch, no sample pack and no soundfont, so no third-party sound is in the render.
-- Mix: 1 cues, music -17.6 dB under the voice while it speaks, peak -1.7 dB.
-- Clearance: narration no, music yes. Not cleared for public release.
+- Mix: 1 cues, music -17.7 dB under the voice while it speaks, peak -1.5 dB.
+- Clearance: narration yes, music yes. Cleared for public release.
 
-## After the review
+## After the upload
 
-1. Record the private upload: `npm run publish -- uploaded test-fixture decision:most-discussed-claims --id <youtube id> --visibility private`.
-2. Fix what the checklist found; a re-render keeps every cached scene the fix does not touch.
-3. Public release needs, besides approval: `npm run video -- final <topic> <story-id> --approved-by "<name>"` (the commercial voice), which packages the release build.
+1. Record it: `npm run publish -- uploaded test-fixture decision:most-discussed-claims --id <youtube id> --visibility private` (or `public` once approved).
+2. Watch the upload with the checklist, then approve this build: `npm run publish -- approve test-fixture decision:most-discussed-claims --by "<name>"`.
+3. Set it public or schedule it on YouTube, then `npm run publish -- published test-fixture decision:most-discussed-claims` (or `scheduled --at <ISO>`).
+4. Any later edit renders a draft again; a live video is never replaced: a re-release is a new output (`npm run publish -- add`).

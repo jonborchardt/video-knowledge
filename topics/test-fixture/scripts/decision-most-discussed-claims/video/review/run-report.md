@@ -24,3 +24,7 @@ Unattended run (npm run run -- story), 2026-11-03T01:35:10.655Z to 2026-11-03T01
 ## Guard events and halts
 
 Total agent cost: 3.92 USD.
+
+## Release build
+
+- 2026-11-03: `npm run video -- final test-fixture decision:most-discussed-claims --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.
