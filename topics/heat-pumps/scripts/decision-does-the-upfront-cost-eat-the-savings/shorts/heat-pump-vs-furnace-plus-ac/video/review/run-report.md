@@ -25,3 +25,7 @@ wrote topics/heat-pumps/scripts/decision-does-the-upfront-cost-eat-the-savings/s
 - unexpected-edit: reverted topics/heat-pumps/scripts/decision-does-the-upfront-cost-eat-the-savings/publish.json (session 0841a4c5-0f4d-4cff-858a-ac6cd3eb4587)
 
 Total agent cost: 12.85 USD.
+
+## Release build
+
+- 2026-11-03: `npm run video -- final heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/heat-pump-vs-furnace-plus-ac --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.

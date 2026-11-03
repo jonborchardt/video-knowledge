@@ -1,10 +1,10 @@
-# PRIVATE REVIEW BUILD: Heat pump or furnace plus air conditioning? One study's medians were $270 apart.
+# RELEASE BUILD: Heat pump or furnace plus air conditioning? One study's medians were $270 apart.
 
-Upload `decision-does-the-upfront-cost-eat-the-savings-short-heat-pump-vs-furnace-plus-ac-review-private.mp4` to YouTube as a **private** video for review. Do not publish. Public release is blocked: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/heat-pump-vs-furnace-plus-ac --approved-by "your name"" re-narrates it for release.
+Upload `decision-does-the-upfront-cost-eat-the-savings-short-heat-pump-vs-furnace-plus-ac.mp4` to YouTube as a **public** video: the build report says narration and music are cleared, and the person who ran the final build approved it (see its command line).
 
-- Working title: [PRIVATE REVIEW] Heat pump or furnace plus air conditioning? One study's medians were $270 apart.
-- Duration: 0:46 (46.6s), 1080x1920 @ 30 fps
-- MP4 sha: 448b27ea94; build report f89dcac797; QA 33/33
+- Title: Heat pump or furnace plus air conditioning? One study's medians were $270 apart.
+- Duration: 0:46 (46.8s), 1080x1920 @ 30 fps
+- MP4 sha: a258ff1b63; build report d8d4f3524f; QA 33/33
 - Description: `description.txt` (paste as is; chapters are measured from the timeline)
 - Checklist: `checklist.md`; build report: `build-report.md`; captions: `captions.en.srt`
 
@@ -13,12 +13,13 @@ Upload `decision-does-the-upfront-cost-eat-the-savings-short-heat-pump-vs-furnac
 
 ## Provenance
 
-- Narration: edge / en-US-AndrewMultilingualNeural (rate +0%), 41.78s of speech, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only.**
+- Narration: azure / en-US-AndrewMultilingualNeural (rate +0%), 42s of speech, $0.0099 (estimated from characters). Licence: commercial: Azure AI Speech terms allow the generated audio in published media. Publishable.
 - Music: none (narration only).
-- Clearance: narration no, music n/a. Not cleared for public release.
+- Clearance: narration yes, music n/a. Cleared for public release.
 
-## After the review
+## After the upload
 
-1. Record the private upload: `npm run publish -- uploaded heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/heat-pump-vs-furnace-plus-ac --id <youtube id> --visibility private`.
-2. Fix what the checklist found; a re-render keeps every cached scene the fix does not touch.
-3. Public release needs, besides approval: `npm run video -- final <topic> <story-id> --approved-by "<name>"` (the commercial voice), which packages the release build.
+1. Record it: `npm run publish -- uploaded heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/heat-pump-vs-furnace-plus-ac --id <youtube id> --visibility private` (or `public` once approved).
+2. Watch the upload with the checklist, then approve this build: `npm run publish -- approve heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/heat-pump-vs-furnace-plus-ac --by "<name>"`.
+3. Set it public or schedule it on YouTube, then `npm run publish -- published heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/heat-pump-vs-furnace-plus-ac` (or `scheduled --at <ISO>`).
+4. Any later edit renders a draft again; a live video is never replaced: a re-release is a new output (`npm run publish -- add`).
