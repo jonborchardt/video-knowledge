@@ -1,16 +1,14 @@
-# Every leap second on record has been an addition [meta.headline fp=8e9b01bd57]
+# Every Leap Second So Far Was Added; None Was Ever Taken Away [meta.headline fp=e20d6e9207]
 
-Story `decision:most-discussed-claims` (test-fixture), revision 1. SEO title: Has a leap second ever been taken away? [meta.seoTitle fp=7aa4427c85]. Validation: **passed**, 0 blocking, 4 warnings, 4/4 assertions verified.
+Story `decision:most-discussed-claims` (test-fixture), revision 1. SEO title: Have Any Leap Seconds Ever Been Removed? [meta.seoTitle fp=33b86a4c48]. Validation: **passed**, 0 blocking, 4 warnings, 4/4 assertions verified.
 
-> Has a leap second ever been taken away? The IERS record says no: every one since 1972 has added a second to civil time. [meta.dek ok fp=ed5a3b3ab0]
+> Since UTC began in 1972, every leap second on record has lengthened the civil clock, and none has ever shortened it. [meta.dek ok fp=e5e6bcb75e]
 
-Description: No leap second has ever been subtracted: the IERS table records 27 straight additions from 1972 to 2017. [meta.description ok fp=15c2c518b5]
+Description: The official table behind UTC lists every leap second since 1972; each one made the civil clock a second longer, and none has ever made it shorter. [meta.description ok fp=31ae44d1eb]
 
-## Every step in the record adds a second [heading:answer fp=5851c5c369]
+## What the record actually shows [heading:answer fp=836063dbf0]
 
-The IERS table of TAI minus UTC, the record of every leap second since civil time began using them in 1972, climbs from 10 seconds to 37 seconds in 2017 without ever stepping back. [s01 ok fp=3147afb1d6] Across those 27 one-second steps, every single one added a second to civil time; none subtracted one, so a leap second has never been taken away. [s02 ok fp=1bfbd8cc75]
-
-Figure decision-most-discussed-claims/sc02: The IERS table's opening value, its latest value, and the single-second steps between them. [decision-most-discussed-claims/sc02 fp=a8d8c149dc]
+The International Earth Rotation and Reference Systems Service's own table of TAI minus UTC opens at 10 seconds on 1 January 1972 and closes at 37 seconds on 1 January 2017, with every entry in between exactly one second higher than the last. [s01 ok fp=99873f1d95] In other words, the civil clock has only ever gained a second from this table; it has never lost one. [s02 ok fp=6dc85bd0b3]
 
 ## Open issues
 
@@ -18,3 +16,4 @@ Figure decision-most-discussed-claims/sc02: The IERS table's opening value, its 
 - **warning** - structure (deterministic): no "setup" section
 - **warning** - structure (deterministic): no "investigation" section
 - **warning** - structure (deterministic): no "takeaway" section
+- **info** s01 (s01.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.

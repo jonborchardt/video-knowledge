@@ -1,27 +1,26 @@
 # Run report: test-fixture decision:most-discussed-claims
 
-Unattended run (npm run run -- story), 2026-11-02T09:03:01.237Z to 2026-11-02T09:32:59.112Z; journal in F:\github\video-knowledge\topics\test-fixture\scripts\decision-most-discussed-claims\run.
+Unattended run (npm run run -- story), 2026-11-03T01:35:10.655Z to 2026-11-03T01:52:36.131Z; journal in F:\github\video-knowledge\topics\test-fixture\scripts\decision-most-discussed-claims\run.
 
 ## Agents
-- Read src/modules/script/briefs/script.md and follow it. (session 8199df8d-0e5e-4f42-a503-4e1feb9ff3be, 1.27 USD)
-- Read src/modules/script/briefs/script-review.md and follow it. (session 5031ea1e-6890-4d60-87f3-04493f29b99f, 1.78 USD)
-- Read src/modules/storyboard/briefs/storyboard.md and follow it. (session 666af96e-4dc3-4cb6-9d8b-2aeffb64d520, 1.53 USD)
-- Read src/modules/article/briefs/article.md and follow it. (session 1fd9185f-cb2b-43e5-9255-e0874d585c07, 1.86 USD)
-- Read src/modules/article/briefs/article-review.md and follow it. (session a708a483-2cc6-467c-b7e2-0e8395640be4, 0.84 USD)
+- Read src/modules/script/briefs/script.md and follow it. (session 628e3ddb-bad4-437f-a3d8-540483706611, 0.78 USD)
+- Read src/modules/script/briefs/script-review.md and follow it. (session ce0b64fb-f631-4425-ba60-da200ed4948d, 0.63 USD)
+- Read src/modules/storyboard/briefs/storyboard.md and follow it. (session 9a9d88e8-2cd7-4dd8-ab38-089cca432fed, 0.60 USD)
+- Read src/modules/article/briefs/article.md and follow it. (session 714eb5f2-9514-4e4f-b609-81337d65fd85, 1.26 USD)
+- Read src/modules/article/briefs/article-review.md and follow it. (session a0f3a964-41ab-4a6d-82d0-00e02092b814, 0.65 USD)
 
 ## Commands
 - npm run script -- package test-fixture decision:most-discussed-claims (exit 0, 1 s)
-- npm run video -- init test-fixture decision:most-discussed-claims (exit 0, 4 s)
+- npm run video -- init test-fixture decision:most-discussed-claims (exit 0, 5 s)
 - npm run video -- check test-fixture decision:most-discussed-claims (exit 0, 3 s)
 - npm run script -- lock test-fixture decision:most-discussed-claims --approved-by "<approver>" (exit 0, 3 s)
-- npm run video -- spike test-fixture decision:most-discussed-claims (exit 0, 211 s)
+- npm run video -- spike test-fixture decision:most-discussed-claims (exit 0, 225 s)
 - npm run music -- cues test-fixture decision:most-discussed-claims (exit 0, 1 s)
-- npm run video -- render test-fixture decision:most-discussed-claims (exit 0, 9 s)
-- npm run video -- qa test-fixture decision:most-discussed-claims (exit 0, 17 s)
+- npm run video -- render test-fixture decision:most-discussed-claims (exit 0, 8 s)
+- npm run video -- qa test-fixture decision:most-discussed-claims (exit 0, 18 s)
 - npm run article -- lock test-fixture decision:most-discussed-claims --approved-by "<approver>" (exit 0, 1 s)
 - npm run video -- package test-fixture decision:most-discussed-claims (exit 0, 4 s)
 
 ## Guard events and halts
-- step-failed: npm run validate failed: > prettier --check . --cache |  | Checking formatting... | [[33mwarn[39m] tests/fixtures/automation/claude-result.json | [[33mwarn[39m] Code style issues found in the above file. Run Prettier with --write to fix.
 
-Total agent cost: 7.27 USD.
+Total agent cost: 3.92 USD.

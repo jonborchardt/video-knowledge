@@ -2,13 +2,13 @@
  "topic": "test-fixture",
  "story": "decision:most-discussed-claims",
  "revision": 1,
- "date": "2026-11-02T09:26:16.434Z",
+ "date": "2026-11-03T01:52:13.118Z",
  "status": "passed",
- "scriptFingerprint": "b7925ce725",
+ "scriptFingerprint": "0a1faf3834",
  "packageFingerprint": "5879ca5f47",
  "wordsPerMinute": 150,
- "words": 102,
- "spokenWords": 116,
+ "words": 111,
+ "spokenWords": 121,
  "minutes": 0.8,
  "counts": {
   "sentences": 4,
@@ -25,21 +25,21 @@
   {
    "id": "meta.dek",
    "section": "answer",
-   "text": "Has a leap second ever been taken away? The IERS record says no: every one since 1972 has added a second to civil time.",
+   "text": "Since UTC began in 1972, every leap second on record has lengthened the civil clock, and none has ever shortened it.",
    "type": "factual",
-   "fingerprint": "ed5a3b3ab0",
-   "words": 24,
+   "fingerprint": "e5e6bcb75e",
+   "words": 21,
    "status": "verified",
    "approved": true,
    "assertions": [
     {
-     "id": "meta.dek.a1",
-     "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+     "id": "meta.dek.a",
+     "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away.",
      "kind": "fact",
      "status": "verified",
      "validation": {
-      "id": "meta.dek.a1",
-      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+      "id": "meta.dek.a",
+      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away.",
       "kind": "fact",
       "modality": "universal",
       "status": "supported",
@@ -82,21 +82,21 @@
   {
    "id": "meta.description",
    "section": "answer",
-   "text": "No leap second has ever been subtracted: the IERS table records 27 straight additions from 1972 to 2017.",
+   "text": "The official table behind UTC lists every leap second since 1972; each one made the civil clock a second longer, and none has ever made it shorter.",
    "type": "factual",
-   "fingerprint": "15c2c518b5",
-   "words": 18,
+   "fingerprint": "31ae44d1eb",
+   "words": 27,
    "status": "verified",
    "approved": true,
    "assertions": [
     {
-     "id": "meta.description.a1",
-     "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+     "id": "meta.description.a",
+     "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away.",
      "kind": "fact",
      "status": "verified",
      "validation": {
-      "id": "meta.description.a1",
-      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+      "id": "meta.description.a",
+      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away.",
       "kind": "fact",
       "modality": "universal",
       "status": "supported",
@@ -139,27 +139,27 @@
   {
    "id": "s01",
    "section": "answer",
-   "text": "The IERS table of TAI minus UTC, the record of every leap second since civil time began using them in 1972, climbs from 10 seconds to 37 seconds in 2017 without ever stepping back.",
+   "text": "The International Earth Rotation and Reference Systems Service's own table of TAI minus UTC opens at 10 seconds on 1 January 1972 and closes at 37 seconds on 1 January 2017, with every entry in between exactly one second higher than the last.",
    "type": "factual",
-   "fingerprint": "3147afb1d6",
-   "words": 34,
+   "fingerprint": "99873f1d95",
+   "words": 43,
    "status": "verified",
    "approved": true,
    "assertions": [
     {
-     "id": "s01.a1",
-     "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+     "id": "s01.a",
+     "text": "The IERS table of TAI-UTC lists values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before.",
      "kind": "fact",
      "status": "verified",
      "validation": {
-      "id": "s01.a1",
-      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+      "id": "s01.a",
+      "text": "The IERS table of TAI-UTC lists values from 10 s on 1 January 1972 to 37 s on 1 January 2017, each exactly one second larger than the one before.",
       "kind": "fact",
-      "modality": "universal",
+      "modality": "plain",
       "status": "supported",
       "decision": "approved",
-      "review": false,
-      "verbatim": true,
+      "review": true,
+      "verbatim": false,
       "strength": 0.85,
       "independent": 1,
       "supporting": [
@@ -184,11 +184,22 @@
       "qualifying": [],
       "context": [],
       "problems": [],
-      "limitations": [],
+      "limitations": [
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
       "suggestions": [],
       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
      },
-     "issues": []
+     "issues": [
+      {
+       "sentence": "s01",
+       "category": "wording",
+       "severity": "info",
+       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+       "by": "deterministic",
+       "assertion": "s01.a"
+      }
+     ]
     }
    ],
    "issues": []
@@ -196,21 +207,21 @@
   {
    "id": "s02",
    "section": "answer",
-   "text": "Across those 27 one-second steps, every single one added a second to civil time; none subtracted one, so a leap second has never been taken away.",
+   "text": "In other words, the civil clock has only ever gained a second from this table; it has never lost one.",
    "type": "factual",
-   "fingerprint": "1bfbd8cc75",
-   "words": 26,
+   "fingerprint": "6dc85bd0b3",
+   "words": 20,
    "status": "verified",
    "approved": true,
    "assertions": [
     {
-     "id": "s02.a1",
-     "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+     "id": "s02.a",
+     "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away.",
      "kind": "fact",
      "status": "verified",
      "validation": {
-      "id": "s02.a1",
-      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away: the IERS table of TAI-UTC runs from 10 seconds on 1 January 1972 to 37 seconds on 1 January 2017, each value one second larger than the last, 27 steps in all.",
+      "id": "s02.a",
+      "text": "Every leap second since UTC began in 1972 has been added to civil time; none has ever been taken away.",
       "kind": "fact",
       "modality": "universal",
       "status": "supported",
@@ -279,13 +290,21 @@
    "severity": "warning",
    "explanation": "no \"takeaway\" section",
    "by": "deterministic"
+  },
+  {
+   "sentence": "s01",
+   "category": "wording",
+   "severity": "info",
+   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+   "by": "deterministic",
+   "assertion": "s01.a"
   }
  ],
  "resolved": [],
  "history": [
   {
    "revision": 1,
-   "date": "2026-11-02T09:26:16.434Z",
+   "date": "2026-11-03T01:52:13.118Z",
    "status": "passed",
    "blocking": 0,
    "warnings": 4

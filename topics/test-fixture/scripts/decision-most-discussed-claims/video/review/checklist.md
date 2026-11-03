@@ -1,6 +1,6 @@
 # Review checklist
 
-Has a leap second ever been taken away?, private review build 2026-11-02.
+Has a leap second ever been taken away?, private review build 2026-11-03.
 
 - [ ] Opening: does the cold open land before the music enters, and does the title card read cleanly?
 - [ ] Narration: is every sentence intelligible at normal volume on headphones and on a laptop speaker?

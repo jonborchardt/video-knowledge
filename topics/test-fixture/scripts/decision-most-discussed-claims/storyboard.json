@@ -2,14 +2,14 @@
  "topic": "test-fixture",
  "story": "decision:most-discussed-claims",
  "title": "Has a leap second ever been taken away?",
- "scriptFingerprint": "a98089c0ff",
+ "scriptFingerprint": "d2206ea3ad",
  "scriptStatus": "passed",
  "wordsPerMinute": 150,
- "runtime": 21.4,
+ "runtime": 20.6,
  "generation": {
   "model": "claude-sonnet-5",
   "brief": "src/modules/storyboard/briefs/storyboard.md",
-  "date": "2026-11-02"
+  "date": "2026-11-03"
  },
  "assets": {},
  "status": "ok",
@@ -20,44 +20,10 @@
    "sentences": [
     "s01"
    ],
-   "purpose": "Put the two directions a leap second could go in front of the viewer before the record answers it.",
-   "visual": {
-    "category": "typography",
-    "description": "Dark field. The question types on word by word in large serif. A thin clock-hand line under the text ticks one notch forward, hesitates, then ticks one notch back before settling forward again — a beat of doubt about which way time moves.",
-    "onScreenText": [
-     "Could a clock ever lose a second instead of gaining one?"
-    ]
-   },
-   "direction": "Hard cut in on the first word; hold half a second after the hand settles forward.",
-   "pauseSeconds": 1,
-   "order": 1,
-   "narration": "Could a clock ever lose a second instead of gaining one?",
-   "words": 11,
-   "spokenWords": 11,
-   "timing": [
-    {
-     "id": "s01",
-     "start": 0,
-     "duration": 4.4,
-     "end": 4.4
-    }
-   ],
-   "start": 0,
-   "duration": 5.4,
-   "end": 5.4
-  },
-  {
-   "id": "sc02",
-   "sentences": [
-    "s02"
-   ],
-   "purpose": "Show the full written record so the answer rests on the table itself, not on the narrator's say-so.",
+   "purpose": "Ground the answer in the written record itself before the narration resolves it.",
    "visual": {
     "category": "data-chart",
-    "description": "Two tiles side by side, connected by a single rising line. The left tile reads 1972 / 10 s; the right tile reads 2017 / 37 s. As the line draws from left to right it only ever climbs — it never dips — and the right tile brightens to the accent once the line reaches it.",
-    "onScreenText": [
-     "Every step: added. None: taken away."
-    ],
+    "description": "Two tiles side by side, joined by a single rising line. The left tile reads 1972 / 10 s; the right tile reads 2017 / 37 s. The line draws from left to right as the narration crosses from '10 seconds' to '37 seconds', climbing in even steps and never dipping; the right tile brightens to the accent once the line reaches it.",
     "chart": {
      "type": "stat-tiles",
      "title": "TAI minus UTC",
@@ -86,22 +52,59 @@
      "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
     }
    ],
-   "direction": "Cut to the two tiles; the connecting line draws left to right as the narration reaches '37 seconds now'.",
+   "direction": "Cut to the two tiles; the connecting line draws left to right as the narration crosses from '10 seconds' to '37 seconds'.",
+   "pauseSeconds": 1,
+   "order": 1,
+   "narration": "The official table of TAI-UTC runs from 10 seconds in 1972 to 37 seconds in 2017, climbing by exactly one second at every entry.",
+   "words": 24,
+   "spokenWords": 30,
+   "timing": [
+    {
+     "id": "s01",
+     "start": 0,
+     "duration": 12,
+     "end": 12
+    }
+   ],
+   "start": 0,
+   "duration": 13,
+   "end": 13
+  },
+  {
+   "id": "sc02",
+   "sentences": [
+    "s02"
+   ],
+   "purpose": "State the resolution plainly: every step the record shows went one way.",
+   "visual": {
+    "category": "typography",
+    "description": "Dark field; the line types on in large serif, centred. On the word 'taken away' the text holds and turns to the glow.",
+    "onScreenText": [
+     "Added every time. Never taken away."
+    ]
+   },
+   "citations": [
+    {
+     "label": "IERS, Leap_Second.dat",
+     "cite": "test-fixture/sources/iers-leap-second-dat.txt#L17-L44"
+    }
+   ],
+   "direction": "Hard cut from the tiles to the statement; hold half a second after it settles.",
    "order": 2,
-   "narration": "The IERS record of TAI minus UTC rises from 10 seconds in 1972 to 37 seconds now, in 27 one-second steps — every leap second has been added, and none has ever been taken away.",
-   "words": 35,
-   "spokenWords": 40,
+   "narration": "Every leap second since civil time started using them has been added, and none has ever been taken away.",
+   "words": 19,
+   "spokenWords": 19,
    "timing": [
     {
      "id": "s02",
-     "start": 5.4,
-     "duration": 16,
-     "end": 21.4
+     "start": 13,
+     "duration": 7.6,
+     "end": 20.6
     }
    ],
-   "start": 5.4,
-   "duration": 16,
-   "end": 21.4
+   "start": 13,
+   "duration": 7.6,
+   "end": 20.6
   }
  ],
  "targetDurationSeconds": 15
