@@ -134,6 +134,11 @@ describe('uploadProblem', () => {
 });
 
 describe('upload', () => {
+  it("names a Short's session file without the colon of its output id (an NTFS alternate data stream otherwise)", () => {
+    expect(SESSION_FILE('youtube')).toBe('video/upload-session.json');
+    expect(SESSION_FILE('short:ten-to-thirty-seven')).toBe('video/upload-session.short-ten-to-thirty-seven.json');
+    expect(SESSION_FILE('short:ten-to-thirty-seven')).not.toMatch(/:/);
+  });
   it('refuses before any byte when the destination is undeclared or the account is another channel (fail closed)', async () => {
     const f = fresh();
     const client = fakeClient();

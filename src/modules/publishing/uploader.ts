@@ -42,8 +42,13 @@ import {
   oembedStatus,
 } from './youtube';
 
+/** The resumable session's file per output. A Short's id carries a colon (`short:<slug>`), which NTFS reads as an
+ *  alternate data stream of `upload-session.short`, so the id is written with a dash (M3 phase 5: the fixture's run
+ *  committed an empty `upload-session.short`). */
 export const SESSION_FILE = (output: string) =>
-  output === 'youtube' ? 'video/upload-session.json' : `video/upload-session.${output}.json`;
+  output === 'youtube'
+    ? 'video/upload-session.json'
+    : `video/upload-session.${output.replace(/[^a-z0-9-]/gi, '-')}.json`;
 export interface Session {
   build: string; // what the session uploads: the mp4 sha
   uri: string; // YouTube's resumable session URI
