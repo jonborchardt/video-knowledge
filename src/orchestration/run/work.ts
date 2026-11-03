@@ -4,7 +4,7 @@
 // pick when due, a topic run (phase 5), a discovery (phase 4), a scan (phase 6).
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { isFixtureTopic } from '../../config/site';
+import { commissionOf, isFixtureTopic } from '../../config/site';
 import type { Automation } from '../../shared/automation';
 import type { MailTransport } from '../../shared/mail';
 import { ROOT, scriptDir, topicsDir } from '../../shared/io';
@@ -126,6 +126,7 @@ export function releaseJobs(a: Automation, root = ROOT, isAlive: (pid: number) =
     : [];
   for (const topic of topics) {
     if (isFixtureTopic(topic)) continue; // the fixture is never selected by automation (spec §5.8)
+    if (!commissionOf(topic)?.handle) continue; // no channel yet: nothing to upload to
     const tb = topicBoard(topic, root, decisions);
     for (const r of tb.stories) {
       if (r.story.partOf || r.production?.stage !== 'packaged' || r.decision?.decision === 'parked') continue;
