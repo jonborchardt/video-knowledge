@@ -135,7 +135,8 @@ export interface ReviewPackage {
  *  ones still tried. */
 export function keywordsOf(k: { institution: string; inquiry: string; question: string; terms: string[] }): string[] {
   const tags: string[] = [];
-  for (const t of [k.institution, k.inquiry, k.question, ...k.terms].map((x) => x.trim())) {
+  // YouTube stores a tag list as comma-separated text: a comma inside a tag merges and cuts its neighbours (seen 2026-11-03)
+  for (const t of [k.institution, k.inquiry, k.question, ...k.terms].map((x) => x.replaceAll(',', '').trim())) {
     if (!t || tags.some((x) => x.toLowerCase() === t.toLowerCase())) continue;
     if (!uploadProblem({ title: 't', description: 'd', tags: [...tags, t] })) tags.push(t);
   }

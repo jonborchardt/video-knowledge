@@ -98,6 +98,7 @@ export function uploadProblem(m: Pick<UploadMetadata, 'title' | 'description' | 
   if (bytes > LIMITS.description)
     return `description is ${bytes} bytes, YouTube allows ${LIMITS.description}: npm run video -- package writes one that fits`;
   if (m.tags.some((t) => /[<>]/.test(t))) return 'a tag contains < or >, which YouTube refuses';
+  if (m.tags.some((t) => t.includes(','))) return 'a tag contains a comma, which YouTube reads as a tag break';
   // YouTube counts a space-holding tag with its quotes, and the comma between two tags
   const tagChars =
     m.tags.reduce((n, t) => n + t.length + (t.includes(' ') ? 2 : 0), 0) + Math.max(0, m.tags.length - 1);

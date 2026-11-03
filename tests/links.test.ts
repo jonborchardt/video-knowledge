@@ -207,6 +207,15 @@ describe('links that cannot silently break', () => {
     ).toEqual(['I', 'Q', 'Why', 'COP']);
   });
 
+  it('a comma never reaches a keyword (YouTube reads it as a tag break)', () => {
+    expect(keywordsOf({ institution: 'I', inquiry: 'Q', question: 'Cheaper, or not?', terms: ['a, b'] })).toEqual([
+      'I',
+      'Q',
+      'Cheaper or not?',
+      'a b',
+    ]);
+  });
+
   it('a description always links its matter page, whatever the primary', () => {
     story({ primary: { type: 'inquiry', target: 'heat-pumps', text: 'The full record' } });
     const links = descriptionLinks('heat-pumps', 'decision:a', null, root);
