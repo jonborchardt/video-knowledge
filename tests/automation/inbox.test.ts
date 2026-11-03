@@ -184,7 +184,7 @@ describe('pollInbox', () => {
     expect(m2.sent).toHaveLength(2);
     const halt = readJson<{ kind: string }>(join(runDir(s2.f.topic, s2.f.story, s2.f.root), 'halt.json'));
     expect(halt?.kind).toBe('request-expired');
-  });
+  }, 120_000); // 4 s alone, over 30 s under a full validate's load
 
   it('a decide that fails (exit 1) leaves the message for the next poll, halts the story step-failed, and the tick goes on', async () => {
     const { s, mail, sent, subject } = await staged();
