@@ -1,0 +1,116 @@
+{
+ "reviewer": "src/modules/script/briefs/script-review.md",
+ "model": "claude-opus-5",
+ "date": "2026-11-03",
+ "revision": 2,
+ "packageFingerprint": "a37758415f",
+ "approved": {
+  "s01": "661e397f01",
+  "s02": "421d6deb72",
+  "s03": "52682278b1",
+  "s04": "90d8457642",
+  "s05": "e9c4923ba0"
+ },
+ "dispositions": {
+  "s02.a": {
+   "fingerprint": "421d6deb72",
+   "category": "needs-qualification",
+   "reason": "The \"all\" the heuristic caught is the study's own phrase for the invoice source (\"the different HVAC contractors used at all 21 sites\"), not a universal claim about homes, and s02 is itself the qualification that narrows the 38 percent to those 21 prototype sites."
+  }
+ },
+ "findings": [
+  {
+   "sentence": "s03",
+   "assertion": "s03.a",
+   "fingerprint": "3d51ccdb1d",
+   "revision": 1,
+   "category": "unsupported",
+   "severity": "blocking",
+   "explanation": "The narration attaches the $3,750 to $8,970 range to the sites where the panel had to change; the passage attaches it to electrical upgrades generally (\"The total costs for electrical upgrades were observed to vary between $3,750 and $8,970\", from invoice totals for all participating sites). Table 11 shows most of that electrical work was not panel replacement: 38 percent needed a new panel but 90 percent needed new breakers for auxiliary heat, 55 percent new wiring and 24 percent a service line upgrade, so the range mostly describes sites that kept their panel. The assertion itself says \"the total costs for electrical upgrades\" and carries no evidence for the restricting clause. A viewer of a Short, with nothing else to go on, comes away believing a panel replacement costs $3,750 to $8,970 - a figure the record does not report for panel work.",
+   "refs": [
+    "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1953-L1976",
+    "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1969-L1976"
+   ],
+   "suggestion": "Use the parent's population, which the passage does support: \"Where electrical upgrades were needed, they alone ran $3,750 to $8,970 in labour and materials, before the heat pump itself.\""
+  },
+  {
+   "sentence": "s04",
+   "assertion": "s04.a",
+   "fingerprint": "50cf859946",
+   "revision": 1,
+   "category": "unsupported",
+   "severity": "blocking",
+   "explanation": "\"A larger retrofit database puts a typical panel upgrade at $1,954\" is not what the passage says, and the word \"larger\" inverts the evidence. The report attributes the figure to an outside source - \"The typical cost for a 200 amp electrical panel upgrade is $1,954 (Lane, 2019)\" - and then says of its own database: \"Only two panel upgrades were explicitly recorded in the DER database, at an average cost of $1,993.\" On panel upgrades the database is smaller than the 21-site field test, not larger, so the sentence tells the viewer the $1,954 rests on a bigger body of evidence than the 38 percent when it rests on a 2019 estimate plus two recorded jobs. The parent's s20 avoided this by saying \"That was a small test, and a typical panel upgrade on its own is put at $1,954 in the first database's report\"; the Short's rewording introduced the claim.",
+   "refs": [
+    "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt#L3676-L3681"
+   ],
+   "suggestion": "Attribute it as the report does and drop \"larger\": \"A 2019 estimate the retrofit report cites puts a typical 200-amp panel upgrade at $1,954, plus wiring for each new circuit.\" Note that the package's short.carries entry repeats the same \"larger retrofit database\" wording, so it is not a qualification the Short can satisfy as written."
+  },
+  {
+   "sentence": "s04",
+   "assertion": "s04.a",
+   "fingerprint": "50cf859946",
+   "revision": 1,
+   "category": "incompatible-comparison",
+   "severity": "blocking",
+   "explanation": "\"Well under that range\" sets a panel-only figure against a different measure. The $1,954 is one item, a 200-amp panel swap; the $3,750 to $8,970 is the total of each site's electrical upgrades, which in the field test typically bundled new breakers for auxiliary heat (90 percent of sites) and new wiring (55 percent) with or without a panel. \"Plus wiring for each new circuit\" gestures at the gap but the comparison is still drawn, and the writer's own qualification states the conclusion it licenses - that the field test's range is \"the high end of this work, not its typical price\" - which neither passage establishes. In a Short the viewer has no later scene to correct this, and the two figures are the whole argument of the piece.",
+   "refs": [
+    "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt#L3676-L3681",
+    "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1969-L1976"
+   ],
+   "suggestion": "Cut the comparison and let the two figures stand as what they each measure (one item against a whole site's electrical work), or say what differs: \"that range is a whole site's electrical work, not the panel alone.\""
+  },
+  {
+   "sentence": "s01",
+   "assertion": "s01.a",
+   "fingerprint": "c567404537",
+   "revision": 1,
+   "category": "unsupported",
+   "severity": "warning",
+   "explanation": "\"The quote covers the heat pump\" earns the hook its grip only through what a viewer infers next: that the panel work is outside the quote. Nothing in the package bears on what a contractor's heat pump quote includes; the PNNL figures come from installers' invoices in a research field test, not from quotes given to homeowners, and the one thing the passage says about scope is the opposite direction (the $3,750 to $8,970 excludes the prototype). The second half of the sentence is sound and names its population. This is a warning rather than blocking because the clause asserts no figure and the title repeats the population, but a Short has no later scene to place it.",
+   "refs": [
+    "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1953-L1976"
+   ],
+   "suggestion": "Make the clause the Short's question rather than a statement about quotes - \"Your quote covers the heat pump. The record says to ask about the wiring.\" - or open on the figure as the parent does."
+  },
+  {
+   "sentence": "s01",
+   "assertion": "s01.a",
+   "fingerprint": "c567404537",
+   "revision": 1,
+   "category": "omission",
+   "severity": "info",
+   "explanation": "Two of the corpus's statements on this claim deny it (Technology Connections, on homes said to lack capacity: \"Except, uh, they do. Almost always.\"), and a study in the package puts panel work on a wider base (Wilson 2024: only 50 to 60 percent of homes have panels above 150 amps, upgrades $2,000 to $30,000). The Short's whole counterweight is s02's \"that share is not the odds for your house\", which is enough as the script stands; if s04 is cut in answering the blocking findings, s02 becomes the only thing standing between the 38 percent and a viewer reading it as their own odds, and should carry the weight on its own.",
+   "refs": [
+    "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L849-L859"
+   ],
+   "suggestion": "No change required; keep s02 intact through any revision of s03 and s04."
+  },
+  {
+   "sentence": "s04",
+   "assertion": "s04.a",
+   "fingerprint": "90d8457642",
+   "revision": 2,
+   "category": "missing-qualification",
+   "severity": "info",
+   "explanation": "The figure's vintage is not spoken. The passage reads \"The typical cost for a 200 amp electrical panel upgrade is $1,954 (Lane, 2019)\", and revision 2 renders that as \"an outside estimate of $1,954\", dropping the year the earlier suggestion carried. It sits one sentence after a range read from the invoices of a field test reported in 2025, so a viewer hears both as present-day money. I kept this at info rather than a warning for three reasons: the sentence claims no currency (it says a report cites an outside estimate, not that a panel costs this today), it draws no comparison with s03's range and names exactly what it measures (a 200-amp panel on its own, plus the wiring for each new circuit), and the same passage's own database recorded two panel upgrades averaging $1,993, so the order of magnitude is not in doubt. Nothing a viewer takes from the sentence is unestablished; naming the year would only make it more precise.",
+   "refs": [
+    "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt#L3676-L3681"
+   ],
+   "suggestion": "No change required. If the line is touched again, \"a 2019 estimate the report cites\" names the vintage in five words without lengthening the Short."
+  },
+  {
+   "sentence": "s01",
+   "assertion": "s01.a",
+   "fingerprint": "661e397f01",
+   "revision": 2,
+   "category": "omission",
+   "severity": "info",
+   "explanation": "Re-judged against revision 2's wording, and recorded so the next revision does not lose the counterweight. The corpus still holds two statements that deny the capacity problem (Technology Connections: \"Except, uh, they do. Almost always.\") and a study that puts panel work on a wider base (Wilson 2024: only 50 to 60 percent of homes have panels above 150 amps, upgrades $2,000 to $30,000). Neither contradicts what this Short claims: the hook now names its own denominator in the narration (\"Across 21 heat pump installs\"), asserts nothing about homes in general, and the unchanged s02 still tells the viewer the share is not the odds for their house. The replacement of \"The quote covers the heat pump\" with the question \"Was it in your quote?\" also clears the revision 1 warning: a question invites the viewer to check their own paperwork and asserts nothing about what a contractor's quote contains.",
+   "refs": [
+    "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L849-L859"
+   ],
+   "suggestion": "No change required; keep s02 beside s01 in any later revision."
+  }
+ ]
+}

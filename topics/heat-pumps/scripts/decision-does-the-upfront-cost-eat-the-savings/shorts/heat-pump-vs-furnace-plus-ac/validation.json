@@ -1,0 +1,714 @@
+{
+ "topic": "heat-pumps",
+ "story": "decision:does-the-upfront-cost-eat-the-savings/shorts/heat-pump-vs-furnace-plus-ac",
+ "revision": 3,
+ "date": "2026-11-03T20:09:50.411Z",
+ "status": "needs-review",
+ "scriptFingerprint": "961950e643",
+ "packageFingerprint": "138aba6afa",
+ "wordsPerMinute": 150,
+ "words": 111,
+ "spokenWords": 115,
+ "minutes": 0.8,
+ "counts": {
+  "sentences": 6,
+  "factual": 5,
+  "assertions": 5,
+  "verified": 4,
+  "blocking": 0,
+  "warnings": 1,
+  "dispositioned": 4,
+  "unreviewed": 1
+ },
+ "revisionLimitReached": false,
+ "sentences": [
+  {
+   "id": "s01",
+   "section": "hook",
+   "text": "Heat pump, or furnace plus air conditioning? One study's median installed costs came out $270 apart.",
+   "type": "factual",
+   "fingerprint": "df8d96c56f",
+   "words": 16,
+   "status": "verified",
+   "approved": true,
+   "assertions": [
+    {
+     "id": "s01.a",
+     "text": "In the study's median installation costs, a heat pump ($6,185) came out $270 below the median of the most expensive system, a natural gas furnace plus AC.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s01.a",
+      "text": "In the study's median installation costs, a heat pump ($6,185) came out $270 below the median of the most expensive system, a natural gas furnace plus AC.",
+      "kind": "fact",
+      "modality": "typical",
+      "status": "disputed",
+      "decision": "qualify",
+      "review": true,
+      "verbatim": false,
+      "strength": 0.5,
+      "independent": 1,
+      "supporting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-about-same-less",
+         "cite": "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L1829-L1836"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "Edwards 2024, inequities in heat pump bill savings",
+        "verdict": "right",
+        "confidence": 0.5,
+        "note": "Edwards' median installed heat pump ($6,185) costs about $270 less than a gas furnace plus central AC and about $90 more than resistance plus AC, with over 80% of the cost distributions overlapping.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "contradicting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-about-same-less",
+         "cite": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L842-L846"
+        },
+        "cited": false,
+        "role": "contradicts",
+        "by": "Canadian Climate Institute 2023, heat pumps pay off",
+        "verdict": "wrong",
+        "confidence": 0.35,
+        "note": "Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "qualifying": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-about-same-less",
+         "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L451-L457"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Wilson 2024 (NREL and LBNL), heat pumps for all?",
+        "verdict": "partly",
+        "confidence": 0.5,
+        "note": "In cold-climate ducted homes with central AC the minimum-efficiency heat pump averages $2,000 less than furnace plus AC, but medium and high-efficiency units cost $8,000 and $13,000 more.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "context": [],
+      "problems": [],
+      "limitations": [
+       "Contradicted by Canadian Climate Institute 2023, heat pumps pay off: Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling.",
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
+      "suggestions": [
+       "Present the disagreement: name the studies on each side instead of stating one side as fact."
+      ],
+      "explanation": "disputed (qualify): 1 supporting (1 independent, strongest 0.5), 1 contradicting, 1 qualifying."
+     },
+     "issues": [
+      {
+       "sentence": "s01",
+       "category": "needs-qualification",
+       "severity": "warning",
+       "explanation": "Contradicted by Canadian Climate Institute 2023, heat pumps pay off: Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling. Present the disagreement: name the studies on each side instead of stating one side as fact.",
+       "by": "deterministic",
+       "assertion": "s01.a",
+       "suggestion": "The writer says the narration carries it: s02 says the figures are one study's national medians rather than contractor quotes; s03 says more than 80 percent of the other systems' cost distributions overlap the heat pump's; s04 gives the Canadian model that disagrees on upfront cost; s05 says the comparison counts cooling on both sides.",
+       "disposition": "s04, two sentences and about fifteen seconds later, gives the Canadian model that disagrees on upfront cost, which is what the warning asks for."
+      }
+     ]
+    }
+   ],
+   "issues": []
+  },
+  {
+   "id": "s02",
+   "section": "finding",
+   "text": "Those are one study's national medians, not quotes for your house: the heat pump's median landed just under the gas furnace with air conditioning.",
+   "type": "factual",
+   "fingerprint": "f6b664b7f4",
+   "words": 24,
+   "status": "needs-review",
+   "approved": false,
+   "assertions": [
+    {
+     "id": "s02.a",
+     "text": "The study's figures are medians of installation cost rather than contractor quotes: the heat pump's median ($6,185) is $270 below the median of the most expensive system, a natural gas furnace plus AC.",
+     "kind": "fact",
+     "status": "needs-review",
+     "validation": {
+      "id": "s02.a",
+      "text": "The study's figures are medians of installation cost rather than contractor quotes: the heat pump's median ($6,185) is $270 below the median of the most expensive system, a natural gas furnace plus AC.",
+      "kind": "fact",
+      "modality": "typical",
+      "status": "disputed",
+      "decision": "qualify",
+      "review": true,
+      "verbatim": false,
+      "strength": 0.5,
+      "independent": 1,
+      "supporting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-about-same-less",
+         "cite": "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L1829-L1836"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "Edwards 2024, inequities in heat pump bill savings",
+        "verdict": "right",
+        "confidence": 0.5,
+        "note": "Edwards' median installed heat pump ($6,185) costs about $270 less than a gas furnace plus central AC and about $90 more than resistance plus AC, with over 80% of the cost distributions overlapping.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "contradicting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-about-same-less",
+         "cite": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L842-L846"
+        },
+        "cited": false,
+        "role": "contradicts",
+        "by": "Canadian Climate Institute 2023, heat pumps pay off",
+        "verdict": "wrong",
+        "confidence": 0.35,
+        "note": "Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "qualifying": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-about-same-less",
+         "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L451-L457"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Wilson 2024 (NREL and LBNL), heat pumps for all?",
+        "verdict": "partly",
+        "confidence": 0.5,
+        "note": "In cold-climate ducted homes with central AC the minimum-efficiency heat pump averages $2,000 less than furnace plus AC, but medium and high-efficiency units cost $8,000 and $13,000 more.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "context": [],
+      "problems": [],
+      "limitations": [
+       "Contradicted by Canadian Climate Institute 2023, heat pumps pay off: Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling.",
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
+      "suggestions": [
+       "Present the disagreement: name the studies on each side instead of stating one side as fact."
+      ],
+      "explanation": "disputed (qualify): 1 supporting (1 independent, strongest 0.5), 1 contradicting, 1 qualifying."
+     },
+     "issues": [
+      {
+       "sentence": "s02",
+       "category": "needs-qualification",
+       "severity": "warning",
+       "explanation": "Contradicted by Canadian Climate Institute 2023, heat pumps pay off: Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling. Present the disagreement: name the studies on each side instead of stating one side as fact.",
+       "by": "deterministic",
+       "assertion": "s02.a",
+       "suggestion": "The writer says the narration carries it: s02 itself says the figures are one study's medians rather than quotes for the viewer's own house; s03 gives the overlap in the cost distributions behind them; s04 gives the model that disagrees."
+      }
+     ]
+    }
+   ],
+   "issues": []
+  },
+  {
+   "id": "s03",
+   "section": "finding",
+   "text": "More than 80 percent of the other systems' cost distributions overlap the heat pump's.",
+   "type": "factual",
+   "fingerprint": "11abfe1cf2",
+   "words": 14,
+   "status": "verified",
+   "approved": true,
+   "assertions": [
+    {
+     "id": "s03.a",
+     "text": "More than 80% of the installation cost distributions for the other systems overlap with the cost distribution for a heat pump.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s03.a",
+      "text": "More than 80% of the installation cost distributions for the other systems overlap with the cost distribution for a heat pump.",
+      "kind": "fact",
+      "modality": "plain",
+      "status": "disputed",
+      "decision": "qualify",
+      "review": true,
+      "verbatim": false,
+      "strength": 0.5,
+      "independent": 1,
+      "supporting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-about-same-less",
+         "cite": "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L1829-L1836"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "Edwards 2024, inequities in heat pump bill savings",
+        "verdict": "right",
+        "confidence": 0.5,
+        "note": "Edwards' median installed heat pump ($6,185) costs about $270 less than a gas furnace plus central AC and about $90 more than resistance plus AC, with over 80% of the cost distributions overlapping.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "contradicting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-about-same-less",
+         "cite": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L842-L846"
+        },
+        "cited": false,
+        "role": "contradicts",
+        "by": "Canadian Climate Institute 2023, heat pumps pay off",
+        "verdict": "wrong",
+        "confidence": 0.35,
+        "note": "Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "qualifying": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-about-same-less",
+         "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L451-L457"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Wilson 2024 (NREL and LBNL), heat pumps for all?",
+        "verdict": "partly",
+        "confidence": 0.5,
+        "note": "In cold-climate ducted homes with central AC the minimum-efficiency heat pump averages $2,000 less than furnace plus AC, but medium and high-efficiency units cost $8,000 and $13,000 more.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "context": [],
+      "problems": [],
+      "limitations": [
+       "Contradicted by Canadian Climate Institute 2023, heat pumps pay off: Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling.",
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
+      "suggestions": [
+       "Present the disagreement: name the studies on each side instead of stating one side as fact."
+      ],
+      "explanation": "disputed (qualify): 1 supporting (1 independent, strongest 0.5), 1 contradicting, 1 qualifying."
+     },
+     "issues": [
+      {
+       "sentence": "s03",
+       "category": "needs-qualification",
+       "severity": "warning",
+       "explanation": "Contradicted by Canadian Climate Institute 2023, heat pumps pay off: Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling. Present the disagreement: name the studies on each side instead of stating one side as fact.",
+       "by": "deterministic",
+       "assertion": "s03.a",
+       "suggestion": "The writer says the narration carries it: s03 is itself the qualification on the gap in s01: the systems' price ranges overlap by more than 80 percent, so the medians sit close together inside a wide spread; s04 gives the model that disagrees with the parity reading altogether.",
+       "disposition": "s03 is itself a limitation on the gap (the price ranges overlap by more than 80 percent), and s04 immediately after gives the study that disagrees."
+      }
+     ]
+    }
+   ],
+   "issues": []
+  },
+  {
+   "id": "s04",
+   "section": "finding",
+   "text": "A Canadian model disagrees, putting heat pumps higher upfront than gas heating with air conditioning, ahead only over the system's life.",
+   "type": "factual",
+   "fingerprint": "190f5aa55a",
+   "words": 21,
+   "status": "verified",
+   "approved": true,
+   "assertions": [
+    {
+     "id": "s04.a",
+     "text": "The Canadian model finds heat pumps have higher upfront costs than gas-fired heating with air conditioning, and are cost-competitive over the life of the system through their efficiency and doubling as cooling.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s04.a",
+      "text": "The Canadian model finds heat pumps have higher upfront costs than gas-fired heating with air conditioning, and are cost-competitive over the life of the system through their efficiency and doubling as cooling.",
+      "kind": "fact",
+      "modality": "plain",
+      "status": "disputed",
+      "decision": "qualify",
+      "review": true,
+      "verbatim": false,
+      "strength": 0.35,
+      "independent": 1,
+      "supporting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-about-same-less",
+         "cite": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L842-L846"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "Canadian Climate Institute 2023, heat pumps pay off",
+        "verdict": "wrong",
+        "confidence": 0.35,
+        "note": "Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "contradicting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-about-same-less",
+         "cite": "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L1829-L1836"
+        },
+        "cited": false,
+        "role": "contradicts",
+        "by": "Edwards 2024, inequities in heat pump bill savings",
+        "verdict": "right",
+        "confidence": 0.5,
+        "note": "Edwards' median installed heat pump ($6,185) costs about $270 less than a gas furnace plus central AC and about $90 more than resistance plus AC, with over 80% of the cost distributions overlapping.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-about-same-less",
+         "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L455-L460"
+        },
+        "cited": false,
+        "role": "contradicts",
+        "by": "RMI 2018, the economics of electrifying buildings",
+        "verdict": "right",
+        "confidence": 0.45,
+        "note": "RMI says customers replacing both an AC and a furnace can save installation cost by choosing one heat pump for both jobs.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-about-same-less",
+         "cite": "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt#L2288-L2293"
+        },
+        "cited": false,
+        "role": "contradicts",
+        "by": "Less 2021 (LBNL), cost of decarbonization retrofits",
+        "verdict": "right",
+        "confidence": 0.45,
+        "note": "LBNL archetypes: electric equipment (ductless heat pump plus heat pump water heater, $14,754) cost more than gas ($8,786), but the gap almost exactly equals the $5,930 cost of adding central air, implying no premium when comparing heating plus cooling like for like.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-about-same-less",
+         "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1386-L1408"
+        },
+        "cited": false,
+        "role": "contradicts",
+        "by": "CEE 2017, cold-climate heat pumps in Minnesota",
+        "verdict": "right",
+        "confidence": 0.4,
+        "note": "When both furnace and AC need replacing, a ccASHP with propane furnace backup costs only $370 more than a new furnace plus AC (payback under about one year).",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "qualifying": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-about-same-less",
+         "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L451-L457"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Wilson 2024 (NREL and LBNL), heat pumps for all?",
+        "verdict": "partly",
+        "confidence": 0.5,
+        "note": "In cold-climate ducted homes with central AC the minimum-efficiency heat pump averages $2,000 less than furnace plus AC, but medium and high-efficiency units cost $8,000 and $13,000 more.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "context": [],
+      "problems": [],
+      "limitations": [
+       "Contradicted by Edwards 2024, inequities in heat pump bill savings: Edwards' median installed heat pump ($6,185) costs about $270 less than a gas furnace plus central AC and about $90 more than resistance plus AC, with over 80% of the cost distributions overlapping.",
+       "Contradicted by RMI 2018, the economics of electrifying buildings: RMI says customers replacing both an AC and a furnace can save installation cost by choosing one heat pump for both jobs.",
+       "Contradicted by Less 2021 (LBNL), cost of decarbonization retrofits: LBNL archetypes: electric equipment (ductless heat pump plus heat pump water heater, $14,754) cost more than gas ($8,786), but the gap almost exactly equals the $5,930 cost of adding central air, implying no premium when comparing heating plus cooling like for like.",
+       "Contradicted by CEE 2017, cold-climate heat pumps in Minnesota: When both furnace and AC need replacing, a ccASHP with propane furnace backup costs only $370 more than a new furnace plus AC (payback under about one year).",
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
+      "suggestions": [
+       "Present the disagreement: name the studies on each side instead of stating one side as fact."
+      ],
+      "explanation": "disputed (qualify): 1 supporting (1 independent, strongest 0.35), 4 contradicting, 1 qualifying."
+     },
+     "issues": [
+      {
+       "sentence": "s04",
+       "category": "needs-qualification",
+       "severity": "warning",
+       "explanation": "Contradicted by Edwards 2024, inequities in heat pump bill savings: Edwards' median installed heat pump ($6,185) costs about $270 less than a gas furnace plus central AC and about $90 more than resistance plus AC, with over 80% of the cost distributions overlapping. Contradicted by RMI 2018, the economics of electrifying buildings: RMI says customers replacing both an AC and a furnace can save installation cost by choosing one heat pump for both jobs. Contradicted by Less 2021 (LBNL), cost of decarbonization retrofits: LBNL archetypes: electric equipment (ductless heat pump plus heat pump water heater, $14,754) cost more than gas ($8,786), but the gap almost exactly equals the $5,930 cost of adding central air, implying no premium when comparing heating plus cooling like for like. Contradicted by CEE 2017, cold-climate heat pumps in Minnesota: When both furnace and AC need replacing, a ccASHP with propane furnace backup costs only $370 more than a new furnace plus AC (payback under about one year). Present the disagreement: name the studies on each side instead of stating one side as fact.",
+       "by": "deterministic",
+       "assertion": "s04.a",
+       "suggestion": "The writer says the narration carries it: s04 is itself the disagreement the record holds against s01 and s02: it is one model's upfront finding, against the installed medians the study measured, and the sentence says in place that the model's advantage arrives only over the system's life.",
+       "disposition": "The four studies the warning names as contradicting the Canadian model are the Short's own finding: s01 to s03 give Edwards' medians and the overlap first, and s04 opens 'A Canadian model disagrees', so both sides are named and the minority is marked as the minority."
+      }
+     ]
+    }
+   ],
+   "issues": []
+  },
+  {
+   "id": "s05",
+   "section": "finding",
+   "text": "Cooling is counted on both sides here: take the air conditioner out of your quote, and the heat pump is the bigger number.",
+   "type": "factual",
+   "fingerprint": "702797adce",
+   "words": 23,
+   "status": "verified",
+   "approved": true,
+   "assertions": [
+    {
+     "id": "s05.a",
+     "text": "The $270 gap is measured against a natural gas furnace plus AC, so it counts cooling on both sides and is not a comparison with replacing a furnace on its own, which buys no cooling.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s05.a",
+      "text": "The $270 gap is measured against a natural gas furnace plus AC, so it counts cooling on both sides and is not a comparison with replacing a furnace on its own, which buys no cooling.",
+      "kind": "fact",
+      "modality": "plain",
+      "status": "disputed",
+      "decision": "qualify",
+      "review": true,
+      "verbatim": false,
+      "strength": 0.5,
+      "independent": 1,
+      "supporting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-about-same-less",
+         "cite": "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L1829-L1836"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "Edwards 2024, inequities in heat pump bill savings",
+        "verdict": "right",
+        "confidence": 0.5,
+        "note": "Edwards' median installed heat pump ($6,185) costs about $270 less than a gas furnace plus central AC and about $90 more than resistance plus AC, with over 80% of the cost distributions overlapping.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "contradicting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-about-same-less",
+         "cite": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L842-L846"
+        },
+        "cited": false,
+        "role": "contradicts",
+        "by": "Canadian Climate Institute 2023, heat pumps pay off",
+        "verdict": "wrong",
+        "confidence": 0.35,
+        "note": "Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "qualifying": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-about-same-less",
+         "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L451-L457"
+        },
+        "cited": false,
+        "role": "qualifies",
+        "by": "Wilson 2024 (NREL and LBNL), heat pumps for all?",
+        "verdict": "partly",
+        "confidence": 0.5,
+        "note": "In cold-climate ducted homes with central AC the minimum-efficiency heat pump averages $2,000 less than furnace plus AC, but medium and high-efficiency units cost $8,000 and $13,000 more.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "context": [],
+      "problems": [],
+      "limitations": [
+       "Contradicted by Canadian Climate Institute 2023, heat pumps pay off: Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling.",
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
+      "suggestions": [
+       "Present the disagreement: name the studies on each side instead of stating one side as fact."
+      ],
+      "explanation": "disputed (qualify): 1 supporting (1 independent, strongest 0.5), 1 contradicting, 1 qualifying."
+     },
+     "issues": [
+      {
+       "sentence": "s05",
+       "category": "needs-qualification",
+       "severity": "warning",
+       "explanation": "Contradicted by Canadian Climate Institute 2023, heat pumps pay off: Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling. Present the disagreement: name the studies on each side instead of stating one side as fact.",
+       "by": "deterministic",
+       "assertion": "s05.a",
+       "suggestion": "The writer says the narration carries it: s05 itself limits the finding to a baseline that includes cooling: against a furnace on its own the heat pump is the bigger number.",
+       "disposition": "s05 is itself the qualification the record asks for on the baseline, and the Canadian disagreement is spoken immediately before it at s04."
+      }
+     ]
+    }
+   ],
+   "issues": []
+  },
+  {
+   "id": "s06",
+   "section": "close",
+   "text": "Which comparison fits your house is the question the full inquiry takes on.",
+   "type": "transitional",
+   "fingerprint": "faa75b6ef4",
+   "words": 13,
+   "status": "verified",
+   "approved": true,
+   "assertions": [],
+   "issues": []
+  }
+ ],
+ "issues": [
+  {
+   "sentence": "s01",
+   "category": "needs-qualification",
+   "severity": "warning",
+   "explanation": "Contradicted by Canadian Climate Institute 2023, heat pumps pay off: Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling. Present the disagreement: name the studies on each side instead of stating one side as fact.",
+   "by": "deterministic",
+   "assertion": "s01.a",
+   "suggestion": "The writer says the narration carries it: s02 says the figures are one study's national medians rather than contractor quotes; s03 says more than 80 percent of the other systems' cost distributions overlap the heat pump's; s04 gives the Canadian model that disagrees on upfront cost; s05 says the comparison counts cooling on both sides.",
+   "disposition": "s04, two sentences and about fifteen seconds later, gives the Canadian model that disagrees on upfront cost, which is what the warning asks for."
+  },
+  {
+   "sentence": "s02",
+   "category": "needs-qualification",
+   "severity": "warning",
+   "explanation": "Contradicted by Canadian Climate Institute 2023, heat pumps pay off: Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling. Present the disagreement: name the studies on each side instead of stating one side as fact.",
+   "by": "deterministic",
+   "assertion": "s02.a",
+   "suggestion": "The writer says the narration carries it: s02 itself says the figures are one study's medians rather than quotes for the viewer's own house; s03 gives the overlap in the cost distributions behind them; s04 gives the model that disagrees."
+  },
+  {
+   "sentence": "s03",
+   "category": "needs-qualification",
+   "severity": "warning",
+   "explanation": "Contradicted by Canadian Climate Institute 2023, heat pumps pay off: Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling. Present the disagreement: name the studies on each side instead of stating one side as fact.",
+   "by": "deterministic",
+   "assertion": "s03.a",
+   "suggestion": "The writer says the narration carries it: s03 is itself the qualification on the gap in s01: the systems' price ranges overlap by more than 80 percent, so the medians sit close together inside a wide spread; s04 gives the model that disagrees with the parity reading altogether.",
+   "disposition": "s03 is itself a limitation on the gap (the price ranges overlap by more than 80 percent), and s04 immediately after gives the study that disagrees."
+  },
+  {
+   "sentence": "s04",
+   "category": "needs-qualification",
+   "severity": "warning",
+   "explanation": "Contradicted by Edwards 2024, inequities in heat pump bill savings: Edwards' median installed heat pump ($6,185) costs about $270 less than a gas furnace plus central AC and about $90 more than resistance plus AC, with over 80% of the cost distributions overlapping. Contradicted by RMI 2018, the economics of electrifying buildings: RMI says customers replacing both an AC and a furnace can save installation cost by choosing one heat pump for both jobs. Contradicted by Less 2021 (LBNL), cost of decarbonization retrofits: LBNL archetypes: electric equipment (ductless heat pump plus heat pump water heater, $14,754) cost more than gas ($8,786), but the gap almost exactly equals the $5,930 cost of adding central air, implying no premium when comparing heating plus cooling like for like. Contradicted by CEE 2017, cold-climate heat pumps in Minnesota: When both furnace and AC need replacing, a ccASHP with propane furnace backup costs only $370 more than a new furnace plus AC (payback under about one year). Present the disagreement: name the studies on each side instead of stating one side as fact.",
+   "by": "deterministic",
+   "assertion": "s04.a",
+   "suggestion": "The writer says the narration carries it: s04 is itself the disagreement the record holds against s01 and s02: it is one model's upfront finding, against the installed medians the study measured, and the sentence says in place that the model's advantage arrives only over the system's life.",
+   "disposition": "The four studies the warning names as contradicting the Canadian model are the Short's own finding: s01 to s03 give Edwards' medians and the overlap first, and s04 opens 'A Canadian model disagrees', so both sides are named and the minority is marked as the minority."
+  },
+  {
+   "sentence": "s05",
+   "category": "needs-qualification",
+   "severity": "warning",
+   "explanation": "Contradicted by Canadian Climate Institute 2023, heat pumps pay off: Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling. Present the disagreement: name the studies on each side instead of stating one side as fact.",
+   "by": "deterministic",
+   "assertion": "s05.a",
+   "suggestion": "The writer says the narration carries it: s05 itself limits the finding to a baseline that includes cooling: against a furnace on its own the heat pump is the bigger number.",
+   "disposition": "s05 is itself the qualification the record asks for on the baseline, and the Canadian disagreement is spoken immediately before it at s04."
+  }
+ ],
+ "resolved": [
+  {
+   "sentence": "s02",
+   "assertion": "s02.a",
+   "fingerprint": "018f1a5f90",
+   "revision": 1,
+   "category": "missing-qualification",
+   "severity": "blocking",
+   "explanation": "The sentence speaks $6,185 as what it costs to install a heat pump, with no date on the money. The study's own methods line says the installation costs come from the National Residential Efficiency Measures Database 'adjusted to $2020 USD', a national average at one assumed capacity (36,000 BTU/hr). In a Short nothing else corrects it, and a viewer holding a 2026 quote against a bare $6,185 would conclude they are being overcharged by a wide margin: the package's own premise cites a $15,900 median in one 2021-2024 programme and a $6,600 to $29,000 national range. 'Not quotes' tells the viewer the figure is not a contractor's price; it does not tell them the figure is six years old. The $270 gap and the 80 percent overlap are unaffected (both sides are in the same dollars), so only the absolute figure needs the date.",
+   "refs": [
+    "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L1810-L1817",
+    "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L1829-L1836"
+   ],
+   "suggestion": "Date the money beside the figure: '$6,185 in 2020 dollars to install the heat pump, with the furnace-and-air-conditioning median just above it'. Three words, and the runtime stays under 50 seconds.",
+   "resolvedBy": 3
+  }
+ ],
+ "history": [
+  {
+   "revision": 1,
+   "date": "2026-11-03T19:58:24.017Z",
+   "status": "blocked",
+   "blocking": 2,
+   "warnings": 3
+  },
+  {
+   "revision": 2,
+   "date": "2026-11-03T20:06:05.028Z",
+   "status": "blocked",
+   "blocking": 1,
+   "warnings": 0
+  },
+  {
+   "revision": 3,
+   "date": "2026-11-03T20:09:50.411Z",
+   "status": "needs-review",
+   "blocking": 0,
+   "warnings": 1
+  }
+ ]
+}

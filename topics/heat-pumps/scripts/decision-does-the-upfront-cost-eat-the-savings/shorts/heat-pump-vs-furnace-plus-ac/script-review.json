@@ -1,0 +1,58 @@
+{
+  "reviewer": "src/modules/script/briefs/script-review.md",
+  "model": "claude-opus-5",
+  "date": "2026-11-03",
+  "revision": 3,
+  "packageFingerprint": "138aba6afa",
+  "approved": {
+    "s01": "df8d96c56f",
+    "s02": "f6b664b7f4",
+    "s03": "11abfe1cf2",
+    "s04": "190f5aa55a",
+    "s05": "702797adce",
+    "s06": "faa75b6ef4"
+  },
+  "findings": [
+    {
+      "sentence": "s02",
+      "assertion": "s02.a",
+      "fingerprint": "018f1a5f90",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "blocking",
+      "explanation": "The sentence speaks $6,185 as what it costs to install a heat pump, with no date on the money. The study's own methods line says the installation costs come from the National Residential Efficiency Measures Database 'adjusted to $2020 USD', a national average at one assumed capacity (36,000 BTU/hr). In a Short nothing else corrects it, and a viewer holding a 2026 quote against a bare $6,185 would conclude they are being overcharged by a wide margin: the package's own premise cites a $15,900 median in one 2021-2024 programme and a $6,600 to $29,000 national range. 'Not quotes' tells the viewer the figure is not a contractor's price; it does not tell them the figure is six years old. The $270 gap and the 80 percent overlap are unaffected (both sides are in the same dollars), so only the absolute figure needs the date.",
+      "refs": [
+        "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L1810-L1817",
+        "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L1829-L1836"
+      ],
+      "suggestion": "Date the money beside the figure: '$6,185 in 2020 dollars to install the heat pump, with the furnace-and-air-conditioning median just above it'. Three words, and the runtime stays under 50 seconds."
+    }
+  ],
+  "dispositions": {
+    "s01.a": {
+      "fingerprint": "df8d96c56f",
+      "category": "needs-qualification",
+      "reason": "s04, two sentences and about fifteen seconds later, gives the Canadian model that disagrees on upfront cost, which is what the warning asks for."
+    },
+    "s02.a": {
+      "fingerprint": "f6b664b7f4",
+      "category": "needs-qualification",
+      "reason": "s04 names the Canadian model that disagrees on upfront cost immediately after, and s02 itself now says these are one study's national medians rather than quotes, so both sides are spoken within about fifteen seconds."
+    },
+    "s03.a": {
+      "fingerprint": "11abfe1cf2",
+      "category": "needs-qualification",
+      "reason": "s03 is itself a limitation on the gap (the price ranges overlap by more than 80 percent), and s04 immediately after gives the study that disagrees."
+    },
+    "s04.a": {
+      "fingerprint": "190f5aa55a",
+      "category": "needs-qualification",
+      "reason": "The four studies the warning names as contradicting the Canadian model are the Short's own finding: s01 to s03 give Edwards' medians and the overlap first, and s04 opens 'A Canadian model disagrees', so both sides are named and the minority is marked as the minority."
+    },
+    "s05.a": {
+      "fingerprint": "702797adce",
+      "category": "needs-qualification",
+      "reason": "s05 is itself the qualification the record asks for on the baseline, and the Canadian disagreement is spoken immediately before it at s04."
+    }
+  }
+}
