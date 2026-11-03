@@ -41,7 +41,15 @@ import { writeRenderCheck } from '../src/modules/video/check';
 import { initVideo } from '../src/modules/video/init';
 
 // Matched against the path inside the topic, never the checkout's own path (CI checks out under .../work/...).
-const SKIP = ['/store/transcripts', '/work', '/video/scenes', '/video/narration', '/video/frames', '/publish.json'];
+const SKIP = [
+  '/store/transcripts',
+  '/work',
+  '/run',
+  '/video/scenes',
+  '/video/narration',
+  '/video/frames',
+  '/publish.json',
+];
 const SKIP_EXT = ['.pdf', '.mp4', '.wav', '.png'];
 
 /** Make `root` a root a repo CLI runs in: a package.json with the repo's name, so its ROOT resolves to it. */
