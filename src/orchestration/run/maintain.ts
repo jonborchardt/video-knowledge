@@ -288,11 +288,7 @@ export async function maintain(
           kind: 'run',
           text: `npm run run -- maintain ${topic}`,
         });
-      if (verdicts.length)
-        writeJsonAtomic(markerPath, {
-          ...(readJson<ScanMarker>(markerPath) ?? { date, svFile, found, recorded: true, at: stamp() }),
-          scanned: true,
-        } satisfies ScanMarker);
+      if (verdicts.length) writeJsonAtomic(markerPath, { ...readJson<ScanMarker>(markerPath)!, scanned: true });
     }
     if (!verdicts.length) {
       actions.push(`${topic}: nothing new recorded`);

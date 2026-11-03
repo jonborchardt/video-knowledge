@@ -8,13 +8,11 @@ export const FPS = 30;
 export const WIDTH = 1920;
 export const HEIGHT = 1080;
 /** A Short's frame (a package with a `short` block): a phone held upright. */
-/** The kinds whose layout leaves the top left clear for the institution's letterhead (Text.tsx). */
-export const LETTERHEAD_KINDS: readonly string[] = ['title', 'question', 'list'];
 /** The landscape scene the letterhead is drawn over (brand/design.md 2.1: the opening visual or finding first, then
  *  a brief institutional mark): the first typography scene of the video, whichever position it holds, so a video
  *  that opens on a chart still carries its mark; null when it has none. */
 export const letterheadSceneId = (scenes: readonly { id: string; kind: string }[]): string | null =>
-  scenes.find((s) => LETTERHEAD_KINDS.includes(s.kind))?.id ?? null;
+  scenes.find((s) => ['title', 'question', 'list'].includes(s.kind))?.id ?? null; // the kinds whose layout leaves the top left clear (Text.tsx)
 
 export const PORTRAIT = { width: 1080, height: 1920 } as const;
 /** Where a Short's parts sit, in frame pixels: the badge band above `top`, the content band, the caption band, the

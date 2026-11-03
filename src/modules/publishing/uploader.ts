@@ -6,6 +6,7 @@
 // or a quota refusal resumes the same YouTube video and never opens a second one. Library layer.
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { setTimeout as sleep } from 'node:timers/promises';
 import { isFixtureTopic } from '../../config/site';
 import { ROOT, readJson, sha, toJson } from '../../shared/io';
 import { Refusal } from '../../shared/refusal';
@@ -74,7 +75,6 @@ export interface Ctx {
  *  was recorded for a change that had taken effect). Up to READ_BACK_TRIES reads, READ_BACK_MS apart. */
 export const READ_BACK_TRIES = 6;
 export const READ_BACK_MS = 5_000;
-const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
 /** Why an upload may not start: the destination is not declared (`YOUTUBE_CHANNEL_ID_<KEY>` or `YOUTUBE_CHANNEL_ID`
  *  in .env), or the authenticated account's channel is another one. Fail closed, before any byte is sent. */
