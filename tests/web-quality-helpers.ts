@@ -69,12 +69,15 @@ export function representativePages(all = distPages()): string[] {
     'index.html',
     'about/index.html',
     'privacy/index.html',
+    'terms/index.html',
     'publishing/index.html',
     'inquiries/index.html',
     'institutions/index.html',
     smallest(all.filter((p) => p.startsWith('commissions/') && depth(p) === 3)),
     smallest(
-      all.filter((p) => !/^(about|commissions|inquiries|institutions|privacy|publishing)\//.test(p) && depth(p) === 2),
+      all.filter(
+        (p) => !/^(about|commissions|inquiries|institutions|privacy|publishing|terms)\//.test(p) && depth(p) === 2,
+      ),
     ), // topic page
     smallest(stories.filter((p) => !withArticle.includes(p))), // story page
     smallest(withArticle), // a story with its article

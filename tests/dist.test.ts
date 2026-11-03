@@ -44,6 +44,7 @@ const pages = [
   'index.html',
   'about/index.html',
   'privacy/index.html',
+  'terms/index.html',
   'inquiries/index.html',
   'institutions/index.html',
   ...Object.keys(commissions).map((k) => `commissions/${k}/index.html`),
@@ -118,7 +119,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       (d) => d.isDirectory() && !['_astro', 'og', 'stamps'].includes(d.name),
     );
     expect(dirs.map((d) => d.name).sort()).toEqual(
-      ['about', 'commissions', 'inquiries', 'institutions', 'privacy', 'publishing', ...liveTopics].sort(),
+      ['about', 'commissions', 'inquiries', 'institutions', 'privacy', 'publishing', 'terms', ...liveTopics].sort(),
     );
     for (const n of topicNames()) {
       expect(existsSync(join(DIST, n, 'stories')), `${n}/stories`).toBe(false);
@@ -392,6 +393,14 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       expect(html).toContain(s);
     expect(html).not.toContain('mailto:');
     expect(readFileSync(join(DIST, 'index.html'), 'utf8')).toContain(`href="${BASE}privacy/"`);
+  });
+
+  it('terms disclaim advice and warranty, link the privacy policy and are linked from every footer', () => {
+    const html = readFileSync(join(DIST, 'terms/index.html'), 'utf8');
+    for (const s of ['id="information"', 'id="liability"', 'id="contact"', `href="${BASE}privacy/"`])
+      expect(html).toContain(s);
+    expect(html).not.toContain('mailto:');
+    expect(readFileSync(join(DIST, 'index.html'), 'utf8')).toContain(`href="${BASE}terms/"`);
   });
 
   it('publishing, the OAuth homepage, names the API, its scope and the terms, and links the privacy policy', () => {

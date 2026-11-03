@@ -492,7 +492,7 @@ Once, by a person (Google's console; nothing here can do it):
    without OAuth verification, Google shows the unverified-app warning at consent and caps the project at 100 users
    over its lifetime, which one owner never reaches; accept the warning once. Run `auth` again after switching from
    Testing, so the stored token is one without the 7-day expiry. Branding: homepage
-   `https://commonwealthofreason.com/publishing/`, privacy policy `https://commonwealthofreason.com/privacy/`
+   `https://commonwealthofreason.com/publishing/`, privacy policy `https://commonwealthofreason.com/privacy/`, terms of service `https://commonwealthofreason.com/terms/`
    (with the trailing slash: the slashless URL redirects, and Google refuses a homepage that redirects), authorized
    domain `commonwealthofreason.com`.
 3. Create an OAuth client of type **Desktop app** and download its JSON. Save it as `.secrets/youtube-oauth.json`
