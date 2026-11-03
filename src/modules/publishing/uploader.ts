@@ -62,6 +62,18 @@ export interface Ctx {
   now?: Date;
 }
 
+/** Why an upload may not start: the destination is not declared (`YOUTUBE_CHANNEL_ID_<KEY>` or `YOUTUBE_CHANNEL_ID`
+ *  in .env), or the authenticated account's channel is another one. Fail closed, before any byte is sent. */
+export async function channelProblem(client: YouTubeClient, intended: string | null): Promise<string | null> {
+  if (!intended)
+    return 'no intended channel declared: set YOUTUBE_CHANNEL_ID_<KEY> (the commission key upper-cased) or YOUTUBE_CHANNEL_ID in .env to the channel id (UC...) its uploads must land on';
+  const actual = await client.myChannelId();
+  if (!actual) return `the authenticated account has no channel; the intended one is ${intended}`;
+  if (actual !== intended)
+    return `the authenticated channel is ${actual}, not the intended ${intended}: nothing uploaded; run npm run publish -- auth for the right account or fix the id in .env`;
+  return null;
+}
+
 /** Why YouTube would reject the metadata, before any call; null when it fits. */
 export function uploadProblem(m: Pick<UploadMetadata, 'title' | 'description' | 'tags'>): string | null {
   if (m.title.length > LIMITS.title)
@@ -123,7 +135,11 @@ async function guarded<T>(
 
 /** Uploads the packaged build (or a derivative's source) as a private video, then its thumbnail and captions. One
  *  result per step done; a thumbnail or captions failure is recorded and the verb goes on. */
-export async function upload(topic: string, storyId: string, c: Ctx): Promise<VerbResult[]> {
+export async function upload(
+  topic: string,
+  storyId: string,
+  c: Ctx & { channel: string | null }, // the declared destination (intendedChannel)
+): Promise<VerbResult[]> {
   const o = openOutput(topic, storyId, c);
   if (o.state.status === 'retracted' || (o.state.id && o.state.status !== 'build-behind'))
     throw new Refusal(`${o.id} is ${o.state.status}: ${o.state.next}`);
@@ -151,6 +167,9 @@ export async function upload(topic: string, storyId: string, c: Ctx): Promise<Ve
     throw new Refusal(
       `${o.rel(SESSION_FILE(o.id))} is an unfinished upload of build ${session.build}, not ${fileSha}: finish it or delete the file`,
     );
+  // the destination, last before the first byte: the account's channel must be the declared one (fail closed)
+  const wrongChannel = await channelProblem(c.client, c.channel);
+  if (wrongChannel) throw new Refusal(wrongChannel);
   const results: VerbResult[] = [];
   const { id } = await guarded(
     topic,

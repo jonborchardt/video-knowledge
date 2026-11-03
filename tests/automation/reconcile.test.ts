@@ -11,6 +11,7 @@ import { FakeMail } from '../../src/shared/mail';
 import type { ReleaseManifest } from '../../src/shared/types';
 import { writeManifest } from '../../src/modules/packaging/manifest';
 import {
+  FAKE_CHANNEL,
   emptyFakeState,
   fakeYoutubeClient,
   readFakeState,
@@ -52,6 +53,7 @@ function staged() {
     by: 'Jon',
     now,
     client: fakeYoutubeClient(fake),
+    channel: FAKE_CHANNEL, // the declared destination the upload guard checks
     ...extra,
   });
   const events = () => loadLedger(f.topic, f.story, f.root)?.outputs.youtube.events ?? [];

@@ -55,6 +55,7 @@ function staged(fixture = true) {
       publishAt: null,
       processingStatus: 'succeeded',
     }),
+    myChannelId: async () => 'UCtest',
     listCaptions: async () => [],
     deleteCaptions: async () => undefined,
   };

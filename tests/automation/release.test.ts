@@ -9,7 +9,7 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { loadAutomation } from '../../src/shared/automation';
 import { MANIFEST_FILE, REVIEW_DIR, ROOT, readJson, sha, shortId, toJson } from '../../src/shared/io';
 import { discoverShorts, loadShortParent, shortsPath } from '../../src/modules/shorts';
-import { emptyFakeState, readFakeState, writeFakeState } from '../../src/modules/publishing/fake-youtube';
+import { FAKE_CHANNEL, emptyFakeState, readFakeState, writeFakeState } from '../../src/modules/publishing/fake-youtube';
 import { addOutputTo, loadLedger, openOutput, recordChangesRequested } from '../../src/modules/publishing/publish';
 import { runCli } from '../../src/shared/cli';
 import { type Halt, clearHalt, readJournal, runDir, writeHalt } from '../../src/orchestration/run/journal';
@@ -94,7 +94,13 @@ function staged(opts: { release?: boolean; shorts?: number } = {}) {
   );
   const fake = join(f.root, 'youtube-fake.json');
   writeFakeState(fake, emptyFakeState());
-  const env = { ...process.env, YOUTUBE_FAKE: fake, APPROVAL_SECRET: SECRET, VK_NO_DOTENV: '1' };
+  const env = {
+    ...process.env,
+    YOUTUBE_FAKE: fake,
+    YOUTUBE_CHANNEL_ID: FAKE_CHANNEL, // the declared destination the upload guard checks against the fake account
+    APPROVAL_SECRET: SECRET,
+    VK_NO_DOTENV: '1',
+  };
   const a = loadAutomation(join(f.root, 'no-automation-file'));
   const run = (o: Partial<RunOptions> = {}, auto = a) =>
     runStory(f.topic, f.story, auto, {

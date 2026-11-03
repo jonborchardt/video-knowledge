@@ -47,6 +47,8 @@ export interface FakeState {
   tagsHeld?: 'reverse' | string[];
 }
 
+/** The channel the fake account owns: a test declares it as YOUTUBE_CHANNEL_ID for an upload to pass the guard. */
+export const FAKE_CHANNEL = 'UCfake000000000000000000';
 export const emptyFakeState = (): FakeState => ({ nextId: 1, videos: {}, calls: [], fail: [], slowProcessing: 0 });
 export const readFakeState = (path: string): FakeState =>
   existsSync(path) ? (JSON.parse(readFileSync(path, 'utf8')) as FakeState) : emptyFakeState();
@@ -161,6 +163,9 @@ export function fakeYoutubeClient(path: string): YouTubeClient {
           fileAvailability: 'available',
         };
       });
+    },
+    async myChannelId() {
+      return call('myChannelId', [], () => FAKE_CHANNEL);
     },
     async listCaptions(videoId) {
       return call('listCaptions', [videoId], (s) => video(s, videoId).captions);

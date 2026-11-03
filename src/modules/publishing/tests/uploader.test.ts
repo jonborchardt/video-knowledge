@@ -76,6 +76,7 @@ function fakeClient(over: Partial<YouTubeClient> = {}): YouTubeClient & { calls:
     insertCaptions: async () => undefined,
     updateVideo: async () => undefined,
     getVideo: async (id) => remoteOf(id),
+    myChannelId: async () => 'UCtest',
     listCaptions: async () => [],
     deleteCaptions: async () => undefined,
   };
@@ -87,6 +88,7 @@ function fakeClient(over: Partial<YouTubeClient> = {}): YouTubeClient & { calls:
     insertCaptions: rec('insertCaptions', c.insertCaptions),
     updateVideo: rec('updateVideo', c.updateVideo),
     getVideo: rec('getVideo', c.getVideo),
+    myChannelId: rec('myChannelId', c.myChannelId),
     listCaptions: rec('listCaptions', c.listCaptions),
     deleteCaptions: rec('deleteCaptions', c.deleteCaptions),
   };
@@ -99,6 +101,7 @@ const ctx = (f: Fixture, client: YouTubeClient, extra: Record<string, unknown> =
   by: 'Jon',
   now,
   client,
+  channel: 'UCtest', // the declared destination: the fake account's channel
   ...extra,
 });
 const events = (f: Fixture, output = 'youtube') => loadLedger(f.topic, f.story, f.root)!.outputs[output].events;
@@ -131,6 +134,23 @@ describe('uploadProblem', () => {
 });
 
 describe('upload', () => {
+  it('refuses before any byte when the destination is undeclared or the account is another channel (fail closed)', async () => {
+    const f = fresh();
+    const client = fakeClient();
+    await expect(upload(f.topic, f.story, ctx(f, client, { channel: null }))).rejects.toThrow(
+      /no intended channel declared: set YOUTUBE_CHANNEL_ID_<KEY>/,
+    );
+    expect(client.calls).toEqual([]); // not even the channel query: nothing declared, nothing asked
+    await expect(upload(f.topic, f.story, ctx(f, client, { channel: 'UCother' }))).rejects.toThrow(
+      /authenticated channel is UCtest, not the intended UCother: nothing uploaded/,
+    );
+    expect(client.calls.map((c) => c.method)).toEqual(['myChannelId']);
+    expect(loadLedger(f.topic, f.story, f.root)).toBeNull(); // no ledger, no event, no session file
+    expect(existsSync(sessionPath(f))).toBe(false);
+    const ok = await upload(f.topic, f.story, ctx(f, client));
+    expect(ok[0].event?.type).toBe('uploaded');
+    expect(client.calls.map((c) => c.method).slice(0, 2)).toEqual(['myChannelId', 'myChannelId']); // the matching query, then the upload
+  });
   it('inserts privately, records the upload, sets the thumbnail and clears the session', async () => {
     const f = fresh();
     const client = fakeClient();
@@ -143,7 +163,7 @@ describe('upload', () => {
     const [ev] = events(f);
     expect(ev).toMatchObject({ type: 'uploaded', id: 'vid00000001', build: BUILD, buildStatus: 'release', by: 'Jon' });
     expect(typeof ev.metadata).toBe('string');
-    const insert = client.calls[0];
+    const insert = client.calls.find((c) => c.method === 'insertVideo')!;
     expect(insert.method).toBe('insertVideo');
     const a = insert.args[0] as {
       file: string;
@@ -160,11 +180,12 @@ describe('upload', () => {
     });
     expect(a.snippet.categoryId).toBe(CATEGORY_DEFAULT);
     expect(a.session).toBeNull();
-    expect(client.calls[1]).toMatchObject({
+    const after = client.calls.slice(client.calls.indexOf(insert) + 1); // the channel query precedes the insert
+    expect(after[0]).toMatchObject({
       method: 'insertCaptions',
       args: ['vid00000001', expect.stringMatching(/captions\.en\.srt$/), 'en', 'English'],
     });
-    expect(client.calls[2]).toMatchObject({
+    expect(after[1]).toMatchObject({
       method: 'setThumbnail',
       args: ['vid00000001', expect.stringMatching(/thumbnail\.png$/)],
     });
@@ -304,7 +325,7 @@ describe('upload', () => {
       },
     });
     await upload(f.topic, f.story, ctx(f, client, { output: 'short-1' }));
-    const a = client.calls[0].args[0] as { file: string };
+    const a = client.calls.find((c) => c.method === 'insertVideo')!.args[0] as { file: string };
     expect(a.file.replaceAll('\\', '/')).toMatch(/video\/shorts\/short-1\.mp4$/);
     expect(events(f, 'short-1')[0]).toMatchObject({ type: 'uploaded', id: 'short000001' });
     expect(client.calls.some((c) => c.method === 'insertCaptions')).toBe(false); // the full video's captions are not the Short's

@@ -83,7 +83,7 @@ import { scriptDir, shortOf, storySlug } from '../../shared/io';
 import { goLive, push, sync, upload, verify } from './uploader';
 import { type DecideVerdict, childEnv, decide } from './decide';
 import { runCli } from '../../shared/cli';
-import { TOKEN_FILE, YouTubeError, authorize, loadCredentials, youtubeClient } from './youtube';
+import { TOKEN_FILE, YouTubeError, authorize, intendedChannel, loadCredentials, youtubeClient } from './youtube';
 import { fakeAnonymous, fakeYoutubeClient } from './fake-youtube';
 
 loadDotEnv(); // keys only; never committed; skipped when the runner handed this child its keys (VK_NO_DOTENV)
@@ -431,7 +431,7 @@ async function main() {
       break;
     }
     case 'upload': {
-      const results = await upload(topic, storyId, api());
+      const results = await upload(topic, storyId, { ...api(), channel: intendedChannel(process.env, commission()) });
       for (const x of results) console.log(x.message);
       if (results.some((x) => x.event?.type === 'failed')) process.exitCode = 1;
       break;

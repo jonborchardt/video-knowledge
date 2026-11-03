@@ -16,6 +16,14 @@ const CREDENTIALS_PATH_VAR = 'YOUTUBE_OAUTH_CREDENTIALS_PATH';
 /** The environment variable naming a commission's own OAuth client file: the key upper-cased, `-` as `_`. */
 export const credentialsVar = (commissionKey: string): string =>
   `${CREDENTIALS_PATH_VAR}_${commissionKey.toUpperCase().replace(/-/g, '_')}`;
+/** The environment variable naming the channel a commission's uploads must land on (`UC...`), checked against the
+ *  authenticated account before every upload; `YOUTUBE_CHANNEL_ID` is the shared default. */
+export const channelVar = (commissionKey: string): string =>
+  `YOUTUBE_CHANNEL_ID_${commissionKey.toUpperCase().replace(/-/g, '_')}`;
+export const intendedChannel = (
+  env: Record<string, string | undefined> = process.env,
+  commissionKey?: string,
+): string | null => (commissionKey && env[channelVar(commissionKey)]) || env.YOUTUBE_CHANNEL_ID || null;
 const TOKEN_URL = 'https://oauth2.googleapis.com/token';
 const AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
 const API = 'https://www.googleapis.com/youtube/v3';
@@ -288,6 +296,8 @@ export interface YouTubeClient {
   insertCaptions(id: string, file: string, language: string, name: string): Promise<void>;
   updateVideo(id: string, body: { snippet?: Snippet; status?: VideoStatus }): Promise<void>;
   getVideo(id: string): Promise<RemoteVideo | null>;
+  /** The channel of the authenticated account (`channels.list mine=true`), or null when it has none. */
+  myChannelId(): Promise<string | null>;
   listCaptions(videoId: string): Promise<RemoteCaption[]>;
   deleteCaptions(trackId: string): Promise<void>;
 }
@@ -411,6 +421,11 @@ export function youtubeClient(creds: Credentials, fetchFn: typeof fetch = fetch)
         headers: { 'content-type': 'application/json; charset=UTF-8' },
         body: JSON.stringify({ id, ...body }),
       });
+    },
+    async myChannelId() {
+      const r = await request(`${API}/channels?part=id&mine=true`, { method: 'GET' });
+      const j = (await r.json()) as { items?: { id: string }[] };
+      return j.items?.[0]?.id ?? null;
     },
     async getVideo(id) {
       const r = await request(

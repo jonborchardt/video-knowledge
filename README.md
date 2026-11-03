@@ -501,7 +501,10 @@ Once, by a person (Google's console; nothing here can do it):
 4. Verify the channel by phone (youtube.com/verify) so custom thumbnails are allowed.
 5. `npm run publish -- auth <topic> <story-id>` opens the consent page and stores the refresh token in that same
    JSON file (mode 0600; without the path variable, in `.youtube-token.json`). A refresh token in `.env` as
-   `YOUTUBE_REFRESH_TOKEN` is used instead when set.
+   `YOUTUBE_REFRESH_TOKEN` is used instead when set. Declare the channel the uploads must land on as
+   `YOUTUBE_CHANNEL_ID_<KEY>` in `.env` (the commission key upper-cased; `YOUTUBE_CHANNEL_ID` for every commission
+   without its own; the id is the `UC...` on youtube.com/account_advanced): `upload` asks the API whose channel the
+   token is and refuses, before any byte, when it is another one or none is declared.
 6. A second channel (another commission's) needs its own OAuth client file: save it under `.secrets/`, name it in
    `.env` as `YOUTUBE_OAUTH_CREDENTIALS_PATH_<KEY>` (the commission key upper-cased, `-` as `_`, e.g.
    `YOUTUBE_OAUTH_CREDENTIALS_PATH_PUBLIC_HEALTH`) and run `npm run publish -- auth <topic> <story-id>` once for a
