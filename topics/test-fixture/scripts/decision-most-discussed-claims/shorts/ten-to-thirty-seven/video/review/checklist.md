@@ -1,6 +1,6 @@
 # Review checklist
 
-A 10-second gap in 1972 grew to 37 by 2017. The record only climbs., private review build 2026-11-03.
+A 10-second gap in 1972 grew to 37 by 2017. The record only climbs., release build 2026-11-03.
 
 - [ ] Opening: does the cold open land before the music enters, and does the title card read cleanly?
 - [ ] Narration: is every sentence intelligible at normal volume on headphones and on a laptop speaker?
@@ -14,4 +14,3 @@ A 10-second gap in 1972 grew to 37 by 2017. The record only climbs., private rev
 - [ ] Conclusion: does the ending answer the question asked at the start, and does the black hold as the storyboard says?
 - [ ] Playback: compare the local MP4 with the YouTube transcode at 1080p and 480p for banding, blur on small text and audio level.
 - [ ] Short: at phone size, is nothing you need to read under the bottom fifth or the right edge, and do the captions keep up with the voice?
-- [ ] Release: the narration voice is draft-only until re-narrated under commercial terms; confirm nothing in this build is cleared for public release unless the build report says so.

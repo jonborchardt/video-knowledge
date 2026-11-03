@@ -1,10 +1,10 @@
-# PRIVATE REVIEW BUILD: A 10-second gap in 1972 grew to 37 by 2017. The record only climbs.
+# RELEASE BUILD: A 10-second gap in 1972 grew to 37 by 2017. The record only climbs.
 
-Upload `decision-most-discussed-claims-short-ten-to-thirty-seven-review-private.mp4` to YouTube as a **private** video for review. Do not publish. Public release is blocked: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final test-fixture decision:most-discussed-claims/shorts/ten-to-thirty-seven --approved-by "your name"" re-narrates it for release.
+Upload `decision-most-discussed-claims-short-ten-to-thirty-seven.mp4` to YouTube as a **public** video: the build report says narration and music are cleared, and the person who ran the final build approved it (see its command line).
 
-- Working title: [PRIVATE REVIEW] [fixture 20261103-0134-c6bc] A 10-second gap in 1972 grew to 37 by 2017. The…
-- Duration: 0:10 (10.8s), 1080x1920 @ 30 fps
-- MP4 sha: 129bf4317f; build report 88169b3056; QA 33/33
+- Title: [fixture 20261103-0134-c6bc] A 10-second gap in 1972 grew to 37 by 2017. The record only climbs.
+- Duration: 0:10 (10.9s), 1080x1920 @ 30 fps
+- MP4 sha: 51943c9270; build report a15d365187; QA 33/33
 - Description: `description.txt` (paste as is; chapters are measured from the timeline)
 - Checklist: `checklist.md`; build report: `build-report.md`; captions: `captions.en.srt`
 
@@ -13,12 +13,13 @@ Upload `decision-most-discussed-claims-short-ten-to-thirty-seven-review-private.
 
 ## Provenance
 
-- Narration: edge / en-US-AndrewMultilingualNeural (rate +0%), 9.36s of speech, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only.**
+- Narration: azure / en-US-AndrewMultilingualNeural (rate +0%), 9.43s of speech, $0.0012 (estimated from characters). Licence: commercial: Azure AI Speech terms allow the generated audio in published media. Publishable.
 - Music: none (narration only).
-- Clearance: narration no, music n/a. Not cleared for public release.
+- Clearance: narration yes, music n/a. Cleared for public release.
 
-## After the review
+## After the upload
 
-1. Record the private upload: `npm run publish -- uploaded test-fixture decision:most-discussed-claims/shorts/ten-to-thirty-seven --id <youtube id> --visibility private`.
-2. Fix what the checklist found; a re-render keeps every cached scene the fix does not touch.
-3. Public release needs, besides approval: `npm run video -- final <topic> <story-id> --approved-by "<name>"` (the commercial voice), which packages the release build.
+1. Record it: `npm run publish -- uploaded test-fixture decision:most-discussed-claims/shorts/ten-to-thirty-seven --id <youtube id> --visibility private` (or `public` once approved).
+2. Watch the upload with the checklist, then approve this build: `npm run publish -- approve test-fixture decision:most-discussed-claims/shorts/ten-to-thirty-seven --by "<name>"`.
+3. Set it public or schedule it on YouTube, then `npm run publish -- published test-fixture decision:most-discussed-claims/shorts/ten-to-thirty-seven` (or `scheduled --at <ISO>`).
+4. Any later edit renders a draft again; a live video is never replaced: a re-release is a new output (`npm run publish -- add`).
