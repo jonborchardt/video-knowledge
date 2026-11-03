@@ -2,7 +2,7 @@
 // scan first), the sequence (the scan agent, record-sources, scanned, report, notes, stories, the article pass), a
 // scan that records nothing journaled and not a halt, a revision on a claim a live video's script cites named as a
 // needs-person halt on that story, an uncited one not. Fake agents, the fake research CLI, the real `scanned`.
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
@@ -187,6 +187,7 @@ describe('maintain', () => {
     const steps = c.journal().map((e) => e.step);
     expect(steps.filter((s) => /new-sources\.md/.test(s))).toHaveLength(1);
     expect(steps.filter((s) => /^npm run record-sources -- /.test(s))).toHaveLength(1);
+    expect(steps.filter((s) => /^npm run evidence -- scanned /.test(s))).toHaveLength(1); // the record, once
     expect(steps.filter((s) => s === `npm run report -- ${c.f.topic}`)).toHaveLength(2);
     expect(c.articleCalls).toEqual([c.f.topic]);
     expect(readJson<MaintenanceFile>(maintenancePath(c.f.topic, c.f.root))!.scans).toHaveLength(1);
@@ -236,4 +237,10 @@ describe('maintain', () => {
     expect(readHalt(runDir(c.f.topic, c.f.story, c.f.root))).toBeNull();
     expect(r.actions.join('\n')).not.toMatch(/live video cites/);
   }, 240_000);
+  it('the scan record the verb writes is excluded from the format check, like every other code-written record', () => {
+    // `evidence -- scanned` writes maintenance.json with the shared 1-space toJson; the scan's own `npm run validate`
+    // halted on its format check the first time a real scan reached it (M3 phase 5)
+    const ignored = readFileSync(join(ROOT, '.prettierignore'), 'utf8').split(/\r?\n/);
+    expect(ignored).toContain('topics/*/maintenance.json');
+  });
 });

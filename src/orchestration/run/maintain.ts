@@ -47,6 +47,8 @@ interface ScanMarker {
   svFile: string;
   found: number;
   recorded: boolean;
+  /** `evidence -- scanned` ran: a resume never records the same scan twice (M3 phase 5: a resumed scan did). */
+  scanned?: boolean;
   at: string;
 }
 
@@ -275,14 +277,21 @@ export async function maintain(
         ...(readJson<ScanMarker>(markerPath) ?? { date, svFile, found, at: stamp() }),
         recorded: true,
       } satisfies ScanMarker);
-    const scanned = await child(
-      `npm run evidence -- scanned ${topic} --found ${found} --recorded ${verdicts.length} --at ${stamp()}${scanSession ? ` --session ${scanSession}` : ''}`,
-    );
-    if (!scanned.ok)
-      return halt('step-failed', `evidence scanned failed: ${scanned.error}`, {
-        kind: 'run',
-        text: `npm run run -- maintain ${topic}`,
-      });
+    if (!resumed?.scanned) {
+      const scanned = await child(
+        `npm run evidence -- scanned ${topic} --found ${found} --recorded ${verdicts.length} --at ${stamp()}${scanSession ? ` --session ${scanSession}` : ''}`,
+      );
+      if (!scanned.ok)
+        return halt('step-failed', `evidence scanned failed: ${scanned.error}`, {
+          kind: 'run',
+          text: `npm run run -- maintain ${topic}`,
+        });
+      if (verdicts.length)
+        writeJsonAtomic(markerPath, {
+          ...(readJson<ScanMarker>(markerPath) ?? { date, svFile, found, recorded: true, at: stamp() }),
+          scanned: true,
+        } satisfies ScanMarker);
+    }
     if (!verdicts.length) {
       actions.push(`${topic}: nothing new recorded`);
       finish();
