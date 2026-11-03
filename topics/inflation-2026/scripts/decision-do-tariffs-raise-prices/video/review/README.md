@@ -1,10 +1,10 @@
 # PRIVATE REVIEW BUILD: Who Really Pays for Tariffs?
 
-Upload `decision-do-tariffs-raise-prices-review-private.mp4` to YouTube as a **private** video for review. Do not publish. Public release is blocked: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final inflation-2026 decision:do-tariffs-raise-prices --approved-by <name>" re-narrates it for release.
+Upload `decision-do-tariffs-raise-prices-review-private.mp4` to YouTube as a **private** video for review. Do not publish. Public release is blocked: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final inflation-2026 decision:do-tariffs-raise-prices --approved-by "your name"" re-narrates it for release.
 
 - Working title: [PRIVATE REVIEW] Who Really Pays for Tariffs?
 - Duration: 4:14 (254.3s), 1920x1080 @ 30 fps
-- MP4 sha: 43eb124924; build report e94e4f6f78; QA 36/36
+- MP4 sha: 43eb124924; build report 10676c19f6; QA 37/37
 - Description: `description.txt` (paste as is; chapters are measured from the timeline)
 - Checklist: `checklist.md`; build report: `build-report.md`; thumbnail: `thumbnail.png` (the title card); captions: `captions.en.srt`
 

@@ -1,10 +1,10 @@
 # Build report: Who Really Pays for Tariffs?
 
-inflation-2026 / decision:do-tariffs-raise-prices, 2026-10-28T04:18:22.760Z. `npm run video -- spike inflation-2026 decision:do-tariffs-raise-prices`
+inflation-2026 / decision:do-tariffs-raise-prices, 2026-11-03T16:21:19.003Z. `npm run video -- qa inflation-2026 decision:do-tariffs-raise-prices`
 
 **Segment.** 22 of 21 storyboard scenes (sc01 to end), 24 sentences. Kinds: sc01 quote, sc02 title, sc03 quote, sc04 quote, sc05 transition, sc06 excerpt, sc07 stat-tiles, sc08 bar, sc09 question, sc10 stat-tiles, sc11 stacked-bar, sc12 list, sc13 excerpt, sc14 question, sc15 stat-tiles, sc16 stat-tiles, sc17 excerpt, sc18 title, sc19 excerpt, sc20 title, sc21 list, end close-card.
 
-**Output.** topics/inflation-2026/scripts/decision-do-tariffs-raise-prices/video/segment.mp4: 254.34s, 1920x1080 @ 30 fps, h264 + aac, 7630 frames, rendered in 1229.8s ($0 (local CPU)).
+**Output.** topics/inflation-2026/scripts/decision-do-tariffs-raise-prices/video/segment.mp4: 254.34s, 1920x1080 @ 30 fps, h264 + aac, 7630 frames, rendered in 0s ($0 (local CPU)).
 
 **Narration.** edge / en-US-AndrewMultilingualNeural (rate +0%), mp3, 228.55s of speech at about 169 wpm, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only, not publishable.**
 
@@ -46,11 +46,11 @@ inflation-2026 / decision:do-tariffs-raise-prices, 2026-10-28T04:18:22.760Z. `np
 | evidence | undertow/texture | 36.5s | 186.2s | -13 dB | -40.3 dB |
 | ending | undertow/pulse | 186.2s | 254.3s | -11 dB | -36.3 dB |
 
-**Clearance.** **Not cleared for public release:** narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final inflation-2026 decision:do-tariffs-raise-prices --approved-by <name>" re-narrates it for release. A passing build is technical completion only; a person approves the release.
+**Clearance.** **Not cleared for public release:** narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final inflation-2026 decision:do-tariffs-raise-prices --approved-by "your name"" re-narrates it for release. A passing build is technical completion only; a person approves the release.
 
 **Fingerprints.** script c96ee7b7ba, storyboard 819bcdcf88, narration 59bf4a9b3a, config b2cef72976, look bf7e3cb00f, music 443a34890e.
 
-## QA: passed (36 of 36)
+## QA: passed (37 of 37)
 
 | Check | Result | Detail |
 |---|---|---|
@@ -62,6 +62,7 @@ inflation-2026 / decision:do-tariffs-raise-prices, 2026-10-28T04:18:22.760Z. `np
 | frame count | ok | 7630 frames, timeline 7630 |
 | duration in range | ok | 254.34s in [253.3,255.3] |
 | duration matches timeline | ok | 254.336s vs 254.333s (7630 frames) |
+| runtime | ok | 238.3s narrated, no target |
 | audio stream | ok | aac 48000 Hz x2 |
 | aac | ok | aac |
 | audio length matches video | ok | 0.003s apart |
@@ -95,7 +96,7 @@ Inspection frames: 47 in video/frames/; contact sheet topics/inflation-2026/scri
 
 ## Known limitations
 
-- NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; once the draft is accepted, "npm run video -- final <topic> <story-id> --approved-by <name>" re-narrates it with Azure for release
+- NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; once the draft is accepted, "npm run video -- final <topic> <story-id> --approved-by "your name"" re-narrates it with Azure for release
 - word boundaries from edge-tts group a numeral with the word before it; the span is split by letters, so a numeral cue can be a few frames early
 - system fonts (Georgia, Segoe UI): renders on another machine may set type differently
 - scene transitions are a short fade over the field; no cross-dissolve between scenes

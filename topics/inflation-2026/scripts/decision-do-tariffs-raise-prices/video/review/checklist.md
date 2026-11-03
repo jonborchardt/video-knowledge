@@ -1,6 +1,6 @@
 # Review checklist
 
-Who Really Pays for Tariffs?, private review build 2026-10-28.
+Who Really Pays for Tariffs?, private review build 2026-11-03.
 
 - [ ] Opening: does the cold open land before the music enters, and does the title card read cleanly?
 - [ ] Narration: is every sentence intelligible at normal volume on headphones and on a laptop speaker?
