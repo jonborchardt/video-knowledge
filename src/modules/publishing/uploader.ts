@@ -65,7 +65,16 @@ export interface Ctx {
   client: YouTubeClient;
   root?: string;
   now?: Date;
+  /** Waits between the reads that follow a visibility update (tests inject a no-op). */
+  wait?: (ms: number) => Promise<void>;
 }
+
+/** How go-live reads a visibility change back: YouTube's status can lag the accepted update by some seconds (M3
+ *  phase 5: the fixture's go-live read `private` at once and `unlisted` two minutes later, so a kept-private failure
+ *  was recorded for a change that had taken effect). Up to READ_BACK_TRIES reads, READ_BACK_MS apart. */
+export const READ_BACK_TRIES = 6;
+export const READ_BACK_MS = 5_000;
+const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
 /** Why an upload may not start: the destination is not declared (`YOUTUBE_CHANNEL_ID_<KEY>` or `YOUTUBE_CHANNEL_ID`
  *  in .env), or the authenticated account's channel is another one. Fail closed, before any byte is sent. */
@@ -352,7 +361,11 @@ export async function goLive(
   await guarded(topic, storyId, c, 'go-live', () =>
     c.client.updateVideo(id, { status: { ...statusOf(o.out), privacyStatus: target } }),
   );
-  const v = await guarded(topic, storyId, c, 'go-live', () => c.client.getVideo(id));
+  let v = await guarded(topic, storyId, c, 'go-live', () => c.client.getVideo(id));
+  for (let i = 1; i < READ_BACK_TRIES && v?.privacyStatus !== target; i++) {
+    await (c.wait ?? sleep)(READ_BACK_MS);
+    v = await guarded(topic, storyId, c, 'go-live', () => c.client.getVideo(id));
+  }
   if (v?.privacyStatus !== target)
     return recordFailed(topic, storyId, {
       ...c,

@@ -20,6 +20,7 @@ import {
   CATEGORY_DEFAULT,
   MIN_SCHEDULE_LEAD_MS,
   SCHEDULE_GRACE_MS,
+  READ_BACK_TRIES,
   SESSION_FILE,
   type Session,
   goLive,
@@ -130,6 +131,38 @@ describe('uploadProblem', () => {
   });
   it('refuses a tag with < or >', () => {
     expect(uploadProblem({ ...ok, tags: ['fine', 'a < b'] })).toMatch(/tag.*< or >/);
+  });
+});
+
+describe('go-live read-back', () => {
+  it('reads the status back again while YouTube lags the accepted update, and fails only when it never arrives', async () => {
+    const f = fresh();
+    const base = { root: f.root, by: 'Jon', now, wait: async () => undefined };
+    recordUploaded(f.topic, f.story, { ...base, id: 'vid00000001', visibility: 'private' });
+    recordApproved(f.topic, f.story, {
+      ...base,
+      checked:
+        readJson<{ checklist?: string[] }>(join(f.dir, 'video', 'review', 'review.json'))?.checklist?.length ?? 0,
+    });
+    let reads = 0;
+    const lagging = fakeClient({
+      getVideo: async (id) => ({ ...remoteOf(id), privacyStatus: ++reads < 3 ? 'private' : 'public' }),
+    });
+    const r = await goLive(f.topic, f.story, { ...base, client: lagging });
+    expect(r.event?.type).toBe('published');
+    expect(reads).toBe(3); // the first read and two more
+    const g = fresh();
+    recordUploaded(g.topic, g.story, { ...base, root: g.root, id: 'vid00000002', visibility: 'private' });
+    recordApproved(g.topic, g.story, {
+      ...base,
+      root: g.root,
+      checked:
+        readJson<{ checklist?: string[] }>(join(g.dir, 'video', 'review', 'review.json'))?.checklist?.length ?? 0,
+    });
+    const stuck = fakeClient({ getVideo: async (id) => ({ ...remoteOf(id), privacyStatus: 'private' }) });
+    const k = await goLive(g.topic, g.story, { ...base, root: g.root, client: stuck });
+    expect(k.event?.type).toBe('failed');
+    expect(stuck.calls.filter((c) => c.method === 'getVideo')).toHaveLength(READ_BACK_TRIES);
   });
 });
 
