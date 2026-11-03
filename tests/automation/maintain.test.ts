@@ -2,7 +2,7 @@
 // scan first), the sequence (the scan agent, record-sources, scanned, report, notes, stories, the article pass), a
 // scan that records nothing journaled and not a halt, a revision on a claim a live video's script cites named as a
 // needs-person halt on that story, an uncited one not. Fake agents, the fake research CLI, the real `scanned`.
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
@@ -34,6 +34,9 @@ function staged(opts: { found?: boolean; live?: boolean; revised?: string[] } = 
   const f = syntheticProduction('packaged', { release: true });
   fixtures.push(f);
   cliRoot(f.root);
+  // the synthetic topic is a copy of the real one, which carries its real scan history since the first real
+  // maintenance scan (M3 phase 5); every scenario here starts from "never scanned"
+  rmSync(maintenancePath(f.topic, f.root), { force: true });
   const claims = readJson<{ topics: { claims: { id: string }[] }[] }>(
     join(f.root, 'topics', f.topic, 'store', 'topics.json'),
   )!.topics[0].claims;
