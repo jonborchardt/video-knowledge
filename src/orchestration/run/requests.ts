@@ -398,7 +398,7 @@ function fixtureLines(rec: LaunchRecord, root: string): string[] {
     ...(rec.fixtureBranch
       ? [`Branch: ${rec.fixtureBranch}; when done: git push origin --delete ${rec.fixtureBranch}`]
       : []),
-    `Set the unlisted outputs private again: Studio > Content > each video > Visibility > Private; then npm run publish -- updated ${rec.topic} ${rec.storyId} --fields visibility`,
+    `Set the unlisted outputs private again: Studio > Content > each video > Visibility > Private; then record each with npm run publish -- unpublished ${rec.topic} ${rec.storyId} [--output <id>] --by "<name>" --note "set private in Studio after the fixture test"`,
     ...(superseded.length
       ? [
           'Superseded uploads of earlier runs, to delete in Studio (Content > the video > Delete forever):',

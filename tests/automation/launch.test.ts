@@ -568,6 +568,7 @@ describe('launch', () => {
     expect(m).toMatch(/superseded/i);
     expect(m).toContain('vid0000old1'); // an earlier run's upload, listed with the Studio step that deletes it
     expect(m).toMatch(/private again/);
+    expect(m).toMatch(/publish -- unpublished/); // the verb that records a change back to private (never `updated`)
     // without a preview URL the positive probe is the local fallback, reported as such
     const d = clone({ fixture: true });
     await launch(d.f.topic, d.f.story, a, d.deps(), d.f.root);
