@@ -105,7 +105,9 @@ function staged(opts: { found?: boolean; live?: boolean; revised?: string[] } = 
     cli === 'evidence' && args[0] === 'scanned' ? cliArgv(cli, args) : [process.execPath, [FAKE_CLI, cli, ...args]];
   const mail = new FakeMail();
   const articleCalls: string[] = [];
-  const run = (over: { validate?: () => { ok: boolean; output: string }; a?: typeof a } = {}) =>
+  const run = (
+    over: { validate?: () => { ok: boolean; output: string }; a?: typeof a; git?: (args: string[]) => string } = {},
+  ) =>
     maintain(
       f.topic,
       over.a ?? a,
@@ -114,7 +116,7 @@ function staged(opts: { found?: boolean; live?: boolean; revised?: string[] } = 
         mail,
         env,
         argvOf,
-        git: 'none',
+        git: over.git ?? 'none',
         validate: over.validate ?? (() => ({ ok: true, output: '' })),
         hooks: { snapshot: () => {}, guard: () => ({ ok: true, why: '', kept: [] }) },
         articles: async (topic) => {
@@ -194,6 +196,7 @@ describe('maintain', () => {
     expect(steps.filter((s) => s === `npm run report -- ${c.f.topic}`)).toHaveLength(2);
     expect(c.articleCalls).toEqual([c.f.topic]);
     expect(readJson<MaintenanceFile>(maintenancePath(c.f.topic, c.f.root))!.scans).toHaveLength(1);
+    expect(readHalt(topicRunDir(c.f.topic, c.f.root))).toBeNull(); // the failed attempt's halt does not survive the finish
     expect(readHalt(runDir(c.f.topic, c.f.story, c.f.root))?.kind).toBe('needs-person');
   }, 300_000);
 
@@ -245,5 +248,29 @@ describe('maintain', () => {
     // halted on its format check the first time a real scan reached it (M3 phase 5)
     const ignored = readFileSync(join(ROOT, '.prettierignore'), 'utf8').split(/\r?\n/);
     expect(ignored).toContain('topics/*/maintenance.json');
+  });
+  it("commits the article pass's files after the scan's own commit, so the clone is clean for the next tick", async () => {
+    const c = staged();
+    const calls: string[][] = [];
+    const git = (args: string[]): string => {
+      calls.push(args);
+      if (args[0] === 'status') return '';
+      if (args[0] === 'ls-files')
+        return `topics/${c.f.topic}/scripts/x/article-validation.json\ntopics/${c.f.topic}/scripts/x/script.json\n`;
+      if (args[0] === 'diff') return 'something staged';
+      return '';
+    };
+    const r = await c.run({ git });
+    expect(r.outcome).toBe('done');
+    const commits = calls.filter((a) => a[0] === 'commit').map((a) => a[a.indexOf('-m') + 1].split('\n')[0]);
+    expect(commits).toEqual([
+      `maintain(${c.f.topic}): scan ${new Date(NOW).toISOString().slice(0, 10)}`,
+      `maintain(${c.f.topic}): article pass ${new Date(NOW).toISOString().slice(0, 10)}`,
+    ]);
+    const added = calls.find(
+      (a) => a[0] === 'add' && a.includes(`topics/${c.f.topic}/scripts/x/article-validation.json`),
+    );
+    expect(added).toBeTruthy();
+    expect(added!.some((p) => p.endsWith('script.json'))).toBe(false); // only the article module's files
   });
 });

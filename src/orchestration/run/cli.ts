@@ -19,9 +19,9 @@
 //                                      crashed run resumes with the same command; a thin topic is parked, not halted
 //   maintain <topic>                   the maintenance scan of one public topic by hand (what the work plane runs when
 //                                      enabled.maintenance and schedule.maintenance.everyDays say it is due)
-//   clear <topic> <story-id> --by <name>
+//   clear <topic> <story-id>|research --by <name>
 //                                      clears a story's halt that needs no action (a live video whose cited finding was
-//                                      revised), journaled by name
+//                                      revised), or the topic run's (`research`: a scan or research run), journaled by name
 //   discover [--institution <key>] [--dry-run]
 //                                      the weekly topic discovery by hand (costs agents): one discovery agent per
 //                                      institution with a channel, one independent review per proposal, the batch and its
@@ -69,7 +69,7 @@ import { launch } from './launch';
 import { discover, discoveryDeps } from './discovery';
 import { runTopic } from './topic-runner';
 import { maintain, maintainDeps } from './maintain';
-import { clearHalt, readHalt, runDir, appendJournal } from './journal';
+import { clearHalt, readHalt, runDir, topicRunDir, appendJournal } from './journal';
 import { INTEGRATIONS, verify } from './readiness';
 
 const usage = () =>
@@ -203,7 +203,7 @@ switch (verb) {
     if (!topic || !storyId) die(usage());
     const by = flag('--by');
     if (!by || /^automated:/i.test(by)) die('clear needs --by <your name>');
-    const dir = runDir(topic, storyId, ROOT);
+    const dir = storyId === 'research' ? topicRunDir(topic, ROOT) : runDir(topic, storyId, ROOT); // research: the topic run's
     const h = readHalt(dir);
     if (!h) {
       console.log('no halt to clear');

@@ -23,6 +23,7 @@ import {
   type Halt,
   type JournalEntry,
   appendJournal,
+  clearHalt,
   nextLine,
   readHalt,
   runDir,
@@ -106,6 +107,7 @@ export async function maintain(
   const acquired = acquire(dir, `scan ${topic}`, { now });
   if ('held' in acquired) return { outcome: 'held', stage: 'scan', halt: null, iterations: 0, costUsd: 0, actions: [] };
   const lock: Lock = acquired.lock;
+  clearHalt(dir); // a resume supersedes the halt (it returns if the cause is still there); a finished scan leaves none
   const runId = d.runId ?? lock.runId;
   const stamp = () => new Date(now()).toISOString();
   const date = stamp().slice(0, 10);
@@ -379,6 +381,32 @@ export async function maintain(
       runId,
     });
     actions.push(...art.actions);
+    // the article pass's writes (the regenerated validations, a reaffirmation, a correction's files) are committed
+    // too: the scan's commit (step 4) came before the pass, and a dirty clone halts the next tick's preflight
+    // (M3 phase 5: the first real scan left five validations uncommitted)
+    if (d.git !== 'none') {
+      try {
+        const changed = git(['ls-files', '-m', '-o', '--exclude-standard', '--', `topics/${topic}/scripts`])
+          .split('\n')
+          .map((p) => p.trim())
+          .filter((p) => /\/article(-validation|-release|-review)?\.(json|md)$/.test(p));
+        if (changed.length) {
+          git(['add', '--', ...changed]);
+          if (git(['diff', '--cached', '--name-only']).trim())
+            git([
+              'commit',
+              '-q',
+              '-m',
+              `maintain(${topic}): article pass ${date}\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>`,
+            ]);
+        }
+      } catch (e) {
+        return halt('git', `git failed after the article pass: ${(e as Error).message.split('\n')[0]}`, {
+          kind: 'fix',
+          text: 'commit the article files by hand in the clone',
+        });
+      }
+    }
     // 6. a live video whose script cites a revised claim: never rebuilt; a person decides about a note
     for (const s of ledgeredStories(topic, root)) {
       if (!storyOutputs(topic, s.id, root).video) continue;
