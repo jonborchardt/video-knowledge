@@ -2,20 +2,21 @@ import { type FC, useEffect, useLayoutEffect, useRef } from 'react';
 import {
   AbsoluteFill,
   Audio,
-  Sequence,
   continueRender,
   delayRender,
+  Img,
   interpolate,
+  Sequence,
   staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from 'remotion';
-import { WIDTH, type Timeline, type TimelineScene } from '../types';
+import { WIDTH, type Timeline, type TimelineScene, letterheadSceneId } from '../types';
 import { Citation } from './Citation';
 import { FONT_FACES, fontCss } from './fonts';
 import { Captions, PortraitBackdrop, PortraitBadge } from './Portrait';
 import { SCENES } from './scenes';
-import { alpha, easeOut, setTheme, theme, themeOf } from './theme';
+import { alpha, easeOut, GUTTER, ramp, setTheme, theme, themeOf } from './theme';
 
 const FADE = 8;
 const TOL = 2; // px at full size
@@ -97,7 +98,34 @@ function camera(scene: TimelineScene, frame: number): number {
  *  scene with one citation per line places its own); the camera moves both. Every frame is checked for
  *  text that does not fit, and a misfit fails the render: what is drawn must fit on the screen, the citation
  *  included. */
-const SceneView: FC<{ scene: TimelineScene; short: Timeline['short'] }> = ({ scene, short }) => {
+/** The institution's letterhead (brand/design.md 2.1: a brief mark after the opening visual, never a crest
+ *  animation): the kit's horizontal lockup slides in at the top left a moment after the scene starts, over the
+ *  video's first typography scene (letterheadSceneId), whose layout leaves that corner clear. Its slot is staged by
+ *  kitSlots (render.ts), which names the same scene. */
+const Lockup: FC<{ scene: TimelineScene }> = ({ scene }) => {
+  const a = ramp(scene.start + useCurrentFrame(), scene.start + 10, 16);
+  return (
+    <Img
+      src={staticFile('brand/lockup-horizontal-ground.png')}
+      alt=""
+      style={{
+        position: 'absolute',
+        left: GUTTER + 20,
+        top: 48,
+        width: 560,
+        height: 140,
+        opacity: a,
+        transform: `translateX(${(1 - a) * -40}px)`,
+      }}
+    />
+  );
+};
+
+const SceneView: FC<{ scene: TimelineScene; short: Timeline['short']; letterhead: boolean }> = ({
+  scene,
+  short,
+  letterhead,
+}) => {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
   const portrait = height > width;
@@ -117,6 +145,7 @@ const SceneView: FC<{ scene: TimelineScene; short: Timeline['short'] }> = ({ sce
     <AbsoluteFill style={{ opacity }}>
       <AbsoluteFill ref={ref} style={{ transform: `scale(${camera(scene, frame)})`, transformOrigin: '50% 40%' }}>
         <Component scene={scene} />
+        {letterhead && !portrait ? <Lockup scene={scene} /> : null}
         {portrait ? <Captions scene={scene} /> : null}
         {ownCitations ? null : <Citation scene={scene} frame={scene.start + frame} />}
       </AbsoluteFill>
@@ -173,7 +202,7 @@ export const Video: FC<Timeline> = (tl) => {
       {portrait ? <PortraitBackdrop /> : <Backdrop />}
       {tl.scenes.map((s) => (
         <Sequence key={s.id} name={s.id} from={s.start} durationInFrames={s.duration}>
-          <SceneView scene={s} short={tl.short} />
+          <SceneView scene={s} short={tl.short} letterhead={letterheadSceneId(tl.scenes) === s.id} />
         </Sequence>
       ))}
       {tl.scenes

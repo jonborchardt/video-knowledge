@@ -47,7 +47,7 @@ import { type TtsProvider, provider, providerLimitations } from '../tts';
 import { RENDERER_LIMITATIONS } from '../remotion/limitations';
 import { openaiProvider, speedOf } from '../tts/openai';
 import { type Speak, azureProvider } from '../tts/azure';
-import { PORTRAIT, SHORT_LAYOUT, type TimelineScene } from '../types';
+import { PORTRAIT, SHORT_LAYOUT, type TimelineScene, letterheadSceneId } from '../types';
 import { alignLine, findWord, tokens } from '../words';
 import { POINTS, inputs, manifest, scenes } from './video-helpers';
 
@@ -881,12 +881,27 @@ describe('shorts: portrait frame and kinds', () => {
     expect(kitSlots(unsealed.scenes[0], unsealed)).toEqual([]);
     expect(sceneKey(unsealed.scenes[0], unsealed, kit('a'))).toBe(sceneKey(unsealed.scenes[0], unsealed, kit('b')));
   });
-  it('names the kit marks a landscape scene draws: the opening lockup and the transition seal', () => {
+  it('names the kit marks a landscape scene draws: the letterhead on the first typography scene and the transition seal', () => {
     const tl = buildTimeline(checkSegment(inputs()), manifest(inputs()), 30, read);
     const [first, second] = tl.scenes;
-    expect(kitSlots({ ...first, kind: 'title' }, tl)).toEqual(['lockup-horizontal-ground']);
-    expect(kitSlots({ ...first, kind: 'bar' }, tl)).toEqual([]); // a chart opening keeps its top clear
-    expect(kitSlots({ ...second, kind: 'title' }, tl)).toEqual([]);
+    const withKinds = (a: string, b: string) => {
+      const scenes = [{ ...first, kind: a }, { ...second, kind: b }, ...tl.scenes.slice(2)] as typeof tl.scenes;
+      return { tl: { ...tl, scenes }, scenes };
+    };
+    const opensOnTitle = withKinds('title', 'title');
+    expect(kitSlots(opensOnTitle.scenes[0], opensOnTitle.tl)).toEqual(['lockup-horizontal-ground']);
+    expect(kitSlots(opensOnTitle.scenes[1], opensOnTitle.tl)).toEqual([]); // once per video
+    // a chart opening keeps its top clear; the mark moves to the first typography scene after it (the fixture
+    // opened on stat tiles and carried no mark at all: M3 phase 5)
+    const opensOnChart = withKinds('bar', 'title');
+    expect(kitSlots(opensOnChart.scenes[0], opensOnChart.tl)).toEqual([]);
+    expect(kitSlots(opensOnChart.scenes[1], opensOnChart.tl)).toEqual(['lockup-horizontal-ground']);
+    expect(
+      letterheadSceneId([
+        { id: 'a', kind: 'bar' },
+        { id: 'b', kind: 'excerpt' },
+      ]),
+    ).toBeNull();
     const wipe = { ...second, kind: 'transition' as const };
     expect(kitSlots(wipe, tl)).toEqual(['seal']);
     const kit = (seal: string) => (_t: string, slot: string) => (slot === 'seal' ? seal : 'card');

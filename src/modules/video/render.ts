@@ -13,7 +13,7 @@ import { stageBrand } from './brand';
 import { brandKey } from '../../shared/look';
 import { ALL_KINDS } from './kinds';
 import { COMPOSITION, CONTACT } from './remotion/Root';
-import type { Timeline, TimelineScene } from './types';
+import { type Timeline, type TimelineScene, letterheadSceneId } from './types';
 
 export const ENTRY = fileURLToPath(new URL('./remotion/index.ts', import.meta.url));
 const REMOTION_DIR = fileURLToPath(new URL('./remotion/', import.meta.url));
@@ -148,12 +148,12 @@ export function relativeScene(s: TimelineScene): TimelineScene {
   };
 }
 /** The kit files a scene draws from the staged brand/ folder: the end scene's cards, a Short's seal (the portrait
- *  badge on every scene when an institution publishes it), and in landscape the lockup over an opening typography
- *  scene (Text.tsx) and the seal at a transition's seam (Transition.tsx). */
+ *  badge on every scene when an institution publishes it), and in landscape the lockup over the video's first
+ *  typography scene (letterheadSceneId; drawn by Video.tsx) and the seal at a transition's seam (Transition.tsx). */
 export const kitSlots = (s: TimelineScene, tl: Timeline): string[] => [
   ...(s.kind === 'close-card' ? ['close-card', 'endscreen-subscribe'] : []),
   ...(tl.short?.commissionKey || (!tl.short && s.kind === 'transition') ? ['seal'] : []),
-  ...(!tl.short && s.order === 1 && ['title', 'question', 'list'].includes(s.kind) ? ['lockup-horizontal-ground'] : []),
+  ...(!tl.short && letterheadSceneId(tl.scenes) === s.id ? ['lockup-horizontal-ground'] : []),
 ];
 const kitSvg = (topic: string, slot: string) =>
   readFileSync(join(ROOT, 'brand', brandKey(topic), `${slot}.svg`), 'utf8');
