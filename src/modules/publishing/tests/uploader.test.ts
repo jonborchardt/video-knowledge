@@ -113,7 +113,7 @@ const fresh = () => {
   fixtures.push(f);
   return f;
 };
-afterAll(() => fixtures.forEach((f) => f.cleanup()), 60_000);
+afterAll(() => fixtures.forEach((f) => f.cleanup()), 300_000); // many temp roots: slow under full-suite load
 
 describe('uploadProblem', () => {
   const ok = { file: 'a.mp4', title: 'T', description: 'D', tags: ['a b'], thumbnail: null, sha: 'x' };
