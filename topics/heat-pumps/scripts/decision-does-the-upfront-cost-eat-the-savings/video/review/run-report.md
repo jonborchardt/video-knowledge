@@ -1,13 +1,15 @@
 # Run report: heat-pumps decision:does-the-upfront-cost-eat-the-savings
 
-Unattended run (npm run run -- story), 2026-11-03T21:37:46.980Z to 2026-11-04T02:30:13.976Z; journal in F:\github\video-knowledge\topics\heat-pumps\scripts\decision-does-the-upfront-cost-eat-the-savings\run.
+Unattended run (npm run run -- story), 2026-11-04T02:41:07.879Z to 2026-11-04T02:42:06.516Z; journal in F:\github\video-knowledge\topics\heat-pumps\scripts\decision-does-the-upfront-cost-eat-the-savings\run.
 
 ## Agents
 
 ## Commands
+- npm run publish -- upload heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/the-panel-upgrade --by Jon (exit 0, 6 s)
+- npm run publish -- verify heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/the-panel-upgrade --by Jon (exit 0, 1 s, RESULT: PENDING (upload, processing): YouTube is still processing or syncing; run npm run publish -- verify again later)
+- npm run publish -- verify heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/the-panel-upgrade --by Jon (exit 0, 1 s, RESULT: PENDING (upload, processing): YouTube is still processing or syncing; run npm run publish -- verify again later)
 
 ## Guard events and halts
-- awaiting-person: the draft build a791d81797 of short:the-panel-upgrade is uploaded for review
-- step-failed: npm run validate failed:        |                             ^ |     158|   }); |     159|   it('an agent error is ok false with its cost and text', async () => { |  | ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+- step-failed: short:the-panel-upgrade: YouTube is still processing e9V5aL-Q5ds; verify again later
 
 Total agent cost: 0.00 USD.
