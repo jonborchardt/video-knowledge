@@ -58,7 +58,7 @@ retryable failure resumes by backoff, a person's step halts `awaiting-person`.
 the digest in `digest.ts`, resume decisions and stuck detection in `resume.ts`, what is due in `schedule.ts`);
 `run/work.ts` runs one due long job (a resume, or the production pick in `pick.ts`) and exits; `run/view.ts` is the
 admin tab's model. Everything stays off until `automation.json` turns it on; the scheduler commands are printed, never
-created. The mail transport is shared infrastructure (`src/shared/mail.ts`), with `FakeMail` for every test.
+created. Mail is the mail module's (`src/modules/mail/`): orchestration decides what to send and when, and reaches the mailbox only through the `Mailer` seam (`run/mailer.ts`, the module's CLI as a child; `FakeMailer` in tests).
 
 ## Phase 3: approval by reply, publication and launch
 

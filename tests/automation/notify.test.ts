@@ -181,6 +181,36 @@ describe('the digest', () => {
     // the next Monday is a new slot
     expect(await sendDigestIfDue(a, mail, () => T0 + 7 * 86400_000, root, rows)).toBe('2026-11-09');
   });
+  it('lists open questions: an answer not yet accepted, and one nobody is waiting on', () => {
+    const q = {
+      kind: 'question' as const,
+      messageId: '<q@x>',
+      to: 't',
+      from: 'f',
+      createdAt: 'c',
+      sentAt: 'c',
+      attempts: 1,
+      late: true,
+      seen: false,
+    };
+    const digest = renderDigest(
+      [],
+      {
+        questions: [
+          { ...q, id: 'qn-aaaaaaaaaaaa', subject: 'which', about: 'bnpl/1', status: 'answered' },
+          { ...q, id: 'qn-bbbbbbbbbbbb', subject: 'other', status: 'unattended' },
+        ],
+      },
+      a,
+    );
+    expect(digest.text).toContain('## Questions');
+    expect(digest.text).toMatch(
+      /qn-aaaaaaaaaaaa answered, not yet accepted \(npm run mail -- questions --ack qn-aaaaaaaaaaaa\) \(bnpl\/1\): which/,
+    );
+    expect(digest.text).toMatch(
+      /qn-bbbbbbbbbbbb unanswered, nobody waiting \(npm run mail -- ask --resume qn-bbbbbbbbbbbb\): other/,
+    );
+  });
   it('local slots and ISO weeks', () => {
     const tz = 'America/Los_Angeles';
     expect(lastSlot(Date.parse('2026-11-02T15:30:00Z'), 'monday', 8, tz)).toBe('2026-10-26'); // 07:30 LA Monday: not yet

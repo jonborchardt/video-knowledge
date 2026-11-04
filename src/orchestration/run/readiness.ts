@@ -15,7 +15,7 @@ import { loadLedger } from '../../modules/publishing';
 import { loadMaintenance } from '../../modules/evidence';
 import { loadSocial } from '../../modules/social';
 import { RUN_DIR, readJournal } from './journal';
-import { readOutbox } from './notify';
+import { filterCorOutbox } from '../../modules/mail';
 import { readInbox } from './inbox';
 import { launches } from './launch';
 import { discoveryRecords } from './discovery-state';
@@ -209,7 +209,7 @@ const MESSAGE_ID = /^<[^<>\s]+@[^<>\s]+>$/;
 export function evidenceProves(root: string, i: Integration, ref: string): boolean | null {
   const e = i.evidence;
   if (MESSAGE_ID.test(ref)) {
-    if (e.kind === 'outbox') return readOutbox(root).some((x) => x.messageId === ref && x.sentAt !== null);
+    if (e.kind === 'outbox') return filterCorOutbox((x) => x.messageId === ref && x.sentAt !== null, root).length > 0;
     if (e.kind === 'inbox')
       return readInbox(root).handled.some(
         (h) =>

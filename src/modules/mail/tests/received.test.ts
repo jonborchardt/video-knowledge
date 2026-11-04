@@ -1,5 +1,5 @@
 // The one inbound pipeline: one cursor, each message recorded once, correlated once, when it is recorded.
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
@@ -7,7 +7,11 @@ import {
   type InMail,
   type MailConfig,
   FakeMail,
+  acknowledge,
+  archive,
   fetchInto,
+  findOutbox,
+  questions,
   readOutbox,
   readReceived,
   receivedPath,
@@ -211,5 +215,108 @@ describe('fetchInto', () => {
     await fetchInto(cfg, f);
     expect(readReceived(cfg.dir)[0].thread).toBe(messageId);
     expect(readOutbox(cfg.dir)[0].answers).toBeUndefined(); // only a question collects answers
+  });
+});
+
+describe('retention', () => {
+  const DAY = 86_400_000;
+  const clocked = (over: Partial<MailConfig> = {}) => {
+    const c = { t: T0 };
+    return { c, cfg: cfgOf({ now: () => c.t, ...over }) };
+  };
+  const answered = (cfg: MailConfig, id: string, ack: boolean) => {
+    const q = question(cfg, id);
+    recordReceived(cfg, '1', [mail(++uidNext, { inReplyTo: q.messageId, text: 'B' })]);
+    if (ack) acknowledge(cfg, id);
+    return q;
+  };
+  let uidNext = 100;
+  const months = (cfg: MailConfig) => readdirSync(join(cfg.dir, 'archive'));
+
+  it('moves a completed question and its reply to the month it was asked; lookups still find it', () => {
+    const { c, cfg } = clocked();
+    const q = answered(cfg, 'qn-aaaaaaaaaaaa', true);
+    c.t += 100 * DAY;
+    expect(archive(cfg)).toEqual({ outbox: 1, received: 1 });
+    expect(months(cfg)).toEqual(['2026-11.json']);
+    expect(questions(cfg.dir)).toEqual([]);
+    expect(readReceived(cfg.dir)).toEqual([]);
+    expect(findOutbox(cfg.dir, (e) => e.id === 'qn-aaaaaaaaaaaa')?.messageId).toBe(q.messageId);
+  });
+  it('an unanswered question stays live at any age, sent or not', () => {
+    const { c, cfg } = clocked();
+    question(cfg, 'qn-aaaaaaaaaaaa');
+    c.t += 200 * DAY;
+    expect(archive(cfg)).toEqual({ outbox: 0, received: 0 });
+    expect(questions(cfg.dir).map((q) => q.id)).toEqual(['qn-aaaaaaaaaaaa']);
+  });
+  it('an answer no consumer accepted stays live, and its reply with it', () => {
+    const { c, cfg } = clocked();
+    answered(cfg, 'qn-aaaaaaaaaaaa', false);
+    c.t += 200 * DAY;
+    expect(archive(cfg)).toEqual({ outbox: 0, received: 0 });
+    expect(readReceived(cfg.dir)).toHaveLength(1);
+  });
+  it('nothing young moves', () => {
+    const { c, cfg } = clocked();
+    answered(cfg, 'qn-aaaaaaaaaaaa', true);
+    c.t += 10 * DAY;
+    expect(archive(cfg)).toEqual({ outbox: 0, received: 0 });
+  });
+  it('a sent mail moves; an unsent one with attempts left does not', async () => {
+    const { c, cfg } = clocked();
+    const f = new FakeMail();
+    await sendTracked(cfg, f, { from: cfg.from, to: cfg.to, subject: 's', text: 't' }, 'note');
+    recordOutgoing(cfg, { from: cfg.from, to: cfg.to, subject: 'pending', text: 't' }, 'note');
+    c.t += 100 * DAY;
+    expect(archive(cfg).outbox).toBe(1);
+    expect(readOutbox(cfg.dir).map((e) => e.subject)).toEqual(['pending']);
+  });
+  it('a reply the host has not processed stays reachable, whatever its age or its request', async () => {
+    const seen = new Set<string>();
+    const { c, cfg } = clocked({ keepReceived: (r) => !!r.thread && !seen.has(r.key) });
+    const f = new FakeMail();
+    const { messageId } = await sendTracked(
+      cfg,
+      f,
+      { from: cfg.from, to: cfg.to, subject: 'req', text: 't' },
+      'request',
+    );
+    recordReceived(cfg, '1', [mail(1, { inReplyTo: messageId })]);
+    c.t += 200 * DAY;
+    expect(archive(cfg)).toEqual({ outbox: 1, received: 0 });
+    expect(readReceived(cfg.dir).map((r) => r.key)).toEqual(['<m1@me>']);
+    expect(findOutbox(cfg.dir, (e) => e.messageId === messageId)).not.toBeNull();
+    seen.add('<m1@me>');
+    expect(archive(cfg).received).toBe(1);
+  });
+  it('a late reply to an archived request threads to it; a late reply to an archived question is listed', () => {
+    const { c, cfg } = clocked();
+    const q = answered(cfg, 'qn-aaaaaaaaaaaa', true);
+    c.t += 100 * DAY;
+    archive(cfg);
+    recordReceived(cfg, '1', [mail(500, { inReplyTo: q.messageId, text: 'one more thing' })]);
+    const r = readReceived(cfg.dir)[0];
+    expect(r).toMatchObject({ thread: q.messageId, why: 'archived-thread' });
+    expect(unmatched(cfg.dir).map((x) => x.key)).toEqual([r.key]);
+  });
+  it('a crash between the archive write and the live write: the re-run does not duplicate', () => {
+    const { c, cfg } = clocked();
+    answered(cfg, 'qn-aaaaaaaaaaaa', true);
+    const outbox = readFileSync(join(cfg.dir, 'outbox.json'), 'utf8');
+    c.t += 100 * DAY;
+    archive(cfg);
+    writeFileSync(join(cfg.dir, 'outbox.json'), outbox); // as if the live rewrite never happened
+    expect(archive(cfg).outbox).toBe(1);
+    const a = JSON.parse(readFileSync(join(cfg.dir, 'archive', '2026-11.json'), 'utf8'));
+    expect(a.outbox).toHaveLength(1);
+    expect(readOutbox(cfg.dir)).toEqual([]);
+  });
+  it('every fetch runs retention', async () => {
+    const { c, cfg } = clocked();
+    answered(cfg, 'qn-aaaaaaaaaaaa', true);
+    c.t += 100 * DAY;
+    await fetchInto(cfg, new FakeMail());
+    expect(questions(cfg.dir)).toEqual([]);
   });
 });

@@ -15,7 +15,16 @@ export {
   messageIdOf,
   toInMail,
 } from './transport';
-export { type Received, type ReceivedFile, fetchInto, readReceived, recordReceived, unmatched } from './received';
+export {
+  type Received,
+  type ReceivedFile,
+  RETENTION_DAYS,
+  archive,
+  fetchInto,
+  readReceived,
+  recordReceived,
+  unmatched,
+} from './received';
 export {
   type InitReport,
   type RecordExtra,
@@ -52,7 +61,7 @@ export {
 } from './ask';
 import { type AskInput, type AskOpts, acknowledge, ask, questions, statusOf } from './ask';
 import { archiveEntries, filterOutbox, findOutbox, init, readOutbox, sendTracked, type SendExtra } from './outbox';
-import { fetchInto, readReceived, unmatched } from './received';
+import { archive, fetchInto, readReceived, unmatched } from './received';
 import type { MailConfig, MailTransport, OutMail } from './types';
 
 /** The core bound to one configuration and one transport: all another project needs. */
@@ -70,6 +79,7 @@ export function mailCore(cfg: MailConfig, mail: MailTransport) {
     unmatched: () => unmatched(cfg.dir),
     findOutbox: (pred: Parameters<typeof findOutbox>[1]) => findOutbox(cfg.dir, pred),
     filterOutbox: (pred: Parameters<typeof filterOutbox>[1]) => filterOutbox(cfg.dir, pred),
+    archive: () => archive(cfg),
     archived: () => archiveEntries(cfg.dir),
   };
 }

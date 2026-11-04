@@ -509,6 +509,33 @@ describe('liveView owner list, jobs, activity, readiness', () => {
     expect(v.activity[0].what).toMatch(/draft-request/);
     expect(v.activity.every((e) => e.topic === T)).toBe(true);
   });
+  it('owner: an open mail question is listed with the verb that moves it; an accepted one is not', () => {
+    const { root, story } = fresh();
+    story(S);
+    mkdirSync(join(root, '.automation', 'mail'), { recursive: true });
+    const q = { kind: 'question', to: 'j', from: 'b', createdAt: ago(9), sentAt: ago(9), attempts: 1 };
+    const answer = { messageId: '<r@x>', from: 'j', at: ago(1), recordedAt: ago(1), text: 'B' };
+    writeFileSync(
+      join(root, '.automation', 'mail', 'outbox.json'),
+      toJson([
+        { ...q, messageId: '<a@x>', id: 'qn-aaaaaaaaaaaa', subject: 'unanswered', about: 'bnpl/1' },
+        { ...q, messageId: '<b@x>', id: 'qn-bbbbbbbbbbbb', subject: 'answered', answers: [answer] },
+        {
+          ...q,
+          messageId: '<c@x>',
+          id: 'qn-cccccccccccc',
+          subject: 'accepted',
+          answers: [answer],
+          acknowledgedAt: ago(1),
+        },
+      ]),
+    );
+    const items = liveView(root, deps()).owner.filter((o) => o.kind === 'question');
+    expect(items.map((o) => [o.key, o.topic, o.command])).toEqual([
+      ['question:qn-aaaaaaaaaaaa', 'bnpl/1', 'npm run mail -- ask --resume qn-aaaaaaaaaaaa'],
+      ['question:qn-bbbbbbbbbbbb', 'mail', 'npm run mail -- questions --ack qn-bbbbbbbbbbbb'],
+    ]);
+  });
   it('jobs: the running locks, the queued job the work plane would start next (dry), the due resumes, scheduled publications and stuck rows; readiness is the integration table', () => {
     const { root, story } = fresh();
     const dir = story(S);

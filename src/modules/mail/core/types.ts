@@ -20,6 +20,8 @@ export interface MailConfig {
   maxAttempts?: number; // 3
   resendAfterMs?: number; // 10 min
   retentionDays?: number; // 90
+  /** A received record the host still needs live, whatever its age (a reply it has not processed yet). */
+  keepReceived?: (r: { key: string; thread: string | null }) => boolean;
   attachmentLimit?: number; // 5 MiB
   now?: () => number;
   alive?: (pid: number) => boolean;

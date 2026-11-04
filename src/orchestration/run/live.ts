@@ -25,6 +25,7 @@ import {
 } from './journal';
 import { launches } from './launch';
 import { readLock } from './lock';
+import { openCorQuestions } from '../../modules/mail';
 import { readOutbox } from './notify';
 import { alive as pidAlive } from './proc';
 import { type ReadinessRow, readinessView } from './readiness';
@@ -92,7 +93,8 @@ export interface OwnerItem {
     | 'paid-link'
     | 'correction-request'
     | 'awaiting-person'
-    | 'needs-person';
+    | 'needs-person'
+    | 'question';
   key: string;
   topic: string;
   storyId: string | null;
@@ -466,6 +468,19 @@ export function liveView(root = ROOT, deps: LiveDeps = {}): LiveView {
       what: l.liveAt ? `launch live (${l.probes} probes)` : `launch started${l.halt ? `, halted ${l.halt.kind}` : ''}`,
     });
 
+  for (const q of openCorQuestions(root, now()))
+    owner.push({
+      kind: 'question',
+      key: `question:${q.id}`,
+      topic: q.about ?? 'mail',
+      storyId: null,
+      what: `${q.id} ${q.status === 'answered' ? 'answered, not yet accepted' : q.status}: ${q.subject}`,
+      url: null,
+      reply: q.status === 'answered' ? null : 'any words above the quote',
+      command:
+        q.status === 'answered' ? `npm run mail -- questions --ack ${q.id}` : `npm run mail -- ask --resume ${q.id}`,
+      since: q.createdAt,
+    });
   // the owner's other items: proposal batches, drafts, corrections, halts a person resolves
   const batches = new Map<string, { slugs: string[]; since: string }>();
   for (const p of loadProposals(root))

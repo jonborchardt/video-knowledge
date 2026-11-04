@@ -3,7 +3,7 @@
 // Rendered from the status rows and what later phases hand in through DigestExtra; sent once per configured slot.
 import type { Automation } from '../../shared/automation';
 import { ROOT } from '../../shared/io';
-import type { OutMail } from '../../modules/mail';
+import { type OutMail, type Question, type QuestionState, openCorQuestions } from '../../modules/mail';
 import type { Mailer } from './mailer';
 import { type OutboxEntry, secretsOf, unsentOutbox } from './notify';
 import { redact } from '../../shared/redact';
@@ -18,10 +18,17 @@ export interface DigestExtra {
   studio?: { story: string; step: string; record: string }[]; // outstanding optional Studio steps (phase 3)
   shadow?: ShadowCriteria; // draft-review shadow verdicts against the enabling criteria (spec §5.5)
   unsent?: OutboxEntry[];
+  questions?: (Question & QuestionState)[]; // open mail questions: answers unaccepted, nobody waiting, never sent
   queue?: { readyStories: number; approvedTopics: number; awaitingApproval: number };
   spend?: { weekUsd: number; perWeekUsd: number };
   secrets?: string[]; // what a body must never carry; the environment's secret families by default
 }
+
+/** Where an open question stands and the verb that moves it. No automation acts on one: a session or a person does. */
+export const questionLine = (q: Question & QuestionState): string =>
+  q.status === 'answered'
+    ? `answered, not yet accepted (npm run mail -- questions --ack ${q.id})`
+    : `${q.status === 'unattended' ? 'unanswered, nobody waiting' : q.status} (npm run mail -- ask --resume ${q.id})`;
 
 const section = (title: string, lines: string[]): string[] => (lines.length ? ['', `## ${title}`, ...lines] : []);
 
@@ -91,6 +98,12 @@ export function renderDigest(rows: StatusRow[], extra: DigestExtra, a: Automatio
     ),
     ...(extra.shadow ? ['', `## Draft review shadow`, shadowSentence(extra.shadow)] : []),
     ...section(
+      'Questions',
+      (extra.questions ?? []).map(
+        (q) => `- ${q.id} ${questionLine(q)}${q.about ? ` (${q.about})` : ''}: ${clean(q.subject)}`,
+      ),
+    ),
+    ...section(
       'Mail that could not be sent',
       (extra.unsent ?? []).map((e) => `- ${e.kind} "${e.subject}" to ${e.to} (${e.attempts} attempts)`),
     ),
@@ -126,9 +139,21 @@ export async function sendDigestIfDue(
 ): Promise<string | null> {
   const slot = lastSlot(now(), a.notifications.digest.weekday, a.notifications.digest.hour, a.schedule.timezone);
   if (readSchedule(root).digest?.lastSlot === slot) return null;
-  await mail.sendTracked(renderDigest(rows, { ...extra, unsent: extra.unsent ?? unsentOutbox(root) }, a), 'digest', {
-    now,
-  });
+  await mail.sendTracked(
+    renderDigest(
+      rows,
+      {
+        ...extra,
+        unsent: extra.unsent ?? unsentOutbox(root),
+        questions: extra.questions ?? openCorQuestions(root, now()),
+      },
+      a,
+    ),
+    'digest',
+    {
+      now,
+    },
+  );
   updateSchedule(root, (s) => ({ ...s, digest: { lastSlot: slot } }));
   return slot;
 }

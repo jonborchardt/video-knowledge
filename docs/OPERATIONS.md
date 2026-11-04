@@ -42,7 +42,7 @@ secret from an agent's environment.
 | service          | keys in `.env`                                                                                                                                                                                                                                                                     | used by                                                                                                                                      |
 | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | YouTube Data API | `YOUTUBE_OAUTH_CREDENTIALS_PATH` (a Desktop OAuth client JSON under `.secrets/`), per commission `YOUTUBE_OAUTH_CREDENTIALS_PATH_<KEY>`; `YOUTUBE_CHANNEL_ID_<KEY>` (or `YOUTUBE_CHANNEL_ID`), the channel an upload must land on, checked against the account before every upload | `npm run publish -- auth                                                                     \| upload \| push \| go-live \| sync \| verify` |
-| Approval mail    | `MAIL_SMTP_HOST`, `MAIL_IMAP_HOST`, `MAIL_USER`, `MAIL_PASSWORD` (ports 465 and 993), `APPROVAL_SECRET` (16+ chars)                                                                                                                                                                | the tick's outbox and inbox, `publish request`, `article request-correction`, `topics batch`                                                 |
+| Approval mail    | `MAIL_SMTP_HOST`, `MAIL_IMAP_HOST`, `MAIL_USER`, `MAIL_PASSWORD` (ports 465 and 993), `APPROVAL_SECRET` (16+ chars)                                                                                                                                                                | the tick's outbox and inbox (`npm run mail`), `publish request`, `article request-correction`, `topics batch`                                |
 | Azure AI Speech  | `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION`                                                                                                                                                                                                                                          | `npm run video -- final` (the release voice, through `npm run tts-azure`)                                                                    |
 | X                | `X_<KEY>_API_KEY`, `_API_SECRET`, `_ACCESS_TOKEN`, `_ACCESS_SECRET`, `_USER_ID` (`_HANDLE` for a test account)                                                                                                                                                                     | `npm run social -- post`                                                                                                                     |
 | Cloudflare       | `wrangler.jsonc`, the host's own deploy on push                                                                                                                                                                                                                                    | the launch job's push; `npm run links -- live` probes the result                                                                             |
@@ -131,13 +131,57 @@ reconcile against it.
 
 With a mailbox configured and `enabled.tick` on, the tick sends one mail per new halt, a weekly digest, the proposal
 batch, the draft request, the release request, the correction request and the launch mail, all through the outbox
-(`.automation/outbox.json`; at least once, never twice as a decision). Your reply's first line decides
+(`.automation/mail/outbox.json`; at least once, never twice as a decision). Your reply's first line decides
 (`src/orchestration/run/replies.ts`): `OK`, `OK at <when>`, `CHANGES:` with one note per line, `PAID OK [1, 3]`,
 `APPROVE <slug>`, `REJECT <slug>: <why>`, `APPROVE ALL`. Anything else gets one clarification and changes nothing.
 The same decisions by hand (external effect where they publish): `npm run publish -- decide ...`,
-`npm run article -- decide ...`, `npm run topics -- approve|reject ...`. `npm run run -- mail-test [--await-reply]`
+`npm run article -- decide ...`, `npm run topics -- approve|reject ...`. `npm run mail -- test [--await-reply]`
 (external effect) sends one test message. Nothing here sends a real approval mail until the mailbox is configured
 and the tick is enabled.
+
+### Asking the approver
+
+`npm run mail -- ask "<subject>" --text "<question>" --about <topic>/<story-id>` sends one question to `approvals.to`
+and blocks until the reply. A session runs it in the background (the Bash tool's `run_in_background`), goes on with
+what does not depend on the answer, and is woken when the command exits. It never polls from the session; the polling
+is inside the verb. Reply above the quote in any words. The first reply answers; a later one is kept in order, never
+overwritten and never given to another question. A follow-up takes `--reply-to <qn-id>`, threads in your client and
+shares the work item.
+
+**A conversational "go ahead" is not an approval.** The reply comes back as your words for the agent to reason about.
+It can revise, re-render and ask again on them. Release approval, scheduling, go-live, paid links, topic approval and
+article corrections still take their own request mail or verb (section above), and the module cannot apply them.
+
+**Live continuation and durable recovery are different.** While the agent that asked is running, `ask` exits with the
+answer and the agent carries on. If that agent has ended, the answer is still recorded by the next fetch (the tick, or
+anyone), and the question and its reply stay on disk, but nothing resumes the original work by itself: no automation
+acts on an unseen answer. The weekly digest and the live page's owner list show it, `npm run mail -- questions --unseen
+--fetch` lists it, and a later session or you pick it up, with `--about` naming the work. An answer stays unseen until
+a consumer runs `questions --ack <qn-id>`, so an agent that dies holding one loses nothing.
+
+| status       | means                                                                          | next                                |
+| ------------ | ------------------------------------------------------------------------------ | ----------------------------------- |
+| `unsent`     | recorded, not delivered yet; the tick or a resume retries                      | `ask --resume <qn-id>`              |
+| `failed`     | three failed sends                                                             | fix the mailbox, then ask again     |
+| `awaiting`   | sent, a live process is waiting                                                | reply                               |
+| `unattended` | sent, nobody waiting (timed out, or the session ended)                         | reply; the answer is still recorded |
+| `answered`   | a reply is recorded; `late` if it came after the wait, `unseen` until accepted | `questions --ack <qn-id>`           |
+
+Delivery is at least once: if a process dies after the server accepted a mail and before recording it, the retry
+carries the same Message-ID and you may get two copies; only the first reply's effect counts per question or request.
+Records live in `.automation/mail/`: `outbox.json`, `received.json`, `received/*.eml` (the original messages) and
+`archive/<YYYY-MM>.json`. Only completed records archive after 90 days (a question answered and accepted, a mail sent
+or out of attempts, a reply handled); an unanswered question or an unprocessed formal reply stays live at any age, and
+a late reply to an archived request still threads to it and is refused as expired by its verb. If a lock is stuck, the
+error names the pid; if that pid is not a repo process, delete `.automation/mail/.lock/held`. Upgrading: `npm run mail
+-- init --dry-run` reports the migration and `npm run mail -- init` performs it (every write runs it anyway).
+
+**Which channel.** An interactive session asks you in the session. An autonomous session (`claude -p`, the SDK, a
+routine) and orchestration use `mail ask`; the harness tells a session which it is, and nothing detects whether you
+are at the keyboard. An explicit instruction ("use email from now on", "I'm leaving") switches the current session to
+mail for the rest of it, and nothing persists past that session: the next one you start is interactive again until
+told otherwise. One channel per question, never both, and no fallback from an unanswered local question to mail.
+Content roles under the runner have no shell, so they ask through a halt and its mail, as before.
 
 ## 9. Diagnosing and recovering
 

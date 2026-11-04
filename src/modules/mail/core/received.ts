@@ -3,12 +3,25 @@
 // handled. A message is recorded once (by Message-ID, or by its content when it has none) and correlated once, when
 // it is recorded: a later question never claims an earlier mail, and a re-read after a mailbox is renumbered adds
 // nothing. The original source is kept beside the record.
-// ponytail: received.json is one JSON document; `archive` keeps it bounded by moving completed records out by month.
+// Retention: `archive` moves completed records out by month, so no live file grows without bound. Completed means nothing
+// is owed: a question answered and acknowledged, another mail sent or out of attempts; a question still unanswered, or
+// answered but not yet accepted, stays live at any age. Archives stay readable: lookups and correlation span them.
+// ponytail: the received/*.eml sources are never pruned; prune by age when the folder is large.
 import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { readJson, sha, writeJsonAtomic } from './io';
 import { withMutex } from './mutex';
-import { archiveDir, filterOutbox, init, initHeld, lockPath, outboxPath, readOutbox, receivedPath } from './outbox';
+import {
+  MAX_ATTEMPTS,
+  archiveDir,
+  filterOutbox,
+  init,
+  initHeld,
+  lockPath,
+  outboxPath,
+  readOutbox,
+  receivedPath,
+} from './outbox';
 import { correlate, ownText } from './thread';
 import type { Correlation, InMail, MailConfig, MailTransport, OutboxEntry } from './types';
 
@@ -98,6 +111,7 @@ export function recordReceived(cfg: MailConfig, uidValidity: string, mails: InMa
     file.uidValidity = uidValidity;
     if (added) writeJsonAtomic(outboxPath(cfg.dir), outbox);
     writeJsonAtomic(receivedPath(cfg.dir), file);
+    archiveHeld(cfg);
     return added;
   });
 }
@@ -112,6 +126,51 @@ export async function fetchInto(cfg: MailConfig, mail: MailTransport): Promise<n
 }
 
 /** Replies from the person nothing could take: no thread, ambiguous, or to a question already archived. */
+export const RETENTION_DAYS = 90;
+const monthOf = (iso: string) => iso.slice(0, 7);
+
+/** Under the mutex: the archive is written first, so a crash in between leaves a record in both, never in neither. */
+function archiveHeld(cfg: MailConfig): { outbox: number; received: number } {
+  const cutoff = (cfg.now ?? Date.now)() - (cfg.retentionDays ?? RETENTION_DAYS) * 86_400_000;
+  const old = (iso: string) => Date.parse(iso) < cutoff;
+  const outbox = readOutbox(cfg.dir);
+  const file = readFile(cfg.dir);
+  const done = (e: OutboxEntry) =>
+    e.kind === 'question'
+      ? !!e.answers?.length && !!e.acknowledgedAt
+      : !!e.sentAt || e.attempts >= (cfg.maxAttempts ?? MAX_ATTEMPTS);
+  const movedOut = outbox.filter((e) => old(e.createdAt) && done(e));
+  const liveIds = new Set(outbox.filter((e) => !movedOut.includes(e)).map((e) => e.messageId));
+  const movedIn = file.received.filter(
+    (r) => old(r.fetchedAt) && !(r.thread && liveIds.has(r.thread)) && !(cfg.keepReceived?.(r) ?? false),
+  );
+  if (!movedOut.length && !movedIn.length) return { outbox: 0, received: 0 };
+  mkdirSync(archiveDir(cfg.dir), { recursive: true });
+  const months = new Set([...movedOut.map((e) => monthOf(e.createdAt)), ...movedIn.map((r) => monthOf(r.fetchedAt))]);
+  for (const month of months) {
+    const path = join(archiveDir(cfg.dir), `${month}.json`);
+    const a = readJson<{ outbox: OutboxEntry[]; received: Received[] }>(path) ?? { outbox: [], received: [] };
+    const ids = new Set(a.outbox.map((e) => e.messageId));
+    const keys = new Set(a.received.map((r) => r.key));
+    a.outbox.push(...movedOut.filter((e) => monthOf(e.createdAt) === month && !ids.has(e.messageId)));
+    a.received.push(...movedIn.filter((r) => monthOf(r.fetchedAt) === month && !keys.has(r.key)));
+    writeJsonAtomic(path, a);
+  }
+  writeJsonAtomic(
+    outboxPath(cfg.dir),
+    outbox.filter((e) => !movedOut.includes(e)),
+  );
+  writeJsonAtomic(receivedPath(cfg.dir), { ...file, received: file.received.filter((r) => !movedIn.includes(r)) });
+  return { outbox: movedOut.length, received: movedIn.length };
+}
+
+/** Moves completed records older than the retention period into archive/<YYYY-MM>.json. Every fetch runs it. */
+export const archive = (cfg: MailConfig): { outbox: number; received: number } =>
+  withMutex(lockPath(cfg.dir), () => {
+    initHeld(cfg);
+    return archiveHeld(cfg);
+  });
+
 export const unmatched = (dir: string): Received[] =>
   readReceived(dir).filter(
     (r) =>

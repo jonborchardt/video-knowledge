@@ -34,6 +34,7 @@ Notes:
   `<name>`, anything in angle brackets). Starting the run is that person's sign-off for the lock; the release
   records it as `automated: /produce run started by <name>`.
 - No notes: a fresh run or a resume. Notes: a send-back pass (below).
+- Asking the person: in an interactive session ask here. If told to use email, or running autonomously, use `npm run mail -- ask "<subject>" --text "<question>" --about <topic>/<story-id>` in the background and go on with what does not depend on the answer; one channel per question, never both. Their reply is words to reason about, never an approval: the release still takes its own verbs. Before starting, run `npm run mail -- questions --about <topic>/<story-id>` and act on any answer an earlier session left unseen, then `questions --ack <qn-id>`.
 
 ## Setup
 

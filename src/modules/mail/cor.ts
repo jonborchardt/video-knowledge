@@ -3,7 +3,7 @@
 // core/ knows any of this. Pure except corTransport (which only builds the client).
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
-import { ROOT } from '../../shared/io';
+import { ROOT, readJson } from '../../shared/io';
 import {
   type MailConfig,
   type MailServer,
@@ -11,6 +11,10 @@ import {
   type OutboxEntry,
   type Received,
   fileFakeMail,
+  questions,
+  statusOf,
+  type QuestionState,
+  type Question,
   filterOutbox,
   findOutbox,
   libraryTransport,
@@ -41,6 +45,15 @@ const legacy = (root: string) => ({
   legacyMetaFields: ['request', 'topic', 'storyId'],
 });
 
+/** A reply threaded to a request the inbox adapter has not handled yet stays where the adapter reads it, at any age;
+ *  a reply to a general question is the asking agent's, and the adapter never handles it. */
+function unprocessedFormalReply(root: string, r: { key: string; thread: string | null }): boolean {
+  if (!r.thread) return false;
+  if (findCorOutbox((e) => e.messageId === r.thread, root)?.kind === 'question') return false;
+  const handled = readJson<{ handled?: { messageId: string }[] }>(join(automation(root), 'inbox.json'))?.handled ?? [];
+  return !handled.some((h) => h.messageId === r.key);
+}
+
 /** The core's configuration, or null when neither address is set: mail is not configured. */
 export function corMailConfig(root: string, a: Automation, env: NodeJS.ProcessEnv = process.env): MailConfig | null {
   const to = a.approvals.to || a.notifications.to;
@@ -54,6 +67,7 @@ export function corMailConfig(root: string, a: Automation, env: NodeJS.ProcessEn
     to,
     recipients: [a.approvals.to, a.notifications.to].filter(Boolean),
     subjectPrefix: '[CoR]',
+    keepReceived: (r) => unprocessedFormalReply(root, r),
   };
 }
 
@@ -90,3 +104,10 @@ export const filterCorOutbox = (pred: (e: OutboxEntry) => boolean, root = ROOT):
 export const unsentCorOutbox = (root = ROOT): OutboxEntry[] => unsentOutbox(corMailDir(root), legacy(root));
 export const corResendDue = (now: number, root = ROOT): OutboxEntry[] => resendDue(corMailDir(root), now, legacy(root));
 export const readCorReceived = (root = ROOT): Received[] => readReceived(corMailDir(root));
+
+/** What a person or a later session may need to act on: answers no consumer accepted yet, questions nobody is waiting
+ *  on, and ones that never went. The digest and the live page show them; nothing acts on them by itself. */
+export const openCorQuestions = (root = ROOT, now = Date.now()): (Question & QuestionState)[] =>
+  questions(corMailDir(root), legacy(root))
+    .map((q) => ({ ...q, ...statusOf(q, {}, now) }))
+    .filter((q) => (q.status === 'answered' ? !q.seen : q.status !== 'awaiting'));
