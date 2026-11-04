@@ -14,6 +14,8 @@ export default defineConfig({
           // fixture-copying tests; vitest's 5 s default was the budget of an in-process suite and times out
           // healthy tests under that load. 30 s still catches a hang; no assertion depends on the timeout.
           testTimeout: 30_000,
+          // afterAll hooks delete many copied topic roots; on Windows under a full validate that takes minutes.
+          hookTimeout: 300_000,
         },
       },
       {
