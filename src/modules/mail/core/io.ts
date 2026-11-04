@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, renameSync, unlinkSync, writeFileSync } from 'node:fs';
 
 export const readJson = <T>(p: string): T | null => (existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')) as T) : null);
-export const toJson = (x: unknown): string => JSON.stringify(x, null, 1) + '\n';
+const toJson = (x: unknown): string => JSON.stringify(x, null, 1) + '\n';
 export const sha = (s: string | Buffer): string => createHash('sha1').update(s).digest('hex');
 export const sleepSync = (ms: number): void => {
   if (ms > 0) Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);

@@ -1,6 +1,6 @@
 // The prepared-directory lock. The lock is `<lockDir>/held/`, a directory that only ever comes into existence by the
 // rename of a directory the acquirer prepared with its own marker `owner.<pid>.<token>` inside.
-// What this relies on, and what establishes it (see ../README.md, "The lock's evidence"): among processes racing to
+// What this relies on, and what establishes it (see README.md, "The lock's evidence"): among processes racing to
 // rename their prepared directories onto one absent target, exactly one wins and its marker is the one left there
 // (measured by tests/primitives-experiment.ts); a rename never replaces a non-empty directory and rmdir never removes
 // one (tests/mutex.test.ts). Those are observations on the platform named in the README, not guarantees from Node.
@@ -39,21 +39,12 @@ const ignore = (fn: () => void, codes: string[]) => {
   }
 };
 
-export interface MutexOpts {
-  timeoutMs?: number;
-  alive?: (pid: number) => boolean;
-  pid?: number;
-}
-
 /** Runs `fn` holding the lock under `lockDir` (created on first use). `fn` is synchronous: no await inside, and no
  *  network call. Throws after `timeoutMs` (10 s) naming the holder. */
-export function withMutex<T>(lockDir: string, fn: () => T, opts: MutexOpts = {}): T {
-  const alive = opts.alive ?? pidAlive;
-  const pid = opts.pid ?? process.pid;
-  const timeoutMs = opts.timeoutMs ?? 10_000;
+export function withMutex<T>(lockDir: string, fn: () => T, { timeoutMs = 10_000 } = {}): T {
   mkdirSync(lockDir, { recursive: true });
   const held = join(lockDir, HELD);
-  const mine = `owner.${pid}.${randomUUID()}`;
+  const mine = `owner.${process.pid}.${randomUUID()}`;
   const tmp = mkdtempSync(join(lockDir, '.acq-'));
   writeFileSync(join(tmp, mine), '');
   const deadline = Date.now() + timeoutMs;
@@ -78,9 +69,9 @@ export function withMutex<T>(lockDir: string, fn: () => T, opts: MutexOpts = {})
         continue;
       }
       for (const o of owners)
-        if (!alive(Number(OWNER.exec(o)![1]))) ignore(() => unlinkSync(join(held, o)), ['ENOENT']);
+        if (!pidAlive(Number(OWNER.exec(o)![1]))) ignore(() => unlinkSync(join(held, o)), ['ENOENT']);
       // empty (a crashed release, or a dead owner's marker just removed): remove it; fails if it is live and non-empty
-      if (owners.length === 0 || owners.some((o) => !alive(Number(OWNER.exec(o)![1]))))
+      if (owners.length === 0 || owners.some((o) => !pidAlive(Number(OWNER.exec(o)![1]))))
         ignore(() => rmdirSync(held), ['ENOENT', 'ENOTEMPTY', 'EPERM', 'EBUSY']);
       if (Date.now() > deadline) {
         const o = owners[0];

@@ -1,7 +1,7 @@
 // The thread core: the person's own words above the quote, addresses, thread membership, question ids.
 import { describe, expect, it } from 'vitest';
 import { htmlToText } from '../core/transport';
-import { address, inThread, ownText, questionIdsIn } from '../core/thread';
+import { address, ownText, questionIdsIn } from '../core/thread';
 
 describe('ownText', () => {
   it('keeps the lines above a quoted block and drops the signature', () => {
@@ -39,15 +39,10 @@ describe('ownText', () => {
   });
 });
 
-describe('address, inThread, questionIdsIn', () => {
+describe('address, questionIdsIn', () => {
   it('address strips the display name and case', () => {
     expect(address('Jon B <Jon@Example.test>')).toBe('jon@example.test');
     expect(address('  jon@example.test ')).toBe('jon@example.test');
-  });
-  it('inThread matches In-Reply-To or any References entry', () => {
-    expect(inThread({ inReplyTo: '<a@x>', references: [] }, '<a@x>')).toBe(true);
-    expect(inThread({ inReplyTo: null, references: ['<b@x>', '<a@x>'] }, '<a@x>')).toBe(true);
-    expect(inThread({ inReplyTo: '<b@x>', references: [] }, '<a@x>')).toBe(false);
   });
   it('questionIdsIn finds every distinct qn- id in order', () => {
     expect(questionIdsIn('Re: [CoR] which one qn-0123456789ab')).toEqual(['qn-0123456789ab']);

@@ -1,11 +1,9 @@
 // The core's public API: what another project imports after copying core/ (the extraction boundary).
 export type { Answer, Correlation, InMail, MailConfig, MailTransport, OutboxEntry, OutMail } from './types';
-export { type Correlatable, type Lookup, address, correlate, inThread, ownText, questionIdsIn } from './thread';
-export { type MutexOpts, withMutex } from './mutex';
+export { address, correlate, ownText, questionIdsIn } from './thread';
+export { withMutex } from './mutex';
 export {
   type FakeFileState,
-  type FakeSent,
-  type MailDeps,
   type MailServer,
   FakeMail,
   emptyFakeState,
@@ -13,21 +11,9 @@ export {
   htmlToText,
   libraryTransport,
   messageIdOf,
-  toInMail,
 } from './transport';
+export { type Received, RETENTION_DAYS, archive, fetchInto, readReceived, recordReceived, unmatched } from './received';
 export {
-  type Received,
-  type ReceivedFile,
-  RETENTION_DAYS,
-  archive,
-  fetchInto,
-  readReceived,
-  recordReceived,
-  unmatched,
-} from './received';
-export {
-  type InitReport,
-  type RecordExtra,
   type SendExtra,
   MailRefusal,
   attemptSend,
@@ -60,8 +46,8 @@ export {
   statusOf,
 } from './ask';
 import { type AskInput, type AskOpts, acknowledge, ask, questions, statusOf } from './ask';
-import { archiveEntries, filterOutbox, findOutbox, init, readOutbox, sendTracked, type SendExtra } from './outbox';
-import { archive, fetchInto, readReceived, unmatched } from './received';
+import { findOutbox, init, readOutbox, sendTracked, type SendExtra } from './outbox';
+import { archive, fetchInto, unmatched } from './received';
 import type { MailConfig, MailTransport, OutMail } from './types';
 
 /** The core bound to one configuration and one transport: all another project needs. */
@@ -75,11 +61,8 @@ export function mailCore(cfg: MailConfig, mail: MailTransport) {
     acknowledge: (id: string) => acknowledge(cfg, id),
     questions: () => questions(cfg.dir).map((q) => ({ ...q, ...statusOf(q, cfg, (cfg.now ?? Date.now)()) })),
     outbox: () => readOutbox(cfg.dir),
-    received: () => readReceived(cfg.dir),
     unmatched: () => unmatched(cfg.dir),
     findOutbox: (pred: Parameters<typeof findOutbox>[1]) => findOutbox(cfg.dir, pred),
-    filterOutbox: (pred: Parameters<typeof filterOutbox>[1]) => filterOutbox(cfg.dir, pred),
     archive: () => archive(cfg),
-    archived: () => archiveEntries(cfg.dir),
   };
 }

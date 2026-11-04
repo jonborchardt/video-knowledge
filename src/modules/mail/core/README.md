@@ -47,9 +47,29 @@ To check a copy, run `tests/standalone.test.ts` (it needs only this folder and v
 
 `outbox.json`, `received.json`, `received/<sha12>.eml` (the original messages), `archive/<YYYY-MM>.json`, `.lock/`.
 
+## The lock's evidence
+
+The lock is `.lock/held/`, which comes into existence only by renaming a directory the acquirer prepared with its own marker inside. Nothing below is a guarantee from Node or the operating system documentation; it is what was observed.
+
+Measured with `tests/primitives-experiment.ts` on Windows 10 (10.0.19045), Node 24.19.0, on two NTFS fixed disks, each 100 rounds of 8 separate processes racing:
+
+| primitive                                          | rounds with more than one winner, C: | F:        |
+| -------------------------------------------------- | ------------------------------------ | --------- |
+| rename one token file to distinct names            | 100 of 100                           | 95 of 100 |
+| `openSync(path, 'wx')`                             | 0 of 100                             | 0 of 100  |
+| `mkdirSync(path)`                                  | 0 of 100                             | 0 of 100  |
+| rename prepared directories onto one absent target | 0 of 100                             | 0 of 100  |
+| the same with an empty `held/` to clear first      | 0 of 100                             | 0 of 100  |
+
+In both directory-rename trials every round had a winner, and the marker left in `held/` was always the reporting winner's. A hundred clean rounds is evidence, not proof. The cause of the token-file result was not investigated; what was established is only that it must not be used.
+
+`tests/mutex.test.ts` pins the rest on every run: a directory rename does not replace a non-empty directory, `rmdir` does not remove one, and across real processes the increments are exact with dead holders, simultaneous recoverers and a live replacement owner. The suite passes on both disks (`MAIL_TEST_DIR` chooses one). Each holder also checks inside the critical section that its marker is alone in `held/`, so a double hold fails loudly.
+
+No other operating system or filesystem has been measured. Run the experiment and the suite before relying on this lock anywhere else, a network filesystem above all.
+
 ## Known ceilings
 
-- The lock is for one machine. A dead owner's pid reused by an unrelated process strands it until a person deletes `.lock/held`; the timeout error names the pid.
+- The lock is for one machine, and has only been measured on the platform above. A dead owner's pid reused by an unrelated process strands it until a person deletes `.lock/held`; the timeout error names the pid.
 - The wait polls by sleeping; IMAP IDLE would suit a shorter interval.
 - The `.eml` sources are never pruned.
 - Nothing here resumes a program that has ended. A later run lists `questions()` and acts on what it finds.

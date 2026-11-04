@@ -52,7 +52,7 @@ const legacyEntries = (cfg: LegacyCfg): OutboxEntry[] | null => {
 export const readOutbox = (dir: string, cfg: LegacyCfg = {}): OutboxEntry[] =>
   readJson<OutboxEntry[]>(outboxPath(dir)) ?? legacyEntries(cfg) ?? [];
 
-export const archiveEntries = (dir: string): OutboxEntry[] => {
+const archiveEntries = (dir: string): OutboxEntry[] => {
   if (!existsSync(archiveDir(dir))) return [];
   return readdirSync(archiveDir(dir))
     .filter((f) => f.endsWith('.json'))

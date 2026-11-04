@@ -152,7 +152,7 @@ export interface FakeFileState {
   uidValidity: string;
   sent: FakeSent[];
   inbox: InMail[];
-  failSend: 'before' | 'after' | null;
+  failSend: 'before' | null;
   failFetch: boolean;
   /** process.exit(137) after the copy is recorded: the sender crashed between SMTP and its own record. */
   crashAfterSend: boolean;
@@ -195,7 +195,6 @@ export function fileFakeMail(
         throw new Error('smtp: connection lost before the send');
       }
       if (before.sendDelayMs) sleepSync(before.sendDelayMs);
-      let after: FakeFileState['failSend'] = null;
       let crash = false;
       update((s) => {
         s.sent.push({
@@ -206,12 +205,9 @@ export function fileFakeMail(
             data: a.data.toString('base64'),
           })),
         });
-        after = s.failSend;
         crash = s.crashAfterSend;
-        s.failSend = null;
       });
       if (crash) process.exit(137);
-      if (after === 'after') throw new Error('smtp: connection lost after the send');
       return { messageId: m.messageId };
     },
     async fetchSince(sinceUid) {

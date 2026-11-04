@@ -31,9 +31,6 @@ export function ownText(body: string): string {
 /** The bare address, lower-cased: `Jon <Jon@Example.test>` is `jon@example.test`. */
 export const address = (s: string): string => (/<([^>]+)>/.exec(s)?.[1] ?? s).trim().toLowerCase();
 
-export const inThread = (m: Pick<InMail, 'inReplyTo' | 'references'>, messageId: string): boolean =>
-  m.inReplyTo === messageId || m.references.includes(messageId);
-
 const QN = /\bqn-[0-9a-f]{12}\b/g;
 /** Every distinct question id in `text`, in order of first appearance. */
 export const questionIdsIn = (text: string): string[] => [...new Set(text.match(QN) ?? [])];
