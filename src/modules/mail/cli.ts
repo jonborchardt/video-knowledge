@@ -12,7 +12,7 @@
 //       what is open or answered, and the replies that matched nothing; --unseen: answers no consumer accepted yet
 //   questions --ack <qn-id>                              the consumer accepted the answer: it leaves --unseen
 //   test [--await-reply] [--poll <seconds>=20]           one question through the outbox; with the flag waits ten minutes and
-//                                                        saves the reply as tests/fixtures/mail/reply-<date>-<uid>.eml, addresses replaced
+//                                                        saves the reply as tests/fixtures/mail/reply-<date>-<uid>.eml, addresses and display names replaced
 //   init [--dry-run]                                     the one migration of the legacy outbox: INIT <migrated|present|empty> <n> entries, <r> with a request; --dry-run writes nothing
 //   send --file <path.json> [--message-id <id>]          one message from a file (kind, from, to, subject, text; html, inReplyTo, references, meta, attachments as base64 optional):
 //                                                        records it, sends it, prints SENT <message-id>; --message-id resends the recorded entry with its id
@@ -33,12 +33,14 @@ import {
   type OutboxEntry,
   MailRefusal,
   acknowledge,
+  address,
   ask,
   fetchInto,
   findOutbox,
   init,
   questions,
   readReceived,
+  sanitizedSource,
   sendTracked,
   skipAttempt,
   statusOf,
@@ -164,7 +166,7 @@ async function testVerb(cfg: MailConfig): Promise<void> {
     transport(),
     {
       subject: `video-knowledge mail test ${at}`,
-      text: `Reply to this message with any words; the reply is saved as a fixture (addresses replaced).\nSent ${at}.`,
+      text: `Reply to this message with any words; the reply is saved as a fixture (addresses and names replaced).\nSent ${at}.`,
     },
     {
       timeoutMs: wait ? 10 * 60_000 : 0,
@@ -188,7 +190,8 @@ async function testVerb(cfg: MailConfig): Promise<void> {
   mkdirSync(dir, { recursive: true });
   const file = join(dir, `reply-${at.slice(0, 10)}-${rec.uid}.eml`);
   const raw = rec.raw ? readFileSync(join(cfg.dir, rec.raw), 'utf8') : '';
-  writeFileSync(file, raw.replaceAll(cfg.to, 'person@example.test').replaceAll(cfg.from, 'automation@example.test'));
+  const people = { [address(cfg.to)]: 'person@example.test', [address(cfg.from)]: 'automation@example.test' };
+  writeFileSync(file, sanitizedSource(raw, people));
   console.log(`reply at ${first.at}; own text:\n${first.text}\nsaved ${file}`);
 }
 

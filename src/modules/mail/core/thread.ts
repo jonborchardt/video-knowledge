@@ -31,6 +31,27 @@ export function ownText(body: string): string {
 /** The bare address, lower-cased: `Jon <Jon@Example.test>` is `jon@example.test`. */
 export const address = (s: string): string => (/<([^>]+)>/.exec(s)?.[1] ?? s).trim().toLowerCase();
 
+const escaped = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/** A mail's source safe to keep: each address in any case becomes its stand-in, and the display name the address
+ *  headers give it becomes the stand-in's name wherever it appears (a quote line repeats it).
+ *  ponytail: a name in an encoded body part or a signature's first name stays; read a fixture before committing it. */
+export function sanitizedSource(raw: string, people: Record<string, string>): string {
+  const headers = raw.split(/\r?\n\r?\n/, 1)[0];
+  const fields = headers.match(/^(?:From|To|Cc|Bcc|Reply-To|Sender):.*(?:\r?\n[ \t].*)*/gim) ?? [];
+  let out = raw;
+  for (const [addr, standIn] of Object.entries(people)) {
+    const local = standIn.split('@')[0];
+    const named = new RegExp(`(?:^[^:]*:|,)\\s*(?:"([^"]+)"|([^",<>]+?))\\s*<${escaped(addr)}>`, 'gi');
+    for (const f of fields)
+      for (const m of f.matchAll(named)) {
+        const name = (m[1] ?? m[2]).trim();
+        if (name) out = out.replaceAll(name, local[0].toUpperCase() + local.slice(1));
+      }
+    out = out.replace(new RegExp(escaped(addr), 'gi'), standIn);
+  }
+  return out;
+}
+
 const QN = /\bqn-[0-9a-f]{12}\b/g;
 /** Every distinct question id in `text`, in order of first appearance. */
 export const questionIdsIn = (text: string): string[] => [...new Set(text.match(QN) ?? [])];

@@ -1,7 +1,7 @@
 // The thread core: the person's own words above the quote, addresses, thread membership, question ids.
 import { describe, expect, it } from 'vitest';
 import { htmlToText } from '../core/transport';
-import { address, ownText, questionIdsIn } from '../core/thread';
+import { address, ownText, questionIdsIn, sanitizedSource } from '../core/thread';
 
 describe('ownText', () => {
   it('keeps the lines above a quoted block and drops the signature', () => {
@@ -51,5 +51,41 @@ describe('address, questionIdsIn', () => {
       'qn-bbbbbbbbbbbb',
     ]);
     expect(questionIdsIn('qn-0123456789abc no id here')).toEqual([]);
+  });
+});
+
+describe('sanitizedSource', () => {
+  const people = { 'jon@x.test': 'person@example.test', 'bot@x.test': 'automation@example.test' };
+  it('replaces the addresses in any case, and each display name wherever it appears', () => {
+    const raw = [
+      'Delivered-To: BOT@x.test',
+      'From: Ann Example <Jon@X.test>',
+      'To: "Example, Bot"',
+      ' <bot@x.test>',
+      'Subject: Re: hi',
+      '',
+      'yes',
+      '',
+      'On Tue, Ann Example <jon@x.test> wrote to Example, Bot:',
+      '> hi',
+      '',
+    ].join('\r\n');
+    const out = sanitizedSource(raw, people);
+    expect(out).not.toMatch(/x\.test|Ann Example|Example, Bot/i);
+    expect(out).toContain('From: Person <person@example.test>');
+    expect(out).toContain('automation@example.test');
+    expect(out).toContain('yes');
+  });
+  it('takes names only from the address headers, never a time or word before an address', () => {
+    const raw = [
+      'Received: by mx; for <jon@x.test>',
+      'From: <jon@x.test>',
+      '',
+      'On Tue at 7:19 PM <bot@x.test> wrote:',
+      '',
+    ].join('\r\n');
+    const out = sanitizedSource(raw, people);
+    expect(out).toContain('7:19 PM <automation@example.test>');
+    expect(out).toContain('for <person@example.test>');
   });
 });

@@ -1,6 +1,6 @@
 // The core's public API: what another project imports after copying core/ (the extraction boundary).
 export type { Answer, Correlation, InMail, MailConfig, MailTransport, OutboxEntry, OutMail } from './types';
-export { address, correlate, ownText, questionIdsIn } from './thread';
+export { address, correlate, ownText, questionIdsIn, sanitizedSource } from './thread';
 export { withMutex } from './mutex';
 export {
   type FakeFileState,
