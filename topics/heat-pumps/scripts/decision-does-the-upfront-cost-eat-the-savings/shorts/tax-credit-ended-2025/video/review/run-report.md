@@ -12,3 +12,7 @@ Unattended run (npm run run -- story), 2026-11-03T23:06:19.204Z to 2026-11-03T23
 - awaiting-person: the draft build aecd56d7e8 of short:tax-credit-ended-2025 is uploaded for review
 
 Total agent cost: 0.00 USD.
+
+## Release build
+
+- 2026-11-04: `npm run video -- final heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/tax-credit-ended-2025 --approved-by Jon (OK by chat, 2026-11-04)` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.
