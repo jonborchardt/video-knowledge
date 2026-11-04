@@ -1,16 +1,13 @@
 # Run report: heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/the-panel-upgrade
 
-Unattended run (npm run run -- story), 2026-11-03T22:20:12.023Z to 2026-11-03T22:31:51.316Z; journal in F:\github\video-knowledge\topics\heat-pumps\scripts\decision-does-the-upfront-cost-eat-the-savings\shorts\the-panel-upgrade\run.
+Unattended run (npm run run -- story), 2026-11-03T22:45:19.848Z to 2026-11-03T23:58:29.476Z; journal in F:\github\video-knowledge\topics\heat-pumps\scripts\decision-does-the-upfront-cost-eat-the-savings\shorts\the-panel-upgrade\run.
 
 ## Agents
 
 ## Commands
+- npm run video -- final heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/the-panel-upgrade --approved-by Jon (exit 0, 156 s)
 
 ## Guard events and halts
-- step-failed: npm run validate failed:        | ^ |     117| |     118| describe('uploadProblem', () => { |  | ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+- awaiting-person: the draft build 448b27ea94 of short:heat-pump-vs-furnace-plus-ac is uploaded for review
 
 Total agent cost: 0.00 USD.
-
-## Release build
-
-- 2026-11-03: `npm run video -- final heat-pumps decision:does-the-upfront-cost-eat-the-savings/shorts/the-panel-upgrade --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.
