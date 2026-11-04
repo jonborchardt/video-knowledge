@@ -57,8 +57,13 @@ const refuse = (why: string): never => {
 const transport = (): MailTransport =>
   corTransport() ??
   refuse('mail is not configured: MAIL_SMTP_HOST, MAIL_IMAP_HOST, MAIL_USER and MAIL_PASSWORD in .env');
-const minutes = (name: string, dflt: number) => Number(flag(name) ?? dflt) * 60_000;
-const seconds = (name: string, dflt: number) => Number(flag(name) ?? dflt) * 1000;
+/** A number of at least `min`, or a refusal: a bad --poll would otherwise log into the mailbox in a tight loop. */
+const numeric = (name: string, dflt: number, min: number): number => {
+  const v = Number(flag(name) ?? dflt);
+  return Number.isFinite(v) && v >= min ? v : refuse(`${name} must be a number of at least ${min}`);
+};
+const minutes = (name: string, dflt: number) => numeric(name, dflt, 0) * 60_000;
+const seconds = (name: string, dflt: number) => numeric(name, dflt, 1) * 1000;
 const withState = (q: OutboxEntry, cfg: MailConfig) => ({ ...q, ...statusOf(q, cfg, Date.now()) });
 
 function printAnswer(q: OutboxEntry): void {

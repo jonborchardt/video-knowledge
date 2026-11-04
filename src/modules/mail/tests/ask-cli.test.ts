@@ -182,6 +182,20 @@ describe('mail ask', () => {
     expect(s.cli('ask', 'q', '--text', 't').status).toBe(2);
     expect(existsSync(join(s.dir, 'outbox.json'))).toBe(false);
   });
+  it.each([
+    ['--poll', '0'],
+    ['--poll', 'abc'],
+    ['--timeout', 'abc'],
+    ['--timeout', '-5'],
+    ['--timeout', 'Infinity'],
+  ])('refuses %s %s before anything is sent: a bad poll would hammer the mailbox', (name, value) => {
+    const s = setup();
+    const r = s.cli('ask', 'q', '--text', 't', name, value);
+    expect(r.status).toBe(2);
+    expect(r.stderr).toContain(name);
+    expect(sentOf(s)).toHaveLength(0);
+    expect(existsSync(join(s.dir, 'outbox.json'))).toBe(false);
+  });
   it('has no way to name a recipient', () => {
     const s = setup();
     expect(s.cli('ask', 'q', '--text', 't', '--to', 'stranger@example.test', '--timeout', '0').status).toBe(2);
