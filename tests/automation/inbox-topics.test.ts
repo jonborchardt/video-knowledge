@@ -8,11 +8,11 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { runCli } from '../../src/shared/cli';
 import { ROOT, readJson, toJson } from '../../src/shared/io';
-import { FakeMail, type InMail } from '../../src/shared/mail';
+import type { InMail } from '../../src/shared/mail';
+import { FakeMailer } from './fake-mailer';
 import type { Proposal, ProposalReview } from '../../src/shared/types';
 import { PROPOSALS_DIR, proposalPath, reviewPath } from '../../src/modules/topic-discovery/proposals';
 import { pollInbox, readInbox } from '../../src/orchestration/run/inbox';
-import { sendTracked } from '../../src/orchestration/run/notify';
 import { cliRoot } from '../production-helpers';
 
 const FIX = join(ROOT, 'tests', 'fixtures', 'proposals');
@@ -47,9 +47,8 @@ async function staged() {
   });
   put('parked-one', 'Are extended warranties ever worth their price?', { status: 'parked', parkedWhy: 'weak' });
   put('next-week', 'Is leasing a car dearer than buying over five years?'); // proposed, not in this batch
-  const mail = new FakeMail();
-  const { messageId } = await sendTracked(
-    mail,
+  const mail = new FakeMailer(root);
+  const { messageId } = await mail.sendTracked(
     {
       from: a.approvals.from,
       to: a.approvals.to,
@@ -57,7 +56,6 @@ async function staged() {
       text: 'x',
     },
     'batch',
-    root,
     { request: BATCH, now: () => T0 },
   );
   const env = { ...process.env, VK_NO_DOTENV: '1', APPROVAL_SECRET: 'a-test-secret-of-some-length' };

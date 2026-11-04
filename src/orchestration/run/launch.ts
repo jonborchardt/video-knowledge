@@ -9,14 +9,14 @@ import type { Automation } from '../../shared/automation';
 import { isFixtureTopic } from '../../config/site';
 import type { CliResult } from '../../shared/cli';
 import { ROOT, readJson, scriptDir, storySlug, topicDir, writeJsonAtomic } from '../../shared/io';
-import type { MailTransport } from '../../shared/mail';
+import type { Mailer } from './mailer';
 import { loadLedger, openOutput } from '../../modules/publishing';
 import { accountFor, loadSocial } from '../../modules/social';
 import { liveCheck } from '../../modules/website';
 import { type Halt, clearHalt, readHalt, runDir, writeHalt } from './journal';
 import { acquire, aliveLocks, readLock, release } from './lock';
 import { alive } from './proc';
-import { automationDir, sendTracked } from './notify';
+import { automationDir } from './notify';
 import { storiesWithLedgers } from './publish-due';
 import { renderLaunched } from './requests';
 import type { RunResult } from './runner';
@@ -322,7 +322,7 @@ export interface ProbeDeps {
   now?: () => number;
   fetchFn?: typeof fetch;
   run: (cli: string, args: string[]) => Promise<CliResult> | CliResult;
-  mail: MailTransport | null;
+  mail: Mailer | null;
   /** The environment the institution's X keys are read from (whether it is configured); the tick's process env. */
   env?: NodeJS.ProcessEnv;
 }
@@ -433,7 +433,7 @@ export async function probeLaunches(a: Automation, root = ROOT, d: ProbeDeps): P
       writeLaunch(root, rec);
     }
     if (d.mail && !rec.emailed) {
-      await sendTracked(d.mail, renderLaunched(rec, a, root), 'launch', root, {
+      await d.mail.sendTracked(renderLaunched(rec, a, root), 'launch', {
         now,
         topic: rec.topic,
         storyId: rec.storyId,

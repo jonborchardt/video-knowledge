@@ -14,13 +14,13 @@ import { commissions, isFixtureTopic } from '../../config/site';
 import type { Automation } from '../../shared/automation';
 import { type CliResult, runCli } from '../../shared/cli';
 import { ROOT } from '../../shared/io';
-import type { MailTransport } from '../../shared/mail';
+import type { Mailer } from './mailer';
 import { PROPOSALS_DIR, loadProposals } from '../../modules/topic-discovery';
 import type { Step } from '../production';
 import { guard as realGuard, snapshot as realSnapshot, type TreeSnapshot, guardWhy } from './guard';
 import type { Halt } from './journal';
 import { acquire, release } from './lock';
-import { automationDir, readOutbox, sendTracked } from './notify';
+import { automationDir, readOutbox } from './notify';
 import { renderBatch } from './requests';
 import { grantFor } from './roles';
 import { addSpend, isoWeek, type RunResult, weekSpend } from './runner';
@@ -82,7 +82,7 @@ export const discoveryInstitutions = (): string[] =>
 
 export interface DiscoveryDeps {
   now?: () => number;
-  mail: MailTransport | null;
+  mail: Mailer | null;
   env?: NodeJS.ProcessEnv;
   /** `'none'` in tests; the default runs git in `root`. */
   git?: 'none' | ((args: string[]) => string);
@@ -377,7 +377,7 @@ async function discoverLocked(
     const existing = readOutbox(root).find((e) => e.kind === 'batch' && e.request === id);
     const messageId = existing
       ? existing.messageId
-      : (await sendTracked(d.mail, renderBatch(root, id, a), 'batch', root, { request: id, now })).messageId;
+      : (await d.mail.sendTracked(renderBatch(root, id, a), 'batch', { request: id, now })).messageId;
     const sent = cli('topics', ['sent', id, '--message-id', messageId]);
     if (sent.status !== 0)
       return halted('step-failed', `npm run topics -- sent failed: ${(sent.stderr || sent.stdout).trim()}`, {
@@ -419,4 +419,4 @@ async function discoverLocked(
 }
 
 /** The real dependencies: the mailbox when configured, git in the clone, the process environment. */
-export const discoveryDeps = (mail: MailTransport | null): DiscoveryDeps => ({ mail, env: process.env });
+export const discoveryDeps = (mail: Mailer | null): DiscoveryDeps => ({ mail, env: process.env });

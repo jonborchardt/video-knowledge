@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { scriptDir } from '../../src/shared/io';
-import { FakeMail } from '../../src/shared/mail';
+import { FakeMailer } from './fake-mailer';
 import { type Halt, appendJournal, readHalt, runDir, writeHalt } from '../../src/orchestration/run/journal';
 import { automationDir, readOutbox } from '../../src/orchestration/run/notify';
 import { readSchedule, writeSchedule } from '../../src/orchestration/run/schedule';
@@ -57,7 +57,7 @@ const same = () => ({ stage: 'review', next: 'watch it' });
 describe('tick', () => {
   it('a step that throws (the inbox, a due publication, a probe) is reported as an action and the pass goes on', async () => {
     const root = fresh();
-    const mail = new FakeMail();
+    const mail = new FakeMailer(root);
     mail.deliver({
       uid: 1,
       messageId: '<x@y>',
@@ -84,7 +84,7 @@ describe('tick', () => {
   });
   it('does nothing while disabled, and never runs a story', async () => {
     const root = fresh();
-    const mail = new FakeMail();
+    const mail = new FakeMailer(root);
     const r = await tick(DEFAULTS, root, { mail, now: () => T0, preflight: okPre });
     expect(r).toEqual({ outcome: 'disabled', actions: ['tick: disabled'] });
     expect(mail.sent).toEqual([]);
@@ -92,7 +92,7 @@ describe('tick', () => {
   });
   it('--preflight runs the preflight alone with the flags off, as if they were on, and writes nothing', async () => {
     const root = fresh();
-    const mail = new FakeMail();
+    const mail = new FakeMailer(root);
     const noMail = { ...okPre, env: {} }; // the mail check applies only while enabled.tick is on
     const r = await tick(DEFAULTS, root, { mail, now: () => T0, preflight: noMail, preflightOnly: true });
     expect(r.outcome).toBe('preflight');
@@ -111,12 +111,12 @@ describe('tick', () => {
       join(automationDir(root), TICK_LOCK, 'lock.json'),
       '{"runId":"x","pid":1,"host":"h","startedAt":"s","heartbeatAt":"s","command":"tick"}',
     );
-    const r = await tick(on, root, { mail: new FakeMail(), now: () => T0, alive: () => true, preflight: okPre });
+    const r = await tick(on, root, { mail: new FakeMailer(root), now: () => T0, alive: () => true, preflight: okPre });
     expect(r.outcome).toBe('held');
   });
   it('a dirty clone emails the preflight halt once over two ticks, records nothing due, and clears when it recovers', async () => {
     const root = fresh();
-    const mail = new FakeMail();
+    const mail = new FakeMailer(root);
     writeHalt(runDir(T, S, root), halt({ kind: 'timeout', why: 'hung' }));
     const dirty = { ...okPre, git: (a: string[]) => (a[0] === 'status' ? ' M src/x.ts\n' : 'main\n') };
     const r1 = await tick(on, root, { mail, now: () => T0, preflight: dirty, ask: same });
@@ -141,11 +141,11 @@ describe('tick', () => {
       git: (a: string[]) => (a[0] === 'status' ? ' M topics/heat-pumps/report.json\n' : 'main\n'),
       launches: () => [{ paths: ['topics/heat-pumps'] }],
     };
-    expect((await tick(on, root, { mail: new FakeMail(), now: () => T0, preflight: dirty })).outcome).toBe('ok');
+    expect((await tick(on, root, { mail: new FakeMailer(root), now: () => T0, preflight: dirty })).outcome).toBe('ok');
   });
   it('a pass records the due resumes, kills a stuck run, emails the new halts once and sends the digest once', async () => {
     const root = fresh();
-    const mail = new FakeMail();
+    const mail = new FakeMailer(root);
     // a retryable halt past its first backoff
     writeHalt(
       runDir(T, S, root),
@@ -235,7 +235,7 @@ describe('tick', () => {
     };
     const killed: number[] = [];
     const r = await tick(on, root, {
-      mail: new FakeMail(),
+      mail: new FakeMailer(root),
       now: () => T0,
       preflight: dirty,
       ask: same,
@@ -248,7 +248,7 @@ describe('tick', () => {
   });
   it("a failed preflight keeps the stories' notified keys, and its own key is stable while the details change", async () => {
     const root = fresh();
-    const mail = new FakeMail();
+    const mail = new FakeMailer(root);
     writeHalt(runDir(T, S, root), halt());
     expect((await tick(on, root, { mail, now: () => T0, preflight: okPre, ask: same })).outcome).toBe('ok');
     expect(mail.sent).toHaveLength(2); // the halt and the Monday digest

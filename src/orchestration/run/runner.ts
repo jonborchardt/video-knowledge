@@ -42,7 +42,7 @@ import {
 } from './steps';
 import { type ReleaseContext, releaseLoop } from './release';
 import { sendDraftRequest, sendReleaseRequest } from './requests';
-import type { MailTransport } from '../../shared/mail';
+import type { Mailer } from './mailer';
 import { type ReviewNote, currentBuild, loadLedger, noteLine, openOutput } from '../../modules/publishing';
 import { parseNoteLine } from './replies';
 
@@ -73,7 +73,7 @@ export interface RunOptions {
   /** The nested run of one Short (the release loop's); the default is this runner to `packaged`. */
   runShort?: (shortStoryId: string) => Promise<RunResult>;
   /** The mailbox the draft and release requests go through; absent: no mail, the halts say what to do. */
-  mail?: MailTransport | null;
+  mail?: Mailer | null;
   /** Tests inject the senders; the default composes and sends through `mail`. */
   releaseMail?: ReleaseContext['mail'];
   /** Tests override automation.json's review.draft. */

@@ -8,6 +8,7 @@ import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
 import { ROOT, readJson, sha, writeJsonAtomic } from '../../shared/io';
 import { type MailTransport, type OutMail, messageIdOf, redact } from '../../shared/mail';
+import type { Mailer } from './mailer';
 import type { Halt } from './journal';
 import { AUTOMATION_DIR } from './runner';
 import { type StatusRow, statusOf } from './status';
@@ -106,10 +107,28 @@ export async function sendTracked(
   return { messageId };
 }
 
+/** A recorded entry sent again with its own Message-ID (the flush step): the body is re-rendered by the caller, the
+ *  attempts are counted by the caller; `sentAt` follows the send. */
+export async function resendRecorded(
+  mail: MailTransport,
+  root: string,
+  kind: OutboxKind,
+  messageId: string,
+  body: Omit<OutMail, 'messageId'>,
+  now: () => number = Date.now,
+): Promise<{ messageId: string }> {
+  await mail.send({ ...withGuide(kind, body), messageId });
+  writeOutbox(
+    root,
+    readOutbox(root).map((e) => (e.messageId === messageId ? { ...e, sentAt: new Date(now()).toISOString() } : e)),
+  );
+  return { messageId };
+}
+
 /** Resend every entry without `sentAt` older than ten minutes, with its recorded id, at most three attempts; the
  *  caller re-renders the body (the outbox stores none). Returns the ids resent. */
 export async function flushOutbox(
-  mail: MailTransport,
+  mail: Mailer,
   root = ROOT,
   now: () => number = Date.now,
   render: (e: OutboxEntry) => Omit<OutMail, 'messageId'> | null,
@@ -125,14 +144,10 @@ export async function flushOutbox(
     const body = render(e);
     if (!body) continue; // nothing to resend it from: it runs out of attempts and the digest lists it
     try {
-      await mail.send({ ...withGuide(e.kind, body), messageId: e.messageId });
+      await mail.sendTracked(body, e.kind, { messageId: e.messageId, now });
     } catch {
       continue; // the next tick tries again, up to the cap
     }
-    writeOutbox(
-      root,
-      readOutbox(root).map((x) => (x.messageId === e.messageId ? { ...x, sentAt: new Date(now()).toISOString() } : x)),
-    );
     resent.push(e.messageId);
   }
   return resent;
@@ -193,7 +208,7 @@ const notifiedPath = (root: string) => join(automationDir(root), NOTIFIED_FILE);
 /** Email every halt whose key is new; forget keys whose halt is gone so a recurrence is emailed again. */
 export async function notifyHalts(
   a: Automation,
-  mail: MailTransport,
+  mail: Mailer,
   root = ROOT,
   opts: {
     now?: () => number;
@@ -215,11 +230,9 @@ export async function notifyHalts(
     current.add(key);
     if (notified[key]) continue;
     try {
-      await sendTracked(
-        mail,
+      await mail.sendTracked(
         renderHalt(r.topic, r.storyId, r.halt, a, { dir: r.dir, sessionId: opts.sessionOf?.(r) ?? null }, opts.secrets),
         'halt',
-        root,
         { now },
       );
     } catch {

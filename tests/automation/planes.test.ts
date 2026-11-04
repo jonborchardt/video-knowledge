@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { scriptDir } from '../../src/shared/io';
-import { FakeMail } from '../../src/shared/mail';
+import { FakeMailer } from './fake-mailer';
 import { type Halt, runDir, writeHalt } from '../../src/orchestration/run/journal';
 import { acquire, release } from '../../src/orchestration/run/lock';
 import { writeSchedule } from '../../src/orchestration/run/schedule';
@@ -63,7 +63,7 @@ describe('the two planes (criterion 15)', () => {
       },
     });
     await new Promise((r) => setTimeout(r, 200));
-    const mail = new FakeMail();
+    const mail = new FakeMailer(root);
     const t0 = Date.now();
     const report = await tick(on, root, { mail, preflight: okPre, ask: () => ({ stage: 'review', next: 'watch it' }) });
     expect(report.outcome).toBe('ok');
@@ -85,7 +85,7 @@ describe('the two planes with the publication steps (criterion 15)', () => {
   it('a tick applies an OK reply and confirms a deploy in seconds while a work job sleeps', async () => {
     const T1 = new Date('2026-10-30T12:00:00Z');
     const s = stagedRelease(T1);
-    const mail = new FakeMail();
+    const mail = new FakeMailer(root);
     const sent = await sentRequest(s, mail, () => T1.getTime());
     mail.deliver({
       uid: 1,

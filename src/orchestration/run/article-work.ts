@@ -10,7 +10,7 @@ import { existsSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
 import { ROOT, readJson, scriptDir, topicDir, writeJsonAtomic } from '../../shared/io';
-import type { MailTransport } from '../../shared/mail';
+import type { Mailer } from './mailer';
 import type { ScriptReviewFile, ScriptValidation } from '../../shared/types';
 import {
   ARTICLE_FILES,
@@ -45,7 +45,7 @@ export const CORRECTION_FILE = 'correction.json';
 
 export interface ArticleWorkDeps {
   now?: () => number;
-  mail: MailTransport | null;
+  mail: Mailer | null;
   env?: NodeJS.ProcessEnv;
   exec?: typeof realExecStep;
   argvOf?: StepContext['argvOf'];

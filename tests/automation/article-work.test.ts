@@ -10,7 +10,7 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { cliArgv } from '../../src/shared/cli';
 import { ROOT, readJson, toJson } from '../../src/shared/io';
-import { FakeMail } from '../../src/shared/mail';
+import { FakeMailer } from './fake-mailer';
 import { ARTICLE_FILES, type ArticleRelease, loadArticleRequest } from '../../src/modules/article';
 import { MLM } from '../script-helpers';
 import { articleWork } from '../../src/orchestration/run/article-work';
@@ -129,7 +129,7 @@ function staged(opts: { revised: string | null; reaffirm?: boolean; validation?:
     cli === 'article' && ['validate', 'reaffirm'].includes(args[0])
       ? [process.execPath, [FAKE_ARTICLE, ...args]]
       : cliArgv(cli, args);
-  const mail = new FakeMail();
+  const mail = new FakeMailer(f.root);
   const run = (over: { stories?: string[] | undefined; a?: typeof a } = {}) =>
     articleWork(f.topic, over.a ?? a, {
       now: () => T0,

@@ -3,7 +3,7 @@
 // touched; a live Short's description is pushed; and the whole tick stays short.
 import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
-import { FakeMail } from '../../src/shared/mail';
+import { FakeMailer } from './fake-mailer';
 import { readFakeState, writeFakeState } from '../../src/modules/publishing/fake-youtube';
 import { openOutput } from '../../src/modules/publishing/publish';
 import { readJson } from '../../src/shared/io';
@@ -263,7 +263,7 @@ describe('publishDue', () => {
     const s = stagedRelease(T0);
     stages.push(s);
     expect((await decided(s, 'ok')).status).toBe(0);
-    const mail = new FakeMail();
+    const mail = new FakeMailer(s.f.root);
     const okPre = {
       git: (args: string[]) => (args[0] === 'status' ? '' : 'main\n'),
       claude: () => true,

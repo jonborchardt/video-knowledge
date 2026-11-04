@@ -5,16 +5,9 @@ import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { scriptDir } from '../../src/shared/io';
-import { FakeMail } from '../../src/shared/mail';
+import { FakeMailer } from './fake-mailer';
 import { type Halt, runDir, writeHalt, clearHalt } from '../../src/orchestration/run/journal';
-import {
-  flushOutbox,
-  haltKey,
-  notifyHalts,
-  readOutbox,
-  renderHalt,
-  sendTracked,
-} from '../../src/orchestration/run/notify';
+import { flushOutbox, haltKey, notifyHalts, readOutbox, renderHalt } from '../../src/orchestration/run/notify';
 import { renderDigest, sendDigestIfDue } from '../../src/orchestration/run/digest';
 import { isoWeek, lastSlot, readSchedule } from '../../src/orchestration/run/schedule';
 import { statusOf } from '../../src/orchestration/run/status';
@@ -53,7 +46,7 @@ describe('halt notifications', () => {
   it('emails a halt once across ticks, and again when it resolves and recurs', async () => {
     const root = fresh();
     roots.push(root);
-    const mail = new FakeMail();
+    const mail = new FakeMailer(root);
     writeHalt(runDir(T, S, root), halt());
     expect(await notifyHalts(a, mail, root, { now: () => T0, rows: statusOf(root, () => false) })).toHaveLength(1);
     expect(await notifyHalts(a, mail, root, { now: () => T0, rows: statusOf(root, () => false) })).toHaveLength(0);
@@ -84,11 +77,11 @@ describe('the outbox', () => {
   it('records the intent before the send and the result after; a failed send stays unsent and is resent later with the same id', async () => {
     const root = fresh();
     roots.push(root);
-    const mail = new FakeMail();
+    const mail = new FakeMailer(root);
     let t = T0;
     const out = { from: 'automation@example.test', to: 'jon@example.test', subject: 's', text: 'body' };
     mail.failNext = 'after'; // delivered, then the crash before the record
-    await expect(sendTracked(mail, out, 'test', root, { now: () => t })).rejects.toThrow(/after/);
+    await expect(mail.sendTracked(out, 'test', { now: () => t })).rejects.toThrow(/after/);
     const [e] = readOutbox(root);
     expect(e.sentAt).toBeNull();
     expect(e.attempts).toBe(1);
@@ -131,11 +124,11 @@ describe('the outbox', () => {
   it('gives up after three attempts and lists the entry for the digest', async () => {
     const root = fresh();
     roots.push(root);
-    const mail = new FakeMail();
+    const mail = new FakeMailer(root);
     let t = T0;
     const out = { from: 'automation@example.test', to: 'jon@example.test', subject: 'stuck', text: 'body' };
     mail.failNext = 'before';
-    await expect(sendTracked(mail, out, 'test', root, { now: () => t })).rejects.toThrow();
+    await expect(mail.sendTracked(out, 'test', { now: () => t })).rejects.toThrow();
     for (let i = 0; i < 3; i++) {
       t += 11 * 60 * 1000;
       mail.failNext = 'before';
@@ -156,9 +149,9 @@ describe('the outbox', () => {
   it('a request id rides on every copy', async () => {
     const root = fresh();
     roots.push(root);
-    const mail = new FakeMail();
+    const mail = new FakeMailer(root);
     const out = { from: 'automation@example.test', to: 'jon@example.test', subject: 'release (req-9)', text: 'b' };
-    const { messageId } = await sendTracked(mail, out, 'release-request', root, { request: 'req-9', now: () => T0 });
+    const { messageId } = await mail.sendTracked(out, 'release-request', { request: 'req-9', now: () => T0 });
     expect(readOutbox(root)[0]).toMatchObject({ messageId, request: 'req-9', kind: 'release-request' });
   });
 });
@@ -167,7 +160,7 @@ describe('the digest', () => {
   it('lists a blocked row with its unblock text and the queue, and sends once per slot', async () => {
     const root = fresh();
     roots.push(root);
-    const mail = new FakeMail();
+    const mail = new FakeMailer(root);
     writeHalt(runDir(T, S, root), halt());
     const rows = statusOf(root, () => false);
     const d = renderDigest(
@@ -200,7 +193,7 @@ describe('the digest', () => {
   describe("the review's findings", () => {
     it('an SMTP failure on one halt leaves one outbox entry per halt and no second id', async () => {
       const root = fresh();
-      const mail = new FakeMail();
+      const mail = new FakeMailer(root);
       writeHalt(runDir(T, S, root), halt());
       const other = 'decision:b';
       runDir(T, other, root);
@@ -228,10 +221,10 @@ describe('the digest', () => {
     });
     it('an entry nothing can re-render runs out of attempts and is listed as unsent', async () => {
       const root = fresh();
-      const mail = new FakeMail();
+      const mail = new FakeMailer(root);
       mail.failNext = 'before';
       await expect(
-        sendTracked(mail, { from: 'a', to: 'b', subject: 's', text: 't' }, 'release-request', root, { now: () => T0 }),
+        mail.sendTracked({ from: 'a', to: 'b', subject: 's', text: 't' }, 'release-request', { now: () => T0 }),
       ).rejects.toThrow();
       let t = T0;
       for (let i = 0; i < 3; i++) {

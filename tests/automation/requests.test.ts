@@ -5,7 +5,7 @@ import { join, relative } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { MANIFEST_FILE, REVIEW_DIR, readJson, toJson } from '../../src/shared/io';
-import { FakeMail } from '../../src/shared/mail';
+import { FakeMailer } from './fake-mailer';
 import type { ReleaseManifest } from '../../src/shared/types';
 import { writeManifest } from '../../src/modules/packaging/manifest';
 import {
@@ -145,7 +145,7 @@ describe('the release request mail', () => {
 
   it('is sent once per request through the outbox with the thumbnail, and its Message-ID is recorded on the ledger', async () => {
     const { f, manifest, req } = requested();
-    const mail = new FakeMail();
+    const mail = new FakeMailer(f.root);
     const id = await sendReleaseRequest(f.topic, f.story, manifest, a, mail, {
       root: f.root,
       now: () => now.getTime(),
@@ -174,7 +174,7 @@ describe('the release request mail', () => {
 
   it('a crash between the send and the ledger record is completed from the outbox, not re-sent (review finding 8)', async () => {
     const { f, manifest, req } = requested();
-    const mail = new FakeMail();
+    const mail = new FakeMailer(f.root);
     mail.failNext = 'after'; // delivered, then the crash before any record
     await expect(
       sendReleaseRequest(f.topic, f.story, manifest, a, mail, {
@@ -263,7 +263,7 @@ describe('the draft request mail', () => {
       id: 'shortdraft1',
       visibility: 'private',
     });
-    const mail = new FakeMail();
+    const mail = new FakeMailer(f.root);
     const shortStory = `${f.story}/shorts/one`;
     const id = await sendDraftRequest(
       f.topic,
@@ -289,7 +289,7 @@ describe('the draft request mail', () => {
     fixtures.push(f);
     cliRoot(f.root);
     recordUploaded(f.topic, f.story, { root: f.root, by: 'x', now, id: 'draft000001', visibility: 'private' });
-    const mail = new FakeMail();
+    const mail = new FakeMailer(f.root);
     const id = await sendDraftRequest(f.topic, f.story, 'draftsha', 'https://youtu.be/draft000001', null, a, mail, {
       root: f.root,
       now: () => now.getTime(),
@@ -339,7 +339,7 @@ describe('the correction request mail (M3 1.3: ownership of the sent record)', (
   }
   it('is sent once and its Message-ID is recorded through `article sent`, never by writing the request file', async () => {
     const { f, req, env, calls, run } = corrected();
-    const mail = new FakeMail();
+    const mail = new FakeMailer(f.root);
     const id = await sendCorrectionRequest(f.topic, f.story, req, a, mail, {
       root: f.root,
       now: () => now.getTime(),
@@ -370,7 +370,7 @@ describe('the correction request mail (M3 1.3: ownership of the sent record)', (
   }, 120_000);
   it('a crash between the send and the verb is completed from the outbox: the same Message-ID recorded, no second mail', async () => {
     const { f, req, env, calls, run } = corrected();
-    const mail = new FakeMail();
+    const mail = new FakeMailer(f.root);
     mail.failNext = 'after';
     await expect(
       sendCorrectionRequest(f.topic, f.story, req, a, mail, { root: f.root, now: () => now.getTime(), env, run }),

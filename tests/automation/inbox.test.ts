@@ -6,11 +6,12 @@ import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { readJson } from '../../src/shared/io';
-import { type InMail, FakeMail } from '../../src/shared/mail';
+import type { InMail } from '../../src/shared/mail';
+import { FakeMailer } from './fake-mailer';
 import { loadLedger, openRequest } from '../../src/modules/publishing/publish';
 import { INBOX_FILE, decideArgs, pollInbox, readInbox, threadOf } from '../../src/orchestration/run/inbox';
 import { runDir } from '../../src/orchestration/run/journal';
-import { automationDir, readOutbox, sendTracked } from '../../src/orchestration/run/notify';
+import { automationDir, readOutbox } from '../../src/orchestration/run/notify';
 import { publishDue } from '../../src/orchestration/run/publish-due';
 import { readSchedule } from '../../src/orchestration/run/schedule';
 import { type Stage, stagedRelease, sentRequest } from './publish-fake-cli';
@@ -40,7 +41,7 @@ const reply = (inReplyTo: string, text: string, extra: Partial<InMail> = {}): In
 async function staged(opts: { expiresDays?: number } = {}) {
   const s = stagedRelease(T0, opts);
   stages.push(s);
-  const mail = new FakeMail();
+  const mail = new FakeMailer(s.f.root);
   const now = () => T0.getTime();
   const sent = await sentRequest(s, mail, now);
   const subject = `Re: [CoR release] ${s.manifest.outputs.youtube.title} (${s.request})`;
@@ -173,7 +174,7 @@ describe('pollInbox', () => {
     const again = new Date(later.getTime() + 10 * 86400_000);
     const s2 = stagedRelease(T0, { expiresDays: 1 });
     stages.push(s2);
-    const m2 = new FakeMail();
+    const m2 = new FakeMailer(s2.f.root);
     await sentRequest(s2, m2, now);
     s2.clock.now = later;
     await publishDue(a, s2.f.root, { now: () => later.getTime(), run: s2.run, mail: m2 });
@@ -258,13 +259,11 @@ describe('pollInbox', () => {
   it('a reply on a story with a live run waits for the next poll (the ledger write would land in an agent step)', async () => {
     const s = stagedRelease(T0);
     stages.push(s);
-    const mail = new FakeMail();
+    const mail = new FakeMailer(s.f.root);
     const now = () => T0.getTime();
-    const { messageId } = await sendTracked(
-      mail,
+    const { messageId } = await mail.sendTracked(
       { from: 'automation@example.test', to: 'jon@example.test', subject: '[CoR draft] a title', text: 'watch it' },
       'draft-request',
-      s.f.root,
       { topic: s.f.topic, storyId: s.f.story, now },
     );
     const { writeFileSync, mkdirSync } = await import('node:fs');
@@ -288,15 +287,13 @@ describe('pollInbox', () => {
   it('a draft reply: OK records the acceptance for the release loop; CHANGES: records the notes on the draft', async () => {
     const s = stagedRelease(T0);
     stages.push(s);
-    const mail = new FakeMail();
+    const mail = new FakeMailer(s.f.root);
     const now = () => T0.getTime();
     // the draft request mail, as sendDraftRequest leaves it: the outbox entry and run/draft-request.json
     const build = 'draftsha';
-    const { messageId } = await sendTracked(
-      mail,
+    const { messageId } = await mail.sendTracked(
       { from: 'automation@example.test', to: 'jon@example.test', subject: '[CoR draft] a title', text: 'watch it' },
       'draft-request',
-      s.f.root,
       { topic: s.f.topic, storyId: s.f.story, now },
     );
     const { writeFileSync, mkdirSync } = await import('node:fs');

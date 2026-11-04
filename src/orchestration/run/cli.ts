@@ -58,8 +58,8 @@ import { PRODUCTION_STAGES, type ProductionStage } from '../production';
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { FakeMail, libraryTransport, mailConfigFromEnv } from '../../shared/mail';
+import { transportMailer } from './mailer';
 import { archiveProduction, freshProblem } from './fresh';
-import { sendTracked } from './notify';
 import { candidates, pickJob, pickJobIfDue, pickState, rank } from './pick';
 import { runStory } from './runner';
 import { renderStatus, statusOf } from './status';
@@ -140,7 +140,7 @@ switch (verb) {
       notes: notesFile ? readFileSync(notesFile, 'utf8') : undefined,
       until,
       root: ROOT,
-      mail: cfg && a.approvals.to ? libraryTransport(cfg) : null, // no mailbox: the halt says what to do
+      mail: cfg && a.approvals.to ? transportMailer(libraryTransport(cfg), ROOT) : null, // no mailbox: the halt says what to do
       ...(runId && { runId }),
       ...(rest.includes('--no-commit') && { git: 'none' as const }),
     });
@@ -187,7 +187,12 @@ switch (verb) {
     if (!topic) die(usage());
     const a = loadAutomation(ROOT);
     const cfg = mailConfigFromEnv();
-    const r = await maintain(topic, a, maintainDeps(cfg && a.approvals.to ? libraryTransport(cfg) : null), ROOT);
+    const r = await maintain(
+      topic,
+      a,
+      maintainDeps(cfg && a.approvals.to ? transportMailer(libraryTransport(cfg), ROOT) : null),
+      ROOT,
+    );
     for (const line of r.actions) console.log(line);
     if (r.outcome === 'held') die('another run holds this topic', 3);
     if (r.outcome === 'halted' && r.halt) {
@@ -233,7 +238,7 @@ switch (verb) {
     const r = await discover(
       a,
       {
-        ...discoveryDeps(cfg && a.approvals.to && !dry ? libraryTransport(cfg) : null),
+        ...discoveryDeps(cfg && a.approvals.to && !dry ? transportMailer(libraryTransport(cfg), ROOT) : null),
         dryRun: dry,
         ...(only && { institutions: () => [only] }),
       },
@@ -259,7 +264,10 @@ switch (verb) {
     const a = loadAutomation(ROOT);
     const cfg = mailConfigFromEnv();
     const preflightOnly = rest.includes('--preflight');
-    const r = await tick(a, ROOT, { mail: cfg && !preflightOnly ? libraryTransport(cfg) : null, preflightOnly });
+    const r = await tick(a, ROOT, {
+      mail: cfg && !preflightOnly ? transportMailer(libraryTransport(cfg), ROOT) : null,
+      preflightOnly,
+    });
     for (const line of r.actions) console.log(line);
     console.log(
       r.outcome === 'ok' || r.outcome === 'disabled' || r.outcome === 'held'
@@ -285,7 +293,7 @@ switch (verb) {
     const wcfg = mailConfigFromEnv();
     const r = await work(a, ROOT, {
       pick: only && only !== 'pick' ? () => null : pick,
-      mail: wcfg && a.approvals.to ? libraryTransport(wcfg) : null,
+      mail: wcfg && a.approvals.to ? transportMailer(libraryTransport(wcfg), ROOT) : null,
       ...(only && { skip: [] as Job[], only: only as JobKind }),
     });
     console.log(
@@ -342,10 +350,10 @@ switch (verb) {
     const cfg = mailConfigFromEnv();
     if (!cfg) die('mail is not configured: MAIL_SMTP_HOST, MAIL_IMAP_HOST, MAIL_USER and MAIL_PASSWORD in .env');
     if (!a.notifications.to) die('automation.json notifications.to is empty');
-    const mail = rest.includes('--fake') ? new FakeMail() : libraryTransport(cfg!);
+    const transport = rest.includes('--fake') ? new FakeMail() : libraryTransport(cfg!);
+    const mail = transportMailer(transport, ROOT);
     const at = new Date().toISOString();
-    const { messageId } = await sendTracked(
-      mail,
+    const { messageId } = await mail.sendTracked(
       {
         from: a.approvals.from || cfg!.user,
         to: a.notifications.to,
@@ -353,14 +361,13 @@ switch (verb) {
         text: `Reply to this message with any words; the reply is saved as a fixture (addresses replaced).\nSent ${at}.`,
       },
       'test',
-      ROOT,
     );
     console.log(`sent ${messageId} to ${a.notifications.to}`);
     if (!rest.includes('--await-reply')) break;
     const deadline = Date.now() + 10 * 60_000;
-    let since = await mail.lastUid(); // only what arrives after the test: never the whole inbox
+    let since = await transport.lastUid(); // only what arrives after the test: never the whole inbox
     while (Date.now() < deadline) {
-      const got = await mail.fetchSince(since);
+      const got = await transport.fetchSince(since);
       for (const m of got) since = Math.max(since, m.uid);
       const reply = got.find((m) => m.inReplyTo === messageId || m.references.includes(messageId));
       if (reply) {

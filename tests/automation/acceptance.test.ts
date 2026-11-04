@@ -9,9 +9,9 @@ import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { scriptDir } from '../../src/shared/io';
-import { FakeMail } from '../../src/shared/mail';
+import { FakeMailer } from './fake-mailer';
 import { type Halt, runDir, writeHalt } from '../../src/orchestration/run/journal';
-import { flushOutbox, notifyHalts, readOutbox, sendTracked } from '../../src/orchestration/run/notify';
+import { flushOutbox, notifyHalts, readOutbox } from '../../src/orchestration/run/notify';
 import { pickJob } from '../../src/orchestration/run/pick';
 import { stuckRows } from '../../src/orchestration/run/resume';
 import { readSchedule } from '../../src/orchestration/run/schedule';
@@ -102,7 +102,7 @@ describe('criterion 12: a stuck workflow notifies the person rather than silentl
         (r) => r.storyId,
       ),
     ).toEqual(['decision:a']);
-    const mail = new FakeMail();
+    const mail = new FakeMailer(root);
     expect(await notifyHalts(a, mail, root, { now: () => monday, rows })).toHaveLength(1);
     expect(await notifyHalts(a, mail, root, { now: () => monday + 900_000, rows })).toHaveLength(0);
     expect(mail.sent).toHaveLength(1);
@@ -113,12 +113,10 @@ describe('criterion 12: a stuck workflow notifies the person rather than silentl
 describe('criterion 13 (email row): an email survives its crash boundary once', () => {
   it('a send that delivered before the crash is resent with the same Message-ID, and never a third time once recorded', async () => {
     const root = fresh();
-    const mail = new FakeMail();
+    const mail = new FakeMailer(root);
     const out = { from: 'automation@example.test', to: 'jon@example.test', subject: 'release (req-1)', text: 'b' };
     mail.failNext = 'after';
-    await expect(
-      sendTracked(mail, out, 'release-request', root, { request: 'req-1', now: () => monday }),
-    ).rejects.toThrow();
+    await expect(mail.sendTracked(out, 'release-request', { request: 'req-1', now: () => monday })).rejects.toThrow();
     const id = readOutbox(root)[0].messageId;
     expect(
       await flushOutbox(

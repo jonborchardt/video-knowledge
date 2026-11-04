@@ -12,7 +12,7 @@ import { join } from 'node:path';
 import { isFixtureTopic } from '../../config/site';
 import type { Automation } from '../../shared/automation';
 import { ROOT, readJson, scriptDir, topicDir, writeJsonAtomic } from '../../shared/io';
-import type { MailTransport } from '../../shared/mail';
+import type { Mailer } from './mailer';
 import type { PublicRecord, Script } from '../../shared/types';
 import { loadMaintenance, publicTopicNames, scanDue } from '../../modules/evidence';
 import { storyOutputs } from '../../modules/publishing';
@@ -55,7 +55,7 @@ interface ScanMarker {
 
 export interface MaintainDeps {
   now?: () => number;
-  mail: MailTransport | null;
+  mail: Mailer | null;
   env?: NodeJS.ProcessEnv;
   git?: 'none' | ((args: string[]) => string);
   validate?: (env: NodeJS.ProcessEnv) => { ok: boolean; output: string };
@@ -445,7 +445,7 @@ export async function maintain(
   }
 }
 
-export const maintainDeps = (mail: MailTransport | null): MaintainDeps => ({ mail, env: process.env });
+export const maintainDeps = (mail: Mailer | null): MaintainDeps => ({ mail, env: process.env });
 
 /** Every story of the topic with a publishing ledger (stories.json may no longer list a produced story). */
 function ledgeredStories(topic: string, root: string): { id: string }[] {

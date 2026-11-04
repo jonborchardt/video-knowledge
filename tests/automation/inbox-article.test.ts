@@ -7,7 +7,8 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { runCli } from '../../src/shared/cli';
 import { readJson, toJson } from '../../src/shared/io';
-import { FakeMail, type InMail } from '../../src/shared/mail';
+import type { InMail } from '../../src/shared/mail';
+import { FakeMailer } from './fake-mailer';
 import { ARTICLE_FILES, type ArticleRelease, type ArticleRequest, loadArticleRequest } from '../../src/modules/article';
 import { pollInbox, readInbox } from '../../src/orchestration/run/inbox';
 import { sendCorrectionRequest } from '../../src/orchestration/run/requests';
@@ -41,7 +42,7 @@ async function staged() {
   });
   expect(r.status, r.stderr).toBe(0);
   const req = loadArticleRequest(f.topic, f.story, f.root)!;
-  const mail = new FakeMail();
+  const mail = new FakeMailer(f.root);
   const T0 = Date.now();
   await sendCorrectionRequest(f.topic, f.story, req, a, mail, { root: f.root, now: () => T0, env });
   const sent = mail.sent[0];

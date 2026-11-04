@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { ROOT, readJson, toJson } from '../../src/shared/io';
-import { FakeMail } from '../../src/shared/mail';
+import { FakeMailer } from './fake-mailer';
 import type { Proposal, ProposalReview } from '../../src/shared/types';
 import { proposalPath, reviewPath } from '../../src/modules/topic-discovery/proposals';
 import {
@@ -63,7 +63,7 @@ function fresh(entries: ScenarioEntry[]) {
   mkdirSync(join(root, 'proposals'), { recursive: true });
   const scenario = join(root, 'scenario.json');
   writeFileSync(scenario, JSON.stringify(entries));
-  const mail = new FakeMail();
+  const mail = new FakeMailer(root);
   const ran: string[][] = [];
   const env = { ...process.env, FAKE_CLAUDE_SCENARIO: scenario, APPROVAL_SECRET: 'a-test-secret-of-some-length' };
   const deps = (extra: Partial<Parameters<typeof discover>[1]> = {}) => ({

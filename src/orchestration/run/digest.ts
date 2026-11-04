@@ -3,8 +3,9 @@
 // Rendered from the status rows and what later phases hand in through DigestExtra; sent once per configured slot.
 import type { Automation } from '../../shared/automation';
 import { ROOT } from '../../shared/io';
-import type { MailTransport, OutMail } from '../../shared/mail';
-import { type OutboxEntry, secretsOf, sendTracked, unsentOutbox } from './notify';
+import type { OutMail } from '../../shared/mail';
+import type { Mailer } from './mailer';
+import { type OutboxEntry, secretsOf, unsentOutbox } from './notify';
 import { redact } from '../../shared/mail';
 import { lastSlot, readSchedule, updateSchedule } from './schedule';
 import type { StatusRow } from './status';
@@ -117,7 +118,7 @@ export function renderDigest(rows: StatusRow[], extra: DigestExtra, a: Automatio
 /** Once per configured slot (weekday and hour in the configured timezone): the slot's id is recorded in schedule.json. */
 export async function sendDigestIfDue(
   a: Automation,
-  mail: MailTransport,
+  mail: Mailer,
   now: () => number,
   root = ROOT,
   rows: StatusRow[],
@@ -125,13 +126,9 @@ export async function sendDigestIfDue(
 ): Promise<string | null> {
   const slot = lastSlot(now(), a.notifications.digest.weekday, a.notifications.digest.hour, a.schedule.timezone);
   if (readSchedule(root).digest?.lastSlot === slot) return null;
-  await sendTracked(
-    mail,
-    renderDigest(rows, { ...extra, unsent: extra.unsent ?? unsentOutbox(root) }, a),
-    'digest',
-    root,
-    { now },
-  );
+  await mail.sendTracked(renderDigest(rows, { ...extra, unsent: extra.unsent ?? unsentOutbox(root) }, a), 'digest', {
+    now,
+  });
   updateSchedule(root, (s) => ({ ...s, digest: { lastSlot: slot } }));
   return slot;
 }

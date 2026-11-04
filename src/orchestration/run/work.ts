@@ -6,7 +6,7 @@ import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { commissionOf, isFixtureTopic } from '../../config/site';
 import type { Automation } from '../../shared/automation';
-import type { MailTransport } from '../../shared/mail';
+import type { Mailer } from './mailer';
 import { ROOT, scriptDir, topicsDir } from '../../shared/io';
 import { loadDecisions, topicBoard } from '../production';
 import { RUN_DIR } from './journal';
@@ -61,7 +61,7 @@ export interface WorkDeps {
   runScan?: (topic: string, a: Automation) => Promise<RunResult>;
   skip?: Job[]; // jobs this instance already found held
   only?: JobKind; // `work --job <kind>`: run a job of this kind or nothing
-  mail?: MailTransport | null; // the request mails of a release loop
+  mail?: Mailer | null; // the request mails of a release loop
 }
 
 export interface WorkReport {

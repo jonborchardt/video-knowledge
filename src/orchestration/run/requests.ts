@@ -9,7 +9,8 @@ import type { BuildSummary } from '../../shared/build-report';
 import { type CliResult, runCli } from '../../shared/cli';
 import { REVIEW_DIR, ROOT, readJson, scriptDir, writeJsonAtomic } from '../../shared/io';
 import { runDir } from './journal';
-import type { MailTransport, OutMail } from '../../shared/mail';
+import type { OutMail } from '../../shared/mail';
+import type { Mailer } from './mailer';
 import { redact } from '../../shared/mail';
 import type { ReleaseManifest } from '../../shared/types';
 import { type ApprovalRequest, loadLedger, openRequest, stampOf, storyOutputs } from '../../modules/publishing';
@@ -21,7 +22,7 @@ import type { LaunchRecord } from './launch';
 import { loadProposals } from '../../modules/topic-discovery';
 import { discoveryRecords } from './discovery-state';
 import { ARTICLE_FILES, type Article, type ArticleRequest, loadArticleRelease } from '../../modules/article';
-import { readOutbox, secretsOf, sendTracked } from './notify';
+import { readOutbox, secretsOf } from './notify';
 import type { ShadowEntry } from './release';
 import { envFor } from './steps';
 
@@ -248,7 +249,7 @@ export async function sendReleaseRequest(
   storyId: string,
   manifest: ReleaseManifest,
   a: Automation,
-  mail: MailTransport,
+  mail: Mailer,
   deps: SendDeps = {},
 ): Promise<string | null> {
   const root = deps.root ?? ROOT;
@@ -269,7 +270,7 @@ export async function sendReleaseRequest(
     secrets: deps.secrets,
     checklist: checklistOf(topic, storyId, root),
   });
-  const { messageId } = await sendTracked(mail, out, 'release-request', root, {
+  const { messageId } = await mail.sendTracked(out, 'release-request', {
     request: req.request,
     topic,
     storyId,
@@ -341,7 +342,7 @@ export async function sendDraftRequest(
   url: string,
   shadow: ShadowEntry | null,
   a: Automation,
-  mail: MailTransport,
+  mail: Mailer,
   deps: SendDeps = {},
 ): Promise<string | null> {
   const root = deps.root ?? ROOT;
@@ -352,7 +353,7 @@ export async function sendDraftRequest(
   const view = draftView(topic, storyId, url, root);
   if (shadow) view.shadowNotes = shadow.agent.notes;
   const out = renderDraftRequest(topic, storyId, view, a, deps.secrets);
-  const { messageId } = await sendTracked(mail, out, 'draft-request', root, { topic, storyId, now: deps.now });
+  const { messageId } = await mail.sendTracked(out, 'draft-request', { topic, storyId, now: deps.now });
   writeJsonAtomic(draftRequestsPath(topic, storyId, root), {
     ...sent,
     [build]: { messageId, at: new Date((deps.now ?? Date.now)()).toISOString() },
@@ -586,7 +587,7 @@ export async function sendCorrectionRequest(
   storyId: string,
   req: ArticleRequest,
   a: Automation,
-  mail: MailTransport,
+  mail: Mailer,
   deps: SendDeps = {},
 ): Promise<string | null> {
   const root = deps.root ?? ROOT;
@@ -596,11 +597,9 @@ export async function sendCorrectionRequest(
     return req.messageId ? null : sent.messageId;
   }
   if (req.messageId) return null;
-  const { messageId } = await sendTracked(
-    mail,
+  const { messageId } = await mail.sendTracked(
     renderCorrectionRequest(topic, storyId, req, a, root),
     'correction-request',
-    root,
     {
       request: req.request,
       topic,

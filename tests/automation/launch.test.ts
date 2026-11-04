@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { readJson, toJson } from '../../src/shared/io';
-import { FakeMail } from '../../src/shared/mail';
+import { FakeMailer } from './fake-mailer';
 import { matterPathOf } from '../../src/modules/website/live';
 import { appendEvent, emptyLedger, loadLedger, publishPath, saveLedger } from '../../src/modules/publishing/publish';
 import { readHalt, runDir } from '../../src/orchestration/run/journal';
@@ -332,7 +332,7 @@ describe('launch', () => {
   it('the probe: a stale page posts and emails nothing; the live page records liveAt, the post (not configured) and one launch email', async () => {
     const c = clone();
     await launch(c.f.topic, c.f.story, a, c.deps(), c.f.root);
-    const mail = new FakeMail();
+    const mail = new FakeMailer(c.f.root);
     const path = matterPathOf(c.f.topic, c.f.story, c.f.root)!;
     const url = `https://commonwealthofreason.com${path}`;
     let page = '<html>soon</html>';
@@ -378,7 +378,7 @@ describe('launch', () => {
   it('with social on: the outcome is the social record, not the CLI text; a retryable failure is tried again next tick before the mail; a final failure halts', async () => {
     const c = clone();
     await launch(c.f.topic, c.f.story, a, c.deps(), c.f.root);
-    const mail = new FakeMail();
+    const mail = new FakeMailer(c.f.root);
     const social = { ...a, enabled: { ...a.enabled, social: true } };
     const answers: (() => { id: string; url: string })[] = [
       () => {
@@ -413,7 +413,7 @@ describe('launch', () => {
     // a final failure on another launch: the halt, the mail still sent (it says so)
     const d = clone();
     await launch(d.f.topic, d.f.story, a, d.deps(), d.f.root);
-    const m2 = new FakeMail();
+    const m2 = new FakeMailer(d.f.root);
     const acts = await probeLaunches(social, d.f.root, {
       now: () => T0 + 60_000,
       run: socialRun(
@@ -442,7 +442,7 @@ describe('launch', () => {
     const social = { ...a, enabled: { ...a.enabled, social: true } };
     const e = clone();
     await launch(e.f.topic, e.f.story, a, e.deps(), e.f.root);
-    const m3 = new FakeMail();
+    const m3 = new FakeMailer(e.f.root);
     const acts3 = await probeLaunches(social, e.f.root, {
       now: () => T0 + 60_000,
       run: () => ({ status: 0, stdout: 'RESULT: POSTED https://x.com/i/status/9\n', stderr: '' }),
@@ -502,7 +502,7 @@ describe('launch', () => {
         calls4.push(cli);
         return { status: 0, stdout: '', stderr: '' };
       },
-      mail: new FakeMail(),
+      mail: new FakeMailer(f.f.root),
       fetchFn: livePage,
       env: {},
     });
@@ -548,7 +548,7 @@ describe('launch', () => {
       pages[String(u)] !== undefined
         ? new Response(pages[String(u)], { status: 200 })
         : new Response('', { status: 404 })) as unknown as typeof fetch;
-    const mail = new FakeMail();
+    const mail = new FakeMailer(c.f.root);
     const fx = { ...a, launch: { ...a.launch, fixturePreviewUrl: 'https://{branch}.vk.pages.dev' } };
     const run = () => ({ status: 0, stdout: 'not configured\n', stderr: '' });
     const a1 = await probeLaunches(fx, c.f.root, { now: () => T0 + 60_000, run, mail, fetchFn });
@@ -572,7 +572,7 @@ describe('launch', () => {
     // without a preview URL the positive probe is the local fallback, reported as such
     const d = clone({ fixture: true });
     await launch(d.f.topic, d.f.story, a, d.deps(), d.f.root);
-    const m2 = new FakeMail();
+    const m2 = new FakeMailer(d.f.root);
     const a4 = await probeLaunches(a, d.f.root, {
       now: () => T0 + 60_000,
       run,
@@ -587,7 +587,7 @@ describe('launch', () => {
   it('a stale page past the deploy timeout halts deploy-timeout once (one halt key across ticks, one mail) and posts nothing', async () => {
     const c = clone();
     await launch(c.f.topic, c.f.story, a, c.deps(), c.f.root);
-    const mail = new FakeMail();
+    const mail = new FakeMailer(c.f.root);
     let answer = { body: 'soon', status: 200 };
     const fetchFn = (async () => new Response(answer.body, { status: answer.status })) as unknown as typeof fetch;
     const posts: string[] = [];

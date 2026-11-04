@@ -11,7 +11,7 @@ import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
 import { MANIFEST_FILE, REVIEW_DIR, ROOT, readJson, scriptDir, topicsDir, writeJsonAtomic } from '../../shared/io';
-import type { MailTransport } from '../../shared/mail';
+import type { Mailer } from './mailer';
 import type { ReleaseManifest } from '../../shared/types';
 import { type Ledger, loadLedger, openOutput, openRequest, requestOf } from '../../modules/publishing';
 import type { CliResult } from '../../shared/cli';
@@ -43,7 +43,7 @@ export function countTry(dir: string, key: string, since: string): number {
 export interface PublishDeps {
   now?: () => number;
   run: (cli: string, args: string[]) => Promise<CliResult> | CliResult;
-  mail: MailTransport | null;
+  mail: Mailer | null;
   env?: NodeJS.ProcessEnv;
   /** Every story with a ledger, as [topic, storyId]; the default scans the topics. */
   stories?: () => [string, string][];

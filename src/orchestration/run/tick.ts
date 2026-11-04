@@ -12,7 +12,8 @@ import { loadLedger, requestOf, youtubeAuthProblem } from '../../modules/publish
 import { publicTopicNames } from '../../modules/evidence';
 import { commissions } from '../../config/site';
 import { checklistOf, renderReleaseRequest, urlsOf } from './requests';
-import type { MailTransport, OutMail } from '../../shared/mail';
+import type { OutMail } from '../../shared/mail';
+import type { Mailer } from './mailer';
 import type { DigestExtra } from './digest';
 import { sendDigestIfDue } from './digest';
 import type { Halt } from './journal';
@@ -37,7 +38,7 @@ export const TICK_LOCK = 'tick';
 export const PREFLIGHT_HALT = 'preflight-halt.json';
 
 export interface TickDeps {
-  mail: MailTransport | null;
+  mail: Mailer | null;
   now?: () => number;
   preflight?: Partial<PreflightDeps>;
   rows?: () => StatusRow[];

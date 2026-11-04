@@ -9,11 +9,12 @@ import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
 import type { CliResult } from '../../shared/cli';
 import { ROOT, readJson, scriptDir, writeJsonAtomic } from '../../shared/io';
-import type { InMail, MailTransport } from '../../shared/mail';
+import type { InMail } from '../../shared/mail';
+import type { Mailer } from './mailer';
 import type { ReleaseManifest } from '../../shared/types';
 import { type Halt, clearHalt, readHalt, runDir, writeHalt } from './journal';
 import { aliveLocks } from './lock';
-import { type OutboxEntry, automationDir, readOutbox, sendTracked } from './notify';
+import { type OutboxEntry, automationDir, readOutbox } from './notify';
 import { DRAFT_ACCEPTED_FILE, readShadow, recordShadowPerson } from './release';
 import { type Decision, batchIdIn, correctionIdIn, ownText, parseReply, requestIdIn } from './replies';
 import { draftRequests } from './requests';
@@ -90,12 +91,7 @@ export function threadOf(m: InMail, outbox: OutboxEntry[]): OutboxEntry | null {
 
 const address = (s: string) => (/<([^>]+)>/.exec(s)?.[1] ?? s).trim().toLowerCase();
 
-export async function pollInbox(
-  a: Automation,
-  mail: MailTransport,
-  root = ROOT,
-  deps: InboxDeps,
-): Promise<InboxReport> {
+export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: InboxDeps): Promise<InboxReport> {
   const now = deps.now ?? Date.now;
   /** A reply whose verb failed: the message stays for the next poll, which runs the same idempotent verb again; the
    *  story halts step-failed once so the person hears of it (the tick's halt mail). Returns the error line. */
@@ -170,8 +166,7 @@ export async function pollInbox(
     }
     const own = ownText(m.text);
     const reply = (text: string) =>
-      sendTracked(
-        mail,
+      mail.sendTracked(
         {
           from: a.approvals.from || a.notifications.to,
           to: a.approvals.to,
@@ -181,7 +176,6 @@ export async function pollInbox(
           references: [...m.references, m.messageId],
         },
         'reply',
-        root,
         { now, ...(thread.request && { request: thread.request }), topic: thread.topic, storyId: thread.storyId },
       );
     const moved = (topic: string, storyId: string) =>

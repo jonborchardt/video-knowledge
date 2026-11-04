@@ -8,7 +8,7 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { cliArgv } from '../../src/shared/cli';
 import { ROOT, readJson, toJson } from '../../src/shared/io';
-import { FakeMail } from '../../src/shared/mail';
+import { FakeMailer } from './fake-mailer';
 import type { MaintenanceFile, Script } from '../../src/shared/types';
 import { maintenancePath } from '../../src/modules/evidence/maintenance';
 import { appendEvent, emptyLedger, loadLedger, publishPath, saveLedger } from '../../src/modules/publishing/publish';
@@ -103,7 +103,7 @@ function staged(opts: { found?: boolean; live?: boolean; revised?: string[] } = 
   // the research CLIs are the fake, except `evidence scanned` (the real record) and the checks
   const argvOf = (cli: string, args: string[]): [string, string[]] =>
     cli === 'evidence' && args[0] === 'scanned' ? cliArgv(cli, args) : [process.execPath, [FAKE_CLI, cli, ...args]];
-  const mail = new FakeMail();
+  const mail = new FakeMailer(f.root);
   const articleCalls: string[] = [];
   const run = (
     over: { validate?: () => { ok: boolean; output: string }; a?: typeof a; git?: (args: string[]) => string } = {},

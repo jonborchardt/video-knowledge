@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { MANIFEST_FILE, REVIEW_DIR, readJson, sha, toJson } from '../../src/shared/io';
-import { FakeMail } from '../../src/shared/mail';
+import { FakeMailer } from './fake-mailer';
 import type { ReleaseManifest } from '../../src/shared/types';
 import { writeManifest } from '../../src/modules/packaging/manifest';
 import {
@@ -132,7 +132,7 @@ describe('criterion 13: the crash boundaries this phase owns', () => {
       ...DEFAULTS,
       approvals: { ...DEFAULTS.approvals, to: 'jon@example.test', from: 'automation@example.test' },
     };
-    const mail = new FakeMail();
+    const mail = new FakeMailer(s.f.root);
     const again = recordRequested(s.f.topic, s.f.story, {
       root: s.f.root,
       by: 'automation',
