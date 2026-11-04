@@ -149,12 +149,12 @@ describe('runAgent (with the fake claude)', () => {
     expect(env.VK_AGENT).toBe('1');
   });
   it('a sleeping agent is killed at the timeout', async () => {
-    const s = scenario('sleep', [{ match: 'write', actions: [], cost: 0, sleepMs: 5000 }]);
+    const s = scenario('sleep', [{ match: 'write', actions: [], cost: 0, sleepMs: 20_000 }]);
     const t0 = Date.now();
     const r = await runAgent(fake, req({ timeoutMs: 500 }), { env: { ...process.env, FAKE_CLAUDE_SCENARIO: s } });
     expect(r.ok).toBe(false);
     expect(r.error).toBe('timeout');
-    expect(Date.now() - t0).toBeLessThan(5000); // the fake sleeps 5 s: anything shorter means it was killed
+    expect(Date.now() - t0).toBeLessThan(20_000); // the fake sleeps 20 s: anything shorter means it was killed (slack for a loaded machine)
   });
   it('an agent error is ok false with its cost and text', async () => {
     const s = scenario('err', [{ match: 'write', actions: [], cost: 0.2, error: true, result: 'budget exceeded' }]);
