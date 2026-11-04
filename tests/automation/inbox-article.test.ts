@@ -7,7 +7,7 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { runCli } from '../../src/shared/cli';
 import { readJson, toJson } from '../../src/shared/io';
-import type { InMail } from '../../src/shared/mail';
+import type { InMail } from '../../src/modules/mail';
 import { FakeMailer } from './fake-mailer';
 import { ARTICLE_FILES, type ArticleRelease, type ArticleRequest, loadArticleRequest } from '../../src/modules/article';
 import { pollInbox, readInbox } from '../../src/orchestration/run/inbox';

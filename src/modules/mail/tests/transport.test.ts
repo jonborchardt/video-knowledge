@@ -1,23 +1,17 @@
-// The mail transport (src/shared/mail.ts) with injected clients: nothing reaches the network.
+// The mail transport (core/transport.ts) with injected clients: nothing reaches the network.
 // The corpus under tests/fixtures/mail/ is pending (phase 1 Task 1 Step 5: the person's real replies from each client
 // they use); until then two synthesised messages stand in, covering multipart/alternative with quoted-printable and an
 // HTML-only base64 reply.
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import {
-  FakeMail,
-  htmlToText,
-  libraryTransport,
-  mailConfigFromEnv,
-  messageIdOf,
-  redact,
-  type MailConfig,
-} from '../src/shared/mail';
-import { ROOT } from '../src/shared/io';
+import { ROOT } from '../../../shared/io';
+import { redact } from '../../../shared/redact';
+import { type MailServer, FakeMail, htmlToText, libraryTransport, messageIdOf } from '../core';
+import { mailConfigFromEnv } from '../cor';
 
 const CORPUS = join(ROOT, 'tests', 'fixtures', 'mail');
-const config: MailConfig = {
+const config: MailServer = {
   smtpHost: 'smtp.example.test',
   smtpPort: 465,
   imapHost: 'imap.example.test',
@@ -166,6 +160,5 @@ describe('FakeMail', () => {
     });
     expect((await f.fetchSince(4)).mails.map((m) => m.uid)).toEqual([5]);
     expect((await f.fetchSince(5)).mails).toEqual([]);
-    expect(await f.lastUid()).toBe(5);
   });
 });

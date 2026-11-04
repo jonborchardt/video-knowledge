@@ -40,8 +40,6 @@
 //                                      without --dry-run.
 //   schedule --print                   the two Task Scheduler (or cron) commands and the power settings, for you to
 //                                      run; this never creates a task.
-//   mail-test [--await-reply]          one message to notifications.to through the outbox; with the flag, waits up to
-//                                      ten minutes for your reply and saves it under tests/fixtures/mail/.
 //   verified <integration> --by <name> --evidence <ref>
 //                                      records your verification of one integration in readiness.json (the only writer):
 //                                      the evidence must name a record of the kind that proves that integration (a ledger
@@ -55,9 +53,7 @@ import { AGENT_ROLES, loadAutomation } from '../../shared/automation';
 import { approverProblem } from '../../shared/approver';
 import { loadDotEnv, ROOT, toJson } from '../../shared/io';
 import { PRODUCTION_STAGES, type ProductionStage } from '../production';
-import { writeFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { libraryTransport, mailConfigFromEnv } from '../../shared/mail';
+import { mailConfigFromEnv } from '../../modules/mail';
 import { cliMailer } from './mailer';
 import { archiveProduction, freshProblem } from './fresh';
 import { candidates, pickJob, pickJobIfDue, pickState, rank } from './pick';
@@ -140,7 +136,7 @@ switch (verb) {
       notes: notesFile ? readFileSync(notesFile, 'utf8') : undefined,
       until,
       root: ROOT,
-      mail: cfg && a.approvals.to ? cliMailer(ROOT, libraryTransport(cfg)) : null, // no mailbox: the halt says what to do
+      mail: cfg && a.approvals.to ? cliMailer(ROOT) : null, // no mailbox: the halt says what to do
       ...(runId && { runId }),
       ...(rest.includes('--no-commit') && { git: 'none' as const }),
     });
@@ -187,12 +183,7 @@ switch (verb) {
     if (!topic) die(usage());
     const a = loadAutomation(ROOT);
     const cfg = mailConfigFromEnv();
-    const r = await maintain(
-      topic,
-      a,
-      maintainDeps(cfg && a.approvals.to ? cliMailer(ROOT, libraryTransport(cfg)) : null),
-      ROOT,
-    );
+    const r = await maintain(topic, a, maintainDeps(cfg && a.approvals.to ? cliMailer(ROOT) : null), ROOT);
     for (const line of r.actions) console.log(line);
     if (r.outcome === 'held') die('another run holds this topic', 3);
     if (r.outcome === 'halted' && r.halt) {
@@ -238,7 +229,7 @@ switch (verb) {
     const r = await discover(
       a,
       {
-        ...discoveryDeps(cfg && a.approvals.to && !dry ? cliMailer(ROOT, libraryTransport(cfg)) : null),
+        ...discoveryDeps(cfg && a.approvals.to && !dry ? cliMailer(ROOT) : null),
         dryRun: dry,
         ...(only && { institutions: () => [only] }),
       },
@@ -265,7 +256,7 @@ switch (verb) {
     const cfg = mailConfigFromEnv();
     const preflightOnly = rest.includes('--preflight');
     const r = await tick(a, ROOT, {
-      mail: cfg && !preflightOnly ? cliMailer(ROOT, libraryTransport(cfg)) : null,
+      mail: cfg && !preflightOnly ? cliMailer(ROOT) : null,
       preflightOnly,
     });
     for (const line of r.actions) console.log(line);
@@ -293,7 +284,7 @@ switch (verb) {
     const wcfg = mailConfigFromEnv();
     const r = await work(a, ROOT, {
       pick: only && only !== 'pick' ? () => null : pick,
-      mail: wcfg && a.approvals.to ? cliMailer(ROOT, libraryTransport(wcfg)) : null,
+      mail: wcfg && a.approvals.to ? cliMailer(ROOT) : null,
       ...(only && { skip: [] as Job[], only: only as JobKind }),
     });
     console.log(
@@ -343,45 +334,6 @@ switch (verb) {
     } catch (e) {
       die((e as Error).message);
     }
-    break;
-  }
-  case 'mail-test': {
-    const a = loadAutomation(ROOT);
-    const cfg = mailConfigFromEnv();
-    if (!cfg) die('mail is not configured: MAIL_SMTP_HOST, MAIL_IMAP_HOST, MAIL_USER and MAIL_PASSWORD in .env');
-    if (!a.notifications.to) die('automation.json notifications.to is empty');
-    const transport = libraryTransport(cfg!);
-    const mail = cliMailer(ROOT, transport);
-    const at = new Date().toISOString();
-    const { messageId } = await mail.sendTracked(
-      {
-        from: a.approvals.from || cfg!.user,
-        to: a.notifications.to,
-        subject: `video-knowledge mail test ${at}`,
-        text: `Reply to this message with any words; the reply is saved as a fixture (addresses replaced).\nSent ${at}.`,
-      },
-      'test',
-    );
-    console.log(`sent ${messageId} to ${a.notifications.to}`);
-    if (!rest.includes('--await-reply')) break;
-    const deadline = Date.now() + 10 * 60_000;
-    let since = await transport.lastUid(); // only what arrives after the test: never the whole inbox
-    while (Date.now() < deadline) {
-      const { mails: got } = await transport.fetchSince(since);
-      for (const m of got) since = Math.max(since, m.uid);
-      const reply = got.find((m) => m.inReplyTo === messageId || m.references.includes(messageId));
-      if (reply) {
-        const file = join(ROOT, 'tests', 'fixtures', 'mail', `reply-${at.slice(0, 10)}-${reply.uid}.eml`);
-        const raw = (reply.raw ?? '')
-          .replaceAll(a.notifications.to, 'jon@example.test')
-          .replaceAll(cfg!.user, 'automation@example.test');
-        writeFileSync(file, raw);
-        console.log(`reply at ${reply.date}; own text:\n${reply.text}\nsaved ${file}`);
-        process.exit(0);
-      }
-      await new Promise((r) => setTimeout(r, 20_000));
-    }
-    die('no reply within ten minutes', 1);
     break;
   }
   default:

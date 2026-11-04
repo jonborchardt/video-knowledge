@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { readJson, toJson } from '../../src/shared/io';
-import type { InMail } from '../../src/shared/mail';
+import type { InMail } from '../../src/modules/mail';
 import { FakeMailer } from './fake-mailer';
 import { matterPathOf } from '../../src/modules/website/live';
 import { readFakeState, writeFakeState } from '../../src/modules/publishing/fake-youtube';

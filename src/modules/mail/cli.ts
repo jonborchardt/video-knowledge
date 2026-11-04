@@ -3,6 +3,7 @@
 //   send --file <path.json> [--message-id <id>]          one message from a file (kind, from, to, subject, text; html, inReplyTo, references, meta, attachments as base64 optional):
 //                                                        records it, sends it, prints SENT <message-id>; --message-id resends the recorded entry with its id
 //   send --skip --message-id <id>                        one attempt with nothing sent, for an entry nothing can re-render
+//   fetch                                                the only reader of the mailbox: new mail into the received store, each message once, correlated once: FETCHED <n>; exit 1 when unreachable
 // A refusal exits 2 and writes nothing (not configured, a malformed file, a recipient outside automation.json, an unknown,
 // sent or exhausted entry, CLAIMED by pid <n> while another live process sends it); a transport failure exits 1 with the
 // entry left unsent for a later attempt. Delivery is at least once: a retry reuses the Message-ID and may duplicate a copy.
@@ -11,7 +12,7 @@ import { readFileSync } from 'node:fs';
 import { loadAutomation } from '../../shared/automation';
 import { ROOT, loadDotEnv } from '../../shared/io';
 import { COR_MAIL_KINDS, type CorMailKind, corMailConfig, corTransport, readCorOutbox } from './cor';
-import { MailRefusal, init, sendTracked, skipAttempt, validateSend } from './core';
+import { MailRefusal, fetchInto, init, sendTracked, skipAttempt, validateSend } from './core';
 
 loadDotEnv();
 const [cmd, ...rest] = process.argv.slice(2);
@@ -63,11 +64,18 @@ async function main(): Promise<void> {
       console.log(`SENT ${messageId}`);
       return;
     }
+    case 'fetch': {
+      const mail =
+        corTransport() ??
+        refuse('mail is not configured: MAIL_SMTP_HOST, MAIL_IMAP_HOST, MAIL_USER and MAIL_PASSWORD in .env');
+      console.log(`FETCHED ${await fetchInto(cfg, mail)}`);
+      return;
+    }
     default:
       console.error(
         readFileSync(new URL(import.meta.url), 'utf8')
           .split('\n')
-          .slice(0, 8)
+          .slice(0, 9)
           .map((l) => l.replace(/^\/\/ ?/, ''))
           .join('\n'),
       );

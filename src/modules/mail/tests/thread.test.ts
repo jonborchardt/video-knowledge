@@ -1,6 +1,6 @@
 // The thread core: the person's own words above the quote, addresses, thread membership, question ids.
 import { describe, expect, it } from 'vitest';
-import { htmlToText } from '../../../shared/mail';
+import { htmlToText } from '../core/transport';
 import { address, inThread, ownText, questionIdsIn } from '../core/thread';
 
 describe('ownText', () => {

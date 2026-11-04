@@ -52,7 +52,7 @@ const legacyEntries = (cfg: LegacyCfg): OutboxEntry[] | null => {
 export const readOutbox = (dir: string, cfg: LegacyCfg = {}): OutboxEntry[] =>
   readJson<OutboxEntry[]>(outboxPath(dir)) ?? legacyEntries(cfg) ?? [];
 
-const archived = (dir: string): OutboxEntry[] => {
+export const archiveEntries = (dir: string): OutboxEntry[] => {
   if (!existsSync(archiveDir(dir))) return [];
   return readdirSync(archiveDir(dir))
     .filter((f) => f.endsWith('.json'))
@@ -63,7 +63,7 @@ const archived = (dir: string): OutboxEntry[] => {
 /** Every entry `pred` accepts, live then archived (newest month first). */
 export const filterOutbox = (dir: string, pred: (e: OutboxEntry) => boolean, cfg: LegacyCfg = {}): OutboxEntry[] => [
   ...readOutbox(dir, cfg).filter(pred),
-  ...archived(dir).filter(pred),
+  ...archiveEntries(dir).filter(pred),
 ];
 export const findOutbox = (dir: string, pred: (e: OutboxEntry) => boolean, cfg: LegacyCfg = {}): OutboxEntry | null =>
   filterOutbox(dir, pred, cfg)[0] ?? null;
@@ -82,7 +82,7 @@ const migratedName = (legacy: string) => join(dirname(legacy), `${basename(legac
 
 /** Under the mutex. Idempotent and crash-safe: the new outbox appears atomically, then the legacy file moves aside;
  *  a re-run after any crash converges (an existing outbox wins, a leftover legacy file just moves). */
-function initHeld(cfg: MailConfig): InitReport {
+export function initHeld(cfg: MailConfig): InitReport {
   mkdirSync(cfg.dir, { recursive: true });
   let state: InitReport['state'] = 'empty';
   if (existsSync(outboxPath(cfg.dir))) state = 'present';

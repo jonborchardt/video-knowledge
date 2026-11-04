@@ -6,10 +6,10 @@ import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { readJson } from '../../src/shared/io';
-import type { InMail } from '../../src/shared/mail';
+import type { InMail } from '../../src/modules/mail';
 import { FakeMailer } from './fake-mailer';
 import { loadLedger, openRequest } from '../../src/modules/publishing/publish';
-import { INBOX_FILE, decideArgs, pollInbox, readInbox, threadOf } from '../../src/orchestration/run/inbox';
+import { INBOX_FILE, decideArgs, originOf, pollInbox, readInbox } from '../../src/orchestration/run/inbox';
 import { runDir } from '../../src/orchestration/run/journal';
 import { automationDir, readOutbox } from '../../src/orchestration/run/notify';
 import { publishDue } from '../../src/orchestration/run/publish-due';
@@ -67,8 +67,53 @@ describe('pollInbox', () => {
     expect(s.publicUpdates()).toHaveLength(1);
     const file = readInbox(s.f.root);
     expect(file.handled.map((h) => h.outcome)).toEqual(['applied:ok']);
-    expect(file.lastUid).toBe(copy.uid);
     expect(readSchedule(s.f.root).due?.[0]).toMatchObject({ topic: s.f.topic, storyId: s.f.story, why: 'moved' });
+  });
+
+  it('a reply to a general question is not its business: not reported, nothing sent back, no decision', async () => {
+    const { s, mail, poll, now } = await staged();
+    const { messageId } = await mail.sendTracked(
+      {
+        from: 'automation@example.test',
+        to: 'jon@example.test',
+        subject: 'which one qn-aaaaaaaaaaaa',
+        text: 'A or B?',
+      },
+      'question',
+      { now },
+    );
+    const before = mail.sent.length;
+    mail.deliver(reply(messageId, 'OK', { subject: 'Re: which one qn-aaaaaaaaaaaa' }));
+    const r = await poll();
+    expect(r).toMatchObject({ fetched: 0, applied: [], ignored: [], clarified: [] });
+    expect(mail.sent).toHaveLength(before);
+    expect(s.events().filter((e) => e.type === 'decided')).toHaveLength(0);
+  });
+
+  it('a renumbered mailbox offers a handled reply again: nothing is applied twice, and new mail is still read', async () => {
+    const { s, mail, sent, subject, poll } = await staged();
+    mail.deliver(reply(sent, 'OK', { subject }));
+    expect((await poll()).applied).toHaveLength(1);
+    mail.inbox = [
+      { ...mail.inbox[0], uid: 1 },
+      { ...reply('<unknown@x>', 'hello'), uid: 2 },
+    ];
+    mail.uidValidity = '999';
+    const r = await poll();
+    expect(r.applied).toEqual([]);
+    expect(r.ignored).toHaveLength(1);
+    expect(s.events().filter((e) => e.type === 'decided')).toHaveLength(1);
+  });
+
+  it('a clarification in a release thread resolves to its request when replied to', async () => {
+    const { s, mail } = await staged();
+    const all = readOutbox(s.f.root);
+    const release = all.find((e) => e.kind === 'release-request')!;
+    const clar = { ...release, kind: 'reply', messageId: '<c@x>' };
+    expect(originOf(clar, all)?.messageId).toBe(release.messageId);
+    expect(originOf({ ...release, kind: 'halt' }, all)).toBeNull();
+    expect(originOf(null, all)).toBeNull();
+    expect(mail.sent).toHaveLength(1);
   });
 
   it('ignores a reply from another address, one outside a request thread, and one whose id disagrees with the thread', async () => {
@@ -308,7 +353,13 @@ describe('pollInbox', () => {
     const accepted = readJson<{ build: string; by: string }>(join(s.f.dir, 'run', 'draft-accepted.json'));
     expect(accepted).toMatchObject({ build, by: 'Jon' });
     expect(readSchedule(s.f.root).due?.[0]).toMatchObject({ storyId: s.f.story, why: 'moved' });
-    expect(threadOf(mail.inbox[0], readOutbox(s.f.root))?.kind).toBe('draft-request');
+    const all = readOutbox(s.f.root);
+    expect(
+      originOf(
+        all.find((e) => e.messageId === messageId),
+        all,
+      )?.kind,
+    ).toBe('draft-request');
     expect(existsSync(join(automationDir(s.f.root), INBOX_FILE))).toBe(true);
   });
 });

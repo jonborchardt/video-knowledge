@@ -192,7 +192,7 @@ describe('cliMailer', () => {
   const out = { from: 'bot@example.test', to: 'jon@example.test', subject: 's', text: 'b' };
   it('hands the guide, the meta and the attachments to the child and deletes the temp file', async () => {
     const s = setup();
-    const m = cliMailer(s.root, null, (cli, args) => runCli(cli, args, { cwd: s.root, env: s.env }));
+    const m = cliMailer(s.root, (cli, args) => runCli(cli, args, { cwd: s.root, env: s.env }));
     const { messageId } = await m.sendTracked(
       { ...out, attachments: [{ name: 'a.png', contentType: 'image/png', data: Buffer.from('hi') }] },
       'draft-request',
@@ -207,7 +207,7 @@ describe('cliMailer', () => {
   });
   it('a failing child throws its last error line and leaves no temp file', async () => {
     const s = setup();
-    const m = cliMailer(s.root, null, () => ({ status: 1, stdout: '', stderr: 'first\nsmtp: gone\n' }));
+    const m = cliMailer(s.root, () => ({ status: 1, stdout: '', stderr: 'first\nsmtp: gone\n' }));
     await expect(m.sendTracked(out, 'halt')).rejects.toThrow('smtp: gone');
     expect(readdirSync(join(s.dir, 'send'))).toEqual([]);
   });

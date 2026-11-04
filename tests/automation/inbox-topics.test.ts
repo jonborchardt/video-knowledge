@@ -8,7 +8,7 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { runCli } from '../../src/shared/cli';
 import { ROOT, readJson, toJson } from '../../src/shared/io';
-import type { InMail } from '../../src/shared/mail';
+import type { InMail } from '../../src/modules/mail';
 import { FakeMailer } from './fake-mailer';
 import type { Proposal, ProposalReview } from '../../src/shared/types';
 import { PROPOSALS_DIR, proposalPath, reviewPath } from '../../src/modules/topic-discovery/proposals';

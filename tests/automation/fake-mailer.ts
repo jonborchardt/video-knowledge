@@ -3,13 +3,22 @@
 // and `mail.failNext` and gains `mail.sendTracked(out, kind, extra)`.
 import { join } from 'node:path';
 import { corMailDir } from '../../src/modules/mail/cor';
-import { type MailConfig, sendTracked, skipAttempt } from '../../src/modules/mail/core';
+import {
+  type MailConfig,
+  type OutMail,
+  FakeMail,
+  fetchInto,
+  sendTracked,
+  skipAttempt,
+} from '../../src/modules/mail/core';
 import { type Mailer, type SendExtra, metaOf } from '../../src/orchestration/run/mailer';
 import { type OutboxKind, withGuide } from '../../src/orchestration/run/notify';
-import { FakeMail, type OutMail } from '../../src/shared/mail';
 
 export class FakeMailer extends FakeMail implements Mailer {
-  constructor(public root: string) {
+  constructor(
+    public root: string,
+    public person = 'jon@example.test',
+  ) {
     super();
   }
   private cfg(to: string, from: string, now?: () => number): MailConfig {
@@ -32,6 +41,9 @@ export class FakeMailer extends FakeMail implements Mailer {
       ...(meta && { meta }),
       ...(extra.messageId && { messageId: extra.messageId }),
     });
+  }
+  fetch(): Promise<number> {
+    return fetchInto(this.cfg(this.person, ''), this);
   }
   async skipAttempt(messageId: string, now?: () => number): Promise<void> {
     skipAttempt(this.cfg('', '', now), messageId);

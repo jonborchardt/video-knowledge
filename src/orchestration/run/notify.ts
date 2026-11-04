@@ -7,8 +7,15 @@ import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
 import { ROOT, readJson, sha, writeJsonAtomic } from '../../shared/io';
-import { type CorMailKind, type OutboxEntry, corResendDue, readCorOutbox, unsentCorOutbox } from '../../modules/mail';
-import { type OutMail, redact } from '../../shared/mail';
+import {
+  type CorMailKind,
+  type OutMail,
+  type OutboxEntry,
+  corResendDue,
+  readCorOutbox,
+  unsentCorOutbox,
+} from '../../modules/mail';
+import { redact } from '../../shared/redact';
 import type { Mailer } from './mailer';
 import type { Halt } from './journal';
 import { AUTOMATION_DIR } from './runner';

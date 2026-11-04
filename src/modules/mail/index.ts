@@ -7,6 +7,7 @@ export {
   type MailTransport,
   type OutMail,
   type OutboxEntry,
+  type Received,
   address,
   correlate,
   inThread,
@@ -20,6 +21,8 @@ export {
   corResendDue,
   filterCorOutbox,
   findCorOutbox,
+  mailConfigFromEnv,
   readCorOutbox,
+  readCorReceived,
   unsentCorOutbox,
 } from './cor';

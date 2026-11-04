@@ -3,10 +3,10 @@
 // Rendered from the status rows and what later phases hand in through DigestExtra; sent once per configured slot.
 import type { Automation } from '../../shared/automation';
 import { ROOT } from '../../shared/io';
-import type { OutMail } from '../../shared/mail';
+import type { OutMail } from '../../modules/mail';
 import type { Mailer } from './mailer';
 import { type OutboxEntry, secretsOf, unsentOutbox } from './notify';
-import { redact } from '../../shared/mail';
+import { redact } from '../../shared/redact';
 import { lastSlot, readSchedule, updateSchedule } from './schedule';
 import type { StatusRow } from './status';
 

@@ -5,7 +5,7 @@ import { existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import type { Automation } from '../../shared/automation';
-import { mailConfigFromEnv } from '../../shared/mail';
+import { mailConfigFromEnv } from '../../modules/mail';
 
 export interface Preflight {
   ok: boolean;

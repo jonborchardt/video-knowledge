@@ -12,7 +12,7 @@ import { loadLedger, requestOf, youtubeAuthProblem } from '../../modules/publish
 import { publicTopicNames } from '../../modules/evidence';
 import { commissions } from '../../config/site';
 import { checklistOf, renderReleaseRequest, urlsOf } from './requests';
-import type { OutMail } from '../../shared/mail';
+import type { OutMail } from '../../modules/mail';
 import type { Mailer } from './mailer';
 import type { DigestExtra } from './digest';
 import { sendDigestIfDue } from './digest';

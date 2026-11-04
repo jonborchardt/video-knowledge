@@ -4,10 +4,9 @@
 import { randomUUID } from 'node:crypto';
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { corMailDir } from '../../modules/mail';
+import { type OutMail, corMailDir } from '../../modules/mail';
 import { type CliResult, runCli } from '../../shared/cli';
 import { ROOT } from '../../shared/io';
-import type { InMail, MailTransport, OutMail } from '../../shared/mail';
 import { type OutboxKind, withGuide } from './notify';
 import { envFor } from './steps';
 
@@ -24,7 +23,8 @@ export interface Mailer {
   sendTracked(out: Omit<OutMail, 'messageId'>, kind: OutboxKind, extra?: SendExtra): Promise<{ messageId: string }>;
   /** One attempt with nothing sent: an entry nothing can re-render runs out of attempts and the digest lists it. */
   skipAttempt(messageId: string, now?: () => number): Promise<void>;
-  fetchSince(sinceUid: number): Promise<{ uidValidity: string; mails: InMail[] }>;
+  /** New mail into the received store (the only way in); returns how many were new. */
+  fetch(): Promise<number>;
 }
 
 /** This project's correlation fields as the core's opaque meta. */
@@ -39,10 +39,9 @@ type Run = (cli: string, args: string[]) => Promise<CliResult> | CliResult;
 const lastLine = (r: CliResult) => (r.stderr || r.stdout).trim().split('\n').at(-1) || `exit ${r.status}`;
 
 /** The production Mailer. The message reaches the child in a temp file (attachments would not fit an argument),
- *  deleted whatever the outcome: a retry renders it again. `transport` still reads the mailbox until `mail fetch`. */
+ *  deleted whatever the outcome: a retry renders it again. */
 export function cliMailer(
   root = ROOT,
-  transport: Pick<MailTransport, 'fetchSince'> | null,
   run: Run = (cli, args) => runCli(cli, args, { cwd: root, env: envFor(cli, args, process.env) }),
 ): Mailer {
   return {
@@ -80,9 +79,10 @@ export function cliMailer(
       const r = await run('mail', ['send', '--skip', '--message-id', messageId]);
       if (r.status !== 0) throw new Error(lastLine(r));
     },
-    fetchSince: (sinceUid) => {
-      if (!transport) throw new Error('no mailbox to read');
-      return transport.fetchSince(sinceUid);
+    async fetch() {
+      const r = await run('mail', ['fetch']);
+      if (r.status !== 0) throw new Error(lastLine(r));
+      return Number(/^FETCHED (\d+)/m.exec(r.stdout)?.[1] ?? 0);
     },
   };
 }

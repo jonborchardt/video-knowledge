@@ -4,15 +4,18 @@
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
 import { ROOT } from '../../shared/io';
-import { libraryTransport, mailConfigFromEnv } from '../../shared/mail';
 import {
   type MailConfig,
+  type MailServer,
   type MailTransport,
   type OutboxEntry,
+  type Received,
   fileFakeMail,
   filterOutbox,
   findOutbox,
+  libraryTransport,
   readOutbox,
+  readReceived,
   resendDue,
   unsentOutbox,
 } from './core';
@@ -54,6 +57,23 @@ export function corMailConfig(root: string, a: Automation, env: NodeJS.ProcessEn
   };
 }
 
+/** `.env`: MAIL_SMTP_HOST, MAIL_SMTP_PORT (465), MAIL_IMAP_HOST, MAIL_IMAP_PORT (993), MAIL_USER, MAIL_PASSWORD. */
+export function mailConfigFromEnv(env: NodeJS.ProcessEnv = process.env): MailServer | null {
+  const smtpHost = env.MAIL_SMTP_HOST;
+  const imapHost = env.MAIL_IMAP_HOST;
+  const user = env.MAIL_USER;
+  const password = env.MAIL_PASSWORD;
+  if (!smtpHost || !imapHost || !user || !password) return null;
+  return {
+    smtpHost,
+    smtpPort: Number(env.MAIL_SMTP_PORT) || 465,
+    imapHost,
+    imapPort: Number(env.MAIL_IMAP_PORT) || 993,
+    user,
+    password,
+  };
+}
+
 /** The transport `.env` names, or the file-backed fake a test names; null when mail is not configured. */
 export function corTransport(env: NodeJS.ProcessEnv = process.env): MailTransport | null {
   if (env.MAIL_FAKE) return fileFakeMail(env.MAIL_FAKE, `${env.MAIL_FAKE}.lock`);
@@ -69,3 +89,4 @@ export const filterCorOutbox = (pred: (e: OutboxEntry) => boolean, root = ROOT):
   filterOutbox(corMailDir(root), pred, legacy(root));
 export const unsentCorOutbox = (root = ROOT): OutboxEntry[] => unsentOutbox(corMailDir(root), legacy(root));
 export const corResendDue = (now: number, root = ROOT): OutboxEntry[] => resendDue(corMailDir(root), now, legacy(root));
+export const readCorReceived = (root = ROOT): Received[] => readReceived(corMailDir(root));

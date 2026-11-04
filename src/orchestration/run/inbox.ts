@@ -9,15 +9,14 @@ import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
 import type { CliResult } from '../../shared/cli';
 import { ROOT, readJson, scriptDir, writeJsonAtomic } from '../../shared/io';
-import type { InMail } from '../../shared/mail';
 import type { Mailer } from './mailer';
 import type { ReleaseManifest } from '../../shared/types';
 import { type Halt, clearHalt, readHalt, runDir, writeHalt } from './journal';
 import { aliveLocks } from './lock';
-import { type OutboxEntry, automationDir, readOutbox } from './notify';
+import { type OutboxEntry, automationDir } from './notify';
 import { DRAFT_ACCEPTED_FILE, readShadow, recordShadowPerson } from './release';
 import { type Decision, batchIdIn, correctionIdIn, parseReply, requestIdIn } from './replies';
-import { address, ownText } from '../../modules/mail';
+import { address, filterCorOutbox, ownText, readCorReceived } from '../../modules/mail';
 import { draftRequests } from './requests';
 import { loadProposals } from '../../modules/topic-discovery';
 import { updateSchedule } from './schedule';
@@ -31,7 +30,8 @@ export interface InboxRecord {
   at: string;
 }
 export interface InboxFile {
-  lastUid: number;
+  /** Only a pre-module file carries it: it seeds the mail module's cursor once. */
+  lastUid?: number;
   handled: InboxRecord[];
 }
 /** A reply's notes as a verb's arguments; the time flag differs by verb. */
@@ -44,8 +44,7 @@ const noteArgs = (notes: Decision['notes'] & object, at: '--at' | '--at-seconds'
     ...(n.sentence ? ['--sentence', n.sentence] : []),
   ]);
 const inboxPath = (root: string) => join(automationDir(root), INBOX_FILE);
-export const readInbox = (root = ROOT): InboxFile =>
-  readJson<InboxFile>(inboxPath(root)) ?? { lastUid: 0, handled: [] };
+export const readInbox = (root = ROOT): InboxFile => readJson<InboxFile>(inboxPath(root)) ?? { handled: [] };
 const writeInbox = (root: string, f: InboxFile) => writeJsonAtomic(inboxPath(root), f);
 
 export interface InboxDeps {
@@ -64,30 +63,24 @@ export interface InboxReport {
   failed: string[];
 }
 
-/** The request thread a mail belongs to: the outbox entry whose Message-ID the reply names, a request mail or a
- *  clarification sent in its thread (which carries the request id, or the story of a draft request). */
-export function threadOf(m: InMail, outbox: OutboxEntry[]): OutboxEntry | null {
-  const ids = [m.inReplyTo, ...m.references].filter((x): x is string => !!x);
-  const hit = outbox.find(
-    (e) =>
-      ids.includes(e.messageId) &&
-      (e.kind === 'release-request' ||
-        e.kind === 'draft-request' ||
-        e.kind === 'batch' ||
-        e.kind === 'correction-request' ||
-        (e.kind === 'reply' && e.meta?.topic && e.meta?.storyId)),
+const REQUEST_KINDS = ['release-request', 'draft-request', 'batch', 'correction-request'];
+/** The request a sent mail belongs to: a request mail itself, or the request behind a clarification sent in its
+ *  thread (which carries the request id, or the story of a draft request). The core threads a reply to a sent mail;
+ *  what that mail means is this adapter's. */
+export function originOf(e: OutboxEntry | null | undefined, all: OutboxEntry[]): OutboxEntry | null {
+  if (!e) return null;
+  if (REQUEST_KINDS.includes(e.kind)) return e;
+  if (e.kind !== 'reply') return null;
+  const { request, topic, storyId } = e.meta ?? {};
+  const origin = all.find(
+    (x) =>
+      REQUEST_KINDS.includes(x.kind) &&
+      x.meta?.topic === topic &&
+      x.meta?.storyId === storyId &&
+      (!request || x.meta?.request === request),
   );
-  if (!hit) return null;
-  if (hit.kind !== 'reply') return hit;
-  // a reply in a thread: the request mail it continues names the kind
-  const origin = outbox.find(
-    (e) =>
-      e.kind !== 'reply' &&
-      e.meta?.topic === hit.meta?.topic &&
-      e.meta?.storyId === hit.meta?.storyId &&
-      (!hit.meta?.request || e.meta?.request === hit.meta?.request),
-  );
-  return origin ?? { ...hit, kind: hit.meta?.request ? 'release-request' : 'draft-request' };
+  if (origin) return origin;
+  return topic && storyId ? { ...e, kind: request ? 'release-request' : 'draft-request' } : null;
 }
 
 export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: InboxDeps): Promise<InboxReport> {
@@ -128,21 +121,19 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
     const under = scriptDir(topic, storyId, root).replaceAll('\\', '/') + '/';
     return aliveLocks(root, deps.alive).some((d) => d.replaceAll('\\', '/').startsWith(under));
   };
-  const { mails: got } = await mail.fetchSince(file.lastUid);
+  await mail.fetch();
+  const outbox = filterCorOutbox(() => true, root);
+  const handled = new Set(file.handled.map((h) => h.messageId));
+  // a reply to a general question is the asking agent's, never a decision: this adapter does not look at it
+  const got = readCorReceived(root).filter(
+    (m) => !handled.has(m.key) && outbox.find((e) => e.messageId === m.thread)?.kind !== 'question',
+  );
   const report: InboxReport = { fetched: got.length, applied: [], ignored: [], clarified: [], refused: [], failed: [] };
-  const outbox = readOutbox(root);
   const by = a.approvals.approverName || address(a.approvals.to);
-  let maxUid = file.lastUid;
-  let leftAt: number | null = null; // the first message left for the next poll (its verb failed): fetched again
   for (const m of got) {
-    maxUid = Math.max(maxUid, m.uid);
-    if (file.handled.some((h) => h.messageId === m.messageId)) {
-      writeInbox(root, file);
-      continue;
-    }
     const done = (outcome: string, request?: string) => {
       file.handled.push({
-        messageId: m.messageId,
+        messageId: m.key,
         uid: m.uid,
         outcome,
         ...(request && { request }),
@@ -158,7 +149,10 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
       ignore('not from the approver');
       continue;
     }
-    const thread = threadOf(m, outbox);
+    const thread = originOf(
+      outbox.find((e) => e.messageId === m.thread),
+      outbox,
+    );
     if (!thread) {
       ignore('not a reply to a request this automation sent');
       continue;
@@ -193,7 +187,6 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
       thread.meta?.storyId &&
       runLive(thread.meta?.topic, thread.meta?.storyId)
     ) {
-      leftAt ??= m.uid;
       continue;
     }
     if (thread.kind === 'release-request' && thread.meta?.topic && thread.meta?.storyId) {
@@ -237,7 +230,6 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
           `npm run publish -- decide ${topic} ${storyId} --request ${id} --by "<name>" --verdict ${d.verdict}`,
         );
         report.failed.push(`${id}: ${err}`);
-        leftAt ??= m.uid;
         continue;
       }
       // the request was decided before this reply: a different answer is told so and never applied; the same one
@@ -437,7 +429,6 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
           `npm run article -- decide ${topic} ${storyId} --request ${id} --verdict ${d.verdict} --by "<name>"`,
         );
         report.failed.push(`${id}: ${err}`);
-        leftAt ??= m.uid;
         continue;
       }
       report.applied.push(`${id}: correction ${d.verdict}`);
@@ -448,9 +439,6 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
     const other = correctionIdIn(m.subject) ?? correctionIdIn(own);
     ignore(other ? `${other}: not a request this automation sent` : 'not a request reply');
   }
-  // a message left behind is fetched again next poll (the handled ones after it are skipped by their ids)
-  file.lastUid = leftAt === null ? maxUid : Math.max(file.lastUid, leftAt - 1);
-  writeInbox(root, file);
   return report;
 }
 

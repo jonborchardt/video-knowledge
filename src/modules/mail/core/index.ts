@@ -2,7 +2,20 @@
 export type { Answer, Correlation, InMail, MailConfig, MailTransport, OutboxEntry, OutMail } from './types';
 export { type Correlatable, type Lookup, address, correlate, inThread, ownText, questionIdsIn } from './thread';
 export { type MutexOpts, withMutex } from './mutex';
-export { type FakeFileState, type FakeSent, emptyFakeState, fileFakeMail, messageIdOf } from './transport';
+export {
+  type FakeFileState,
+  type FakeSent,
+  type MailDeps,
+  type MailServer,
+  FakeMail,
+  emptyFakeState,
+  fileFakeMail,
+  htmlToText,
+  libraryTransport,
+  messageIdOf,
+  toInMail,
+} from './transport';
+export { type Received, type ReceivedFile, fetchInto, readReceived, recordReceived, unmatched } from './received';
 export {
   type InitReport,
   type RecordExtra,
