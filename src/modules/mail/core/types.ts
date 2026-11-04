@@ -2,7 +2,7 @@
 // MailTransport; nothing here names a project, a workflow or a configuration file.
 
 export interface MailConfig {
-  /** Where the records live: outbox.json, received.json, received/*.eml, archive/, send/, lock/. */
+  /** Where the records live: outbox.json, received.json, received/*.eml, archive/, .lock/. */
   dir: string;
   /** A pre-core outbox file to migrate once (its entries normalised into this shape). */
   legacyOutbox?: string;
@@ -77,7 +77,7 @@ export interface OutboxEntry {
   attempts: number;
   lastAttemptAt?: string;
   lastError?: string;
-  /** The caller's correlation fields (a request id, a topic, a story), opaque to the core. */
+  /** The caller's own correlation fields, opaque to the core. */
   meta?: Record<string, string>;
   // kind 'question'
   id?: string;
