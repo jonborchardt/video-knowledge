@@ -782,17 +782,15 @@ export function treeFingerprint(root: string): string | null {
     rmSync(tmp, { force: true });
   }
 }
-export const VALIDATE_MARKER = '.automation/validate-ok.json'; // the tree that last passed, so a resume that changed nothing skips the suite
-
 /** `npm run validate` in a secret-free environment: the suite imports the renderer tree, which carries agent code.
- *  Skipped, as a pass, when the tree is byte for byte the one that passed last (`VALIDATE_MARKER`): a resume into
+ *  Skipped, as a pass, when the tree is byte for byte the one that passed last (the marker): a resume into
  *  the same halt re-validates nothing new. `run` is the suite itself; tests inject one. */
 export function runValidate(
   root: string,
   env: NodeJS.ProcessEnv,
   run: () => { ok: boolean; output: string } = () => npmValidate(root, env),
 ): { ok: boolean; output: string } {
-  const marker = join(root, VALIDATE_MARKER);
+  const marker = join(root, AUTOMATION_DIR, 'validate-ok.json');
   const tree = treeFingerprint(root);
   const last = readJson<{ tree: string; at: string }>(marker);
   if (tree && last?.tree === tree)

@@ -14,10 +14,9 @@ describe('reply guide', () => {
     const mail = new FakeMail();
     const out = { from: 'a@example.test', to: 'j@example.test', subject: 's', text: 'the body' };
     await sendTracked(mail, out, 'draft-request', root);
-    await sendTracked(mail, { ...out, html: '<p>the body</p>' }, 'halt', root);
+    await sendTracked(mail, out, 'halt', root);
     expect(mail.sent[0].text).toBe(`${REPLY_GUIDE['draft-request']}\n\nthe body`);
     expect(REPLY_GUIDE['draft-request']).toMatch(/^ACTION NEEDED\. Reply OK/);
     expect(mail.sent[1].text.startsWith('NO REPLY NEEDED')).toBe(true);
-    expect(mail.sent[1].html).toContain('NO REPLY NEEDED');
   });
 });

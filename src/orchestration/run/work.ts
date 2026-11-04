@@ -167,11 +167,6 @@ export async function work(a: Automation, root = ROOT, deps: WorkDeps = {}): Pro
   for (let attempt = 0; attempt < 2; attempt++) {
     const job = nextJob(a, root, { ...deps, skip });
     if (!job || (deps.only && job.kind !== deps.only)) return { outcome: 'idle', job: null };
-    if (job.kind === 'resume')
-      updateSchedule(root, (s) => ({
-        ...s,
-        due: (s.due ?? []).filter((d) => !(d.topic === job.topic && d.storyId === job.storyId)),
-      }));
     // a pick is recorded in schedule.json before it starts (a crash never starts two; the cadence binds)
     const picked = job.kind === 'pick' ? await (deps.runPick ?? (() => pickJob(a, root)))() : null;
     if (job.kind === 'pick' && !picked?.result) return { outcome: 'idle', job: null };
@@ -194,20 +189,12 @@ export async function work(a: Automation, root = ROOT, deps: WorkDeps = {}): Pro
                 )
               : await run(job.topic!, job.storyId!, a, approver));
     if (result.outcome === 'held') {
-      skip.push(job); // another instance owns it: try the next job once
-      if (job.kind === 'resume')
-        // the due entry was taken above; the next pass needs it
-        updateSchedule(root, (s) => ({
-          ...s,
-          due: [
-            ...(s.due ?? []),
-            { topic: job.topic!, storyId: job.storyId!, why: 'moved', at: new Date(now()).toISOString() },
-          ],
-        }));
+      skip.push(job); // another instance owns it: try the next job once (a held resume keeps its due entry)
       continue;
     }
     updateSchedule(root, (s) => ({
       ...s,
+      due: (s.due ?? []).filter((d) => !(d.topic === job.topic && d.storyId === job.storyId)), // a resume's, once run
       lastWork: { kind: job.kind, outcome: result.outcome, at: new Date(now()).toISOString() },
     }));
     return { outcome: result.outcome === 'done' ? 'done' : 'halted', job, result };

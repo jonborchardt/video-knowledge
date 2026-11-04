@@ -77,7 +77,7 @@ describe('work', () => {
     const r = await work(on, root, { runStory: async (_t, s) => (ran.push(s), held()), pick: () => null });
     expect(r.outcome).toBe('idle');
     expect(ran).toEqual(['decision:a']);
-    expect(readSchedule(root).due?.map((d) => [d.storyId, d.why])).toEqual([['decision:a', 'moved']]); // kept for the next pass
+    expect(readSchedule(root).due?.map((d) => [d.storyId, d.why])).toEqual([['decision:a', 'backoff']]); // kept as it was for the next pass
     const launchOnly = await work(on, root, {
       only: 'launch',
       runStory: async (_t, s) => (ran.push(s), done()),

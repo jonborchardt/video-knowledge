@@ -189,12 +189,17 @@ export async function pollInbox(
         ...s,
         due: [...(s.due ?? []), { topic, storyId, why: 'moved', at: new Date(now()).toISOString() }],
       }));
+    if (
+      (thread.kind === 'release-request' || thread.kind === 'draft-request') &&
+      thread.topic &&
+      thread.storyId &&
+      runLive(thread.topic, thread.storyId)
+    ) {
+      leftAt ??= m.uid;
+      continue;
+    }
     if (thread.kind === 'release-request' && thread.topic && thread.storyId) {
       const { topic, storyId } = thread;
-      if (runLive(topic, storyId)) {
-        leftAt ??= m.uid;
-        continue;
-      }
       const id = requestIdIn(m.subject) ?? requestIdIn(own);
       if (!id || id !== thread.request) {
         ignore(`the request id in the reply (${id ?? 'none'}) is not the thread's (${thread.request})`);
@@ -257,10 +262,6 @@ export async function pollInbox(
     }
     if (thread.kind === 'draft-request' && thread.topic && thread.storyId) {
       const { topic, storyId } = thread;
-      if (runLive(topic, storyId)) {
-        leftAt ??= m.uid;
-        continue;
-      }
       const parsed = parseReply(own, a, new Date(now()), 'draft');
       if ('problem' in parsed || parsed.decision.verdict === 'schedule') {
         await reply(

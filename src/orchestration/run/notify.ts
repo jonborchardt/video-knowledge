@@ -70,11 +70,10 @@ export const REPLY_GUIDE: Record<OutboxKind, string> = {
   reply: 'NO REPLY NEEDED. An answer from the automation; replies to it are not read.',
   test: 'Reply with any words: this mail tests the round trip.',
 };
-/** The mail with its reply guide first, in the text and, when there is one, the html. */
-export const withGuide = (kind: OutboxKind, out: Omit<OutMail, 'messageId'>): Omit<OutMail, 'messageId'> => ({
+/** The mail with its reply guide first. */
+const withGuide = (kind: OutboxKind, out: Omit<OutMail, 'messageId'>): Omit<OutMail, 'messageId'> => ({
   ...out,
   text: `${REPLY_GUIDE[kind]}\n\n${out.text}`,
-  ...(out.html && { html: `<p><strong>${REPLY_GUIDE[kind]}</strong></p>\n${out.html}` }),
 });
 
 export async function sendTracked(
