@@ -18,6 +18,7 @@ import type { DigestExtra } from './digest';
 import { sendDigestIfDue } from './digest';
 import type { Halt } from './journal';
 import { acquire, heartbeat, release } from './lock';
+import { questionMail } from '../../modules/mail';
 import { type OutboxEntry, automationDir, flushOutbox, notifyHalts, renderHalt } from './notify';
 import { renderDigest } from './digest';
 import { type PreflightDeps, preflight } from './preflight';
@@ -86,12 +87,14 @@ export const freeGbOf = (path: string): number => {
 export const defaultRender =
   (a: Automation, rows: () => StatusRow[], extra: () => DigestExtra = () => ({}), root = ROOT) =>
   (e: OutboxEntry): Omit<OutMail, 'messageId'> | null => {
+    const { request, topic, storyId } = e.meta ?? {};
+    if (e.kind === 'question') return questionMail(e);
     if (e.kind === 'halt') {
       const r = rows().find((x) => x.halt && renderHalt(x.topic, x.storyId, x.halt, a).subject === e.subject);
       return r ? renderHalt(r.topic, r.storyId, r.halt!, a, { dir: r.dir }) : null;
     }
     if (e.kind === 'digest') return renderDigest(rows(), extra(), a);
-    if (e.kind === 'batch' && e.request) return renderBatch(root, e.request, a);
+    if (e.kind === 'batch' && request) return renderBatch(root, request, a);
     if (e.kind === 'test')
       return {
         from: a.approvals.from || a.notifications.to,
@@ -99,17 +102,15 @@ export const defaultRender =
         subject: e.subject,
         text: 'A resend of the mail test.',
       };
-    if (e.kind === 'release-request' && e.topic && e.storyId && e.request) {
+    if (e.kind === 'release-request' && topic && storyId && request) {
       // the same request, re-rendered from the manifest and ledger as they are now
-      const m = readJson<ReleaseManifest>(
-        join(scriptDir(e.topic, e.storyId, root), 'video', REVIEW_DIR, MANIFEST_FILE),
-      );
-      const ledger = loadLedger(e.topic, e.storyId, root);
-      const req = ledger && requestOf(ledger, e.request);
+      const m = readJson<ReleaseManifest>(join(scriptDir(topic, storyId, root), 'video', REVIEW_DIR, MANIFEST_FILE));
+      const ledger = loadLedger(topic, storyId, root);
+      const req = ledger && requestOf(ledger, request);
       if (!m || !req || m.releaseSha !== req.release) return null; // the release moved: a new request follows
       return renderReleaseRequest(m, req, a, {
-        urls: urlsOf(e.topic, e.storyId, m, root),
-        checklist: checklistOf(e.topic, e.storyId, root),
+        urls: urlsOf(topic, storyId, m, root),
+        checklist: checklistOf(topic, storyId, root),
       });
     }
     return null;

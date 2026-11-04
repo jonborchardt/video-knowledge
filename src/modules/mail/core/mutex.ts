@@ -29,6 +29,7 @@ import { pidAlive, sleepSync } from './io';
 const HELD = 'held';
 const OWNER = /^owner\.(\d+)\.([0-9a-f-]+)$/;
 const code = (e: unknown) => (e as NodeJS.ErrnoException).code;
+const TRANSIENT = ['EPERM', 'EBUSY', 'EACCES'];
 const ignore = (fn: () => void, codes: string[]) => {
   try {
     fn();
@@ -68,7 +69,12 @@ export function withMutex<T>(lockDir: string, fn: () => T, opts: MutexOpts = {})
         owners = readdirSync(held).filter((n) => OWNER.test(n));
       } catch (e) {
         if (code(e) === 'ENOENT') continue; // released in between: try again at once
-        throw e;
+        if (!TRANSIENT.includes(code(e) ?? '')) throw e;
+        // Windows answers EPERM while a directory is being deleted: contended, not broken
+        if (Date.now() > deadline)
+          throw new Error(`mail state locked (${held}): ${(e as Error).message}`, { cause: e });
+        sleepSync(20);
+        continue;
       }
       for (const o of owners)
         if (!alive(Number(OWNER.exec(o)![1]))) ignore(() => unlinkSync(join(held, o)), ['ENOENT']);
@@ -77,7 +83,10 @@ export function withMutex<T>(lockDir: string, fn: () => T, opts: MutexOpts = {})
         ignore(() => rmdirSync(held), ['ENOENT', 'ENOTEMPTY', 'EPERM', 'EBUSY']);
       if (Date.now() > deadline) {
         const o = owners[0];
-        const since = o ? statSync(join(held, o)).mtime.toISOString() : '?';
+        let since = '?';
+        ignore(() => {
+          if (o) since = statSync(join(held, o)).mtime.toISOString();
+        }, ['ENOENT', ...TRANSIENT]);
         throw new Error(
           `mail state locked by pid ${o ? OWNER.exec(o)![1] : '?'} since ${since} (${held}); if that pid is not a repo process, delete the held folder`,
         );
@@ -89,12 +98,24 @@ export function withMutex<T>(lockDir: string, fn: () => T, opts: MutexOpts = {})
     throw e;
   }
   try {
-    const names = readdirSync(held);
+    const names = listHeld(held);
     if (names.length !== 1 || names[0] !== mine)
       throw new Error(`mail lock invariant broken in ${held}: ${names.join(', ')}`);
     return fn();
   } finally {
     release(held, mine);
+  }
+}
+
+/** The holder's own check of the directory, through the same transient refusals. */
+function listHeld(held: string): string[] {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return readdirSync(held);
+    } catch (e) {
+      if (!TRANSIENT.includes(code(e) ?? '') || attempt >= 50) throw e;
+      sleepSync(20);
+    }
   }
 }
 
@@ -107,7 +128,7 @@ function release(held: string, mine: string): void {
       break;
     } catch (e) {
       if (code(e) === 'ENOENT') break;
-      if (!['EPERM', 'EBUSY'].includes(code(e) ?? '') || attempt >= 50) throw e;
+      if (!TRANSIENT.includes(code(e) ?? '') || attempt >= 50) throw e;
       sleepSync(20);
     }
   }

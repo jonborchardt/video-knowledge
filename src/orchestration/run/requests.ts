@@ -256,7 +256,7 @@ export async function sendReleaseRequest(
   const ledger = loadLedger(topic, storyId, root);
   const req = ledger && openRequest(ledger, manifest.releaseSha, new Date((deps.now ?? Date.now)()));
   if (!req) return null;
-  const sent = readOutbox(root).find((e) => e.request === req.request);
+  const sent = readOutbox(root).find((e) => e.meta?.request === req.request);
   if (sent) {
     // sent before: the ledger may lack the record (a crash between the send and it): complete it from the outbox
     if (!req.messageId) await recordSent(topic, storyId, req.request, sent.messageId, root, deps);
@@ -591,7 +591,7 @@ export async function sendCorrectionRequest(
   deps: SendDeps = {},
 ): Promise<string | null> {
   const root = deps.root ?? ROOT;
-  const sent = readOutbox(root).find((e) => e.request === req.request);
+  const sent = readOutbox(root).find((e) => e.meta?.request === req.request);
   if (sent) {
     if (!req.messageId) await recordArticleSent(topic, storyId, req.request, sent.messageId, root, deps);
     return req.messageId ? null : sent.messageId;

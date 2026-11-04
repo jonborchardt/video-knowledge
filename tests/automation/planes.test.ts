@@ -85,7 +85,7 @@ describe('the two planes with the publication steps (criterion 15)', () => {
   it('a tick applies an OK reply and confirms a deploy in seconds while a work job sleeps', async () => {
     const T1 = new Date('2026-10-30T12:00:00Z');
     const s = stagedRelease(T1);
-    const mail = new FakeMailer(root);
+    const mail = new FakeMailer(s.f.root);
     const sent = await sentRequest(s, mail, () => T1.getTime());
     mail.deliver({
       uid: 1,

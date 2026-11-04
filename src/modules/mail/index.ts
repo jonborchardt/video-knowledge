@@ -6,9 +6,20 @@ export {
   type InMail,
   type MailTransport,
   type OutMail,
+  type OutboxEntry,
   address,
   correlate,
   inThread,
   ownText,
   questionIdsIn,
+  questionMail,
 } from './core';
+export {
+  type CorMailKind,
+  corMailDir,
+  corResendDue,
+  filterCorOutbox,
+  findCorOutbox,
+  readCorOutbox,
+  unsentCorOutbox,
+} from './cor';

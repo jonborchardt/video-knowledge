@@ -7,7 +7,6 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import { MANIFEST_FILE, REVIEW_DIR, readJson, sha, toJson } from '../../src/shared/io';
-import { FakeMail } from '../../src/shared/mail';
 import { Refusal } from '../../src/shared/refusal';
 import type { ReleaseManifest } from '../../src/shared/types';
 import { writeManifest } from '../../src/modules/packaging/manifest';
@@ -34,7 +33,7 @@ import {
   videoDirOf,
 } from '../../src/modules/publishing/publish';
 import { goLive, push, sync, verify } from '../../src/modules/publishing/uploader';
-import { sendTracked } from '../../src/orchestration/run/notify';
+import type { Mailer } from '../../src/orchestration/run/mailer';
 import { site } from '../../src/config/site';
 import { post as postOnX, textFor } from '../../src/modules/social/social';
 import type { XClient } from '../../src/modules/social/x';
@@ -167,9 +166,8 @@ export function stagedRelease(
 }
 
 /** The release request mail as the release loop sends it: through the outbox, the Message-ID on the ledger. */
-export async function sentRequest(s: Stage, mail: FakeMail, now: () => number, request = s.request): Promise<string> {
-  const { messageId } = await sendTracked(
-    mail,
+export async function sentRequest(s: Stage, mail: Mailer, now: () => number, request = s.request): Promise<string> {
+  const { messageId } = await mail.sendTracked(
     {
       from: 'automation@example.test',
       to: 'jon@example.test',
@@ -177,7 +175,6 @@ export async function sentRequest(s: Stage, mail: FakeMail, now: () => number, r
       text: `Request ${request}`,
     },
     'release-request',
-    s.f.root,
     { request, topic: s.f.topic, storyId: s.f.story, now },
   );
   recordMessageSent(s.f.topic, s.f.story, {

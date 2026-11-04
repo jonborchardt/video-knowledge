@@ -57,8 +57,8 @@ import { loadDotEnv, ROOT, toJson } from '../../shared/io';
 import { PRODUCTION_STAGES, type ProductionStage } from '../production';
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { FakeMail, libraryTransport, mailConfigFromEnv } from '../../shared/mail';
-import { transportMailer } from './mailer';
+import { libraryTransport, mailConfigFromEnv } from '../../shared/mail';
+import { cliMailer } from './mailer';
 import { archiveProduction, freshProblem } from './fresh';
 import { candidates, pickJob, pickJobIfDue, pickState, rank } from './pick';
 import { runStory } from './runner';
@@ -140,7 +140,7 @@ switch (verb) {
       notes: notesFile ? readFileSync(notesFile, 'utf8') : undefined,
       until,
       root: ROOT,
-      mail: cfg && a.approvals.to ? transportMailer(libraryTransport(cfg), ROOT) : null, // no mailbox: the halt says what to do
+      mail: cfg && a.approvals.to ? cliMailer(ROOT, libraryTransport(cfg)) : null, // no mailbox: the halt says what to do
       ...(runId && { runId }),
       ...(rest.includes('--no-commit') && { git: 'none' as const }),
     });
@@ -190,7 +190,7 @@ switch (verb) {
     const r = await maintain(
       topic,
       a,
-      maintainDeps(cfg && a.approvals.to ? transportMailer(libraryTransport(cfg), ROOT) : null),
+      maintainDeps(cfg && a.approvals.to ? cliMailer(ROOT, libraryTransport(cfg)) : null),
       ROOT,
     );
     for (const line of r.actions) console.log(line);
@@ -238,7 +238,7 @@ switch (verb) {
     const r = await discover(
       a,
       {
-        ...discoveryDeps(cfg && a.approvals.to && !dry ? transportMailer(libraryTransport(cfg), ROOT) : null),
+        ...discoveryDeps(cfg && a.approvals.to && !dry ? cliMailer(ROOT, libraryTransport(cfg)) : null),
         dryRun: dry,
         ...(only && { institutions: () => [only] }),
       },
@@ -265,7 +265,7 @@ switch (verb) {
     const cfg = mailConfigFromEnv();
     const preflightOnly = rest.includes('--preflight');
     const r = await tick(a, ROOT, {
-      mail: cfg && !preflightOnly ? transportMailer(libraryTransport(cfg), ROOT) : null,
+      mail: cfg && !preflightOnly ? cliMailer(ROOT, libraryTransport(cfg)) : null,
       preflightOnly,
     });
     for (const line of r.actions) console.log(line);
@@ -293,7 +293,7 @@ switch (verb) {
     const wcfg = mailConfigFromEnv();
     const r = await work(a, ROOT, {
       pick: only && only !== 'pick' ? () => null : pick,
-      mail: wcfg && a.approvals.to ? transportMailer(libraryTransport(wcfg), ROOT) : null,
+      mail: wcfg && a.approvals.to ? cliMailer(ROOT, libraryTransport(wcfg)) : null,
       ...(only && { skip: [] as Job[], only: only as JobKind }),
     });
     console.log(
@@ -350,8 +350,8 @@ switch (verb) {
     const cfg = mailConfigFromEnv();
     if (!cfg) die('mail is not configured: MAIL_SMTP_HOST, MAIL_IMAP_HOST, MAIL_USER and MAIL_PASSWORD in .env');
     if (!a.notifications.to) die('automation.json notifications.to is empty');
-    const transport = rest.includes('--fake') ? new FakeMail() : libraryTransport(cfg!);
-    const mail = transportMailer(transport, ROOT);
+    const transport = libraryTransport(cfg!);
+    const mail = cliMailer(ROOT, transport);
     const at = new Date().toISOString();
     const { messageId } = await mail.sendTracked(
       {

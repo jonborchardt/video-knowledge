@@ -99,7 +99,7 @@ describe('pollInbox', () => {
     expect(c.text).toMatch(/could not read your reply/);
     expect(c.text).toMatch(/\bOK\b/);
     expect(c.text).toMatch(/CHANGES:/);
-    expect(readOutbox(s.f.root).at(-1)).toMatchObject({ kind: 'reply', request: s.request });
+    expect(readOutbox(s.f.root).at(-1)).toMatchObject({ kind: 'reply', meta: { request: s.request } });
     expect(s.events().some((e) => e.type === 'decided' || e.type === 'approved')).toBe(false);
     expect(openRequest(loadLedger(s.f.topic, s.f.story, s.f.root)!, undefined, new Date(now()))?.request).toBe(
       s.request,
@@ -165,7 +165,7 @@ describe('pollInbox', () => {
     expect(renewed.renewed).toBe(1);
     expect(mail.sent).toHaveLength(3);
     expect(mail.sent[2].subject).toContain(renewed.request);
-    expect(readOutbox(s.f.root).find((e) => e.request === renewed.request)?.kind).toBe('release-request');
+    expect(readOutbox(s.f.root).find((e) => e.meta?.request === renewed.request)?.kind).toBe('release-request');
     mail.deliver(reply(mail.sent[2].messageId, 'OK', { subject: mail.sent[2].subject }));
     const r2 = await pollInbox(a, mail, s.f.root, { now: () => later.getTime(), run: s.run });
     expect(r2.applied).toEqual([`${renewed.request}: ok`]);

@@ -152,7 +152,7 @@ describe('the outbox', () => {
     const mail = new FakeMailer(root);
     const out = { from: 'automation@example.test', to: 'jon@example.test', subject: 'release (req-9)', text: 'b' };
     const { messageId } = await mail.sendTracked(out, 'release-request', { request: 'req-9', now: () => T0 });
-    expect(readOutbox(root)[0]).toMatchObject({ messageId, request: 'req-9', kind: 'release-request' });
+    expect(readOutbox(root)[0]).toMatchObject({ messageId, meta: { request: 'req-9' }, kind: 'release-request' });
   });
 });
 

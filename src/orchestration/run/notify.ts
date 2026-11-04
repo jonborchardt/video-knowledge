@@ -7,56 +7,26 @@ import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
 import { ROOT, readJson, sha, writeJsonAtomic } from '../../shared/io';
-import { type MailTransport, type OutMail, messageIdOf, redact } from '../../shared/mail';
+import { type CorMailKind, type OutboxEntry, corResendDue, readCorOutbox, unsentCorOutbox } from '../../modules/mail';
+import { type OutMail, redact } from '../../shared/mail';
 import type { Mailer } from './mailer';
 import type { Halt } from './journal';
 import { AUTOMATION_DIR } from './runner';
 import { type StatusRow, statusOf } from './status';
 
 export { AUTOMATION_DIR };
-export const OUTBOX_FILE = 'outbox.json';
 export const NOTIFIED_FILE = 'notified.json';
-export const RESEND_AFTER_MS = 10 * 60 * 1000;
-export const MAX_ATTEMPTS = 3;
 
-export type OutboxKind =
-  | 'halt'
-  | 'digest'
-  | 'draft-request'
-  | 'release-request'
-  | 'batch'
-  | 'correction-request'
-  | 'reply'
-  | 'launch'
-  | 'test';
-
-export interface OutboxEntry {
-  messageId: string;
-  kind: OutboxKind;
-  subject: string;
-  to: string;
-  request?: string;
-  topic?: string;
-  storyId?: string;
-  createdAt: string;
-  sentAt: string | null;
-  attempts: number;
-}
+export type OutboxKind = CorMailKind;
+export type { OutboxEntry };
 
 export const automationDir = (root = ROOT): string => {
   const d = join(root, AUTOMATION_DIR);
   mkdirSync(d, { recursive: true });
   return d;
 };
-export const readOutbox = (root = ROOT): OutboxEntry[] =>
-  readJson<OutboxEntry[]>(join(automationDir(root), OUTBOX_FILE)) ?? [];
-const writeOutbox = (root: string, entries: OutboxEntry[]) =>
-  writeJsonAtomic(join(automationDir(root), OUTBOX_FILE), entries);
+export const readOutbox = (root = ROOT): OutboxEntry[] => readCorOutbox(root);
 
-const domainOf = (from: string): string => from.split('@')[1]?.replace(/>$/, '') || 'commonwealthofreason.com';
-
-/** Two-phase send: the entry (with its Message-ID) is on disk before the first attempt; `sentAt` follows the send. A
- *  crash in between leaves an unsent entry that flushOutbox resends with the same id. */
 /** The first lines of every mail: what a reply to it does, so the person never answers the wrong one. */
 export const REPLY_GUIDE: Record<OutboxKind, string> = {
   'draft-request':
@@ -70,63 +40,14 @@ export const REPLY_GUIDE: Record<OutboxKind, string> = {
   launch: 'NO REPLY NEEDED. Replies to this mail are not read; the Studio steps it lists are recorded by the CLI.',
   reply: 'NO REPLY NEEDED. An answer from the automation; replies to it are not read.',
   test: 'Reply with any words: this mail tests the round trip.',
+  question: '', // the question is the whole mail: any words above the quote answer it
 };
 /** The mail with its reply guide first. */
-const withGuide = (kind: OutboxKind, out: Omit<OutMail, 'messageId'>): Omit<OutMail, 'messageId'> => ({
-  ...out,
-  text: `${REPLY_GUIDE[kind]}\n\n${out.text}`,
-});
+export const withGuide = (kind: OutboxKind, out: Omit<OutMail, 'messageId'>): Omit<OutMail, 'messageId'> =>
+  REPLY_GUIDE[kind] ? { ...out, text: `${REPLY_GUIDE[kind]}\n\n${out.text}` } : out;
 
-export async function sendTracked(
-  mail: MailTransport,
-  out: Omit<OutMail, 'messageId'>,
-  kind: OutboxKind,
-  root = ROOT,
-  extra: { request?: string; topic?: string; storyId?: string; now?: () => number } = {},
-): Promise<{ messageId: string }> {
-  const now = extra.now ?? Date.now;
-  const messageId = messageIdOf(domainOf(out.from));
-  const entry: OutboxEntry = {
-    messageId,
-    kind,
-    subject: out.subject,
-    to: out.to,
-    ...(extra.request && { request: extra.request }),
-    ...(extra.topic && { topic: extra.topic }),
-    ...(extra.storyId && { storyId: extra.storyId }),
-    createdAt: new Date(now()).toISOString(),
-    sentAt: null,
-    attempts: 1,
-  };
-  writeOutbox(root, [...readOutbox(root), entry]);
-  await mail.send({ ...withGuide(kind, out), messageId });
-  writeOutbox(
-    root,
-    readOutbox(root).map((e) => (e.messageId === messageId ? { ...e, sentAt: new Date(now()).toISOString() } : e)),
-  );
-  return { messageId };
-}
-
-/** A recorded entry sent again with its own Message-ID (the flush step): the body is re-rendered by the caller, the
- *  attempts are counted by the caller; `sentAt` follows the send. */
-export async function resendRecorded(
-  mail: MailTransport,
-  root: string,
-  kind: OutboxKind,
-  messageId: string,
-  body: Omit<OutMail, 'messageId'>,
-  now: () => number = Date.now,
-): Promise<{ messageId: string }> {
-  await mail.send({ ...withGuide(kind, body), messageId });
-  writeOutbox(
-    root,
-    readOutbox(root).map((e) => (e.messageId === messageId ? { ...e, sentAt: new Date(now()).toISOString() } : e)),
-  );
-  return { messageId };
-}
-
-/** Resend every entry without `sentAt` older than ten minutes, with its recorded id, at most three attempts; the
- *  caller re-renders the body (the outbox stores none). Returns the ids resent. */
+/** Resend every entry that is due (unsent, attempts left, no live sender, quiet for ten minutes), with its recorded
+ *  id; the caller re-renders the body (only a question stores one). Returns the ids resent. */
 export async function flushOutbox(
   mail: Mailer,
   root = ROOT,
@@ -134,17 +55,14 @@ export async function flushOutbox(
   render: (e: OutboxEntry) => Omit<OutMail, 'messageId'> | null,
 ): Promise<string[]> {
   const resent: string[] = [];
-  for (const e of readOutbox(root)) {
-    if (e.sentAt || e.attempts >= MAX_ATTEMPTS) continue;
-    if (now() - Date.parse(e.createdAt) < RESEND_AFTER_MS) continue;
-    writeOutbox(
-      root,
-      readOutbox(root).map((x) => (x.messageId === e.messageId ? { ...x, attempts: x.attempts + 1 } : x)),
-    );
+  for (const e of corResendDue(now(), root)) {
     const body = render(e);
-    if (!body) continue; // nothing to resend it from: it runs out of attempts and the digest lists it
     try {
-      await mail.sendTracked(body, e.kind, { messageId: e.messageId, now });
+      if (!body) {
+        await mail.skipAttempt(e.messageId, now); // nothing to resend it from: it runs out of attempts, the digest lists it
+        continue;
+      }
+      await mail.sendTracked(body, e.kind as OutboxKind, { messageId: e.messageId, now });
     } catch {
       continue; // the next tick tries again, up to the cap
     }
@@ -154,8 +72,7 @@ export async function flushOutbox(
 }
 
 /** Entries that were never sent after their attempts ran out: the digest lists them. */
-export const unsentOutbox = (root = ROOT): OutboxEntry[] =>
-  readOutbox(root).filter((e) => !e.sentAt && e.attempts >= MAX_ATTEMPTS);
+export const unsentOutbox = (root = ROOT): OutboxEntry[] => unsentCorOutbox(root);
 
 export const haltKey = (topic: string, storyId: string, h: Pick<Halt, 'kind' | 'why'>): string =>
   sha(`${topic}\n${storyId}\n${h.kind}\n${h.why}`).slice(0, 12);

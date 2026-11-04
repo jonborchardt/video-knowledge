@@ -453,8 +453,8 @@ export function liveView(root = ROOT, deps: LiveDeps = {}): LiveView {
     activity.push({
       at: e.sentAt ?? e.createdAt,
       actor: 'code',
-      topic: e.topic ?? 'proposals',
-      storyId: e.storyId ?? null,
+      topic: e.meta?.topic ?? 'proposals',
+      storyId: e.meta?.storyId ?? null,
       what: `mail ${e.kind}: ${e.subject}${e.sentAt ? '' : ' (unsent)'}`,
     });
   for (const l of launches(root))

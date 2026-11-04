@@ -3,3 +3,26 @@ export type { Answer, Correlation, InMail, MailConfig, MailTransport, OutboxEntr
 export { type Correlatable, type Lookup, address, correlate, inThread, ownText, questionIdsIn } from './thread';
 export { type MutexOpts, withMutex } from './mutex';
 export { type FakeFileState, type FakeSent, emptyFakeState, fileFakeMail, messageIdOf } from './transport';
+export {
+  type InitReport,
+  type RecordExtra,
+  type SendExtra,
+  MailRefusal,
+  attemptSend,
+  filterOutbox,
+  findOutbox,
+  init,
+  lockPath,
+  mutateOutbox,
+  normaliseLegacy,
+  outboxPath,
+  questionMail,
+  readOutbox,
+  receivedPath,
+  recordOutgoing,
+  resendDue,
+  sendTracked,
+  skipAttempt,
+  unsentOutbox,
+  validateSend,
+} from './outbox';

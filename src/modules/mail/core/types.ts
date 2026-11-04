@@ -6,6 +6,8 @@ export interface MailConfig {
   dir: string;
   /** A pre-core outbox file to migrate once (its entries normalised into this shape). */
   legacyOutbox?: string;
+  /** Top-level fields of a pre-core entry that move under `meta`. */
+  legacyMetaFields?: string[];
   /** A JSON file with `lastUid`: seeds the received cursor once, so an upgrade does not re-read the mailbox. */
   legacyCursor?: string;
   from: string;

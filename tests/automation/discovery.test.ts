@@ -187,7 +187,7 @@ describe('discovery', () => {
     expect(c.proposal('ev-running-costs')!.batch?.messageId).toBe(m.messageId);
     expect(readOutbox(c.root).at(-1)).toMatchObject({
       kind: 'batch',
-      request: rec.batch!.id,
+      meta: { request: rec.batch!.id },
       sentAt: expect.any(String),
     });
     expect(rec.emailed).toBe(true);

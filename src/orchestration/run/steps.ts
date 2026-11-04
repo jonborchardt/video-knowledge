@@ -99,6 +99,7 @@ const FAMILY: Record<string, RegExp | undefined> = {
   social: /^X_/,
   topics: /^APPROVAL_/, // the batch id
   article: /^APPROVAL_/, // the correction request id
+  mail: /^MAIL_/, // the mailbox, and nothing else secret
 };
 
 /** The environment a child CLI gets: every secret family removed, then one family back by verb (`publish` →

@@ -367,7 +367,10 @@ describe('launch', () => {
     expect(m.text).toMatch(/X: not configured/);
     expect(m.text).toMatch(/end screen/i);
     expect(m.text).toContain('npm run publish -- updated');
-    expect(readOutbox(c.f.root).at(-1)).toMatchObject({ kind: 'launch', topic: c.f.topic, storyId: c.f.story });
+    expect(readOutbox(c.f.root).at(-1)).toMatchObject({
+      kind: 'launch',
+      meta: { topic: c.f.topic, storyId: c.f.story },
+    });
     // nothing more on a later tick
     const a3 = await probeLaunches(a, c.f.root, { now: () => T0 + 180_000, run, mail, fetchFn });
     expect(a3).toEqual([]);

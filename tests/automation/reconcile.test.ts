@@ -152,7 +152,7 @@ describe('criterion 13: the crash boundaries this phase owns', () => {
     expect(id).toBeTruthy();
     expect(mail.sent).toHaveLength(1);
     expect(mail.sent[0].subject).toContain(first.event!.request!);
-    expect(readOutbox(s.f.root).filter((e) => e.request === first.event!.request)).toHaveLength(1);
+    expect(readOutbox(s.f.root).filter((e) => e.meta?.request === first.event!.request)).toHaveLength(1);
     // a second job after the send: nothing new
     expect(
       await sendReleaseRequest(s.f.topic, s.f.story, manifest, a, mail, { root: s.f.root, now: () => now.getTime() }),

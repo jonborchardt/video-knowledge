@@ -374,7 +374,7 @@ async function discoverLocked(
   // 4. one mail with the batch id; a crash between the outbox entry and the send is the outbox's to resend
   if (!record.emailed && record.batch.listed.length && d.mail) {
     const id = record.batch.id;
-    const existing = readOutbox(root).find((e) => e.kind === 'batch' && e.request === id);
+    const existing = readOutbox(root).find((e) => e.kind === 'batch' && e.meta?.request === id);
     const messageId = existing
       ? existing.messageId
       : (await d.mail.sendTracked(renderBatch(root, id, a), 'batch', { request: id, now })).messageId;

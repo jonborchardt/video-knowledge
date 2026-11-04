@@ -157,9 +157,7 @@ describe('the release request mail', () => {
     expect(mail.sent[0].text).toContain('https://youtu.be/vid00000000');
     expect(readOutbox(f.root)[0]).toMatchObject({
       kind: 'release-request',
-      request: req.request,
-      topic: f.topic,
-      storyId: f.story,
+      meta: { request: req.request, topic: f.topic, storyId: f.story },
     });
     const ev = loadLedger(f.topic, f.story, f.root)!.outputs.youtube.events;
     expect(ev.find((e) => e.type === 'message-sent')).toMatchObject({ request: req.request, messageId: id });
@@ -194,7 +192,7 @@ describe('the release request mail', () => {
     expect(id).toBe(mail.sent[0].messageId); // the record, from the outbox entry
     expect(mail.sent).toHaveLength(1);
     expect(openRequest(loadLedger(f.topic, f.story, f.root)!, undefined, now)?.messageId).toBe(id);
-    expect(req.request).toBe(readOutbox(f.root)[0].request);
+    expect(req.request).toBe(readOutbox(f.root)[0].meta?.request);
   }, 120_000);
 });
 
@@ -305,7 +303,7 @@ describe('the draft request mail', () => {
       }),
     ).toBeNull();
     expect(mail.sent).toHaveLength(1);
-    expect(readOutbox(f.root)[0]).toMatchObject({ kind: 'draft-request', topic: f.topic, storyId: f.story });
+    expect(readOutbox(f.root)[0]).toMatchObject({ kind: 'draft-request', meta: { topic: f.topic, storyId: f.story } });
   });
 });
 
@@ -388,7 +386,7 @@ describe('the correction request mail (M3 1.3: ownership of the sent record)', (
     expect(mail.sent).toHaveLength(1);
     expect(calls).toHaveLength(1);
     expect(loadArticleRequest(f.topic, f.story, f.root)!.messageId).toBe(id);
-    expect(readOutbox(f.root).find((e) => e.request === req.request)?.kind).toBe('correction-request');
+    expect(readOutbox(f.root).find((e) => e.meta?.request === req.request)?.kind).toBe('correction-request');
     const file = readJson<ArticleRequest>(join(f.dir, ARTICLE_FILES.request))!;
     expect(file.messageId).toBe(id);
   }, 120_000);

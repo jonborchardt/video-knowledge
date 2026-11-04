@@ -75,7 +75,7 @@ export function threadOf(m: InMail, outbox: OutboxEntry[]): OutboxEntry | null {
         e.kind === 'draft-request' ||
         e.kind === 'batch' ||
         e.kind === 'correction-request' ||
-        (e.kind === 'reply' && e.topic && e.storyId)),
+        (e.kind === 'reply' && e.meta?.topic && e.meta?.storyId)),
   );
   if (!hit) return null;
   if (hit.kind !== 'reply') return hit;
@@ -83,11 +83,11 @@ export function threadOf(m: InMail, outbox: OutboxEntry[]): OutboxEntry | null {
   const origin = outbox.find(
     (e) =>
       e.kind !== 'reply' &&
-      e.topic === hit.topic &&
-      e.storyId === hit.storyId &&
-      (!hit.request || e.request === hit.request),
+      e.meta?.topic === hit.meta?.topic &&
+      e.meta?.storyId === hit.meta?.storyId &&
+      (!hit.meta?.request || e.meta?.request === hit.meta?.request),
   );
-  return origin ?? { ...hit, kind: hit.request ? 'release-request' : 'draft-request' };
+  return origin ?? { ...hit, kind: hit.meta?.request ? 'release-request' : 'draft-request' };
 }
 
 export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: InboxDeps): Promise<InboxReport> {
@@ -175,7 +175,12 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
           references: [...m.references, m.messageId],
         },
         'reply',
-        { now, ...(thread.request && { request: thread.request }), topic: thread.topic, storyId: thread.storyId },
+        {
+          now,
+          ...(thread.meta?.request && { request: thread.meta?.request }),
+          topic: thread.meta?.topic,
+          storyId: thread.meta?.storyId,
+        },
       );
     const moved = (topic: string, storyId: string) =>
       updateSchedule(root, (s) => ({
@@ -184,18 +189,18 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
       }));
     if (
       (thread.kind === 'release-request' || thread.kind === 'draft-request') &&
-      thread.topic &&
-      thread.storyId &&
-      runLive(thread.topic, thread.storyId)
+      thread.meta?.topic &&
+      thread.meta?.storyId &&
+      runLive(thread.meta?.topic, thread.meta?.storyId)
     ) {
       leftAt ??= m.uid;
       continue;
     }
-    if (thread.kind === 'release-request' && thread.topic && thread.storyId) {
-      const { topic, storyId } = thread;
+    if (thread.kind === 'release-request' && thread.meta?.topic && thread.meta?.storyId) {
+      const { topic, storyId } = thread.meta ?? {};
       const id = requestIdIn(m.subject) ?? requestIdIn(own);
-      if (!id || id !== thread.request) {
-        ignore(`the request id in the reply (${id ?? 'none'}) is not the thread's (${thread.request})`);
+      if (!id || id !== thread.meta?.request) {
+        ignore(`the request id in the reply (${id ?? 'none'}) is not the thread's (${thread.meta?.request})`);
         continue;
       }
       const parsed = parseReply(own, a, new Date(now()), 'release');
@@ -253,8 +258,8 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
       moved(topic, storyId); // the work plane resumes the story's loop (the Shorts, the launch)
       continue;
     }
-    if (thread.kind === 'draft-request' && thread.topic && thread.storyId) {
-      const { topic, storyId } = thread;
+    if (thread.kind === 'draft-request' && thread.meta?.topic && thread.meta?.storyId) {
+      const { topic, storyId } = thread.meta ?? {};
       const parsed = parseReply(own, a, new Date(now()), 'draft');
       if ('problem' in parsed || parsed.decision.verdict === 'schedule') {
         await reply(
@@ -315,8 +320,8 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
       // batch id required in the subject or the own text; a slug outside the batch is reported back, never applied;
       // APPROVE ALL and REJECT ALL expand over the batch's slugs only; the verbs are idempotent
       const id = batchIdIn(m.subject) ?? batchIdIn(own);
-      if (!id || id !== thread.request) {
-        ignore(`the batch id in the reply (${id ?? 'none'}) is not the thread's (${thread.request})`);
+      if (!id || id !== thread.meta?.request) {
+        ignore(`the batch id in the reply (${id ?? 'none'}) is not the thread's (${thread.meta?.request})`);
         continue;
       }
       const parsed = parseReply(own, a, new Date(now()), 'topics');
@@ -378,13 +383,13 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
       );
       continue;
     }
-    if (thread.kind === 'correction-request' && thread.topic && thread.storyId) {
+    if (thread.kind === 'correction-request' && thread.meta?.topic && thread.meta?.storyId) {
       // an article correction (register D10): OK runs `article decide --verdict ok` (the correction itself, for the
       // exact fingerprint the request bound, by the person); CHANGES records the notes for the next writer pass
-      const { topic, storyId } = thread;
+      const { topic, storyId } = thread.meta ?? {};
       const id = correctionIdIn(m.subject) ?? correctionIdIn(own);
-      if (!id || id !== thread.request) {
-        ignore(`the correction id in the reply (${id ?? 'none'}) is not the thread's (${thread.request})`);
+      if (!id || id !== thread.meta?.request) {
+        ignore(`the correction id in the reply (${id ?? 'none'}) is not the thread's (${thread.meta?.request})`);
         continue;
       }
       const parsed = parseReply(own, a, new Date(now()), 'correction');
