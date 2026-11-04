@@ -136,7 +136,10 @@ export function verificationChecks(
   const processed = v.processingStatus === 'succeeded';
   const text = (name: 'title' | 'description' | 'tags' | 'category' | 'language', want: unknown, got: unknown) =>
     got === undefined && !(Array.isArray(want) && want.length === 0)
-      ? k(name, 'fail', `not set; npm run publish -- push sends the composed ${name}`)
+      ? processed
+        ? k(name, 'fail', `not set; npm run publish -- push sends the composed ${name}`)
+        : // YouTube surfaces tags only once processing ends, and a push meanwhile is lost (seen 2026-11-04)
+          k(name, 'pending', `not visible while YouTube processes the upload; run verify again`)
       : same(want, got ?? [])
         ? k(name, 'pass')
         : k(name, 'fail', `differs from the composed ${name}; npm run publish -- push resends it`);

@@ -59,6 +59,17 @@ describe('verificationChecks', () => {
     expect(check(verificationChecks(x, reordered, [track], 401, now), 'tags').result).toBe('pass');
     expect(check(verificationChecks(x, { ...ok, tags: ['other'] }, [track], 401, now), 'tags').result).toBe('fail');
   });
+  it('metadata YouTube has not surfaced yet is pending while it processes, a failure once processed', () => {
+    const processing = {
+      ...ok,
+      tags: undefined,
+      uploadStatus: 'uploaded',
+      processingStatus: 'processing',
+    } as RemoteVideo;
+    expect(check(verificationChecks(x, processing, [track], 401, now), 'tags').result).toBe('pending');
+    const processed = { ...ok, tags: undefined } as RemoteVideo;
+    expect(check(verificationChecks(x, processed, [track], 401, now), 'tags').result).toBe('fail');
+  });
   it('a video that matches the package passes every check', () => {
     const c = verificationChecks(x, ok, [track], 403, now);
     expect(c.map((k) => k.name)).toEqual([...CHECKS]);
