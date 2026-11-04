@@ -3,7 +3,8 @@
 // no stored progress: the board re-derives the stage from the files; the journal only supplies attempt counts.
 // Around every agent: snapshot, agent, guard, (component check), validator, guard; after every child: guard.
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
 import { ROOT, readJson, scriptDir, sha, shortOf, storySlug, writeJsonAtomic } from '../../shared/io';
@@ -766,8 +767,44 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
   }
 }
 
-/** `npm run validate` in a secret-free environment: the suite imports the renderer tree, which carries agent code. */
-export function runValidate(root: string, env: NodeJS.ProcessEnv): { ok: boolean; output: string } {
+/** The working tree's content as one git tree hash (tracked and untracked, .gitignore respected): what validate
+ *  judges. Null when git cannot say (no repo, a broken index). */
+export function treeFingerprint(root: string): string | null {
+  const tmp = join(tmpdir(), `vk-index-${process.pid}-${Date.now()}`);
+  try {
+    copyFileSync(join(root, '.git', 'index'), tmp);
+    const env = { ...process.env, GIT_INDEX_FILE: tmp };
+    execFileSync('git', ['add', '-A', '--', '.', `:(exclude)${AUTOMATION_DIR}`], { cwd: root, env, stdio: 'ignore' });
+    return execFileSync('git', ['write-tree'], { cwd: root, env, encoding: 'utf8' }).trim();
+  } catch {
+    return null;
+  } finally {
+    rmSync(tmp, { force: true });
+  }
+}
+export const VALIDATE_MARKER = '.automation/validate-ok.json'; // the tree that last passed, so a resume that changed nothing skips the suite
+
+/** `npm run validate` in a secret-free environment: the suite imports the renderer tree, which carries agent code.
+ *  Skipped, as a pass, when the tree is byte for byte the one that passed last (`VALIDATE_MARKER`): a resume into
+ *  the same halt re-validates nothing new. `run` is the suite itself; tests inject one. */
+export function runValidate(
+  root: string,
+  env: NodeJS.ProcessEnv,
+  run: () => { ok: boolean; output: string } = () => npmValidate(root, env),
+): { ok: boolean; output: string } {
+  const marker = join(root, VALIDATE_MARKER);
+  const tree = treeFingerprint(root);
+  const last = readJson<{ tree: string; at: string }>(marker);
+  if (tree && last?.tree === tree)
+    return { ok: true, output: `validate skipped: the tree is the one that passed at ${last.at}` };
+  const r = run();
+  if (r.ok && tree) {
+    mkdirSync(join(root, AUTOMATION_DIR), { recursive: true });
+    writeJsonAtomic(marker, { tree, at: new Date().toISOString() });
+  }
+  return r;
+}
+function npmValidate(root: string, env: NodeJS.ProcessEnv): { ok: boolean; output: string } {
   try {
     const out = execFileSync('npm', ['run', 'validate'], {
       cwd: root,
