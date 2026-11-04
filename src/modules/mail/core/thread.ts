@@ -43,6 +43,7 @@ export interface Correlatable {
   messageId: string;
   kind: string;
   id?: string;
+  inReplyTo?: string;
   createdAt: string;
 }
 export type Lookup<E extends Correlatable = Correlatable> = (pred: (e: E) => boolean) => E[];
@@ -69,7 +70,10 @@ export function correlate<E extends Correlatable>(
   for (const text of [m.subject, ownText(m.text)]) {
     const ids = questionIdsIn(text);
     if (!ids.length) continue;
-    const r = decide(lookup((e) => e.kind === 'question' && !!e.id && ids.includes(e.id)));
+    const hits = lookup((e) => e.kind === 'question' && !!e.id && ids.includes(e.id));
+    // a follow-up reuses its parent's subject, id included: an id alone cannot tell the parent from what followed
+    const kids = hits.length === 1 ? lookup((e) => e.kind === 'question' && e.inReplyTo === hits[0].messageId) : [];
+    const r = decide([...hits, ...kids]);
     if (r) return r;
   }
   const refs = lookup((e) => m.references.includes(e.messageId));
