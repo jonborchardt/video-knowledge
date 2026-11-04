@@ -2,8 +2,8 @@
  "topic": "heat-pumps",
  "story": "decision:what-happens-when-it-gets-cold",
  "title": "What Really Happens to a Heat Pump at 0°F",
- "generatedAt": "2026-10-28T03:40:46.289Z",
- "command": "npm run video -- spike heat-pumps decision:what-happens-when-it-gets-cold",
+ "generatedAt": "2026-11-04T02:11:13.579Z",
+ "command": "npm run video -- qa heat-pumps decision:what-happens-when-it-gets-cold",
  "segment": {
   "scenes": [
    "sc01",
@@ -436,7 +436,7 @@
  },
  "rendering": {
   "architecture": "Remotion (React, frame-based) rendered scene by scene into cached chunks through @remotion/renderer; chunks concatenated and the narration track laid down with the ffmpeg in the Remotion compositor (loudnorm to -16 LUFS)",
-  "seconds": 2052.4,
+  "seconds": 0,
   "frames": 14024,
   "cost": "$0 (local CPU)"
  },
@@ -513,7 +513,7 @@
   "music": true,
   "publishable": false,
   "why": [
-   "narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, \"npm run video -- final heat-pumps decision:what-happens-when-it-gets-cold --approved-by <name>\" re-narrates it for release"
+   "narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, \"npm run video -- final heat-pumps decision:what-happens-when-it-gets-cold --approved-by \"your name\"\" re-narrates it for release"
   ]
  },
  "fingerprints": {
@@ -565,6 +565,11 @@
     "name": "duration matches timeline",
     "ok": true,
     "detail": "467.477s vs 467.467s (14024 frames)"
+   },
+   {
+    "name": "runtime",
+    "ok": true,
+    "detail": "451.5s narrated, no target"
    },
    {
     "name": "audio stream",
@@ -784,7 +789,7 @@
   "contactSheet": "topics/heat-pumps/scripts/decision-what-happens-when-it-gets-cold/video/contact-sheet.png"
  },
  "limitations": [
-  "NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; once the draft is accepted, \"npm run video -- final <topic> <story-id> --approved-by <name>\" re-narrates it with Azure for release",
+  "NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; once the draft is accepted, \"npm run video -- final <topic> <story-id> --approved-by \"your name\"\" re-narrates it with Azure for release",
   "word boundaries from edge-tts group a numeral with the word before it; the span is split by letters, so a numeral cue can be a few frames early",
   "system fonts (Georgia, Segoe UI): renders on another machine may set type differently",
   "scene transitions are a short fade over the field; no cross-dissolve between scenes",

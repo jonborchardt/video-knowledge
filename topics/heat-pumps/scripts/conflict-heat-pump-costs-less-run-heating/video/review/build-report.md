@@ -1,10 +1,10 @@
 # Build report: Heat Pump vs Oil, Propane and Baseboard Heat
 
-heat-pumps / conflict:heat-pump-costs-less-run-heating, 2026-10-27T14:43:28.903Z. `npm run video -- spike heat-pumps conflict:heat-pump-costs-less-run-heating`
+heat-pumps / conflict:heat-pump-costs-less-run-heating, 2026-11-04T02:13:38.197Z. `npm run video -- qa heat-pumps conflict:heat-pump-costs-less-run-heating`
 
 **Segment.** 23 of 22 storyboard scenes (sc01 to end), 24 sentences. Kinds: sc01 title, sc02 question, sc03 quote, sc04 quote, sc05 quote, sc06 title, sc07 stat-tiles, sc08 stat-tiles, sc09 stat-tiles, sc10 question, sc11 stat-tiles, sc12 excerpt, sc13 excerpt, sc14 list, sc15 excerpt, sc16 stat-tiles, sc17 question, sc18 list, sc19 list, sc20 title, sc21 question, sc22 title, end close-card.
 
-**Output.** topics/heat-pumps/scripts/conflict-heat-pump-costs-less-run-heating/video/segment.mp4: 245.01s, 1920x1080 @ 30 fps, h264 + aac, 7350 frames, rendered in 1083s ($0 (local CPU)).
+**Output.** topics/heat-pumps/scripts/conflict-heat-pump-costs-less-run-heating/video/segment.mp4: 245.01s, 1920x1080 @ 30 fps, h264 + aac, 7350 frames, rendered in 0s ($0 (local CPU)).
 
 **Narration.** edge / en-US-AndrewMultilingualNeural (rate +0%), mp3, 220.46s of speech at about 164 wpm, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only, not publishable.**
 
@@ -46,11 +46,11 @@ heat-pumps / conflict:heat-pump-costs-less-run-heating, 2026-10-27T14:43:28.903Z
 | evidence | undertow/texture | 48.9s | 181.5s | -13 dB | -40.4 dB |
 | ending | undertow/pulse | 181.5s | 245.0s | -11 dB | -36.3 dB |
 
-**Clearance.** **Not cleared for public release:** narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final heat-pumps conflict:heat-pump-costs-less-run-heating --approved-by <name>" re-narrates it for release. A passing build is technical completion only; a person approves the release.
+**Clearance.** **Not cleared for public release:** narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final heat-pumps conflict:heat-pump-costs-less-run-heating --approved-by "your name"" re-narrates it for release. A passing build is technical completion only; a person approves the release.
 
-**Fingerprints.** script c8f01d495c, storyboard 5439813b6d, narration 9b407a34ec, config 5fbb2ac135, music 7fa9802066.
+**Fingerprints.** script c8f01d495c, storyboard 5439813b6d, narration 9b407a34ec, config 5fbb2ac135, look undefined, music 7fa9802066.
 
-## QA: passed (36 of 36)
+## QA: passed (37 of 37)
 
 | Check | Result | Detail |
 |---|---|---|
@@ -62,6 +62,7 @@ heat-pumps / conflict:heat-pump-costs-less-run-heating, 2026-10-27T14:43:28.903Z
 | frame count | ok | 7350 frames, timeline 7350 |
 | duration in range | ok | 245.01s in [244.0,246.0] |
 | duration matches timeline | ok | 245.013s vs 245.000s (7350 frames) |
+| runtime | ok | 229.0s narrated, no target |
 | audio stream | ok | aac 48000 Hz x2 |
 | aac | ok | aac |
 | audio length matches video | ok | 0.013s apart |
@@ -95,7 +96,7 @@ Inspection frames: 51 in video/frames/; contact sheet topics/heat-pumps/scripts/
 
 ## Known limitations
 
-- NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; once the draft is accepted, "npm run video -- final <topic> <story-id> --approved-by <name>" re-narrates it with Azure for release
+- NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; once the draft is accepted, "npm run video -- final <topic> <story-id> --approved-by "your name"" re-narrates it with Azure for release
 - word boundaries from edge-tts group a numeral with the word before it; the span is split by letters, so a numeral cue can be a few frames early
 - system fonts (Georgia, Segoe UI): renders on another machine may set type differently
 - scene transitions are a short fade over the field; no cross-dissolve between scenes

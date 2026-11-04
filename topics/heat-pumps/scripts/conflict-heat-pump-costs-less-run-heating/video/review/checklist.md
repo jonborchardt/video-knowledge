@@ -1,6 +1,6 @@
 # Review checklist
 
-Heat Pump vs Oil, Propane and Baseboard Heat, private review build 2026-10-27.
+Heat Pump vs Oil, Propane and Baseboard Heat, private review build 2026-11-04.
 
 - [ ] Opening: does the cold open land before the music enters, and does the title card read cleanly?
 - [ ] Narration: is every sentence intelligible at normal volume on headphones and on a laptop speaker?

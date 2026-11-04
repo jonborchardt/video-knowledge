@@ -1,10 +1,10 @@
 # Build report: Do Heat Pumps Cut Emissions on Today's Grid?
 
-heat-pumps / conflict:heat-pumps-cut-home-carbon-emissions, 2026-10-28T01:45:00.361Z. `npm run video -- spike heat-pumps conflict:heat-pumps-cut-home-carbon-emissions`
+heat-pumps / conflict:heat-pumps-cut-home-carbon-emissions, 2026-11-04T02:12:21.102Z. `npm run video -- qa heat-pumps conflict:heat-pumps-cut-home-carbon-emissions`
 
 **Segment.** 17 of 16 storyboard scenes (sc01 to end), 26 sentences. Kinds: sc01 question, sc02 transition, sc03 quote, sc04 quote, sc05 question, sc06 bar, sc07 question, sc08 excerpt, sc09 title, sc10 question, sc11 stat-tiles, sc12 excerpt, sc13 title, sc14 excerpt, sc15 list, sc16 question, end close-card.
 
-**Output.** topics/heat-pumps/scripts/conflict-heat-pumps-cut-home-carbon-emissions/video/segment.mp4: 277.95s, 1920x1080 @ 30 fps, h264 + aac, 8338 frames, rendered in 1296.3s ($0 (local CPU)).
+**Output.** topics/heat-pumps/scripts/conflict-heat-pumps-cut-home-carbon-emissions/video/segment.mp4: 277.95s, 1920x1080 @ 30 fps, h264 + aac, 8338 frames, rendered in 0s ($0 (local CPU)).
 
 **Narration.** edge / en-US-AndrewMultilingualNeural (rate +0%), mp3, 251.5s of speech at about 168 wpm, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only, not publishable.**
 
@@ -48,11 +48,11 @@ heat-pumps / conflict:heat-pumps-cut-home-carbon-emissions, 2026-10-28T01:45:00.
 | evidence | undertow/texture | 44.1s | 213.8s | -13 dB | -40.3 dB |
 | ending | undertow/pulse | 213.8s | 277.9s | -11 dB | -36.3 dB |
 
-**Clearance.** **Not cleared for public release:** narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final heat-pumps conflict:heat-pumps-cut-home-carbon-emissions --approved-by <name>" re-narrates it for release. A passing build is technical completion only; a person approves the release.
+**Clearance.** **Not cleared for public release:** narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final heat-pumps conflict:heat-pumps-cut-home-carbon-emissions --approved-by "your name"" re-narrates it for release. A passing build is technical completion only; a person approves the release.
 
 **Fingerprints.** script c826edc72b, storyboard d46d2b7ce9, narration 04a6dd64a7, config 8403955ee0, look bf7e3cb00f, music c9936e65de.
 
-## QA: passed (36 of 36)
+## QA: passed (37 of 37)
 
 | Check | Result | Detail |
 |---|---|---|
@@ -64,6 +64,7 @@ heat-pumps / conflict:heat-pumps-cut-home-carbon-emissions, 2026-10-28T01:45:00.
 | frame count | ok | 8338 frames, timeline 8338 |
 | duration in range | ok | 277.95s in [276.9,278.9] |
 | duration matches timeline | ok | 277.952s vs 277.933s (8338 frames) |
+| runtime | ok | 262.0s narrated, no target |
 | audio stream | ok | aac 48000 Hz x2 |
 | aac | ok | aac |
 | audio length matches video | ok | 0.019s apart |
@@ -97,7 +98,7 @@ Inspection frames: 40 in video/frames/; contact sheet topics/heat-pumps/scripts/
 
 ## Known limitations
 
-- NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; once the draft is accepted, "npm run video -- final <topic> <story-id> --approved-by <name>" re-narrates it with Azure for release
+- NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; once the draft is accepted, "npm run video -- final <topic> <story-id> --approved-by "your name"" re-narrates it with Azure for release
 - word boundaries from edge-tts group a numeral with the word before it; the span is split by letters, so a numeral cue can be a few frames early
 - system fonts (Georgia, Segoe UI): renders on another machine may set type differently
 - scene transitions are a short fade over the field; no cross-dissolve between scenes

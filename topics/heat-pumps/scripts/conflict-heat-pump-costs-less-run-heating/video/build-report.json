@@ -2,8 +2,8 @@
  "topic": "heat-pumps",
  "story": "conflict:heat-pump-costs-less-run-heating",
  "title": "Heat Pump vs Oil, Propane and Baseboard Heat",
- "generatedAt": "2026-10-27T14:43:28.903Z",
- "command": "npm run video -- spike heat-pumps conflict:heat-pump-costs-less-run-heating",
+ "generatedAt": "2026-11-04T02:13:38.197Z",
+ "command": "npm run video -- qa heat-pumps conflict:heat-pump-costs-less-run-heating",
  "segment": {
   "scenes": [
    "sc01",
@@ -253,7 +253,7 @@
  },
  "rendering": {
   "architecture": "Remotion (React, frame-based) rendered scene by scene into cached chunks through @remotion/renderer; chunks concatenated and the narration track laid down with the ffmpeg in the Remotion compositor (loudnorm to -16 LUFS)",
-  "seconds": 1083,
+  "seconds": 0,
   "frames": 7350,
   "cost": "$0 (local CPU)"
  },
@@ -330,7 +330,7 @@
   "music": true,
   "publishable": false,
   "why": [
-   "narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, \"npm run video -- final heat-pumps conflict:heat-pump-costs-less-run-heating --approved-by <name>\" re-narrates it for release"
+   "narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, \"npm run video -- final heat-pumps conflict:heat-pump-costs-less-run-heating --approved-by \"your name\"\" re-narrates it for release"
   ]
  },
  "fingerprints": {
@@ -381,6 +381,11 @@
     "name": "duration matches timeline",
     "ok": true,
     "detail": "245.013s vs 245.000s (7350 frames)"
+   },
+   {
+    "name": "runtime",
+    "ok": true,
+    "detail": "229.0s narrated, no target"
    },
    {
     "name": "audio stream",
@@ -579,7 +584,7 @@
   "contactSheet": "topics/heat-pumps/scripts/conflict-heat-pump-costs-less-run-heating/video/contact-sheet.png"
  },
  "limitations": [
-  "NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; once the draft is accepted, \"npm run video -- final <topic> <story-id> --approved-by <name>\" re-narrates it with Azure for release",
+  "NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; once the draft is accepted, \"npm run video -- final <topic> <story-id> --approved-by \"your name\"\" re-narrates it with Azure for release",
   "word boundaries from edge-tts group a numeral with the word before it; the span is split by letters, so a numeral cue can be a few frames early",
   "system fonts (Georgia, Segoe UI): renders on another machine may set type differently",
   "scene transitions are a short fade over the field; no cross-dissolve between scenes",

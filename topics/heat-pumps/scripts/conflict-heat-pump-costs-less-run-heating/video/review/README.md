@@ -1,10 +1,10 @@
 # PRIVATE REVIEW BUILD: Heat Pump vs Oil, Propane and Baseboard Heat
 
-Upload `conflict-heat-pump-costs-less-run-heating-review-private.mp4` to YouTube as a **private** video for review. Do not publish. Public release is blocked: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final heat-pumps conflict:heat-pump-costs-less-run-heating --approved-by <name>" re-narrates it for release.
+Upload `conflict-heat-pump-costs-less-run-heating-review-private.mp4` to YouTube as a **private** video for review. Do not publish. Public release is blocked: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final heat-pumps conflict:heat-pump-costs-less-run-heating --approved-by "your name"" re-narrates it for release.
 
 - Working title: [PRIVATE REVIEW] Heat Pump vs Oil, Propane and Baseboard Heat
 - Duration: 4:05 (245.0s), 1920x1080 @ 30 fps
-- MP4 sha: b97da6ed2f; build report 4f6168e2b8; QA 36/36
+- MP4 sha: b97da6ed2f; build report d955f57e20; QA 37/37
 - Description: `description.txt` (paste as is; chapters are measured from the timeline)
 - Checklist: `checklist.md`; build report: `build-report.md`; thumbnail: `thumbnail.png` (the title card); captions: `captions.en.srt`
 

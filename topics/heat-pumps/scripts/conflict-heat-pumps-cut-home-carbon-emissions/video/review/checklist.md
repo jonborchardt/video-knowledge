@@ -1,6 +1,6 @@
 # Review checklist
 
-Do Heat Pumps Cut Emissions on Today's Grid?, private review build 2026-10-28.
+Do Heat Pumps Cut Emissions on Today's Grid?, private review build 2026-11-04.
 
 - [ ] Opening: does the cold open land before the music enters, and does the title card read cleanly?
 - [ ] Narration: is every sentence intelligible at normal volume on headphones and on a laptop speaker?

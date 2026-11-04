@@ -1,10 +1,10 @@
 # PRIVATE REVIEW BUILD: What Really Happens to a Heat Pump at 0°F
 
-Upload `decision-what-happens-when-it-gets-cold-review-private.mp4` to YouTube as a **private** video for review. Do not publish. Public release is blocked: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final heat-pumps decision:what-happens-when-it-gets-cold --approved-by <name>" re-narrates it for release.
+Upload `decision-what-happens-when-it-gets-cold-review-private.mp4` to YouTube as a **private** video for review. Do not publish. Public release is blocked: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final heat-pumps decision:what-happens-when-it-gets-cold --approved-by "your name"" re-narrates it for release.
 
 - Working title: [PRIVATE REVIEW] What Really Happens to a Heat Pump at 0°F
 - Duration: 7:47 (467.5s), 1920x1080 @ 30 fps
-- MP4 sha: 02ad6fb732; build report 8aab1db6fd; QA 36/36
+- MP4 sha: 02ad6fb732; build report d5741adb57; QA 37/37
 - Description: `description.txt` (paste as is; chapters are measured from the timeline)
 - Checklist: `checklist.md`; build report: `build-report.md`; thumbnail: `thumbnail.png` (the title card); captions: `captions.en.srt`
 

@@ -1,10 +1,10 @@
 # Build report: What Really Happens to a Heat Pump at 0°F
 
-heat-pumps / decision:what-happens-when-it-gets-cold, 2026-10-28T03:40:46.289Z. `npm run video -- spike heat-pumps decision:what-happens-when-it-gets-cold`
+heat-pumps / decision:what-happens-when-it-gets-cold, 2026-11-04T02:11:13.579Z. `npm run video -- qa heat-pumps decision:what-happens-when-it-gets-cold`
 
 **Segment.** 34 of 33 storyboard scenes (sc01 to end), 47 sentences. Kinds: sc01 title, sc02 question, sc03 quote, sc04 quote, sc05 question, sc06 list, sc07 stat-tiles, sc08 title, sc09 stat-tiles, sc10 transition, sc11 quote, sc12 stat-tiles, sc13 excerpt, sc14 stat-tiles, sc15 excerpt, sc16 stat-tiles, sc17 title, sc18 quote, sc19 stat-tiles, sc20 title, sc21 excerpt, sc22 title, sc23 title, sc24 stat-tiles, sc25 stat-tiles, sc26 stat-tiles, sc27 stat-tiles, sc28 list, sc29 question, sc30 list, sc31 list, sc32 title, sc33 list, end close-card.
 
-**Output.** topics/heat-pumps/scripts/decision-what-happens-when-it-gets-cold/video/segment.mp4: 467.48s, 1920x1080 @ 30 fps, h264 + aac, 14024 frames, rendered in 2052.4s ($0 (local CPU)).
+**Output.** topics/heat-pumps/scripts/decision-what-happens-when-it-gets-cold/video/segment.mp4: 467.48s, 1920x1080 @ 30 fps, h264 + aac, 14024 frames, rendered in 0s ($0 (local CPU)).
 
 **Narration.** edge / en-US-AndrewMultilingualNeural (rate +0%), mp3, 439.82s of speech at about 162 wpm, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only, not publishable.**
 
@@ -69,11 +69,11 @@ heat-pumps / decision:what-happens-when-it-gets-cold, 2026-10-28T03:40:46.289Z. 
 | evidence | undertow/texture | 39.4s | 374.2s | -13 dB | -40.3 dB |
 | ending | undertow/pulse | 374.2s | 467.5s | -11 dB | -36.4 dB |
 
-**Clearance.** **Not cleared for public release:** narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final heat-pumps decision:what-happens-when-it-gets-cold --approved-by <name>" re-narrates it for release. A passing build is technical completion only; a person approves the release.
+**Clearance.** **Not cleared for public release:** narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final heat-pumps decision:what-happens-when-it-gets-cold --approved-by "your name"" re-narrates it for release. A passing build is technical completion only; a person approves the release.
 
 **Fingerprints.** script 106cb5cd54, storyboard 933fab9eb3, narration 45dcc60392, config 9700ae80ea, look bf7e3cb00f, music ef22666a3b.
 
-## QA: passed (36 of 36)
+## QA: passed (37 of 37)
 
 | Check | Result | Detail |
 |---|---|---|
@@ -85,6 +85,7 @@ heat-pumps / decision:what-happens-when-it-gets-cold, 2026-10-28T03:40:46.289Z. 
 | frame count | ok | 14024 frames, timeline 14024 |
 | duration in range | ok | 467.48s in [466.5,468.5] |
 | duration matches timeline | ok | 467.477s vs 467.467s (14024 frames) |
+| runtime | ok | 451.5s narrated, no target |
 | audio stream | ok | aac 48000 Hz x2 |
 | aac | ok | aac |
 | audio length matches video | ok | 0.010s apart |
@@ -118,7 +119,7 @@ Inspection frames: 72 in video/frames/; contact sheet topics/heat-pumps/scripts/
 
 ## Known limitations
 
-- NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; once the draft is accepted, "npm run video -- final <topic> <story-id> --approved-by <name>" re-narrates it with Azure for release
+- NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; once the draft is accepted, "npm run video -- final <topic> <story-id> --approved-by "your name"" re-narrates it with Azure for release
 - word boundaries from edge-tts group a numeral with the word before it; the span is split by letters, so a numeral cue can be a few frames early
 - system fonts (Georgia, Segoe UI): renders on another machine may set type differently
 - scene transitions are a short fade over the field; no cross-dissolve between scenes
