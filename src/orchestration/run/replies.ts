@@ -30,28 +30,6 @@ export const requestIdIn = (text: string): string | null => ID('rq').exec(text)?
 export const batchIdIn = (text: string): string | null => ID('pb').exec(text)?.[0] ?? null;
 export const correctionIdIn = (text: string): string | null => ID('ar').exec(text)?.[0] ?? null;
 
-/** The person's own lines: everything before the first quote marker (a `>` block, `On … wrote:` on one line or
- *  wrapped over two, Outlook's `From:` header block or its rule, `-----Original Message-----`) and before a
- *  signature (`-- `, `Sent from my …`). */
-export function ownText(body: string): string {
-  const lines = body.replace(/\r\n?/g, '\n').split('\n');
-  const out: string[] = [];
-  for (let i = 0; i < lines.length; i++) {
-    const l = lines[i];
-    const t = l.trim();
-    if (/^>/.test(t)) break;
-    if (/^-+\s*Original Message\s*-+$/i.test(t)) break;
-    if (/^_{5,}$/.test(t)) break;
-    if (/^On\b.*\bwrote:\s*$/.test(t)) break;
-    if (/^On\b/.test(t) && /\bwrote:\s*$/.test(lines[i + 1]?.trim() ?? '')) break;
-    if (/^From:\s/.test(t) && lines.slice(i + 1, i + 5).some((x) => /^(Sent|Date|To):\s/.test(x.trim()))) break;
-    if (/^-- ?$/.test(l)) break;
-    if (/^Sent from my\b/i.test(t)) continue;
-    out.push(l);
-  }
-  return out.join('\n').trim();
-}
-
 const WEEKDAYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
 /** The wall clock of an instant in a timezone. */

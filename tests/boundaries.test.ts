@@ -45,6 +45,18 @@ describe('module boundaries (CLAUDE.md: Module boundaries)', () => {
     expect(resolveSpecifier('src/lib/a.ts', '.', has)).toBeNull();
   });
 
+  it('a self-contained folder imports only itself, node builtins and packages (the mail core)', () => {
+    const record = (path: string, imports: string[]) => ({ path, specs: imports, imports, source: '' });
+    const leak = record('src/modules/mail/core/zz-leak.ts', ['src/shared/io.ts']);
+    const fine = record('src/modules/mail/core/zz-fine.ts', ['src/modules/mail/core/io.ts', 'node:fs', 'imapflow']);
+    const found = violations([leak, fine], config);
+    expect(found.filter((v) => v.rule === 'self-contained').map((v) => v.from)).toEqual([leak.path]);
+    // never allowlistable
+    expect(check(found, [{ from: leak.path, to: 'src/shared/io.ts' }]).unexpected).toContainEqual(
+      expect.objectContaining({ rule: 'self-contained' }),
+    );
+  });
+
   it('resolves every relative import, so no edge is dropped', () => {
     const misses = files.flatMap((f) =>
       f.specs

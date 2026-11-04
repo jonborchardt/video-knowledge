@@ -16,7 +16,8 @@ import { type Halt, clearHalt, readHalt, runDir, writeHalt } from './journal';
 import { aliveLocks } from './lock';
 import { type OutboxEntry, automationDir, readOutbox } from './notify';
 import { DRAFT_ACCEPTED_FILE, readShadow, recordShadowPerson } from './release';
-import { type Decision, batchIdIn, correctionIdIn, ownText, parseReply, requestIdIn } from './replies';
+import { type Decision, batchIdIn, correctionIdIn, parseReply, requestIdIn } from './replies';
+import { address, ownText } from '../../modules/mail';
 import { draftRequests } from './requests';
 import { loadProposals } from '../../modules/topic-discovery';
 import { updateSchedule } from './schedule';
@@ -89,8 +90,6 @@ export function threadOf(m: InMail, outbox: OutboxEntry[]): OutboxEntry | null {
   return origin ?? { ...hit, kind: hit.request ? 'release-request' : 'draft-request' };
 }
 
-const address = (s: string) => (/<([^>]+)>/.exec(s)?.[1] ?? s).trim().toLowerCase();
-
 export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: InboxDeps): Promise<InboxReport> {
   const now = deps.now ?? Date.now;
   /** A reply whose verb failed: the message stays for the next poll, which runs the same idempotent verb again; the
@@ -129,7 +128,7 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
     const under = scriptDir(topic, storyId, root).replaceAll('\\', '/') + '/';
     return aliveLocks(root, deps.alive).some((d) => d.replaceAll('\\', '/').startsWith(under));
   };
-  const got = await mail.fetchSince(file.lastUid);
+  const { mails: got } = await mail.fetchSince(file.lastUid);
   const report: InboxReport = { fetched: got.length, applied: [], ignored: [], clarified: [], refused: [], failed: [] };
   const outbox = readOutbox(root);
   const by = a.approvals.approverName || address(a.approvals.to);

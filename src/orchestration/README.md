@@ -64,7 +64,7 @@ created. The mail transport is shared infrastructure (`src/shared/mail.ts`), wit
 
 `run/replies.ts` is the reply grammar (spec §7.2: the first line of the person's own text decides, and a release
 approval is unambiguous: `OK` alone, punctuation allowed, or `OK at <when>`; an OK with anything after it is a
-clarification, never a publication; `ownText` drops quotes and signatures; `parseWhen` reads the schedule in the
+clarification, never a publication; `ownText` (the mail module's) drops quotes and signatures; `parseWhen` reads the schedule in the
 configured timezone); `run/inbox.ts` is the inbox
 adapter (the thread and the request id both required, one `publish decide` per reply, one clarification for what it
 cannot read, `.automation/inbox.json` the record written after the verb; a draft reply writes `run/draft-accepted.json`

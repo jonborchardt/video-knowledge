@@ -17,7 +17,7 @@ export interface SendExtra {
 
 export interface Mailer {
   sendTracked(out: Omit<OutMail, 'messageId'>, kind: OutboxKind, extra?: SendExtra): Promise<{ messageId: string }>;
-  fetchSince(sinceUid: number): Promise<InMail[]>;
+  fetchSince(sinceUid: number): Promise<{ uidValidity: string; mails: InMail[] }>;
 }
 
 /** Today's implementation: the transport in process, the outbox in `.automation/outbox.json`. */

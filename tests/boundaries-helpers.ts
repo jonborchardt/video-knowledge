@@ -132,6 +132,7 @@ export type Violation = Edge & { rule: string };
 export type BoundariesConfig = {
   capabilities: Record<string, string>;
   browserSafe: string[];
+  selfContained?: string[];
   layoutOwner: string;
   readApi: Record<string, string[]>;
   edges: Edge[];
@@ -188,6 +189,14 @@ function browserSafe({ f, to, cfg }: Ctx): Violation | null {
   return bad ? { from: f.path, to, rule: 'browser-safe' } : null;
 }
 
+// A self-contained folder (the mail core) imports only files under itself, node builtins and packages: never
+// allowlistable, so the folder can be copied into another project whole.
+function selfContained({ f, to, cfg }: Ctx): Violation | null {
+  const base = (cfg.selfContained ?? []).find((b) => f.path.startsWith(b));
+  if (!base) return null;
+  return isRepoFile(to) && !to.startsWith(base) ? { from: f.path, to, rule: 'self-contained' } : null;
+}
+
 function unmappedTarget({ f, to, toCap }: Ctx): Violation | null {
   return isRepoFile(to) && !toCap ? { from: f.path, to, rule: 'unmapped' } : null;
 }
@@ -212,7 +221,14 @@ export function violations(files: FileRecord[], cfg: BoundariesConfig): Violatio
     }
     for (const to of f.imports) {
       const c: Ctx = { f, to, cfg, fromCap, toCap: capabilityOf(to, cfg.capabilities) };
-      const hits = [unmappedTarget, crossCapability, sharedImportsModule, orchestrationImportsInternal, browserSafe]
+      const hits = [
+        unmappedTarget,
+        crossCapability,
+        sharedImportsModule,
+        orchestrationImportsInternal,
+        browserSafe,
+        selfContained,
+      ]
         .map((rule) => rule(c))
         .filter((v): v is Violation => v !== null);
       out.push(...hits);
@@ -228,7 +244,7 @@ export function violations(files: FileRecord[], cfg: BoundariesConfig): Violatio
   return out;
 }
 
-const NEVER_ALLOWED = ['unmapped', 'read-api-cycle'];
+const NEVER_ALLOWED = ['unmapped', 'read-api-cycle', 'self-contained'];
 
 export function check(found: Violation[], allow: Edge[]): { unexpected: Violation[]; stale: Edge[] } {
   const listed = (v: Violation) => allow.some((a) => a.from === v.from && a.to === v.to);

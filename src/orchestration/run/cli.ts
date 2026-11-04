@@ -367,7 +367,7 @@ switch (verb) {
     const deadline = Date.now() + 10 * 60_000;
     let since = await transport.lastUid(); // only what arrives after the test: never the whole inbox
     while (Date.now() < deadline) {
-      const got = await transport.fetchSince(since);
+      const { mails: got } = await transport.fetchSince(since);
       for (const m of got) since = Math.max(since, m.uid);
       const reply = got.find((m) => m.inReplyTo === messageId || m.references.includes(messageId));
       if (reply) {

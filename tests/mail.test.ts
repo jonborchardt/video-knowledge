@@ -123,7 +123,8 @@ describe('libraryTransport', () => {
     expect(files.length).toBeGreaterThanOrEqual(2);
     const imap = fakeImap(files);
     const t = libraryTransport(config, { ImapFlow: imap.ImapFlow });
-    const all = await t.fetchSince(10);
+    const { uidValidity, mails: all } = await t.fetchSince(10);
+    expect(typeof uidValidity).toBe('string');
     expect(all.map((m) => m.uid)).toEqual(files.map((_, i) => i + 11));
     expect(imap.log).toEqual(['new imap.example.test', 'connect', 'lock INBOX', 'fetch 11:*', 'release', 'logout']);
     const qp = all.find((m) => m.subject.includes('multipart'))!;
@@ -137,7 +138,7 @@ describe('libraryTransport', () => {
     expect(html.text).toContain('OK at Thursday 15:00'); // base64 html stripped to text
     expect(html.date).toMatch(/^2026-/);
     // the last message is yielded even when the range starts past it: it is not returned twice or below the uid
-    expect(await t.fetchSince(100)).toEqual([]);
+    expect((await t.fetchSince(100)).mails).toEqual([]);
   });
 });
 
@@ -163,8 +164,8 @@ describe('FakeMail', () => {
       html: null,
       date: '',
     });
-    expect((await f.fetchSince(4)).map((m) => m.uid)).toEqual([5]);
-    expect(await f.fetchSince(5)).toEqual([]);
+    expect((await f.fetchSince(4)).mails.map((m) => m.uid)).toEqual([5]);
+    expect((await f.fetchSince(5)).mails).toEqual([]);
     expect(await f.lastUid()).toBe(5);
   });
 });

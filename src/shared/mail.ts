@@ -60,7 +60,8 @@ export interface InMail {
 
 export interface MailTransport {
   send(m: OutMail): Promise<{ messageId: string }>;
-  fetchSince(sinceUid: number, opts?: { mailbox?: string }): Promise<InMail[]>;
+  /** Everything after `sinceUid`, with the mailbox's UIDVALIDITY as a decimal string (a change renumbers the uids). */
+  fetchSince(sinceUid: number, opts?: { mailbox?: string }): Promise<{ uidValidity: string; mails: InMail[] }>;
   /** The highest uid the mailbox holds now (0 when empty): a poll for new mail starts after it. */
   lastUid(opts?: { mailbox?: string }): Promise<number>;
 }
@@ -104,6 +105,8 @@ export function libraryTransport(c: MailConfig, deps: MailDeps = {}): MailTransp
       await client.connect();
       const lock = await client.getMailboxLock(opts.mailbox ?? 'INBOX');
       const out: InMail[] = [];
+      const mb = client.mailbox;
+      const uidValidity = mb && typeof mb === 'object' && 'uidValidity' in mb ? String(mb.uidValidity) : '0';
       try {
         for await (const msg of client.fetch({ uid: `${sinceUid + 1}:*` }, { uid: true, source: true })) {
           if (msg.uid <= sinceUid || !msg.source) continue; // `n:*` yields the last message even below n
@@ -113,7 +116,7 @@ export function libraryTransport(c: MailConfig, deps: MailDeps = {}): MailTransp
         lock.release();
         await client.logout();
       }
-      return out.sort((a, b) => a.uid - b.uid);
+      return { uidValidity, mails: out.sort((a, b) => a.uid - b.uid) };
     },
     async lastUid(opts = {}) {
       const client = new Imap({
@@ -182,6 +185,8 @@ export class FakeMail implements MailTransport {
   sent: OutMail[] = [];
   inbox: InMail[] = [];
   failNext: 'before' | 'after' | null = null;
+  uidValidity = '1';
+  failNextFetch = false;
   async send(m: OutMail): Promise<{ messageId: string }> {
     const fail = this.failNext;
     this.failNext = null;
@@ -190,8 +195,15 @@ export class FakeMail implements MailTransport {
     if (fail === 'after') throw new Error('smtp: connection lost after the send');
     return { messageId: m.messageId };
   }
-  async fetchSince(sinceUid: number): Promise<InMail[]> {
-    return this.inbox.filter((m) => m.uid > sinceUid).sort((a, b) => a.uid - b.uid);
+  async fetchSince(sinceUid: number): Promise<{ uidValidity: string; mails: InMail[] }> {
+    if (this.failNextFetch) {
+      this.failNextFetch = false;
+      throw new Error('imap: connection refused');
+    }
+    return {
+      uidValidity: this.uidValidity,
+      mails: this.inbox.filter((m) => m.uid > sinceUid).sort((a, b) => a.uid - b.uid),
+    };
   }
   deliver(m: InMail): void {
     this.inbox.push(m);

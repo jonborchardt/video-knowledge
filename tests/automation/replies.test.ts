@@ -1,14 +1,8 @@
 // The reply grammar (spec §7.2): a person's own text, read forgivingly; pure, the clock and timezone passed in.
 import { describe, expect, it } from 'vitest';
-import {
-  batchIdIn,
-  correctionIdIn,
-  ownText,
-  parseReply,
-  parseWhen,
-  requestIdIn,
-} from '../../src/orchestration/run/replies';
+import { batchIdIn, correctionIdIn, parseReply, parseWhen, requestIdIn } from '../../src/orchestration/run/replies';
 import { DEFAULTS } from '../../src/shared/automation';
+import { ownText } from '../../src/modules/mail';
 
 const a = {
   ...DEFAULTS,
@@ -27,18 +21,6 @@ const bad = (text: string, kind?: 'release' | 'draft' | 'topics' | 'correction')
   if ('decision' in r) throw new Error(`parsed ${JSON.stringify(r.decision)}`);
   return r;
 };
-
-describe('ownText', () => {
-  it('keeps the lines above a quoted block and drops the signature', () => {
-    expect(ownText('OK\r\n\r\n-- \r\nJon\r\n')).toBe('OK');
-    expect(ownText('OK\n\n> Release request rq-0123456789ab\n> ...')).toBe('OK');
-    expect(ownText('OK\n\nOn Tue, 10 Nov 2026 at 09:00, Commonwealth <bot@x.org> wrote:\n> hi')).toBe('OK');
-    expect(ownText('OK\n\nOn Tue, 10 Nov 2026 at 09:00, Commonwealth of Reason\n<bot@x.org> wrote:\n> hi')).toBe('OK');
-    expect(ownText('OK\n\nFrom: Commonwealth <bot@x.org>\nSent: Tuesday\nTo: jon\nSubject: x\n\nrequest')).toBe('OK');
-    expect(ownText('OK\n\n-----Original Message-----\nFrom: x')).toBe('OK');
-    expect(ownText('Sent from my iPhone\n\nOK')).toBe('OK');
-  });
-});
 
 describe('ids', () => {
   it('finds an id in the subject or the own text, never in the quote only', () => {

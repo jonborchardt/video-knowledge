@@ -473,6 +473,53 @@
       "readme": "src/modules/social/README.md"
     },
     {
+      "name": "mail",
+      "kind": "module",
+      "responsibility": "The system's conversation with a person by email: one outbox (every mail sent, questions included), one received store (every mail that came back, correlated once to what it answers), an archive, and the verbs ask, send, fetch, questions, test. General communication (ask: the reply comes back as the person's own words, never read as authorisation) and formal authorisation (orchestration's request mails and reply grammar) ride the same records without sharing semantics. core/ is extraction-ready: it imports nothing outside itself (selfContained in tests/boundaries.json), is configured by an injected MailConfig and MailTransport, and knows kind: string and meta only.",
+      "paths": "src/modules/mail/ (core/: io, mutex, types, thread, transport, outbox, received, ask; cor.ts the Commonwealth adapter)",
+      "cli": "src/modules/mail/cli.ts",
+      "briefs": "",
+      "readApi": [
+        "ownText",
+        "address",
+        "inThread",
+        "questionIdsIn",
+        "correlate",
+        "Correlation",
+        "Correlatable",
+        "InMail",
+        "MailTransport",
+        "OutMail"
+      ],
+      "objects": [
+        {
+          "id": "question",
+          "t": "Question",
+          "d": [
+            "an outbox entry of kind question: sent to the",
+            "person, answered in their own words, acknowledged by the agent"
+          ],
+          "owner": "mail",
+          "writer": "npm run mail -- ask (a session or an authorised automation)",
+          "valid": "to the configured person only; status derived (unsent, failed, awaiting, unattended, answered); a timeout stops the waiter, never the question",
+          "file": ".automation/mail/outbox.json"
+        },
+        {
+          "id": "received",
+          "t": "Received mail",
+          "d": [
+            "received.json: every mail fetched, once, with the",
+            "sent mail it answers (correlated at record time)"
+          ],
+          "owner": "mail",
+          "writer": "npm run mail -- fetch (the only IMAP reader; ask runs it while waiting)",
+          "valid": "deduplicated by Message-ID; the sender must be the person; an ambiguous reply matches nothing and is listed",
+          "file": ".automation/mail/received.json"
+        }
+      ],
+      "readme": "src/modules/mail/README.md"
+    },
+    {
       "name": "stories",
       "kind": "module",
       "responsibility": "Stories turns a topic's judged claims into ranked candidate videos, each with its evidence audit, and merges the reviewer's semantic pass.",
