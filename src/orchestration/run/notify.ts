@@ -56,6 +56,27 @@ const domainOf = (from: string): string => from.split('@')[1]?.replace(/>$/, '')
 
 /** Two-phase send: the entry (with its Message-ID) is on disk before the first attempt; `sentAt` follows the send. A
  *  crash in between leaves an unsent entry that flushOutbox resends with the same id. */
+/** The first lines of every mail: what a reply to it does, so the person never answers the wrong one. */
+export const REPLY_GUIDE: Record<OutboxKind, string> = {
+  'draft-request':
+    'ACTION NEEDED. Reply OK on its own to accept this draft, or CHANGES: and one note per line. Any other first line is asked about, not applied.',
+  'release-request':
+    'ACTION NEEDED. Reply OK on its own (publish now), OK at <day time> (schedule, your time) or CHANGES: and one note per line; PAID OK on its own line approves the paid links. Any other first line is asked about, not applied.',
+  'correction-request': 'ACTION NEEDED. Reply OK to release the correction, or CHANGES: and one note per line.',
+  batch: 'ACTION NEEDED. Reply with lines like APPROVE <slug>, REJECT <slug>: <why>, APPROVE ALL or REJECT ALL: <why>.',
+  halt: 'NO REPLY NEEDED. A status notice: replies to it are not read. If it asks for a decision, answer the draft or release mail it refers to.',
+  digest: 'NO REPLY NEEDED. Replies to this mail are not read.',
+  launch: 'NO REPLY NEEDED. Replies to this mail are not read; the Studio steps it lists are recorded by the CLI.',
+  reply: 'NO REPLY NEEDED. An answer from the automation; replies to it are not read.',
+  test: 'Reply with any words: this mail tests the round trip.',
+};
+/** The mail with its reply guide first, in the text and, when there is one, the html. */
+export const withGuide = (kind: OutboxKind, out: Omit<OutMail, 'messageId'>): Omit<OutMail, 'messageId'> => ({
+  ...out,
+  text: `${REPLY_GUIDE[kind]}\n\n${out.text}`,
+  ...(out.html && { html: `<p><strong>${REPLY_GUIDE[kind]}</strong></p>\n${out.html}` }),
+});
+
 export async function sendTracked(
   mail: MailTransport,
   out: Omit<OutMail, 'messageId'>,
@@ -78,7 +99,7 @@ export async function sendTracked(
     attempts: 1,
   };
   writeOutbox(root, [...readOutbox(root), entry]);
-  await mail.send({ ...out, messageId });
+  await mail.send({ ...withGuide(kind, out), messageId });
   writeOutbox(
     root,
     readOutbox(root).map((e) => (e.messageId === messageId ? { ...e, sentAt: new Date(now()).toISOString() } : e)),
@@ -105,7 +126,7 @@ export async function flushOutbox(
     const body = render(e);
     if (!body) continue; // nothing to resend it from: it runs out of attempts and the digest lists it
     try {
-      await mail.send({ ...body, messageId: e.messageId });
+      await mail.send({ ...withGuide(e.kind, body), messageId: e.messageId });
     } catch {
       continue; // the next tick tries again, up to the cap
     }
