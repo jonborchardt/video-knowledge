@@ -60,6 +60,8 @@ export interface MailTransport {
 
 export interface Answer {
   messageId: string;
+  /** The received record's key, when the mail has no Message-ID to identify it. */
+  key?: string;
   from: string;
   at: string; // the mail's date
   recordedAt: string;

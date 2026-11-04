@@ -35,8 +35,12 @@ export function statusOf(q: OutboxEntry, cfg: Pick<MailConfig, 'alive' | 'maxAtt
   const first = q.answers?.[0];
   if (first) return { status: 'answered', late: !q.waiter || first.recordedAt > q.waiter.until, seen };
   const base = { late: false, seen };
-  if (!q.sentAt) return { status: q.attempts >= (cfg.maxAttempts ?? MAX_ATTEMPTS) ? 'failed' : 'unsent', ...base };
   const alive = cfg.alive ?? pidAlive;
+  if (!q.sentAt) {
+    // out of attempts is only final once nobody is still on the last one
+    const sending = q.claim && alive(q.claim.pid);
+    return { status: q.attempts >= (cfg.maxAttempts ?? MAX_ATTEMPTS) && !sending ? 'failed' : 'unsent', ...base };
+  }
   const waiting = q.waiter && alive(q.waiter.pid) && now < Date.parse(q.waiter.until);
   return { status: waiting ? 'awaiting' : 'unattended', ...base };
 }
@@ -122,12 +126,13 @@ export async function ask(
   const current = () => readOutbox(cfg.dir).find((e) => e.messageId === messageId)!;
   const reported = new Set<string>();
   for (;;) {
+    // durable state first: an answer already stored needs neither the mail server nor a working mailbox
     const q = current();
+    if (q.answers?.length) return { question: q, answered: true };
     if (!q.sentAt && q.attempts < (cfg.maxAttempts ?? MAX_ATTEMPTS)) {
-      await attemptSend(cfg, mail, messageId, questionMail(q)).catch((e: Error) => {
-        if (e instanceof MailRefusal) throw e;
-        // recorded on the entry; the next poll tries again with the same id
-      });
+      // Whatever this answers (another live sender, one that just finished) the next read of the entry shows, and a
+      // transport failure is recorded on it: the wait goes on, and the next poll tries again with the same id.
+      await attemptSend(cfg, mail, messageId, questionMail(q)).catch(() => {});
     }
     if (statusOf(current(), cfg, now()).status === 'failed') return { question: current(), answered: false };
     if (opts.timeoutMs === 0) return { question: current(), answered: false };

@@ -8,7 +8,9 @@ import {
   mkdtempSync,
   readFileSync,
   readdirSync,
+  renameSync,
   rmSync,
+  rmdirSync,
   utimesSync,
   writeFileSync,
 } from 'node:fs';
@@ -24,8 +26,9 @@ const TSX = join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs');
 const CHILD = join(ROOT, 'src', 'modules', 'mail', 'tests', 'mutex-child.ts');
 const dirs: string[] = [];
 afterAll(() => dirs.forEach((d) => rmSync(d, { recursive: true, force: true })));
+// MAIL_TEST_DIR runs the suite on another volume (the lock lives on the repo's, not the temp folder's)
 const fresh = () => {
-  const d = mkdtempSync(join(tmpdir(), 'vk-mutex-'));
+  const d = mkdtempSync(join(process.env.MAIL_TEST_DIR ?? tmpdir(), 'vk-mutex-'));
   dirs.push(d);
   return { dir: d, lock: join(d, 'lock'), counter: join(d, 'counter.json') };
 };
@@ -47,6 +50,34 @@ const waitFor = async (p: string, ms = 15_000) => {
     await new Promise((r) => setTimeout(r, 25));
   }
 };
+
+describe('what the lock relies on from the filesystem', () => {
+  const dirWith = (parent: string, name: string, marker: string) => {
+    mkdirSync(join(parent, name));
+    writeFileSync(join(parent, name, marker), '');
+  };
+  it('a directory rename never replaces a non-empty directory', () => {
+    const { dir } = fresh();
+    dirWith(dir, 'held', 'owner.a');
+    dirWith(dir, 'tmp', 'owner.b');
+    expect(() => renameSync(join(dir, 'tmp'), join(dir, 'held'))).toThrow(/EPERM|ENOTEMPTY|EEXIST|EACCES/);
+    expect(readdirSync(join(dir, 'held'))).toEqual(['owner.a']);
+    expect(readdirSync(join(dir, 'tmp'))).toEqual(['owner.b']);
+  });
+  it('rmdir never removes a non-empty directory', () => {
+    const { dir } = fresh();
+    dirWith(dir, 'held', 'owner.a');
+    expect(() => rmdirSync(join(dir, 'held'))).toThrow(/ENOTEMPTY|EEXIST/);
+    expect(readdirSync(join(dir, 'held'))).toEqual(['owner.a']);
+  });
+  it('the marker travels with the rename: the target is non-empty from its first appearance', () => {
+    const { dir } = fresh();
+    dirWith(dir, 'tmp', 'owner.a');
+    renameSync(join(dir, 'tmp'), join(dir, 'held'));
+    expect(readdirSync(join(dir, 'held'))).toEqual(['owner.a']);
+    expect(existsSync(join(dir, 'tmp'))).toBe(false);
+  });
+});
 
 describe('withMutex', () => {
   it('serialises increments across four processes', async () => {

@@ -210,6 +210,68 @@ describe('mail ask', () => {
   });
 });
 
+describe('a stored answer and an unavailable mailbox', () => {
+  const stored = () => {
+    const s = setup();
+    expect(s.cli('ask', 'q', '--text', 't', '--timeout', '0').status).toBe(0);
+    const [q] = questions(s.dir);
+    s.answer(q.messageId, 'Stored words');
+    expect(s.cli('fetch').status).toBe(0);
+    return { s, q };
+  };
+  it('ask --resume returns it with IMAP down, and says nothing about the mailbox', () => {
+    const { s, q } = stored();
+    s.fake.update((st) => {
+      st.failFetch = true;
+      st.failSend = 'before';
+    });
+    const r = s.cli('ask', '--resume', q.id!, '--timeout', '1');
+    expect(r.status).toBe(0);
+    expect(r.stdout).toContain('Stored words');
+    expect(r.stderr).not.toMatch(/mailbox/);
+  });
+  it('ask --resume returns it with no transport configured at all', () => {
+    const { s, q } = stored();
+    const env = { ...s.env, MAIL_FAKE: '', MAIL_SMTP_HOST: '', MAIL_IMAP_HOST: '', MAIL_USER: '', MAIL_PASSWORD: '' };
+    const r = runCli('mail', ['ask', '--resume', q.id!], { cwd: s.root, env });
+    expect(r.status).toBe(0);
+    expect(r.stdout).toContain('Stored words');
+    // an unanswered one still needs the mailbox, and says so
+    const un = setup();
+    un.cli('ask', 'q', '--text', 't', '--timeout', '0');
+    const open = runCli('mail', ['ask', '--resume', questions(un.dir)[0].id!, '--timeout', '1'], {
+      cwd: un.root,
+      env: { ...un.env, MAIL_FAKE: '', MAIL_SMTP_HOST: '', MAIL_IMAP_HOST: '', MAIL_USER: '', MAIL_PASSWORD: '' },
+    });
+    expect(open.status).toBe(2);
+    expect(open.stderr).toMatch(/not configured/);
+  });
+});
+
+describe('ask and another live sender', () => {
+  it('ask --resume waits on a send in flight in another process: exit 0, one copy, nothing refused', async () => {
+    const s = setup({ crashBeforeSend: true });
+    expect(s.cli('ask', 'q', '--text', 't', ...FAST).status).toBe(137);
+    const [q] = questions(s.dir);
+    s.fake.update((st) => {
+      st.crashBeforeSend = false;
+      st.sendDelayMs = 8000;
+    });
+    const file = join(s.root, 'm.json');
+    writeFileSync(file, JSON.stringify({ kind: 'question', from: q.from, to: q.to, subject: q.subject, text: q.text }));
+    const sender = s.start('send', '--file', file, '--message-id', q.messageId);
+    await until(() => questions(s.dir)[0].claim?.pid === sender.pid || questions(s.dir)[0].attempts === 2);
+    const waiter = s.start('ask', '--resume', q.id!, '--poll', '1', '--timeout', '1');
+    expect(await sender.done).toBe(0);
+    await until(() => sentOf(s).length === 1);
+    s.answer(q.messageId, 'Both fine');
+    expect(await waiter.done).toBe(0);
+    expect(waiter.out()).toContain('Both fine');
+    expect(waiter.out()).not.toMatch(/CLAIMED|already sent/);
+    expect(sentOf(s).map((m) => m.messageId)).toEqual([q.messageId]);
+  });
+});
+
 describe('mail questions', () => {
   it('lists statuses in text and shows unmatched replies', () => {
     const s = setup();

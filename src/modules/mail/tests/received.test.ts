@@ -156,6 +156,43 @@ describe('recordReceived', () => {
   });
 });
 
+describe('a crash between the two writes of recordReceived', () => {
+  // The outbox is written first. Restoring the earlier received.json is the state a process leaves if it dies between
+  // the writes: the answer is on the question, the record and the cursor are not.
+  const crashed = async (over: Partial<InMail> = {}) => {
+    const cfg = cfgOf();
+    const q = question(cfg);
+    const f = new FakeMail();
+    f.deliver(mail(1, { inReplyTo: q.messageId, text: 'Use B', ...over }));
+    const before = existsSync(receivedPath(cfg.dir)) ? readFileSync(receivedPath(cfg.dir), 'utf8') : null;
+    await fetchInto(cfg, f);
+    expect(readOutbox(cfg.dir)[0].answers).toHaveLength(1);
+    if (before === null) rmSync(receivedPath(cfg.dir));
+    else writeFileSync(receivedPath(cfg.dir), before);
+    return { cfg, f };
+  };
+  it('the refetch records the mail and leaves one answer', async () => {
+    const { cfg, f } = await crashed();
+    expect(await fetchInto(cfg, f)).toBe(1);
+    expect(readReceived(cfg.dir).map((r) => r.key)).toEqual(['<m1@me>']);
+    expect(readOutbox(cfg.dir)[0].answers?.map((a) => a.text)).toEqual(['Use B']);
+    expect(JSON.parse(readFileSync(receivedPath(cfg.dir), 'utf8')).lastUid).toBe(1);
+  });
+  it('the same for a mail with no Message-ID', async () => {
+    const { cfg, f } = await crashed({ messageId: '' });
+    await fetchInto(cfg, f);
+    expect(readOutbox(cfg.dir)[0].answers).toHaveLength(1);
+    expect(readReceived(cfg.dir)).toHaveLength(1);
+  });
+  it('a second, different reply after the recovery is still appended', async () => {
+    const { cfg, f } = await crashed();
+    await fetchInto(cfg, f);
+    f.deliver(mail(2, { inReplyTo: readOutbox(cfg.dir)[0].messageId, text: 'Actually, A' }));
+    await fetchInto(cfg, f);
+    expect(readOutbox(cfg.dir)[0].answers?.map((a) => a.text)).toEqual(['Use B', 'Actually, A']);
+  });
+});
+
 describe('fetchInto', () => {
   it('reads only after the cursor and advances it', async () => {
     const cfg = cfgOf();

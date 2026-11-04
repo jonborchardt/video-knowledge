@@ -68,11 +68,41 @@ describe('sending', () => {
     const mail = new FakeMail();
     await expect(attemptSend(cfg, mail, '<nope@x>', out)).rejects.toThrow(/unknown/);
     const { messageId } = await sendTracked(cfg, mail, out, 'note');
-    await expect(attemptSend(cfg, mail, messageId, out)).rejects.toThrow(/already sent/);
+    await expect(sendTracked(cfg, mail, out, 'note', { messageId })).rejects.toThrow(/already sent/);
     const e = recordOutgoing(cfg, out, 'note');
     for (let i = 0; i < 3; i++) skipAttempt(cfg, e.messageId);
-    await expect(attemptSend(cfg, mail, e.messageId, out)).rejects.toThrow(/out of attempts/);
+    await expect(sendTracked(cfg, mail, out, 'note', { messageId: e.messageId })).rejects.toThrow(/out of attempts/);
     expect(unsentOutbox(cfg.dir).map((x) => x.messageId)).toEqual([e.messageId]);
+  });
+});
+
+describe('attemptSend under concurrency', () => {
+  it('answers what another process already did instead of throwing, and sends nothing', async () => {
+    const cfg = cfgOf();
+    const mail = new FakeMail();
+    const { messageId } = await sendTracked(cfg, mail, out, 'note');
+    expect(await attemptSend(cfg, mail, messageId, out)).toBe('already-sent');
+    const e = recordOutgoing(cfg, out, 'note');
+    for (let i = 0; i < 3; i++) skipAttempt(cfg, e.messageId);
+    expect(await attemptSend(cfg, mail, e.messageId, out)).toBe('exhausted');
+    expect(mail.sent).toHaveLength(1);
+  });
+  it('a live sender on the last attempt is claimed, not exhausted', async () => {
+    const cfg = cfgOf({ alive: () => true });
+    const mail = new FakeMail();
+    const e = recordOutgoing(cfg, out, 'note');
+    mutateOutbox(cfg, (es) => es.map((x) => ({ ...x, attempts: 3, claim: { pid: 424242, token: 't', at: 'c' } })));
+    expect(await attemptSend(cfg, mail, e.messageId, out)).toBe('claimed');
+    expect(mail.sent).toHaveLength(0);
+  });
+  it('an answered question is not resent: the reply proves it arrived', () => {
+    const cfg = cfgOf();
+    const e = recordOutgoing(cfg, out, 'question', { id: 'qn-aaaaaaaaaaaa', text: 'q' });
+    mutateOutbox(cfg, (es) =>
+      es.map((x) => ({ ...x, answers: [{ messageId: '<r@x>', from: 'f', at: 'a', recordedAt: 'a', text: 'B' }] })),
+    );
+    expect(e.sentAt).toBeNull();
+    expect(resendDue(cfg.dir, T0 + 3_600_000, cfg)).toEqual([]);
   });
 });
 

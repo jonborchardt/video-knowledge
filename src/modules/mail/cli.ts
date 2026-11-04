@@ -6,7 +6,8 @@
 //       for the caller to reason about, never an authorisation. NO ANSWER <id> after <n> minutes exits 1 and the question
 //       stays open; SEND FAILED <id> <error> exits 1. --timeout 0 sends and returns, exit 0. --reply-to threads a follow-up
 //       under an earlier question and reuses its subject.
-//   ask --resume <qn-id> [--timeout] [--poll] [--json]   wait again (RESUMED <id>), sending it first if it never went
+//   ask --resume <qn-id> [--timeout] [--poll] [--json]   an answer already stored comes back with no mailbox needed; otherwise wait again
+//                                                        (RESUMED <id>), sending it first if it never went, and waiting on any other live sender
 //   questions [--about <ref>] [--status unsent|failed|awaiting|unattended|answered] [--unseen] [--fetch] [--json]
 //       what is open or answered, and the replies that matched nothing; --unseen: answers no consumer accepted yet
 //   questions --ack <qn-id>                              the consumer accepted the answer: it leaves --unseen
@@ -34,6 +35,7 @@ import {
   acknowledge,
   ask,
   fetchInto,
+  findOutbox,
   init,
   questions,
   readReceived,
@@ -89,6 +91,13 @@ async function askVerb(cfg: MailConfig): Promise<void> {
   }
   const timeoutMs = minutes('--timeout', 60);
   const about = flag('--about');
+  const report = (q: OutboxEntry) => {
+    if (has('--json')) console.log(JSON.stringify(withState(q, cfg), null, 1));
+    else printAnswer(q);
+  };
+  // an answer already stored needs no mailbox, and no mail configuration
+  const stored = resume ? findOutbox(cfg.dir, (e) => e.kind === 'question' && e.id === resume, cfg) : null;
+  if (stored?.answers?.length) return report(stored);
   const { question, answered } = await ask(
     cfg,
     transport(),
@@ -100,13 +109,14 @@ async function askVerb(cfg: MailConfig): Promise<void> {
       onFetchError: (m) => console.error(`mailbox: ${m}; still waiting`),
     },
   );
+  if (answered) return report(question);
   if (has('--json')) console.log(JSON.stringify(withState(question, cfg), null, 1));
-  if (answered) {
-    if (!has('--json')) printAnswer(question);
-    return;
-  }
   if (!question.sentAt) {
-    console.log(`SEND FAILED ${question.id} ${question.lastError ?? ''}`);
+    console.log(
+      question.claim
+        ? `NOT SENT YET ${question.id}: pid ${question.claim.pid} is sending it`
+        : `SEND FAILED ${question.id} ${question.lastError ?? ''}`,
+    );
     process.exit(1);
   }
   if (timeoutMs === 0) return;

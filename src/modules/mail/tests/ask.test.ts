@@ -14,8 +14,10 @@ import {
   correlate,
   fetchInto,
   filterOutbox,
+  mutateOutbox,
   questions,
   readOutbox,
+  recordReceived,
   statusOf,
 } from '../core';
 
@@ -224,6 +226,117 @@ describe('ask', () => {
     const s = setup({ recipients: ['me@example.test', 'other@example.test'] });
     await ask(s.cfg, s.mail, Q, { timeoutMs: 0, pollMs: 1, sleep: s.sleep });
     expect(s.mail.sent[0].to).toBe('me@example.test');
+  });
+});
+
+describe('a stored answer needs no mailbox', () => {
+  const dead = {
+    send: async () => {
+      throw new Error('smtp: unavailable');
+    },
+    fetchSince: async () => {
+      throw new Error('imap: unavailable');
+    },
+  };
+  it('resume returns it without touching the transport', async () => {
+    const s = setup();
+    await ask(s.cfg, s.mail, Q, { timeoutMs: 0, pollMs: 1 });
+    const q = questions(s.cfg.dir)[0];
+    recordReceived(s.cfg, '1', [reply(q.messageId, 'Stored')]);
+    let touched = 0;
+    const counting = {
+      send: () => (touched++, dead.send()),
+      fetchSince: () => (touched++, dead.fetchSince()),
+    };
+    const r = await ask(s.cfg, counting, { resume: q.id! }, { ...OPTS, sleep: s.sleep });
+    expect(r.answered).toBe(true);
+    expect(r.question.answers?.[0].text).toBe('Stored');
+    expect(touched).toBe(0);
+  });
+  it('an answer another process records during a mailbox outage reaches the waiter', async () => {
+    const s = setup();
+    await ask(s.cfg, s.mail, Q, { timeoutMs: 0, pollMs: 1 });
+    const q = questions(s.cfg.dir)[0];
+    const errors: string[] = [];
+    s.hooks.push(() => recordReceived(s.cfg, '1', [reply(q.messageId, 'From the tick')]));
+    const r = await ask(
+      s.cfg,
+      dead,
+      { resume: q.id! },
+      { ...OPTS, sleep: s.sleep, onFetchError: (m) => errors.push(m) },
+    );
+    expect(r.answered).toBe(true);
+    expect(r.question.answers?.[0].text).toBe('From the tick');
+    expect(errors).toEqual(['imap: unavailable']);
+  });
+  it('an answer on a question never recorded as sent is returned, not sent again', async () => {
+    const s = setup();
+    s.mail.failNext = 'after'; // delivered, the record lost
+    await ask(s.cfg, s.mail, Q, { timeoutMs: 0, pollMs: 1 });
+    const q = questions(s.cfg.dir)[0];
+    expect(q.sentAt).toBeNull();
+    recordReceived(s.cfg, '1', [reply(q.messageId, 'Got it anyway')]);
+    const r = await ask(s.cfg, s.mail, { resume: q.id! }, { ...OPTS, sleep: s.sleep });
+    expect(r.answered).toBe(true);
+    expect(s.mail.sent).toHaveLength(1);
+  });
+});
+
+describe('another process holds the send claim', () => {
+  const claimedBy = (s: ReturnType<typeof setup>, attempts: number, pid = 424242) => {
+    mutateOutbox(s.cfg, (es) =>
+      es.map((e) => ({ ...e, attempts, claim: { pid, token: 't', at: new Date(T0).toISOString() } })),
+    );
+  };
+  const unsent = async (s: ReturnType<typeof setup>) => {
+    s.mail.failNext = 'before';
+    await ask(s.cfg, s.mail, Q, { timeoutMs: 0, pollMs: 1 }).catch(() => {});
+    return questions(s.cfg.dir)[0];
+  };
+  it('ask observes and waits; the sender finishes; the reply answers; no second copy', async () => {
+    const s = setup({ alive: () => true });
+    const q = await unsent(s);
+    claimedBy(s, 2);
+    s.hooks.push(() => {
+      expect(s.mail.sent).toHaveLength(0); // waited, did not send
+      mutateOutbox(s.cfg, (es) => es.map((e) => ({ ...e, claim: undefined, sentAt: new Date(T0).toISOString() })));
+      s.mail.deliver(reply(q.messageId, 'B'));
+    });
+    const r = await ask(s.cfg, s.mail, { resume: q.id! }, { ...OPTS, sleep: s.sleep });
+    expect(r.answered).toBe(true);
+    expect(s.mail.sent).toHaveLength(0);
+  });
+  it('a live sender on the last attempt is not failed: ask keeps waiting', async () => {
+    const s = setup({ alive: () => true });
+    const q = await unsent(s);
+    claimedBy(s, 3);
+    expect(statusOf(questions(s.cfg.dir)[0], s.cfg, s.clock.t).status).toBe('unsent');
+    const r = await ask(s.cfg, s.mail, { resume: q.id! }, { ...OPTS, sleep: s.sleep });
+    expect(r.answered).toBe(false);
+    expect(s.clock.t).toBe(T0 + OPTS.timeoutMs); // waited the whole time, did not return failed
+    expect(s.mail.sent).toHaveLength(0);
+  });
+  it('the same entry out of attempts with a dead claimant is failed', async () => {
+    const s = setup({ alive: () => false });
+    const q = await unsent(s);
+    claimedBy(s, 3);
+    const r = await ask(s.cfg, s.mail, { resume: q.id! }, { ...OPTS, sleep: s.sleep });
+    expect(statusOf(r.question, s.cfg, s.clock.t).status).toBe('failed');
+    expect(s.clock.t).toBe(T0);
+  });
+  it('a claimant that dies during the wait is taken over, with the same Message-ID', async () => {
+    let alive = true;
+    const s = setup({ alive: () => alive });
+    const q = await unsent(s);
+    claimedBy(s, 2);
+    s.hooks.push(() => {
+      alive = false;
+    });
+    s.hooks.push(() => s.mail.deliver(reply(q.messageId, 'B')));
+    const r = await ask(s.cfg, s.mail, { resume: q.id! }, { ...OPTS, sleep: s.sleep });
+    expect(r.answered).toBe(true);
+    expect(s.mail.sent.map((m) => m.messageId)).toEqual([q.messageId]);
+    expect(r.question.attempts).toBe(3);
   });
 });
 

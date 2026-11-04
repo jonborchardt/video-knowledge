@@ -160,31 +160,30 @@ export function recordOutgoing(
 }
 
 /** One attempt: takes the claim and counts the attempt under the mutex, sends outside it, records the outcome under
- *  it. 'claimed': another live process is sending this entry, nothing changed. A claim whose pid is dead is void. */
+ *  it. Anything but 'sent' means nothing was sent because of what another process did or is doing: 'claimed' a live
+ *  sender holds it, 'already-sent' one finished, 'exhausted' none has attempts left. A claim whose pid is dead is void. */
 export async function attemptSend(
   cfg: MailConfig,
   mail: MailTransport,
   messageId: string,
   out: Omit<OutMail, 'messageId'>,
-): Promise<'sent' | 'claimed'> {
+): Promise<'sent' | 'claimed' | 'already-sent' | 'exhausted'> {
   const alive = cfg.alive ?? pidAlive;
   const token = randomUUID();
-  let claimed = false;
+  let outcome: 'claimed' | 'already-sent' | 'exhausted' | null = null;
   mutateOutbox(cfg, (es) => {
     const e = es.find((x) => x.messageId === messageId);
     if (!e) throw new MailRefusal(`unknown message ${messageId}`);
-    if (e.sentAt) throw new MailRefusal(`${messageId} is already sent`);
-    if (e.attempts >= maxOf(cfg)) throw new MailRefusal(`${messageId} is out of attempts`);
-    if (e.claim && alive(e.claim.pid)) {
-      claimed = true;
-      return es;
-    }
+    if (e.sentAt) outcome = 'already-sent';
+    else if (e.claim && alive(e.claim.pid)) outcome = 'claimed';
+    else if (e.attempts >= maxOf(cfg)) outcome = 'exhausted';
+    if (outcome) return es;
     e.claim = { pid: process.pid, token, at: iso(cfg) };
     e.attempts += 1;
     e.lastAttemptAt = iso(cfg);
     return es;
   });
-  if (claimed) return 'claimed';
+  if (outcome) return outcome;
   const settle = (fn: (e: OutboxEntry) => void) =>
     mutateOutbox(cfg, (es) => {
       const e = es.find((x) => x.messageId === messageId);
@@ -223,10 +222,13 @@ export async function sendTracked(
 ): Promise<{ messageId: string }> {
   const { messageId: resend, ...record } = extra;
   const messageId = resend ?? recordOutgoing(cfg, out, kind, record).messageId;
-  if ((await attemptSend(cfg, mail, messageId, out)) === 'claimed') {
+  const outcome = await attemptSend(cfg, mail, messageId, out);
+  if (outcome === 'claimed') {
     const pid = readOutbox(cfg.dir).find((e) => e.messageId === messageId)?.claim?.pid;
     throw new MailRefusal(`CLAIMED by pid ${pid}: ${messageId} is being sent`);
   }
+  if (outcome === 'already-sent') throw new MailRefusal(`${messageId} is already sent`);
+  if (outcome === 'exhausted') throw new MailRefusal(`${messageId} is out of attempts`);
   return { messageId };
 }
 
@@ -246,7 +248,7 @@ export function skipAttempt(cfg: MailConfig, messageId: string, why = 'nothing t
 export const unsentOutbox = (dir: string, cfg: LegacyCfg & Pick<MailConfig, 'maxAttempts'> = {}): OutboxEntry[] =>
   readOutbox(dir, cfg).filter((e) => !e.sentAt && e.attempts >= maxOf(cfg));
 
-/** Unsent, attempts left, no live sender, and quiet for the resend interval. */
+/** Unsent, unanswered, attempts left, no live sender, and quiet for the resend interval. */
 export const resendDue = (
   dir: string,
   now: number,
@@ -256,6 +258,7 @@ export const resendDue = (
   return readOutbox(dir, cfg).filter(
     (e) =>
       !e.sentAt &&
+      !e.answers?.length && // the reply proves it arrived, whatever the record says
       e.attempts < maxOf(cfg) &&
       !(e.claim && alive(e.claim.pid)) &&
       now - Date.parse(e.lastAttemptAt ?? e.createdAt) >= (cfg.resendAfterMs ?? RESEND_AFTER_MS),

@@ -1,8 +1,9 @@
 // The prepared-directory lock. The lock is `<lockDir>/held/`, a directory that only ever comes into existence by the
-// atomic rename of a directory the acquirer prepared with its own marker `owner.<pid>.<token>` inside, so `held/`
-// is non-empty from its first instant and the rename is exclusive: a non-empty target is never replaced (measured on
-// this platform by tests/primitives-experiment.ts, 0 double winners in 40 rounds, while renaming a single
-// token FILE had 2+ winners in 40 of 40 rounds, because Windows renames the file a handle points at, not the path).
+// rename of a directory the acquirer prepared with its own marker `owner.<pid>.<token>` inside.
+// What this relies on, and what establishes it (see ../README.md, "The lock's evidence"): among processes racing to
+// rename their prepared directories onto one absent target, exactly one wins and its marker is the one left there
+// (measured by tests/primitives-experiment.ts); a rename never replaces a non-empty directory and rmdir never removes
+// one (tests/mutex.test.ts). Those are observations on the platform named in the README, not guarantees from Node.
 // Release unlinks the marker and removes the empty directory. Recovery unlinks only a marker whose pid is dead (its
 // own unique name: a live owner's marker is never touched) and removes `held/` only when it is empty, which a live
 // owner's never is. So no live owner is displaced, two recoverers of one dead owner cannot both acquire (the rename

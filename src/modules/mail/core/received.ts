@@ -95,9 +95,12 @@ export function recordReceived(cfg: MailConfig, uidValidity: string, mails: InMa
         ...(c.why && { why: c.why }),
         ...(c.thread && !live && { why: 'archived-thread' as const }),
       });
-      if (live?.kind === 'question')
+      // The outbox is written before received.json, so a crash between them leaves this answer on the question with
+      // the mail still unrecorded and the cursor unmoved: the refetch comes here again and must not add it twice.
+      if (live?.kind === 'question' && !live.answers?.some((a) => (a.key ?? a.messageId) === key))
         (live.answers ??= []).push({
           messageId: m.messageId,
+          ...(!m.messageId && { key }),
           from: m.from,
           at: m.date,
           recordedAt: at,
