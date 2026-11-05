@@ -282,3 +282,33 @@ record of another kind are refused; nothing else is written, and no flag changes
 The `verified` column is on `/admin#automation`, from `readiness.json`. An integration that is implemented and
 verified is still off until its flag is on; one that is enabled but never verified is running on faith, and the
 table says so.
+
+## 15. Incident records
+
+### Heat-pumps launch, 2026-11-04
+
+Four heat-pumps outputs were public while the matter page their descriptions link to returned 404. Jon authorised the launch on 2026-11-04, with the two records below as conditions.
+
+#### Quality gate exception
+
+This exception covers this one launch and nothing else.
+
+- **What fails:** `npm run quality` ends `RESULT: FAILED (browser suite)` on one test, `tests/browser/admin-live.test.ts`: `expected 'shorts' to be 'producing'`.
+- **Why the launch proceeded:** the same test fails the same way on the baseline, `9f18ed7`, which has none of the launch's changes. It covers the dev-only admin page on the fixture story, and a build never emits that page.
+- **What passed on the prepared tree:** the static gate (181 of 181) and `tests/browser/site.test.ts` (no failures, 22 tests skipped by the suite). `npm run validate` passed in full.
+- **What did not change:** the test, the gate and `tests/web-quality.json`. The gate stays red until the test is fixed; the cause has not been diagnosed.
+
+#### Attribution correction
+
+The ledger event below names the wrong actor. It stays as written, because ledger events are append-only and no verb corrects one.
+
+| Field | Value |
+| --- | --- |
+| Ledger | `topics/heat-pumps/scripts/decision-does-the-upfront-cost-eat-the-savings/publish.json` |
+| Output | `youtube` |
+| Event | `verified`, `passed`, video `Z1cAlTwainc`, at `2026-11-05T03:10:37.170Z` |
+| Recorded actor | `by: Jon` |
+| Actual actor | The Claude Code agent, running `npm run publish -- verify --by Jon` under Jon's authorisation of operational fixes |
+| Written in | commit `77345df` |
+
+Read this record alongside that event. The correction changes no ledger state and does not touch Jon's release approval: the `approved` and `decided` events on request `rq-4257256a18e5` are his own and stand as written.
