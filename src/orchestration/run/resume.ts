@@ -33,13 +33,16 @@ export function resumesSince(dir: string, h: Pick<Halt, 'kind'>): number {
   return n;
 }
 
-/** When the output this story id names went live, or null: the main output, or a Short's own. */
-function publishedAt(topic: string, storyId: string, root: string): string | null {
+/** When the output this story id names went live, or null when it is not live now: the main output, or a Short's own.
+ *  Reads the ledger only, so a story the board cannot read still answers. */
+export function publishedAt(topic: string, storyId: string, root = ROOT): string | null {
   const short = shortOf(storyId);
   const parent = short?.parent ?? storyId;
-  if (!loadLedger(topic, parent, root)) return null;
-  const { out } = openOutput(topic, parent, { root, ...(short && { output: `short:${short.slug}` }) });
-  return out.events.findLast((e) => e.type === 'published')?.at ?? null;
+  const ledger = loadLedger(topic, parent, root);
+  const output = short ? `short:${short.slug}` : undefined;
+  if (!ledger || (output && !ledger.outputs[output])) return null;
+  const o = openOutput(topic, parent, { root, ...(output && { output }) });
+  return o.state.live ? (o.out.events.findLast((e) => e.type === 'published')?.at ?? null) : null;
 }
 
 /** Settles what still asks a person about a release already live: an `awaiting-person` halt older than the output's

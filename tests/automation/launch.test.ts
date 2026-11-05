@@ -406,6 +406,42 @@ describe('launch', () => {
       expect(readHalt(gone)?.kind).toBe('awaiting-person');
     }, 120_000);
 
+    it('an output taken down again is not live: its halt stands and its resume runs', () => {
+      const c = clone();
+      const { f } = c;
+      const p = publishPath(f.topic, f.story, f.root);
+      saveLedger(
+        p,
+        appendEvent(loadLedger(f.topic, f.story, f.root)!, 'youtube', {
+          at: '2026-11-01T01:00:00Z',
+          type: 'unpublished',
+          by: 'Jon',
+          id: 'vid00000000',
+          note: 'taken down',
+        }).ledger,
+      );
+      const dir = runDir(f.topic, f.story, f.root);
+      writeHalt(dir, approvalHalt(BEFORE));
+      expect(
+        settleFinished(f.root, {
+          by: 'automated: test',
+          ask: () => ({ stage: 's', next: 'n', halt: { kind: 'published' } }),
+        }),
+      ).toEqual([]);
+      expect(readHalt(dir)?.kind).toBe('awaiting-person');
+      updateSchedule(f.root, (s) => ({ ...s, due: [{ topic: f.topic, storyId: f.story, why: 'moved', at: BEFORE }] }));
+      expect(nextJob(a, f.root, { launches: () => [], releases: () => [] })?.kind).toBe('resume');
+    }, 120_000);
+
+    it('a queued resume of a story with no ledger or production is still selected, not a crash', () => {
+      const c = clone();
+      updateSchedule(c.f.root, (s) => ({
+        ...s,
+        due: [{ topic: c.f.topic, storyId: 'decision:no-such-story', why: 'backoff', at: BEFORE }],
+      }));
+      expect(nextJob(a, c.f.root, { launches: () => [], releases: () => [] })?.storyId).toBe('decision:no-such-story');
+    }, 120_000);
+
     it('the work plane never selects a queued resume of a live story', () => {
       const c = clone();
       const { f } = c;
