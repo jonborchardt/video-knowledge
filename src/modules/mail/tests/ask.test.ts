@@ -19,6 +19,10 @@ import {
   readOutbox,
   recordReceived,
   statusOf,
+  archive,
+  close,
+  reopen,
+  unmatched,
 } from '../core';
 
 const dirs: string[] = [];
@@ -420,5 +424,63 @@ describe('statusOf', () => {
   it('a waiter past its time is unattended, a live pid notwithstanding', () => {
     const q = { ...base, waiter: { pid: 1, until } } as Question;
     expect(statusOf(q, cfg(true), T0 + 2000).status).toBe('unattended');
+  });
+});
+
+describe('closing a question', () => {
+  const asked = async (s: ReturnType<typeof setup>) => {
+    await ask(s.cfg, s.mail, Q, { timeoutMs: 0, pollMs: 1 });
+    return questions(s.cfg.dir)[0];
+  };
+  it('close needs a note and names its actor; the question is closed, not open, and archives as completed', async () => {
+    const s = setup();
+    const q = await asked(s);
+    expect(() => close(s.cfg, q.id, { by: 'automated: test', note: ' ' })).toThrow(/note/);
+    close(s.cfg, q.id, { by: 'automated: test', note: 'sent by mistake' });
+    const c = questions(s.cfg.dir)[0];
+    expect(statusOf(c, s.cfg, s.clock.t).status).toBe('closed');
+    expect(c.history).toEqual([
+      { at: new Date(T0).toISOString(), by: 'automated: test', action: 'close', note: 'sent by mistake' },
+    ]);
+    close(s.cfg, q.id, { by: 'automated: test', note: 'again' }); // already closed: nothing added
+    expect(questions(s.cfg.dir)[0].history).toHaveLength(1);
+    s.clock.t = T0 + 91 * 86_400_000;
+    archive(s.cfg);
+    expect(readOutbox(s.cfg.dir)).toEqual([]);
+    expect(filterOutbox(s.cfg.dir, (e) => e.id === q.id)[0]?.history).toHaveLength(1);
+  });
+  it('a reply after closure is kept and visible, but the question stays closed until someone reopens it', async () => {
+    const s = setup();
+    const q = await asked(s);
+    close(s.cfg, q.id, { by: 'automated: test', note: 'moot' });
+    recordReceived(s.cfg, '1', [reply(q.messageId, 'Late words')]);
+    const c = questions(s.cfg.dir)[0];
+    expect(c.answers?.map((a) => a.text)).toEqual(['Late words']);
+    expect(statusOf(c, s.cfg, s.clock.t)).toMatchObject({ status: 'closed', seen: false });
+    reopen(s.cfg, q.id, { by: 'Jon', note: 'the words matter after all' });
+    const r = questions(s.cfg.dir)[0];
+    expect(statusOf(r, s.cfg, s.clock.t)).toMatchObject({ status: 'answered', seen: false });
+    expect(r.history?.map((h) => h.action)).toEqual(['close', 'reopen']);
+    expect(() => reopen(s.cfg, q.id, { by: 'Jon', note: 'x' })).toThrow(/not closed/);
+  });
+  it('an acknowledged answer keeps its note through a close', async () => {
+    const s = setup();
+    const q = await asked(s);
+    recordReceived(s.cfg, '1', [reply(q.messageId, 'B')]);
+    acknowledge(s.cfg, q.id, 'chose B');
+    expect(questions(s.cfg.dir)[0].acknowledgedNote).toBe('chose B');
+    close(s.cfg, q.id, { by: 'Jon', note: 'done' });
+    expect(statusOf(questions(s.cfg.dir)[0], s.cfg, s.clock.t)).toMatchObject({ status: 'closed', seen: true });
+  });
+  it('a bounce is recorded, listed as a delivery failure, and never an answer', async () => {
+    const s = setup();
+    const q = await asked(s);
+    recordReceived(s.cfg, '1', [
+      reply(q.messageId, 'Undelivered Mail Returned to Sender', {
+        from: 'Mail Delivery Subsystem <mailer-daemon@googlemail.com>',
+      }),
+    ]);
+    expect(questions(s.cfg.dir)[0].answers ?? []).toEqual([]);
+    expect(unmatched(s.cfg.dir).map((r) => r.why)).toEqual(['bounce']);
   });
 });

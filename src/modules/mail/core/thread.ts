@@ -74,6 +74,7 @@ export function correlate<E extends Correlatable>(
   lookup: Lookup<E>,
   person: string,
 ): Correlation {
+  if (/^(mailer-daemon|postmaster)@/i.test(address(m.from))) return { thread: null, why: 'bounce' };
   if (address(m.from) !== address(person)) return { thread: null, why: 'not-from-person' };
   const decide = (es: E[]): Correlation | null => {
     const hits = distinct(es);

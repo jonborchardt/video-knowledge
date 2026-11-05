@@ -15,12 +15,13 @@ import {
   questionMail,
   readOutbox,
   recordOutgoing,
+  isClosed,
 } from './outbox';
 import { fetchInto } from './received';
 import type { MailConfig, MailTransport, OutboxEntry } from './types';
 
 export type Question = OutboxEntry & { kind: 'question'; id: string };
-export type QuestionStatus = 'unsent' | 'failed' | 'awaiting' | 'unattended' | 'answered';
+export type QuestionStatus = 'unsent' | 'failed' | 'awaiting' | 'unattended' | 'answered' | 'closed';
 export interface QuestionState {
   status: QuestionStatus;
   /** The first answer came after the waiter's time, or with no waiter at all. */
@@ -32,6 +33,8 @@ export interface QuestionState {
 /** Derived, never stored. */
 export function statusOf(q: OutboxEntry, cfg: Pick<MailConfig, 'alive' | 'maxAttempts'>, now: number): QuestionState {
   const seen = !!q.acknowledgedAt;
+  // closed as moot: whatever arrives after is kept on the entry and shown, but nothing is actionable until reopened
+  if (isClosed(q)) return { status: 'closed', late: false, seen };
   const first = q.answers?.[0];
   if (first) return { status: 'answered', late: !q.waiter || first.recordedAt > q.waiter.until, seen };
   const base = { late: false, seen };
@@ -52,11 +55,39 @@ const unknown = (id: string): never => {
   throw new MailRefusal(`unknown question ${id}`);
 };
 
-/** The consumer accepted the answer: it leaves the unseen list. Idempotent. */
-export function acknowledge(cfg: MailConfig, id: string): void {
+/** The consumer accepted the answer: it leaves the unseen list. Idempotent; the note says what the answer caused. */
+export function acknowledge(cfg: MailConfig, id: string, note?: string): void {
   mutateOutbox(cfg, (es) => {
     const q = es.find((e) => e.kind === 'question' && e.id === id) ?? unknown(id);
     q.acknowledgedAt ??= new Date((cfg.now ?? Date.now)()).toISOString();
+    if (note?.trim()) q.acknowledgedNote = note.trim();
+    return es;
+  });
+}
+
+const decision = (by: string, note: string): { by: string; note: string } => {
+  if (!note.trim()) throw new MailRefusal('a close or reopen needs --note saying why');
+  if (!by.trim()) throw new MailRefusal('a close or reopen names who decided it (--by)');
+  return { by: by.trim(), note: note.trim() };
+};
+/** Closes a question nobody will answer, or whose answer no longer matters: it leaves every open list and archives
+ *  as completed. Nothing is pretended answered; a reply that comes later is still recorded and shown. Idempotent. */
+export function close(cfg: MailConfig, id: string, o: { by: string; note: string }): void {
+  const d = decision(o.by, o.note);
+  mutateOutbox(cfg, (es) => {
+    const q = es.find((e) => e.kind === 'question' && e.id === id) ?? unknown(id);
+    if (!isClosed(q))
+      (q.history ??= []).push({ at: new Date((cfg.now ?? Date.now)()).toISOString(), action: 'close', ...d });
+    return es;
+  });
+}
+/** The explicit way back: a closed question becomes what its answers make it (answered and unseen, or open). */
+export function reopen(cfg: MailConfig, id: string, o: { by: string; note: string }): void {
+  const d = decision(o.by, o.note);
+  mutateOutbox(cfg, (es) => {
+    const q = es.find((e) => e.kind === 'question' && e.id === id) ?? unknown(id);
+    if (!isClosed(q)) throw new MailRefusal(`${id} is not closed`);
+    q.history!.push({ at: new Date((cfg.now ?? Date.now)()).toISOString(), action: 'reopen', ...d });
     return es;
   });
 }

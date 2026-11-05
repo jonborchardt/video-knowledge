@@ -8,7 +8,7 @@ import { ImapFlow } from 'imapflow';
 import { type ParsedMail, simpleParser } from 'mailparser';
 import { readJson, sleepSync, writeJsonAtomic } from './io';
 import { withMutex } from './mutex';
-import type { InMail, MailTransport, OutMail } from './types';
+import type { InMail, MailTransport, OutMail, SendResult } from './types';
 
 export const messageIdOf = (domain: string): string => `<${randomUUID()}@${domain}>`;
 
@@ -47,7 +47,12 @@ export function libraryTransport(c: MailServer, deps: MailDeps = {}): MailTransp
           attachments: m.attachments.map((a) => ({ filename: a.name, contentType: a.contentType, content: a.data })),
         }),
       });
-      return { messageId: r.messageId || m.messageId };
+      return {
+        messageId: r.messageId || m.messageId,
+        ...(Array.isArray(r.accepted) && { accepted: r.accepted.map(String) }),
+        ...(Array.isArray(r.rejected) && { rejected: r.rejected.map(String) }),
+        ...(typeof r.response === 'string' && { response: r.response }),
+      };
     },
     async fetchSince(sinceUid) {
       const client = new Imap({
@@ -119,15 +124,21 @@ export class FakeMail implements MailTransport {
   sent: OutMail[] = [];
   inbox: InMail[] = [];
   failNext: 'before' | 'after' | null = null;
+  /** The next send comes back refused by the server: the recipient rejected, nothing delivered. */
+  rejectNext = false;
   uidValidity = '1';
   failNextFetch = false;
-  async send(m: OutMail): Promise<{ messageId: string }> {
+  async send(m: OutMail): Promise<SendResult> {
     const fail = this.failNext;
     this.failNext = null;
     if (fail === 'before') throw new Error('smtp: connection lost before the send');
+    if (this.rejectNext) {
+      this.rejectNext = false;
+      return { messageId: m.messageId, accepted: [], rejected: [m.to], response: '550 5.1.1 fake: no such user' };
+    }
     this.sent.push({ ...m });
     if (fail === 'after') throw new Error('smtp: connection lost after the send');
-    return { messageId: m.messageId };
+    return { messageId: m.messageId, accepted: [m.to], rejected: [], response: '250 fake' };
   }
   async fetchSince(sinceUid: number): Promise<{ uidValidity: string; mails: InMail[] }> {
     if (this.failNextFetch) {
@@ -208,7 +219,7 @@ export function fileFakeMail(
         crash = s.crashAfterSend;
       });
       if (crash) process.exit(137);
-      return { messageId: m.messageId };
+      return { messageId: m.messageId, accepted: [m.to], rejected: [], response: '250 fake' };
     },
     async fetchSince(sinceUid) {
       const s = read();

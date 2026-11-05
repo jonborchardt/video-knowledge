@@ -67,3 +67,19 @@ describe('correlate', () => {
     expect(correlate(mail({}), lookup, person)).toEqual({ thread: null, why: 'no-thread' });
   });
 });
+
+describe('a delivery failure', () => {
+  it('from the mail system is a bounce, never an answer, whatever it threads to', () => {
+    expect(
+      correlate(
+        mail({ from: 'Mail Delivery Subsystem <mailer-daemon@googlemail.com>', inReplyTo: '<a@x>' }),
+        lookup,
+        person,
+      ),
+    ).toEqual({ thread: null, why: 'bounce' });
+    expect(correlate(mail({ from: 'postmaster@example.test' }), lookup, person)).toEqual({
+      thread: null,
+      why: 'bounce',
+    });
+  });
+});

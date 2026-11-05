@@ -12,6 +12,7 @@ export {
 } from './core';
 export {
   type CorMailKind,
+  COR_REPLY_GUIDES,
   corMailDir,
   corResendDue,
   filterCorOutbox,

@@ -18,5 +18,6 @@ describe('reply guide', () => {
     expect(mail.sent[0].text).toBe(`${REPLY_GUIDE['draft-request']}\n\nthe body`);
     expect(REPLY_GUIDE['draft-request']).toMatch(/^ACTION NEEDED\. Reply OK/);
     expect(mail.sent[1].text.startsWith('NO REPLY NEEDED')).toBe(true);
+    expect(REPLY_GUIDE.report).toMatch(/^NO REPLY NEEDED\. A completion report/);
   });
 });

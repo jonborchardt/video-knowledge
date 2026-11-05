@@ -18,6 +18,7 @@ import {
   skipAttempt,
   unsentOutbox,
   validateSend,
+  address,
 } from '../core';
 
 const dirs: string[] = [];
@@ -212,5 +213,29 @@ describe('validateSend', () => {
     ['oversized attachments', { ...ok, attachments: [{ name: 'a', contentType: 't', data: 'aGVsbG8=' }] }, /limit/],
   ])('refuses %s', (_n, v, re) => {
     expect(() => validateSend(v, cfgOf({ attachmentLimit: 3 }))).toThrow(re);
+  });
+});
+
+describe('what the server said', () => {
+  it('a normal send keeps the response and the accepted address on the entry', async () => {
+    const cfg = cfgOf();
+    const mail = new FakeMail();
+    const { messageId } = await sendTracked(cfg, mail, out, 'note');
+    const e = findOutbox(cfg.dir, (x) => x.messageId === messageId)!;
+    expect(e.sentAt).toBeTruthy();
+    expect(e.smtp).toEqual({ response: '250 fake', accepted: [address(out.to)], rejected: [] });
+  });
+  it('a send the server rejected is a failed attempt, never sentAt; the next attempt may succeed', async () => {
+    const cfg = cfgOf();
+    const mail = new FakeMail();
+    mail.rejectNext = true;
+    await expect(sendTracked(cfg, mail, out, 'note')).rejects.toThrow(/rejected/);
+    const [e] = readOutbox(cfg.dir);
+    expect(e.sentAt).toBeNull();
+    expect(e.attempts).toBe(1);
+    expect(e.lastError).toMatch(/rejected by the server: 550/);
+    expect(e.smtp?.rejected).toEqual([address(out.to)]);
+    expect(await attemptSend(cfg, mail, e.messageId, out)).toBe('sent');
+    expect(readOutbox(cfg.dir)[0].smtp?.rejected).toEqual([]);
   });
 });

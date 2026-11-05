@@ -17,6 +17,7 @@ export {
   type SendExtra,
   MailRefusal,
   attemptSend,
+  isClosed,
   filterOutbox,
   findOutbox,
   init,
@@ -44,6 +45,8 @@ export {
   ask,
   questions,
   statusOf,
+  close,
+  reopen,
 } from './ask';
 import { type AskInput, type AskOpts, acknowledge, ask, questions, statusOf } from './ask';
 import { findOutbox, init, readOutbox, sendTracked, type SendExtra } from './outbox';

@@ -52,8 +52,17 @@ export interface InMail {
   raw?: string;
 }
 
+/** What the server said to one message: nodemailer's verdict, kept on the entry. A transport that cannot report
+ *  leaves the lists out and the core takes the send as accepted. */
+export interface SendResult {
+  messageId: string;
+  accepted?: string[];
+  rejected?: string[];
+  response?: string;
+}
+
 export interface MailTransport {
-  send(m: OutMail): Promise<{ messageId: string }>;
+  send(m: OutMail): Promise<SendResult>;
   /** Everything after `sinceUid` in the mailbox, with the mailbox's UIDVALIDITY as a decimal string. */
   fetchSince(sinceUid: number): Promise<{ uidValidity: string; mails: InMail[] }>;
 }
@@ -90,10 +99,16 @@ export interface OutboxEntry {
   waiter?: { pid: number; until: string };
   answers?: Answer[];
   acknowledgedAt?: string;
+  /** What the consumer did with the answer, given with the acknowledgment. */
+  acknowledgedNote?: string;
+  /** A question closed as moot, or reopened: the last entry says which; every change names who and why. */
+  history?: { at: string; by: string; action: 'close' | 'reopen'; note: string }[];
+  /** The server's verdict on the last attempt (the response line, who it accepted, who it rejected). */
+  smtp?: { response?: string; accepted: string[]; rejected: string[] };
   /** The process sending this entry now; void when its pid is dead. */
   claim?: { pid: number; token: string; at: string };
 }
 
 export type Correlation =
   | { thread: string; why?: undefined }
-  | { thread: null; why: 'not-from-person' | 'no-thread' | `ambiguous:${string}` | 'archived-thread' };
+  | { thread: null; why: 'not-from-person' | 'bounce' | 'no-thread' | `ambiguous:${string}` | 'archived-thread' };

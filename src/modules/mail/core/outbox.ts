@@ -10,7 +10,7 @@ import { pidAlive, readJson, writeJsonAtomic } from './io';
 import { withMutex } from './mutex';
 import { address } from './thread';
 import { messageIdOf } from './transport';
-import type { MailConfig, MailTransport, OutboxEntry, OutMail } from './types';
+import type { MailConfig, MailTransport, OutboxEntry, OutMail, SendResult } from './types';
 
 export const MAX_ATTEMPTS = 3;
 export const RESEND_AFTER_MS = 600_000;
@@ -193,17 +193,34 @@ export async function attemptSend(
       }
       return es;
     });
+  let r: SendResult;
   try {
-    await mail.send({ ...out, messageId });
+    r = await mail.send({ ...out, messageId });
   } catch (err) {
     settle((e) => {
       e.lastError = (err as Error).message;
     });
     throw err;
   }
+  // one recipient per message (validateSend): accepted means that address accepted and nothing rejected
+  const to = address(out.to);
+  const smtp = {
+    ...(r.response !== undefined && { response: r.response.slice(0, 200) }),
+    accepted: (r.accepted ?? [to]).map(address),
+    rejected: (r.rejected ?? []).map(address),
+  };
+  if (!smtp.accepted.includes(to) || smtp.rejected.length) {
+    const why = `rejected by the server: ${r.response ?? smtp.rejected.join(', ')}`;
+    settle((e) => {
+      e.lastError = why;
+      e.smtp = smtp;
+    });
+    throw new Error(why);
+  }
   settle((e) => {
     e.sentAt = iso(cfg);
     delete e.lastError;
+    e.smtp = smtp;
   });
   return 'sent';
 }
@@ -247,6 +264,9 @@ export function skipAttempt(cfg: MailConfig, messageId: string, why = 'nothing t
 /** Never sent and out of attempts: what a host lists for a person. */
 export const unsentOutbox = (dir: string, cfg: LegacyCfg & Pick<MailConfig, 'maxAttempts'> = {}): OutboxEntry[] =>
   readOutbox(dir, cfg).filter((e) => !e.sentAt && e.attempts >= maxOf(cfg));
+
+/** A question closed as moot: its last history entry is a close. */
+export const isClosed = (e: OutboxEntry): boolean => e.history?.at(-1)?.action === 'close';
 
 /** Unsent, unanswered, attempts left, no live sender, and quiet for the resend interval. */
 export const resendDue = (

@@ -35,8 +35,26 @@ export const COR_MAIL_KINDS = [
   'launch',
   'test',
   'question',
+  'report',
 ] as const;
 export type CorMailKind = (typeof COR_MAIL_KINDS)[number];
+
+/** The first lines of every mail: what a reply to it does, so the person never answers the wrong one. */
+export const COR_REPLY_GUIDES: Record<CorMailKind, string> = {
+  'draft-request':
+    'ACTION NEEDED. Reply OK on its own to accept this draft, or CHANGES: and one note per line. Any other first line is asked about, not applied.',
+  'release-request':
+    'ACTION NEEDED. Reply OK on its own (publish now), OK at <day time> (schedule, your time) or CHANGES: and one note per line; PAID OK on its own line approves the paid links. Any other first line is asked about, not applied.',
+  'correction-request': 'ACTION NEEDED. Reply OK to release the correction, or CHANGES: and one note per line.',
+  batch: 'ACTION NEEDED. Reply with lines like APPROVE <slug>, REJECT <slug>: <why>, APPROVE ALL or REJECT ALL: <why>.',
+  halt: 'NO REPLY NEEDED. A status notice: replies to it are not read. If it asks for a decision, answer the draft or release mail it refers to.',
+  digest: 'NO REPLY NEEDED. Replies to this mail are not read.',
+  launch: 'NO REPLY NEEDED. Replies to this mail are not read; the Studio steps it lists are recorded by the CLI.',
+  reply: 'NO REPLY NEEDED. An answer from the automation; replies to it are not read.',
+  report: 'NO REPLY NEEDED. A completion report from the automation or an agent; replies to it are not read.',
+  test: 'Reply with any words: this mail tests the round trip.',
+  question: '', // the question is the whole mail: any words above the quote answer it
+};
 
 const automation = (root: string) => join(root, '.automation');
 export const corMailDir = (root = ROOT): string => join(automation(root), 'mail');
@@ -110,4 +128,4 @@ export const readCorReceived = (root = ROOT): Received[] => readReceived(corMail
 export const openCorQuestions = (root = ROOT, now = Date.now()): (Question & QuestionState)[] =>
   questions(corMailDir(root), legacy(root))
     .map((q) => ({ ...q, ...statusOf(q, {}, now) }))
-    .filter((q) => (q.status === 'answered' ? !q.seen : q.status !== 'awaiting'));
+    .filter((q) => (q.status === 'answered' ? !q.seen : q.status !== 'awaiting' && q.status !== 'closed'));

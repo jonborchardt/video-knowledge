@@ -212,3 +212,35 @@ describe('cliMailer', () => {
     expect(readdirSync(join(s.dir, 'send'))).toEqual([]);
   });
 });
+
+describe('mail report', () => {
+  it('sends one one-way mail: kind report, the guide first, no question created, SENT printed', () => {
+    const s = setup();
+    const r = runCli('mail', ['report', 'done with x', '--text', 'All four are live.', '--about', 't/s'], {
+      cwd: s.root,
+      env: s.env,
+    });
+    expect(r.status).toBe(0);
+    expect(r.stdout).toMatch(/^SENT <\S+>/m);
+    const [e] = readOutbox(s.dir);
+    expect(e.kind).toBe('report');
+    expect(e.sentAt).toBeTruthy();
+    expect(e.id).toBeUndefined();
+    expect(e.meta).toEqual({ about: 't/s' });
+    expect(s.fake().sent[0].text.startsWith('NO REPLY NEEDED')).toBe(true);
+    expect(s.fake().sent[0].subject).toBe('[CoR] done with x');
+    expect(readOutbox(s.dir).filter((x) => x.kind === 'question')).toEqual([]);
+  });
+  it('needs a subject and text; a failed send leaves it unsent for the outbox flush', () => {
+    const s = setup();
+    expect(runCli('mail', ['report', '--text', 't'], { cwd: s.root, env: s.env }).status).toBe(2);
+    expect(runCli('mail', ['report', 'subj'], { cwd: s.root, env: s.env }).status).toBe(2);
+    expect(readOutbox(s.dir)).toEqual([]);
+    s.setFake({ failSend: 'before' });
+    const r = runCli('mail', ['report', 'subj', '--text', 't'], { cwd: s.root, env: s.env });
+    expect(r.status).toBe(1);
+    const [e] = readOutbox(s.dir);
+    expect(e.sentAt).toBeNull();
+    expect(e.attempts).toBe(1);
+  });
+});

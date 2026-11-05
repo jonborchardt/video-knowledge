@@ -21,6 +21,7 @@ import {
   outboxPath,
   readOutbox,
   receivedPath,
+  isClosed,
 } from './outbox';
 import { correlate, ownText } from './thread';
 import type { Correlation, InMail, MailConfig, MailTransport, OutboxEntry } from './types';
@@ -140,7 +141,7 @@ function archiveHeld(cfg: MailConfig): { outbox: number; received: number } {
   const file = readFile(cfg.dir);
   const done = (e: OutboxEntry) =>
     e.kind === 'question'
-      ? !!e.answers?.length && !!e.acknowledgedAt
+      ? isClosed(e) || (!!e.answers?.length && !!e.acknowledgedAt)
       : !!e.sentAt || e.attempts >= (cfg.maxAttempts ?? MAX_ATTEMPTS);
   const movedOut = outbox.filter((e) => old(e.createdAt) && done(e));
   const liveIds = new Set(outbox.filter((e) => !movedOut.includes(e)).map((e) => e.messageId));

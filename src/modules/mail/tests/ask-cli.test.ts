@@ -8,6 +8,7 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { killTree } from '../../../orchestration/run/proc';
 import { cliArgv, runCli } from '../../../shared/cli';
 import { type FakeFileState, emptyFakeState, fileFakeMail, questions } from '../core';
+import { openCorQuestions } from '../cor';
 
 const dirs: string[] = [];
 afterAll(() => dirs.forEach((d) => rmSync(d, { recursive: true, force: true })));
@@ -321,5 +322,32 @@ describe('mail test', () => {
     expect(body).toContain('any words');
     expect(body).not.toContain('jon@example.test');
     expect(body).toContain('person@example.test');
+  });
+});
+
+describe('questions --close, --reopen, --ack --note', () => {
+  it('close records actor and note and leaves every open list; a late reply shows but stays closed; reopen restores it', () => {
+    const s = setup();
+    expect(s.cli('ask', 'q', '--text', 't', '--timeout', '0').status).toBe(0);
+    const [q] = questions(s.dir);
+    expect(s.cli('questions', '--close', q.id!).status).toBe(2); // a note is required
+    const r = s.cli('questions', '--close', q.id!, '--note', 'a report sent as a question', '--by', 'automated: test');
+    expect(r.status).toBe(0);
+    expect(r.stdout).toContain(`CLOSED ${q.id}`);
+    expect(s.cli('questions').stdout).toMatch(new RegExp(`${q.id} closed`));
+    expect(openCorQuestions(s.root)).toEqual([]);
+    s.answer(q.messageId, 'late');
+    expect(s.cli('fetch').status).toBe(0);
+    expect(s.cli('questions', '--unseen').stdout).not.toContain(q.id);
+    expect(s.cli('questions').stdout).toMatch(/closed.*1 reply after/);
+    expect(openCorQuestions(s.root)).toEqual([]);
+    expect(s.cli('questions', '--reopen', q.id!, '--note', 'wanted after all', '--by', 'Jon').status).toBe(0);
+    expect(s.cli('questions', '--unseen').stdout).toContain(q.id);
+    expect(s.cli('questions', '--ack', q.id!, '--note', 'acted on it').status).toBe(0);
+    expect(questions(s.dir)[0].acknowledgedNote).toBe('acted on it');
+    expect(questions(s.dir)[0].history?.map((h) => `${h.action} by ${h.by}`)).toEqual([
+      'close by automated: test',
+      'reopen by Jon',
+    ]);
   });
 });

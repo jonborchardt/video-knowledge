@@ -162,3 +162,29 @@ describe('FakeMail', () => {
     expect((await f.fetchSince(5)).mails).toEqual([]);
   });
 });
+
+describe('the server verdict', () => {
+  it('send returns what nodemailer reported: accepted, rejected and the response line', async () => {
+    const createTransport = (() => ({
+      sendMail: async (m: { messageId: string }) => ({
+        messageId: m.messageId,
+        accepted: ['jon@example.test'],
+        rejected: [],
+        response: '250 2.0.0 OK 1762300000 abc.123 - gsmtp',
+      }),
+    })) as never;
+    const r = await libraryTransport(config, { createTransport }).send({
+      from: 'automation@example.test',
+      to: 'jon@example.test',
+      subject: 's',
+      text: 't',
+      messageId: '<m@x>',
+    });
+    expect(r).toEqual({
+      messageId: '<m@x>',
+      accepted: ['jon@example.test'],
+      rejected: [],
+      response: '250 2.0.0 OK 1762300000 abc.123 - gsmtp',
+    });
+  });
+});

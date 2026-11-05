@@ -14,6 +14,7 @@ import {
   corResendDue,
   readCorOutbox,
   unsentCorOutbox,
+  COR_REPLY_GUIDES,
 } from '../../modules/mail';
 import { redact } from '../../shared/redact';
 import type { Mailer } from './mailer';
@@ -34,21 +35,8 @@ export const automationDir = (root = ROOT): string => {
 };
 export const readOutbox = (root = ROOT): OutboxEntry[] => readCorOutbox(root);
 
-/** The first lines of every mail: what a reply to it does, so the person never answers the wrong one. */
-export const REPLY_GUIDE: Record<OutboxKind, string> = {
-  'draft-request':
-    'ACTION NEEDED. Reply OK on its own to accept this draft, or CHANGES: and one note per line. Any other first line is asked about, not applied.',
-  'release-request':
-    'ACTION NEEDED. Reply OK on its own (publish now), OK at <day time> (schedule, your time) or CHANGES: and one note per line; PAID OK on its own line approves the paid links. Any other first line is asked about, not applied.',
-  'correction-request': 'ACTION NEEDED. Reply OK to release the correction, or CHANGES: and one note per line.',
-  batch: 'ACTION NEEDED. Reply with lines like APPROVE <slug>, REJECT <slug>: <why>, APPROVE ALL or REJECT ALL: <why>.',
-  halt: 'NO REPLY NEEDED. A status notice: replies to it are not read. If it asks for a decision, answer the draft or release mail it refers to.',
-  digest: 'NO REPLY NEEDED. Replies to this mail are not read.',
-  launch: 'NO REPLY NEEDED. Replies to this mail are not read; the Studio steps it lists are recorded by the CLI.',
-  reply: 'NO REPLY NEEDED. An answer from the automation; replies to it are not read.',
-  test: 'Reply with any words: this mail tests the round trip.',
-  question: '', // the question is the whole mail: any words above the quote answer it
-};
+/** The first lines of every mail, by kind: the adapter's list (the mail CLI's `report` uses the same). */
+export const REPLY_GUIDE: Record<OutboxKind, string> = COR_REPLY_GUIDES;
 /** The mail with its reply guide first. */
 export const withGuide = (kind: OutboxKind, out: Omit<OutMail, 'messageId'>): Omit<OutMail, 'messageId'> =>
   REPLY_GUIDE[kind] ? { ...out, text: `${REPLY_GUIDE[kind]}\n\n${out.text}` } : out;

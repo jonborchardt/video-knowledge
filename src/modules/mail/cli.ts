@@ -10,7 +10,15 @@
 //                                                        (RESUMED <id>), sending it first if it never went, and waiting on any other live sender
 //   questions [--about <ref>] [--status unsent|failed|awaiting|unattended|answered] [--unseen] [--fetch] [--json]
 //       what is open or answered, and the replies that matched nothing; --unseen: answers no consumer accepted yet
-//   questions --ack <qn-id>                              the consumer accepted the answer: it leaves --unseen
+//   questions --ack <qn-id> [--note "<what was done>"]   the consumer accepted the answer: it leaves --unseen; the note says what it caused
+//   questions --close <qn-id> --note "<why>" [--by <who>]
+//                                                        a question nobody will answer, or whose answer no longer matters: closed, out of every open
+//                                                        list, archived as completed; a later reply is still recorded and shown, never acted on
+//   questions --reopen <qn-id> --note "<why>" [--by <who>]
+//                                                        the explicit way back: the question is again what its replies make it
+//   report "<subject>" (--text "<text>" | --text-file <path>) [--about <ref>]
+//                                                        one-way: a completion report or a status note to the approver through the outbox; SENT <id>;
+//                                                        never a question (nothing waits, nothing stays open); a failed send stays unsent for the flush
 //   test [--await-reply] [--poll <seconds>=20]           one question through the outbox; with the flag waits ten minutes and
 //                                                        saves the reply as tests/fixtures/mail/reply-<date>-<uid>.eml, addresses and display names replaced
 //   init [--dry-run]                                     the one migration of the legacy outbox: INIT <migrated|present|empty> <n> entries, <r> with a request; --dry-run writes nothing
@@ -26,7 +34,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { loadAutomation } from '../../shared/automation';
 import { ROOT, loadDotEnv } from '../../shared/io';
-import { COR_MAIL_KINDS, type CorMailKind, corMailConfig, corTransport, readCorOutbox } from './cor';
+import { COR_MAIL_KINDS, COR_REPLY_GUIDES, type CorMailKind, corMailConfig, corTransport, readCorOutbox } from './cor';
 import {
   type MailConfig,
   type MailTransport,
@@ -35,6 +43,8 @@ import {
   acknowledge,
   address,
   ask,
+  close,
+  reopen,
   fetchInto,
   findOutbox,
   init,
@@ -128,11 +138,48 @@ async function askVerb(cfg: MailConfig): Promise<void> {
   process.exit(1);
 }
 
+const REPORT_FLAGS = ['--text', '--text-file', '--about'];
+
+/** One-way: a completion report or a status note to the person. Never a question: nothing waits, nothing is open. */
+async function reportVerb(cfg: MailConfig): Promise<void> {
+  for (const f of rest.filter((a) => a.startsWith('--')))
+    if (!REPORT_FLAGS.includes(f)) refuse(`report takes no ${f}: the recipient is always the approver`);
+  const subject = rest[0]?.startsWith('--') ? undefined : rest[0];
+  const file = flag('--text-file');
+  const text = flag('--text') ?? (file ? readFileSync(file, 'utf8') : undefined);
+  if (!subject) refuse('report needs a subject');
+  if (!text) refuse('report needs --text or --text-file');
+  const about = flag('--about');
+  const prefix = cfg.subjectPrefix ? `${cfg.subjectPrefix} ` : '';
+  const { messageId } = await sendTracked(
+    cfg,
+    transport(),
+    { from: cfg.from, to: cfg.to, subject: `${prefix}${subject}`, text: `${COR_REPLY_GUIDES.report}\n\n${text}` },
+    'report',
+    about ? { meta: { about } } : {},
+  );
+  console.log(`SENT ${messageId}`);
+}
+
 async function questionsVerb(cfg: MailConfig): Promise<void> {
   const ack = flag('--ack');
   if (ack) {
-    acknowledge(cfg, ack);
+    acknowledge(cfg, ack, flag('--note'));
     console.log(`ACKNOWLEDGED ${ack}`);
+    return;
+  }
+  // a decision about a question records who made it: a person's name, or the automated actor that ran this
+  const decided = { by: flag('--by') ?? 'automated: npm run mail', note: flag('--note') ?? '' };
+  const toClose = flag('--close');
+  if (toClose) {
+    close(cfg, toClose, decided);
+    console.log(`CLOSED ${toClose}`);
+    return;
+  }
+  const toReopen = flag('--reopen');
+  if (toReopen) {
+    reopen(cfg, toReopen, decided);
+    console.log(`REOPENED ${toReopen}`);
     return;
   }
   if (has('--fetch')) await fetchInto(cfg, transport()).catch((e: Error) => console.error(`mailbox: ${e.message}`));
@@ -152,10 +199,18 @@ async function questionsVerb(cfg: MailConfig): Promise<void> {
     return;
   }
   for (const q of listed) {
-    const marks = `${q.late ? ' late' : ''}${q.status === 'answered' && !q.seen ? ' unseen' : ''}`;
+    const closedAt = q.status === 'closed' ? q.history!.at(-1)!.at : null;
+    const after = closedAt ? (q.answers ?? []).filter((a) => a.recordedAt >= closedAt).length : 0;
+    const marks = `${q.late ? ' late' : ''}${q.status === 'answered' && !q.seen ? ' unseen' : ''}${
+      after ? ` (${after} ${after === 1 ? 'reply' : 'replies'} after closure)` : ''
+    }`;
     console.log(`${q.id} ${q.status}${marks} asked ${q.createdAt}${q.about ? ` about ${q.about}` : ''}: ${q.subject}`);
   }
-  if (stray.length) console.log(`${stray.length} replies from the person matched no question (--json lists them)`);
+  const bounces = stray.filter((r) => r.why === 'bounce').length;
+  if (bounces)
+    console.log(`${bounces} delivery failure${bounces === 1 ? '' : 's'} from the mail system (--json lists them)`);
+  if (stray.length - bounces)
+    console.log(`${stray.length - bounces} replies from the person matched no question (--json lists them)`);
 }
 
 async function testVerb(cfg: MailConfig): Promise<void> {
@@ -204,6 +259,8 @@ async function main(): Promise<void> {
       return askVerb(cfg);
     case 'questions':
       return questionsVerb(cfg);
+    case 'report':
+      return reportVerb(cfg);
     case 'test':
       return testVerb(cfg);
     case 'init': {
