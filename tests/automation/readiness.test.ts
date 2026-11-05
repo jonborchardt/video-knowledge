@@ -126,6 +126,7 @@ describe('INTEGRATIONS and readinessView', () => {
       'scheduled-tasks',
       'research-pipeline',
       'discovery',
+      'mail-question',
     ])
       expect(keys).toContain(k);
     expect(INTEGRATIONS.find((i) => i.key === 'scheduled-tasks')!.implemented).toBe(false);
@@ -277,5 +278,47 @@ describe('verify (the one writer of readiness.json)', () => {
     // format check halted the fixture's release loop (step-failed) the first time a verification existed (M3 phase 5)
     const ignored = readFileSync(join(ROOT, '.prettierignore'), 'utf8').split(/\r?\n/);
     expect(ignored).toContain('readiness.json');
+  });
+});
+
+describe('mail-question evidence', () => {
+  const outbox = (root: string, over: object) => {
+    mkdirSync(join(root, '.automation', 'mail'), { recursive: true });
+    writeFileSync(
+      join(root, '.automation', 'mail', 'outbox.json'),
+      JSON.stringify([
+        {
+          messageId: '<q@x>',
+          kind: 'question',
+          id: 'qn-0123456789ab',
+          subject: 's',
+          to: 'jon@example.test',
+          from: 'bot@example.test',
+          createdAt: '2026-11-04T15:32:26.000Z',
+          sentAt: '2026-11-04T15:32:29.000Z',
+          attempts: 1,
+          ...over,
+        },
+      ]),
+    );
+  };
+  const answered = {
+    answers: [{ messageId: '<r@x>', from: 'jon@example.test', at: 'a', recordedAt: 'b', text: 'looks good' }],
+  };
+  it('a question answered and acknowledged proves it; unanswered or unacknowledged does not; another kind refuses it', () => {
+    const root = fresh();
+    outbox(root, answered);
+    expect(() => verify(root, 'mail-question', { by: 'Jon', evidence: 'qn-0123456789ab', now: NOW })).toThrow(
+      /does not prove/,
+    );
+    outbox(root, { ...answered, acknowledgedAt: '2026-11-04T15:36:42.000Z' });
+    const r = verify(root, 'mail-question', { by: 'Jon', evidence: 'qn-0123456789ab', now: NOW });
+    expect(r.changed).toBe(true);
+    expect(() => verify(root, 'approval-mail-send', { by: 'Jon', evidence: 'qn-0123456789ab', now: NOW })).toThrow(
+      /does not prove/,
+    );
+    expect(() => verify(root, 'mail-question', { by: 'Jon', evidence: 'qn-ffffffffffff', now: NOW })).toThrow(
+      /no such record/,
+    );
   });
 });

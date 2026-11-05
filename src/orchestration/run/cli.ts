@@ -58,7 +58,7 @@ import { AGENT_ROLES, loadAutomation } from '../../shared/automation';
 import { approverProblem } from '../../shared/approver';
 import { loadDotEnv, ROOT, toJson } from '../../shared/io';
 import { PRODUCTION_STAGES, type ProductionStage } from '../production';
-import { mailConfigFromEnv } from '../../modules/mail';
+import { mailConfigFromEnv, openCorQuestions } from '../../modules/mail';
 import { cliMailer } from './mailer';
 import { archiveProduction, freshProblem } from './fresh';
 import { candidates, pickJob, pickJobIfDue, pickState, rank } from './pick';
@@ -277,7 +277,7 @@ switch (verb) {
   }
   case 'status': {
     const rows = statusOf(ROOT);
-    process.stdout.write(rest.includes('--json') ? toJson(rows) : renderStatus(rows));
+    process.stdout.write(rest.includes('--json') ? toJson(rows) : renderStatus(rows, openCorQuestions(ROOT)));
     break;
   }
   case 'tick': {

@@ -8,6 +8,8 @@ import { type Halt, readHalt, readJournal, RUN_DIR } from './journal';
 import { readLock } from './lock';
 import { alive } from './proc';
 import { discoveryHalts, discoveryHaltsDir } from './discovery-state';
+import type { Question, QuestionState } from '../../modules/mail';
+import { questionLine } from './digest';
 
 export interface StatusRow {
   topic: string;
@@ -101,15 +103,22 @@ function idFromDir(dir: string, slug: string, topic: string, root: string): stri
   return stories?.stories?.find((s) => storySlug(s.id) === slug)?.id ?? slug;
 }
 
-export function renderStatus(rows: StatusRow[]): string {
-  if (!rows.length) return 'no runs\n';
-  return (
-    rows
-      .map((r) => {
+/** The runs, then the open mail questions (an answer nobody accepted yet, a question nobody answered, one that never
+ *  went): where a session looks first. Listing acknowledges nothing; the verb on each line does. */
+export function renderStatus(rows: StatusRow[], questions: (Question & QuestionState)[] = []): string {
+  const runs = rows.length
+    ? rows.map((r) => {
         const head = `${r.topic} ${r.storyId}: ${r.state}${r.since ? ` since ${r.since}` : ''}${r.step ? ` (${r.step})` : ''}`;
         const h = r.halt ? `\n  HALT ${r.halt.kind}: ${r.halt.why}\n  UNBLOCK: ${r.halt.unblock.text}` : '';
         return `${head}${h}\n  spent ${r.costUsd.toFixed(2)} USD; journal ${r.dir}`;
       })
-      .join('\n') + '\n'
-  );
+    : ['no runs'];
+  const mail = questions.length
+    ? [
+        '',
+        'Mail questions (npm run mail -- questions):',
+        ...questions.map((q) => `  ${q.id} ${questionLine(q)}${q.about ? `; about ${q.about}` : ''}: ${q.subject}`),
+      ]
+    : [];
+  return [...runs, ...mail].join('\n') + '\n';
 }

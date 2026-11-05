@@ -275,6 +275,7 @@ record of another kind are refused; nothing else is written, and no flag changes
 | `agent-draft-review-shadow` | yes         | `review.draft`        | `shadow:<topic>/<story>`                                           |
 | `cloudflare-deploy-probe`   | yes         | `enabled.work`        | `launch:<topic>/<story>`                                           |
 | `x-post`                    | yes         | `enabled.social`      | `social:<topic>/<story>`                                           |
+| `mail-question`             | yes         | none: a session's act | `qn-<id>` (a question answered by you and acknowledged)            |
 | `scheduled-tasks`           | no (yours)  | none: your scheduler  | `tick:<ISO of a recorded tick>`                                    |
 | `research-pipeline`         | yes         | `enabled.research`    | `run:<run id>` (a finished topic run)                              |
 | `discovery`                 | yes         | `enabled.discovery`   | `discovery:<slot>`                                                 |

@@ -1,13 +1,14 @@
 // `npm run mail -- ask|questions|test` as real processes over one fake mailbox: killed waiters, crashes, concurrency,
 // and a two-turn conversation across processes.
-import { spawn } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { spawn, spawnSync } from 'node:child_process';
+import { existsSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { killTree } from '../../../orchestration/run/proc';
+import { ROOT } from '../../../shared/io';
 import { cliArgv, runCli } from '../../../shared/cli';
-import { type FakeFileState, emptyFakeState, fileFakeMail, questions } from '../core';
+import { type FakeFileState, emptyFakeState, fileFakeMail, questions, readOutbox } from '../core';
 import { openCorQuestions } from '../cor';
 
 const dirs: string[] = [];
@@ -350,4 +351,64 @@ describe('questions --close, --reopen, --ack --note', () => {
       'reopen by Jon',
     ]);
   });
+});
+
+describe('the unattended lifecycle over real processes: ask, reply, consume, act once, acknowledge, report', () => {
+  // This is durable recovery by a later run, not an agent restarted by anything: the consumer is started by the test.
+  const CHILD = join(ROOT, 'src', 'modules', 'mail', 'tests', 'consumer-child.ts');
+  const TSX = join(ROOT, 'node_modules', 'tsx', 'dist', 'cli.mjs');
+  const consumer = (s: ReturnType<typeof setup>, env: NodeJS.ProcessEnv = {}) =>
+    spawnSync(process.execPath, [TSX, '--tsconfig', join(ROOT, 'tsconfig.json'), CHILD, s.root, 't/s'], {
+      env: { ...s.env, ...env },
+      encoding: 'utf8',
+      windowsHide: true,
+    });
+  const reports = (s: ReturnType<typeof setup>) => readOutbox(s.dir).filter((e) => e.kind === 'report');
+  const actionFile = (s: ReturnType<typeof setup>, id: string) => join(s.root, `action-${id}.txt`);
+
+  it('a reply to a question nobody waits on is consumed once by a later run, acknowledged with a note, and reported', () => {
+    const s = setup();
+    expect(s.cli('ask', 'which', '--text', 'A or B?', '--about', 't/s', '--timeout', '0').status).toBe(0);
+    const [q] = questions(s.dir);
+    expect(JSON.parse(s.cli('questions', '--json').stdout).questions[0].status).toBe('unattended');
+    s.answer(q.messageId, 'Use B');
+    const r = consumer(s);
+    expect(r.stdout).toContain(`DONE ${q.id}`);
+    expect(readFileSync(actionFile(s, q.id), 'utf8')).toBe('Use B');
+    const after = questions(s.dir)[0];
+    expect(after.acknowledgedAt).toBeTruthy();
+    expect(after.acknowledgedNote).toBe(`wrote action-${q.id}.txt`);
+    expect(reports(s)).toHaveLength(1);
+    expect(reports(s)[0].sentAt).toBeTruthy();
+    expect(reports(s)[0].meta).toEqual({ about: 't/s' });
+    expect(sentOf(s).map((m) => m.subject)).toEqual([q.subject, `[CoR] done ${q.id}`]);
+    expect(questions(s.dir)).toHaveLength(1); // the report opened no question
+    // a second run finds nothing to do
+    expect(consumer(s).stdout).toContain('NOTHING');
+    expect(reports(s)).toHaveLength(1);
+  }, 120_000);
+
+  it('a consumer killed between its action and the acknowledgment: the next run acts no second time, acknowledges once, reports once', () => {
+    const s = setup();
+    s.cli('ask', 'which', '--text', 'A or B?', '--about', 't/s', '--timeout', '0');
+    const [q] = questions(s.dir);
+    s.answer(q.messageId, 'Use B');
+    const crashed = consumer(s, { VK_TEST_CRASH_AFTER: 'action' });
+    expect(crashed.status).toBe(137);
+    const file = actionFile(s, q.id);
+    const first = { text: readFileSync(file, 'utf8'), mtime: statSync(file).mtimeMs };
+    expect(questions(s.dir)[0].acknowledgedAt).toBeUndefined(); // the answer stays unseen: nothing is lost
+    expect(reports(s)).toEqual([]);
+    const again = consumer(s);
+    expect(again.stdout).toContain(`DONE ${q.id}`);
+    expect({ text: readFileSync(file, 'utf8'), mtime: statSync(file).mtimeMs }).toEqual(first);
+    expect(questions(s.dir)[0].acknowledgedAt).toBeTruthy();
+    expect(reports(s)).toHaveLength(1);
+    // a second reply after the fact is kept, in order, and changes nothing the consumer did
+    s.answer(q.messageId, 'Actually, A');
+    expect(consumer(s).stdout).toContain('NOTHING');
+    expect(questions(s.dir)[0].answers?.map((a) => a.text)).toEqual(['Use B', 'Actually, A']);
+    expect(readFileSync(file, 'utf8')).toBe('Use B');
+    expect(reports(s)).toHaveLength(1);
+  }, 120_000);
 });

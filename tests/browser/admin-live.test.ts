@@ -24,6 +24,11 @@ const dir = scriptDir(TOPIC, STORY);
 const run = join(dir, 'run');
 const storyboard = join(dir, FILES.storyboard);
 const aside = `${storyboard}.live-test-aside`;
+// The fixture's publishing ledger: once a fixture run has released, the board lets the ledger's state win over the
+// production stage (buildColumn), and the row would not follow the artifacts below. Moved aside for the test, the
+// same way as the storyboard, so the state read is the production's; put back by restore(), also after a crash.
+const ledger = join(dir, 'publish.json');
+const ledgerAside = `${ledger}.live-test-aside`;
 const lockFile = join(run, 'lock.json');
 const haltFile = join(run, 'halt.json');
 const WRITER = 'Read src/modules/script/briefs/script.md and follow it.';
@@ -89,6 +94,7 @@ async function startDev(): Promise<ChildProcess> {
 /** The artifact the test moved, put back (also from a crashed earlier run); only the files this test wrote, removed. */
 function restore() {
   if (existsSync(aside)) renameSync(aside, storyboard);
+  if (existsSync(ledgerAside)) renameSync(ledgerAside, ledger);
   for (const f of created) if (existsSync(f)) rmSync(f, { force: true });
   const agents = join(run, 'agents');
   if (existsSync(agents) && readdirSync(agents).length === 0) rmSync(agents, { recursive: true, force: true });
@@ -101,6 +107,7 @@ const write = (file: string, value: unknown) => {
 beforeAll(async () => {
   if (skip) return;
   restore();
+  if (existsSync(ledger)) renameSync(ledger, ledgerAside);
   server = await startDev();
   browser = await chromium.launch();
 });

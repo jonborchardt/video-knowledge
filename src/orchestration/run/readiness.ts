@@ -36,7 +36,8 @@ export type EvidenceKind =
   | 'social' // social:<topic>/<story>, a posted record with an id
   | 'tick' // tick:<ISO>, a recorded tick
   | 'topic-run' // run:<run id>, a topic run's journal that finished
-  | 'discovery'; // discovery:<slot>, a discovery record
+  | 'discovery' // discovery:<slot>, a discovery record
+  | 'question'; // qn-<id>, a mail question answered by the person and acknowledged by its consumer
 export interface Evidence {
   kind: EvidenceKind;
   events?: string[];
@@ -53,7 +54,7 @@ export interface Integration {
   /** Exists in code with passing tests (true today for every integration but the scheduled tasks, which are the
    *  person's own Task Scheduler or cron entries). */
   implemented: boolean;
-  /** The automation.json key its enabled state is read from; null when no flag governs it (a person's act). */
+  /** The automation.json key its enabled state is read from; null when no flag governs it (a person's or a session's act). */
   enabledBy: string | null;
   evidence: Evidence;
 }
@@ -128,6 +129,13 @@ export const INTEGRATIONS: readonly Integration[] = [
     implemented: true,
     enabledBy: 'enabled.social',
     evidence: { kind: 'social', form: 'social:<topic>/<story>' },
+  },
+  {
+    key: 'mail-question',
+    name: 'Question by mail, answered and acknowledged',
+    implemented: true,
+    enabledBy: null,
+    evidence: { kind: 'question', form: 'qn-<id> (a question answered and acknowledged)' },
   },
   {
     key: 'scheduled-tasks',
@@ -219,6 +227,12 @@ export function evidenceProves(root: string, i: Integration, ref: string): boole
       );
     return false;
   }
+  if (/^qn-[0-9a-f]{12}$/.test(ref))
+    return (
+      e.kind === 'question' &&
+      filterCorOutbox((x) => x.kind === 'question' && x.id === ref && !!x.answers?.length && !!x.acknowledgedAt, root)
+        .length > 0
+    );
   const m = /^(\w[\w-]*):(.*)$/.exec(ref);
   if (!m) return null;
   const [, kind, rest] = m;
