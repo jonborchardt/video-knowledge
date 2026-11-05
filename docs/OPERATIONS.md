@@ -302,13 +302,13 @@ This exception covers this one launch and nothing else.
 
 The ledger event below names the wrong actor. It stays as written, because ledger events are append-only and no verb corrects one.
 
-| Field | Value |
-| --- | --- |
-| Ledger | `topics/heat-pumps/scripts/decision-does-the-upfront-cost-eat-the-savings/publish.json` |
-| Output | `youtube` |
-| Event | `verified`, `passed`, video `Z1cAlTwainc`, at `2026-11-05T03:10:37.170Z` |
-| Recorded actor | `by: Jon` |
-| Actual actor | The Claude Code agent, running `npm run publish -- verify --by Jon` under Jon's authorisation of operational fixes |
-| Written in | commit `77345df` |
+| Field          | Value                                                                                                              |
+| -------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Ledger         | `topics/heat-pumps/scripts/decision-does-the-upfront-cost-eat-the-savings/publish.json`                            |
+| Output         | `youtube`                                                                                                          |
+| Event          | `verified`, `passed`, video `Z1cAlTwainc`, at `2026-11-05T03:10:37.170Z`                                           |
+| Recorded actor | `by: Jon`                                                                                                          |
+| Actual actor   | The Claude Code agent, running `npm run publish -- verify --by Jon` under Jon's authorisation of operational fixes |
+| Written in     | commit `77345df`                                                                                                   |
 
 Read this record alongside that event. The correction changes no ledger state and does not touch Jon's release approval: the `approved` and `decided` events on request `rq-4257256a18e5` are his own and stand as written.
