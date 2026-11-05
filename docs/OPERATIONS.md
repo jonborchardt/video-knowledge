@@ -159,19 +159,40 @@ acts on an unseen answer. The weekly digest and the live page's owner list show 
 --fetch` lists it, and a later session or you pick it up, with `--about` naming the work. An answer stays unseen until
 a consumer runs `questions --ack <qn-id>`, so an agent that dies holding one loses nothing.
 
-| status       | means                                                                          | next                                |
-| ------------ | ------------------------------------------------------------------------------ | ----------------------------------- |
-| `unsent`     | recorded, not delivered yet; the tick or a resume retries                      | `ask --resume <qn-id>`              |
-| `failed`     | three failed sends                                                             | fix the mailbox, then ask again     |
-| `awaiting`   | sent, a live process is waiting                                                | reply                               |
-| `unattended` | sent, nobody waiting (timed out, or the session ended)                         | reply; the answer is still recorded |
-| `answered`   | a reply is recorded; `late` if it came after the wait, `unseen` until accepted | `questions --ack <qn-id>`           |
+**Which verb.** `ask` when you need words back: it blocks, or `--timeout 0` sends and returns, and the question stays
+open until it is answered and acknowledged, or closed. `report "<subject>" (--text | --text-file <path>) [--about
+<ref>]` for anything one-way: a completion report, a progress summary, a status note; it goes through the same outbox,
+opens no question and nothing waits on it. Halts and the digest are the tick's. A formal decision keeps its request
+mail and its verb.
+
+**The consumer's contract** for an answer, whoever consumes it (the session that asked, a later one, or you): list it
+(`questions --fetch --unseen --about <ref>`, or `ask --resume <qn-id>`), act once, keyed by the question id (your own
+record says whether the action was done, so a rerun after a crash does not do it twice), then `questions --ack <qn-id>
+--note "<what was done>"`, then `report`. Listing never acknowledges: not `questions`, not `npm run run -- status`
+(which shows the open questions, an unaccepted answer apart from an unanswered question), not the digest or the live
+page. A question nobody will answer, or whose answer no longer matters, is `questions --close <qn-id> --note "<why>"
+--by <who>`: it leaves every open list and archives as completed, nothing is pretended answered, and a reply that
+comes later is still recorded and shown, never acted on, until `questions --reopen <qn-id> --note "<why>" --by <who>`.
+
+| status       | means                                                                                        | next                                |
+| ------------ | -------------------------------------------------------------------------------------------- | ----------------------------------- |
+| `unsent`     | recorded, not delivered yet; the tick or a resume retries                                    | `ask --resume <qn-id>`              |
+| `failed`     | three failed sends                                                                           | fix the mailbox, then ask again     |
+| `awaiting`   | sent, a live process is waiting                                                              | reply                               |
+| `unattended` | sent, nobody waiting (timed out, or the session ended)                                       | reply; the answer is still recorded |
+| `answered`   | a reply is recorded; `late` if it came after the wait, `unseen` until accepted               | `questions --ack <qn-id>`           |
+| `closed`     | closed as moot by a named actor with a note; a later reply is kept and shown, never acted on | `questions --reopen <qn-id>`        |
 
 Delivery is at least once: if a process dies after the server accepted a mail and before recording it, the retry
 carries the same Message-ID and you may get two copies; only the first reply's effect counts per question or request.
+`sentAt` means the server accepted the message for its one recipient; the server's response line and verdict stay on
+the entry (`questions --json`, `smtp`), and a rejected recipient is a failed attempt that leaves the entry unsent for
+the flush. A delivery failure the mail system sends back (mailer-daemon, postmaster) is recorded as a bounce, counted
+by `questions`, and is never an answer. Acceptance is not arrival: only a reply, or you, proves a mail reached the
+inbox.
 Records live in `.automation/mail/`: `outbox.json`, `received.json`, `received/*.eml` (the original messages) and
-`archive/<YYYY-MM>.json`. Only completed records archive after 90 days (a question answered and accepted, a mail sent
-or out of attempts, a reply handled); an unanswered question or an unprocessed formal reply stays live at any age, and
+`archive/<YYYY-MM>.json`. Only completed records archive after 90 days (a question answered and accepted, or closed,
+a mail sent or out of attempts, a reply handled); an unanswered question or an unprocessed formal reply stays live at any age, and
 a late reply to an archived request still threads to it and is refused as expired by its verb. If a lock is stuck, the
 error names the pid; if that pid is not a repo process, delete `.automation/mail/.lock/held`. Upgrading: `npm run mail
 -- init --dry-run` reports the migration and `npm run mail -- init` performs it (every write runs it anyway).
@@ -297,7 +318,8 @@ This exception covers this one launch and nothing else.
 - **What fails:** `npm run quality` ends `RESULT: FAILED (browser suite)` on one test, `tests/browser/admin-live.test.ts`: `expected 'shorts' to be 'producing'`.
 - **Why the launch proceeded:** the same test fails the same way on the baseline, `9f18ed7`, which has none of the launch's changes. It covers the dev-only admin page on the fixture story, and a build never emits that page.
 - **What passed on the prepared tree:** the static gate (181 of 181) and `tests/browser/site.test.ts` (no failures, 22 tests skipped by the suite). `npm run validate` passed in full.
-- **What did not change:** the test, the gate and `tests/web-quality.json`. The gate stays red until the test is fixed; the cause has not been diagnosed.
+- **What did not change:** the test, the gate and `tests/web-quality.json`, at the time.
+- **Root cause and fix (2026-11-05, `a37fb4f`):** the fixture's released ledger wins over its production stage on the board (`buildColumn`), so the row no longer followed the artifact the test moved. The test now moves the fixture's `publish.json` aside for its duration, as it already did the storyboard, and restores it; no assertion, timeout or exception changed.
 
 #### Attribution correction
 

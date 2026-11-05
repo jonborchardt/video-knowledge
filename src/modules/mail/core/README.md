@@ -20,7 +20,7 @@ const { question, answered } = await core.ask(
 );
 if (answered) {
   doSomethingWith(question.answers![0].text);
-  core.acknowledge(question.id!); // only once you have accepted it for processing
+  core.acknowledge(question.id!, 'deployed'); // only once you have accepted it for processing; the note says what it caused
 }
 ```
 
@@ -37,6 +37,8 @@ To check a copy, run `tests/standalone.test.ts` (it needs only this folder and v
 - **Recorded before sent.** Every mail has its Message-ID on disk before the first attempt.
 - **At least once, not exactly once.** If a process dies after the server accepted a mail and before recording that, the retry carries the same Message-ID and a duplicate copy is possible. Key any effect by what the mail is about, never by the copy.
 - **One live sender per message.** A claim taken under the lock, void once its pid is dead.
+- **The server's verdict is kept.** `sentAt` means the one recipient was accepted and nothing rejected; the response line stays on the entry (`smtp`). A rejected recipient is a failed attempt. A mail from the mail system itself (mailer-daemon, postmaster) is a bounce, listed by `unmatched`, never an answer.
+- **Closing is a decision, not an answer.** `close(id, { by, note })` and `reopen` append to the entry's `history`; a closed question is complete and listed nowhere open, and a reply after closure is kept and shown, never acted on until reopened. `acknowledge(id, note)` records what the answer caused.
 - **One inbound pipeline.** `fetch` is the only mailbox reader and holds the only cursor. Each message is recorded once, by Message-ID or by a content hash when it has none. A changed UIDVALIDITY re-reads the mailbox with no duplicate and nothing skipped.
 - **Correlated once, conservatively.** The sender must be `to` (a weak check: a From header is not authentication). Then In-Reply-To, a question id in the subject, a question id in the person's own text, then the latest of References. More than one candidate in the deciding tier matches nothing and is listed by `unmatched`.
 - **A timeout stops the waiter, never the question.** A later fetch records the reply; `ask({ resume })` waits again.

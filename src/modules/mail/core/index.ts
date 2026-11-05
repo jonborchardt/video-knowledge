@@ -48,7 +48,7 @@ export {
   close,
   reopen,
 } from './ask';
-import { type AskInput, type AskOpts, acknowledge, ask, questions, statusOf } from './ask';
+import { type AskInput, type AskOpts, acknowledge, ask, close, questions, reopen, statusOf } from './ask';
 import { findOutbox, init, readOutbox, sendTracked, type SendExtra } from './outbox';
 import { archive, fetchInto, unmatched } from './received';
 import type { MailConfig, MailTransport, OutMail } from './types';
@@ -61,7 +61,9 @@ export function mailCore(cfg: MailConfig, mail: MailTransport) {
       sendTracked(cfg, mail, out, kind, extra),
     fetch: () => fetchInto(cfg, mail),
     ask: (input: AskInput | { resume: string }, opts: AskOpts) => ask(cfg, mail, input, opts),
-    acknowledge: (id: string) => acknowledge(cfg, id),
+    acknowledge: (id: string, note?: string) => acknowledge(cfg, id, note),
+    close: (id: string, o: { by: string; note: string }) => close(cfg, id, o),
+    reopen: (id: string, o: { by: string; note: string }) => reopen(cfg, id, o),
     questions: () => questions(cfg.dir).map((q) => ({ ...q, ...statusOf(q, cfg, (cfg.now ?? Date.now)()) })),
     outbox: () => readOutbox(cfg.dir),
     unmatched: () => unmatched(cfg.dir),
