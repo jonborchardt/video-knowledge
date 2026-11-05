@@ -31,7 +31,7 @@ import { renderBatch } from './requests';
 import { type CliResult, runCli } from '../../shared/cli';
 import { envFor } from './steps';
 import { alive, killTree } from './proc';
-import { dueResumes, stuckRows } from './resume';
+import { dueResumes, settleFinished, stuckRows } from './resume';
 import { updateSchedule } from './schedule';
 import { type StatusRow, statusOf } from './status';
 
@@ -240,6 +240,14 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
     await step('deploy probes', async () => {
       actions.push(...(await probeLaunches(a, root, { now, run, mail: deps.mail, fetchFn: deps.fetchFn, env })));
     });
+    const settled = settleFinished(root, {
+      by: 'automated: tick',
+      now,
+      rows: deps.rows?.(),
+      ask: deps.ask,
+      alive: deps.alive,
+    });
+    if (settled.length) actions.push(`settled: ${settled.join(', ')}`);
     const rows = (deps.rows ?? (() => statusOf(root, deps.alive)))();
     const due = dueResumes(a, root, { now, rows, ask: deps.ask, alive: deps.alive });
     // merged over what the inbox queued this pass (a draft OK, a moved request): a replace lost those entries

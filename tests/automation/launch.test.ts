@@ -21,7 +21,9 @@ import { ROOT, readJson, toJson } from '../../src/shared/io';
 import { FakeMailer } from './fake-mailer';
 import { matterPathOf } from '../../src/modules/website/live';
 import { appendEvent, emptyLedger, loadLedger, publishPath, saveLedger } from '../../src/modules/publishing/publish';
-import { readHalt, runDir } from '../../src/orchestration/run/journal';
+import { readHalt, readJournal, runDir, writeHalt } from '../../src/orchestration/run/journal';
+import { settleFinished } from '../../src/orchestration/run/resume';
+import { readSchedule, updateSchedule } from '../../src/orchestration/run/schedule';
 import {
   LAUNCH_PATHS,
   launch,
@@ -32,9 +34,10 @@ import {
   launches,
   probeLaunches,
   readLaunch,
+  writeLaunch as writeLaunchRecord,
 } from '../../src/orchestration/run/launch';
 import { preflight } from '../../src/orchestration/run/preflight';
-import { launchDeps } from '../../src/orchestration/run/work';
+import { launchDeps, nextJob } from '../../src/orchestration/run/work';
 import { cliArgv } from '../../src/shared/cli';
 import { notifyHalts, readOutbox } from '../../src/orchestration/run/notify';
 import { statusOf } from '../../src/orchestration/run/status';
@@ -349,6 +352,84 @@ describe('launch', () => {
     expect(readLaunch(c.f.topic, c.f.story, c.f.root)!.halt).toBeNull();
     expect(readHalt(runDir(c.f.topic, c.f.story, c.f.root))).toBeNull();
   }, 120_000);
+
+  describe('a release that already went live', () => {
+    const approvalHalt = (at: string, kind: 'awaiting-person' | 'needs-person' = 'awaiting-person') => ({
+      kind,
+      stage: 'packaged',
+      why: 'the release awaits approval: request rq-old',
+      unblock: { kind: 'decide' as const, text: 'reply OK' },
+      at,
+      runId: 'r',
+      board: { stage: 'packaged', next: 'approve' },
+    });
+    const BEFORE = '2026-10-31T12:00:00.000Z'; // the fixture publishes at 2026-11-01T00:00:00Z
+    const AFTER = '2026-11-01T06:00:00.000Z';
+
+    it('settles a request for approval older than the publication: the journal keeps it, its resume goes', () => {
+      const c = clone();
+      const { f } = c;
+      const dir = runDir(f.topic, f.story, f.root);
+      writeHalt(dir, approvalHalt(BEFORE));
+      updateSchedule(f.root, (s) => ({
+        ...s,
+        due: [
+          { topic: f.topic, storyId: f.story, why: 'moved', at: BEFORE },
+          { topic: 'other', storyId: 'x', why: 'moved', at: BEFORE },
+        ],
+      }));
+      expect(settleFinished(f.root, { by: 'automated: test' })).toEqual([`${f.topic}/${f.story}`]);
+      expect(readHalt(dir)).toBeNull();
+      const line = readJournal(dir).at(-1)!;
+      expect(line.step).toBe('settle');
+      expect(line.error).toMatch(/automated: test/);
+      expect(line.error).toMatch(/awaiting-person/);
+      expect(line.error).toContain('request rq-old');
+      expect(line.error).toContain(BEFORE);
+      expect(readSchedule(f.root).due).toEqual([{ topic: 'other', storyId: 'x', why: 'moved', at: BEFORE }]);
+      expect(settleFinished(f.root, { by: 'automated: test' })).toEqual([]);
+    }, 120_000);
+
+    it('leaves a halt written after the publication, any other kind, and a story not live', () => {
+      const c = clone();
+      const { f } = c;
+      const dir = runDir(f.topic, f.story, f.root);
+      writeHalt(dir, approvalHalt(AFTER));
+      expect(settleFinished(f.root, { by: 'automated: test' })).toEqual([]);
+      writeHalt(dir, approvalHalt(BEFORE, 'needs-person'));
+      expect(settleFinished(f.root, { by: 'automated: test' })).toEqual([]);
+      expect(readHalt(dir)?.kind).toBe('needs-person');
+      const d = clone({ live: false });
+      const gone = runDir(d.f.topic, d.f.story, d.f.root);
+      writeHalt(gone, approvalHalt(BEFORE));
+      expect(settleFinished(d.f.root, { by: 'automated: test' })).toEqual([]);
+      expect(readHalt(gone)?.kind).toBe('awaiting-person');
+    }, 120_000);
+
+    it('the work plane never selects a queued resume of a live story', () => {
+      const c = clone();
+      const { f } = c;
+      updateSchedule(f.root, (s) => ({ ...s, due: [{ topic: f.topic, storyId: f.story, why: 'moved', at: BEFORE }] }));
+      expect(nextJob(a, f.root, { launches: () => [], releases: () => [] })).toBeNull();
+    }, 120_000);
+
+    it('probe answers for one launch: another stays untouched, and a second probe mails nothing', async () => {
+      const c = clone();
+      const { f } = c;
+      const r = await launch(f.topic, f.story, a, c.deps(), f.root);
+      expect(r.outcome).toBe('done');
+      writeLaunchRecord(f.root, { ...readLaunch(f.topic, f.story, f.root)!, storyId: 'decision:other' });
+      const mail = new FakeMailer(f.root);
+      const only = { topic: f.topic, storyId: f.story };
+      await probeLaunches(a, f.root, { now: () => T0, run: c.deps().run, mail, fetchFn: livePage, only });
+      expect(readLaunch(f.topic, f.story, f.root)!.liveAt).toBeTruthy();
+      expect(readLaunch(f.topic, f.story, f.root)!.emailed).toBe(true);
+      expect(readLaunch(f.topic, 'decision:other', f.root)!.liveAt).toBeNull();
+      expect(mail.sent).toHaveLength(1);
+      await probeLaunches(a, f.root, { now: () => T0, run: c.deps().run, mail, fetchFn: livePage, only });
+      expect(mail.sent).toHaveLength(1);
+    }, 120_000);
+  });
 
   it('every step of the launch dispatches through the real runner; the build really builds the site', async () => {
     for (const cli of ['report', 'brand', 'build', 'links']) expect(() => cliArgv(cli, [])).not.toThrow();

@@ -36,6 +36,7 @@ export const EVENT_TYPES = [
   'approval-requested', // a release request binding the manifest's sha (Milestone 2, spec §7.2)
   'decided', // a person's decision on a request, or its void/expiry; keyed by the request id
   'message-sent', // the request mail's Message-ID, for the reply adapter
+  'actor-corrected', // who really ran a `verified` event that names someone else; that event stays as written
 ] as const;
 export type EventType = (typeof EVENT_TYPES)[number];
 export type Visibility = 'private' | 'unlisted' | 'public';
@@ -88,6 +89,8 @@ export interface PublishEvent {
   notes?: ReviewNote[]; // changes-requested
   title?: string; // approved: the composed title the person approved with the build
   result?: Verdict; // verified
+  corrects?: { type: string; at: string }; // actor-corrected: the event it is about
+  actor?: string; // actor-corrected: who ran that event
   checks?: LedgerCheck[]; // verified
   request?: string; // approval-requested, decided, message-sent: the request id (rq-<12 hex>)
   release?: string; // approval-requested: the manifest's releaseSha the request binds
@@ -147,6 +150,7 @@ const REQUIRED: Record<EventType, (keyof PublishEvent)[]> = {
   'approval-requested': ['request', 'release', 'outputs', 'expiresAt', 'channel'],
   decided: ['request', 'verdict'],
   'message-sent': ['request', 'messageId'],
+  'actor-corrected': ['corrects', 'actor', 'note'],
 };
 const isRecord = (x: unknown): x is Record<string, unknown> => !!x && typeof x === 'object' && !Array.isArray(x);
 
@@ -251,6 +255,8 @@ export function eventKey(e: PublishEvent): string | null {
       return `decided|${e.request}`; // a request decides once, whatever the verdict
     case 'message-sent':
       return `message-sent|${e.request}|${e.messageId}`;
+    case 'actor-corrected':
+      return `actor-corrected|${e.corrects?.type}|${e.corrects?.at}`;
     case 'updated': // recordUpdated refuses an unchanged sha; A, B, A is three honest events
     case 'failed':
       return null;
@@ -455,6 +461,8 @@ export function approvalHolds(ev: PublishEvent[], build: string, title?: string 
   const d = decisionOn(ev, build);
   return d?.type === 'approved' && (d.title === undefined || title == null || d.title === title);
 }
+/** A record about the output rather than something done to it: it never moves the output's state. */
+export const isReadBack = (e: PublishEvent): boolean => e.type === 'verified' || e.type === 'actor-corrected';
 /** The flow a kind follows: YouTube outputs are uploaded, watched and approved; anything else is made, approved, published. */
 export const flowOf = (kind: string): 'youtube' | 'generic' => (kind.startsWith('youtube') ? 'youtube' : 'generic');
 
@@ -476,7 +484,7 @@ export function outputState(
   const verb = (v: string, flags = '') =>
     `npm run publish -- ${v} ${ctx.topic} ${ctx.story}${ctx.output === 'youtube' ? '' : ` --output ${ctx.output}`}${flags}`;
   const ev = output.events;
-  const last = ev.findLast((e) => e.type !== 'verified') ?? null;
+  const last = ev.findLast((e) => !isReadBack(e)) ?? null;
   const uploads = ev.filter((e) => e.type === 'uploaded');
   const upload = uploads.at(-1) ?? null;
   // a failure overlays the state while what it failed on stands: a re-packaged build or moved metadata is a new attempt
@@ -1166,6 +1174,30 @@ export function recordVerified(
   if (o.state.uploadedBuild) e.build = o.state.uploadedBuild;
   if (o.metadata?.sha) e.metadata = o.metadata.sha;
   return write(o, e);
+}
+
+/** Records who really ran a verification that names someone else. Only a verification: a person's approval, decision
+ *  or go-live is never reattributed. The event itself stays as written; this one sits beside it and moves no state. */
+export function recordActorCorrected(
+  topic: string,
+  storyId: string,
+  a: VerbArgs & { target: { type: string; at: string }; actor: string; note: string },
+): VerbResult {
+  if (a.target.type !== 'verified') throw new Refusal(`only a verification can be reattributed, not ${a.target.type}`);
+  if (!a.actor.trim().startsWith('automated:'))
+    throw new Refusal('the actor of a corrected verification is automated: "automated: <what ran it>"');
+  if (!a.note.trim()) throw new Refusal('a correction needs a note saying how the actor is known');
+  const o = openOutput(topic, storyId, a);
+  if (!o.out.events.some((e) => e.type === 'verified' && e.at === a.target.at))
+    throw new Refusal(`no verified event at ${a.target.at} on ${o.id}`);
+  return write(o, {
+    at: stamp(a),
+    type: 'actor-corrected',
+    by: a.by,
+    corrects: { type: a.target.type, at: a.target.at },
+    actor: a.actor.trim(),
+    note: a.note.trim(),
+  });
 }
 
 export function recordFailed(

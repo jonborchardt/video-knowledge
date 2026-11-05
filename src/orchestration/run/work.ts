@@ -8,7 +8,7 @@ import { commissionOf, isFixtureTopic } from '../../config/site';
 import type { Automation } from '../../shared/automation';
 import type { Mailer } from './mailer';
 import { ROOT, scriptDir, topicsDir } from '../../shared/io';
-import { loadDecisions, topicBoard } from '../production';
+import { boardNext, loadDecisions, topicBoard } from '../production';
 import { RUN_DIR } from './journal';
 import { readLock } from './lock';
 import { alive } from './proc';
@@ -82,6 +82,7 @@ export function nextJob(a: Automation, root = ROOT, deps: WorkDeps = {}): Job | 
   const due: DueResume[] = readSchedule(root).due ?? [];
   if (storyRoom)
     for (const d of due) {
+      if (boardNext(d.topic, d.storyId, root).halt?.kind === 'published') continue; // live: nothing left to resume
       const job: Job = { kind: 'resume', topic: d.topic, storyId: d.storyId, why: `due resume (${d.why})` };
       if (!skip.some((s) => sameJob(s, job))) return job;
     }

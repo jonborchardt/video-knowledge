@@ -300,7 +300,7 @@ This exception covers this one launch and nothing else.
 
 #### Attribution correction
 
-The ledger event below names the wrong actor. It stays as written, because ledger events are append-only and no verb corrects one.
+The ledger event below names the wrong actor. It stays as written, because ledger events are append-only; `npm run publish -- correct-actor`, added afterwards, records the actual actor beside it as an `actor-corrected` event.
 
 | Field          | Value                                                                                                              |
 | -------------- | ------------------------------------------------------------------------------------------------------------------ |
@@ -312,3 +312,7 @@ The ledger event below names the wrong actor. It stays as written, because ledge
 | Written in     | commit `77345df`                                                                                                   |
 
 Read this record alongside that event. The correction changes no ledger state and does not touch Jon's release approval: the `approved` and `decided` events on request `rq-4257256a18e5` are his own and stand as written.
+
+#### The launch job's build step
+
+The launch job crashed at its build step on its first real run, because its CLI runner refused `astro build`. For this launch only, it ran from a one-off script that sent that step to `npm run build`; validation, the commit logic and the push were the job's own, and the push carried commit `4c2c821`. The runner was fixed afterwards in `af4503a`.

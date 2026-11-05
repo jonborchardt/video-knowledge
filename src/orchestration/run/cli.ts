@@ -29,6 +29,11 @@
 //   launch <topic> <story-id>          the launch job by hand (what the work plane runs once the release group is live and
 //                                      verified): report seed, brand, build, links freeze, validate, commit, push, resumable
 //                                      from its record under .automation/launch/; clears the launch's halt first.
+//   probe <topic> <story-id>           the tick's deploy step for one launch by hand: the page read once; live, the social
+//                                      step by policy and the launch mail, once each
+//   settle <topic> <story-id> [--by <actor>]
+//                                      clears an awaiting-person halt older than its output's publication, on the story and
+//                                      its Shorts, and drops its queued resume; the journal keeps the halt (the tick does the same)
 //   status [--json]                    every run folder: running, halted (kind, why, unblock) or idle, and its spend.
 //   tick [--preflight]                 the control plane (automation.json enabled.tick): one short pass: preflight,
 //                                      outbox, due resumes, stuck runs, halt emails, the digest. Never runs a story.
@@ -61,7 +66,10 @@ import { runStory } from './runner';
 import { renderStatus, statusOf } from './status';
 import { tick } from './tick';
 import { type Job, type JobKind, launchDeps, nextJob, scheduleText, work } from './work';
-import { launch } from './launch';
+import { launch, probeLaunches, readLaunch } from './launch';
+import { runCli } from '../../shared/cli';
+import { envFor } from './steps';
+import { settleFinished } from './resume';
 import { discover, discoveryDeps } from './discovery';
 import { runTopic } from './topic-runner';
 import { maintain, maintainDeps } from './maintain';
@@ -147,6 +155,27 @@ switch (verb) {
       process.exit(1);
     }
     console.log(`done at ${r.stage}; ${r.iterations} iterations; ${r.costUsd.toFixed(2)} USD`);
+    break;
+  }
+  case 'probe': {
+    const [topic, storyId] = rest;
+    if (!topic || !storyId) die(usage());
+    const actions = await probeLaunches(loadAutomation(ROOT), ROOT, {
+      run: (cli, args) => runCli(cli, args, { cwd: ROOT, env: envFor(cli, args, process.env) }),
+      mail: mailConfigFromEnv() ? cliMailer(ROOT) : null,
+      only: { topic, storyId },
+    });
+    for (const line of actions) console.log(line);
+    const rec = readLaunch(topic, storyId, ROOT);
+    console.log(rec ? `liveAt ${rec.liveAt} posted ${rec.posted} emailed ${rec.emailed}` : 'no launch record');
+    break;
+  }
+  case 'settle': {
+    const [topic, storyId] = rest;
+    if (!topic || !storyId) die(usage());
+    const by = flag('--by') ?? 'automated: run settle';
+    const settled = settleFinished(ROOT, { by, only: { topic, storyId } });
+    console.log(settled.length ? `settled ${settled.join(', ')}` : 'nothing to settle');
     break;
   }
   case 'launch': {

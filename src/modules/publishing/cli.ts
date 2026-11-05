@@ -15,6 +15,8 @@
 //   updated <topic> <story-id> --fields a,b [--by <name>]     title, description, tags or thumbnail were updated on YouTube to the current metadata
 //   failed <topic> <story-id> --step <s> --error <text> [--retryable] [--by <name>]
 //   unpublished | retracted <topic> <story-id> --note <text> [--by <name>]
+//   correct-actor <topic> <story-id> --event-at <ISO> --actor "automated: <what>" --note <how it is known> [--output <id>] [--by <name>]
+//                                                             who really ran a verification that names someone else; the event stays as written, this one sits beside it (a verification only, never a person's act)
 //   add <topic> <story-id> <output-id> --kind <kind> [--from <output>] [--source <file>]
 //                                                             a new output (youtube-video, youtube-short, blog-post, web-page, post, ...)
 //   request <topic> <story-id> --channel email [--by <name>] [--renew] [--dry-run]
@@ -70,6 +72,7 @@ import {
   openRequest,
   requestOf,
   videoDirOf,
+  recordActorCorrected,
   recordFailed,
   recordPublished,
   recordScheduled,
@@ -336,6 +339,14 @@ async function main() {
         step: need('--step'),
         error: need('--error'),
         retryable: has('--retryable'),
+      });
+      break;
+    case 'correct-actor':
+      r = recordActorCorrected(topic, storyId, {
+        ...common(),
+        target: { type: 'verified', at: need('--event-at') },
+        actor: need('--actor'),
+        note: need('--note'),
       });
       break;
     case 'unpublished':

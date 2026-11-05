@@ -328,6 +328,8 @@ export interface ProbeDeps {
   mail: Mailer | null;
   /** The environment the institution's X keys are read from (whether it is configured); the tick's process env. */
   env?: NodeJS.ProcessEnv;
+  /** One launch only (`npm run run -- probe`); the tick probes them all. */
+  only?: { topic: string; storyId: string };
 }
 
 /** Tick step 5: one probe per pending launch (pushed, not yet live); confirmed, the social post when the policy
@@ -356,6 +358,7 @@ export async function probeLaunches(a: Automation, root = ROOT, d: ProbeDeps): P
   const now = d.now ?? Date.now;
   const actions: string[] = [];
   for (const rec of launches(root)) {
+    if (d.only && (rec.topic !== d.only.topic || rec.storyId !== d.only.storyId)) continue;
     const pushed = a.launch.push ? rec.pushed : rec.committed;
     if (!pushed) continue;
     if (rec.liveAt && rec.posted !== null && (rec.emailed || !d.mail)) continue; // finished

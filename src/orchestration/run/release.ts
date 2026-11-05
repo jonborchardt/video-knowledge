@@ -303,7 +303,13 @@ export async function releaseLoop(
   const verbStep = (o: GroupOutput): Step =>
     o.step.verb === 'package'
       ? cmd('video', ['package', topic, o.storyId])
-      : cmd('publish', [o.step.verb, topic, o.storyId, '--by', c.approver]);
+      : cmd('publish', [
+          o.step.verb,
+          topic,
+          o.storyId,
+          '--by',
+          o.step.verb === 'verify' ? 'automated: release loop' : c.approver,
+        ]);
   const resume = { kind: 'run' as const, text: `npm run run -- story ${topic} ${storyId}` };
   for (let i = 0; i < a.runs.loopCap; i++) {
     const g = releaseGroup(topic, storyId, root);

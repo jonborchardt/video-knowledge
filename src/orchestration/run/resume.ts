@@ -2,12 +2,13 @@
 // run again (a retryable halt by backoff; any other once the board's answer moved, because a person acted; a budget
 // halt when the ISO week rolled) and which running locks are stuck. Pure over the files; the work plane runs what is due.
 import type { Automation } from '../../shared/automation';
-import { ROOT } from '../../shared/io';
+import { ROOT, shortOf } from '../../shared/io';
+import { loadLedger, openOutput } from '../../modules/publishing';
 import { boardNext, loadDecisions } from '../production';
-import { type Halt, readJournal, writeHalt } from './journal';
+import { type Halt, appendJournal, clearHalt, readJournal, writeHalt } from './journal';
 import { readLock, release } from './lock';
 import { alive as pidAlive, killTree } from './proc';
-import { type DueResume, isoWeek } from './schedule';
+import { type DueResume, isoWeek, updateSchedule } from './schedule';
 import { type StatusRow, statusOf } from './status';
 import { isFixtureTopic } from '../../config/site';
 
@@ -32,9 +33,60 @@ export function resumesSince(dir: string, h: Pick<Halt, 'kind'>): number {
   return n;
 }
 
+/** When the output this story id names went live, or null: the main output, or a Short's own. */
+function publishedAt(topic: string, storyId: string, root: string): string | null {
+  const short = shortOf(storyId);
+  const parent = short?.parent ?? storyId;
+  if (!loadLedger(topic, parent, root)) return null;
+  const { out } = openOutput(topic, parent, { root, ...(short && { output: `short:${short.slug}` }) });
+  return out.events.findLast((e) => e.type === 'published')?.at ?? null;
+}
+
+/** Settles what still asks a person about a release already live: an `awaiting-person` halt older than the output's
+ *  publication, on a story the board calls published. The journal keeps the halt whole; its queued resume goes. Any
+ *  other halt stays: a needs-person on a live video is a person's. `only` limits it to one story and its Shorts. */
+export function settleFinished(
+  root = ROOT,
+  deps: ResumeDeps & { by: string; only?: { topic: string; storyId: string } },
+): string[] {
+  const now = deps.now ?? Date.now;
+  const ask = deps.ask ?? boardNext;
+  const at = new Date(now()).toISOString();
+  const settled: string[] = [];
+  for (const r of deps.rows ?? statusOf(root, deps.alive)) {
+    const h = r.halt;
+    if (r.state !== 'halted' || h?.kind !== 'awaiting-person' || isFixtureTopic(r.topic)) continue;
+    const { only } = deps;
+    if (only && (r.topic !== only.topic || !`${r.storyId}/`.startsWith(`${only.storyId}/`))) continue;
+    const live = publishedAt(r.topic, r.storyId, root);
+    if (!live || h.at >= live || ask(r.topic, r.storyId, root).halt?.kind !== 'published') continue;
+    clearHalt(r.dir);
+    appendJournal(r.dir, {
+      at,
+      runId: 'settle',
+      stage: h.stage,
+      next: h.board.next,
+      step: 'settle',
+      kind: 'do',
+      attempt: 0,
+      error: `settled by ${deps.by}: ${h.kind} from ${h.at}, live since ${live}: ${h.why}`,
+    });
+    updateSchedule(root, (s) => ({
+      ...s,
+      due: (s.due ?? []).filter((d) => !(d.topic === r.topic && d.storyId === r.storyId)),
+    }));
+    settled.push(`${r.topic}/${r.storyId}`);
+  }
+  return settled;
+}
+
 export interface ResumeDeps {
   now?: () => number;
-  ask?: (topic: string, storyId: string, root: string) => { stage: string; next: string };
+  ask?: (
+    topic: string,
+    storyId: string,
+    root: string,
+  ) => { stage: string; next: string; halt?: { kind: string } | null };
   rows?: StatusRow[];
   alive?: (pid: number) => boolean;
 }
@@ -86,7 +138,11 @@ export function dueResumes(a: Automation, root = ROOT, deps: ResumeDeps = {}): D
 
 export interface StuckDeps {
   now?: () => number;
-  ask?: (topic: string, storyId: string, root: string) => { stage: string; next: string };
+  ask?: (
+    topic: string,
+    storyId: string,
+    root: string,
+  ) => { stage: string; next: string; halt?: { kind: string } | null };
   rows?: StatusRow[];
   alive?: (pid: number) => boolean;
   kill?: (pid: number) => void;

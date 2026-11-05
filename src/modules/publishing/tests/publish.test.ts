@@ -32,6 +32,7 @@ import {
   parentUrlOf,
   recordApproved,
   recordFailed,
+  recordActorCorrected,
   recordPublished,
   recordScheduled,
   recordSimple,
@@ -1446,6 +1447,70 @@ describe('verification events', () => {
     l = appendEvent(l, 'youtube', { at: '2026-11-05T00:00:00Z', type: 'unpublished', by: 'x', id: 'v' }).ledger;
     l = appendEvent(l, 'youtube', verified('2026-11-05T00:01:00Z')).ledger;
     expect(count(l)).toBe(3);
+  });
+
+  describe('actor corrections', () => {
+    const AGENT = 'automated: tick';
+    const live = () => {
+      const f = fresh({ release: true });
+      recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
+      const v = recordVerified(f.topic, f.story, {
+        ...a(f),
+        result: 'passed',
+        checks: [{ name: 'title', result: 'pass' }],
+      }).event!;
+      return { f, v };
+    };
+    const correct = (
+      f: ReturnType<typeof fresh>,
+      target: { type: string; at: string },
+      extra: { actor?: string; note?: string } = {},
+    ) =>
+      recordActorCorrected(f.topic, f.story, {
+        ...a(f),
+        by: AGENT,
+        target,
+        actor: AGENT,
+        note: 'run by the tick under the approver name',
+        ...extra,
+      });
+
+    it('appends a correction beside the event, which stays as written, and repeats as the same one', () => {
+      const { f, v } = live();
+      const before = events(f).map((e) => JSON.stringify(e));
+      const r = correct(f, { type: 'verified', at: v.at });
+      expect(r.event).toMatchObject({
+        type: 'actor-corrected',
+        actor: AGENT,
+        corrects: { type: 'verified', at: v.at },
+      });
+      expect(
+        events(f)
+          .slice(0, before.length)
+          .map((e) => JSON.stringify(e)),
+      ).toEqual(before);
+      expect(correct(f, { type: 'verified', at: v.at }).existing).toBe(true);
+      expect(events(f)).toHaveLength(before.length + 1);
+      expect(ledgerProblems(loadLedger(f.topic, f.story, f.root), `${f.topic}/${f.story}`)).toEqual([]);
+    });
+
+    it('refuses any event but a verification, a target that does not exist, and an actor that is not automated', () => {
+      const { f, v } = live();
+      for (const type of ['approved', 'decided', 'published', 'scheduled', 'uploaded'])
+        expect(() => correct(f, { type, at: v.at })).toThrow(/only a verification/);
+      expect(() => correct(f, { type: 'verified', at: '2020-01-01T00:00:00.000Z' })).toThrow(/no verified event/);
+      expect(() => correct(f, { type: 'verified', at: v.at }, { actor: 'Jon' })).toThrow(/automated:/);
+      expect(() => correct(f, { type: 'verified', at: v.at }, { note: ' ' })).toThrow(/note/);
+    });
+
+    it('changes no state: a failure stays on the overlay, the verification still counts', () => {
+      const { f, v } = live();
+      recordFailed(f.topic, f.story, { ...a(f), step: 'thumbnail', error: 'forbidden', retryable: false });
+      const before = openOutput(f.topic, f.story, { root: f.root }).state;
+      correct(f, { type: 'verified', at: v.at });
+      expect(openOutput(f.topic, f.story, { root: f.root }).state).toEqual(before);
+      expect(before.failed?.step).toBe('thumbnail');
+    });
   });
 
   it('a verification does not hide a failure and is recorded', () => {

@@ -70,6 +70,7 @@ export async function publishDue(a: Automation, root = ROOT, d: PublishDeps): Pr
   const now = d.now ?? Date.now;
   const actions: string[] = [];
   const by = a.approvals.approverName || 'automation';
+  const readBack = 'automated: tick'; // a sync or a verification is the tick's own act, never the approver's
   const run = async (cli: string, args: string[]) => d.run(cli, args);
   for (const [topic, storyId] of (d.stories ?? (() => storiesWithLedgers(root)))()) {
     const ledger = loadLedger(topic, storyId, root);
@@ -101,7 +102,7 @@ export async function publishDue(a: Automation, root = ROOT, d: PublishDeps): Pr
           );
           continue;
         }
-        const r = await run('publish', ['sync', topic, storyId, '--by', by]);
+        const r = await run('publish', ['sync', topic, storyId, '--by', readBack]);
         actions.push(`${tag}: sync (${r.status})`);
         if (r.status !== 0) {
           if (countTry(dir(), 'sync', at) >= MAX_TRIES)
@@ -110,7 +111,7 @@ export async function publishDue(a: Automation, root = ROOT, d: PublishDeps): Pr
               `read the video back (npm run publish -- sync ${topic} ${storyId}) and fix what it names`,
             );
         } else if (openOutput(topic, storyId, { root }).state.live)
-          await run('publish', ['verify', topic, storyId, '--by', by]);
+          await run('publish', ['verify', topic, storyId, '--by', readBack]);
       }
       continue;
     }
@@ -132,7 +133,7 @@ export async function publishDue(a: Automation, root = ROOT, d: PublishDeps): Pr
         const key = `verify|${id}`;
         const done = triesOf(dir(), key, since);
         if (done < MAX_TRIES) {
-          const r = await run('publish', ['verify', topic, cliStory, '--by', by]);
+          const r = await run('publish', ['verify', topic, cliStory, '--by', readBack]);
           actions.push(`${id === main.id ? tag : `${topic}/${cliStory}`}: verify (${r.status})`);
           countTry(dir(), key, since);
         } else
@@ -158,7 +159,7 @@ export async function publishDue(a: Automation, root = ROOT, d: PublishDeps): Pr
           if (s.state.status === 'metadata-behind' && !s.state.failed) {
             const r = await run('publish', ['push', topic, shortStory, '--by', by]);
             actions.push(`${shortTag}: push (${r.status})`);
-            if (r.status === 0) await run('publish', ['verify', topic, shortStory, '--by', by]);
+            if (r.status === 0) await run('publish', ['verify', topic, shortStory, '--by', readBack]);
           }
           continue;
         }
@@ -200,7 +201,7 @@ export async function publishDue(a: Automation, root = ROOT, d: PublishDeps): Pr
               haltOnce(`${id}: go-live keeps failing after ${tries} tries: ${after.failed.error}`, goLiveFix);
           }
           if (r.status === 0 && openOutput(topic, storyId, { root, output: id }).state.live)
-            await run('publish', ['verify', topic, shortStory, '--by', by]);
+            await run('publish', ['verify', topic, shortStory, '--by', readBack]);
           break; // in order, one per tick: the next after this one has been read back
         }
       }

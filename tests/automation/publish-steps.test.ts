@@ -11,6 +11,7 @@ import { runDir } from '../../src/orchestration/run/journal';
 import { join } from 'node:path';
 import { publishDue } from '../../src/orchestration/run/publish-due';
 import { tick } from '../../src/orchestration/run/tick';
+import { loadLedger } from '../../src/modules/publishing/publish';
 import { type Stage, stagedRelease } from './publish-fake-cli';
 
 const stages: Stage[] = [];
@@ -93,6 +94,27 @@ describe('publishDue', () => {
     expect(s.events().at(-1)).toMatchObject({ type: 'verified', result: 'passed' });
     const a2 = await publishDue(a, s.f.root, { now: () => T0.getTime() + 120_000, run: s.run, mail: null });
     expect(a2).toEqual([]); // once
+  });
+
+  it('a read-back names the tick; the go-live of a Short still names the person who decided', async () => {
+    const s = stagedRelease(T0, { shorts: ['one'] });
+    stages.push(s);
+    expect((await decided(s, 'ok')).status).toBe(0);
+    await publishDue(a, s.f.root, { now: () => T0.getTime() + 60_000, run: s.run, mail: null });
+    await publishDue(a, s.f.root, { now: () => T0.getTime() + 120_000, run: s.run, mail: null });
+    const ledger = loadLedger(s.f.topic, s.f.story, s.f.root)!;
+    const reads = (o: string) => {
+      const ev = ledger.outputs[o].events;
+      return ev.slice(ev.findLastIndex((e) => e.type === 'published')).filter((e) => e.type === 'verified');
+    };
+    expect(reads('youtube').map((e) => e.by)).toEqual(['automated: tick']);
+    expect(reads('short:one').map((e) => e.by)).toEqual(['automated: tick']);
+    const humans = (o: string, type: string) =>
+      ledger.outputs[o].events.filter((e) => e.type === type).map((e) => e.by);
+    expect(humans('youtube', 'approved')).toEqual(['Jon']);
+    expect(humans('youtube', 'decided')).toEqual(['Jon']);
+    expect(humans('youtube', 'published')).toEqual(['Jon']);
+    expect(humans('short:one', 'published')).toEqual(['Jon']);
   });
 
   it('a verify that keeps failing after the publish is retried twice, then the story halts step-failed naming verify', async () => {
