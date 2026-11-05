@@ -83,13 +83,16 @@ export function settleFinished(
   return settled;
 }
 
+/** The board's answer for one story, as the resume logic reads it (`boardNext`, or a test's). */
+export type Ask = (
+  topic: string,
+  storyId: string,
+  root: string,
+) => { stage: string; next: string; halt?: { kind: string } | null };
+
 export interface ResumeDeps {
   now?: () => number;
-  ask?: (
-    topic: string,
-    storyId: string,
-    root: string,
-  ) => { stage: string; next: string; halt?: { kind: string } | null };
+  ask?: Ask;
   rows?: StatusRow[];
   alive?: (pid: number) => boolean;
 }
@@ -141,11 +144,7 @@ export function dueResumes(a: Automation, root = ROOT, deps: ResumeDeps = {}): D
 
 export interface StuckDeps {
   now?: () => number;
-  ask?: (
-    topic: string,
-    storyId: string,
-    root: string,
-  ) => { stage: string; next: string; halt?: { kind: string } | null };
+  ask?: Ask;
   rows?: StatusRow[];
   alive?: (pid: number) => boolean;
   kill?: (pid: number) => void;

@@ -35,11 +35,9 @@ export const automationDir = (root = ROOT): string => {
 };
 export const readOutbox = (root = ROOT): OutboxEntry[] => readCorOutbox(root);
 
-/** The first lines of every mail, by kind: the adapter's list (the mail CLI's `report` uses the same). */
-export const REPLY_GUIDE: Record<OutboxKind, string> = COR_REPLY_GUIDES;
-/** The mail with its reply guide first. */
+/** The mail with its reply guide first (the adapter's list, by kind; the mail CLI's `report` uses the same). */
 export const withGuide = (kind: OutboxKind, out: Omit<OutMail, 'messageId'>): Omit<OutMail, 'messageId'> =>
-  REPLY_GUIDE[kind] ? { ...out, text: `${REPLY_GUIDE[kind]}\n\n${out.text}` } : out;
+  COR_REPLY_GUIDES[kind] ? { ...out, text: `${COR_REPLY_GUIDES[kind]}\n\n${out.text}` } : out;
 
 /** Resend every entry that is due (unsent, attempts left, no live sender, quiet for ten minutes), with its recorded
  *  id; the caller re-renders the body (only a question stores one). Returns the ids resent. */

@@ -22,6 +22,7 @@ import {
   readOutbox,
   receivedPath,
   isClosed,
+  iso,
 } from './outbox';
 import { correlate, ownText } from './thread';
 import type { Correlation, InMail, MailConfig, MailTransport, OutboxEntry } from './types';
@@ -60,7 +61,7 @@ export function recordReceived(cfg: MailConfig, uidValidity: string, mails: InMa
     initHeld(cfg);
     const file = readFile(cfg.dir);
     const outbox = readOutbox(cfg.dir);
-    const at = new Date((cfg.now ?? Date.now)()).toISOString();
+    const at = iso(cfg);
     const seen = new Set([...file.received.map((r) => r.key), ...archivedKeys(cfg.dir)]);
     const lookup = (pred: (e: OutboxEntry) => boolean) => [
       ...outbox.filter(pred),

@@ -1,10 +1,10 @@
-// Every mail opens with what a reply to it does (REPLY_GUIDE), so the person never answers the wrong one.
+// Every mail opens with what a reply to it does (COR_REPLY_GUIDES), so the person never answers the wrong one.
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { FakeMailer } from './fake-mailer';
-import { REPLY_GUIDE } from '../../src/orchestration/run/notify';
+import { COR_REPLY_GUIDES as REPLY_GUIDE } from '../../src/modules/mail';
 
 const root = mkdtempSync(join(tmpdir(), 'vk-guide-'));
 afterAll(() => rmSync(root, { recursive: true, force: true }));

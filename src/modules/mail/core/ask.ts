@@ -16,6 +16,7 @@ import {
   readOutbox,
   recordOutgoing,
   isClosed,
+  iso,
 } from './outbox';
 import { fetchInto } from './received';
 import type { MailConfig, MailTransport, OutboxEntry } from './types';
@@ -59,7 +60,7 @@ const unknown = (id: string): never => {
 export function acknowledge(cfg: MailConfig, id: string, note?: string): void {
   mutateOutbox(cfg, (es) => {
     const q = es.find((e) => e.kind === 'question' && e.id === id) ?? unknown(id);
-    q.acknowledgedAt ??= new Date((cfg.now ?? Date.now)()).toISOString();
+    q.acknowledgedAt ??= iso(cfg);
     if (note?.trim()) q.acknowledgedNote = note.trim();
     return es;
   });
@@ -76,8 +77,7 @@ export function close(cfg: MailConfig, id: string, o: { by: string; note: string
   const d = decision(o.by, o.note);
   mutateOutbox(cfg, (es) => {
     const q = es.find((e) => e.kind === 'question' && e.id === id) ?? unknown(id);
-    if (!isClosed(q))
-      (q.history ??= []).push({ at: new Date((cfg.now ?? Date.now)()).toISOString(), action: 'close', ...d });
+    if (!isClosed(q)) (q.history ??= []).push({ at: iso(cfg), action: 'close', ...d });
     return es;
   });
 }
@@ -87,7 +87,7 @@ export function reopen(cfg: MailConfig, id: string, o: { by: string; note: strin
   mutateOutbox(cfg, (es) => {
     const q = es.find((e) => e.kind === 'question' && e.id === id) ?? unknown(id);
     if (!isClosed(q)) throw new MailRefusal(`${id} is not closed`);
-    q.history!.push({ at: new Date((cfg.now ?? Date.now)()).toISOString(), action: 'reopen', ...d });
+    q.history!.push({ at: iso(cfg), action: 'reopen', ...d });
     return es;
   });
 }

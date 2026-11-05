@@ -31,7 +31,7 @@ import { renderBatch } from './requests';
 import { type CliResult, runCli } from '../../shared/cli';
 import { envFor } from './steps';
 import { alive, killTree } from './proc';
-import { dueResumes, settleFinished, stuckRows } from './resume';
+import { type Ask, dueResumes, settleFinished, stuckRows } from './resume';
 import { updateSchedule } from './schedule';
 import { type StatusRow, statusOf } from './status';
 
@@ -43,7 +43,7 @@ export interface TickDeps {
   now?: () => number;
   preflight?: Partial<PreflightDeps>;
   rows?: () => StatusRow[];
-  ask?: (topic: string, storyId: string, root: string) => { stage: string; next: string };
+  ask?: Ask;
   alive?: (pid: number) => boolean;
   kill?: (pid: number) => void;
   digestExtra?: () => DigestExtra;

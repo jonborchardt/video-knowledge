@@ -120,7 +120,7 @@ export function mutateOutbox(cfg: MailConfig, fn: (entries: OutboxEntry[]) => Ou
 }
 
 const nowOf = (cfg: MailConfig) => (cfg.now ?? Date.now)();
-const iso = (cfg: MailConfig) => new Date(nowOf(cfg)).toISOString();
+export const iso = (cfg: MailConfig) => new Date(nowOf(cfg)).toISOString();
 const maxOf = (cfg?: Pick<MailConfig, 'maxAttempts'>) => cfg?.maxAttempts ?? MAX_ATTEMPTS;
 const domainOf = (from: string) => address(from).split('@')[1] || 'mail.invalid';
 const recipientsOf = (cfg: MailConfig) => (cfg.recipients ?? [cfg.to]).map(address);

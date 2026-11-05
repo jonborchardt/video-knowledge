@@ -17,7 +17,6 @@ export {
   type SendExtra,
   MailRefusal,
   attemptSend,
-  isClosed,
   filterOutbox,
   findOutbox,
   init,
