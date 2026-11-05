@@ -197,6 +197,43 @@ describe('launch', () => {
     expect(launchJobs(a, c.f.root)).toEqual([]);
   }, 120_000);
 
+  it('a verification from before the publish does not clear the launch; the same findings read back after it do', () => {
+    const c = clone({ live: false });
+    const { f } = c;
+    const build = readJson<{ mp4Sha: string }>(join(f.dir, 'video', 'review', 'review.json'))!.mp4Sha;
+    const verified = (at: string): Parameters<typeof appendEvent>[2] => ({
+      at,
+      type: 'verified',
+      by: 'automation',
+      id: 'vid00000000',
+      build,
+      metadata: 'm',
+      result: 'passed',
+      checks: [{ name: 'privacy', result: 'pass' }],
+    });
+    let l = emptyLedger(`${f.topic}/${f.story}`);
+    const add = (e: Parameters<typeof appendEvent>[2]) => {
+      l = appendEvent(l, 'youtube', e).ledger;
+      saveLedger(publishPath(f.topic, f.story, f.root), l);
+    };
+    add({
+      at: '2026-10-31T00:00:00Z',
+      type: 'uploaded',
+      by: 'automation',
+      build,
+      buildStatus: 'release',
+      metadata: 'm',
+      id: 'vid00000000',
+      visibility: 'private',
+    });
+    add(verified('2026-10-31T00:01:00Z'));
+    add({ at: '2026-10-31T01:00:00Z', type: 'approved', by: 'Jon', build });
+    add({ at: '2026-11-01T00:00:00Z', type: 'published', by: 'Jon', id: 'vid00000000' });
+    expect(launchProblem(f.topic, f.story, f.root)).toMatch(/not verified since/);
+    add(verified('2026-11-01T00:01:00Z'));
+    expect(launchProblem(f.topic, f.story, f.root)).toBeNull();
+  }, 120_000);
+
   it('two launches of one story at once: the second is held; a live run of another story in the topic blocks the launch', async () => {
     const c = clone();
     let release: () => void = () => undefined;

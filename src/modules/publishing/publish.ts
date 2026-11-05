@@ -278,11 +278,14 @@ export function appendEvent(
     );
     existing = latest && eventKey(latest) === key ? latest : null;
   } else if (e.type === 'verified') {
-    // pass, fail, pass are three findings; only a repeat of the latest verification of the id, with no upload or
-    // update since (the boundary failedSince reads), is the same one
+    // pass, fail, pass are three findings; only a repeat of the latest verification of the id, with no upload, update
+    // or change of visibility since, is the same one: the launch needs a read-back from after the publish, and the
+    // checks of a private video and of the same video public can be identical
     const i = o.events.findLastIndex((x) => x.type === 'verified' && x.id === e.id);
-    const sent = o.events.findLastIndex((x) => x.type === 'uploaded' || x.type === 'updated');
-    existing = i > sent && eventKey(o.events[i]) === key ? o.events[i] : null;
+    const boundary = o.events.findLastIndex((x) =>
+      ['uploaded', 'updated', 'published', 'unpublished'].includes(x.type),
+    );
+    existing = i > boundary && eventKey(o.events[i]) === key ? o.events[i] : null;
   } else if (key !== null) existing = o.events.find((x) => eventKey(x) === key) ?? null;
   if (existing) return { ledger, existing };
   return {

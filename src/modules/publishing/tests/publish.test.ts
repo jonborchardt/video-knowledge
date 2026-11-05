@@ -1427,6 +1427,27 @@ describe('verification events', () => {
     expect(failedSince(loadLedger(f.topic, f.story, f.root)!.outputs.youtube, ['title'])).toBe(true);
   });
 
+  it('the same findings after a publish or an unpublish are a new verification, and only once', () => {
+    const verified = (at: string): Parameters<typeof appendEvent>[2] => ({
+      at,
+      type: 'verified',
+      by: 'x',
+      id: 'v',
+      result: 'passed',
+      checks: [{ name: 'privacy', result: 'pass' }],
+    });
+    const count = (l: Ledger) => l.outputs.youtube.events.filter((e) => e.type === 'verified').length;
+    let l = emptyLedger('t/s');
+    l = appendEvent(l, 'youtube', verified('2026-11-03T00:00:00Z')).ledger;
+    l = appendEvent(l, 'youtube', { at: '2026-11-04T00:00:00Z', type: 'published', by: 'x', id: 'v' }).ledger;
+    l = appendEvent(l, 'youtube', verified('2026-11-04T00:01:00Z')).ledger;
+    expect(count(l)).toBe(2);
+    expect(appendEvent(l, 'youtube', verified('2026-11-04T00:02:00Z')).existing).not.toBeNull();
+    l = appendEvent(l, 'youtube', { at: '2026-11-05T00:00:00Z', type: 'unpublished', by: 'x', id: 'v' }).ledger;
+    l = appendEvent(l, 'youtube', verified('2026-11-05T00:01:00Z')).ledger;
+    expect(count(l)).toBe(3);
+  });
+
   it('a verification does not hide a failure and is recorded', () => {
     const f = fresh({ release: true });
     recordUploaded(f.topic, f.story, { ...a(f), id: 'studio00001' });
