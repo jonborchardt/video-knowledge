@@ -2,12 +2,22 @@
 // runs in the clone as one resumable job with a progress record; a commit is never repeated and a push never forced;
 // the deploy confirmation is the tick's one probe per pass, followed by the social post and the launch email.
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  renameSync,
+  rmSync,
+  symlinkSync,
+  unlinkSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
-import { readJson, toJson } from '../../src/shared/io';
+import { ROOT, readJson, toJson } from '../../src/shared/io';
 import { FakeMailer } from './fake-mailer';
 import { matterPathOf } from '../../src/modules/website/live';
 import { appendEvent, emptyLedger, loadLedger, publishPath, saveLedger } from '../../src/modules/publishing/publish';
@@ -24,6 +34,8 @@ import {
   readLaunch,
 } from '../../src/orchestration/run/launch';
 import { preflight } from '../../src/orchestration/run/preflight';
+import { launchDeps } from '../../src/orchestration/run/work';
+import { cliArgv } from '../../src/shared/cli';
 import { notifyHalts, readOutbox } from '../../src/orchestration/run/notify';
 import { statusOf } from '../../src/orchestration/run/status';
 import { site } from '../../src/config/site';
@@ -336,6 +348,63 @@ describe('launch', () => {
     expect(readLaunch(c.f.topic, c.f.story, c.f.root)!.pushed).toBe(rec.committed);
     expect(readLaunch(c.f.topic, c.f.story, c.f.root)!.halt).toBeNull();
     expect(readHalt(runDir(c.f.topic, c.f.story, c.f.root))).toBeNull();
+  }, 120_000);
+
+  it('every step of the launch dispatches through the real runner; the build really builds the site', async () => {
+    for (const cli of ['report', 'brand', 'build', 'links']) expect(() => cliArgv(cli, [])).not.toThrow();
+    const c = clone();
+    const { root } = c.f;
+    // a real, tiny Astro project in the clone: the job's own runner runs the repo's astro against it
+    mkdirSync(join(root, 'src', 'pages'), { recursive: true });
+    writeFileSync(join(root, 'astro.config.mjs'), 'export default {};\n');
+    writeFileSync(join(root, 'src', 'pages', 'index.astro'), '<h1>built by the launch</h1>\n');
+    writeFileSync(join(root, '.git', 'info', 'exclude'), 'node_modules\ndist\n.astro\n');
+    const link = join(root, 'node_modules');
+    symlinkSync(join(ROOT, 'node_modules'), link, 'junction');
+    try {
+      c.git('add', 'astro.config.mjs', 'src');
+      c.git('commit', '-q', '-m', 'the site');
+      c.git('push', '-q', 'origin', 'main');
+      const fake = c.deps().run;
+      const real = launchDeps(root).run;
+      const r = await launch(
+        c.f.topic,
+        c.f.story,
+        a,
+        c.deps({ run: (cli: string, args: string[]) => (cli === 'build' ? real(cli, args) : fake(cli, args)) }),
+        root,
+      );
+      expect(r.halt?.why).toBeUndefined();
+      expect(r.outcome).toBe('done');
+      expect(readFileSync(join(root, 'dist', 'index.html'), 'utf8')).toContain('built by the launch');
+      expect(readLaunch(c.f.topic, c.f.story, root)!.steps.built).toBeTruthy();
+    } finally {
+      unlinkSync(link); // the link only, never what it points at
+      expect(existsSync(join(ROOT, 'node_modules'))).toBe(true);
+    }
+  }, 180_000);
+
+  it('a step that cannot even start halts git with its reason and pushes nothing', async () => {
+    const c = clone();
+    const head = c.originHead();
+    const fake = c.deps().run;
+    const r = await launch(
+      c.f.topic,
+      c.f.story,
+      a,
+      c.deps({
+        run: (cli: string, args: string[]) => {
+          if (cli === 'build') throw new Error('package.json has no CLI script build');
+          return fake(cli, args);
+        },
+      }),
+      c.f.root,
+    );
+    expect(r.outcome).toBe('halted');
+    expect(r.halt?.kind).toBe('git');
+    expect(r.halt?.why).toMatch(/npm run build .*no CLI script build/);
+    expect(c.originHead()).toBe(head);
+    expect(readLaunch(c.f.topic, c.f.story, c.f.root)!.steps.built).toBeUndefined();
   }, 120_000);
 
   it('a failing validate halts git with the last lines and pushes nothing; the preflight accepts the dirty paths the record owns', async () => {

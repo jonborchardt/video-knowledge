@@ -13,18 +13,24 @@ import { ROOT } from './io';
 // CLIs themselves still live here).
 const CODE = fileURLToPath(new URL('../..', import.meta.url));
 
+const packageScript = (name: string): string =>
+  (JSON.parse(readFileSync(join(CODE, 'package.json'), 'utf8')) as { scripts?: Record<string, string> }).scripts?.[
+    name
+  ] ?? '';
+
 /** The file `npm run <name>` runs, as package.json writes it (`tsx <file>` or `node <file>`), relative to the repo. */
 export function cliScript(name: string): string {
-  const scripts = (JSON.parse(readFileSync(join(CODE, 'package.json'), 'utf8')) as { scripts?: Record<string, string> })
-    .scripts;
-  const m = /^(?:tsx|node) (\S+)$/.exec(scripts?.[name] ?? '');
+  const m = /^(?:tsx|node) (\S+)$/.exec(packageScript(name));
   if (!m) throw new Error(`package.json has no CLI script ${name}`);
   return m[1];
 }
 
 /** `[node, [tsx, --tsconfig, <repo tsconfig>, <file>, ...args]]`: the argv that runs `npm run <name> -- <args>`
- *  without npm, from any cwd; a `.mjs` script runs under node alone. */
+ *  without npm, from any cwd; a `.mjs` script runs under node alone, an `astro <command>` script under astro's bin. */
 export function cliArgv(name: string, args: string[]): [string, string[]] {
+  // `astro build` is a command of the installed package, not a file of the repo; it builds the project in the cwd
+  const astro = /^astro (\S+)$/.exec(packageScript(name));
+  if (astro) return [process.execPath, [join(CODE, 'node_modules', 'astro', 'bin', 'astro.mjs'), astro[1], ...args]];
   const file = join(CODE, cliScript(name));
   const runner = file.endsWith('.mjs')
     ? []

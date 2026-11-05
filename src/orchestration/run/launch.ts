@@ -236,10 +236,13 @@ async function launchLocked(
     return null;
   };
   const cli = async (name: string, args: string[]): Promise<string | null> => {
-    const r = await d.run(name, args);
-    return r.status === 0
-      ? null
-      : `npm run ${name} -- ${args.join(' ')} failed (exit ${r.status}): ${tail(r.stderr || r.stdout)}`;
+    const label = `npm run ${name} -- ${args.join(' ')}`;
+    try {
+      const r = await d.run(name, args);
+      return r.status === 0 ? null : `${label} failed (exit ${r.status}): ${tail(r.stderr || r.stdout)}`;
+    } catch (e) {
+      return `${label} did not start: ${tail((e as Error).message)}`;
+    }
   };
   const fail = (why: string) =>
     halted(
