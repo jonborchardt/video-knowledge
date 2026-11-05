@@ -251,7 +251,8 @@ describe('recordRequested', () => {
   it('the CLI needs APPROVAL_SECRET and a channel, prints the manifest and the request, and --dry-run writes nothing', () => {
     const f = staged([]);
     ready(f);
-    const env = { ...process.env, APPROVAL_SECRET: SECRET, VK_NO_DOTENV: '1' };
+    // the actor is the test's: --by otherwise falls back to git's user.name, which a clean machine does not have
+    const env = { ...process.env, APPROVAL_SECRET: SECRET, VK_NO_DOTENV: '1', PUBLISH_BY: 'automation' };
     const run = (args: string[], e = env) =>
       runCli('publish', ['request', f.topic, f.story, ...args], { cwd: f.root, env: e } as never);
     const noSecret = run(['--channel', 'email'], { ...env, APPROVAL_SECRET: '' });

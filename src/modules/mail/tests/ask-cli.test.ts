@@ -44,7 +44,8 @@ const setup = (state: Partial<FakeFileState> = {}) => {
   const cli = (...args: string[]) => runCli('mail', args, { cwd: root, env });
   const start = (...args: string[]) => {
     const [exe, argv] = cliArgv('mail', args);
-    const c = spawn(exe, argv, { cwd: root, env, windowsHide: true });
+    // its own process group off Windows, as killTree expects: tsx runs the CLI as a child, and the kill must reach it
+    const c = spawn(exe, argv, { cwd: root, env, windowsHide: true, detached: process.platform !== 'win32' });
     let stdout = '';
     c.stdout.on('data', (d) => (stdout += d));
     c.stderr.on('data', (d) => (stdout += d));
