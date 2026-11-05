@@ -53,6 +53,7 @@ licence at all.
 npm run music -- import <id> --source <strudel-bench>/songs/<name>.strudel --repo <strudel-bench> [--title "<t>"] [--crossfade <s>] [--cleared "<why>"] <strudel-bench>/renders/<name>.<section>.wav ...
 npm run music -- render <id> [--port 3000]     # STRUDEL_BENCH=<dir> with `npm run headless` running there: re-render every variation and import
 npm run music -- show <id>
+npm run music -- cues <topic> <story-id> [--composition <id>] [--force]     # draft video/music.json from the script's sections over a cleared composition (kept unless --force)
 ```
 
 `render` needs the song in a temporary strudel-bench checkout's `songs/`: copy `music/<id>/source.strudel` to

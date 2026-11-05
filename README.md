@@ -9,7 +9,7 @@ The library lives in `../retire-sim/watcher`, which must be checked out next to 
 ## Milestones
 
 1. **Module separation** (done): every capability is a module under `src/modules/` behind a boundary test; the production board derives state from the files; module CLIs are the write boundary (`src/modules/README.md`).
-2. **Autonomous operations** (done in code, Milestone 2): discover, research, produce, approve, publish, distribute and maintain with minimal manual coordination, behind flags in `automation.json` that are all off. The test: approve a batch of topics, stop thinking about the system for a week, and come back to well-researched, professionally produced releases that need only the final decisions, with failures already identified and routine problems handled. A person still creates institutions and channels, approves topics, reviews drafts until automated review earns trust, approves each exact release and every paid link, and resolves genuine exceptions. Each integration is **implemented**, then **verified** by a person against the real service, then **enabled**; `docs/OPERATIONS.md` is the runbook and its readiness table says which are proven.
+2. **Autonomous operations** (done in code, Milestone 2): discover, research, produce, approve, publish, distribute and maintain with minimal manual coordination, behind flags in `automation.json` that are off by default (today `enabled.tick` and `enabled.work` are on, the planes run by hand with no scheduled task; every other flag is off). The test: approve a batch of topics, stop thinking about the system for a week, and come back to well-researched, professionally produced releases that need only the final decisions, with failures already identified and routine problems handled. A person still creates institutions and channels, approves topics, reviews drafts until automated review earns trust, approves each exact release and every paid link, and resolves genuine exceptions. Each integration is **implemented**, then **verified** by a person against the real service, then **enabled**; `docs/OPERATIONS.md` is the runbook, and the readiness table on `/admin#automation` (from `readiness.json`) says which are proven.
 3. **Operational visibility** (Milestone 3): the admin page shows what runs now (actor, model, elapsed, reported cost, estimate), what is blocked and how to unblock it, what awaits a person, the activity and the readiness of every integration; the attempt records and the usage rollups behind it; the objects and modules catalog; the runbook. No new architecture.
 4. **Business optimization** (later): measure audience response, compare stories and institutions, optimize topic selection, test monetization, allocate production by results.
 
@@ -339,9 +339,9 @@ The Short's evidence package is a filter of the parent's: the claims its finding
 the format, how each qualification the parent carried elsewhere is said inside the Short, the cap, the parent's
 fingerprints), so a parent revised, re-locked or re-reviewed stales the Short. The script has three sections (`hook`,
 `finding`, `close`); the validator blocks an assertion on a claim outside the package, a qualified assertion that no
-sentence of the Short carries, and a figure in the close; the storyboard blocks past 170 s and QA fails a measured
+sentence of the Short carries, and a figure in the close; the storyboard blocks past 60 s and QA fails a measured
 Short over 180 s (YouTube's rule). Shorts draw with a closed portrait vocabulary (`short-title`, `short-question`,
-`short-list`, `short-quote`, `short-stat-tiles`, `short-bar`, `short-excerpt`); anything else fails the render
+`short-list`, `short-quote`, `short-stat-tiles`, `short-bar`, `short-excerpt`, `short-endcard`); anything else fails the render
 check. The review package has no chapters, a `#Shorts` description with the full inquiry's link, and its own captions.
 
 Packaging records the Short as the output `short:<slug>` in the parent's `publish.json`, derived from the main video,
@@ -686,8 +686,8 @@ institution's public X account: only from a test account named beside its keys (
 
 ## Automation
 
-Milestone 2 runs the production unattended, behind flags in `automation.json` that are all off: merging the code
-changes nothing. Two verbs share the operating system's scheduler and the locks (spec: the control plane and the
+Milestone 2 runs the production unattended, behind flags in `automation.json` that are off by default: merging the code
+changes nothing until a person turns one on. Two verbs share the operating system's scheduler and the locks (spec: the control plane and the
 work plane):
 
 ```
@@ -789,7 +789,7 @@ the strudel-bench checkout when regenerating music.
 
 ## Website
 
-An [Astro](https://astro.build) site with Tailwind. Each topic with a `report.json` becomes a page (`src/pages/[topic]/index.astro`), linked from a home page. Pages are rendered at build time; the only client script is the tab bar and the claim search.
+An [Astro](https://astro.build) site with Tailwind. Each topic an institution claims (`commissions` in `src/config/site.ts`) with a live video becomes a page (`src/pages/[topic]/index.astro`), reached from the home page through its institution, with a page per live story under it; the dev server previews packaged stories too. Pages are rendered at build time; the client script is the tab bar, the claim search and the claim cards' stat shortcuts, the theme toggle, the matter page's video facade and the calculators in `src/tools/`.
 
 ```
 npm run report     # refresh topics/<topic>/report.json from the stores (needs the watcher checkout, so run locally)

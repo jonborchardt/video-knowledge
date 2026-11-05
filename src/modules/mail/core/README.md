@@ -43,7 +43,7 @@ To check a copy, run `tests/standalone.test.ts` (it needs only this folder and v
 - **Correlated once, conservatively.** The sender must be `to` (a weak check: a From header is not authentication). Then In-Reply-To, a question id in the subject, a question id in the person's own text, then the latest of References. More than one candidate in the deciding tier matches nothing and is listed by `unmatched`.
 - **A timeout stops the waiter, never the question.** A later fetch records the reply; `ask({ resume })` waits again.
 - **Receipt and acknowledgment are separate.** An answer is durable once recorded and stays unseen until `acknowledge`, so a caller that dies holding it loses nothing.
-- **Only completed records archive.** A question answered and acknowledged, or another mail sent or out of attempts. Unanswered questions stay live at any age. Lookups and correlation span the archives.
+- **Only completed records archive.** A question answered and acknowledged, or closed, or another mail sent or out of attempts. Unanswered questions stay live at any age. Lookups and correlation span the archives.
 
 ## Files under `dir`
 

@@ -1,7 +1,7 @@
 {
   "about": "The capabilities (one module each) as src/admin/objects.ts moduleCatalog() reads them from src/modules/README.md, each README and tests/boundaries.json. The dependency rules below are the boundary test (tests/boundaries.test.ts).",
   "generatedFrom": ["src/modules/README.md", "tests/boundaries.json", "src/modules/*/README.md"],
-  "generatedOn": "2026-11-02",
+  "generatedOn": "2026-11-05",
   "rules": [
     "A capability never imports another capability's code: only src/shared/ and src/config/.",
     "It reads another capability's output files through shared io and shared types.",
@@ -55,9 +55,9 @@
     {
       "name": "orchestration",
       "kind": "orchestration",
-      "responsibility": "Owns derived state: every topic's, story's and script's stage, computed from the committed artifacts alone (production.ts). Owns routing: for each story the stage, the next step (a command or a brief), the halt kind (HALT_KINDS) and the board column (COLUMNS, columnOf); publishing answers a structured next step (OutputStep: verb, actor, args, retryable); the board renders it (renderStep) and the runner dispatches on it. npm run board -- next <topic> <story-id> [--json] (board.ts) prints that answer; /produce (.claude/skills/produce/SKILL.md) is the executor of its steps. It reads each module through its index.ts (an inspect() where the module has one) and module files through src/shared/ io. The website reads it only through index.ts. It never writes a module's artifact, never judges content, and schedules nothing in Milestone 1. Milestone 2 adds the executor here (scheduling, execution of the board's steps as child processes and claude -p agents, retries, budgets, notifications, the approval mail adapter); those are coordination, and the two rules above still hold for them: a write is the owning module's CLI, and judgment is a brief handed to an agent. The runner (run/, npm run run -- story | status) is phase 0 of that: runner.ts is the loop over boardNext, steps.ts runs one step (a child with only its verb's secrets, or an agent followed by its validator), agent.ts and roles.ts spawn claude -p under per-role permission rules, guard.ts reverts writes outside a role's files and checks a graphics agent's components before a child loads them, journal.ts and lock.ts are its operational state under the story's gitignored run/, status.ts the read-only view the admin page may import through index.ts. It never publishes, posts, pushes or sends mail; it never imports a module file but its index.ts. Its only stored decision file is production.json (queued, parked); automation.json (Milestone 2) is policy, not state, and its operational files (run/, .automation/) are gitignored and decide no stage. The modules and their rules: src/modules/README.md.",
+      "responsibility": "Owns derived state: every topic's, story's and script's stage, computed from the committed artifacts alone (production.ts). Owns routing: for each story the stage, the next step (a command or a brief), the halt kind (HALT_KINDS) and the board column (COLUMNS, columnOf); publishing answers a structured next step (OutputStep: verb, actor, args, retryable); the board renders it (renderStep) and the runner dispatches on it. npm run board -- next <topic> <story-id> [--json] (board.ts) prints that answer; /produce (.claude/skills/produce/SKILL.md) is the executor of its steps. It reads each module through its index.ts (an inspect() where the module has one) and module files through src/shared/ io. The website reads it only through index.ts. It never writes a module's artifact and never judges content. The executor is here too (Milestone 2: scheduling, execution of the board's steps as child processes and claude -p agents, retries, budgets, notifications, the approval mail adapter); those are coordination, and the two rules above hold for them: a write is the owning module's CLI, and judgment is a brief handed to an agent. The runner (run/, npm run run -- story | status) is phase 0 of that: runner.ts is the loop over boardNext, steps.ts runs one step (a child with only its verb's secrets, or an agent followed by its validator), agent.ts and roles.ts spawn claude -p under per-role permission rules, guard.ts reverts writes outside a role's files and checks a graphics agent's components before a child loads them, journal.ts and lock.ts are its operational state under the story's gitignored run/, status.ts the read-only view the admin page may import through index.ts. What it uploads, publishes, posts or mails goes through the owning module's CLI as a child process (the release loop, the tick's due step, the launch job, the Mailer seam), and only the launch job pushes; it never imports a module file but its index.ts. Its only stored decision file is production.json (queued, parked); automation.json (Milestone 2) is policy, not state, and its operational files (run/, .automation/) are gitignored and decide no stage. The modules and their rules: src/modules/README.md.",
       "paths": "src/orchestration/",
-      "cli": "src/orchestration/board.ts",
+      "cli": "src/orchestration/board.ts, run/cli.ts",
       "briefs": ".claude/skills/produce/SKILL.md",
       "readApi": [],
       "objects": [
@@ -114,7 +114,7 @@
           "owner": "orchestration",
           "writer": "the launch job (npm run run -- launch) and the tick’s probe",
           "valid": "resumable step by step; live only once the deploy probe answers; the X post after that, or not-configured",
-          "file": ".automation/launch/<topic>-<slug>.json"
+          "file": ".automation/launch/<topic>--<slug>.json"
         },
         {
           "id": "journal",
@@ -207,8 +207,8 @@
       "kind": "module",
       "responsibility": "Evidence gathers and judges claims for a topic it is given; proposing or evaluating new topics is topic discovery (src/modules/topic-discovery/) and never evidence's job.",
       "paths": "src/modules/evidence/ (topics.ts, corpus.ts, batches.ts, finding-label.ts, verdict-label.ts, cited.ts, datasets.ts, live-claims.ts)",
-      "cli": "src/modules/evidence/cli-report.ts, record.mjs, record-sources.mjs, watcher.mjs, merge-claims.mjs",
-      "briefs": "extract.md, sources.md, evidence.md, collect.md, studies.md, merge.md, revision-note.md",
+      "cli": "src/modules/evidence/cli-report.ts, cli-research.ts, record.mjs, record-sources.mjs, watcher.mjs, merge-claims.mjs",
+      "briefs": "extract.md, sources.md, evidence.md, collect.md, studies.md, merge.md, revision-note.md, new-sources.md",
       "readApi": [
         "loadMaintenance",
         "scanDue",
@@ -315,6 +315,55 @@
         }
       ],
       "readme": "src/modules/evidence/README.md"
+    },
+    {
+      "name": "mail",
+      "kind": "module",
+      "responsibility": "The system's conversation with a person by email: one outbox (every mail the system sends, questions included), one received store (every mail that came back, correlated once to what it answers), an archive, and the verbs ask, questions, report, test, init, send, fetch (npm run mail). Two kinds of interaction ride the same records without sharing semantics: **general communication** (ask: a question in ordinary language; the reply comes back as the person's own words for the calling agent to reason about, never read by the module as authorisation) and **formal authorisation** (release, scheduling, go-live, paid links, topic approval, article corrections: orchestration's request mails and reply grammar, applied through their own verbs with their request ids and signed manifests).",
+      "paths": "src/modules/mail/ (core/ the extraction-ready core: mutex, outbox, received store, correlation, ask; cor.ts the Commonwealth adapter)",
+      "cli": "src/modules/mail/cli.ts",
+      "briefs": "",
+      "readApi": [
+        "ownText",
+        "address",
+        "questionMail",
+        "InMail",
+        "OutMail",
+        "OutboxEntry",
+        "Question",
+        "QuestionState",
+        "CorMailKind",
+        "COR_REPLY_GUIDES",
+        "corMailDir",
+        "corResendDue",
+        "filterCorOutbox",
+        "mailConfigFromEnv",
+        "openCorQuestions",
+        "readCorOutbox",
+        "readCorReceived",
+        "unsentCorOutbox"
+      ],
+      "objects": [
+        {
+          "id": "question",
+          "t": "Outbox and questions",
+          "d": ["mail/outbox.json: every mail, recorded", "before the send; a question waits there"],
+          "owner": "mail",
+          "writer": "npm run mail -- send | ask | report | questions (orchestration through the Mailer seam, or a session)",
+          "valid": "to the configured person only; a question’s status is derived (unsent, failed, awaiting, unattended, answered, closed); a timeout stops the waiter, never the question; an answer is never an authorisation",
+          "file": ".automation/mail/outbox.json"
+        },
+        {
+          "id": "received",
+          "t": "Received mail",
+          "d": ["mail/received.json: every mail fetched", "once, with the sent mail it answers"],
+          "owner": "mail",
+          "writer": "npm run mail -- fetch (the only IMAP reader; ask runs it while waiting)",
+          "valid": "deduplicated by Message-ID; the sender must be the person; a bounce or an ambiguous reply matches nothing and is listed",
+          "file": ".automation/mail/received.json"
+        }
+      ],
+      "readme": "src/modules/mail/README.md"
     },
     {
       "name": "packaging",
@@ -473,61 +522,6 @@
       "readme": "src/modules/social/README.md"
     },
     {
-      "name": "mail",
-      "kind": "module",
-      "responsibility": "The system's conversation with a person by email: one outbox (every mail sent, questions included), one received store (every mail that came back, correlated once to what it answers), an archive, and the verbs ask, send, fetch, questions, test. General communication (ask: the reply comes back as the person's own words, never read as authorisation) and formal authorisation (orchestration's request mails and reply grammar) ride the same records without sharing semantics. core/ is extraction-ready: it imports nothing outside itself (selfContained in tests/boundaries.json), is configured by an injected MailConfig and MailTransport, and knows kind: string and meta only.",
-      "paths": "src/modules/mail/ (core/: io, mutex, types, thread, transport, outbox, received, ask; cor.ts the Commonwealth adapter)",
-      "cli": "src/modules/mail/cli.ts",
-      "briefs": "",
-      "readApi": [
-        "ownText",
-        "address",
-        "questionMail",
-        "InMail",
-        "OutMail",
-        "OutboxEntry",
-        "Question",
-        "QuestionState",
-        "CorMailKind",
-        "COR_REPLY_GUIDES",
-        "corMailDir",
-        "corResendDue",
-        "filterCorOutbox",
-        "mailConfigFromEnv",
-        "openCorQuestions",
-        "readCorOutbox",
-        "readCorReceived",
-        "unsentCorOutbox"
-      ],
-      "objects": [
-        {
-          "id": "question",
-          "t": "Question",
-          "d": [
-            "an outbox entry of kind question: sent to the",
-            "person, answered in their own words, acknowledged by the agent"
-          ],
-          "owner": "mail",
-          "writer": "npm run mail -- ask (a session or an authorised automation)",
-          "valid": "to the configured person only; status derived (unsent, failed, awaiting, unattended, answered); a timeout stops the waiter, never the question",
-          "file": ".automation/mail/outbox.json"
-        },
-        {
-          "id": "received",
-          "t": "Received mail",
-          "d": [
-            "received.json: every mail fetched, once, with the",
-            "sent mail it answers (correlated at record time)"
-          ],
-          "owner": "mail",
-          "writer": "npm run mail -- fetch (the only IMAP reader; ask runs it while waiting)",
-          "valid": "deduplicated by Message-ID; the sender must be the person; an ambiguous reply matches nothing and is listed",
-          "file": ".automation/mail/received.json"
-        }
-      ],
-      "readme": "src/modules/mail/README.md"
-    },
-    {
       "name": "stories",
       "kind": "module",
       "responsibility": "Stories turns a topic's judged claims into ranked candidate videos, each with its evidence audit, and merges the reviewer's semantic pass.",
@@ -651,7 +645,7 @@
       "responsibility": "Video owns the media of a story: narration, the timeline, the Remotion render (scene chunks, the end card), the soundtrack mix, QA and the render check of its bespoke graphics. Packaging owns the review package made from it; publishing owns the ledger.",
       "paths": "src/modules/video/ (remotion/, bespoke/, tts/, render-check.ts, final.ts), music/",
       "cli": "src/modules/video/cli.ts, cli-music.ts",
-      "briefs": "graphics.md, visual-review.md, video-fix.md, strudel-bench.md",
+      "briefs": "graphics.md, visual-review.md, video-fix.md, draft-review.md, strudel-bench.md",
       "readApi": [
         "loadSegment",
         "renderCheckProblems",

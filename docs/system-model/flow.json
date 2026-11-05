@@ -1,7 +1,7 @@
 {
   "about": "The state machines and the workflow: research stages of a topic, production stages of a story, the board's columns (who acts next), the halt kinds, and the 25-step workflow a person follows, with the person's steps marked.",
-  "generatedOn": "2026-11-02",
-  "authority": "src/orchestration/research.ts (RESEARCH_STAGES), src/orchestration/production.ts (PRODUCTION_STAGES, COLUMNS, HALT_KINDS, stoppedOf), src/orchestration/run/runner.ts (RUN_HALT_KINDS), src/admin/index.astro (flow)",
+  "generatedOn": "2026-11-05",
+  "authority": "src/orchestration/research.ts (RESEARCH_STAGES), src/orchestration/production.ts (PRODUCTION_STAGES, COLUMNS, HALT_KINDS, stoppedOf), src/orchestration/run/journal.ts (RUN_HALT_KINDS), src/admin/index.astro (flow)",
   "principle": "State is derived at read from the committed artifacts; the board (production.ts) is the one state machine; every halt has a kind and a next step that names a command or a brief, so /produce and the runner never parse prose.",
   "researchStages": {
     "entity": "a topic (npm run board -- topic; npm run run -- topic)",
@@ -141,15 +141,19 @@
       "published"
     ],
     "runHalts": [
+      "awaiting-person",
+      "cap",
       "budget",
       "timeout",
+      "step-failed",
       "no-progress",
+      "retries-spent",
+      "lock-stale",
       "unexpected-edit",
       "forbidden-flag",
       "git",
-      "awaiting-person",
-      "step-failed",
-      "retries-spent",
+      "preflight",
+      "request-expired",
       "deploy-timeout",
       "needs-person"
     ],
@@ -179,7 +183,7 @@
     ]
   },
   "workflow": {
-    "about": "the diagram on /admin (flow in src/admin/index.astro): what runs and where a person acts; the order is the order of a release",
+    "about": "the diagram on /admin (flow in src/admin/index.astro), condensed from its 30 boxes to 25 steps (the Studio upload fallback, the X post and the Short's start are folded into their neighbours): what runs and where a person acts; the order is the order of a release",
     "steps": [
       {
         "n": 1,

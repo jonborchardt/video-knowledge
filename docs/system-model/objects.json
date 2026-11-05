@@ -1,7 +1,7 @@
 {
   "about": "Every object the repo keeps, in the column of the stage that makes it; the edges between them. Copied from the admin Objects tab (src/admin/objects.ts: cols, edges). Regenerate: see README.md.",
   "generatedFrom": "src/admin/objects.ts",
-  "generatedOn": "2026-11-02",
+  "generatedOn": "2026-11-05",
   "legend": {
     "you": "hand-written by a person",
     "owner": "the module that owns the artifact",
@@ -357,7 +357,7 @@
           "owner": "orchestration",
           "writer": "the launch job (npm run run -- launch) and the tick’s probe",
           "valid": "resumable step by step; live only once the deploy probe answers; the X post after that, or not-configured",
-          "file": ".automation/launch/<topic>-<slug>.json"
+          "file": ".automation/launch/<topic>--<slug>.json"
         },
         {
           "id": "post",
@@ -401,6 +401,24 @@
           "writer": "npm run run -- verified (a person; the only writer)",
           "valid": "verification only; implemented is code, enabled is automation.json; a verification changes no flag",
           "file": "readiness.json"
+        },
+        {
+          "id": "question",
+          "t": "Outbox and questions",
+          "d": ["mail/outbox.json: every mail, recorded", "before the send; a question waits there"],
+          "owner": "mail",
+          "writer": "npm run mail -- send | ask | report | questions (orchestration through the Mailer seam, or a session)",
+          "valid": "to the configured person only; a question’s status is derived (unsent, failed, awaiting, unattended, answered, closed); a timeout stops the waiter, never the question; an answer is never an authorisation",
+          "file": ".automation/mail/outbox.json"
+        },
+        {
+          "id": "received",
+          "t": "Received mail",
+          "d": ["mail/received.json: every mail fetched", "once, with the sent mail it answers"],
+          "owner": "mail",
+          "writer": "npm run mail -- fetch (the only IMAP reader; ask runs it while waiting)",
+          "valid": "deduplicated by Message-ID; the sender must be the person; a bounce or an ambiguous reply matches nothing and is listed",
+          "file": ".automation/mail/received.json"
         },
         {
           "id": "policy",
