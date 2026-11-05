@@ -184,7 +184,7 @@ describe('mail ask', () => {
     writeFileSync(join(s.root, 'automation.json'), '{}');
     expect(s.cli('ask', 'q', '--text', 't').status).toBe(2);
     expect(existsSync(join(s.dir, 'outbox.json'))).toBe(false);
-  });
+  }, 120_000); // five CLI processes; a tsx spawn measured 2 to 5 s on the Linux CI box under the suite's load
   it.each([
     ['--poll', '0'],
     ['--poll', 'abc'],
@@ -350,7 +350,7 @@ describe('questions --close, --reopen, --ack --note', () => {
       'close by automated: test',
       'reopen by Jon',
     ]);
-  });
+  }, 120_000); // ten CLI processes, the same measured spawn cost
 });
 
 describe('the unattended lifecycle over real processes: ask, reply, consume, act once, acknowledge, report', () => {
