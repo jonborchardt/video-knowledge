@@ -335,4 +335,19 @@ describe('the tick commits the files its own verbs write (plan A, A2)', () => {
     await c(0, false).run('publish', args);
     expect(head()).toBe(h1);
   });
+
+  it('a commit that fails leaves the file written and unstaged: a run that finishes next commits only what it adds itself', async () => {
+    const root = fresh();
+    const g = gitOrigin(root);
+    const other = 'proposals/cheap-flights.json'; // outside any run's `git add`: only the index could carry it along
+    const git = (args: string[]) => {
+      if (args[0] === 'commit') throw new Error('fatal: unable to auto-detect email address');
+      return g.git(...args);
+    };
+    const c = committing(writes(root, other), git, { root, enabled: true, taken: () => [] });
+    await expect(c.run('topics', ['approve', 'cheap-flights', '--by', 'Jon'])).rejects.toThrow(/commit failed/);
+    expect(c.stopped()).toBe(true);
+    expect(g.git('diff', '--cached', '--name-only').trim()).toBe('');
+    expect(g.git('status', '--porcelain', '--untracked-files=all').trim()).toBe(`?? ${other}`);
+  });
 });

@@ -19,7 +19,7 @@ import type { Mailer } from './mailer';
 import type { DigestExtra } from './digest';
 import { sendDigestIfDue } from './digest';
 import type { Halt } from './journal';
-import { acquire, heartbeat, release } from './lock';
+import { TICK_LOCK, acquire, heartbeat, release, setWriting } from './lock';
 import { questionMail } from '../../modules/mail';
 import { type OutboxEntry, automationDir, flushOutbox, notifyHalts, renderHalt } from './notify';
 import { renderDigest } from './digest';
@@ -37,7 +37,7 @@ import { type Ask, dueResumes, settleFinished, stuckRows } from './resume';
 import { updateSchedule } from './schedule';
 import { type StatusRow, statusOf } from './status';
 
-export const TICK_LOCK = 'tick';
+export { TICK_LOCK };
 export const PREFLIGHT_HALT = 'preflight-halt.json';
 
 export interface TickDeps {
@@ -99,11 +99,13 @@ const dirtyIn = (git: (args: string[]) => string, files: string[]): string[] =>
  *  Nothing is committed when whose the files are is not certain: one was dirty before the verb, a live run or a
  *  pending launch will commit them itself (`taken`), or git could not be asked. Those stay as written and the next
  *  preflight reports them. A commit that fails throws and stops every later verb of this pass (`stopped`); nothing
- *  is kept on disk for it, the dirty file is the record. */
+ *  is kept on disk for it, the dirty file is the record (unstaged again, so no other commit carries it along).
+ *  While the verb runs and until its commit, `writing` names the files in the tick's lock: a run's tree guard
+ *  (guard.ts) would otherwise revert them as an edit outside its step. */
 export function committing(
   run: Run,
   git: (args: string[]) => string,
-  o: { root: string; enabled: boolean; taken: () => string[] },
+  o: { root: string; enabled: boolean; taken: () => string[]; writing?: (files: string[] | null) => void },
 ): { run: Run; stopped: () => boolean } {
   let stopped = false;
   const wrapped: Run = async (cli, args) => {
@@ -117,25 +119,35 @@ export function committing(
       } catch {
         // not a repository, or git failed: nothing is committed
       }
-    const r = await run(cli, args);
-    if (!mine) return r;
+    if (!mine) return run(cli, args);
+    o.writing?.(files);
     let wrote = files;
     try {
-      wrote = dirtyIn(git, files);
-      if (wrote.length) {
-        const flag = args.findIndex((x) => x.startsWith('--'));
-        const what = args.slice(0, Math.min(3, flag < 0 ? 3 : flag));
-        git(['add', '--', ...wrote]);
-        git(['commit', '-q', '-m', `tick: ${[cli, ...what].join(' ')}`, '--', ...wrote]); // an automated commit: no author line
+      const r = await run(cli, args);
+      try {
+        wrote = dirtyIn(git, files);
+        if (wrote.length) {
+          const flag = args.findIndex((x) => x.startsWith('--'));
+          const what = args.slice(0, Math.min(3, flag < 0 ? 3 : flag));
+          git(['add', '--', ...wrote]);
+          git(['commit', '-q', '-m', `tick: ${[cli, ...what].join(' ')}`, '--', ...wrote]); // an automated commit: no author line
+        }
+      } catch (e) {
+        stopped = true;
+        try {
+          git(['reset', '-q', '--', ...wrote]);
+        } catch {
+          // git itself is what failed: the file stays staged, and the preflight still names it
+        }
+        const why = (e as Error).message.split('\n')[0];
+        throw new Error(`commit failed after ${cli} ${args[0]} (${wrote.join(', ')} left as written): ${why}`, {
+          cause: e,
+        });
       }
-    } catch (e) {
-      stopped = true;
-      const why = (e as Error).message.split('\n')[0];
-      throw new Error(`commit failed after ${cli} ${args[0]} (${wrote.join(', ')} left as written): ${why}`, {
-        cause: e,
-      });
+      return r;
+    } finally {
+      o.writing?.(null);
     }
-    return r;
   };
   return { run: wrapped, stopped: () => stopped };
 }
@@ -316,6 +328,7 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
         // run's own folder. Another story of a running topic is committed here all the same: left dirty it would
         // halt the next preflight, and the run's tree guard reverts any path that turns dirty during an agent step.
         taken: () => [...preDeps.launches().flatMap((l) => l.paths), ...(preDeps.running?.() ?? [])],
+        writing: (files) => setWriting(join(dir, TICK_LOCK), lock, files),
       },
     );
     const run = commits.run;

@@ -10,7 +10,9 @@ import type { InMail } from '../../src/modules/mail';
 import { FakeMailer } from './fake-mailer';
 import { loadLedger, openRequest } from '../../src/modules/publishing/publish';
 import { INBOX_FILE, decideArgs, originOf, pollInbox, readInbox } from '../../src/orchestration/run/inbox';
+import { type GuardResult, guard, snapshot } from '../../src/orchestration/run/guard';
 import { runDir } from '../../src/orchestration/run/journal';
+import { grantFor } from '../../src/orchestration/run/roles';
 import { automationDir, readOutbox } from '../../src/orchestration/run/notify';
 import { publishDue } from '../../src/orchestration/run/publish-due';
 import { readSchedule } from '../../src/orchestration/run/schedule';
@@ -411,10 +413,20 @@ describe('pollInbox', () => {
     // another story of the same topic is mid-run: its tree guard reverts any path that turns dirty meanwhile, so
     // this story's ledger must be committed all the same (only the run's own folder is left to the run)
     const other = join(s.f.root, 'topics', s.f.topic, 'scripts', 'decision-another-story', 'run');
+    // that run's agent step ends while the verb's write is not yet committed: its guard must leave the ledger to
+    // the tick (it reverted it, and the inbox still recorded the reply handled: the decision was lost)
+    const before = snapshot(s.f.root, { home: s.f.root });
+    const guards: GuardResult[] = [];
     const r = await tick({ ...a, enabled: { ...a.enabled, tick: true } }, s.f.root, {
       mail,
       now,
-      run: s.run,
+      run: async (cli, args) => {
+        const out = await s.run(cli, args);
+        guards.push(
+          guard(before, s.f.root, grantFor('writer', { topic: s.f.topic, storyId: 'decision:another-story' }).writable),
+        );
+        return out;
+      },
       ask: () => ({ stage: 'packaged', next: '' }),
       rows: () => [
         {
@@ -439,6 +451,9 @@ describe('pollInbox', () => {
       },
     });
     expect(r.actions.join('\n')).toMatch(/1 applied/);
+    expect(guards.map((x) => x.reverted)).toEqual([[]]);
+    expect(s.events().map((e) => e.type)).toContain('changes-requested');
+    expect(readInbox(s.f.root).handled.map((h) => h.outcome)).toEqual(['applied:changes']);
     expect(g.git('show', '--name-only', '--format=%s', 'HEAD').trim().split(/\n+/)).toEqual([
       `tick: publish decide ${s.f.topic} ${s.f.story}`,
       relative(s.f.root, join(s.f.dir, 'publish.json')).split(sep).join('/'),

@@ -43,6 +43,33 @@ describe('guard', () => {
     expect(r.read(`${r.story}/script.json`)).toBe('{"revision":2}\n');
     r.git('checkout', '--', '.');
   });
+  it("a file the live tick's verb is writing is left for the tick to commit; unclaimed, or claimed by a dead tick, it is reverted", () => {
+    const ledger = `topics/${r.topic}/scripts/decision-other/publish.json`;
+    r.write(ledger, '{"events":[]}\n');
+    r.git('add', '--', ledger);
+    r.git('commit', '-q', '-m', 'another story');
+    const tickLock = (pid: number, writing?: string[]) =>
+      r.write(
+        '.automation/tick/lock.json',
+        JSON.stringify({ runId: 't', pid, host: 'h', startedAt: 's', heartbeatAt: 's', command: 'tick', writing }),
+      );
+    /** An agent step on this story during which the other story's ledger changes. */
+    const step = () => {
+      const before = snapshot(r.root, { home: home() });
+      r.write(ledger, '{"events":[{"type":"decided"}]}\n');
+      return guard(before, r.root, writer().writable);
+    };
+    tickLock(process.pid, [ledger]);
+    expect(step()).toMatchObject({ ok: true, reverted: [], kept: [] });
+    expect(r.read(ledger)).toContain('decided');
+    r.git('checkout', '--', ledger);
+    tickLock(process.pid); // a live tick between verbs claims nothing
+    expect(step().reverted).toEqual([ledger]);
+    tickLock(999999, [ledger]); // a tick that died mid-verb
+    expect(step().reverted).toEqual([ledger]);
+    expect(r.read(ledger)).not.toContain('decided');
+    rmSync(join(r.root, '.automation'), { recursive: true, force: true });
+  });
   it('an edit to package.json is reverted and listed', () => {
     const before = snapshot(r.root, { home: home() });
     r.write('package.json', '{"scripts":{"script":"node evil.js"}}');

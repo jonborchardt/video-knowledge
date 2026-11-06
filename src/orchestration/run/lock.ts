@@ -21,7 +21,13 @@ export interface Lock {
   childStep?: string;
   /** When the child or agent running now started (the live view's elapsed time). */
   childAt?: string;
+  /** The files the holder's verb is writing now and commits itself as it returns (the tick's `committing`): until
+   *  then they are dirty by a legitimate hand, and a run's tree guard leaves them alone (`tickWriting`). */
+  writing?: string[];
 }
+
+/** The tick's lock folder, under `.automation/`. */
+export const TICK_LOCK = 'tick';
 
 const pidAlive = (pid: number): boolean => {
   try {
@@ -97,6 +103,20 @@ export function setChild(dir: string, lock: Lock, childPid: number | null, child
     childAt: childPid === null ? undefined : (current.childAt ?? new Date().toISOString()),
   });
 }
+
+/** Records the files the owner's verb is writing now, or none (only the owner may). */
+export function setWriting(dir: string, lock: Lock, files: string[] | null): void {
+  const current = readLock(dir);
+  if (current?.runId !== lock.runId) return;
+  writeJsonAtomic(join(dir, LOCK), { ...current, writing: files ?? undefined });
+}
+
+/** What a live tick's verb is writing and will commit itself (repo-relative, as `ownedFiles` names them); nothing
+ *  when no tick runs, it is between verbs, or it died. */
+export const tickWriting = (root: string, alive: (pid: number) => boolean = pidAlive): string[] => {
+  const l = readLock(join(root, '.automation', TICK_LOCK));
+  return l && alive(l.pid) ? (l.writing ?? []) : [];
+};
 
 export function heartbeat(dir: string, lock: Lock, now: () => number = Date.now): void {
   const current = readLock(dir);
