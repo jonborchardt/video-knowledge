@@ -226,11 +226,13 @@ is killed by the tick after `runs.stuckAfterMinutes` and halted `timeout`.
 
 A `preflight` halt that says `the clone is dirty` and names a ledger, a proposal or an article file: the tick commits
 the files each of its own verbs writes as the verb returns (`tick: publish decide ...`), but leaves a file as written
-when it was already dirty, when a live run or a pending launch on the topic will commit it, or when the commit itself
-failed (the tick then runs no further verb that pass). Nothing is lost: the decision is in the file. Commit the named
+when it was already dirty, when it sits in a live run's own folder or a pending launch owns it, or when the commit
+itself failed (the tick then runs no further verb that pass). Nothing is lost: the decision is in the file. Commit the named
 files by hand (`git add <files>`, `git commit`) and the next tick goes on; a reply it had already applied answers
 `already recorded`. A line of a proposal-batch reply whose verb crashes is tried again on every tick and mailed once,
-as the halt `automation/batch:<id>`, with the command to run it by hand.
+as the halt `automation/batch:<id>`, with the command to run it by hand. Whatever you decide about that proposal
+afterwards (by a later reply or by hand) stands: the retried reply leaves a line alone when the proposal was decided
+after it was sent, and says so in its one answer.
 
 ## 10. The fixture
 
