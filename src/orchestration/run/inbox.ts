@@ -12,7 +12,7 @@ import { ROOT, readJson, scriptDir, writeJsonAtomic } from '../../shared/io';
 import type { Mailer } from './mailer';
 import type { ReleaseManifest } from '../../shared/types';
 import { type Halt, clearHalt, readHalt, runDir, writeHalt } from './journal';
-import { aliveLocks } from './lock';
+import { storyRunLive } from './lock';
 import { type OutboxEntry, automationDir } from './notify';
 import { DRAFT_ACCEPTED_FILE, readShadow, recordShadowPerson } from './release';
 import { type Decision, batchIdIn, correctionIdIn, parseReply, requestIdIn } from './replies';
@@ -61,6 +61,15 @@ export interface InboxReport {
   refused: string[];
   /** Messages whose verb failed (exit 1): left for the next poll, the story halted step-failed. */
   failed: string[];
+  /** The lines of a proposal batch whose verb crashed this pass. A batch has no story to halt, so the tick mails
+   *  each as a halt of its own (once per line, by the halt mail's key). */
+  failedLines: FailedLine[];
+}
+export interface FailedLine {
+  batch: string;
+  line: string; // `approve <slug>` or `reject <slug>`
+  error: string;
+  byHand: string;
 }
 
 const REQUEST_KINDS = ['release-request', 'draft-request', 'batch', 'correction-request'];
@@ -115,12 +124,7 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
     return err;
   };
   const file = readInbox(root);
-  /** A run of the story or of one of its Shorts is live: a ledger write now would land inside an agent step and
-   *  the tree guard would revert it (a Short halted unexpected-edit on 2026-11-03), so the reply waits a poll. */
-  const runLive = (topic: string, storyId: string) => {
-    const under = scriptDir(topic, storyId, root).replaceAll('\\', '/') + '/';
-    return aliveLocks(root, deps.alive).some((d) => d.replaceAll('\\', '/').startsWith(under));
-  };
+  const runLive = (topic: string, storyId: string) => storyRunLive(root, topic, storyId, deps.alive); // the reply waits a poll
   await mail.fetch();
   const outbox = filterCorOutbox(() => true, root);
   const handled = new Set(file.handled.map((h) => h.messageId));
@@ -128,7 +132,15 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
   const got = readCorReceived(root).filter(
     (m) => !handled.has(m.key) && outbox.find((e) => e.messageId === m.thread)?.kind !== 'question',
   );
-  const report: InboxReport = { fetched: got.length, applied: [], ignored: [], clarified: [], refused: [], failed: [] };
+  const report: InboxReport = {
+    fetched: got.length,
+    applied: [],
+    ignored: [],
+    clarified: [],
+    refused: [],
+    failed: [],
+    failedLines: [],
+  };
   const by = a.approvals.approverName || address(a.approvals.to);
   for (const m of got) {
     const done = (outcome: string, request?: string) => {
@@ -300,7 +312,21 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
           done('refused');
           continue;
         }
-        if (r.status !== 0) throw new Error(`publish request-changes failed: ${(r.stderr || r.stdout).trim()}`);
+        if (r.status !== 0) {
+          // as a failed decide: the message stays for the next poll and the story halts once. A throw here ended the
+          // poll with this message still first in line, so no later reply was ever reached.
+          const err = verbFailed(
+            r,
+            topic,
+            storyId,
+            'release',
+            'the draft notes',
+            `publish request-changes on the draft of ${storyId} failed`,
+            `npm run publish -- request-changes ${topic} ${storyId} --by "<name>" --note "<note>"`,
+          );
+          report.failed.push(`${storyId}: ${err}`);
+          continue;
+        }
         report.applied.push(`${storyId}: draft changes`);
         done('applied:draft-changes');
       }
@@ -336,15 +362,27 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
       const applied = { approve: [] as string[], reject: [] as string[] };
       const skipped: string[] = [];
       const refused: string[] = [];
+      const failed: FailedLine[] = [];
       const via = `email:${m.messageId}`;
+      // exit 2 is the verb's refusal (the person is told); any other failure is a crash, never a ruling on the line
+      const line = (verb: 'approve' | 'reject', slug: string, r: CliResult, extra = '') => {
+        const said = (r.stderr || r.stdout).trim();
+        if (r.status === 0) applied[verb].push(slug);
+        else if (r.status === 2) refused.push(`${slug}: ${said.replace(/^refused: /, '')}`);
+        else
+          failed.push({
+            batch: id,
+            line: `${verb} ${slug}`,
+            error: said.split('\n').at(-1) ?? 'exit 1',
+            byHand: `npm run topics -- ${verb} ${slug} --by "<name>"${extra}`,
+          });
+      };
       for (const slug of approve) {
         if (!inBatch.includes(slug)) {
           skipped.push(`${slug}: not in batch ${id}`);
           continue;
         }
-        const r = await deps.run('topics', ['approve', slug, '--by', by, '--via', via]);
-        if (r.status === 0) applied.approve.push(slug);
-        else refused.push(`${slug}: ${(r.stderr || r.stdout).trim().replace(/^refused: /, '')}`);
+        line('approve', slug, await deps.run('topics', ['approve', slug, '--by', by, '--via', via]));
       }
       for (const { slug, note } of reject) {
         if (!inBatch.includes(slug)) {
@@ -352,8 +390,15 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
           continue;
         }
         const r = await deps.run('topics', ['reject', slug, '--by', by, '--note', note, '--via', via]);
-        if (r.status === 0) applied.reject.push(slug);
-        else refused.push(`${slug}: ${(r.stderr || r.stdout).trim().replace(/^refused: /, '')}`);
+        line('reject', slug, r, ' --note "<why>"');
+      }
+      if (failed.length) {
+        // nothing is said and the message is not handled: the next poll runs every line again (a decided proposal
+        // answers "already" and changes nothing), so the one reply below is sent on the pass that has no failure.
+        // The tick mails the failure once, as a halt.
+        report.failed.push(`${id}: ${failed.map((f) => `${f.line}: ${f.error}`).join('; ')}`);
+        report.failedLines.push(...failed);
+        continue;
       }
       if (skipped.length || refused.length || t.unknown?.length)
         await reply(

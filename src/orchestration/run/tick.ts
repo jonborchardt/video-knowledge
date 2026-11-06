@@ -4,9 +4,11 @@
 // runs are due again, kills stuck runs, emails new halts, and sends the digest on its day.
 import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, statfsSync, unlinkSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative } from 'node:path';
 import type { Automation } from '../../shared/automation';
-import { MANIFEST_FILE, REVIEW_DIR, ROOT, readJson, scriptDir, writeJsonAtomic } from '../../shared/io';
+import { MANIFEST_FILE, REVIEW_DIR, ROOT, readJson, scriptDir, shortOf, writeJsonAtomic } from '../../shared/io';
+import { publicRecordPath } from '../../shared/public-record';
+import { PROPOSALS_DIR } from '../../modules/topic-discovery';
 import type { ReleaseManifest } from '../../shared/types';
 import { loadLedger, requestOf, youtubeAuthProblem } from '../../modules/publishing';
 import { publicTopicNames } from '../../modules/evidence';
@@ -22,7 +24,7 @@ import { questionMail } from '../../modules/mail';
 import { type OutboxEntry, automationDir, flushOutbox, notifyHalts, renderHalt } from './notify';
 import { renderDigest } from './digest';
 import { type PreflightDeps, preflight } from './preflight';
-import { pollInbox } from './inbox';
+import { type FailedLine, pollInbox } from './inbox';
 import { publishDue } from './publish-due';
 import { launchPaths, probeLaunches } from './launch';
 import { shadowAgreement } from './release';
@@ -67,6 +69,76 @@ export interface TickReport {
 
 const gitIn = (root: string) => (args: string[]) =>
   execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+
+type Run = (cli: string, args: string[]) => Promise<CliResult> | CliResult;
+
+/** The files a tick verb is defined to write, from its arguments (repo-relative; a pathspec where it writes a
+ *  family): the ledger for a publish verb (a Short's is its parent's), the proposal for a decision on it, the
+ *  article's files and the public record for a correction, the post record. Any other verb owns none. A verb that
+ *  writes outside its row leaves that file dirty, and the next preflight halts on it. */
+export function ownedFiles(cli: string, args: string[], root = ROOT): string[] {
+  const [verb, x, y] = args;
+  if (cli === 'topics') return (verb === 'approve' || verb === 'reject') && x ? [`${PROPOSALS_DIR}/${x}.json`] : [];
+  if (!x || !y || !['publish', 'article', 'social'].includes(cli)) return [];
+  const rel = (p: string) => relative(root, p).replaceAll('\\', '/');
+  const dir = rel(scriptDir(x, shortOf(y)?.parent ?? y, root));
+  if (cli === 'social') return verb === 'post' ? [`${dir}/social.json`] : [];
+  if (cli === 'article') return verb === 'decide' ? [`${dir}/article*`, rel(publicRecordPath(x, root))] : [];
+  // `decide --paid` runs `links cta approve` and `video package` as its own children
+  return [`${dir}/publish.json`, ...(args.includes('--paid') ? [`${dir}/cta.json`, `${dir}/video/review`] : [])];
+}
+
+const dirtyIn = (git: (args: string[]) => string, files: string[]): string[] =>
+  git(['status', '--porcelain', '--untracked-files=all', '--', ...files])
+    .split('\n')
+    .map((l) => l.slice(3).trim())
+    .filter(Boolean);
+
+/** `run`, with each verb's own files (ownedFiles) committed right after it returns, whatever its exit code: a verb
+ *  that failed part-way left real events, and leaving them dirty would stop the next tick before it could try again.
+ *  Nothing is committed when whose the files are is not certain: one was dirty before the verb, a live run or a
+ *  pending launch will commit them itself (`taken`), or git could not be asked. Those stay as written and the next
+ *  preflight reports them. A commit that fails throws and stops every later verb of this pass (`stopped`); nothing
+ *  is kept on disk for it, the dirty file is the record. */
+export function committing(
+  run: Run,
+  git: (args: string[]) => string,
+  o: { root: string; enabled: boolean; taken: () => string[] },
+): { run: Run; stopped: () => boolean } {
+  let stopped = false;
+  const wrapped: Run = async (cli, args) => {
+    if (stopped) throw new Error('a commit failed earlier in this pass');
+    const files = o.enabled ? ownedFiles(cli, args, o.root) : [];
+    let mine = false;
+    if (files.length)
+      try {
+        const taken = o.taken();
+        mine = !files.some((f) => taken.some((t) => f === t || f.startsWith(`${t}/`))) && !dirtyIn(git, files).length;
+      } catch {
+        // not a repository, or git failed: nothing is committed
+      }
+    const r = await run(cli, args);
+    if (!mine) return r;
+    let wrote = files;
+    try {
+      wrote = dirtyIn(git, files);
+      if (wrote.length) {
+        const flag = args.findIndex((x) => x.startsWith('--'));
+        const what = args.slice(0, Math.min(3, flag < 0 ? 3 : flag));
+        git(['add', '--', ...wrote]);
+        git(['commit', '-q', '-m', `tick: ${[cli, ...what].join(' ')}`, '--', ...wrote]); // an automated commit: no author line
+      }
+    } catch (e) {
+      stopped = true;
+      const why = (e as Error).message.split('\n')[0];
+      throw new Error(`commit failed after ${cli} ${args[0]} (${wrote.join(', ')} left as written): ${why}`, {
+        cause: e,
+      });
+    }
+    return r;
+  };
+  return { run: wrapped, stopped: () => stopped };
+}
 
 /** `claude -p "pong"` answers within 60 s: the login is live. */
 export const claudeAnswers = (command: string): boolean =>
@@ -124,9 +196,10 @@ export const channelsOf = (root = ROOT): { key: string; problem: string | null }
     .map(([key]) => ({ key, problem: youtubeAuthProblem(key, root, process.env) }));
 };
 
-const preflightRow = (root: string, h: Halt): StatusRow => ({
+/** A halt that belongs to the automation, not to a story: a row the halt mail takes like any other. */
+const automationRow = (root: string, storyId: string, h: Halt): StatusRow => ({
   topic: 'automation',
-  storyId: 'preflight',
+  storyId,
   dir: automationDir(root),
   state: 'halted',
   since: h.at,
@@ -135,6 +208,23 @@ const preflightRow = (root: string, h: Halt): StatusRow => ({
   lastFinish: null,
   costUsd: 0,
 });
+const preflightRow = (root: string, h: Halt): StatusRow => automationRow(root, 'preflight', h);
+/** A proposal-batch line whose verb crashed this pass. The reply is tried again every tick; this row exists only
+ *  while it still fails, so the halt mail's own key (story, kind, why) keeps it to one mail. `why` carries no error
+ *  text: the same line failing differently is still the one failure. */
+const batchRow = (root: string, f: FailedLine, at: string): StatusRow =>
+  automationRow(root, `batch:${f.batch}`, {
+    kind: 'step-failed',
+    stage: 'inbox',
+    why: `topics ${f.line} failed for batch ${f.batch}`,
+    unblock: {
+      kind: 'fix',
+      text: `${f.error}\nfix what it names, or run ${f.byHand} by hand; every tick tries the reply again until it is applied`,
+    },
+    at,
+    runId: 'tick',
+    board: { stage: 'inbox', next: 'a fix' },
+  });
 
 /** What the digest says beyond the status rows, by default: the proposals pending and parked (phase 4). */
 export const defaultDigestExtra =
@@ -152,7 +242,7 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
   try {
     if (!a.enabled.tick && !deps.preflightOnly) return { outcome: 'disabled', actions: ['tick: disabled'] };
     const checked = deps.preflightOnly ? { ...a, enabled: { ...a.enabled, tick: true, work: true } } : a;
-    const pre = preflight(checked, root, {
+    const preDeps: PreflightDeps = {
       git: gitIn(root),
       claude: () => claudeAnswers(a.agents.command),
       env: process.env,
@@ -169,7 +259,8 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
               .replace(/\/run$/, ''),
           ),
       ...deps.preflight,
-    });
+    };
+    const pre = preflight(checked, root, preDeps);
     if (deps.preflightOnly)
       return pre.ok
         ? { outcome: 'ok', actions: ['preflight ok (as if enabled.tick and enabled.work were on)'] }
@@ -212,9 +303,23 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
     }
     // the inbox (replies become decisions) and the due publications (a schedule, the Shorts, a renewal); the deploy
     // probes follow (phase 3 Task 4)
-    const run =
+    // every verb of the three steps below goes through this one `run`: what a verb wrote is committed as it returns,
+    // or the next tick's preflight would find the clone dirty (a reply on a parked story did that on 2026-11-03)
+    const commits = committing(
       deps.run ??
-      ((cli: string, args: string[]) => runCli(cli, args, { cwd: root, env: envFor(cli, args, process.env) }));
+        ((cli: string, args: string[]) => runCli(cli, args, { cwd: root, env: envFor(cli, args, process.env) })),
+      preDeps.git,
+      {
+        root,
+        enabled: a.git.commitOn === 'main', // the branch the preflight has just required
+        // what commits itself: a pending launch its paths, a live run its whole topic (the runner stages the topic)
+        taken: () => [
+          ...preDeps.launches().flatMap((l) => l.paths),
+          ...(preDeps.running?.() ?? []).map((p) => p.split('/').slice(0, 2).join('/')),
+        ],
+      },
+    );
+    const run = commits.run;
     // each publication step on its own: one that throws (a mailbox outage, a missing CLI) is reported as an
     // action and the pass goes on to the rest (the halts, the digest)
     const step = async (name: string, fn: () => Promise<void>) => {
@@ -224,22 +329,40 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
         actions.push(`${name} failed: ${(e as Error).message.split('\n')[0]}`);
       }
     };
-    if (deps.mail)
-      await step('inbox', async () => {
-        const inbox = await pollInbox(a, deps.mail!, root, { now, run });
-        if (inbox.fetched)
-          actions.push(
-            `inbox: ${inbox.fetched} fetched, ${inbox.applied.length} applied, ${inbox.clarified.length} clarified, ${inbox.refused.length} refused, ${inbox.failed.length} failed, ${inbox.ignored.length} ignored`,
-          );
-      });
     const env = deps.env ?? process.env;
-    await step('due publications', async () => {
-      actions.push(...(await publishDue(a, root, { now, run, mail: deps.mail, env })));
-    });
-    // the deploy probes: one per pending launch, then the social post and the launch mail
-    await step('deploy probes', async () => {
-      actions.push(...(await probeLaunches(a, root, { now, run, mail: deps.mail, fetchFn: deps.fetchFn, env })));
-    });
+    const failedLines: FailedLine[] = [];
+    const writing: [string, () => Promise<void>][] = [
+      [
+        'inbox',
+        async () => {
+          if (!deps.mail) return;
+          const inbox = await pollInbox(a, deps.mail, root, { now, run, alive: deps.alive });
+          failedLines.push(...inbox.failedLines);
+          if (inbox.fetched)
+            actions.push(
+              `inbox: ${inbox.fetched} fetched, ${inbox.applied.length} applied, ${inbox.clarified.length} clarified, ${inbox.refused.length} refused, ${inbox.failed.length} failed, ${inbox.ignored.length} ignored`,
+            );
+        },
+      ],
+      [
+        'due publications',
+        async () => {
+          actions.push(...(await publishDue(a, root, { now, run, mail: deps.mail, env, alive: deps.alive })));
+        },
+      ],
+      [
+        // one per pending launch, then the social post and the launch mail
+        'deploy probes',
+        async () => {
+          actions.push(...(await probeLaunches(a, root, { now, run, mail: deps.mail, fetchFn: deps.fetchFn, env })));
+        },
+      ],
+    ];
+    // after a commit that failed the tick writes nothing more this pass: the file stays as its verb left it, the
+    // next preflight finds it and mails the halt, and a person commits it
+    for (const [name, fn] of writing)
+      if (commits.stopped()) actions.push(`${name} skipped: a commit failed earlier in this pass`);
+      else await step(name, fn);
     const settled = settleFinished(root, {
       by: 'automated: tick',
       now,
@@ -268,7 +391,11 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
     if (stuck.stuck.length) actions.push(`stuck: ${stuck.stuck.map((r) => `${r.topic}/${r.storyId}`).join(', ')}`);
     if (deps.mail) {
       const fresh = (deps.rows ?? (() => statusOf(root, deps.alive)))(); // after the kills
-      const sent = await notifyHalts(a, deps.mail, root, { now, rows: fresh });
+      const at = new Date(now()).toISOString();
+      const sent = await notifyHalts(a, deps.mail, root, {
+        now,
+        rows: [...fresh, ...failedLines.map((f) => batchRow(root, f, at))],
+      });
       if (sent.length) actions.push(`emailed ${sent.length} halt${sent.length === 1 ? '' : 's'}`);
       const slot = await sendDigestIfDue(a, deps.mail, now, root, fresh, digestExtra());
       if (slot) actions.push(`digest sent for ${slot}`);

@@ -13,6 +13,9 @@ import { FakeMailer } from './fake-mailer';
 import type { Proposal, ProposalReview } from '../../src/shared/types';
 import { PROPOSALS_DIR, proposalPath, reviewPath } from '../../src/modules/topic-discovery/proposals';
 import { pollInbox, readInbox } from '../../src/orchestration/run/inbox';
+import { automationDir } from '../../src/orchestration/run/notify';
+import { tick } from '../../src/orchestration/run/tick';
+import { gitOrigin } from './publish-fake-cli';
 import { cliRoot } from '../production-helpers';
 
 const FIX = join(ROOT, 'tests', 'fixtures', 'proposals');
@@ -74,7 +77,7 @@ async function staged() {
     ...extra,
   });
   const proposal = (slug: string) => readJson<Proposal>(proposalPath(slug, root))!;
-  return { root, mail, messageId, poll, reply, proposal };
+  return { root, mail, messageId, poll, reply, proposal, run };
 }
 
 describe('pollInbox: proposal batches', () => {
@@ -146,5 +149,101 @@ describe('pollInbox: proposal batches', () => {
     expect(s.mail.sent[1].text).toMatch(/APPROVE <slug>/);
     for (const slug of ['ev-running-costs', 'cheap-flights', 'day-trading-courses'])
       expect(s.proposal(slug).status).toBe('proposed');
+  }, 180_000);
+});
+
+describe('the tick over a proposal batch (plan A, A2)', () => {
+  const on = { ...a, enabled: { ...a.enabled, tick: true } };
+  const pre = (git: (args: string[]) => string) => ({
+    git,
+    claude: () => true,
+    env: { MAIL_SMTP_HOST: 'a', MAIL_IMAP_HOST: 'b', MAIL_USER: 'u', MAIL_PASSWORD: 'p' },
+    freeGb: () => 100,
+    launches: () => [],
+    channels: () => [],
+  });
+  const noGit = (args: string[]) => (args[0] === 'status' ? '' : 'main\n');
+  const HOUR = 3600_000;
+
+  it('a line whose verb crashes is retried, never called a refusal: no reply and no handled record while it fails, one halt mail, then applied once (N5)', async () => {
+    const s = await staged();
+    mkdirSync(join(s.root, 'topics'), { recursive: true });
+    s.mail.deliver(s.reply('APPROVE ev-running-costs\nAPPROVE cheap-flights'));
+    let crash = true;
+    const run = (cli: string, args: string[]) =>
+      crash && args[1] === 'cheap-flights'
+        ? { status: 1, stdout: '', stderr: 'EBUSY: the proposal file is locked\n' }
+        : s.run(cli, args);
+    const go = (at: number) => tick(on, s.root, { mail: s.mail, now: () => at, preflight: pre(noGit), run });
+    const halts = () => s.mail.sent.filter((m) => m.subject.includes(`batch:${BATCH}`));
+    const replies = () => s.mail.sent.filter((m) => m.subject.startsWith('Re:'));
+    const r1 = await go(T0 + HOUR);
+    expect(r1.actions.join('\n')).toMatch(/1 failed/);
+    expect(s.proposal('ev-running-costs').status).toBe('approved');
+    expect(s.proposal('cheap-flights').status).toBe('proposed');
+    expect(readInbox(s.root).handled).toHaveLength(0);
+    expect(replies()).toHaveLength(0);
+    expect(halts()).toHaveLength(1);
+    expect(halts()[0].text).toContain('EBUSY: the proposal file is locked');
+    expect(halts()[0].text).toContain('npm run topics -- approve cheap-flights');
+    // the same failure on the next tick: tried again, nothing more is mailed
+    await go(T0 + 2 * HOUR);
+    expect(halts()).toHaveLength(1);
+    expect(replies()).toHaveLength(0);
+    const first = s.proposal('ev-running-costs').decidedAt;
+    crash = false;
+    await go(T0 + 3 * HOUR);
+    expect(s.proposal('cheap-flights').status).toBe('approved');
+    expect(s.proposal('ev-running-costs').decidedAt).toBe(first); // the line that had succeeded is not applied twice
+    expect(readInbox(s.root).handled).toHaveLength(1);
+    expect(replies()).toHaveLength(0); // every line applied: nothing to report back
+    const notified = readJson<Record<string, { storyId: string }>>(join(automationDir(s.root), 'notified.json')) ?? {};
+    expect(Object.values(notified).filter((n) => n.storyId.startsWith('batch:'))).toEqual([]);
+  }, 180_000);
+
+  it('commits the proposal a reply decided, and only that file; what someone else staged stays staged', async () => {
+    const s = await staged();
+    mkdirSync(join(s.root, 'topics'), { recursive: true });
+    const g = gitOrigin(s.root);
+    writeFileSync(join(s.root, 'notes.txt'), 'someone else is in the middle of this\n');
+    g.git('add', 'notes.txt');
+    // the preflight's whole-tree status is faked clean (the staged note would stop it); every other call is git's
+    const git = (args: string[]) => (args[0] === 'status' && !args.includes('--') ? '' : g.git(...args));
+    s.mail.deliver(s.reply('APPROVE ev-running-costs'));
+    await tick(on, s.root, { mail: s.mail, now: () => T0 + HOUR, preflight: pre(git), run: s.run });
+    expect(s.proposal('ev-running-costs').status).toBe('approved');
+    expect(g.git('show', '--name-only', '--format=%s', 'HEAD').trim().split(/\n+/)).toEqual([
+      'tick: topics approve ev-running-costs',
+      'proposals/ev-running-costs.json',
+    ]);
+    expect(g.git('status', '--porcelain').trim()).toBe('A  notes.txt');
+  }, 180_000);
+
+  it('a commit that fails stops the tick writing for that pass: the file stays as written and the reply is replayed', async () => {
+    const s = await staged();
+    mkdirSync(join(s.root, 'topics'), { recursive: true });
+    s.mail.deliver(s.reply('APPROVE ev-running-costs'));
+    let ran = 0;
+    const run = (cli: string, args: string[]) => (ran++, s.run(cli, args));
+    // clean before the verb, dirty after it, and the commit refused
+    const broken = (args: string[]) => {
+      if (args[0] === 'commit') throw new Error("fatal: Unable to create '.git/index.lock': File exists.");
+      if (args[0] === 'status') return args.includes('--') && ran ? ' M proposals/ev-running-costs.json\n' : '';
+      return 'main\n';
+    };
+    const r1 = await tick(on, s.root, { mail: s.mail, now: () => T0 + HOUR, preflight: pre(broken), run });
+    const said = r1.actions.join('\n');
+    expect(said).toMatch(
+      /inbox failed: commit failed after topics approve \(proposals\/ev-running-costs\.json left as written\)/,
+    );
+    expect(said).toContain('due publications skipped: a commit failed earlier in this pass');
+    expect(said).toContain('deploy probes skipped: a commit failed earlier in this pass');
+    expect(s.proposal('ev-running-costs').status).toBe('approved'); // the decision is on disk
+    expect(readInbox(s.root).handled).toHaveLength(0); // and the reply is not marked handled
+    // after the hand commit the reply is replayed: the verb answers "already", nothing is decided twice
+    const first = s.proposal('ev-running-costs').decidedAt;
+    await tick(on, s.root, { mail: s.mail, now: () => T0 + 2 * HOUR, preflight: pre(noGit), run });
+    expect(s.proposal('ev-running-costs').decidedAt).toBe(first);
+    expect(readInbox(s.root).handled).toHaveLength(1);
   }, 180_000);
 });

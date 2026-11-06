@@ -1,8 +1,8 @@
 // The inbox adapter (spec §4.4 step 3, §7.2, §12): a reply is applied once, by thread and by id, only from the
 // approver; anything unreadable gets one clarification; a crash after the verb and before the record is caught by
 // the verb's idempotence; an expired request is renewed by the tick and the reply to the renewal is applied.
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, writeFileSync } from 'node:fs';
+import { join, relative, sep } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { readJson } from '../../src/shared/io';
@@ -14,7 +14,8 @@ import { runDir } from '../../src/orchestration/run/journal';
 import { automationDir, readOutbox } from '../../src/orchestration/run/notify';
 import { publishDue } from '../../src/orchestration/run/publish-due';
 import { readSchedule } from '../../src/orchestration/run/schedule';
-import { type Stage, stagedRelease, sentRequest } from './publish-fake-cli';
+import { tick } from '../../src/orchestration/run/tick';
+import { type Stage, gitOrigin, stagedRelease, sentRequest } from './publish-fake-cli';
 
 const stages: Stage[] = [];
 afterAll(() => stages.forEach((s) => s.f.cleanup()), 120_000);
@@ -361,5 +362,66 @@ describe('pollInbox', () => {
       )?.kind,
     ).toBe('draft-request');
     expect(existsSync(join(automationDir(s.f.root), INBOX_FILE))).toBe(true);
+  });
+
+  it('a draft reply whose verb fails halts its story and waits for the next poll; the replies after it are still applied (N1)', async () => {
+    const { s, mail, sent, subject, now } = await staged();
+    const draft = await mail.sendTracked(
+      { from: 'automation@example.test', to: 'jon@example.test', subject: '[CoR draft] a title', text: 'watch it' },
+      'draft-request',
+      { topic: s.f.topic, storyId: s.f.story, now },
+    );
+    const dir = runDir(s.f.topic, s.f.story, s.f.root);
+    writeFileSync(
+      join(dir, 'draft-request.json'),
+      JSON.stringify({ draftsha: { messageId: draft.messageId, at: T0.toISOString() } }),
+    );
+    mail.deliver(reply(draft.messageId, 'CHANGES:\nthe chart is unreadable', { subject: 'Re: [CoR draft] a title' }));
+    mail.deliver(reply(sent, 'OK', { subject }));
+    let tries = 0;
+    const run: typeof s.run = async (cli, args) =>
+      args[0] === 'request-changes'
+        ? (tries++, { status: 1, stdout: '', stderr: 'the ledger could not be written\n' })
+        : s.run(cli, args);
+    const mails = mail.sent.length;
+    const r = await pollInbox(a, mail, s.f.root, { now, run });
+    expect(r.failed).toEqual([`${s.f.story}: the ledger could not be written`]);
+    expect(r.applied).toEqual([`${s.request}: ok`]); // the release OK behind it was reached
+    const halt = readJson<{ kind: string; why: string }>(join(dir, 'halt.json'));
+    expect(halt).toMatchObject({ kind: 'step-failed' });
+    expect(halt?.why).toMatch(/publish request-changes .*could not be written/);
+    expect(readInbox(s.f.root).handled.map((h) => h.outcome)).toEqual(['applied:ok']);
+    // still failing on the next poll: one more try of the verb, the same halt, nothing mailed by the inbox
+    await pollInbox(a, mail, s.f.root, { now: () => T0.getTime() + 900_000, run });
+    expect(tries).toBe(2);
+    expect(readJson(join(dir, 'halt.json'))).toEqual(halt);
+    expect(mail.sent).toHaveLength(mails);
+  });
+
+  it('the tick commits the ledger a reply wrote when no run follows: only publish.json, and the story folder is clean (2026-11-03)', async () => {
+    const { s, mail, sent, subject, now } = await staged();
+    const g = gitOrigin(s.f.root);
+    const git = (args: string[]) => (args[0] === 'status' && !args.includes('--') ? '' : g.git(...args));
+    mail.deliver(reply(sent, 'CHANGES:\nthe second chart is wrong', { subject }));
+    const r = await tick({ ...a, enabled: { ...a.enabled, tick: true } }, s.f.root, {
+      mail,
+      now,
+      run: s.run,
+      ask: () => ({ stage: 'packaged', next: '' }),
+      preflight: {
+        git,
+        claude: () => true,
+        env: { MAIL_SMTP_HOST: 'a', MAIL_IMAP_HOST: 'b', MAIL_USER: 'u', MAIL_PASSWORD: 'p' },
+        freeGb: () => 100,
+        launches: () => [],
+        channels: () => [],
+      },
+    });
+    expect(r.actions.join('\n')).toMatch(/1 applied/);
+    expect(g.git('show', '--name-only', '--format=%s', 'HEAD').trim().split(/\n+/)).toEqual([
+      `tick: publish decide ${s.f.topic} ${s.f.story}`,
+      relative(s.f.root, join(s.f.dir, 'publish.json')).split(sep).join('/'),
+    ]);
+    expect(g.git('status', '--porcelain', '--', 'topics').trim()).toBe('');
   });
 });

@@ -2,7 +2,7 @@
 // recovers; a held lock exits at once; a pass records what is due, kills a stuck run, emails new halts, sends the digest.
 import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { scriptDir } from '../../src/shared/io';
@@ -10,7 +10,8 @@ import { FakeMailer } from './fake-mailer';
 import { type Halt, appendJournal, readHalt, runDir, writeHalt } from '../../src/orchestration/run/journal';
 import { automationDir, readOutbox } from '../../src/orchestration/run/notify';
 import { readSchedule, writeSchedule } from '../../src/orchestration/run/schedule';
-import { PREFLIGHT_HALT, TICK_LOCK, tick } from '../../src/orchestration/run/tick';
+import { PREFLIGHT_HALT, TICK_LOCK, committing, ownedFiles, tick } from '../../src/orchestration/run/tick';
+import { gitOrigin } from './publish-fake-cli';
 
 const roots: string[] = [];
 afterAll(() => roots.forEach((r) => rmSync(r, { recursive: true, force: true })));
@@ -264,5 +265,74 @@ describe('tick', () => {
     expect(mail.sent).toHaveLength(3); // the same problem: no second mail
     expect((await tick(on, root, { mail, now: () => T0 + 180_000, preflight: okPre, ask: same })).outcome).toBe('ok');
     expect(mail.sent).toHaveLength(3); // the story's halt was never re-emailed
+  });
+});
+
+describe('the tick commits the files its own verbs write (plan A, A2)', () => {
+  const dir = `topics/${T}/scripts/decision-a`;
+  const ledger = `${dir}/publish.json`;
+  /** A verb that writes `rel` and exits with `status`. */
+  const writes =
+    (root: string, rel: string, status = 0) =>
+    () => {
+      mkdirSync(dirname(join(root, rel)), { recursive: true });
+      writeFileSync(join(root, rel), JSON.stringify({ wrote: Math.random() }));
+      return { status, stdout: '', stderr: '' };
+    };
+
+  it('names the files a verb owns from its arguments', () => {
+    const root = fresh();
+    expect(ownedFiles('publish', ['verify', T, S, '--by', 'x'], root)).toEqual([ledger]);
+    expect(ownedFiles('publish', ['go-live', T, `${S}/shorts/one`], root)).toEqual([ledger]); // a Short's ledger is its parent's
+    expect(ownedFiles('publish', ['decide', T, S, '--paid', '1'], root)).toEqual([
+      ledger,
+      `${dir}/cta.json`,
+      `${dir}/video/review`,
+    ]);
+    expect(ownedFiles('article', ['decide', T, S], root)).toEqual([
+      `${dir}/article*`,
+      `topics/${T}/public-record.json`,
+    ]);
+    expect(ownedFiles('social', ['post', T, S], root)).toEqual([`${dir}/social.json`]);
+    expect(ownedFiles('topics', ['reject', 'cheap-flights', '--by', 'Jon'], root)).toEqual([
+      'proposals/cheap-flights.json',
+    ]);
+    expect(ownedFiles('topics', ['batch'], root)).toEqual([]);
+    expect(ownedFiles('video', ['package', T, S], root)).toEqual([]);
+  });
+
+  it('commits the file after the verb, whatever its exit code; never when it was dirty before, when a run or a launch will take it, or when commits are off', async () => {
+    const root = fresh();
+    const g = gitOrigin(root);
+    const git = (args: string[]) => g.git(...args);
+    const head = () => g.git('rev-parse', 'HEAD').trim();
+    const args = ['request-changes', T, S, '--by', 'Jon'];
+    const taken: string[] = [];
+    const c = (status = 0, enabled = true) =>
+      committing(writes(root, ledger, status), git, { root, enabled, taken: () => taken });
+    // a verb that failed after it wrote: what it left is committed, so the next tick can try it again
+    const h0 = head();
+    expect((await c(1).run('publish', args)).status).toBe(1);
+    expect(head()).not.toBe(h0);
+    expect(g.git('show', '--name-only', '--format=%s', 'HEAD').trim().split(/\n+/)).toEqual([
+      `tick: publish request-changes ${T} ${S}`,
+      ledger,
+    ]);
+    expect(g.git('status', '--porcelain').trim()).toBe('');
+    // dirty before the verb (a person's edit): whose it is is not certain, so nothing is committed
+    const h1 = head();
+    writeFileSync(join(root, ledger), 'a hand edit');
+    await c().run('publish', args);
+    expect(head()).toBe(h1);
+    g.git('checkout', '--', ledger);
+    // a live run on the topic, or a launch pending on it, commits the topic itself
+    taken.push(`topics/${T}`);
+    await c().run('publish', args);
+    expect(head()).toBe(h1);
+    g.git('checkout', '--', ledger);
+    taken.length = 0;
+    // git.commitOn is not main: the tick commits nothing
+    await c(0, false).run('publish', args);
+    expect(head()).toBe(h1);
   });
 });

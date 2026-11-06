@@ -4,7 +4,7 @@ import { closeSync, existsSync, mkdirSync, openSync, unlinkSync, writeSync } fro
 import { hostname } from 'node:os';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
-import { readJson, scriptDirs, writeJsonAtomic } from '../../shared/io';
+import { readJson, scriptDir, scriptDirs, writeJsonAtomic } from '../../shared/io';
 
 const LOCK = 'lock.json';
 const RUN_DIR = 'run';
@@ -112,6 +112,14 @@ export function aliveLocks(root: string, alive: (pid: number) => boolean = pidAl
       const l = readLock(dir);
       return l !== null && alive(l.pid);
     });
+}
+
+/** A run of the story, or of one of its Shorts, is live. The tick leaves that story's ledger alone until it ends: a
+ *  write now would land inside an agent step (the tree guard reverted one on 2026-11-03) or beside the run's own
+ *  publish verbs on the one unlocked ledger. */
+export function storyRunLive(root: string, topic: string, storyId: string, alive?: (pid: number) => boolean): boolean {
+  const under = scriptDir(topic, storyId, root).replaceAll('\\', '/') + '/';
+  return aliveLocks(root, alive).some((d) => d.replaceAll('\\', '/').startsWith(under));
 }
 
 /** Only the owner removes its lock. */

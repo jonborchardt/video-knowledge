@@ -16,6 +16,7 @@ import type { ReleaseManifest } from '../../shared/types';
 import { type Ledger, loadLedger, openOutput, openRequest, requestOf } from '../../modules/publishing';
 import type { CliResult } from '../../shared/cli';
 import { type Halt, readHalt, runDir, writeHalt } from './journal';
+import { storyRunLive } from './lock';
 import { sendReleaseRequest } from './requests';
 
 /** How many times a failing publication step (a sync, a verification read, a Short's go-live) is tried before the
@@ -47,6 +48,7 @@ export interface PublishDeps {
   env?: NodeJS.ProcessEnv;
   /** Every story with a ledger, as [topic, storyId]; the default scans the topics. */
   stories?: () => [string, string][];
+  alive?: (pid: number) => boolean; // tests inject; a live run's story is left for the next tick
 }
 
 /** Every story with a publish.json, from the topic folders. */
@@ -73,6 +75,9 @@ export async function publishDue(a: Automation, root = ROOT, d: PublishDeps): Pr
   const readBack = 'automated: tick'; // a sync or a verification is the tick's own act, never the approver's
   const run = async (cli: string, args: string[]) => d.run(cli, args);
   for (const [topic, storyId] of (d.stories ?? (() => storiesWithLedgers(root)))()) {
+    // a live run owns the story's ledger: its own publish verbs write it, and nothing locks the file. What is due is
+    // read from the ledger each pass and nothing is counted here, so the same step is due on the tick after the run.
+    if (storyRunLive(root, topic, storyId, d.alive)) continue;
     const ledger = loadLedger(topic, storyId, root);
     if (!ledger) continue;
     const main = openOutput(topic, storyId, { root });
