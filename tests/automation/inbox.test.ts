@@ -444,5 +444,5 @@ describe('pollInbox', () => {
       relative(s.f.root, join(s.f.dir, 'publish.json')).split(sep).join('/'),
     ]);
     expect(g.git('status', '--porcelain', '--', 'topics').trim()).toBe('');
-  });
+  }, 120_000); // a git repository over the whole fixture: over 30 s under a full validate's load
 });
