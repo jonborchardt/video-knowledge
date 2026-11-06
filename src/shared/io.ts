@@ -97,7 +97,12 @@ export function shortOf(storyId: string): { parent: string; slug: string } | nul
   const m = /^(.+)\/shorts\/([a-z0-9]+(?:-[a-z0-9]+)*)$/.exec(storyId);
   return m ? { parent: m[1], slug: m[2] } : null;
 }
-export const shortId = (parent: string, slug: string) => `${parent}/shorts/${slug}`;
+/** A Short's id from its story's. A Short is never a parent: the release loop keyed by a Short's id once nested its
+ *  siblings under it and mailed a second draft request (2026-11-03). */
+export const shortId = (parent: string, slug: string) => {
+  if (shortOf(parent)) throw new Error(`a Short has no Shorts: ${parent}`);
+  return `${parent}/shorts/${slug}`;
+};
 /** A story's folder, or a Short's nested in its parent's: the id carries the nesting, so every CLI keyed by
  *  (topic, storyId) works on a Short unchanged. */
 export const scriptDir = (topic: string, storyId: string, root = ROOT) => {
