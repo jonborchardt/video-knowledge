@@ -44,6 +44,25 @@ describe('review package chapters', () => {
       ['0:40', 'Three'],
     ]);
   });
+  /** The fixture's three sentences as a chain's sections: a hook, a titled question, a close. */
+  const chain = (ch?: Record<string, string>) => {
+    const s = seg(ch);
+    const pick = (id: string) => s.script.sections.flatMap((x) => x.sentences).filter((x) => x.id === id);
+    const sections = [
+      { name: 'hook' as const, sentences: pick('s01') },
+      { name: 'question-1' as const, title: 'Why does it cost more?', sentences: pick('s02') },
+      { name: 'close' as const, sentences: pick('s03') },
+    ];
+    return { ...s, script: { ...s.script, sections } };
+  };
+  const titles = (c: ReturnType<typeof chapters>) => c.map((x) => x.title);
+  it('names a chapter for the viewer: the section’s own title, else a plain name, never the internal one', () => {
+    expect(titles(chapters(chain(), tl()))).toEqual(['The question', 'Why does it cost more?', 'In short']);
+  });
+  it('a stored title that is only the old default is replaced; any other stored title is kept', () => {
+    const stored = { sc01: 'Hook', sc02: 'A title someone wrote', sc03: 'Close' };
+    expect(titles(chapters(chain(stored), tl()))).toEqual(['The question', 'A title someone wrote', 'In short']);
+  });
   it('a micro or short story carries no chapters when it cannot hold three of ten seconds', () => {
     // the first real fixture run was refused at package for two chapters of a 17 s video
     const micro = Object.assign(tl(), { targetDurationSeconds: 15 });

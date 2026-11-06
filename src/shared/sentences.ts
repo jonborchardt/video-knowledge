@@ -30,6 +30,17 @@ export const isStudyRef = (r: EvidenceRef): r is { kind: 'study'; claim: string;
 /** A section's viewer-facing title: its own (a question section's question), else its name capitalised. */
 export const sectionTitle = (sec: Pick<Section, 'name' | 'title'>) =>
   sec.title ?? sec.name[0].toUpperCase() + sec.name.slice(1);
+const CHAPTER_TITLES: Record<string, string> = {
+  hook: 'The question',
+  setup: 'Background',
+  investigation: 'The evidence',
+  answer: 'The answer',
+  takeaway: 'What to do',
+  close: 'In short',
+};
+/** A section's title as a YouTube chapter: its own, else a plain name a viewer can read (never "Hook" or "Close"). */
+export const chapterTitle = (sec: Pick<Section, 'name' | 'title'>) =>
+  sec.title ?? CHAPTER_TITLES[sec.name] ?? sectionTitle(sec);
 export const revisionsInPass = (s: Script) => s.revision - (s.passStartRevision ?? 0);
 
 export const words = (s: string) => s.split(/\s+/).filter(Boolean).length;
