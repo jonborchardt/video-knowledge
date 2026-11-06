@@ -129,7 +129,8 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
   const outbox = filterCorOutbox(() => true, root);
   const handled = new Set(file.handled.map((h) => h.messageId));
   // a reply to a general question is the asking agent's, never a decision: this adapter does not look at it
-  const got = readCorReceived(root).filter(
+  const received = readCorReceived(root);
+  const got = received.filter(
     (m) => !handled.has(m.key) && outbox.find((e) => e.messageId === m.thread)?.kind !== 'question',
   );
   const report: InboxReport = {
@@ -304,15 +305,8 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
           ...noteArgs(d.notes ?? [], '--at'),
         ];
         const r = await deps.run('publish', args);
-        if (r.status === 2) {
-          await reply(
-            `Your notes on the draft of ${storyId} could not be recorded: ${r.stderr.trim().replace(/^refused: /, '')}`,
-          );
-          report.refused.push(storyId);
-          done('refused');
-          continue;
-        }
-        if (r.status !== 0) {
+        const failed = `publish request-changes on the draft of ${storyId} failed`;
+        if (r.status !== 0 && r.status !== 2) {
           // as a failed decide: the message stays for the next poll and the story halts once. A throw here ended the
           // poll with this message still first in line, so no later reply was ever reached.
           const err = verbFailed(
@@ -321,10 +315,21 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
             storyId,
             'release',
             'the draft notes',
-            `publish request-changes on the draft of ${storyId} failed`,
+            failed,
             `npm run publish -- request-changes ${topic} ${storyId} --by "<name>" --note "<note>"`,
           );
           report.failed.push(`${storyId}: ${err}`);
+          continue;
+        }
+        // the verb ran to an answer (recorded, or refused and said so below): the halt of an earlier failed try goes
+        const dir = runDir(topic, storyId, root);
+        if (readHalt(dir)?.why.startsWith(failed)) clearHalt(dir);
+        if (r.status === 2) {
+          await reply(
+            `Your notes on the draft of ${storyId} could not be recorded: ${r.stderr.trim().replace(/^refused: /, '')}`,
+          );
+          report.refused.push(storyId);
+          done('refused');
           continue;
         }
         report.applied.push(`${storyId}: draft changes`);
@@ -350,9 +355,20 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
         continue;
       }
       const t = parsed.decision.topics!;
-      const inBatch = loadProposals(root)
-        .filter((x) => x.proposal.batch?.id === id)
-        .map((x) => x.proposal.slug);
+      const proposals = loadProposals(root).map((x) => x.proposal);
+      const inBatch = proposals.filter((p) => p.batch?.id === id).map((p) => p.slug);
+      // A reply is only as new as the moment it was sent. One left for a retry (or read late) must not overturn
+      // what the person decided after sending it, by a later reply or by hand: that line is left and reported.
+      // "After" is the deciding reply's own date, or the decision's time when it did not come by mail.
+      const since: string[] = [];
+      const decidedSince = (slug: string, want: 'approved' | 'rejected'): boolean => {
+        const p = proposals.find((x) => x.slug === slug);
+        if (!p?.decidedAt || p.status === want) return false; // undecided, or already what this line asks
+        const decider = received.find((x) => x.messageId === p.via?.messageId);
+        if (!(Date.parse(decider?.date ?? p.decidedAt) > Date.parse(m.date))) return false;
+        since.push(`${slug}: ${p.status} by ${p.decidedBy ?? 'someone'} after this reply was sent`);
+        return true;
+      };
       const approve = t.approve === 'all' ? [...new Set([...inBatch, ...(t.named ?? [])])] : t.approve;
       const reject = Array.isArray(t.reject)
         ? t.reject
@@ -382,6 +398,7 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
           skipped.push(`${slug}: not in batch ${id}`);
           continue;
         }
+        if (decidedSince(slug, 'approved')) continue;
         line('approve', slug, await deps.run('topics', ['approve', slug, '--by', by, '--via', via]));
       }
       for (const { slug, note } of reject) {
@@ -389,6 +406,7 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
           skipped.push(`${slug}: not in batch ${id}`);
           continue;
         }
+        if (decidedSince(slug, 'rejected')) continue;
         const r = await deps.run('topics', ['reject', slug, '--by', by, '--note', note, '--via', via]);
         line('reject', slug, r, ' --note "<why>"');
       }
@@ -400,12 +418,15 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
         report.failedLines.push(...failed);
         continue;
       }
-      if (skipped.length || refused.length || t.unknown?.length)
+      if (skipped.length || since.length || refused.length || t.unknown?.length)
         await reply(
           [
             `Your reply to the proposal batch ${id} was applied in part.`,
             `Applied: ${[applied.approve.length ? `APPROVE ${applied.approve.join(', ')}` : '', applied.reject.length ? `REJECT ${applied.reject.join(', ')}` : ''].filter(Boolean).join('; ') || 'nothing'}`,
             ...(skipped.length ? ['Skipped (not in this batch):', ...skipped.map((x) => `  - ${x}`)] : []),
+            ...(since.length
+              ? ['Left as decided since (reply again to change it):', ...since.map((x) => `  - ${x}`)]
+              : []),
             ...(refused.length ? ['Refused:', ...refused.map((x) => `  - ${x}`)] : []),
             ...(t.unknown?.length ? ['Lines I could not read:', ...t.unknown.map((x) => `  - ${x}`)] : []),
             '',

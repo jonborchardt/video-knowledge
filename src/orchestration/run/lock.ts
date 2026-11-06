@@ -1,6 +1,6 @@
 // One run per story: a lock file with the owner's pid and a heartbeat. Live while the pid is alive (whatever the
 // heartbeat age: a render can go quiet for an hour); a dead owner's lock is taken over and the caller journals it.
-import { closeSync, existsSync, mkdirSync, openSync, unlinkSync, writeSync } from 'node:fs';
+import { closeSync, existsSync, mkdirSync, openSync, readdirSync, unlinkSync, writeSync } from 'node:fs';
 import { hostname } from 'node:os';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
@@ -117,9 +117,20 @@ export function aliveLocks(root: string, alive: (pid: number) => boolean = pidAl
 /** A run of the story, or of one of its Shorts, is live. The tick leaves that story's ledger alone until it ends: a
  *  write now would land inside an agent step (the tree guard reverted one on 2026-11-03) or beside the run's own
  *  publish verbs on the one unlocked ledger. */
-export function storyRunLive(root: string, topic: string, storyId: string, alive?: (pid: number) => boolean): boolean {
-  const under = scriptDir(topic, storyId, root).replaceAll('\\', '/') + '/';
-  return aliveLocks(root, alive).some((d) => d.replaceAll('\\', '/').startsWith(under));
+export function storyRunLive(
+  root: string,
+  topic: string,
+  storyId: string,
+  alive: (pid: number) => boolean = pidAlive,
+): boolean {
+  // the story's own run folder and each of its Shorts' (aliveLocks reads the story folders only)
+  const dir = scriptDir(topic, storyId, root);
+  const shorts = join(dir, 'shorts');
+  const runs = [dir, ...(existsSync(shorts) ? readdirSync(shorts).map((s) => join(shorts, s)) : [])];
+  return runs.some((d) => {
+    const l = readLock(join(d, RUN_DIR));
+    return l !== null && alive(l.pid);
+  });
 }
 
 /** Only the owner removes its lock. */

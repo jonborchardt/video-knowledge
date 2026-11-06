@@ -325,6 +325,13 @@ describe('publishDue', () => {
     expect(existsSync(join(dir, 'retries.json'))).toBe(false); // and no try was counted
     expect(existsSync(join(dir, 'halt.json'))).toBe(false);
     release(dir, held.lock);
+    // a Short of the story running by its own id holds the story's ledger too (its packaging writes into it)
+    const shortDir = runDir(s.f.topic, `${s.f.story}/shorts/one`, s.f.root);
+    const short = acquire(shortDir, 'run story', { now: () => after.getTime() });
+    if (!('lock' in short)) throw new Error('the test could not take the Short run lock');
+    expect(await due()).toEqual([]);
+    expect(verbs).toEqual([]);
+    release(shortDir, short.lock);
     expect((await due()).join('\n')).toMatch(/sync/); // the run is over: the same step is due and runs
     expect(verbs[0]).toBe('sync');
     expect(state(s, 'youtube').live).toBe(true);

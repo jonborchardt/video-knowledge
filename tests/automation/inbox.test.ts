@@ -396,6 +396,11 @@ describe('pollInbox', () => {
     expect(tries).toBe(2);
     expect(readJson(join(dir, 'halt.json'))).toEqual(halt);
     expect(mail.sent).toHaveLength(mails);
+    // the verb works again: the notes are recorded and the halt this reply caused is gone
+    const r3 = await pollInbox(a, mail, s.f.root, { now: () => T0.getTime() + 1_800_000, run: s.run });
+    expect(r3.failed).toEqual([]);
+    expect(readInbox(s.f.root).handled).toHaveLength(2);
+    expect(readJson(join(dir, 'halt.json'))).toBeNull();
   });
 
   it('the tick commits the ledger a reply wrote when no run follows: only publish.json, and the story folder is clean (2026-11-03)', async () => {
@@ -403,11 +408,27 @@ describe('pollInbox', () => {
     const g = gitOrigin(s.f.root);
     const git = (args: string[]) => (args[0] === 'status' && !args.includes('--') ? '' : g.git(...args));
     mail.deliver(reply(sent, 'CHANGES:\nthe second chart is wrong', { subject }));
+    // another story of the same topic is mid-run: its tree guard reverts any path that turns dirty meanwhile, so
+    // this story's ledger must be committed all the same (only the run's own folder is left to the run)
+    const other = join(s.f.root, 'topics', s.f.topic, 'scripts', 'decision-another-story', 'run');
     const r = await tick({ ...a, enabled: { ...a.enabled, tick: true } }, s.f.root, {
       mail,
       now,
       run: s.run,
       ask: () => ({ stage: 'packaged', next: '' }),
+      rows: () => [
+        {
+          topic: s.f.topic,
+          storyId: 'decision:another-story',
+          dir: other,
+          state: 'running',
+          since: T0.toISOString(),
+          step: 'render',
+          halt: null,
+          lastFinish: null,
+          costUsd: 0,
+        },
+      ],
       preflight: {
         git,
         claude: () => true,

@@ -201,6 +201,45 @@ describe('the tick over a proposal batch (plan A, A2)', () => {
     expect(Object.values(notified).filter((n) => n.storyId.startsWith('batch:'))).toEqual([]);
   }, 180_000);
 
+  it('a reply left for a retry never overturns a decision made after it was sent: the line is left alone and reported once', async () => {
+    const s = await staged();
+    mkdirSync(join(s.root, 'topics'), { recursive: true });
+    // sent an hour ago; one of its two lines crashes, so the reply waits for the next tick
+    const sentAt = new Date(Date.now() - HOUR).toISOString();
+    s.mail.deliver(s.reply('APPROVE ev-running-costs\nAPPROVE cheap-flights', { date: sentAt }));
+    let crash = true;
+    const run = (cli: string, args: string[]) =>
+      crash && args[1] === 'cheap-flights'
+        ? { status: 1, stdout: '', stderr: 'EBUSY: the proposal file is locked\n' }
+        : s.run(cli, args);
+    const go = (at: number) => tick(on, s.root, { mail: s.mail, now: () => at, preflight: pre(noGit), run });
+    await go(T0 + HOUR);
+    expect(s.proposal('ev-running-costs').status).toBe('approved');
+    // the person then changes their mind by hand: that is the later word
+    const hand = s.run('topics', ['reject', 'ev-running-costs', '--by', 'Jon', '--note', 'on reflection, no']);
+    expect(hand.status, hand.stderr).toBe(0);
+    crash = false;
+    await go(T0 + 2 * HOUR);
+    expect(s.proposal('ev-running-costs')).toMatchObject({ status: 'rejected', note: 'on reflection, no' });
+    expect(s.proposal('cheap-flights').status).toBe('approved'); // the line that had crashed is applied
+    expect(readInbox(s.root).handled).toHaveLength(1);
+    const replies = s.mail.sent.filter((m) => m.subject.startsWith('Re:'));
+    expect(replies).toHaveLength(1);
+    expect(replies[0].text).toContain('ev-running-costs: rejected by Jon after this reply was sent');
+  }, 180_000);
+
+  it('two replies waiting in one poll: the one sent later decides, whichever is read first', async () => {
+    const s = await staged();
+    mkdirSync(join(s.root, 'topics'), { recursive: true });
+    s.mail.deliver(s.reply('APPROVE ev-running-costs', { date: new Date(Date.now() - 2 * HOUR).toISOString() }));
+    s.mail.deliver(
+      s.reply('REJECT ev-running-costs: changed my mind', { date: new Date(Date.now() - HOUR).toISOString() }),
+    );
+    await tick(on, s.root, { mail: s.mail, now: () => T0 + HOUR, preflight: pre(noGit), run: s.run });
+    expect(s.proposal('ev-running-costs')).toMatchObject({ status: 'rejected', note: 'changed my mind' });
+    expect(readInbox(s.root).handled).toHaveLength(2);
+  }, 180_000);
+
   it('commits the proposal a reply decided, and only that file; what someone else staged stays staged', async () => {
     const s = await staged();
     mkdirSync(join(s.root, 'topics'), { recursive: true });

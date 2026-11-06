@@ -312,11 +312,10 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
       {
         root,
         enabled: a.git.commitOn === 'main', // the branch the preflight has just required
-        // what commits itself: a pending launch its paths, a live run its whole topic (the runner stages the topic)
-        taken: () => [
-          ...preDeps.launches().flatMap((l) => l.paths),
-          ...(preDeps.running?.() ?? []).map((p) => p.split('/').slice(0, 2).join('/')),
-        ],
+        // what commits itself, exactly as the preflight lets it stand dirty: a pending launch's paths and a live
+        // run's own folder. Another story of a running topic is committed here all the same: left dirty it would
+        // halt the next preflight, and the run's tree guard reverts any path that turns dirty during an agent step.
+        taken: () => [...preDeps.launches().flatMap((l) => l.paths), ...(preDeps.running?.() ?? [])],
       },
     );
     const run = commits.run;

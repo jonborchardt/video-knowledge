@@ -71,6 +71,10 @@ describe('npm run topics', () => {
     expect(c.topics(['validate', 'ev-running-costs']).status).toBe(0);
     expect(c.topics(['validate', 'ev-running-costs', '--review']).status).toBe(0);
     expect(c.topics(['validate', 'no-review', '--review']).status).toBe(2);
+    // a later decision made by hand is not the email's: the earlier decision's via does not carry over to it
+    expect(c.topics(['reject', 'ev-running-costs', '--by', 'Jon', '--note', 'on reflection, no']).status).toBe(0);
+    expect(c.read('ev-running-costs')).toMatchObject({ status: 'rejected', note: 'on reflection, no' });
+    expect(c.read('ev-running-costs').via).toBeUndefined();
   }, 120_000);
 
   it('reject needs a note; park writes the reason, allows an automated actor and is idempotent; a later approve un-parks', () => {
