@@ -3,7 +3,7 @@
 // halt when the ISO week rolled) and which running locks are stuck. Pure over the files; the work plane runs what is due.
 import type { Automation } from '../../shared/automation';
 import { ROOT, shortOf } from '../../shared/io';
-import { loadLedger, openOutput } from '../../modules/publishing';
+import { decidedOk, loadLedger, openOutput } from '../../modules/publishing';
 import { boardNext, loadDecisions } from '../production';
 import { type Halt, appendJournal, clearHalt, readJournal, writeHalt } from './journal';
 import { readLock, release } from './lock';
@@ -45,6 +45,14 @@ export function publishedAt(topic: string, storyId: string, root = ROOT): string
   return o.state.live ? (o.out.events.findLast((e) => e.type === 'published')?.at ?? null) : null;
 }
 
+/** When a person decided `ok` on the story's approved, not yet public video (the page goes up first, plan B), or
+ *  null. A Short's id answers null: its decision is its parent's. */
+export function decidedAt(topic: string, storyId: string, root = ROOT): string | null {
+  if (shortOf(storyId) || !loadLedger(topic, storyId, root)) return null;
+  const o = openOutput(topic, storyId, { root });
+  return !o.state.live && o.state.status === 'approved' ? (decidedOk(o.out)?.at ?? null) : null;
+}
+
 /** Settles what still asks a person about a release already live: an `awaiting-person` halt older than the output's
  *  publication, on a story the board calls published. The journal keeps the halt whole; its queued resume goes. Any
  *  other halt stays: a needs-person on a live video is a person's. `only` limits it to one story and its Shorts. */
@@ -61,8 +69,13 @@ export function settleFinished(
     if (r.state !== 'halted' || h?.kind !== 'awaiting-person' || isFixtureTopic(r.topic)) continue;
     const { only } = deps;
     if (only && (r.topic !== only.topic || !`${r.storyId}/`.startsWith(`${only.storyId}/`))) continue;
+    // published, or decided ok (plan B: the decision answers the request the halt asked about; the launch then
+    // deploys the page and the tick goes live, and launchJobs starts nothing while a person's halt stands)
     const live = publishedAt(r.topic, r.storyId, root);
-    if (!live || h.at >= live || ask(r.topic, r.storyId, root).halt?.kind !== 'published') continue;
+    const decided = live ? null : decidedAt(r.topic, r.storyId, root);
+    const since = live ?? decided;
+    if (!since || h.at >= since) continue;
+    if (live && ask(r.topic, r.storyId, root).halt?.kind !== 'published') continue;
     clearHalt(r.dir);
     appendJournal(r.dir, {
       at,
@@ -72,7 +85,7 @@ export function settleFinished(
       step: 'settle',
       kind: 'do',
       attempt: 0,
-      error: `settled by ${deps.by}: ${h.kind} from ${h.at}, live since ${live}: ${h.why}`,
+      error: `settled by ${deps.by}: ${h.kind} from ${h.at}, ${live ? `live since ${live}` : `decided ok at ${decided}`}: ${h.why}`,
     });
     updateSchedule(root, (s) => ({
       ...s,

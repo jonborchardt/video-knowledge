@@ -35,10 +35,12 @@ function graphOf(
   ledgers: Record<string, (l: Ledger) => Ledger> = {},
   view: View = 'live',
   packaged: string[] = [],
+  frozen: string[] = [], // matter paths in public-urls.json
 ) {
   root = mkdtempSync(join(tmpdir(), 'graph-'));
   mkdirSync(topicDir(T, root), { recursive: true });
   writeFileSync(join(topicDir(T, root), 'stories.json'), toJson({ topic: T, stories: stories.map(story) }));
+  if (frozen.length) writeFileSync(join(root, 'public-urls.json'), toJson(frozen));
   for (const [id, f] of Object.entries(ledgers)) {
     mkdirSync(scriptDir(T, id, root), { recursive: true });
     saveLedger(publishPath(T, id, root), f(emptyLedger(`${T}/${id}`)));
@@ -296,6 +298,56 @@ describe('content graph', () => {
     const g = contentGraph(root, [T], 'live', [`${T}/decision:b`]);
     expect(g.nodes.get(`${T}/decision:b`)!.public).toBe(true);
     expect(urlOf(g, `${T}/decision:b`)).toBe('/heat-pumps/b/');
+  });
+
+  it('a releasing story (uploaded, approved, decided ok, not yet public) is public in the live view with its video node', () => {
+    const BUILD = 'b'.repeat(64);
+    const rq = { channel: 'email' as const, request: 'rq-000000000001' };
+    const releasing = (l: Ledger) =>
+      [
+        {
+          at: '2026-10-01T00:00:00Z',
+          type: 'uploaded' as const,
+          build: BUILD,
+          buildStatus: 'release' as const,
+          metadata: 'm'.repeat(64),
+          id: 'vid00000002',
+        },
+        { at: '2026-10-02T00:00:00Z', type: 'approved' as const, build: BUILD, via: rq },
+        { at: '2026-10-02T00:00:01Z', type: 'decided' as const, request: rq.request, verdict: 'ok' as const, via: rq },
+      ].reduce((acc, e) => appendEvent(acc, 'youtube', { by: 'Jon', ...e }).ledger, l);
+    const g = graphOf(
+      [
+        { id: 'decision:a', claims: ['c1'] },
+        { id: 'decision:b', claims: ['c2'] },
+      ],
+      { 'decision:a': releasing },
+    );
+    expect(g.nodes.get(`${T}/decision:a`)!.public).toBe(true);
+    expect(g.nodes.get(`${T}/decision:a#youtube`)).toMatchObject({
+      public: true,
+      url: 'https://www.youtube.com/watch?v=vid00000002',
+    });
+    expect(isPreview(g, `${T}/decision:a`)).toBe(false);
+    expect(g.nodes.get(`${T}/decision:b`)!.public).toBe(false);
+    expect(liveClaims(g, T)).toEqual(new Set(['c1']));
+  });
+
+  it('a story whose matter path is frozen in public-urls.json stays public without a video (a withdrawn or unpublished release); it is no preview in the live view', () => {
+    const stories = [
+      { id: 'decision:a', claims: ['c1'] },
+      { id: 'decision:b', claims: ['c2'] },
+    ];
+    const g = graphOf(stories, {}, 'live', [], ['/heat-pumps/a/']);
+    expect(g.nodes.get(`${T}/decision:a`)!.public).toBe(true);
+    expect(g.nodes.get(`${T}/decision:a#youtube`)).toBeUndefined();
+    expect(g.nodes.get(`${T}/decision:b`)!.public).toBe(false);
+    expect(isPreview(g, `${T}/decision:a`)).toBe(false);
+    expect(inquiryMatters(g, T).map((m) => [m.href, m.video, m.preview])).toEqual([['/heat-pumps/a/', false, false]]);
+    expect(liveClaims(g, T)).toEqual(new Set());
+    // the dev server's view still marks a packaged, not live story as a preview
+    const p = graphOf(stories, {}, 'preview', ['decision:b']);
+    expect(isPreview(p, `${T}/decision:b`)).toBe(true);
   });
 
   it('liveClaims is the claims of live stories only, in either view', () => {

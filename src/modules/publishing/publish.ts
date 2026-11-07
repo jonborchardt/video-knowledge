@@ -461,6 +461,19 @@ export function approvalHolds(ev: PublishEvent[], build: string, title?: string 
   const d = decisionOn(ev, build);
   return d?.type === 'approved' && (d.title === undefined || title == null || d.title === title);
 }
+/** The person's `decided ok` that stands for the last upload: the latest `decided` with verdict `ok` whose request
+ *  approved the uploaded build, while that approval is still the latest decision on the build (plan B: the page is
+ *  built and the tick goes live on it). Null without an upload, a decision, or once the decision is overturned. */
+export function decidedOk(o: Pick<Output, 'events'>): PublishEvent | null {
+  const ev = o.events;
+  const upload = ev.findLast((e) => e.type === 'uploaded');
+  const decided = ev.findLast((e) => e.type === 'decided');
+  if (!upload?.build || decided?.verdict !== 'ok' || !decided.request) return null;
+  const approved = ev.some(
+    (e) => e.type === 'approved' && e.build === upload.build && e.via?.request === decided.request,
+  );
+  return approved && approvalHolds(ev, upload.build) ? decided : null;
+}
 /** A record about the output rather than something done to it: it never moves the output's state. */
 export const isReadBack = (e: PublishEvent): boolean => e.type === 'verified' || e.type === 'actor-corrected';
 /** The flow a kind follows: YouTube outputs are uploaded, watched and approved; anything else is made, approved, published. */
@@ -676,6 +689,13 @@ export function outputState(
     );
   }
   if (metaBehind) return done('metadata-behind', behind);
+  // decided ok (plan B): the page is built and deployed first, then the tick goes live under that decision
+  const decided = decidedOk(output);
+  if (decided)
+    return done(
+      'approved',
+      step('go-live', 'automation', `decided ok by ${decided.by}: the page deploys, then the tick goes live`),
+    );
   return done('approved', automated(step('go-live', 'person', verb('go-live', ' [--at <ISO>]'), ['[--at <ISO>]'])));
 }
 

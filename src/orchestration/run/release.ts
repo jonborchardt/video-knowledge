@@ -21,6 +21,7 @@ import {
   type OutputState,
   type OutputStep,
   currentBuild,
+  decidedOk,
   loadLedger,
   openOutput,
   openRequest,
@@ -318,7 +319,14 @@ export async function releaseLoop(
         kind: 'fix',
         text: `npm run video -- package ${topic} ${storyId}`,
       });
-    if (g.main.state.live || g.main.state.status === 'scheduled') return c.done();
+    // live, scheduled, or decided ok (plan B: the launch deploys the page and the tick goes live under that decision;
+    // a resumed run must never ask again or go live itself)
+    if (
+      g.main.state.live ||
+      g.main.state.status === 'scheduled' ||
+      (g.main.state.status === 'approved' && decidedOk(openOutput(topic, storyId, { root }).out))
+    )
+      return c.done();
     // no progress: the same picture of the group three times in a row
     const key = JSON.stringify(g.all.map((o) => [o.id, o.step.verb, o.step.actor, o.build?.sha, o.state.status]));
     attempt = key === lastKey ? attempt + 1 : 1;

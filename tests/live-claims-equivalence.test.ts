@@ -50,6 +50,41 @@ describe('live claims equivalence', () => {
     expect(sorted(liveClaims(contentGraph(root, [T]), T))).toEqual([]);
   });
 
+  it('a releasing story (approved, decided ok, not yet public) is live on both sides', () => {
+    const T = 'heat-pumps';
+    root = mkdtempSync(join(tmpdir(), 'live-claims-'));
+    mkdirSync(topicDir(T, root), { recursive: true });
+    const story = {
+      id: 'decision:a',
+      title: 'a',
+      question: 'a?',
+      readiness: 'ready',
+      scores: { overall: 0.5 },
+      claims: ['c1'],
+    };
+    writeFileSync(join(topicDir(T, root), 'stories.json'), toJson({ topic: T, stories: [story] }));
+    mkdirSync(scriptDir(T, 'decision:a', root), { recursive: true });
+    const rq = { channel: 'email' as const, request: 'rq-000000000001' };
+    const build = 'b'.repeat(64);
+    const ledger = [
+      {
+        type: 'uploaded' as const,
+        build,
+        buildStatus: 'release' as const,
+        metadata: 'm'.repeat(64),
+        id: 'vid00000002',
+      },
+      { type: 'approved' as const, build, via: rq },
+      { type: 'decided' as const, request: rq.request, verdict: 'ok' as const, via: rq },
+    ].reduce(
+      (l, e, i) => appendEvent(l, 'youtube', { at: `2026-10-0${i + 1}T00:00:00Z`, by: 'Jon', ...e }).ledger,
+      emptyLedger(`${T}/decision:a`),
+    );
+    saveLedger(publishPath(T, 'decision:a', root), ledger);
+    expect(sorted(liveClaimIds(T, root))).toEqual(['c1']);
+    expect(sorted(liveClaims(contentGraph(root, [T]), T))).toEqual(['c1']);
+  });
+
   it('a chain whose first question is live makes its follow-up live; an unpublished story is not', () => {
     const T = 'heat-pumps';
     root = mkdtempSync(join(tmpdir(), 'live-claims-'));

@@ -10,14 +10,14 @@ import { isFixtureTopic } from '../../config/site';
 import type { CliResult } from '../../shared/cli';
 import { ROOT, readJson, scriptDir, storySlug, topicDir, writeJsonAtomic } from '../../shared/io';
 import type { Mailer } from './mailer';
-import { loadLedger, openOutput } from '../../modules/publishing';
+import { type PublishEvent, decidedOk, loadLedger, openOutput } from '../../modules/publishing';
 import { accountFor, loadSocial } from '../../modules/social';
 import { liveCheck } from '../../modules/website';
 import { type Halt, clearHalt, readHalt, runDir, writeHalt } from './journal';
 import { acquire, aliveLocks, readLock, release } from './lock';
 import { alive } from './proc';
 import { automationDir } from './notify';
-import { storiesWithLedgers } from './publish-due';
+import { MAX_TRIES, countTry, storiesWithLedgers, triesOf } from './publish-due';
 import { renderLaunched } from './requests';
 import type { RunResult } from './runner';
 import type { Job } from './work';
@@ -79,22 +79,26 @@ export interface LaunchDeps {
   validate: () => { ok: boolean; output: string };
 }
 
-/** Why the story may not be launched, or null: the main output published and verified since; no Short left
- *  approved or scheduled (each goes live from the tick before the launch). */
+/** The main output as the launch reads it: its state, and the person's `decided ok` when the video is approved and
+ *  not yet public (plan B: the page is deployed on the decision, the tick goes live after the probe). */
+function releaseOf(topic: string, storyId: string, root: string) {
+  const main = openOutput(topic, storyId, { root });
+  const decided = !main.state.live && main.state.status === 'approved' ? decidedOk(main.out) : null;
+  return { main, decided };
+}
+
+/** Why the story may not be launched, or null: the main output published and verified since, or approved and
+ *  decided ok (the page goes up before the video); no live run of another story in the topic. */
 export function launchProblem(topic: string, storyId: string, root = ROOT): string | null {
   const ledger = loadLedger(topic, storyId, root);
   if (!ledger) return 'no publish.json';
-  const main = openOutput(topic, storyId, { root });
-  if (!main.state.live) return `${main.id} is not live (${main.state.status})`;
-  const ev = ledger.outputs[main.id].events;
-  const published = ev.findLastIndex((e) => e.type === 'published');
-  const verified = ev.slice(published).find((e) => e.type === 'verified' && e.result === 'passed');
-  if (!verified) return `${main.id} is live but not verified since: npm run publish -- verify`;
-  for (const id of Object.keys(ledger.outputs)) {
-    if (!id.startsWith('short:')) continue;
-    const s = openOutput(topic, storyId, { root, output: id });
-    // an uploaded Short goes live before the launch (it is approved, scheduled, or behind on its parent link)
-    if (s.state.id && !s.state.live) return `${id} is ${s.state.status}, not live yet`;
+  const { main, decided } = releaseOf(topic, storyId, root);
+  if (!main.state.live && !decided) return `${main.id} is not live (${main.state.status})`;
+  if (main.state.live) {
+    const ev = ledger.outputs[main.id].events;
+    const published = ev.findLastIndex((e) => e.type === 'published');
+    const verified = ev.slice(published).find((e) => e.type === 'verified' && e.result === 'passed');
+    if (!verified) return `${main.id} is live but not verified since: npm run publish -- verify`;
   }
   // another story of the topic with a live run writes under the same topic folder: the launch waits for it
   const mine = runDir(topic, storyId, root);
@@ -103,6 +107,31 @@ export function launchProblem(topic: string, storyId: string, root = ROOT): stri
   );
   if (other) return `${other.replaceAll('\\', '/').split('/').at(-2)} has a live run in this topic: the launch waits`;
   return null;
+}
+
+/** Why the launch may not be announced yet (the X post, the launch mail), or null: the main output live and verified
+ *  since its publish, every uploaded Short live (each goes live from the tick after the video). */
+export function announceProblem(topic: string, storyId: string, root = ROOT): string | null {
+  const ledger = loadLedger(topic, storyId, root);
+  if (!ledger) return 'no publish.json';
+  const main = openOutput(topic, storyId, { root });
+  if (!main.state.live) return `${main.id} is not live (${main.state.status})`;
+  const ev = ledger.outputs[main.id].events;
+  const published = ev.findLastIndex((e) => e.type === 'published');
+  if (!ev.slice(published).some((e) => e.type === 'verified' && e.result === 'passed'))
+    return `${main.id} is live but not verified since: npm run publish -- verify`;
+  for (const id of Object.keys(ledger.outputs)) {
+    if (!id.startsWith('short:')) continue;
+    const s = openOutput(topic, storyId, { root, output: id });
+    if (s.state.id && !s.state.live) return `${id} is ${s.state.status}, not live yet`;
+  }
+  return null;
+}
+
+/** A finished launch record of an earlier decision on a video still private: a new `decided ok` (a withdrawn release
+ *  decided again, the same upload) rebuilds and deploys the page before the tick goes live on it. */
+function launchStale(rec: LaunchRecord | null, decided: PublishEvent | null): boolean {
+  return !!rec?.committed && !!decided && Date.parse(decided.at) > Date.parse(rec.startedAt);
 }
 
 /** What the launch commits: this story's folder, the topic's derived files beside it (the report, the public record,
@@ -129,8 +158,14 @@ export function launchJobs(a: Automation, root = ROOT): Job[] {
     if (held && alive(held.pid)) continue; // a work instance is launching it now
     const rec = readLaunch(topic, storyId, root);
     if (rec?.halt || readHalt(runDir(topic, storyId, root))) continue; // a person's
-    if (rec && rec.committed && (rec.pushed || !a.launch.push)) continue; // launched
-    out.push({ kind: 'launch', topic, storyId, why: 'launch: the release group is live' });
+    const { main, decided } = releaseOf(topic, storyId, root);
+    if (rec && rec.committed && (rec.pushed || !a.launch.push) && !launchStale(rec, decided)) continue; // launched
+    out.push({
+      kind: 'launch',
+      topic,
+      storyId,
+      why: main.state.live ? 'launch: the release group is live' : 'launch: the release is decided',
+    });
   }
   return out;
 }
@@ -212,7 +247,10 @@ async function launchLocked(
     record: LaunchRecord | null,
   ) => RunResult & { record: LaunchRecord | null },
 ): Promise<RunResult & { record: LaunchRecord | null }> {
-  const record: LaunchRecord = readLaunch(topic, storyId, root) ?? {
+  const { main, decided } = releaseOf(topic, storyId, root);
+  const previous = readLaunch(topic, storyId, root);
+  // a record of an earlier decision on the still-private video is stale: the page is built and deployed again
+  const record: LaunchRecord = (launchStale(previous, decided) ? null : previous) ?? {
     topic,
     storyId,
     startedAt: new Date(now()).toISOString(),
@@ -283,7 +321,9 @@ async function launchLocked(
     try {
       d.git(['add', '-A', '--', ...launchStaged(topic, storyId, root)]);
       const staged = d.git(['diff', '--cached', '--name-only']).trim();
-      if (staged) d.git(['commit', '-q', '-m', `release(${topic}): ${storyId} is live`]); // an automated commit: no author line
+      // an automated commit: no author line
+      if (staged)
+        d.git(['commit', '-q', '-m', `release(${topic}): ${storyId} is ${main.state.live ? 'live' : 'releasing'}`]);
       record.committed = d.git(['rev-parse', 'HEAD']).trim();
       save();
     } catch (e) {
@@ -363,6 +403,13 @@ export async function probeLaunches(a: Automation, root = ROOT, d: ProbeDeps): P
     if (!pushed) continue;
     if (rec.liveAt && rec.posted !== null && (rec.emailed || !d.mail)) continue; // finished
     const tag = `${rec.topic}/${rec.storyId}`;
+    // the page is up (or being deployed) for a video no longer approved for release (withdrawn after the decision,
+    // plan B): nothing to probe for and nothing to publish until a person decides again
+    const { main, decided } = releaseOf(rec.topic, rec.storyId, root);
+    if (!main.state.live && !decided) {
+      actions.push(`${tag}: ${main.id} is ${main.state.status}: the launch waits for a decision`);
+      continue;
+    }
     if (!rec.liveAt) {
       const probe = await probeOf(a, rec, d.fetchFn, root);
       rec.probes += 1;
@@ -398,6 +445,54 @@ export async function probeLaunches(a: Automation, root = ROOT, d: ProbeDeps): P
       actions.push(
         `${tag}: live at ${probe.url}${probe.preview === 'local fallback' ? ' (preview: local fallback)' : ''}`,
       );
+    }
+    // the page is up: a video the person decided ok for goes live now, under that decision (plan B); the verb's
+    // own refusals hold (an unapproved build, an automated actor); a retryable failure is tried MAX_TRIES ticks
+    // since the decision, then a person's; a final one (YouTube kept it private) is a person's at once
+    if (decided) {
+      const dir = runDir(rec.topic, rec.storyId, root);
+      const key = 'go-live|youtube';
+      const fix = `fix it, then npm run publish -- go-live ${rec.topic} ${rec.storyId} --by "<name>"`;
+      const goLiveHalt = (why: string) =>
+        haltLaunch(root, rec, {
+          kind: 'step-failed',
+          stage: 'launch',
+          why,
+          unblock: { kind: 'fix', text: fix },
+          at: new Date(now()).toISOString(),
+          runId: 'tick',
+          board: { stage: 'launch', next: 'the go-live' },
+        });
+      if (main.state.failed?.retryable && triesOf(dir, key, decided.at) >= MAX_TRIES) {
+        actions.push(`${tag}: go-live keeps failing (${MAX_TRIES} tries): a person's`);
+        continue;
+      }
+      const r = await d.run('publish', [
+        'go-live',
+        rec.topic,
+        rec.storyId,
+        '--by',
+        decided.by,
+        '--via',
+        `tick:${decided.request}`,
+      ]);
+      actions.push(`${tag}: go-live${main.state.failed ? ' retry' : ''} (${r.status})`);
+      const after = openOutput(rec.topic, rec.storyId, { root }).state;
+      if (after.failed && !after.failed.retryable)
+        goLiveHalt(`${main.id}: ${after.failed.step} failed: ${after.failed.error}`);
+      else if (after.failed?.retryable) {
+        const tries = countTry(dir, key, decided.at);
+        if (tries >= MAX_TRIES)
+          goLiveHalt(`${main.id}: go-live keeps failing after ${tries} tries: ${after.failed.error}`);
+      }
+      if (r.status === 0 && after.live)
+        await d.run('publish', ['verify', rec.topic, rec.storyId, '--by', 'automated: tick']);
+    }
+    // the announcement (the post, the mail) only once the video is live and verified and every Short is live
+    const wait = announceProblem(rec.topic, rec.storyId, root);
+    if (wait) {
+      actions.push(`${tag}: ${wait}; the post and the mail wait`);
+      continue;
     }
     if (rec.posted === null) {
       // the post, when the policy says so and the institution has an account (the social read API, from the

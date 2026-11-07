@@ -10,9 +10,10 @@ export function liveClaimIds(topic: string, root = ROOT): Set<string> {
   const stories = readJson<StoriesFile>(join(topicDir(topic, root), 'stories.json'))?.stories ?? [];
   for (const s of stories) {
     const rootId = s.partOf ? s.id.replace(/[^/]+$/, s.partOf) : s.id;
-    // A chain whose root is not itself a story has no video node in the graph: never live.
-    if (stories.some((x) => x.id === rootId) && storyOutputs(topic, rootId, root).video)
-      for (const c of s.claims) claims.add(c);
+    // A chain whose root is not itself a story has no video node in the graph: never live. A releasing video (decided
+    // ok, the page built before it goes public: plan B) counts as the graph counts it.
+    const outs = stories.some((x) => x.id === rootId) ? storyOutputs(topic, rootId, root) : null;
+    if (outs && (outs.video ?? outs.releasing)) for (const c of s.claims) claims.add(c);
   }
   return claims;
 }

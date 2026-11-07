@@ -172,7 +172,7 @@ describe('phase 3 acceptance: OK at <time>, the Shorts, the launch, the probe, t
     expect(t3.actions.join('\n')).toMatch(/sync \(0\)/);
     expect(c.state('youtube').live).toBe(true);
     expect(s.events().filter((e) => e.type === 'verified')).toHaveLength(2);
-    expect(launchJobs(c.a, s.f.root)).toEqual([]); // the Shorts are not live yet: no launch
+    expect(launchJobs(c.a, s.f.root)).toHaveLength(1); // the launch no longer waits for the Shorts: the announcement does
     // the Shorts follow, one per tick, in order, with the tick's via
     const t4 = await c.oneTick();
     expect(t4.actions.join('\n')).toMatch(/shorts\/one: go-live \(0\)/);
@@ -231,39 +231,107 @@ describe('phase 3 acceptance: OK at <time>, the Shorts, the launch, the probe, t
     expect(readJson<{ posts: unknown[] }>(join(s.f.root, 'x-fake.json'))).toBeNull(); // the fake X is in process
   }, 300_000);
 
-  it('a Short failing once is retried next tick and the video is never touched; an institution without X posts nothing and the mail says so', async () => {
+  it('OK: the page is deployed and confirmed before the video goes live (plan B); a Short failing once is retried next tick; an institution without X posts nothing and the mail says so', async () => {
     const c = await scenario({ x: false });
     const { s, mail } = c;
-    // the one tick applies OK, goes live with the video and reaches the first Short: its go-live meets a 503
-    // (the video's update, then the Short's push, pass)
+    const before = c.origin.originHead();
+    // the first Short's go-live meets a 503 (the video's go-live, then the Short's push, pass)
     const fs = readFakeState(s.fake);
     fs.fail.push({ method: 'updateVideo', status: 503, reason: 'backendError', retryable: true, times: 1, after: 2 });
     writeFakeState(s.fake, fs);
     mail.deliver(reply(c.sent, c.subject, 'OK'));
+    // 1. the reply is applied: approved and decided, the video still private
     const t1 = await c.oneTick();
+    expect(t1.actions.join('\n')).toMatch(/inbox: 1 fetched, 1 applied/);
+    expect(s.events().find((e) => e.type === 'decided')).toMatchObject({ verdict: 'ok', by: 'Jon' });
+    expect(c.state('youtube')).toMatchObject({ status: 'approved', live: false });
+    expect(c.state('youtube').step).toMatchObject({ verb: 'go-live', actor: 'automation' });
+    expect(s.publicUpdates()).toHaveLength(0);
+    expect(readFakeState(s.fake).videos.vid00000000.privacyStatus).toBe('private');
+    expect(t1.actions.join('\n')).not.toMatch(/go-live/);
+    // 2. the launch runs on the decision: the page, committed and pushed once, carries the uploaded video
+    expect(launchProblem(s.f.topic, s.f.story, s.f.root)).toBeNull();
+    expect(launchJobs(c.a, s.f.root)).toEqual([
+      { kind: 'launch', topic: s.f.topic, storyId: s.f.story, why: 'launch: the release is decided' },
+    ]);
+    const w = await c.oneWork();
+    expect(w.job?.kind).toBe('launch');
+    expect(w.outcome).toBe('done');
+    expect(c.launchRan).toEqual([`report seed ${s.f.topic}`, 'brand', 'build', 'links freeze']);
+    const rec = readLaunch(s.f.topic, s.f.story, s.f.root)!;
+    expect(c.origin.originHead()).toBe(rec.committed);
+    expect(c.origin.originHead()).not.toBe(before);
+    expect(c.origin.git('log', '-1', '--format=%s')).toContain(`${s.f.story} is releasing`);
+    expect(launchJobs(c.a, s.f.root)).toEqual([]);
+    // 3. the probe: a stale page leaves the video private
+    c.advance(60_000);
+    const t2 = await c.oneTick();
+    expect(t2.actions.join('\n')).toMatch(/not live yet \(probe 1\)/);
+    expect(c.state('youtube').live).toBe(false);
+    expect(s.publicUpdates()).toHaveLength(0);
+    expect(c.mails()).toHaveLength(1);
+    // 4. the page confirmed: go-live under the decision, then verify, in the same pass; nothing announced yet
+    c.page.live = true;
+    c.advance(60_000);
+    const t3 = await c.oneTick();
+    expect(t3.actions.join('\n')).toMatch(/live at/);
+    expect(t3.actions.join('\n')).toMatch(/go-live \(0\)/);
     expect(c.state('youtube').live).toBe(true);
     expect(s.publicUpdates('vid00000000')).toHaveLength(1);
-    expect(t1.actions.join('\n')).toMatch(/shorts\/one: go-live \(1\)/);
+    expect(s.events().find((e) => e.type === 'published')).toMatchObject({
+      by: 'Jon',
+      via: { channel: 'tick', request: s.request },
+    });
+    expect(s.events().filter((e) => e.type === 'verified')).toHaveLength(2);
+    expect(t3.actions.join('\n')).toMatch(/short:one is .*not live yet; the post and the mail wait/);
+    expect(c.mails()).toHaveLength(1);
+    // 5. the Shorts follow, one per tick; the first meets the 503 and is retried
+    c.advance(60_000);
+    const t4 = await c.oneTick();
+    expect(t4.actions.join('\n')).toMatch(/shorts\/one: go-live \(1\)/);
     expect(c.state('short:one').failed?.retryable).toBe(true);
     expect(c.state('short:one').live).toBe(false);
     c.advance(60_000);
-    const t2 = await c.oneTick();
-    expect(t2.actions.join('\n')).toMatch(/shorts\/one: go-live retry \(0\)/);
+    const t5 = await c.oneTick();
+    expect(t5.actions.join('\n')).toMatch(/shorts\/one: go-live retry \(0\)/);
     expect(c.state('short:one').live).toBe(true);
     expect(c.state('short:two').live).toBe(false);
+    expect(c.mails()).toHaveLength(1);
     c.advance(60_000);
-    await c.oneTick();
+    const t6 = await c.oneTick();
     expect(c.state('short:two').live).toBe(true);
-    expect(s.publicUpdates('vid00000000')).toHaveLength(1);
-    expect(launchProblem(s.f.topic, s.f.story, s.f.root)).toBeNull();
-    expect((await c.oneWork()).outcome).toBe('done');
-    c.page.live = true;
-    const t5 = await c.oneTick();
-    expect(t5.actions.join('\n')).toMatch(/live at/);
+    expect(s.publicUpdates('vid00000000')).toHaveLength(1); // the video is never touched again
+    // 6. everything live and read back: the post (not configured) and the mail, once
+    expect(t6.actions.join('\n')).not.toMatch(/the post and the mail wait/);
     expect(readLaunch(s.f.topic, s.f.story, s.f.root)!.posted).toBe('not-configured');
     expect(s.ran.some((r) => r[0] === 'social')).toBe(false); // social is off: never called
     expect(c.mails()).toHaveLength(2);
     expect(c.mails()[1].text).toMatch(/X: not configured/);
+    c.advance(60_000);
+    const t7 = await c.oneTick();
+    expect(t7.actions.filter((x) => /post|live at|go-live|sync/.test(x))).toEqual([]);
+    expect(c.mails()).toHaveLength(2);
+  }, 300_000);
+
+  it('OK, then the approval withdrawn before the page is confirmed: the page stays, nothing goes live, nothing is announced', async () => {
+    const c = await scenario({ x: false });
+    const { s, mail } = c;
+    mail.deliver(reply(c.sent, c.subject, 'OK'));
+    await c.oneTick();
+    expect((await c.oneWork()).outcome).toBe('done');
+    // a change request on the build from the review page: the latest decision on it is no longer the approval
+    const r = await s.run('publish', ['request-changes', s.f.topic, s.f.story, '--by', 'Jon', '--note', 'wait']);
+    expect(r.status).toBe(0);
+    expect(c.state('youtube').status).toBe('changes-requested');
+    c.page.live = true;
+    c.advance(60_000);
+    const t = await c.oneTick();
+    expect(t.actions.join('\n')).toMatch(/youtube is changes-requested: the launch waits for a decision/);
+    expect(t.actions.join('\n')).not.toMatch(/live at|go-live|deploy-timeout/);
+    expect(s.publicUpdates()).toHaveLength(0);
+    expect(c.state('youtube').live).toBe(false);
+    expect(c.mails()).toHaveLength(1);
+    expect(launchJobs(c.a, s.f.root)).toEqual([]);
   }, 300_000);
 
   it('CHANGES: records the send-back with its placed notes and nothing goes live; an ambiguous reply gets one clarification and nothing is applied', async () => {

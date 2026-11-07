@@ -206,6 +206,23 @@ describe('the next line a person reads is unchanged by the structured step', () 
       `"npm run publish -- go-live ai-coding decision:how-much-faster [--at <ISO>]"`,
     );
   });
+  it("approved and decided ok: the tick's go-live, once the page is up (plan B)", () => {
+    const rq = { channel: 'email' as const, request: 'rq-000000000001' };
+    const s = outputState(
+      out(
+        up('r1', 'id1'),
+        verified('passed'),
+        ev('approved', { build: 'r1', id: 'id1', via: rq }),
+        ev('decided', { request: rq.request, verdict: 'ok', via: rq }),
+      ),
+      release,
+      'm1',
+      ctx,
+    );
+    expect(s.status).toBe('approved');
+    expect(s.step).toMatchObject({ verb: 'go-live', actor: 'automation' });
+    expect(s.next).toBe('decided ok by Jon: the page deploys, then the tick goes live');
+  });
   it('approved, not verified', () => {
     expect(states['approved, not verified']().next).toMatchInlineSnapshot(
       `"npm run publish -- go-live ai-coding decision:how-much-faster [--at <ISO>]"`,

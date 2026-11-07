@@ -2,13 +2,11 @@
 // site, no loop: live when it answers 200, carries the story's live video id (the embed) and the path is in the
 // frozen public-urls.json. The fixture's two probes (phase 3 Task 7) reuse it: negative on the production host
 // (`expectAbsent`), positive on the preview host (`baseUrl`, not frozen).
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { site } from '../../config/site';
 import { ROOT } from '../../shared/io';
 import { loadLedger, storyOutputs } from '../publishing';
 import { loadStories } from '../stories';
-import { matterPath } from './content-graph';
+import { frozenPath as frozen, matterPath } from './content-graph';
 
 export interface LiveCheck {
   ok: boolean;
@@ -22,11 +20,6 @@ export function matterPathOf(topic: string, storyId: string, root = ROOT): strin
   const s = loadStories(topic, root)?.stories.find((x) => x.id === storyId);
   return s ? matterPath(topic, s) : null;
 }
-
-const frozen = (root: string, path: string): boolean => {
-  const list = join(root, 'public-urls.json');
-  return existsSync(list) && (JSON.parse(readFileSync(list, 'utf8')) as string[]).includes(path);
-};
 
 export async function liveCheck(
   topic: string,
@@ -52,9 +45,12 @@ export async function liveCheck(
     return { ok: true, url, status: res.status };
   }
   if (res.status !== 200) return { ok: false, url, status: res.status, why: `answered ${res.status}` };
-  // the id to look for: the public video, or (a fixture, unlisted at most) the ledger's published id
+  // the id to look for: the public video, the releasing one (decided ok, deployed before it goes live: plan B), or
+  // (a fixture, unlisted at most) the ledger's published id
+  const outs = storyOutputs(topic, storyId, root);
   const id =
-    storyOutputs(topic, storyId, root).video?.id ??
+    outs.video?.id ??
+    outs.releasing?.id ??
     loadLedger(topic, storyId, root)?.outputs.youtube?.events.findLast((e) => e.type === 'published')?.id ??
     null;
   if (!id) return { ok: false, url, status: 200, why: 'the ledger has no live video to look for' };

@@ -12,6 +12,7 @@ export {
   type ReviewNote,
   type UploadMetadata,
   currentBuild,
+  decidedOk,
   emptyLedger,
   loadLedger,
   mainOutput,

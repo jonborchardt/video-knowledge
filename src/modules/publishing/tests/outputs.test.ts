@@ -57,6 +57,7 @@ describe('public outputs', () => {
   it('no video until a published event', () => {
     expect(setup([ev('scheduled', '2026-11-01T00:00:00Z', { publishAt: '2026-11-02T00:00:00Z' })])).toEqual({
       video: null,
+      releasing: null,
       shorts: [],
     });
   });
@@ -107,6 +108,52 @@ describe('public outputs', () => {
     const ledger = JSON.parse(readFileSync(path, 'utf8')) as Ledger;
     saveLedger(path, addOutput(ledger, 'youtube-2', 'youtube-video'));
     expect(storyOutputs(TOPIC, STORY, root).video).toMatchObject({ output: 'youtube', id: 'abc12345678' });
+  });
+
+  describe('releasing: an approved upload the person decided ok for, before it is live', () => {
+    const BUILD = 'b'.repeat(64);
+    const upload = ev('uploaded', '2026-11-01T09:00:00Z', { build: BUILD, buildStatus: 'release', metadata: 'm1' });
+    const approved = ev('approved', '2026-11-02T09:00:00Z', {
+      build: BUILD,
+      via: { channel: 'email', request: 'rq-000000000001' },
+    });
+    const decided = ev('decided', '2026-11-02T09:00:01Z', {
+      request: 'rq-000000000001',
+      verdict: 'ok',
+      via: { channel: 'email', request: 'rq-000000000001' },
+    });
+
+    it('is set after approve and decide ok on the uploaded build, with the upload date; video stays null', () => {
+      const out = setup([upload, approved, decided]);
+      expect(out.video).toBeNull();
+      expect(out.releasing).toMatchObject({
+        output: 'youtube',
+        id: 'abc12345678',
+        url: 'https://www.youtube.com/watch?v=abc12345678',
+        publishedAt: '2026-11-01T09:00:00Z',
+        title: 'Fixture video',
+      });
+    });
+
+    it('is null without the decision, after a later changes-requested on the build, or once published', () => {
+      expect(setup([upload, approved]).releasing).toBeNull();
+      expect(
+        setup([upload, approved, decided, ev('changes-requested', '2026-11-02T10:00:00Z', { build: BUILD, notes: [] })])
+          .releasing,
+      ).toBeNull();
+      const live = setup([upload, approved, decided, ev('published', '2026-11-02T11:00:00Z')]);
+      expect(live.releasing).toBeNull();
+      expect(live.video?.publishedAt).toBe('2026-11-02T11:00:00Z');
+    });
+
+    it("is null when the decision belongs to another build's request, or the verdict is schedule", () => {
+      const other = ev('approved', '2026-11-02T09:00:00Z', {
+        build: 'c'.repeat(64),
+        via: { channel: 'email', request: 'rq-000000000001' },
+      });
+      expect(setup([upload, other, decided]).releasing).toBeNull();
+      expect(setup([upload, approved, { ...decided, verdict: 'schedule' }]).releasing).toBeNull();
+    });
   });
 
   it('seekUrl appends the whole second', () => {

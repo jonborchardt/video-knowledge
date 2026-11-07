@@ -2,8 +2,9 @@
 // against the exact manifest the request bound. Every step is idempotent and `decided` is written last, so a decide
 // interrupted anywhere is completed by the next call and never repeated: a paid link's approval and the re-package
 // (the website's and packaging's CLIs as children, since those modules own the files), one `approved` per output of
-// the group, the push when the metadata is behind, a sync, then the main output's go-live now or at the time. The
-// Shorts are approved here and go live from the tick once the video is published (a derivative follows its parent).
+// the group, the push when the metadata is behind, a sync, then (a schedule) the main output's go-live at the time.
+// An `ok` goes live from the tick once the matter page is deployed with the video (plan B: the page before the
+// video); the Shorts are approved here and go live from the tick once the video is published.
 import { join } from 'node:path';
 import { isFixtureTopic } from '../../config/site';
 import { ROOT, readJson } from '../../shared/io';
@@ -171,19 +172,14 @@ export async function decide(topic: string, storyId: string, a: DecideArgs, d: D
   // 3. the main output's metadata, when behind (a paid link just changed the description)
   const m = openOutput(topic, storyId, { root, output: main });
   if (m.state.status === 'metadata-behind') await push(topic, storyId, { ...base, output: main, client: d.client });
-  // 4. read back (a go-live that died after YouTube's update is found public here), then go live now or at the time:
-  // the video only; the Shorts follow from the tick
+  // 4. read back (a schedule that died after YouTube's update is found here), then: a schedule hands YouTube the
+  // time now; an `ok` leaves the video private (plan B): the launch deploys the matter page first and the tick's
+  // probe step goes live under this decision once the page carries the video. The Shorts follow from the tick.
   const s = await sync(topic, storyId, { ...base, output: main, client: d.client });
   if ('event' in s && s.event?.type === 'failed') throw new Error(`sync: ${s.message}`);
   const afterSync = openOutput(topic, storyId, { root, output: main });
-  if (!afterSync.state.live && afterSync.state.status !== 'scheduled') {
-    const r = await goLive(topic, storyId, {
-      ...base,
-      output: main,
-      client: d.client,
-      via,
-      ...(a.verdict === 'schedule' && { at: a.at }),
-    });
+  if (a.verdict === 'schedule' && !afterSync.state.live && afterSync.state.status !== 'scheduled') {
+    const r = await goLive(topic, storyId, { ...base, output: main, client: d.client, via, at: a.at });
     if (r.event?.type === 'failed') throw new Error(`go-live: ${r.message}`);
   }
   return recordDecided(topic, storyId, { ...a, root, now, main });

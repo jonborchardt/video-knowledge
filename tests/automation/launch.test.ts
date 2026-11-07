@@ -20,12 +20,20 @@ import { DEFAULTS } from '../../src/shared/automation';
 import { ROOT, readJson, toJson } from '../../src/shared/io';
 import { FakeMailer } from './fake-mailer';
 import { matterPathOf } from '../../src/modules/website/live';
-import { appendEvent, emptyLedger, loadLedger, publishPath, saveLedger } from '../../src/modules/publishing/publish';
+import {
+  appendEvent,
+  emptyLedger,
+  loadLedger,
+  openOutput,
+  publishPath,
+  saveLedger,
+} from '../../src/modules/publishing/publish';
 import { readHalt, readJournal, runDir, writeHalt } from '../../src/orchestration/run/journal';
 import { settleFinished } from '../../src/orchestration/run/resume';
 import { readSchedule, updateSchedule } from '../../src/orchestration/run/schedule';
 import {
   LAUNCH_PATHS,
+  announceProblem,
   launch,
   launchJobs,
   launchLockDir,
@@ -62,8 +70,10 @@ const a = {
   launch: { ...DEFAULTS.launch, push: true, deployTimeoutMinutes: 40 },
 };
 
-/** A packaged release fixture turned into a git clone of a bare origin, its video live (published, verified). */
-function clone(opts: { live?: boolean; fixture?: boolean } = {}) {
+const RQ = 'rq-0000000000ab';
+/** A packaged release fixture turned into a git clone of a bare origin, its video live (published, verified), or
+ *  `decided`: uploaded, approved and decided ok but not public (the page goes up first, plan B). */
+function clone(opts: { live?: boolean; fixture?: boolean; decided?: boolean } = {}) {
   const f0 = syntheticProduction('packaged', { release: true });
   fixtures.push(f0);
   cliRoot(f0.root);
@@ -115,34 +125,48 @@ function clone(opts: { live?: boolean; fixture?: boolean } = {}) {
   execFileSync('git', ['symbolic-ref', 'HEAD', 'refs/heads/main'], { cwd: bare });
   git('remote', 'add', 'origin', bare);
   git('push', '-q', '-u', 'origin', 'main');
-  if (opts.live !== false) {
+  if (opts.live !== false || opts.decided) {
     let l = loadLedger(f.topic, f.story, f.root) ?? emptyLedger(`${f.topic}/${f.story}`);
     const build = readJson<{ mp4Sha: string }>(join(f.dir, 'video', 'review', 'review.json'))!.mp4Sha;
+    const via = { channel: 'email' as const, request: RQ };
+    // the composed metadata as sent: a decided video is approved only while nothing is behind
+    const metadata = openOutput(f.topic, f.story, { root: f.root }).metadata?.sha ?? 'm';
     l = appendEvent(l, 'youtube', {
       at: '2026-10-31T00:00:00Z',
       type: 'uploaded',
       by: 'automation',
       build,
       buildStatus: 'release',
-      metadata: 'm',
+      metadata,
       id: 'vid00000000',
       visibility: 'private',
     }).ledger;
-    l = appendEvent(l, 'youtube', { at: '2026-10-31T01:00:00Z', type: 'approved', by: 'Jon', build }).ledger;
-    l = appendEvent(l, 'youtube', {
-      at: '2026-11-01T00:00:00Z',
-      type: 'published',
-      by: 'Jon',
-      id: 'vid00000000',
-    }).ledger;
-    l = appendEvent(l, 'youtube', {
-      at: '2026-11-01T00:01:00Z',
-      type: 'verified',
-      by: 'automation',
-      id: 'vid00000000',
-      result: 'passed',
-      checks: [{ name: 'visibility', result: 'pass' }],
-    }).ledger;
+    l = appendEvent(l, 'youtube', { at: '2026-10-31T01:00:00Z', type: 'approved', by: 'Jon', build, via }).ledger;
+    if (opts.decided)
+      l = appendEvent(l, 'youtube', {
+        at: '2026-10-31T01:00:01Z',
+        type: 'decided',
+        by: 'Jon',
+        request: RQ,
+        verdict: 'ok',
+        via,
+      }).ledger;
+    else {
+      l = appendEvent(l, 'youtube', {
+        at: '2026-11-01T00:00:00Z',
+        type: 'published',
+        by: 'Jon',
+        id: 'vid00000000',
+      }).ledger;
+      l = appendEvent(l, 'youtube', {
+        at: '2026-11-01T00:01:00Z',
+        type: 'verified',
+        by: 'automation',
+        id: 'vid00000000',
+        result: 'passed',
+        checks: [{ name: 'visibility', result: 'pass' }],
+      }).ledger;
+    }
     saveLedger(publishPath(f.topic, f.story, f.root), l);
   }
   const ran: string[] = [];
@@ -191,7 +215,7 @@ describe('launch', () => {
     expect(launchJobs(a, c.f.root)).toEqual([]);
   }, 120_000);
 
-  it('an uploaded Short that is not live yet (approved, or behind on its parent link) blocks the launch', async () => {
+  it('an uploaded Short that is not live yet (approved, or behind on its parent link) holds the announcement, not the launch', async () => {
     const c = clone();
     const l = loadLedger(c.f.topic, c.f.story, c.f.root)!;
     l.outputs['short:one'] = { kind: 'youtube-short', derivedFrom: 'youtube', metadata: {}, events: [] };
@@ -208,9 +232,139 @@ describe('launch', () => {
         visibility: 'private',
       }).ledger,
     );
-    expect(launchProblem(c.f.topic, c.f.story, c.f.root)).toMatch(/short:one is .*not live yet/);
-    expect(launchJobs(a, c.f.root)).toEqual([]);
+    expect(launchProblem(c.f.topic, c.f.story, c.f.root)).toBeNull();
+    expect(announceProblem(c.f.topic, c.f.story, c.f.root)).toMatch(/short:one is .*not live yet/);
+    expect(launchJobs(a, c.f.root)).toHaveLength(1);
+    await launch(c.f.topic, c.f.story, a, c.deps(), c.f.root);
+    const mail = new FakeMailer(c.f.root);
+    const r = await probeLaunches(a, c.f.root, { now: () => T0, run: c.deps().run, mail, fetchFn: livePage });
+    expect(r.join('\n')).toMatch(/short:one is .*not live yet; the post and the mail wait/);
+    expect(mail.sent).toEqual([]);
+    expect(readLaunch(c.f.topic, c.f.story, c.f.root)!.liveAt).toBeTruthy();
   }, 120_000);
+
+  describe('the page before the video (plan B): a decided release launches, the probe goes live', () => {
+    const published = (f: { topic: string; story: string; root: string }, at = '2026-11-01T12:30:00Z') => {
+      let l = loadLedger(f.topic, f.story, f.root)!;
+      l = appendEvent(l, 'youtube', { at, type: 'published', by: 'Jon', id: 'vid00000000' }).ledger;
+      l = appendEvent(l, 'youtube', {
+        at: '2026-11-01T12:31:00Z',
+        type: 'verified',
+        by: 'automated: tick',
+        id: 'vid00000000',
+        result: 'passed',
+        checks: [{ name: 'visibility', result: 'pass' }],
+      }).ledger;
+      saveLedger(publishPath(f.topic, f.story, f.root), l);
+    };
+
+    it('an approved, decided-ok story is launchable before it is live; one with a later changes-requested is not', async () => {
+      const c = clone({ decided: true });
+      expect(launchProblem(c.f.topic, c.f.story, c.f.root)).toBeNull();
+      expect(launchJobs(a, c.f.root)).toEqual([
+        { kind: 'launch', topic: c.f.topic, storyId: c.f.story, why: 'launch: the release is decided' },
+      ]);
+      const r = await launch(c.f.topic, c.f.story, a, c.deps(), c.f.root);
+      expect(r.outcome).toBe('done');
+      expect(c.git('log', '-1', '--format=%s')).toContain(`release(${c.f.topic}): ${c.f.story} is releasing`);
+      // withdrawn: the latest decision on the build is a change request
+      const d = clone({ decided: true });
+      const build = readJson<{ mp4Sha: string }>(join(d.f.dir, 'video', 'review', 'review.json'))!.mp4Sha;
+      saveLedger(
+        publishPath(d.f.topic, d.f.story, d.f.root),
+        appendEvent(loadLedger(d.f.topic, d.f.story, d.f.root)!, 'youtube', {
+          at: '2026-10-31T02:00:00Z',
+          type: 'changes-requested',
+          by: 'Jon',
+          build,
+          notes: [{ text: 'not yet' }],
+        }).ledger,
+      );
+      expect(launchProblem(d.f.topic, d.f.story, d.f.root)).toMatch(/not live \(changes-requested\)/);
+      expect(launchJobs(a, d.f.root)).toEqual([]);
+    }, 120_000);
+
+    it('a request halt older than the decision is settled, so the launch can start; one written after it stands', () => {
+      const c = clone({ decided: true });
+      const dir = runDir(c.f.topic, c.f.story, c.f.root);
+      const halt = (at: string) => ({
+        kind: 'awaiting-person' as const,
+        stage: 'packaged',
+        why: `the release awaits approval: request ${RQ}`,
+        unblock: { kind: 'decide' as const, text: 'reply OK' },
+        at,
+        runId: 'r',
+        board: { stage: 'packaged', next: 'approve' },
+      });
+      writeHalt(dir, halt('2026-10-31T00:30:00.000Z'));
+      expect(launchJobs(a, c.f.root)).toEqual([]); // a person's halt blocks the launch until it is settled
+      expect(settleFinished(c.f.root, { by: 'automated: test' })).toEqual([`${c.f.topic}/${c.f.story}`]);
+      expect(readHalt(dir)).toBeNull();
+      expect(readJournal(dir).at(-1)!.error).toMatch(/decided ok/);
+      expect(launchJobs(a, c.f.root)).toHaveLength(1);
+      writeHalt(dir, halt('2026-10-31T02:00:00.000Z'));
+      expect(settleFinished(c.f.root, { by: 'automated: test' })).toEqual([]);
+    }, 120_000);
+
+    it('a finished launch older than a new decision on the same upload is stale: the launch runs again', async () => {
+      const c = clone({ decided: true });
+      expect((await launch(c.f.topic, c.f.story, a, c.deps(), c.f.root)).outcome).toBe('done');
+      expect(launchJobs(a, c.f.root)).toEqual([]);
+      // withdrawn, then approved and decided again under a new request (a changed article, the same video)
+      const build = readJson<{ mp4Sha: string }>(join(c.f.dir, 'video', 'review', 'review.json'))!.mp4Sha;
+      const via = { channel: 'email' as const, request: 'rq-0000000000cd' };
+      let l = loadLedger(c.f.topic, c.f.story, c.f.root)!;
+      for (const e of [
+        { at: '2026-11-01T13:00:00Z', type: 'changes-requested' as const, build, notes: [{ text: 'the article' }] },
+        { at: '2026-11-01T14:00:00Z', type: 'approved' as const, build, via },
+        { at: '2026-11-01T14:00:01Z', type: 'decided' as const, request: via.request, verdict: 'ok' as const, via },
+      ])
+        l = appendEvent(l, 'youtube', { by: 'Jon', ...e }).ledger;
+      saveLedger(publishPath(c.f.topic, c.f.story, c.f.root), l);
+      expect(launchJobs(a, c.f.root)).toHaveLength(1);
+      unlinkSync(join(c.f.root, 'brand-out.txt')); // the fake brand's file outside the launch paths: a clean clone
+      const before = c.commits();
+      const r = await launch(c.f.topic, c.f.story, a, c.deps({ now: () => T0 + 3 * 3600_000 }), c.f.root);
+      expect(r.outcome).toBe('done');
+      expect(readLaunch(c.f.topic, c.f.story, c.f.root)!.startedAt).toBe(new Date(T0 + 3 * 3600_000).toISOString());
+      expect(c.ran.filter((x) => x === 'build')).toHaveLength(2);
+      expect(Number(c.commits())).toBe(Number(before) + 1);
+      expect(launchJobs(a, c.f.root)).toEqual([]);
+    }, 120_000);
+
+    it('the probe confirming the page runs go-live under the decision, then verify; the post and the mail wait for the live, verified video', async () => {
+      const c = clone({ decided: true });
+      await launch(c.f.topic, c.f.story, a, c.deps(), c.f.root);
+      const mail = new FakeMailer(c.f.root);
+      const verbs: string[] = [];
+      const run = (cli: string, args: string[]) => {
+        verbs.push([cli, ...args].join(' '));
+        return { status: 0, stdout: '', stderr: '' };
+      };
+      const stale = (async () => new Response('soon', { status: 200 })) as unknown as typeof fetch;
+      const a1 = await probeLaunches(a, c.f.root, { now: () => T0 + 60_000, run, mail, fetchFn: stale });
+      expect(a1.join('\n')).toMatch(/not live yet/);
+      expect(verbs).toEqual([]);
+      const a2 = await probeLaunches(a, c.f.root, { now: () => T0 + 120_000, run, mail, fetchFn: livePage });
+      expect(a2.join('\n')).toMatch(/live at/);
+      expect(verbs).toEqual([`publish go-live ${c.f.topic} ${c.f.story} --by Jon --via tick:${RQ}`]);
+      // the fake verb changed nothing: the ledger still says approved, so nothing is announced yet
+      expect(a2.join('\n')).toMatch(/go-live/);
+      expect(readLaunch(c.f.topic, c.f.story, c.f.root)!.liveAt).toBeTruthy();
+      expect(readLaunch(c.f.topic, c.f.story, c.f.root)!.emailed).toBe(false);
+      expect(mail.sent).toEqual([]);
+      // the video published and read back (what the real verbs leave): the announcement follows once
+      published(c.f);
+      const a3 = await probeLaunches(a, c.f.root, { now: () => T0 + 180_000, run, mail, fetchFn: livePage });
+      expect(a3.join('\n')).not.toMatch(/go-live/);
+      expect(readLaunch(c.f.topic, c.f.story, c.f.root)!.posted).toBe('not-configured');
+      expect(mail.sent).toHaveLength(1);
+      expect(mail.sent[0].text).toContain('https://www.youtube.com/watch?v=vid00000000');
+      const a4 = await probeLaunches(a, c.f.root, { now: () => T0 + 240_000, run, mail, fetchFn: livePage });
+      expect(a4).toEqual([]);
+      expect(mail.sent).toHaveLength(1);
+    }, 120_000);
+  });
 
   it('a verification from before the publish does not clear the launch; the same findings read back after it do', () => {
     const c = clone({ live: false });

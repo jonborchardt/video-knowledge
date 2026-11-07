@@ -9,8 +9,22 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { loadAutomation } from '../../src/shared/automation';
 import { MANIFEST_FILE, REVIEW_DIR, ROOT, readJson, sha, shortId, toJson } from '../../src/shared/io';
 import { discoverShorts, loadShortParent, shortsPath } from '../../src/modules/shorts';
-import { FAKE_CHANNEL, emptyFakeState, readFakeState, writeFakeState } from '../../src/modules/publishing/fake-youtube';
-import { addOutputTo, loadLedger, openOutput, recordChangesRequested } from '../../src/modules/publishing/publish';
+import {
+  FAKE_CHANNEL,
+  emptyFakeState,
+  fakeYoutubeClient,
+  readFakeState,
+  writeFakeState,
+} from '../../src/modules/publishing/fake-youtube';
+import { decide } from '../../src/modules/publishing/decide';
+import {
+  addOutputTo,
+  loadLedger,
+  openOutput,
+  openRequest,
+  recordChangesRequested,
+} from '../../src/modules/publishing/publish';
+import type { ReleaseManifest } from '../../src/shared/types';
 import { runCli } from '../../src/shared/cli';
 import { type Halt, clearHalt, readJournal, runDir, writeHalt } from '../../src/orchestration/run/journal';
 import {
@@ -158,6 +172,32 @@ describe('the release loop over the fake YouTube', () => {
     expect(again.halt?.kind).toBe('awaiting-person');
     expect(s.events().filter((e) => e.type === 'approval-requested')).toHaveLength(1);
     expect(s.calls().filter((c) => c.method === 'insertVideo')).toHaveLength(3);
+  }, 600_000);
+
+  it('after a decide ok the loop is done: no second request, no go-live (the page deploys first, plan B)', async () => {
+    const s = staged({ shorts: 1 });
+    const r = await s.run();
+    expect(r.halt?.kind).toBe('awaiting-person');
+    const ledger = loadLedger(s.f.topic, s.f.story, s.f.root)!;
+    const manifestOf = () => readJson<ReleaseManifest>(join(s.f.dir, 'video', REVIEW_DIR, MANIFEST_FILE));
+    const req = openRequest(ledger, manifestOf()!.releaseSha, new Date())!;
+    await decide(
+      s.f.topic,
+      s.f.story,
+      { request: req.request, by: 'Jon', verdict: 'ok', via: { channel: 'email', messageId: '<m@t>' }, root: s.f.root },
+      {
+        client: fakeYoutubeClient(s.fake),
+        run: () => ({ status: 0, stdout: '', stderr: '' }),
+        manifestOf,
+        scheduleLeadMinutes: 30,
+      },
+    );
+    expect(openOutput(s.f.topic, s.f.story, { root: s.f.root }).state.status).toBe('approved');
+    const again = await s.run();
+    expect(again.outcome).toBe('done');
+    expect(s.events().filter((e) => e.type === 'approval-requested')).toHaveLength(1);
+    expect(publicUpdates(s.calls())).toEqual([]);
+    expect(s.events().some((e) => e.type === 'published')).toBe(false);
   }, 600_000);
 
   it('a pending verification is retried by a retryable halt, never counted as no progress', async () => {

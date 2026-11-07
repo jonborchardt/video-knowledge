@@ -37,7 +37,14 @@ export interface Graph {
   nodes: Map<string, Node>;
   edges: Edge[];
   stories: Map<string, Story>; // story node id → the story, for ordering and the call-to-action checks
+  view: View; // what made the stories public: the preview markers exist only outside the live view
 }
+
+/** Whether a site path is frozen in `public-urls.json` (a public URL never disappears). */
+export const frozenPath = (root: string, path: string): boolean => {
+  const list = join(root, 'public-urls.json');
+  return existsSync(list) && (readJson<string[]>(list) ?? []).includes(path);
+};
 
 export const storyNode = (topic: string, storyId: string) => `${topic}/${storyId}`;
 /** A matter page's root-relative path, from the story id (never its title). */
@@ -62,7 +69,7 @@ export function contentGraph(
 }
 
 function buildGraph(root: string, topics: string[], view: View, assumeLive: string[]): Graph {
-  const g: Graph = { nodes: new Map(), edges: [], stories: new Map() };
+  const g: Graph = { nodes: new Map(), edges: [], stories: new Map(), view };
   const node = (n: Node) => g.nodes.set(n.id, n);
   const edge = (from: string, to: string, kind: EdgeKind, weight?: number) =>
     g.edges.push({ from, to, kind, ...(weight !== undefined && { weight }) });
@@ -85,7 +92,13 @@ function buildGraph(root: string, topics: string[], view: View, assumeLive: stri
       const id = storyNode(topic, s.id);
       g.stories.set(id, s);
       const rootId = s.partOf ?? s.id; // a follow-up is public exactly when its first question is
-      const isLive = !!storyOutputs(topic, rootId, root).video || assumeLive.includes(storyNode(topic, rootId));
+      // live, or releasing (decided ok: the page goes up before the video, plan B), or assumed so, or a page the
+      // site once published (its path frozen: a withdrawn or unpublished video leaves the page, without an embed)
+      const outs = storyOutputs(topic, rootId, root);
+      const isLive =
+        !!(outs.video ?? outs.releasing) ||
+        assumeLive.includes(storyNode(topic, rootId)) ||
+        frozenPath(root, matterPath(topic, s));
       const packaged =
         (view === 'preview' || (view === 'fixture' && isFixtureTopic(topic))) &&
         existsSync(join(scriptDir(topic, rootId, root), 'video', 'review', 'review.json'));
@@ -107,7 +120,8 @@ function buildGraph(root: string, topics: string[], view: View, assumeLive: stri
         // Every video output of a story is its one #youtube node: a re-release replaces the original.
         const out = `${id}#${short ? key : 'youtube'}`;
         if (g.nodes.has(out)) continue;
-        const v = short ? live.shorts.find((x) => x.output === key) : live.video;
+        // the video node is public for a live video, or a releasing one (its page goes up before it, plan B)
+        const v = short ? live.shorts.find((x) => x.output === key) : (live.video ?? live.releasing);
         node({
           id: out,
           kind: short ? 'short' : 'video',
@@ -228,8 +242,10 @@ export const chainRoot = (g: Graph, id: string) => {
 /** Whether a story has a live video (a follow-up's video is its first question's). */
 export const hasVideo = (g: Graph, story: string) => !!g.nodes.get(`${chainRoot(g, story)}#youtube`)?.public;
 
-/** A public story with no live video: shown only in the preview view. */
-export const isPreview = (g: Graph, story: string) => !!g.nodes.get(story)?.public && !hasVideo(g, story);
+/** A packaged story made public by the preview or fixture view, with no live video: marked as a preview there. In
+ *  the live view a public story without a video is a page kept for its frozen URL, never a preview. */
+export const isPreview = (g: Graph, story: string) =>
+  g.view !== 'live' && !!g.nodes.get(story)?.public && !hasVideo(g, story);
 
 /** The claim ids of the topic's stories that have a live video, whatever the view. */
 export function liveClaims(g: Graph, topic: string): Set<string> {

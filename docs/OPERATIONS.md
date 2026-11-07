@@ -246,18 +246,30 @@ file watcher holds the folder on Windows.
 ## 11. Publishing and verifying
 
 The release loop after `packaged` (inside `npm run run -- story`) uploads every output privately, pushes, verifies,
-writes the release manifest and sends the request; your reply or the review page decides. By hand, in order
-(external effect): `npm run publish -- upload`, `approve --by --checked`, `go-live [--at]`, `sync`, `verify`; `npm run
-video -- final --approved-by` accepts a draft and makes the release build (Azure voice). `npm run publish -- show`
+writes the release manifest and sends the request; your reply or the review page decides. An `OK` leaves the video
+private: the launch deploys the matter page with the video embedded, the tick's probe confirms the page carries it,
+and only then does the tick run `go-live` under your decision, then `verify`, then the Shorts in order; the X post
+and the launch mail follow once everything is live and verified. (`OK at <when>` is unchanged: YouTube publishes at
+the time and the page follows about one deploy later.) By hand, in the same order (external effect): `npm run publish
+-- upload`, `approve --by --checked`, `decide --verdict ok` (or `approve` alone), `npm run run -- launch`, `npm run
+run -- probe` (which goes live once the page carries the video), or `go-live [--at]` yourself after the page is up,
+then `sync`, `verify`; `npm run video -- final --approved-by` accepts a draft and makes the release build (Azure
+voice). `npm run publish -- show`
 (read-only) prints the state and the composed metadata. YouTube Studio is the fallback route; every hand step is
 recorded with `uploaded --id`, `scheduled --at`, `published`, `updated --fields`.
 
 ## 12. Deployment, maintenance, corrections
 
-- **Launch** (external effect): once a release group is live and verified, the work plane runs `npm run run --
-launch <topic> <story-id>`: `report -- seed`, `brand`, `build`, `links freeze`, `validate`, one commit, one push;
-  the tick probes the deploy (`npm run links -- live <topic> <story-id>`, read-only), posts on X by policy and sends
-  the launch mail with the Studio steps left to record.
+- **Launch** (external effect): on your `OK` (the video approved and decided, still private), or once a scheduled
+  video is live and verified, the work plane runs `npm run run -- launch <topic> <story-id>`: `report -- seed`,
+  `brand`, `build`, `links freeze`, `validate`, one commit, one push; the tick probes the deploy (`npm run links --
+live <topic> <story-id>`, read-only: the page carries the video id) and, confirmed, runs `go-live` under your
+  decision and `verify`; the Shorts follow from the due step; once the video is verified and every Short is live it
+  posts on X by policy and sends the launch mail with the Studio steps left to record. Between the deploy and the
+  next tick the page shows the facade of a still-private video (at most one tick interval). A release withdrawn
+  after its page is up keeps the page (its URL is frozen) without a video; decided again, the launch runs again
+  before the tick goes live. A scheduled release is the exception: the page follows the publication, about one
+  deploy later, as before.
 - **Maintenance** (writes the repo; external effect: model calls, fetches): `npm run run -- maintain <topic>` runs
   the scan (a `new-sources.md` agent, `record-sources`, `evidence -- scanned`, `report`, a note per revised finding,
   `stories discover`, validate, one commit) and the article pass (a fresh reviewer reaffirms, or a writer corrects and

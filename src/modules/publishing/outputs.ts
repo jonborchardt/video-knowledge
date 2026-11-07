@@ -3,7 +3,7 @@
 // public only after a person's go-live is in the ledger: the site never decides what is public.
 import { join } from 'node:path';
 import { readJson, ROOT } from '../../shared/io';
-import { loadLedger, nestedSource, type Output } from './publish';
+import { decidedOk, loadLedger, nestedSource, type Output, type PublishEvent } from './publish';
 import { scriptDir } from '../../shared/io';
 
 export interface PublicVideo {
@@ -12,6 +12,7 @@ export interface PublicVideo {
   id: string;
   url: string;
   embedUrl: string;
+  /** The `published` event's time; for `releasing`, the upload's (the one date it has). */
   publishedAt: string;
   title: string;
   seconds: number | null;
@@ -19,6 +20,9 @@ export interface PublicVideo {
 }
 export interface StoryOutputs {
   video: PublicVideo | null;
+  /** The main output a person decided `ok` for (plan B), uploaded and approved but not yet public: the page is built
+   *  with its embed before the tick takes it live. Null once `video` is set. Nothing that posts or picks reads it. */
+  releasing: PublicVideo | null;
   shorts: PublicVideo[];
 }
 interface ReviewJson {
@@ -33,15 +37,15 @@ const liveEvent = (o: Output) => {
   return last?.type === 'published' && last.id && (!last.visibility || last.visibility === 'public') ? last : null;
 };
 
-function publicVideo(output: string, o: Output, reviewDir: string | null): PublicVideo | null {
-  const e = liveEvent(o);
-  if (!e || (o.kind !== 'youtube-video' && o.kind !== 'youtube-short')) return null;
+/** The video an event names (its id, URL and time), with the package's title and chapters. */
+function videoOf(output: string, o: Output, e: PublishEvent, reviewDir: string | null): PublicVideo | null {
+  if (!e.id || (o.kind !== 'youtube-video' && o.kind !== 'youtube-short')) return null;
   const short = o.kind === 'youtube-short';
   const r = (reviewDir && readJson<ReviewJson>(join(reviewDir, 'video', 'review', 'review.json'))) || {};
   return {
     output,
     kind: o.kind,
-    id: e.id!,
+    id: e.id,
     url: e.url ?? (short ? `https://www.youtube.com/shorts/${e.id}` : `https://www.youtube.com/watch?v=${e.id}`),
     embedUrl: `https://www.youtube-nocookie.com/embed/${e.id}`,
     publishedAt: e.at,
@@ -51,16 +55,29 @@ function publicVideo(output: string, o: Output, reviewDir: string | null): Publi
   };
 }
 
+function publicVideo(output: string, o: Output, reviewDir: string | null): PublicVideo | null {
+  const e = liveEvent(o);
+  return e ? videoOf(output, o, e, reviewDir) : null;
+}
+
+/** The uploaded video of an output a person decided `ok` for, while nothing of it was ever published. */
+function releasingVideo(output: string, o: Output, reviewDir: string | null): PublicVideo | null {
+  if (o.kind !== 'youtube-video' || !decidedOk(o) || o.events.some((e) => e.type === 'published')) return null;
+  const upload = o.events.findLast((e) => e.type === 'uploaded');
+  return upload ? videoOf(output, o, upload, reviewDir) : null;
+}
+
 export function storyOutputs(topic: string, storyId: string, root = ROOT): StoryOutputs {
   const ledger = loadLedger(topic, storyId, root);
-  if (!ledger) return { video: null, shorts: [] };
+  if (!ledger) return { video: null, releasing: null, shorts: [] };
+  const videos = Object.entries(ledger.outputs).filter(([, o]) => o.kind === 'youtube-video');
   // The last video output that is live: a re-release in progress (a new output, not yet public) leaves the original.
   // ponytail: chapters and title come from the current review package, which a re-release's build replaces.
   const video =
-    Object.entries(ledger.outputs)
-      .filter(([, o]) => o.kind === 'youtube-video')
-      .map(([id, o]) => publicVideo(id, o, scriptDir(topic, storyId, root)))
-      .findLast((v) => !!v) ?? null;
+    videos.map(([id, o]) => publicVideo(id, o, scriptDir(topic, storyId, root))).findLast((v) => !!v) ?? null;
+  const releasing = video
+    ? null
+    : (videos.map(([id, o]) => releasingVideo(id, o, scriptDir(topic, storyId, root))).findLast((v) => !!v) ?? null);
   const shorts = Object.entries(ledger.outputs)
     .filter(([, o]) => o.kind === 'youtube-short')
     .map(([id, o]) => {
@@ -68,7 +85,7 @@ export function storyOutputs(topic: string, storyId: string, root = ROOT): Story
       return publicVideo(id, o, src && join(root, src));
     })
     .filter((v): v is PublicVideo => !!v);
-  return { video, shorts };
+  return { video, releasing, shorts };
 }
 
 /** A watch URL that starts at `seconds` (whole seconds, rounded down). */

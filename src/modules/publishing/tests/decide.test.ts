@@ -12,7 +12,9 @@ import { type DecideArgs, type DecideDeps, childEnv, decide, decideProblem } fro
 import { emptyFakeState, fakeYoutubeClient, readFakeState, writeFakeState } from '../fake-youtube';
 import {
   addOutputTo,
+  decidedOk,
   loadLedger,
+  openOutput,
   openRequest,
   recordRequested,
   recordUploaded,
@@ -178,7 +180,7 @@ describe('decideProblem', () => {
 });
 
 describe('decide', () => {
-  it('ok: approves every output, syncs, goes live with the video only, then records decided', async () => {
+  it('ok: approves every output, syncs, leaves the video private (the page deploys first, plan B), then records decided', async () => {
     const s = requested();
     const r = await decide(s.f.topic, s.f.story, s.args(), s.deps());
     expect(r.existing).toBe(false);
@@ -192,10 +194,16 @@ describe('decide', () => {
         checklist: 'asserted-by-email',
       });
     }
-    expect(s.publicUpdates()).toHaveLength(1);
-    expect(s.publicUpdates()[0].args[0]).toBe('vid00000000');
-    expect(s.events().filter((e) => e.type === 'published')).toHaveLength(1);
+    expect(s.publicUpdates()).toHaveLength(0);
+    expect(s.calls('updateVideo')).toHaveLength(0);
+    expect(s.events().some((e) => e.type === 'published' || e.type === 'scheduled')).toBe(false);
+    expect(readFakeState(s.fake).videos.vid00000000.privacyStatus).toBe('private');
     expect(s.events('short:one').some((e) => e.type === 'published' || e.type === 'scheduled')).toBe(false);
+    // what the launch and the tick read: approved, decided ok for this build, the tick's go-live
+    const main = openOutput(s.f.topic, s.f.story, { root: s.f.root });
+    expect(main.state.status).toBe('approved');
+    expect(decidedOk(main.out)?.request).toBe(s.req.request);
+    expect(main.state.step).toMatchObject({ verb: 'go-live', actor: 'automation' });
     const d = s.events().filter((e) => e.type === 'decided');
     expect(d).toHaveLength(1);
     expect(d[0]).toMatchObject({
@@ -208,7 +216,7 @@ describe('decide', () => {
     // a second identical decide prints the existing decision and calls nothing
     const again = await decide(s.f.topic, s.f.story, s.args(), s.deps());
     expect(again.existing).toBe(true);
-    expect(s.publicUpdates()).toHaveLength(1);
+    expect(s.calls('updateVideo')).toHaveLength(0);
     expect(s.events().filter((e) => e.type === 'decided')).toHaveLength(1);
   });
 
@@ -247,23 +255,21 @@ describe('decide', () => {
     expect(s.events().find((e) => e.type === 'decided')).toMatchObject({ verdict: 'changes' });
   });
 
-  it('a decide that died after go-live and before decided is completed, not repeated (criterion 13)', async () => {
+  it('a decide that died after the approvals and before decided is completed, not repeated (criterion 13)', async () => {
     const s = requested();
     writeFakeState(s.fake, {
       ...readFakeState(s.fake),
-      fail: [{ method: 'updateVideo', status: 0, reason: 'crash', retryable: false, times: 1, kind: 'crash' }],
+      fail: [{ method: 'getVideo', status: 0, reason: 'crash', retryable: false, times: 1, kind: 'crash' }],
     });
-    await expect(decide(s.f.topic, s.f.story, s.args(), s.deps())).rejects.toThrow(/crashed after updateVideo/);
+    await expect(decide(s.f.topic, s.f.story, s.args(), s.deps())).rejects.toThrow(/crashed after getVideo/);
     expect(s.events().some((e) => e.type === 'decided')).toBe(false);
-    expect(s.events().some((e) => e.type === 'published')).toBe(false);
+    expect(s.events().filter((e) => e.type === 'approved')).toHaveLength(1);
     const r = await decide(s.f.topic, s.f.story, s.args(), s.deps());
     expect(r.existing).toBe(false);
-    expect(s.publicUpdates()).toHaveLength(1); // the sync found it public: no second update
-    const published = s.events().filter((e) => e.type === 'published');
-    expect(published).toHaveLength(1);
-    expect(published[0].note).toMatch(/observed public on read-back/);
+    expect(s.calls('updateVideo')).toHaveLength(0);
+    expect(s.events().some((e) => e.type === 'published')).toBe(false);
     expect(s.events().filter((e) => e.type === 'decided')).toHaveLength(1);
-    expect(s.events().filter((e) => e.type === 'approved')).toHaveLength(1);
+    expect(s.events().filter((e) => e.type === 'approved')).toHaveLength(1); // not approved twice
   });
 
   it('paid: approves the link through the website verb, re-packages, and the release sha stands', async () => {
@@ -281,30 +287,30 @@ describe('decide', () => {
     expect(after.ctas.commercial[0].approvedBy).toBe('Jon');
     expect(after.outputs.youtube.description).toContain(`Paid link (affiliate link): The pump we sized: ${PAID_URL}`);
     expect(after.outputs.youtube.metadataSha).not.toBe(s.m.outputs.youtube.metadataSha);
-    // the metadata moved: pushed before the sync, then live
+    // the metadata moved: pushed before the sync; the video stays private for the tick's go-live
     expect(
       s
         .calls('updateVideo')
         .map((c) =>
           (c.args[1] as { snippet?: unknown; status?: { privacyStatus?: string } }).snippet ? 'push' : 'go-live',
         ),
-    ).toEqual(['push', 'go-live']);
+    ).toEqual(['push']);
     expect(s.events().find((e) => e.type === 'decided')).toMatchObject({ paid: [id] });
-    expect(s.events().some((e) => e.type === 'published')).toBe(true);
+    expect(s.events().some((e) => e.type === 'published')).toBe(false);
   });
 
-  it('a decide that died after go-live is completed even once the request expired (the video is live)', async () => {
+  it('a decide that died after the approvals is completed even once the request expired (the approvals stand)', async () => {
     const s = requested();
     writeFakeState(s.fake, {
       ...readFakeState(s.fake),
-      fail: [{ method: 'updateVideo', status: 0, reason: 'crash', retryable: false, times: 1, kind: 'crash' }],
+      fail: [{ method: 'getVideo', status: 0, reason: 'crash', retryable: false, times: 1, kind: 'crash' }],
     });
     await expect(decide(s.f.topic, s.f.story, s.args(), s.deps())).rejects.toThrow(/crashed/);
     const later = new Date(now.getTime() + 30 * 86400_000);
     const r = await decide(s.f.topic, s.f.story, s.args({ now: later }), s.deps());
     expect(r.existing).toBe(false);
     expect(s.events().filter((e) => e.type === 'decided')).toHaveLength(1);
-    expect(s.events().filter((e) => e.type === 'published')).toHaveLength(1);
+    expect(s.events().some((e) => e.type === 'published')).toBe(false);
     // a fresh (not completing) decide on an expired request is still refused
     const t = requested();
     await expect(decide(t.f.topic, t.f.story, t.args({ now: later }), t.deps())).rejects.toThrow(/expired/);
