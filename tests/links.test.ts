@@ -184,36 +184,25 @@ describe('links that cannot silently break', () => {
       /YouTube allows 5000/,
     );
   });
-  it('keywords fit YouTube; a tag too long for the budget is skipped, shorter ones still fit', () => {
-    const terms = Array(80)
-      .fill(0)
-      .map((_, i) => `term number ${i}`);
-    const tags = keywordsOf({ institution: 'Commission on Spending', inquiry: 'Heat pumps', question: 'q', terms });
+  it('keywords are the institution and the inquiry, nothing from a question or a claim, and fit YouTube', () => {
+    const tags = keywordsOf({ institution: 'Commission on Spending', inquiry: 'Heat pumps' });
+    expect(tags).toEqual(['Commission on Spending', 'Heat pumps']);
     expect(uploadProblem({ title: 't', description: 'd', tags })).toBeNull();
-    expect(tags[0]).toBe('Commission on Spending');
-    expect(keywordsOf({ institution: 'a'.repeat(490), inquiry: 'b'.repeat(20), question: 'c', terms: ['C'] })).toEqual([
-      'a'.repeat(490),
-      'c',
-    ]);
-    // the comma between two tags counts: 490 + 9 + 1 leaves no room for 'c'
-    expect(keywordsOf({ institution: 'a'.repeat(490), inquiry: 'b'.repeat(9), question: 'c', terms: [] })).toEqual([
+    expect(keywordsOf({ institution: 'Heat pumps', inquiry: 'heat pumps' })).toEqual(['Heat pumps']);
+    // one too long for the budget is skipped: 490 + 20 + the comma is over YouTube's 500
+    expect(keywordsOf({ institution: 'a'.repeat(490), inquiry: 'b'.repeat(20) })).toEqual(['a'.repeat(490)]);
+    // the comma between two tags counts: 490 + 9 + 1 is exactly 500
+    expect(keywordsOf({ institution: 'a'.repeat(490), inquiry: 'b'.repeat(9) })).toEqual([
       'a'.repeat(490),
       'b'.repeat(9),
     ]);
   });
-  it('a term with < or > is no keyword', () => {
-    expect(
-      keywordsOf({ institution: 'I', inquiry: 'Q', question: 'Why', terms: ['cost < gas', 'heat <b>', 'COP'] }),
-    ).toEqual(['I', 'Q', 'Why', 'COP']);
+  it('a name with < or > is no keyword', () => {
+    expect(keywordsOf({ institution: 'I', inquiry: 'heat <b>' })).toEqual(['I']);
   });
 
   it('a comma never reaches a keyword (YouTube reads it as a tag break)', () => {
-    expect(keywordsOf({ institution: 'I', inquiry: 'Q', question: 'Cheaper, or not?', terms: ['a, b'] })).toEqual([
-      'I',
-      'Q',
-      'Cheaper or not?',
-      'a b',
-    ]);
+    expect(keywordsOf({ institution: 'I', inquiry: 'Cheaper, or not?' })).toEqual(['I', 'Cheaper or not?']);
   });
 
   it('a description always links its matter page, whatever the primary', () => {

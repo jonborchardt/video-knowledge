@@ -5,7 +5,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { readJson, toJson, ROOT, FILES, scriptDir, storySlug } from '../../shared/io';
-import { sectionTitle, sentences } from '../../shared/sentences';
+import { chapterTitle, sentences } from '../../shared/sentences';
 import type { EvidencePackage, Script, Storyboard } from '../../shared/types';
 import { VIDEO_DIR, VIDEO_FILES } from './files';
 import { GENERIC, type KindRegistry, type SceneKind, bespokeFor, kindOf, registryFor } from './kinds';
@@ -52,7 +52,7 @@ export function draftRenderConfig(
   const chapters: Record<string, string> = {};
   for (const sec of script.sections) {
     const at = sec.sentences[0] && sceneOf(sec.sentences[0].id);
-    if (at && !chapters[at]) chapters[at] = sectionTitle(sec);
+    if (at && !chapters[at]) chapters[at] = chapterTitle(sec);
   }
   return {
     config: {

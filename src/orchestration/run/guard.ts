@@ -10,6 +10,7 @@ import { homedir } from 'node:os';
 import { basename, dirname, isAbsolute, join, relative } from 'node:path';
 import ts from 'typescript';
 import { readJson, ROOT, sha } from '../../shared/io';
+import { tickWriting } from './lock';
 
 /** Repo files whose change is never the agent's to make, restored from the snapshot when the content is held. */
 export const CANARIES = [
@@ -227,7 +228,12 @@ export function guard(
     const full = join(root, p);
     return existsSync(full) && statSync(full).isFile() ? sha(readFileSync(full)) !== was : true;
   });
+  // what the tick's verb is writing this moment (a reply applied to another story's ledger) is neither this step's
+  // nor an agent's: the tick commits it as the verb returns. Reverting it lost the decision (the inbox had already
+  // recorded the reply handled). Only those exact files, only while that tick lives; anything else is still reverted.
+  const tick = tickWriting(root);
   for (const [path, code] of changed) {
+    if (matchesAny(path, tick)) continue;
     const name = basename(path);
     const byName = NEVER_BY_NAME.has(name) || path.split('/').includes('node_modules');
     const denied = matchesAny(path, opts.deny ?? []);

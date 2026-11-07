@@ -1,10 +1,10 @@
 // One run per story: a lock file with the owner's pid and a heartbeat. Live while the pid is alive (whatever the
 // heartbeat age: a render can go quiet for an hour); a dead owner's lock is taken over and the caller journals it.
-import { closeSync, existsSync, mkdirSync, openSync, unlinkSync, writeSync } from 'node:fs';
+import { closeSync, existsSync, mkdirSync, openSync, readdirSync, unlinkSync, writeSync } from 'node:fs';
 import { hostname } from 'node:os';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
-import { readJson, scriptDirs, writeJsonAtomic } from '../../shared/io';
+import { readJson, scriptDir, scriptDirs, writeJsonAtomic } from '../../shared/io';
 
 const LOCK = 'lock.json';
 const RUN_DIR = 'run';
@@ -21,7 +21,13 @@ export interface Lock {
   childStep?: string;
   /** When the child or agent running now started (the live view's elapsed time). */
   childAt?: string;
+  /** The files the holder's verb is writing now and commits itself as it returns (the tick's `committing`): until
+   *  then they are dirty by a legitimate hand, and a run's tree guard leaves them alone (`tickWriting`). */
+  writing?: string[];
 }
+
+/** The tick's lock folder, under `.automation/`. */
+export const TICK_LOCK = 'tick';
 
 const pidAlive = (pid: number): boolean => {
   try {
@@ -98,6 +104,20 @@ export function setChild(dir: string, lock: Lock, childPid: number | null, child
   });
 }
 
+/** Records the files the owner's verb is writing now, or none (only the owner may). */
+export function setWriting(dir: string, lock: Lock, files: string[] | null): void {
+  const current = readLock(dir);
+  if (current?.runId !== lock.runId) return;
+  writeJsonAtomic(join(dir, LOCK), { ...current, writing: files ?? undefined });
+}
+
+/** What a live tick's verb is writing and will commit itself (repo-relative, as `ownedFiles` names them); nothing
+ *  when no tick runs, it is between verbs, or it died. */
+export const tickWriting = (root: string, alive: (pid: number) => boolean = pidAlive): string[] => {
+  const l = readLock(join(root, '.automation', TICK_LOCK));
+  return l && alive(l.pid) ? (l.writing ?? []) : [];
+};
+
 export function heartbeat(dir: string, lock: Lock, now: () => number = Date.now): void {
   const current = readLock(dir);
   if (current?.runId !== lock.runId) return;
@@ -112,6 +132,25 @@ export function aliveLocks(root: string, alive: (pid: number) => boolean = pidAl
       const l = readLock(dir);
       return l !== null && alive(l.pid);
     });
+}
+
+/** A run of the story, or of one of its Shorts, is live. The tick leaves that story's ledger alone until it ends: a
+ *  write now would land inside an agent step (the tree guard reverted one on 2026-11-03) or beside the run's own
+ *  publish verbs on the one unlocked ledger. */
+export function storyRunLive(
+  root: string,
+  topic: string,
+  storyId: string,
+  alive: (pid: number) => boolean = pidAlive,
+): boolean {
+  // the story's own run folder and each of its Shorts' (aliveLocks reads the story folders only)
+  const dir = scriptDir(topic, storyId, root);
+  const shorts = join(dir, 'shorts');
+  const runs = [dir, ...(existsSync(shorts) ? readdirSync(shorts).map((s) => join(shorts, s)) : [])];
+  return runs.some((d) => {
+    const l = readLock(join(d, RUN_DIR));
+    return l !== null && alive(l.pid);
+  });
 }
 
 /** Only the owner removes its lock. */

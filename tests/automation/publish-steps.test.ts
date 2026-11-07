@@ -8,6 +8,8 @@ import { readFakeState, writeFakeState } from '../../src/modules/publishing/fake
 import { openOutput } from '../../src/modules/publishing/publish';
 import { readJson } from '../../src/shared/io';
 import { runDir } from '../../src/orchestration/run/journal';
+import { acquire, release } from '../../src/orchestration/run/lock';
+import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { publishDue } from '../../src/orchestration/run/publish-due';
 import { tick } from '../../src/orchestration/run/tick';
@@ -299,5 +301,39 @@ describe('publishDue', () => {
     expect(r.outcome).toBe('ok');
     expect(r.actions.join('\n')).toMatch(/shorts\/one: go-live/);
     expect(state(s, 'short:one').live).toBe(true);
+  });
+
+  it('a story with a live run is left for the next tick: no verb, nothing counted, and the same step is due once the run ends (plan A, A2)', async () => {
+    const s = stagedRelease(T0);
+    stages.push(s);
+    const at = new Date(T0.getTime() + 2 * 3600_000).toISOString();
+    expect((await decided(s, 'schedule', at)).status).toBe(0);
+    const fs = readFakeState(s.fake);
+    fs.videos.vid00000000.privacyStatus = 'public'; // YouTube published at the time: the sync is due
+    writeFakeState(s.fake, fs);
+    const after = new Date(T0.getTime() + 2 * 3600_000 + 60_000);
+    s.clock.now = after;
+    const verbs: string[] = [];
+    const run: typeof s.run = (cli, args) => (verbs.push(args[0]), s.run(cli, args));
+    const dir = runDir(s.f.topic, s.f.story, s.f.root);
+    const held = acquire(dir, 'run story', { now: () => after.getTime() });
+    if (!('lock' in held)) throw new Error('the test could not take the run lock');
+    const due = () => publishDue(a, s.f.root, { now: () => after.getTime(), run, mail: null });
+    expect(await due()).toEqual([]);
+    expect(verbs).toEqual([]);
+    expect(state(s, 'youtube').status).toBe('scheduled'); // nothing moved
+    expect(existsSync(join(dir, 'retries.json'))).toBe(false); // and no try was counted
+    expect(existsSync(join(dir, 'halt.json'))).toBe(false);
+    release(dir, held.lock);
+    // a Short of the story running by its own id holds the story's ledger too (its packaging writes into it)
+    const shortDir = runDir(s.f.topic, `${s.f.story}/shorts/one`, s.f.root);
+    const short = acquire(shortDir, 'run story', { now: () => after.getTime() });
+    if (!('lock' in short)) throw new Error('the test could not take the Short run lock');
+    expect(await due()).toEqual([]);
+    expect(verbs).toEqual([]);
+    release(shortDir, short.lock);
+    expect((await due()).join('\n')).toMatch(/sync/); // the run is over: the same step is due and runs
+    expect(verbs[0]).toBe('sync');
+    expect(state(s, 'youtube').live).toBe(true);
   });
 });

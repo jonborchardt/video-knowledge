@@ -19,10 +19,10 @@ import {
   topicDir,
   writeJsonAtomic,
 } from '../../shared/io';
-import { FRESH_FILE, type FreshRun } from '../../shared/types';
+import { FRESH_FILE, type FreshRun, type Section } from '../../shared/types';
 import { bandOf } from '../../shared/duration';
 import { loadLedger, mainOutput, uploadProblem } from '../publishing';
-import { sectionTitle } from '../../shared/sentences';
+import { chapterTitle, sectionTitle } from '../../shared/sentences';
 import { absoluteUrl } from '../../lib/url';
 import { renderSrt } from './captions';
 import { extractFrame } from '../../shared/ffmpeg';
@@ -130,13 +130,14 @@ export interface ReviewPackage {
   short: { parent: string; slug: string; format: string; fullVideo: string | null } | null;
 }
 
-/** YouTube keywords: ordered, de-duplicated without regard to case, each kept while the total as `uploadProblem`
+/** YouTube keywords: the institution and the inquiry, never a question or a claim (those are sentences, and a
+ *  person's own tags in publish.json replace these); de-duplicated without regard to case, each kept while the total as `uploadProblem`
  *  counts it stays within YouTube's 500 characters; one that does not fit, or holds < or >, is skipped and the later
  *  ones still tried. */
-export function keywordsOf(k: { institution: string; inquiry: string; question: string; terms: string[] }): string[] {
+export function keywordsOf(k: { institution: string; inquiry: string }): string[] {
   const tags: string[] = [];
   // YouTube stores a tag list as comma-separated text: a comma inside a tag merges and cuts its neighbours (seen 2026-11-03)
-  for (const t of [k.institution, k.inquiry, k.question, ...k.terms].map((x) => x.replaceAll(',', '').trim())) {
+  for (const t of [k.institution, k.inquiry].map((x) => x.replaceAll(',', '').trim())) {
     if (!t || tags.some((x) => x.toLowerCase() === t.toLowerCase())) continue;
     if (!uploadProblem({ title: 't', description: 'd', tags: [...tags, t] })) tags.push(t);
   }
@@ -156,13 +157,26 @@ export function chapters(seg: Segment, tl: Timeline): Chapter[] {
   const named = seg.config.chapters;
   for (const id of Object.keys(named ?? {}))
     if (!tl.scenes.some((s) => s.id === id)) throw new Error(`render.json chapters names ${id}, not in the timeline`);
+  // the first section that begins at each scene, as `video -- init` pairs them
+  const begins = new Map<string, Section>();
+  for (const sec of seg.script.sections) {
+    const scene = sec.sentences.map((s) => sceneOf.get(s.id)).find((x): x is string => !!x);
+    if (scene && !begins.has(scene)) begins.set(scene, sec);
+  }
+  // init once stored a section's internal name ("Hook", "Close") as its chapter title: a stored title that is exactly
+  // that default is read as none, so a video initialised before the fix needs no edit to render.json (and no render)
+  const stored = (scene: string, title: string) => {
+    const sec = begins.get(scene);
+    return sec && title === sectionTitle(sec) ? chapterTitle(sec) : title;
+  };
   const list: Chapter[] = named
-    ? Object.entries(named).map(([scene, title]) => ({ scene, seconds: start(scene), stamp: '', title }))
-    : seg.script.sections.flatMap((sec) => {
-        const scene = sec.sentences.map((s) => sceneOf.get(s.id)).find((x): x is string => !!x);
-        if (!scene) return [];
-        return [{ scene, seconds: start(scene), stamp: '', title: sectionTitle(sec) }];
-      });
+    ? Object.entries(named).map(([scene, title]) => ({
+        scene,
+        seconds: start(scene),
+        stamp: '',
+        title: stored(scene, title),
+      }))
+    : [...begins].map(([scene, sec]) => ({ scene, seconds: start(scene), stamp: '', title: chapterTitle(sec) }));
   list.sort((a, b) => a.seconds - b.seconds);
   if (list.length) list[0].seconds = 0;
   // YouTube ignores every chapter unless there are at least three, starting at 0:00, each at least 10 s long. A
@@ -295,8 +309,6 @@ export function reviewData(
       institution: commissionOf(tl.topic)?.name ?? '',
       inquiry:
         readJson<{ topics: { label?: string }[] }>(join(topicDir(tl.topic), 'report.json'))?.topics[0]?.label ?? '',
-      question: seg.pkg.question ?? tl.title,
-      terms: seg.pkg.claims.map((c) => c.text).filter((t) => t.length <= 60), // the builder's ranking; a sentence is no keyword
     }),
     sources: { studies, sources },
     provenance: { narration: report.narration, music: report.music, clearance: report.clearance },

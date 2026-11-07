@@ -610,7 +610,7 @@ describe('render config draft and render check', () => {
     expect(config.scenes).toEqual(storyboard.scenes.map((s) => s.id));
     expect(needsGraphics).toEqual(['sc01', 'sc03']); // every animation and diagram is listed, never guessed
     expect(config.voice.rate).toBe('+0%');
-    expect(config.chapters?.sc01).toBe('Hook');
+    expect(config.chapters?.sc01).toBe('The question'); // what a viewer reads, never the section's internal name
   });
 
   it('initVideo writes a draft once and keeps it unless forced', () => {

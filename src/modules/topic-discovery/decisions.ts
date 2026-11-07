@@ -33,6 +33,7 @@ export function decideProposal(p: Proposal, review: ProposalReview | null, d: De
     };
   const rest: Proposal = { ...p };
   delete rest.parkedWhy;
+  delete rest.via; // how the earlier decision arrived is not how this one did: a decision by hand has no via
   const next: Proposal = {
     ...rest,
     status: d.status,

@@ -16,6 +16,7 @@ import { type Halt, clearHalt, readJournal, runDir, writeHalt } from '../../src/
 import {
   DRAFT_ACCEPTED_FILE,
   readShadow,
+  releaseGroup,
   releasePending,
   shadowAgreement,
   recordShadowAgent,
@@ -124,6 +125,14 @@ const publicUpdates = (calls: { method: string; args: unknown[] }[]) =>
   );
 
 describe('the release loop over the fake YouTube', () => {
+  it("a Short's id never yields a group with its siblings nested under it (the duplicate draft mail of 2026-11-03)", () => {
+    const s = staged();
+    expect(releaseGroup(s.f.topic, s.f.story, s.f.root)?.shorts.map((o) => o.storyId)).toEqual([
+      shortId(s.f.story, 'one'),
+      shortId(s.f.story, 'two'),
+    ]);
+    expect(() => releaseGroup(s.f.topic, shortId(s.f.story, 'one'), s.f.root)).toThrow(/a Short has no Shorts/);
+  });
   it('uploads the video and its Shorts private, verifies them, requests approval once and halts for the person', async () => {
     const s = staged();
     expect(releasePending(s.f.topic, s.f.story, s.a, s.f.root)).toMatch(/youtube: upload/);

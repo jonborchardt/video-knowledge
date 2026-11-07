@@ -2,7 +2,7 @@
 // --verdict ok` for the request's id and marks the story due for the launch job; CHANGES: records the notes on the
 // request for the next writer pass; a contradicted OK asks again; a reply naming another id is ignored.
 import { writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative, sep } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../../src/shared/automation';
 import { runCli } from '../../src/shared/cli';
@@ -12,6 +12,8 @@ import { FakeMailer } from './fake-mailer';
 import { ARTICLE_FILES, type ArticleRelease, type ArticleRequest, loadArticleRequest } from '../../src/modules/article';
 import { pollInbox, readInbox } from '../../src/orchestration/run/inbox';
 import { sendCorrectionRequest } from '../../src/orchestration/run/requests';
+import { tick } from '../../src/orchestration/run/tick';
+import { gitOrigin } from './publish-fake-cli';
 import { readSchedule } from '../../src/orchestration/run/schedule';
 import { type Fixture, cliRoot, syntheticProduction } from '../production-helpers';
 
@@ -66,7 +68,7 @@ async function staged() {
     ...extra,
   });
   const request = () => readJson<ArticleRequest>(join(f.dir, ARTICLE_FILES.request))!;
-  return { f, mail, req, sent, poll, reply, request, okRuns };
+  return { f, mail, req, sent, poll, reply, request, okRuns, run };
 }
 
 describe('pollInbox: article corrections', () => {
@@ -124,5 +126,31 @@ describe('pollInbox: article corrections', () => {
       'clarified',
       expect.stringMatching(/^ignored:/),
     ]);
+  }, 120_000);
+
+  it('the tick commits what `article decide` wrote for a correction reply, and only that (plan A, A2)', async () => {
+    const s = await staged();
+    const g = gitOrigin(s.f.root);
+    const git = (args: string[]) => (args[0] === 'status' && !args.includes('--') ? '' : g.git(...args));
+    s.mail.deliver(s.reply('CHANGES:\n- say when the survey was published'));
+    await tick({ ...a, enabled: { ...a.enabled, tick: true } }, s.f.root, {
+      mail: s.mail,
+      run: s.run,
+      ask: () => ({ stage: 'packaged', next: '' }),
+      preflight: {
+        git,
+        claude: () => true,
+        env: { MAIL_SMTP_HOST: 'a', MAIL_IMAP_HOST: 'b', MAIL_USER: 'u', MAIL_PASSWORD: 'p' },
+        freeGb: () => 100,
+        launches: () => [],
+        channels: () => [],
+      },
+    });
+    expect(s.request().decided).toMatchObject({ verdict: 'changes' });
+    expect(g.git('show', '--name-only', '--format=%s', 'HEAD').trim().split(/\n+/)).toEqual([
+      `tick: article decide ${s.f.topic} ${s.f.story}`,
+      relative(s.f.root, join(s.f.dir, ARTICLE_FILES.request)).split(sep).join('/'),
+    ]);
+    expect(g.git('status', '--porcelain', '--', 'topics').trim()).toBe('');
   }, 120_000);
 });
