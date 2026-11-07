@@ -227,7 +227,7 @@ export function scheduleText(a: Automation, root: string, platform = process.pla
       "Then, in the Task Scheduler window, for each task: Run only when user is logged on (so ~/.claude's login, the GPU",
       'and %TEMP% are yours); Stop the task if it runs longer than: off (or 3 days) for work.',
       'Settings tab: tick and work = "Do not start a new instance" (one instance of each task at a time, so one job at a',
-      'time: a trigger that fires while the task runs is skipped, not queued; the tick\'s lock and its file claims are',
+      "time: a trigger that fires while the task runs is skipped, not queued; the tick's lock and its file claims are",
       'the second line of defence). Check it: schtasks /Query /TN "video-knowledge work" /XML must show',
       '<MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>. The setting is per task: it serialises neither the',
       'tick against work nor anything you start by hand (docs/OPERATIONS.md, section 4).',
