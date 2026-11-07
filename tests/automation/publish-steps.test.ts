@@ -25,8 +25,10 @@ const a = {
   approvals: { ...DEFAULTS.approvals, to: 'jon@example.test', from: 'automation@example.test', approverName: 'Jon' },
   notifications: { to: 'jon@example.test', digest: { weekday: 'monday', hour: 8 } },
 };
-const decided = async (s: Stage, verdict: 'ok' | 'schedule', at?: string) =>
-  s.run('publish', [
+/** The decision, and for `ok` the go-live the tick's probe runs under it once the page is confirmed (plan B: decide
+ *  itself leaves the video private); the due step then finds a published video, as before. */
+const decided = async (s: Stage, verdict: 'ok' | 'schedule', at?: string) => {
+  const r = await s.run('publish', [
     'decide',
     s.f.topic,
     s.f.story,
@@ -40,6 +42,9 @@ const decided = async (s: Stage, verdict: 'ok' | 'schedule', at?: string) =>
     '--via',
     'email:<m1@test>',
   ]);
+  if (r.status !== 0 || verdict !== 'ok') return r;
+  return s.run('publish', ['go-live', s.f.topic, s.f.story, '--by', 'Jon', '--via', `tick:${s.request}`]);
+};
 const state = (s: Stage, output: string) => openOutput(s.f.topic, s.f.story, { root: s.f.root, output }).state;
 
 describe('publishDue', () => {
@@ -84,7 +89,7 @@ describe('publishDue', () => {
     expect(s.publicUpdates('vid00000000')).toHaveLength(0); // the video was never touched again
   });
 
-  it('a video that decide published is read back once by the next tick (the launch needs it verified since)', async () => {
+  it('a video the tick published under the decision is read back once by the next tick (the announcement needs it verified since)', async () => {
     const s = stagedRelease(T0, { shorts: [] });
     stages.push(s);
     expect((await decided(s, 'ok')).status).toBe(0);

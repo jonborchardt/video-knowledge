@@ -187,24 +187,34 @@ describe('criterion 13: the crash boundaries of phase 3', () => {
       ...readFakeState(s.fake),
       fail: [{ method: 'updateVideo', status: 0, reason: 'crash', retryable: false, times: 1, kind: 'crash' }],
     });
-  it('a go-live that dies after the update: the next decide finds the video public, records it observed, and decides once', async () => {
+  it("the tick's go-live that dies after the update: the next tick's go-live records it once; the decision is one (plan B)", async () => {
     const s = stagedRelease(T1);
-    crashOnce(s);
+    // decide ok leaves the video private: no update, one decision
     const args = decideArgs(s, 'ok');
-    const first = await s.run('publish', args);
+    expect((await s.run('publish', args)).status).toBe(0);
+    expect(s.calls('updateVideo')).toHaveLength(0);
+    expect(s.events().filter((e) => e.type === 'decided')).toHaveLength(1);
+    // the go-live the probe runs under the decision dies after YouTube's update
+    crashOnce(s);
+    const goLive = ['go-live', s.f.topic, s.f.story, '--by', 'Jon', '--via', `tick:${s.request}`];
+    const first = await s.run('publish', goLive);
     expect(first.status).toBe(1);
     expect(first.stderr).toMatch(/crashed after updateVideo/);
-    expect(s.events().some((e) => e.type === 'decided')).toBe(false);
-    const second = await s.run('publish', args);
+    expect(s.events().some((e) => e.type === 'published')).toBe(false);
+    // the next tick runs it again: the verb's read-back records the publication once
+    const second = await s.run('publish', goLive);
     expect(second.status).toBe(0);
-    expect(s.publicUpdates()).toHaveLength(1);
     expect(s.events().filter((e) => e.type === 'published')).toHaveLength(1);
-    expect(s.events().find((e) => e.type === 'published')?.note).toMatch(/observed public/);
-    expect(s.events().filter((e) => e.type === 'decided')).toHaveLength(1);
-    const third = await s.run('publish', args);
+    expect(s.events().find((e) => e.type === 'published')?.via).toEqual({ channel: 'tick', request: s.request });
+    const third = await s.run('publish', goLive);
     expect(third.status).toBe(0);
-    expect(third.stdout).toMatch(/already recorded/);
-    expect(s.publicUpdates()).toHaveLength(1);
+    expect(third.stdout).toMatch(/already published/);
+    expect(s.events().filter((e) => e.type === 'published')).toHaveLength(1);
+    // the same decision again is the recorded one
+    const again = await s.run('publish', args);
+    expect(again.status).toBe(0);
+    expect(again.stdout).toMatch(/already recorded/);
+    expect(s.events().filter((e) => e.type === 'decided')).toHaveLength(1);
     s.f.cleanup();
   });
   it('a schedule that dies after the update: the next decide sets the same time once more and records one schedule', async () => {
