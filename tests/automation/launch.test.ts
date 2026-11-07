@@ -332,6 +332,116 @@ describe('launch', () => {
       expect(launchJobs(a, c.f.root)).toEqual([]);
     }, 120_000);
 
+    it('a video the person unpublished is never taken live again by the probe (the decision is spent)', async () => {
+      const c = clone({ decided: true });
+      await launch(c.f.topic, c.f.story, a, c.deps(), c.f.root);
+      published(c.f);
+      let l = loadLedger(c.f.topic, c.f.story, c.f.root)!;
+      l = appendEvent(l, 'youtube', {
+        at: '2026-11-01T13:00:00Z',
+        type: 'unpublished',
+        by: 'Jon',
+        id: 'vid00000000',
+        note: 'taken down',
+      }).ledger;
+      saveLedger(publishPath(c.f.topic, c.f.story, c.f.root), l);
+      const verbs: string[] = [];
+      const run = (cli: string, args: string[]) => {
+        verbs.push([cli, ...args].join(' '));
+        return { status: 0, stdout: '', stderr: '' };
+      };
+      const mail = new FakeMailer(c.f.root);
+      const r = await probeLaunches(a, c.f.root, { now: () => T0 + 60_000, run, mail, fetchFn: livePage });
+      expect(verbs.filter((v) => v.includes('go-live'))).toEqual([]);
+      expect(r.join('\n')).toMatch(/waits for a decision/);
+      expect(mail.sent).toEqual([]);
+    }, 120_000);
+
+    it('a new decision after the page went up: the probe waits for the rebuilt page instead of going live on the old one', async () => {
+      const c = clone({ decided: true });
+      await launch(c.f.topic, c.f.story, a, c.deps(), c.f.root);
+      const build = readJson<{ mp4Sha: string }>(join(c.f.dir, 'video', 'review', 'review.json'))!.mp4Sha;
+      const via = { channel: 'email' as const, request: 'rq-0000000000cd' };
+      let l = loadLedger(c.f.topic, c.f.story, c.f.root)!;
+      for (const e of [
+        { at: '2026-11-01T13:00:00Z', type: 'changes-requested' as const, build, notes: [{ text: 'the article' }] },
+        { at: '2026-11-01T14:00:00Z', type: 'approved' as const, build, via },
+        { at: '2026-11-01T14:00:01Z', type: 'decided' as const, request: via.request, verdict: 'ok' as const, via },
+      ])
+        l = appendEvent(l, 'youtube', { by: 'Jon', ...e }).ledger;
+      saveLedger(publishPath(c.f.topic, c.f.story, c.f.root), l);
+      const verbs: string[] = [];
+      const run = (cli: string, args: string[]) => {
+        verbs.push([cli, ...args].join(' '));
+        return { status: 0, stdout: '', stderr: '' };
+      };
+      const mail = new FakeMailer(c.f.root);
+      // the tick's probe runs before the work plane's fresh launch: the old page carries the same id
+      const r = await probeLaunches(a, c.f.root, { now: () => T0 + 3 * 3600_000, run, mail, fetchFn: livePage });
+      expect(verbs).toEqual([]);
+      expect(r.join('\n')).toMatch(/new decision/);
+      expect(readLaunch(c.f.topic, c.f.story, c.f.root)!.halt ?? null).toBeNull();
+      expect(launchJobs(a, c.f.root)).toHaveLength(1);
+    }, 120_000);
+
+    it('a go-live that fails finally, or is refused, halts once and is not run again; a hand go-live clears the halt', async () => {
+      const c = clone({ decided: true });
+      await launch(c.f.topic, c.f.story, a, c.deps(), c.f.root);
+      const mail = new FakeMailer(c.f.root);
+      const verbs: string[] = [];
+      let refuse = true;
+      const run = (cli: string, args: string[]) => {
+        verbs.push([cli, ...args].join(' '));
+        return refuse && args[0] === 'go-live'
+          ? { status: 2, stdout: '', stderr: 'refused: youtube is drawn with an older kit\n' }
+          : { status: 0, stdout: '', stderr: '' };
+      };
+      // refused (exit 2, no failed event): a person's at once
+      const r1 = await probeLaunches(a, c.f.root, { now: () => T0 + 60_000, run, mail, fetchFn: livePage });
+      expect(verbs.filter((v) => v.includes('go-live'))).toHaveLength(1);
+      expect(r1.join('\n')).toMatch(/go-live \(2\)/);
+      const rec = readLaunch(c.f.topic, c.f.story, c.f.root)!;
+      expect(rec.halt?.kind).toBe('step-failed');
+      expect(rec.halt?.why).toMatch(/older kit/);
+      expect(readHalt(runDir(c.f.topic, c.f.story, c.f.root))?.kind).toBe('step-failed');
+      // the next ticks run nothing more
+      await probeLaunches(a, c.f.root, { now: () => T0 + 120_000, run, mail, fetchFn: livePage });
+      expect(verbs.filter((v) => v.includes('go-live'))).toHaveLength(1);
+      // a final failure recorded by the verb (YouTube kept it private) is the same: halted once, never retried
+      const d = clone({ decided: true });
+      await launch(d.f.topic, d.f.story, a, d.deps(), d.f.root);
+      saveLedger(
+        publishPath(d.f.topic, d.f.story, d.f.root),
+        appendEvent(loadLedger(d.f.topic, d.f.story, d.f.root)!, 'youtube', {
+          at: '2026-11-01T12:10:00Z',
+          type: 'failed',
+          by: 'Jon',
+          id: 'vid00000000',
+          step: 'go-live',
+          error: 'YouTube kept vid00000000 private',
+          retryable: false,
+        }).ledger,
+      );
+      const verbs2: string[] = [];
+      const run2 = (cli: string, args: string[]) => {
+        verbs2.push([cli, ...args].join(' '));
+        return { status: 0, stdout: '', stderr: '' };
+      };
+      await probeLaunches(a, d.f.root, { now: () => T0 + 60_000, run: run2, mail, fetchFn: livePage });
+      await probeLaunches(a, d.f.root, { now: () => T0 + 120_000, run: run2, mail, fetchFn: livePage });
+      expect(verbs2.filter((v) => v.includes('go-live'))).toEqual([]);
+      expect(readLaunch(d.f.topic, d.f.story, d.f.root)!.halt?.kind).toBe('step-failed');
+      expect(readLaunch(d.f.topic, d.f.story, d.f.root)!.halt?.why).toMatch(/kept vid00000000 private/);
+      // the person fixes it and goes live by hand: the halt clears and the launch goes on to the announcement
+      published(d.f);
+      refuse = false;
+      const r3 = await probeLaunches(a, d.f.root, { now: () => T0 + 180_000, run: run2, mail, fetchFn: livePage });
+      expect(readLaunch(d.f.topic, d.f.story, d.f.root)!.halt ?? null).toBeNull();
+      expect(readHalt(runDir(d.f.topic, d.f.story, d.f.root))).toBeNull();
+      expect(r3.join('\n')).not.toMatch(/go-live/);
+      expect(mail.sent).toHaveLength(1);
+    }, 120_000);
+
     it('the probe confirming the page runs go-live under the decision, then verify; the post and the mail wait for the live, verified video', async () => {
       const c = clone({ decided: true });
       await launch(c.f.topic, c.f.story, a, c.deps(), c.f.root);

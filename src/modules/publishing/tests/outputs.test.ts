@@ -7,6 +7,7 @@ import { seekUrl, storyOutputs } from '../outputs';
 import {
   addOutput,
   appendEvent,
+  decidedOk,
   emptyLedger,
   type Ledger,
   type PublishEvent,
@@ -144,6 +145,20 @@ describe('public outputs', () => {
       const live = setup([upload, approved, decided, ev('published', '2026-11-02T11:00:00Z')]);
       expect(live.releasing).toBeNull();
       expect(live.video?.publishedAt).toBe('2026-11-02T11:00:00Z');
+    });
+
+    it('a decision is spent once the video was published: unpublished, the output is not releasing and decidedOk is null', () => {
+      const out = setup([
+        upload,
+        approved,
+        decided,
+        ev('published', '2026-11-02T11:00:00Z'),
+        ev('unpublished', '2026-11-03T11:00:00Z', { note: 'taken down' }),
+      ]);
+      expect(out.video).toBeNull();
+      expect(out.releasing).toBeNull();
+      const ledger = JSON.parse(readFileSync(publishPath(TOPIC, STORY, root), 'utf8')) as Ledger;
+      expect(decidedOk(ledger.outputs.youtube)).toBeNull();
     });
 
     it("is null when the decision belongs to another build's request, or the verdict is schedule", () => {

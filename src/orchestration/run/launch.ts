@@ -410,6 +410,24 @@ export async function probeLaunches(a: Automation, root = ROOT, d: ProbeDeps): P
       actions.push(`${tag}: ${main.id} is ${main.state.status}: the launch waits for a decision`);
       continue;
     }
+    // a new decision since this record's launch: the work plane rebuilds and deploys the page first (launchStale in
+    // launchJobs); the old page would carry the same id, so it is not probed and nothing goes live on it
+    if (launchStale(rec, decided)) {
+      actions.push(`${tag}: a new decision (${decided!.at}): the launch rebuilds the page first`);
+      continue;
+    }
+    // a go-live the tick halted on (a final failure, a refusal) is a person's: nothing runs until the person took
+    // the video live by hand, which clears the halt and lets the announcement follow
+    if (rec.halt?.kind === 'step-failed' && /go-live/.test(rec.halt.board.next)) {
+      if (!main.state.live) {
+        actions.push(`${tag}: go-live halted: ${rec.halt.why}`);
+        continue;
+      }
+      // the same halt in the run folder goes too (haltLaunch clears only the launch's own kinds there)
+      const dir = runDir(rec.topic, rec.storyId, root);
+      if (readHalt(dir)?.why === rec.halt.why) clearHalt(dir);
+      haltLaunch(root, rec, null);
+    }
     if (!rec.liveAt) {
       const probe = await probeOf(a, rec, d.fetchFn, root);
       rec.probes += 1;
@@ -463,6 +481,13 @@ export async function probeLaunches(a: Automation, root = ROOT, d: ProbeDeps): P
           runId: 'tick',
           board: { stage: 'launch', next: 'the go-live' },
         });
+      if (main.state.failed && !main.state.failed.retryable) {
+        // recorded by the verb (YouTube kept it private): a person's; said once, the halt key stays stable
+        if (rec.halt?.kind !== 'step-failed')
+          goLiveHalt(`${main.id}: ${main.state.failed.step} failed: ${main.state.failed.error}`);
+        actions.push(`${tag}: go-live failed finally: a person's`);
+        continue;
+      }
       if (main.state.failed?.retryable && triesOf(dir, key, decided.at) >= MAX_TRIES) {
         actions.push(`${tag}: go-live keeps failing (${MAX_TRIES} tries): a person's`);
         continue;
@@ -484,6 +509,11 @@ export async function probeLaunches(a: Automation, root = ROOT, d: ProbeDeps): P
         const tries = countTry(dir, key, decided.at);
         if (tries >= MAX_TRIES)
           goLiveHalt(`${main.id}: go-live keeps failing after ${tries} tries: ${after.failed.error}`);
+      } else if (r.status !== 0 && !after.live) {
+        // refused (exit 2: the kit redrawn since the approval, the build not uploaded) or failed without a record:
+        // a person's at once, never run again from here
+        const why = (r.stderr || r.stdout).trim().split('\n').at(-1) ?? `exit ${r.status}`;
+        goLiveHalt(`${main.id}: go-live ${r.status === 2 ? 'refused' : 'failed'}: ${why}`);
       }
       if (r.status === 0 && after.live)
         await d.run('publish', ['verify', rec.topic, rec.storyId, '--by', 'automated: tick']);

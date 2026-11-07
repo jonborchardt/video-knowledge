@@ -466,6 +466,8 @@ export function approvalHolds(ev: PublishEvent[], build: string, title?: string 
  *  built and the tick goes live on it). Null without an upload, a decision, or once the decision is overturned. */
 export function decidedOk(o: Pick<Output, 'events'>): PublishEvent | null {
   const ev = o.events;
+  // a decision is spent once the video was published: an unpublish is a person's act, never reversed from here
+  if (ev.some((e) => e.type === 'published')) return null;
   const upload = ev.findLast((e) => e.type === 'uploaded');
   const decided = ev.findLast((e) => e.type === 'decided');
   if (!upload?.build || decided?.verdict !== 'ok' || !decided.request) return null;

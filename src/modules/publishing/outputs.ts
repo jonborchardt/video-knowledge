@@ -60,9 +60,9 @@ function publicVideo(output: string, o: Output, reviewDir: string | null): Publi
   return e ? videoOf(output, o, e, reviewDir) : null;
 }
 
-/** The uploaded video of an output a person decided `ok` for, while nothing of it was ever published. */
+/** The uploaded video of an output a person decided `ok` for (`decidedOk` is null once anything was published). */
 function releasingVideo(output: string, o: Output, reviewDir: string | null): PublicVideo | null {
-  if (o.kind !== 'youtube-video' || !decidedOk(o) || o.events.some((e) => e.type === 'published')) return null;
+  if (o.kind !== 'youtube-video' || !decidedOk(o)) return null;
   const upload = o.events.findLast((e) => e.type === 'uploaded');
   return upload ? videoOf(output, o, upload, reviewDir) : null;
 }
