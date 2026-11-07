@@ -403,6 +403,10 @@ export async function probeLaunches(a: Automation, root = ROOT, d: ProbeDeps): P
     if (!pushed) continue;
     if (rec.liveAt && rec.posted !== null && (rec.emailed || !d.mail)) continue; // finished
     const tag = `${rec.topic}/${rec.storyId}`;
+    if (!loadLedger(rec.topic, rec.storyId, root)) {
+      actions.push(`${tag}: no publish.json: nothing to publish`);
+      continue;
+    }
     // the page is up (or being deployed) for a video no longer approved for release (withdrawn after the decision,
     // plan B): nothing to probe for and nothing to publish until a person decides again
     const { main, decided } = releaseOf(rec.topic, rec.storyId, root);

@@ -140,8 +140,8 @@ describe('the two planes with the publication steps (criterion 15)', () => {
     expect(Date.now() - t0).toBeLessThan(5000);
     expect(report.actions.join('\n')).toMatch(/inbox: 1 fetched, 1 applied/);
     expect(s.events().find((e) => e.type === 'decided')).toMatchObject({ verdict: 'ok' });
-    expect(s.publicUpdates('vid00000000')).toHaveLength(1); // the video; its Short followed in the same pass
-    expect(report.actions.join('\n')).toMatch(/decision:other: (live at|not live yet)/);
+    expect(s.publicUpdates('vid00000000')).toHaveLength(0); // the page goes up first (plan B): private until the probe
+    expect(report.actions.join('\n')).toMatch(/decision:other: (live at|not live yet|no publish.json)/);
     expect((await sleeping).outcome).toBe('done');
     s.f.cleanup();
   }, 20_000);

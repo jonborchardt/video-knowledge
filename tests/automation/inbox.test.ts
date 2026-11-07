@@ -53,21 +53,22 @@ async function staged(opts: { expiresDays?: number } = {}) {
 }
 
 describe('pollInbox', () => {
-  it('applies OK once: the same reply delivered twice is one decided and one go-live (criterion 6)', async () => {
+  it('applies OK once: the same reply delivered twice is one decided; the video stays private for the page (criterion 6, plan B)', async () => {
     const { s, mail, sent, subject, poll } = await staged();
     mail.deliver(reply(sent, 'OK', { subject }));
     const r1 = await poll();
     expect(r1.applied).toEqual([`${s.request}: ok`]);
     expect(s.events().filter((e) => e.type === 'decided')).toHaveLength(1);
-    expect(s.publicUpdates()).toHaveLength(1);
-    expect(s.events().find((e) => e.type === 'published')?.via).toMatchObject({ channel: 'email', request: s.request });
+    expect(s.events().find((e) => e.type === 'decided')?.via).toMatchObject({ channel: 'email', request: s.request });
+    expect(s.publicUpdates()).toHaveLength(0);
+    expect(s.events().some((e) => e.type === 'published')).toBe(false);
     // the same message again (a fetch after a crash between fetch and record): handled, nothing applied twice
     const copy = { ...mail.inbox[0], uid: ++uid };
     mail.deliver(copy);
     const r2 = await poll();
     expect(r2.applied).toEqual([]);
     expect(s.events().filter((e) => e.type === 'decided')).toHaveLength(1);
-    expect(s.publicUpdates()).toHaveLength(1);
+    expect(s.events().filter((e) => e.type === 'approved')).toHaveLength(1);
     const file = readInbox(s.f.root);
     expect(file.handled.map((h) => h.outcome)).toEqual(['applied:ok']);
     expect(readSchedule(s.f.root).due?.[0]).toMatchObject({ topic: s.f.topic, storyId: s.f.story, why: 'moved' });
@@ -158,7 +159,8 @@ describe('pollInbox', () => {
     mail.deliver(reply(c.messageId, 'OK', { subject, references: [sent, c.messageId] }));
     const r2 = await poll();
     expect(r2.applied).toEqual([`${s.request}: ok`]);
-    expect(s.publicUpdates()).toHaveLength(1);
+    expect(s.events().filter((e) => e.type === 'decided')).toHaveLength(1);
+    expect(s.publicUpdates()).toHaveLength(0); // the page goes up first; the tick goes live after the probe
   });
 
   it('a conditional OK ("OK, but hold off") publishes nothing: one clarification asking for a plain OK', async () => {
@@ -174,7 +176,7 @@ describe('pollInbox', () => {
     expect(mail.sent[1].text).toMatch(/The request stays open/);
   });
 
-  it('a crash between decide and the inbox record is completed on the next poll without a second go-live (criterion 13)', async () => {
+  it('a crash between decide and the inbox record is completed on the next poll without a second decision (criterion 13)', async () => {
     const { s, mail, sent, subject } = await staged();
     mail.deliver(reply(sent, 'OK', { subject }));
     let crash = true;
@@ -190,7 +192,8 @@ describe('pollInbox', () => {
     const r = await pollInbox(a, mail, s.f.root, { now: () => T0.getTime(), run });
     expect(r.applied).toEqual([`${s.request}: ok`]);
     expect(s.events().filter((e) => e.type === 'decided')).toHaveLength(1);
-    expect(s.publicUpdates()).toHaveLength(1);
+    expect(s.events().filter((e) => e.type === 'approved')).toHaveLength(1);
+    expect(s.publicUpdates()).toHaveLength(0);
     expect(readInbox(s.f.root).handled).toHaveLength(1);
   });
 
@@ -217,7 +220,8 @@ describe('pollInbox', () => {
     mail.deliver(reply(mail.sent[2].messageId, 'OK', { subject: mail.sent[2].subject }));
     const r2 = await pollInbox(a, mail, s.f.root, { now: () => later.getTime(), run: s.run });
     expect(r2.applied).toEqual([`${renewed.request}: ok`]);
-    expect(s.publicUpdates()).toHaveLength(1);
+    expect(s.events().find((e) => e.type === 'decided' && e.verdict === 'ok')?.request).toBe(renewed.request);
+    expect(s.publicUpdates()).toHaveLength(0);
     // a second expiry is a person's: the halt, no second renewal
     const again = new Date(later.getTime() + 10 * 86400_000);
     const s2 = stagedRelease(T0, { expiresDays: 1 });
@@ -271,7 +275,8 @@ describe('pollInbox', () => {
     const r2 = await poll();
     expect(r2.applied).toEqual([`${s.request}: ok`]); // a copy of the same decision: nothing to say
     expect(mail.sent).toHaveLength(2);
-    expect(s.publicUpdates()).toHaveLength(1);
+    expect(s.events().filter((e) => e.type === 'decided')).toHaveLength(1);
+    expect(s.publicUpdates()).toHaveLength(0);
   });
 
   it('CHANGES: with placed notes and PAID OK reach decide as arguments', async () => {
