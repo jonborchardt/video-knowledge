@@ -114,14 +114,19 @@ describe('work', () => {
     release();
     expect((await first).outcome).toBe('done');
   });
-  it('prints the two scheduler commands and the power lines, and runs nothing', () => {
+  it('prints the two scheduler commands (the work task launches only, one instance each) and the power lines, and runs nothing', () => {
     const text = scheduleText({ ...on, clone: 'F:/github/video-knowledge-auto' }, 'F:/x', 'win32');
     expect(text).toContain('schtasks /Create /SC MINUTE /MO 15 /TN "video-knowledge tick"');
     expect(text).toContain('schtasks /Create /SC MINUTE /MO 15 /TN "video-knowledge work"');
     expect(text).toContain('cd /d F:/github/video-knowledge-auto');
-    expect(text).toContain('Run a new instance in parallel');
+    // the work task runs launches only (no agent-written code unattended) and one instance at a time (one job)
+    expect(text).toContain('npm run -s run -- work --job launch');
+    expect(text).toContain('IgnoreNew');
+    expect(text).not.toContain('Run a new instance in parallel');
     expect(text).toContain('powercfg /change standby-timeout-ac 0');
-    expect(scheduleText(on, 'F:/x', 'linux')).toContain('*/15 * * * * cd F:/x');
+    const cron = scheduleText(on, 'F:/x', 'linux');
+    expect(cron).toContain('*/15 * * * * cd F:/x');
+    expect(cron).toContain('work --job launch');
   });
   it('runs a pick through the pick itself, which records it before the start (never runStory directly)', async () => {
     const root = fresh();

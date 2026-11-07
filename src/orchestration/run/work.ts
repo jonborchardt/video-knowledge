@@ -1,7 +1,8 @@
 // The work plane (spec §4.4): one process picks one due long job, runs it in the foreground to its end or halt, and
-// exits. The scheduler starts instances in parallel; the subject's lock is the bound on how many run at once, not
-// the scheduler. The pick order is fixed: a launch (phase 3), a due resume, a release loop (phase 2), the production
-// pick when due, a topic run (phase 5), a discovery (phase 4), a scan (phase 6).
+// exits. The scheduled task runs one instance at a time (one job; "Do not start a new instance") and launches only
+// (`--job launch`: no agent-written code runs unattended); the subject's locks are the second line of defence, and
+// the bound when a person starts jobs by hand. The pick order is fixed: a launch (phase 3), a due resume, a release
+// loop (phase 2), the production pick when due, a topic run (phase 5), a discovery (phase 4), a scan (phase 6).
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { commissionOf, isFixtureTopic } from '../../config/site';
@@ -216,17 +217,22 @@ export function scheduleText(a: Automation, root: string, platform = process.pla
   const clone = a.clone ?? root;
   if (platform === 'win32') {
     const task = (name: string, verb: string) =>
-      `schtasks /Create /SC MINUTE /MO ${a.schedule.tickMinutes} /TN "video-knowledge ${name}" /TR "cmd /c cd /d ${clone} && npm run -s run -- ${verb} >> .automation\\${verb}.log 2>&1" /F`;
+      `schtasks /Create /SC MINUTE /MO ${a.schedule.tickMinutes} /TN "video-knowledge ${name}" /TR "cmd /c cd /d ${clone} && npm run -s run -- ${verb} >> .automation\\${name}.log 2>&1" /F`;
     return [
       'Two Task Scheduler tasks, created by you (the repo never creates one):',
       '',
       task('tick', 'tick'),
-      task('work', 'work'),
+      task('work', 'work --job launch'),
       '',
       "Then, in the Task Scheduler window, for each task: Run only when user is logged on (so ~/.claude's login, the GPU",
       'and %TEMP% are yours); Stop the task if it runs longer than: off (or 3 days) for work.',
-      'Settings tab: tick = "Do not start a new instance"; work = "Run a new instance in parallel" (the locks bound how',
-      'many jobs run at once, not the scheduler).',
+      'Settings tab: tick and work = "Do not start a new instance" (one instance of each task at a time, so one job at a',
+      'time: a trigger that fires while the task runs is skipped, not queued; the tick\'s lock and its file claims are',
+      'the second line of defence). Check it: schtasks /Query /TN "video-knowledge work" /XML must show',
+      '<MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>. The setting is per task: it serialises neither the',
+      'tick against work nor anything you start by hand (docs/OPERATIONS.md, section 4).',
+      'The work task runs launches only (--job launch): no agent-written code runs unattended; story, topic, scan and',
+      'discovery runs are started by a person in a session.',
       '',
       'Power: renders must not sleep (register D2). You run these yourself:',
       'powercfg /change standby-timeout-ac 0',
@@ -236,8 +242,8 @@ export function scheduleText(a: Automation, root: string, platform = process.pla
     ].join('\n');
   }
   return [
-    'Two cron lines (crontab -e), created by you:',
+    'Two cron lines (crontab -e), created by you (cron has no instance policy: the locks are the only bound):',
     `*/${a.schedule.tickMinutes} * * * * cd ${clone} && npm run -s run -- tick >> .automation/tick.log 2>&1`,
-    `*/${a.schedule.tickMinutes} * * * * cd ${clone} && npm run -s run -- work >> .automation/work.log 2>&1`,
+    `*/${a.schedule.tickMinutes} * * * * cd ${clone} && npm run -s run -- work --job launch >> .automation/work.log 2>&1`,
   ].join('\n');
 }
