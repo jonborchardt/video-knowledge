@@ -113,6 +113,7 @@ const relatedItems = related(graph, node, { ...rel, exclude: [...(rel.exclude ??
   title={meta ? meta.seoTitle : `${s.title} · ${commission.name}`}
   description={meta?.description.text ?? s.question}
   image={image}
+  brand={commissionKey(commission)}
   jsonLd={jsonLd}
   article={{ published, modified }}
   noindex={isFixtureTopic(t.name)}

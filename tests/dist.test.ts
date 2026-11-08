@@ -52,6 +52,9 @@ const pages = [
   ...storyPages.map((p) => `${p.topic}/${p.slug}/index.html`),
   ...liveTopics.filter((n) => liveData(n).length > 0).map((n) => `${n}/data/index.html`),
 ];
+// An institution page's livery: Base sets the four source tokens on <html> from its kit (plan N).
+const livery = (p: Record<string, string>) =>
+  `<html lang="en-US" style="--navy:${p.ground};--gold:${p.accent};--paper:${p.paper};--slate:${p.ink}">`;
 const sitemapXml = () => {
   const index = readFileSync(join(DIST, 'sitemap-index.xml'), 'utf8');
   const part = index.match(/<loc>[^<]*\/(sitemap-\d+\.xml)<\/loc>/)![1];
@@ -147,15 +150,24 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     expect(html).toContain('The Commonwealth is fictional. The research is real.');
   });
 
+  it("the Commonwealth's own pages keep the stylesheet's palette", () => {
+    for (const p of ['index.html', 'about/index.html', 'inquiries/index.html', 'institutions/index.html'])
+      expect(readFileSync(join(DIST, p), 'utf8'), p).toContain('<html lang="en-US">');
+  });
+
   it('commission pages name the institution, its inquiries and their matters', () => {
     for (const [k, c] of Object.entries(commissions)) {
       const html = readFileSync(join(DIST, 'commissions', k, 'index.html'), 'utf8');
       expect(html).toContain(c.ceremonialName);
       expect(html).toContain(c.fullName);
+      expect(html).toContain(
+        livery(readJson<{ palette: Record<string, string> }>(join(ROOT, 'brand', k, 'kit.json'))!.palette),
+      );
       const published = c.topics.filter((n) => liveTopics.includes(n));
       for (const n of published) expect(html).toContain(`href="${BASE}${n}/"`);
       if (published.length) expect(html).toContain('Matters before the');
-      if (published.length) expect(html).not.toContain(' stories<'); // the lexicon's word is matters
+      if (published.length)
+        expect(html).not.toContain(' stories<'); // the lexicon's word is matters
       else expect(html).toContain('no inquiry published yet');
     }
   });
@@ -258,6 +270,10 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       expect(html).toContain('Published by');
       expect(html).toContain(c.fullName);
       expect(html).toContain(c.ceremonialName);
+      // its livery: the four source tokens set from the kit's palette, and the theme colours the browser shows
+      const p = readJson<{ palette: Record<string, string> }>(join(ROOT, 'brand', key, 'kit.json'))!.palette;
+      expect(html).toContain(livery(p));
+      expect(html).toContain(`<meta name="theme-color" media="(prefers-color-scheme: dark)" content="${p.ground}"`);
       expect(html).toContain('Entered into the Public Record');
       // the kit's record stamp closes the page, in both inks (dark mode swaps them)
       for (const g of ['paper', 'ground'])

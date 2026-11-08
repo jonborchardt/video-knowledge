@@ -24,13 +24,16 @@ export interface LookPalette {
   paper: string;
   ink: string;
 }
-/** The four colour roles of the topic's kit, or null when `npm run brand` has not written it. */
-export function kitPaletteOf(topic: string, root = ROOT): LookPalette | null {
-  const kit = readJson<{ palette?: LookPalette }>(join(root, 'brand', brandKey(topic), 'kit.json'));
+/** The four colour roles of a kit by its key (`cor` or a commission key), or null when `npm run brand` has not
+ *  written it. The site's Base sets its source tokens from them on an institution's pages. */
+export function kitPalette(key: string, root = ROOT): LookPalette | null {
+  const kit = readJson<{ palette?: LookPalette }>(join(root, 'brand', key, 'kit.json'));
   if (!kit?.palette) return null;
   const { ground, accent, paper, ink } = kit.palette;
   return { ground, accent, paper, ink };
 }
+/** The four colour roles of the topic's kit, or null when `npm run brand` has not written it. */
+export const kitPaletteOf = (topic: string, root = ROOT): LookPalette | null => kitPalette(brandKey(topic), root);
 
 /** The look's fingerprint: only the palette roles, the slot SVGs and theme.ts count, never the rest of the kit. */
 export function lookFingerprint(topic: string, root = ROOT): string {

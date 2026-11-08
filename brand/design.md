@@ -33,7 +33,10 @@ bureaucracy is a recognizable frame around it.
 
 ### 1.2 Commission on Spending palette: Treasury Navy
 
-RECOMMENDED. The site's base tokens (`--navy`, `--gold`, `--paper`, `--slate` in `global.css`) are these values.
+RECOMMENDED. The site's base tokens (`--navy`, `--gold`, `--paper`, `--slate` in `global.css`) are these values on
+the Commonwealth's own pages; an institution's pages (its commission, inquiry, matter and data pages) set the four
+from its kit's `palette` (DECIDED 2026-11-08, `Base.astro`), so every colour the stylesheet mixes follows the
+institution in light, dark and print.
 
 | Token        | Hex       | Purpose                                      |
 | ------------ | --------- | -------------------------------------------- |

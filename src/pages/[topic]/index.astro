@@ -42,6 +42,7 @@ const small = 'text-sm text-muted-foreground';
 <Base
   title={`${t.label} · ${commission.name}`}
   image={`/og/${commissionKey(commission)}.jpg`}
+  brand={commissionKey(commission)}
   noindex={isFixtureTopic(t.name)}
   jsonLd={[
     reportJsonLd(
