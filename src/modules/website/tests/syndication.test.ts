@@ -6,7 +6,7 @@ import type { Commission } from '../../../config/site';
 import type { Story } from '../../../shared/types';
 import type { MatterModel } from '../matter';
 import { verdictLabel } from '../../evidence';
-import { feedXml, matterMarkdown, xmlEscape } from '../syndication';
+import { feedXml, llmsTxt, matterMarkdown, xmlEscape } from '../syndication';
 
 const meta = { title: 'Site', url: 'https://example.test/', description: 'About. The disclosure.', language: 'en-US' };
 
@@ -20,9 +20,21 @@ describe('xmlEscape', () => {
 
 describe('feedXml', () => {
   const items = [
-    { title: 'Old', url: 'https://example.test/t/old/', answer: 'old answer', inquiry: 'T', publishedAt: '2026-10-28T10:00:00Z' },
+    {
+      title: 'Old',
+      url: 'https://example.test/t/old/',
+      answer: 'old answer',
+      inquiry: 'T',
+      publishedAt: '2026-10-28T10:00:00Z',
+    },
     { title: 'Undated', url: 'https://example.test/t/undated/', answer: 'releasing', inquiry: 'T' },
-    { title: 'New', url: 'https://example.test/t/new/', answer: 'new answer', inquiry: 'T', publishedAt: '2026-11-04T18:00:00Z' },
+    {
+      title: 'New',
+      url: 'https://example.test/t/new/',
+      answer: 'new answer',
+      inquiry: 'T',
+      publishedAt: '2026-11-04T18:00:00Z',
+    },
   ];
 
   it('is RSS 2.0, newest first, an undated item last with no pubDate, lastBuildDate the newest date', () => {
@@ -51,6 +63,51 @@ describe('feedXml', () => {
     expect(xml).toContain('<channel>');
     expect(xml).not.toContain('<item>');
     expect(xml).not.toContain('<lastBuildDate>');
+  });
+});
+
+describe('llmsTxt', () => {
+  const site = { name: 'Site', description: 'About.', disclosure: 'The disclosure.', url: 'https://example.test/' };
+  const entries = [
+    {
+      inquiry: 'Heat pumps',
+      inquiryUrl: 'https://example.test/hp/',
+      title: 'A',
+      question: 'Q1?',
+      markdownUrl: 'https://example.test/hp/a/index.md',
+    },
+    {
+      inquiry: 'Heat pumps',
+      inquiryUrl: 'https://example.test/hp/',
+      title: 'B',
+      question: 'Q2?',
+      markdownUrl: 'https://example.test/hp/b/index.md',
+    },
+    {
+      inquiry: 'Tariffs',
+      inquiryUrl: 'https://example.test/t/',
+      title: 'C',
+      question: 'Q3?',
+      markdownUrl: 'https://example.test/t/c/index.md',
+    },
+  ];
+
+  it('groups the matters under their inquiries, each linking its Markdown copy, the disclosure once', () => {
+    const txt = llmsTxt(entries, site);
+    expect(txt.startsWith('# Site\n\n> About.\n')).toBe(true);
+    expect(txt.match(/^## /gm)).toHaveLength(2);
+    expect(txt).toContain(
+      '## [Heat pumps](https://example.test/hp/)\n\n- [A](https://example.test/hp/a/index.md): Q1?\n- [B](https://example.test/hp/b/index.md): Q2?',
+    );
+    expect(txt).toContain('## [Tariffs](https://example.test/t/)\n\n- [C](https://example.test/t/c/index.md): Q3?');
+    expect(txt.split('The disclosure.').length).toBe(2);
+    expect(txt).toContain('https://example.test/');
+  });
+
+  it('an empty Record is the header alone', () => {
+    const txt = llmsTxt([], site);
+    expect(txt).toContain('# Site');
+    expect(txt).not.toContain('## ');
   });
 });
 
@@ -121,10 +178,24 @@ describe('matterMarkdown', () => {
       },
     ],
     verdicts: [
-      { by: 'NREL model', verdict: 'partly', confidence: 0.8, note: 'Above a switchover temperature.', cite, date: '2026-10-01' },
+      {
+        by: 'NREL model',
+        verdict: 'partly',
+        confidence: 0.8,
+        note: 'Above a switchover temperature.',
+        cite,
+        date: '2026-10-01',
+      },
     ],
     revisions: [
-      { kind: 'claim', id: 'heat-pumps/c1', at: '2026-11-01', note: 'Verdict moved from right to partly.', from: 'right', to: 'partly' },
+      {
+        kind: 'claim',
+        id: 'heat-pumps/c1',
+        at: '2026-11-01',
+        note: 'Verdict moved from right to partly.',
+        from: 'right',
+        to: 'partly',
+      },
     ],
   } as unknown as ClaimView;
   const exhibit = {
@@ -189,7 +260,9 @@ describe('matterMarkdown', () => {
     expect(md).toContain('### Qualified claim');
     const label = verdictLabel('partly', 0.8).text;
     expect(md).toContain(`- **Heat pumps cost less to run than oil.** (${label}. Depends on the oil price.)`);
-    expect(md).toContain('  - Denies: [A video](https://www.youtube.com/watch?v=abc) (Chan) "Oil was cheaper that winter."');
+    expect(md).toContain(
+      '  - Denies: [A video](https://www.youtube.com/watch?v=abc) (Chan) "Oil was cheaper that winter."',
+    );
     expect(md).toContain(`  - ${label} by NREL model, [lines 10-12](${citeUrl}). Above a switchover temperature.`);
     expect(md).toContain('  - Revised 2026-11-01: Verdict moved from right to partly.');
     expect(md).toContain('- Exhibit 3: [A video](https://www.youtube.com/watch?v=abc) (Chan)');

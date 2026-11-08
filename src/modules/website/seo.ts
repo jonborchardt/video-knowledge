@@ -13,6 +13,8 @@ export interface PageMeta {
   noindex?: boolean;
   /** The page's own structured data, emitted after the WebSite object (never on a noindex page). */
   jsonLd?: object[];
+  /** The page's Markdown copy, a site path (a matter's `index.md`), announced as an alternate. */
+  markdown?: string;
 }
 
 const person = () => ({ '@type': 'Person', name: author.name, url: author.links.GitHub });

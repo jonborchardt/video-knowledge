@@ -67,6 +67,34 @@ export function feedXml(items: FeedItem[], meta: FeedMeta): string {
   ].join('\n');
 }
 
+export interface LlmsEntry {
+  inquiry: string;
+  inquiryUrl: string;
+  title: string;
+  question: string;
+  markdownUrl: string; // the matter's index.md, absolute
+}
+
+/** llms.txt: the public matters under their inquiries, each linking its Markdown copy; entries in the order given. */
+export function llmsTxt(
+  entries: LlmsEntry[],
+  site: { name: string; description: string; disclosure: string; url: string },
+): string {
+  const out = [
+    `# ${site.name}`,
+    `> ${site.description}`,
+    `${site.disclosure} Pages: ${site.url}. This file lists each public matter with its Markdown copy, which carries the article, its sources, the claims examined with their verdicts and the exhibits.`,
+  ];
+  const byInquiry = new Map<string, LlmsEntry[]>();
+  for (const e of entries) byInquiry.set(e.inquiry, [...(byInquiry.get(e.inquiry) ?? []), e]);
+  for (const [inquiry, list] of byInquiry)
+    out.push(
+      `## [${inquiry}](${list[0].inquiryUrl})`,
+      list.map((e) => `- [${e.title}](${e.markdownUrl}): ${e.question}`).join('\n'),
+    );
+  return out.join('\n\n') + '\n';
+}
+
 export interface MatterMeta {
   canonical: string; // the HTML page's absolute URL
   inquiryUrl: string;

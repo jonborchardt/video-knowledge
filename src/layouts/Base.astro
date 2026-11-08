@@ -14,6 +14,7 @@ const {
   noindex = false,
   image: imagePath = '/og/site.jpg',
   jsonLd: pageLd = [],
+  markdown,
 } = Astro.props;
 // Absolute URLs are on the canonical host from both deploy targets: the mirror's pages point at commonwealthofreason.com.
 const canonical = absoluteUrl(sitePath(Astro.url.pathname));
@@ -61,6 +62,8 @@ const devCss = `body[data-dev-page]::after { content: ''; position: fixed; inset
     <link rel="icon" href={href('/favicon.png')} type="image/png" sizes="96x96" />
     <link rel="apple-touch-icon" href={href('/apple-touch-icon.png')} />
     <link rel="sitemap" href={href('/sitemap-index.xml')} />
+    <link rel="alternate" type="application/rss+xml" title={site.name} href={href('/feed.xml')} />
+    {markdown && <link rel="alternate" type="text/markdown" href={href(markdown)} />}
     {/* A noindex page makes no canonical claim: 404.html has no URL of its own to point at. */}
     {noindex ? <meta name="robots" content="noindex, nofollow" /> : <link rel="canonical" href={canonical} />}
     <title>{title}</title>

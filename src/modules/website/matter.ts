@@ -1,7 +1,14 @@
 // What a matter page shows, loaded once: the HTML page and its Markdown copy render this same model, so they cannot
 // drift. Nothing here reads import.meta.env (the page passes `preview`).
 import { type ArticleRelease, type ArticleView, articleView, loadArticleRelease, releaseFigureDraws } from '../article';
-import { type ClaimView, FINDING_LABELS, type FindingLabel, findingLabel, type SourceView, type Topic } from '../evidence';
+import {
+  type ClaimView,
+  FINDING_LABELS,
+  type FindingLabel,
+  findingLabel,
+  type SourceView,
+  type Topic,
+} from '../evidence';
 import { type PublicVideo, storyOutputs } from '../publishing';
 import { loadPublicRecord } from '../../shared/public-record';
 import type { ClaimRevision, Story } from '../../shared/types';
