@@ -113,20 +113,27 @@ Loop. Notes never touch derived files. The lock is redone through the board's lo
 ## Finish
 
 1. `npm run validate` (fix code the run added until it passes; if it cannot, Stop).
-2. Write `topics/<topic>/scripts/<slug>/video/review/run-report.md`:
-   - the mp4 and checklist paths (`video/review/`), wall-clock time;
-   - evidence added (documents, verdicts with cites, and why);
-   - script revisions and the findings behind each;
-   - graphics built (scene, kind, component), and any scene drawn as labelled text instead of its
-     described diagram;
-   - the music composition and cues;
-   - the QA result line;
-   - release blockers (draft narration licence, music clearance).
+2. Append a section `## Run <ISO date> (session, approver <name>)` to
+   `topics/<topic>/scripts/<slug>/video/review/run-report.md`; never rewrite what is there. It answers, in this
+   order and only where there is something to say:
+   - **Needs a person**: each decision only a person may make that this run met (a `--replace-cited`, a sentence
+     kept weaker than the evidence allows, a kept warning), placed `[m:ss scene sentence]`, with the passage line;
+   - **Found**: defects and warnings still open when the run ended, placed the same way, each saying whether a
+     command or a reviewer found it;
+   - **Changed**: evidence recorded (cite, verdict, why) and what could not be recorded; script revisions with the
+     findings behind each; graphics built or drawn as labelled text; music cues;
+   - **Verified**: the `RESULT:` or last line of each command this run ran; a step the board asked for and the run
+     skipped is said to be skipped. Nothing about commands the run never reached;
+   - **Next**: the board's `next` after the commit, as it printed it.
+   Write only what the run produced or the board printed; investigate nothing for the report. Figures stay in
+   `review.json`, `build-report.md` and `storyboard.json`; name the file, do not copy the number.
+   The exemplar is `topics/organic-food/scripts/conflict-organic-farming-yields-less-food-per/video/review/run-report.md`:
+   placed editor notes with their passage lines, what was not recordable, each revision with its findings.
 3. Commit on the produce branch (`git add <topic> src music` and anything else the run changed;
    `.gitignore` keeps the media out): the story's JSON and markdown, store, report, stories and
    sources changes, bespoke components and kinds. Never media. End the message with the
    attribution lines the session asks for.
-4. Print the run report. If the story was already `packaged` when the run started, say so: nothing
+4. Print the section you appended. If the story was already `packaged` when the run started, say so: nothing
    was re-rendered.
 
 ## Stop
