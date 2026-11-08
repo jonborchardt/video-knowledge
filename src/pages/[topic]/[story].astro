@@ -27,13 +27,13 @@ import {
   videoJsonLd,
 } from '../../modules/website';
 import { siteGraph, siteTopicNames } from '../../modules/website/site-graph';
+import { matterModel } from '../../modules/website/matter';
 import { toolOf } from '../../tools';
-import { articleModified, articleView, loadArticleRelease, releaseFigureDraws } from '../../modules/article';
+import { articleModified } from '../../modules/article';
 import { loadDatasets } from '../../modules/evidence';
 import { storySlug } from '../../shared/io';
-import { storyOutputs } from '../../modules/publishing';
-import { loadPublicRecord, revisionLine } from '../../shared/public-record';
-import { FINDING_LABELS, FINDING_TEXT, findingLabel, labelCounts } from '../../modules/evidence';
+import { revisionLine } from '../../shared/public-record';
+import { FINDING_TEXT, labelCounts } from '../../modules/evidence';
 import SourceIcons from '../../components/SourceIcons.astro';
 import SourceLink from '../../components/SourceLink.astro';
 import Stamp from '../../components/Stamp.astro';
@@ -56,38 +56,14 @@ export function getStaticPaths() {
 }
 const { t, s, stories } = Astro.props as { t: Topic; s: Story; stories: Story[] };
 const commission = commissionOf(t.name)!;
-const byId = new Map(stories.map((x) => [x.id, x]));
-const first = s.partOf ? byId.get(s.partOf) : undefined;
-const claims = s.claims.map((id) => t.claims.find((c) => c.id === id)).filter((c) => !!c);
-const groups = FINDING_LABELS.map((label) => ({
-  label,
-  claims: claims.filter((c) => findingLabel(c) === label),
-})).filter((g) => g.claims.length);
-// The sources this matter rests on: every source that asserts or denies one of its claims, by exhibit number.
-const exhibitIds = new Set(claims.flatMap((c) => c.sources.map((x) => x.id)));
-// A preview (dev server) also lists sources without a number yet, last.
-const exhibits = t.sources
-  .filter((x) => exhibitIds.has(x.id) && (x.exhibit || import.meta.env.DEV))
-  .sort((a, b) => (a.exhibit ?? Infinity) - (b.exhibit ?? Infinity));
-const revisions = claims
-  .flatMap((c) => c.revisions.map((r) => ({ r, text: c.text })))
-  .sort((a, b) => a.r.at.localeCompare(b.r.at));
-const revised = revisions.at(-1)?.r.at ?? null;
-// The video lives on the first question's page; a follow-up links to it. The embed shows a live video, or a releasing
-// one (decided ok, the page deployed before the tick takes it live: plan B); the structured data and the publication
-// date wait for the live video (no fabricated date).
-const outputs = storyOutputs(t.name, s.partOf ?? s.id);
-const embed = outputs.video ?? outputs.releasing;
+// The page's model (src/modules/website/matter.ts), shared with the Markdown copy at index.md. A preview (dev server)
+// also lists sources without an exhibit number yet, last. The structured data and the publication date wait for the
+// live video (no fabricated date).
+const { first, claims, groups, exhibits, revisions, revised, outputs, embed, release, firstArticle, view, path } =
+  matterModel(t, s, stories, { repo: site.repo, preview: import.meta.env.DEV });
 // The story's own share card (npm run brand), else its institution's.
 const card = `/og/stories/${t.name}/${storyUrlSlug(s)}.jpg`;
 const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionKey(commission)}.jpg`;
-const path = matterPath(t.name, s);
-// The released companion article, each figure drawn from the release's snapshot of its storyboard chart or evidence
-// dataset, never the live files. A follow-up links to its first question's article, so the two pages never share a title.
-const release = first ? null : loadArticleRelease(t.name, s.id);
-const firstArticle = !!first && !!loadArticleRelease(t.name, first.id);
-const figures = release ? releaseFigureDraws(release, t.docNames) : new Map();
-const view = release && articleView(release, t, loadPublicRecord(t.name), site.repo, figures);
 const meta = release?.article.meta;
 const jsonLd = [
   articleJsonLd({
