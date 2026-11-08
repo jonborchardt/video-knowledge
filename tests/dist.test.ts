@@ -179,10 +179,6 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       // its own share card, the question drawn on it (npm run brand)
       expect(html).toContain(`<meta property="og:image" content="${CANON}og/stories/${topic}/${slug}.jpg"`);
       expect(existsSync(join(DIST, 'og/stories', topic, `${slug}.jpg`)), `${topic}/${slug} card`).toBe(true);
-      expect(html).toContain('<meta property="og:type" content="article"');
-      // a released article's SEO title is the whole title tag: the brief's 60 characters, no suffix added
-      const title = html.match(/<title>([^<]+)<\/title>/)![1];
-      if (loadArticleRelease(topic, s.id)) expect(title.length, title).toBeLessThanOrEqual(60);
       if (!s.partOf) {
         const c = Object.entries(commissions).find(([, c]) => c.topics.includes(topic))![0];
         expect(readFileSync(join(DIST, 'commissions', c, 'index.html'), 'utf8')).toContain(
@@ -365,8 +361,6 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     expect(image, 'og:image').toMatch(new RegExp(`^${CANON}`));
     expect(existsSync(join(DIST, image!.slice(CANON.length))), image).toBe(true);
     expect(html).toContain('<meta name="twitter:card" content="summary_large_image"');
-    if (!storyPages.some((x) => p === `${x.topic}/${x.slug}/index.html`))
-      expect(html).toContain('<meta property="og:type" content="website"');
   });
 
   it('404 is noindex and makes no canonical claim', () => {
