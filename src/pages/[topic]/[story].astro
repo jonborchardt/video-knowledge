@@ -65,6 +65,8 @@ const { first, claims, groups, exhibits, revisions, revised, outputs, embed, rel
 const card = `/og/stories/${t.name}/${storyUrlSlug(s)}.jpg`;
 const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionKey(commission)}.jpg`;
 const meta = release?.article.meta;
+const published = outputs.video?.publishedAt;
+const modified = (release && articleModified(release)) ?? revised ?? undefined;
 const jsonLd = [
   articleJsonLd({
     headline: meta?.headline ?? s.title,
@@ -72,8 +74,8 @@ const jsonLd = [
     path,
     image,
     series: commission.fullName,
-    datePublished: outputs.video?.publishedAt,
-    dateModified: (release && articleModified(release)) ?? revised ?? undefined,
+    datePublished: published,
+    dateModified: modified,
   }),
   ...(outputs.video && !first ? [videoJsonLd(outputs.video, s.question, image)] : []),
   breadcrumbJsonLd([
@@ -101,10 +103,11 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
 ---
 
 <Base
-  title={`${meta?.seoTitle ?? s.title} · ${commission.name}`}
+  title={meta ? meta.seoTitle : `${s.title} · ${commission.name}`}
   description={meta?.description.text ?? s.question}
   image={image}
   jsonLd={jsonLd}
+  article={{ published, modified }}
   noindex={isFixtureTopic(t.name)}
   markdown={`${path}index.md`}
 >

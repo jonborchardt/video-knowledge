@@ -15,6 +15,8 @@ export interface PageMeta {
   jsonLd?: object[];
   /** The page's Markdown copy, a site path (a matter's `index.md`), announced as an alternate. */
   markdown?: string;
+  /** A matter page: `og:type` article, with its publication and modification dates (ISO 8601) when known. */
+  article?: { published?: string; modified?: string };
 }
 
 const person = () => ({ '@type': 'Person', name: author.name, url: author.links.GitHub });

@@ -81,7 +81,8 @@ answers nothing again.
 `meta` holds four fields; the validator blocks any over its limit (`LIMITS` in `src/modules/article/validation.ts`):
 
 - `headline`: the on-page h1, at most 90 characters. It may differ from the video's title.
-- `seoTitle`: the title tag, at most 60 characters (the site adds its suffix).
+- `seoTitle`: the whole title tag, at most 60 characters. The site adds no suffix, so end it with the institution's
+  short name (`Commission on Spending`) only when that fits. It may differ from the headline.
 - `dek`: one or two sentences under the headline, a `Sentence` with id **`meta.dek`**. Not empty.
 - `description`: the search snippet, at most 155 characters, a `Sentence` with id **`meta.description`**.
 
