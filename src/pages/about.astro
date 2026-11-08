@@ -228,7 +228,17 @@ const rows = [
       This site is published by <a href={author.links.GitHub}>{author.name}</a>, who writes about building things like
       this at <a href={author.blog.url}>{author.blog.name}</a>. The data, the agent briefs, the brand charter and this
       site are open at <a href={site.repo}>GitHub</a>. Every claim links back to its quote and every study verdict to
-      the lines it rests on, so you can check the checking.
+      the lines it rests on, so you can check the checking. Elsewhere:{' '}
+      {
+        Object.entries(author.links).map(([label, url], i) => (
+          <>
+            {i > 0 && ', '}
+            <a href={url} rel="me">
+              {label}
+            </a>
+          </>
+        ))
+      }.
     </p>
     <p class={p}>
       Corrections go through the repository's issues: <a href={`${site.repo}/issues`}>raise one</a>. A corrected finding
