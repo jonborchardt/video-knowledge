@@ -27,6 +27,8 @@ $start = Get-Date
 if (-not $Repo) { $Repo = Split-Path -Parent $PSScriptRoot }
 $Repo = (Resolve-Path $Repo).Path.TrimEnd('\')
 $name = 'video-knowledge-' + $start.ToString('yyyy-MM-dd') + '.tar'
+# a second run on the same day gets its own name (the time); an existing archive is never overwritten
+if (Test-Path -LiteralPath (Join-Path $Destination $name)) { $name = 'video-knowledge-' + $start.ToString('yyyy-MM-dd-HHmmss') + '.tar' }
 $final = Join-Path $Destination $name
 $part = "$final.part"
 $list = "$final.paths.txt"
@@ -46,7 +48,7 @@ function Rel([string]$full) { return $full.Substring($Repo.Length + 1).Replace('
 try {
   if (-not (Test-Path -LiteralPath $Tar)) { Fail "tar not found: $Tar" }
   New-Item -ItemType Directory -Force -Path $Destination | Out-Null
-  if (Test-Path -LiteralPath $final) { Fail "$name already exists (one archive per day; nothing is overwritten)" }
+  if (Test-Path -LiteralPath $final) { Fail "$name already exists (nothing is overwritten)" }
 
   # 1. the include list: the fixed paths (each must exist), the folders that exist, the published finals
   $paths = New-Object System.Collections.Generic.List[string]
