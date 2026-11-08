@@ -30,7 +30,7 @@ const label = `${title}: ${spec.points.map((p) => `${p.label} ${p.display}`).joi
   </figcaption>
   {
     drawn && (
-      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={label} class="h-auto w-full">
+      <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img" aria-label={label} class="block h-auto max-w-full">
         {spec.type === 'stat-tiles'
           ? bars.map((b, i) => (
               <g>

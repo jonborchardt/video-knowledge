@@ -17,6 +17,9 @@ export interface PageMeta {
   markdown?: string;
   /** A matter page: `og:type` article, with its publication and modification dates (ISO 8601) when known. */
   article?: { published?: string; modified?: string };
+  /** An institution's page (commission, inquiry, matter, data): its commission key, so Base sets the site's four
+   *  source tokens from that kit's palette and the page wears the institution's livery (brand/charter.md 2.1). */
+  brand?: string;
 }
 
 const person = () => ({ '@type': 'Person', name: author.name, url: author.links.GitHub });

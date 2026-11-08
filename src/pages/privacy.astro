@@ -19,51 +19,53 @@ const list = 'mt-3 grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
   description="What this website collects (almost nothing), and how the separate publishing tool uses YouTube API Services."
   jsonLd={[breadcrumbJsonLd([{ name: 'Privacy policy', path: '/privacy/' }])]}
 >
-  <header class="grid gap-4 border-y-4 border-double py-5">
-    <div class="eyebrow text-muted-foreground">
-      <a class="text-muted-foreground no-underline hover:underline" href={href('/')}>{site.name}</a> · {
-        site.publicRecord
-      }
-    </div>
-    <h1 class="text-display font-bold">Privacy policy</h1>
-    <p class={`${p} text-muted-foreground`}>
-      Last updated {REVISED}. {site.name} is an independent publication operated by {author.name}. This policy covers
-      this website and, separately, the software the publisher uses to put videos on the publication's own YouTube
-      channels.
+  <div class="grid gap-3">
+    <header class="grid gap-4 border-y-4 border-double py-5">
+      <div class="eyebrow text-muted-foreground">
+        <a class="text-muted-foreground no-underline hover:underline" href={href('/')}>{site.name}</a> · {
+          site.publicRecord
+        }
+      </div>
+      <h1 class="text-display font-bold">Privacy policy</h1>
+      <p class={`${p} text-muted-foreground`}>
+        Last updated {REVISED}. {site.name} is an independent publication operated by {author.name}. This policy covers
+        this website and, separately, the software the publisher uses to put videos on the publication's own YouTube
+        channels.
+      </p>
+    </header>
+
+    <h2 class={h2} id="site">This website</h2>
+    <ul class={list}>
+      <li>It has no accounts, forms, comments, advertising or analytics, and it sets no cookies.</li>
+      <li>A light or dark theme you choose is kept in your browser's local storage and never sent anywhere.</li>
+      <li>The calculators run in your browser and send nothing.</li>
+      <li>
+        It is hosted by Cloudflare and mirrored on GitHub Pages, which, like any web host, receive your IP address and
+        browser details when you load a page.
+      </li>
+      <li>
+        Pages load nothing from other sites. A video loads nothing from YouTube until you press play; then a
+        youtube-nocookie.com player loads, and YouTube may store information on your device under Google's policies.
+      </li>
+      <li>The website does not use the YouTube Data API and never asks for access to your Google account.</li>
+    </ul>
+
+    <h2 class={h2} id="youtube-api">The YouTube publishing tool</h2>
+    <p class={p}>
+      The publisher's separate <a href={href('/publishing/')}>publishing tool</a> uses YouTube API Services, only on the channels
+      the publisher authorizes, to upload and manage the publication's videos. That data is used for nothing else, never sold
+      or used for advertising. The authorization stays on the publisher's computer (deleted on request); a log of each step,
+      with video ids, is in the public repository. Revoke access on the
+      <a href="https://security.google.com/settings/security/permissions">Google security settings page</a>. See the
+      <a href="https://www.youtube.com/t/terms">YouTube Terms of Service</a> and the
+      <a href="http://www.google.com/policies/privacy">Google Privacy Policy</a>.
     </p>
-  </header>
 
-  <h2 class={h2} id="site">This website</h2>
-  <ul class={list}>
-    <li>It has no accounts, forms, comments, advertising or analytics, and it sets no cookies.</li>
-    <li>A light or dark theme you choose is kept in your browser's local storage and never sent anywhere.</li>
-    <li>The calculators run in your browser and send nothing.</li>
-    <li>
-      It is hosted by Cloudflare and mirrored on GitHub Pages, which, like any web host, receive your IP address and
-      browser details when you load a page.
-    </li>
-    <li>
-      Pages load nothing from other sites. A video loads nothing from YouTube until you press play; then a
-      youtube-nocookie.com player loads, and YouTube may store information on your device under Google's policies.
-    </li>
-    <li>The website does not use the YouTube Data API and never asks for access to your Google account.</li>
-  </ul>
-
-  <h2 class={h2} id="youtube-api">The YouTube publishing tool</h2>
-  <p class={p}>
-    The publisher's separate <a href={href('/publishing/')}>publishing tool</a> uses YouTube API Services, only on the channels
-    the publisher authorizes, to upload and manage the publication's videos. That data is used for nothing else, never sold
-    or used for advertising. The authorization stays on the publisher's computer (deleted on request); a log of each step,
-    with video ids, is in the public repository. Revoke access on the
-    <a href="https://security.google.com/settings/security/permissions">Google security settings page</a>. See the
-    <a href="https://www.youtube.com/t/terms">YouTube Terms of Service</a> and the
-    <a href="http://www.google.com/policies/privacy">Google Privacy Policy</a>.
-  </p>
-
-  <h2 class={h2} id="contact">Questions, complaints and requests</h2>
-  <p class={p}>
-    Raise them in the <a href={`${site.repo}/issues`}>repository's issues</a>. Issues are public, so leave personal
-    details out; for anything private, send the publisher a message on
-    <a href={author.links.LinkedIn}>LinkedIn</a> instead. A change to this policy is recorded in the repository's history.
-  </p>
+    <h2 class={h2} id="contact">Questions, complaints and requests</h2>
+    <p class={p}>
+      Raise them in the <a href={`${site.repo}/issues`}>repository's issues</a>. Issues are public, so leave personal
+      details out; for anything private, send the publisher a message on
+      <a href={author.links.LinkedIn}>LinkedIn</a> instead. A change to this policy is recorded in the repository's history.
+    </p>
+  </div>
 </Base>

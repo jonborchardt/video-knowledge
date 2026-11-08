@@ -52,6 +52,9 @@ const pages = [
   ...storyPages.map((p) => `${p.topic}/${p.slug}/index.html`),
   ...liveTopics.filter((n) => liveData(n).length > 0).map((n) => `${n}/data/index.html`),
 ];
+// An institution page's livery: Base sets the four source tokens on <html> from its kit (plan N).
+const livery = (p: Record<string, string>) =>
+  `<html lang="en-US" style="--navy:${p.ground};--gold:${p.accent};--paper:${p.paper};--slate:${p.ink}">`;
 const sitemapXml = () => {
   const index = readFileSync(join(DIST, 'sitemap-index.xml'), 'utf8');
   const part = index.match(/<loc>[^<]*\/(sitemap-\d+\.xml)<\/loc>/)![1];
@@ -147,14 +150,24 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     expect(html).toContain('The Commonwealth is fictional. The research is real.');
   });
 
-  it('commission pages name the institution, its inquiries and their stories', () => {
+  it("the Commonwealth's own pages keep the stylesheet's palette", () => {
+    for (const p of ['index.html', 'about/index.html', 'inquiries/index.html', 'institutions/index.html'])
+      expect(readFileSync(join(DIST, p), 'utf8'), p).toContain('<html lang="en-US">');
+  });
+
+  it('commission pages name the institution, its inquiries and their matters', () => {
     for (const [k, c] of Object.entries(commissions)) {
       const html = readFileSync(join(DIST, 'commissions', k, 'index.html'), 'utf8');
       expect(html).toContain(c.ceremonialName);
       expect(html).toContain(c.fullName);
+      expect(html).toContain(
+        livery(readJson<{ palette: Record<string, string> }>(join(ROOT, 'brand', k, 'kit.json'))!.palette),
+      );
       const published = c.topics.filter((n) => liveTopics.includes(n));
       for (const n of published) expect(html).toContain(`href="${BASE}${n}/"`);
       if (published.length) expect(html).toContain('Matters before the');
+      if (published.length)
+        expect(html).not.toContain(' stories<'); // the lexicon's word is matters
       else expect(html).toContain('no inquiry published yet');
     }
   });
@@ -257,6 +270,10 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       expect(html).toContain('Published by');
       expect(html).toContain(c.fullName);
       expect(html).toContain(c.ceremonialName);
+      // its livery: the four source tokens set from the kit's palette, and the theme colours the browser shows
+      const p = readJson<{ palette: Record<string, string> }>(join(ROOT, 'brand', key, 'kit.json'))!.palette;
+      expect(html).toContain(livery(p));
+      expect(html).toContain(`<meta name="theme-color" media="(prefers-color-scheme: dark)" content="${p.ground}"`);
       expect(html).toContain('Entered into the Public Record');
       // the kit's record stamp closes the page, in both inks (dark mode swaps them)
       for (const g of ['paper', 'ground'])
@@ -275,6 +292,28 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       const html = readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8');
       const cards = (html.match(/<details[^>]*data-claim/g) ?? []).length;
       expect(html.match(/data-label="(verified|qualification|unresolved|reported)"/g)!.length).toBe(cards);
+    }
+  });
+
+  it('every focusable scroll region is a named region (a keyboard user hears what they landed on)', () => {
+    let seen = 0;
+    for (const p of pages) {
+      const html = readFileSync(join(DIST, p), 'utf8');
+      for (const tag of html.match(/<(?:div|section)[^>]*tabindex="0"[^>]*>/g) ?? []) {
+        seen++;
+        expect(tag, `${p}: ${tag}`).toMatch(/aria-label(?:ledby)?="[^"]+"/);
+        expect(tag, `${p}: ${tag}`).toMatch(/<section|role="region"/);
+      }
+    }
+    expect(seen).toBeGreaterThan(0);
+  });
+
+  it('no claim filter opens on a disabled chip (a checked radio is never disabled)', () => {
+    for (const n of liveTopics) {
+      const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');
+      const radios = html.match(/<input type="radio"[^>]*>/g) ?? [];
+      expect(radios.length).toBeGreaterThan(0);
+      for (const r of radios) if (r.includes(' checked')) expect(r, r).not.toContain(' disabled');
     }
   });
 
@@ -563,6 +602,18 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     // A lone live story has no one to relate to: require a list only where a topic has two live root stories.
     const roots = (t: string) => storyPages.filter((p) => p.topic === t && !p.s.partOf).length;
     if (liveTopics.some((t) => roots(t) >= 2)) expect(seen).toBeGreaterThan(0);
+  });
+
+  it('a matter never lists a question of its own chain under Related matters', () => {
+    for (const { topic, slug } of storyPages) {
+      const html = readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8');
+      const sec = (id: string) => html.match(new RegExp(`<section aria-labelledby="${id}"[\\s\\S]*?</section>`))?.[0];
+      const chain = sec('chain');
+      const rel = sec('related');
+      if (!chain || !rel) continue;
+      // page links only, never the icon sprite's `<use href="#icon-...">`
+      for (const h of chain.match(/href="\/[^"]+"/g) ?? []) expect(rel, `${topic}/${slug} ${h}`).not.toContain(h);
+    }
   });
 
   it('the built site keeps every url in public-urls.json', () => {

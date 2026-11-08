@@ -6,6 +6,7 @@ import { author, site } from '../config/site';
 import { absoluteUrl, href, sitePath } from '../lib/url';
 import { websiteJsonLd, type PageMeta, isPreview, urlOf } from '../modules/website';
 import { siteGraph } from '../modules/website/site-graph';
+import { kitPalette } from '../shared/look';
 
 type Props = PageMeta;
 const {
@@ -16,7 +17,13 @@ const {
   jsonLd: pageLd = [],
   markdown,
   article,
+  brand,
 } = Astro.props;
+// An institution's page wears its kit's livery: the four source tokens every colour in global.css is mixed from, set
+// inline so light, dark and print all follow. A missing kit keeps the Commonwealth's values, never throws.
+const palette = brand ? kitPalette(brand) : null;
+const livery =
+  palette && `--navy:${palette.ground};--gold:${palette.accent};--paper:${palette.paper};--slate:${palette.ink}`;
 // Absolute URLs are on the canonical host from both deploy targets: the mirror's pages point at commonwealthofreason.com.
 const canonical = absoluteUrl(sitePath(Astro.url.pathname));
 // Social image: the brand kit's share card (1200x675), the Commonwealth's unless the page belongs to an institution.
@@ -51,14 +58,14 @@ const devCss = `body[data-dev-page]::after { content: ''; position: fixed; inset
 ---
 
 <!doctype html>
-<html lang={site.locale}>
+<html lang={site.locale} style={livery || undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f9f6ee" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#172a45" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content={palette?.paper ?? '#f9f6ee'} />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content={palette?.ground ?? '#172a45'} />
     <link rel="icon" href={href('/favicon.svg')} type="image/svg+xml" />
     <link rel="icon" href={href('/favicon.png')} type="image/png" sizes="96x96" />
     <link rel="apple-touch-icon" href={href('/apple-touch-icon.png')} />

@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { brandKey, kitPaletteOf, LOOK_SLOTS, lookFingerprint, lookStale } from '../src/shared/look';
+import { brandKey, kitPalette, kitPaletteOf, LOOK_SLOTS, lookFingerprint, lookStale } from '../src/shared/look';
 
 const PALETTE = { ground: '#172A45', accent: '#C5A46A', paper: '#F2EBDD', ink: '#444E59' };
 let root = '';
@@ -54,6 +54,12 @@ describe('look fingerprint', () => {
   });
   it('a topic no commission claims draws from the Commonwealth kit', () => {
     expect(brandKey('no-such-topic')).toBe('cor');
+  });
+  it('kitPalette reads a kit by its key: the four roles, the same as the topic read', () => {
+    const p = kitPalette('spending');
+    expect(Object.keys(p!).sort()).toEqual(['accent', 'ground', 'ink', 'paper']);
+    expect(kitPaletteOf('heat-pumps')).toEqual(p);
+    expect(kitPalette('no-such-brand')).toBeNull();
   });
   it('lookStale: legacy, changed, current, no report', () => {
     const fp = { script: 'a', storyboard: 'b', config: 'c' };

@@ -28,6 +28,11 @@ is **Commonwealth of Reason: Commission on Spending**. Use the formal name where
 (banners, seal ring text, opening dossiers, report covers, closing credits); the compact name where YouTube's character
 budget or quick comprehension matters.
 
+DECIDED 2026-11-08, the site: the formal name stands wherever the institution is the masthead, beside its seal at
+display size (its own page's H1 and docket trail, the headings of `/inquiries/`, its share card); the compact name
+stands wherever the institution is an entry in a list or a link (the home page, `/institutions/`, About, breadcrumbs,
+title tags). `/institutions/` pairs the two, the formal name as the eyebrow over the compact one.
+
 Earlier names are historical context, not alternative public display names:
 
 | Current institution       | Earlier working identity           | Meaning of the change                                            |

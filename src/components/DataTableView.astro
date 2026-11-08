@@ -8,41 +8,45 @@ interface Props {
   dataHref?: string; // the inquiry's data page, linked from the caption (omit on the data page itself)
 }
 const { table, caption, dataHref } = Astro.props;
+const id = `table-${table.id}`; // a dataset is drawn once per page
 ---
 
-<section class="max-w-wide overflow-x-auto" aria-label={table.title} tabindex="0">
-  <table class="w-full border-collapse text-sm">
-    <caption class="mb-1 text-left text-muted-foreground">
-      {caption ? `${caption} ` : ''}{table.title}, {table.asOf}, retrieved {table.retrieved}.{
-        table.note ? ` ${table.note}` : ''
-      }
-      {dataHref && <a href={dataHref}> All figures in this inquiry.</a>}
-    </caption>
-    <thead>
-      <tr class="border-b text-left text-muted-foreground">
-        <th scope="col" class="py-2 pr-4 font-medium"><span class="sr-only">Measure</span></th>
+{/* The caption sits above the scroll region so a phone never clips it; the table is named by it (aria-labelledby). */}
+<div class="max-w-wide min-w-0">
+  <p class="mb-1 text-sm text-muted-foreground" id={`${id}-caption`}>
+    {caption ? `${caption} ` : ''}{table.title} ({table.asOf}, retrieved {table.retrieved}).{
+      table.note ? ` ${table.note}` : ''
+    }
+    {dataHref && <a href={dataHref}> All figures in this inquiry.</a>}
+  </p>
+  <section class="overflow-x-auto" aria-labelledby={`${id}-caption`} tabindex="0">
+    <table class="w-full border-collapse text-sm" aria-labelledby={`${id}-caption`}>
+      <thead>
+        <tr class="border-b text-left text-muted-foreground">
+          <th scope="col" class="py-2 pr-4 font-medium"><span class="sr-only">Measure</span></th>
+          {
+            table.columns.map((c) => (
+              <th scope="col" class="py-2 pr-4 font-medium">
+                {c.label}
+              </th>
+            ))
+          }
+        </tr>
+      </thead>
+      <tbody>
         {
-          table.columns.map((c) => (
-            <th scope="col" class="py-2 pr-4 font-medium">
-              {c.label}
-            </th>
+          table.rows.map((r) => (
+            <tr class="border-b">
+              <th scope="row" class="py-2 pr-4 text-left font-normal">
+                {r.label}
+              </th>
+              {r.cells.map((c) => (
+                <td class="py-2 pr-4 font-mono tabular-nums">{c.display}</td>
+              ))}
+            </tr>
           ))
         }
-      </tr>
-    </thead>
-    <tbody>
-      {
-        table.rows.map((r) => (
-          <tr class="border-b">
-            <th scope="row" class="py-2 pr-4 text-left font-normal">
-              {r.label}
-            </th>
-            {r.cells.map((c) => (
-              <td class="py-2 pr-4 font-mono tabular-nums">{c.display}</td>
-            ))}
-          </tr>
-        ))
-      }
-    </tbody>
-  </table>
-</section>
+      </tbody>
+    </table>
+  </section>
+</div>

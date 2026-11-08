@@ -18,83 +18,87 @@ const list = 'mt-3 grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
   description="The terms for reading this website and watching its videos: not professional advice, no warranty, and how to reuse the work."
   jsonLd={[breadcrumbJsonLd([{ name: 'Terms of use', path: '/terms/' }])]}
 >
-  <header class="grid gap-4 border-y-4 border-double py-5">
-    <div class="eyebrow text-muted-foreground">
-      <a class="text-muted-foreground no-underline hover:underline" href={href('/')}>{site.name}</a> · {
-        site.publicRecord
-      }
-    </div>
-    <h1 class="text-display font-bold">Terms of use</h1>
-    <p class={`${p} text-muted-foreground`}>
-      Last updated {REVISED}. {site.name} is an independent publication operated by {author.name}. By using this website
-      or watching its videos, you accept these terms. If you do not accept them, please do not use it.
+  <div class="grid gap-3">
+    <header class="grid gap-4 border-y-4 border-double py-5">
+      <div class="eyebrow text-muted-foreground">
+        <a class="text-muted-foreground no-underline hover:underline" href={href('/')}>{site.name}</a> · {
+          site.publicRecord
+        }
+      </div>
+      <h1 class="text-display font-bold">Terms of use</h1>
+      <p class={`${p} text-muted-foreground`}>
+        Last updated {REVISED}. {site.name} is an independent publication operated by {author.name}. By using this
+        website or watching its videos, you accept these terms. If you do not accept them, please do not use it.
+      </p>
+    </header>
+
+    <h2 class={h2} id="information">Information, not advice</h2>
+    <ul class={list}>
+      <li>
+        Everything here is general information about public claims and published studies. It is not financial, legal,
+        medical, engineering or other professional advice, and it does not consider your circumstances.
+      </li>
+      <li>
+        The calculators give estimates from the figures you enter and the defaults they show. They are not quotes or
+        predictions. Check anything important with a qualified professional before you act on it.
+      </li>
+    </ul>
+
+    <h2 class={h2} id="accuracy">Accuracy</h2>
+    <ul class={list}>
+      <li>
+        Findings are the publication's reading of the evidence it reviewed, prepared with the help of AI tools. They can
+        be incomplete, out of date or wrong, and a confidence figure is not a guarantee.
+      </li>
+      <li>
+        A finding is about a claim, not a judgment of the character or honesty of the person or organization who made
+        it.
+      </li>
+      <li>
+        The institutions, offices and seals on this site are inventions of the publisher. They are not government or
+        regulatory bodies, and a finding is not an official ruling, certification or endorsement.
+      </li>
+      <li>
+        To report an error, use <a href="#contact">the contact details below</a>. The
+        <a href={href('/about/#publisher')}>About page</a> says how corrections are recorded.
+      </li>
+    </ul>
+
+    <h2 class={h2} id="reuse">Reusing this work</h2>
+    <p class={p}>
+      You may read, share, link to and briefly quote this work if you credit {site.name}. Unless a licence in the
+      <a href={site.repo}>public repository</a> says otherwise, all other rights are reserved. Quoted sources, cited studies
+      and third-party data belong to their owners and stay under their own terms.
     </p>
-  </header>
 
-  <h2 class={h2} id="information">Information, not advice</h2>
-  <ul class={list}>
-    <li>
-      Everything here is general information about public claims and published studies. It is not financial, legal,
-      medical, engineering or other professional advice, and it does not consider your circumstances.
-    </li>
-    <li>
-      The calculators give estimates from the figures you enter and the defaults they show. They are not quotes or
-      predictions. Check anything important with a qualified professional before you act on it.
-    </li>
-  </ul>
+    <h2 class={h2} id="other-sites">Other sites and services</h2>
+    <p class={p}>
+      Pages link to sources and services the publisher does not control and is not responsible for. Their own terms
+      apply, including the <a href="https://www.youtube.com/t/terms">YouTube Terms of Service</a> when you watch a video.
+      A paid or commercial link is disclosed where it appears.
+    </p>
 
-  <h2 class={h2} id="accuracy">Accuracy</h2>
-  <ul class={list}>
-    <li>
-      Findings are the publication's reading of the evidence it reviewed, prepared with the help of AI tools. They can
-      be incomplete, out of date or wrong, and a confidence figure is not a guarantee.
-    </li>
-    <li>
-      A finding is about a claim, not a judgment of the character or honesty of the person or organization who made it.
-    </li>
-    <li>
-      The institutions, offices and seals on this site are inventions of the publisher. They are not government or
-      regulatory bodies, and a finding is not an official ruling, certification or endorsement.
-    </li>
-    <li>
-      To report an error, use <a href="#contact">the contact details below</a>. The
-      <a href={href('/about/#publisher')}>About page</a> says how corrections are recorded.
-    </li>
-  </ul>
+    <h2 class={h2} id="liability">No warranty, and limits on liability</h2>
+    <p class={p}>
+      This website, its videos and its calculators are provided free of charge and "as is", without warranties of any
+      kind. To the fullest extent the law allows, the publisher is not liable for any loss or damage arising from your
+      use of them or your reliance on them. Nothing here limits a right or liability that the law does not allow to be
+      limited.
+    </p>
 
-  <h2 class={h2} id="reuse">Reusing this work</h2>
-  <p class={p}>
-    You may read, share, link to and briefly quote this work if you credit {site.name}. Unless a licence in the
-    <a href={site.repo}>public repository</a> says otherwise, all other rights are reserved. Quoted sources, cited studies
-    and third-party data belong to their owners and stay under their own terms.
-  </p>
+    <h2 class={h2} id="changes">Changes</h2>
+    <p class={p}>
+      The publisher may change or remove this content, or these terms, at any time. A change to these terms is recorded
+      in the repository's history and applies from the date it is posted. The <a href={href('/privacy/')}
+        >privacy policy</a
+      > says how data is handled.
+    </p>
 
-  <h2 class={h2} id="other-sites">Other sites and services</h2>
-  <p class={p}>
-    Pages link to sources and services the publisher does not control and is not responsible for. Their own terms apply,
-    including the <a href="https://www.youtube.com/t/terms">YouTube Terms of Service</a> when you watch a video. A paid or
-    commercial link is disclosed where it appears.
-  </p>
-
-  <h2 class={h2} id="liability">No warranty, and limits on liability</h2>
-  <p class={p}>
-    This website, its videos and its calculators are provided free of charge and "as is", without warranties of any
-    kind. To the fullest extent the law allows, the publisher is not liable for any loss or damage arising from your use
-    of them or your reliance on them. Nothing here limits a right or liability that the law does not allow to be
-    limited.
-  </p>
-
-  <h2 class={h2} id="changes">Changes</h2>
-  <p class={p}>
-    The publisher may change or remove this content, or these terms, at any time. A change to these terms is recorded in
-    the repository's history and applies from the date it is posted. The <a href={href('/privacy/')}>privacy policy</a> says
-    how data is handled.
-  </p>
-
-  <h2 class={h2} id="contact">Contact</h2>
-  <p class={p}>
-    Raise questions and corrections in the <a href={`${site.repo}/issues`}>repository's issues</a>. Issues are public,
-    so leave personal details out; for anything private, send the publisher a message on
-    <a href={author.links.LinkedIn}>LinkedIn</a> instead.
-  </p>
+    <h2 class={h2} id="contact">Contact</h2>
+    <p class={p}>
+      Raise questions and corrections in the <a href={`${site.repo}/issues`}>repository's issues</a>. Issues are public,
+      so leave personal details out; for anything private, send the publisher a message on
+      <a href={author.links.LinkedIn}>LinkedIn</a> instead.
+    </p>
+  </div>
 </Base>
