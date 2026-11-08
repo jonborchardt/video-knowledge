@@ -26,205 +26,216 @@ const rows = [
   title={`About · ${site.name}`}
   description="What the Commonwealth of Reason is, which institutions publish its inquiries, and how to read a verdict."
 >
-  <header class="grid gap-4 border-y-4 border-double py-5">
-    <div class="eyebrow text-muted-foreground">
-      <a class="text-muted-foreground no-underline hover:underline" href={href('/')}>{site.name}</a> · {
-        site.publicRecord
-      }
-    </div>
-    <h1 class="text-display font-bold">About the Commonwealth</h1>
-    <p class={`${p} text-muted-foreground`}>
-      The {site.name} publishes through its commissions, bureaus, offices and society, each a YouTube channel with a remit.
-      This site is their public record: every inquiry, with the sources it examined, the claims it pulled out of them, and
-      the verdict on each claim with the evidence that decided it. The research is real, attributed and correctable, and no
-      finding, seal or stamp claims more than the verdicts do. Motto: <em>{site.motto}</em>
-    </p>
-  </header>
-
-  <h2 class={h2}>The institutions</h2>
-  <p class={p}>
-    Each institution has a remit and publishes the inquiries that fall under it. A channel is linked once it exists; the
-    others are named and waiting.
-  </p>
-  <ul class="mt-4 grid gap-3">
-    {
-      Object.values(commissions).map((c) => (
-        <li class="grid gap-1 rounded-md border bg-card p-4">
-          <div class="flex flex-wrap items-baseline justify-between gap-x-4">
-            <a class="flex items-center gap-2 font-heading font-bold" href={href(`/commissions/${commissionKey(c)}/`)}>
-              <img class="size-8" src={href(`/commissions/${commissionKey(c)}.png`)} alt="" width="256" height="256" />
-              {c.name}
-            </a>
-            {c.youtube ? (
-              <a href={c.youtube} rel="me" class="inline-block py-0.5 text-sm" title={c.fullName}>
-                YouTube {c.handle}
-              </a>
-            ) : (
-              <span class="eyebrow text-muted-foreground">Channel coming soon</span>
-            )}
-          </div>
-          <span class="text-sm text-muted-foreground">{c.remit}</span>
-          {c.topics.filter((n) => names.has(n)).length > 0 && (
-            <span class="text-sm">
-              Inquiries:{' '}
-              {c.topics
-                .filter((n) => names.has(n))
-                .map((n, i) => (
-                  <>
-                    {i > 0 && ', '}
-                    <a href={href(`/${n}/`)}>{label(n)}</a>
-                  </>
-                ))}
-            </span>
-          )}
-        </li>
-      ))
-    }
-  </ul>
-
-  <h2 class={h2}>How an inquiry is built</h2>
-  <ol class={list}>
-    <li>
-      <strong>Collect.</strong> YouTube videos with captions and blog posts, chosen to cover the pitches, the critics and
-      the explainers on a question, not just one side.
-    </li>
-    <li>
-      <strong>Extract.</strong> From each source, the four to twelve claims a viewer would walk away believing, each tied
-      to a short verbatim quote. Claims are written once in canonical form, so the same idea from twenty videos is one claim
-      with twenty sources behind it.
-    </li>
-    <li>
-      <strong>Guess.</strong> Every new claim gets an AI judgment with a one-line reason. It counts for at most 50% confidence,
-      however sure the model sounds.
-    </li>
-    <li>
-      <strong>Check.</strong> Studies, official data releases and reports go in a sources folder. Each is read against every
-      claim, and a verdict is recorded only where a passage bears directly on the claim as worded, with a line citation. A
-      study verdict replaces the AI guess when it is at least as confident.
-    </li>
-    <li>
-      <strong>Score.</strong> Evidence belongs to the claim, not the source. A verdict on a claim counts for every source
-      that makes it, including ones added later. Each source's score comes from the verdicts on its claims.
-    </li>
-  </ol>
-
-  <h2 class={h2} id="labels">Reported, verified, qualified, unresolved</h2>
-  <p class={p}>
-    Every claim in the Record carries one of four finding labels, read from its verdict and the evidence that decides
-    it.
-  </p>
-  <dl class="mt-3 grid max-w-prose gap-2">
-    {
-      FINDING_LABELS.map((l) => (
-        <div>
-          <dt>
-            <FindingLabel label={l} />
-          </dt>
-          <dd class="mt-1 text-sm text-muted-foreground">{FINDING_TEXT[l].meaning}</dd>
-        </div>
-      ))
-    }
-  </dl>
-
-  <h2 class={h2} id="verdicts">How to read a verdict</h2>
-  <p class={p}>
-    Each claim carries one of five verdicts. <em>Right</em>, <em>wrong</em> and <em>partly right</em> are judgments with a
-    confidence from 0 to 100%. <em>Untestable</em> means framing, taste or a value judgment with no operational definition.{
-      ' '
-    }
-    <em>Unknown</em> means testable, but the available evidence cannot settle it yet, including predictions.
-  </p>
-  <p class={p}>
-    The label puts the confidence into words. The adverb comes from how sure the deciding evidence is; the colour comes
-    from the verdict and fades as confidence drops. A <em>leans</em> label with a dashed border is an unverified AI guess
-    or a weak study: it shows which way the evidence points, not a settled answer.
-  </p>
-  <section class="mt-4 max-w-wide overflow-x-auto" aria-label="Verdict labels" tabindex="0">
-    <table class="w-full border-collapse text-sm">
-      <thead>
-        <tr class="border-b text-left text-muted-foreground">
-          <th scope="col" class="py-2 pr-4 font-medium">Confidence</th>
-          <th scope="col" class="py-2 pr-4 font-medium">Judged right</th>
-          <th scope="col" class="py-2 pr-4 font-medium">Judged partly right</th>
-          <th scope="col" class="py-2 font-medium">Judged wrong</th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          rows.map((r) => (
-            <tr class="border-b">
-              <td class="py-2.5 pr-4 font-mono text-xs text-muted-foreground tabular-nums">{r.band}</td>
-              <td class="py-2.5 pr-4">
-                <VerdictBadge verdict="right" confidence={r.c} />
-              </td>
-              <td class="py-2.5 pr-4">
-                <VerdictBadge verdict="partly" confidence={r.c} />
-              </td>
-              <td class="py-2.5">
-                <VerdictBadge verdict="wrong" confidence={r.c} />
-              </td>
-            </tr>
-          ))
+  <div class="grid gap-3">
+    <header class="grid gap-4 border-y-4 border-double py-5">
+      <div class="eyebrow text-muted-foreground">
+        <a class="text-muted-foreground no-underline hover:underline" href={href('/')}>{site.name}</a> · {
+          site.publicRecord
         }
-        <tr>
-          <td class="py-2.5 pr-4 font-mono text-xs text-muted-foreground">no judgment</td>
-          <td class="py-2.5 pr-4" colspan="3">
-            <VerdictBadge verdict="untestable" />
-            <VerdictBadge verdict="unknown" />
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-  <p class={`${p} text-sm text-muted-foreground`}>
-    Confidence measures how strongly that evidence settles that claim, not how reputable the publisher is. A direct
-    reading from an official release scores high. One econometric study scores lower, and lower still when a claim
-    reaches beyond what the study measured. Hover a label to see the raw verdict and percentage.
-  </p>
+      </div>
+      <h1 class="text-display font-bold">About the Commonwealth</h1>
+      <p class={`${p} text-muted-foreground`}>
+        The {site.name} publishes through its commissions, bureaus, offices and society, each a YouTube channel with a remit.
+        This site is their public record: every inquiry, with the sources it examined, the claims it pulled out of them, and
+        the verdict on each claim with the evidence that decided it. The research is real, attributed and correctable, and
+        no finding, seal or stamp claims more than the verdicts do. Motto: <em>{site.motto}</em>
+      </p>
+    </header>
 
-  <h2 class={h2}>How sources are scored</h2>
-  <p class={p}>
-    A source's score averages its claims: right counts 1, partly right counts half, wrong counts minus 1, and the sign
-    flips when the source argues against a claim. The average maps to four labels: <em>mostly wrong</em>,
-    <em>mixed</em>, <em>mostly right</em> and <em>right</em>. Mixed means the source's correct and incorrect claims
-    roughly cancel, or it only makes half-true ones.
-  </p>
-  <p class={p}>
-    Novelty breaks ties. It rewards a source for claims that hold up and that few other sources make, weighted by how
-    sure the verdict is. A video that repeats what twenty others say scores the same but ranks lower than one that adds
-    something sound.
-  </p>
+    <h2 class={h2}>The institutions</h2>
+    <p class={p}>
+      Each institution has a remit and publishes the inquiries that fall under it. A channel is linked once it exists;
+      the others are named and waiting.
+    </p>
+    <ul class="mt-4 grid gap-3">
+      {
+        Object.values(commissions).map((c) => (
+          <li class="grid gap-1 rounded-md border bg-card p-4">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+              <a
+                class="flex items-center gap-2 font-heading font-bold"
+                href={href(`/commissions/${commissionKey(c)}/`)}
+              >
+                <img
+                  class="size-8"
+                  src={href(`/commissions/${commissionKey(c)}.png`)}
+                  alt=""
+                  width="256"
+                  height="256"
+                />
+                {c.name}
+              </a>
+              {c.youtube ? (
+                <a href={c.youtube} rel="me" class="inline-block py-0.5 text-sm" title={c.fullName}>
+                  YouTube {c.handle}
+                </a>
+              ) : (
+                <span class="eyebrow text-muted-foreground">Channel coming soon</span>
+              )}
+            </div>
+            <span class="text-sm text-muted-foreground">{c.remit}</span>
+            {c.topics.filter((n) => names.has(n)).length > 0 && (
+              <span class="text-sm">
+                Inquiries:{' '}
+                {c.topics
+                  .filter((n) => names.has(n))
+                  .map((n, i) => (
+                    <>
+                      {i > 0 && ', '}
+                      <a href={href(`/${n}/`)}>{label(n)}</a>
+                    </>
+                  ))}
+              </span>
+            )}
+          </li>
+        ))
+      }
+    </ul>
 
-  <h2 class={h2}>What the Commonwealth does not do</h2>
-  <ul class={list}>
-    <li>
-      It does not judge people or politics. Each verdict applies to one claim, in one period, against one body of
-      evidence. Claims whose truth changes over time carry a period in brackets, and the same claim in another period is
-      a different claim.
-    </li>
-    <li>
-      It does not force a verdict. Predictions stay unknown until the data arrive. Value judgments stay untestable.
-    </li>
-    <li>
-      It does not treat an AI guess as evidence. The guess is a starting point that a study can overturn, and the
-      Revisions section of each inquiry lists every finding where that happened.
-    </li>
-    <li>It does not invent. Every citation, witness, authority and figure on this site is real and attributed.</li>
-  </ul>
+    <h2 class={h2}>How an inquiry is built</h2>
+    <ol class={list}>
+      <li>
+        <strong>Collect.</strong> YouTube videos with captions and blog posts, chosen to cover the pitches, the critics and
+        the explainers on a question, not just one side.
+      </li>
+      <li>
+        <strong>Extract.</strong> From each source, the four to twelve claims a viewer would walk away believing, each tied
+        to a short verbatim quote. Claims are written once in canonical form, so the same idea from twenty videos is one claim
+        with twenty sources behind it.
+      </li>
+      <li>
+        <strong>Guess.</strong> Every new claim gets an AI judgment with a one-line reason. It counts for at most 50% confidence,
+        however sure the model sounds.
+      </li>
+      <li>
+        <strong>Check.</strong> Studies, official data releases and reports go in a sources folder. Each is read against every
+        claim, and a verdict is recorded only where a passage bears directly on the claim as worded, with a line citation.
+        A study verdict replaces the AI guess when it is at least as confident.
+      </li>
+      <li>
+        <strong>Score.</strong> Evidence belongs to the claim, not the source. A verdict on a claim counts for every source
+        that makes it, including ones added later. Each source's score comes from the verdicts on its claims.
+      </li>
+    </ol>
 
-  <!-- Out of character, on purpose: the real publisher, in plain type, with no seal or in-world title. -->
-  <h2 class={h2} id="publisher">Publisher</h2>
-  <p class={p}>
-    This site is published by <a href={author.links.GitHub}>{author.name}</a>, who writes about building things like
-    this at <a href={author.blog.url}>{author.blog.name}</a>. The data, the agent briefs, the brand charter and this
-    site are open at <a href={site.repo}>GitHub</a>. Every claim links back to its quote and every study verdict to the
-    lines it rests on, so you can check the checking.
-  </p>
-  <p class={p}>
-    Corrections go through the repository's issues: <a href={`${site.repo}/issues`}>raise one</a>. A corrected finding
-    is marked on its page with the date and the reason.
-  </p>
-  <p class={`${p} text-sm text-muted-foreground`}>
-    <a href={href('/')}>Back to the Public Record</a>.
-  </p>
+    <h2 class={h2} id="labels">Reported, verified, qualified, unresolved</h2>
+    <p class={p}>
+      Every claim in the Record carries one of four finding labels, read from its verdict and the evidence that decides
+      it.
+    </p>
+    <dl class="mt-3 grid max-w-prose gap-2">
+      {
+        FINDING_LABELS.map((l) => (
+          <div>
+            <dt>
+              <FindingLabel label={l} />
+            </dt>
+            <dd class="mt-1 text-sm text-muted-foreground">{FINDING_TEXT[l].meaning}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <h2 class={h2} id="verdicts">How to read a verdict</h2>
+    <p class={p}>
+      Each claim carries one of five verdicts. <em>Right</em>, <em>wrong</em> and <em>partly right</em> are judgments with
+      a confidence from 0 to 100%. <em>Untestable</em> means framing, taste or a value judgment with no operational definition.{
+        ' '
+      }
+      <em>Unknown</em> means testable, but the available evidence cannot settle it yet, including predictions.
+    </p>
+    <p class={p}>
+      The label puts the confidence into words. The adverb comes from how sure the deciding evidence is; the colour
+      comes from the verdict and fades as confidence drops. A <em>leans</em> label with a dashed border is an unverified AI
+      guess or a weak study: it shows which way the evidence points, not a settled answer.
+    </p>
+    <section class="mt-4 max-w-wide overflow-x-auto" aria-label="Verdict labels" tabindex="0">
+      <table class="w-full border-collapse text-sm">
+        <thead>
+          <tr class="border-b text-left text-muted-foreground">
+            <th scope="col" class="py-2 pr-4 font-medium">Confidence</th>
+            <th scope="col" class="py-2 pr-4 font-medium">Judged right</th>
+            <th scope="col" class="py-2 pr-4 font-medium">Judged partly right</th>
+            <th scope="col" class="py-2 font-medium">Judged wrong</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            rows.map((r) => (
+              <tr class="border-b">
+                <td class="py-2.5 pr-4 font-mono text-xs text-muted-foreground tabular-nums">{r.band}</td>
+                <td class="py-2.5 pr-4">
+                  <VerdictBadge verdict="right" confidence={r.c} />
+                </td>
+                <td class="py-2.5 pr-4">
+                  <VerdictBadge verdict="partly" confidence={r.c} />
+                </td>
+                <td class="py-2.5">
+                  <VerdictBadge verdict="wrong" confidence={r.c} />
+                </td>
+              </tr>
+            ))
+          }
+          <tr>
+            <td class="py-2.5 pr-4 font-mono text-xs text-muted-foreground">no judgment</td>
+            <td class="py-2.5 pr-4" colspan="3">
+              <VerdictBadge verdict="untestable" />
+              <VerdictBadge verdict="unknown" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <p class={`${p} text-sm text-muted-foreground`}>
+      Confidence measures how strongly that evidence settles that claim, not how reputable the publisher is. A direct
+      reading from an official release scores high. One econometric study scores lower, and lower still when a claim
+      reaches beyond what the study measured. Hover a label to see the raw verdict and percentage.
+    </p>
+
+    <h2 class={h2}>How sources are scored</h2>
+    <p class={p}>
+      A source's score averages its claims: right counts 1, partly right counts half, wrong counts minus 1, and the sign
+      flips when the source argues against a claim. The average maps to four labels: <em>mostly wrong</em>,
+      <em>mixed</em>, <em>mostly right</em> and <em>right</em>. Mixed means the source's correct and incorrect claims
+      roughly cancel, or it only makes half-true ones.
+    </p>
+    <p class={p}>
+      Novelty breaks ties. It rewards a source for claims that hold up and that few other sources make, weighted by how
+      sure the verdict is. A video that repeats what twenty others say scores the same but ranks lower than one that
+      adds something sound.
+    </p>
+
+    <h2 class={h2}>What the Commonwealth does not do</h2>
+    <ul class={list}>
+      <li>
+        It does not judge people or politics. Each verdict applies to one claim, in one period, against one body of
+        evidence. Claims whose truth changes over time carry a period in brackets, and the same claim in another period
+        is a different claim.
+      </li>
+      <li>
+        It does not force a verdict. Predictions stay unknown until the data arrive. Value judgments stay untestable.
+      </li>
+      <li>
+        It does not treat an AI guess as evidence. The guess is a starting point that a study can overturn, and the
+        Revisions section of each inquiry lists every finding where that happened.
+      </li>
+      <li>It does not invent. Every citation, witness, authority and figure on this site is real and attributed.</li>
+    </ul>
+
+    <!-- Out of character, on purpose: the real publisher, in plain type, with no seal or in-world title. -->
+    <h2 class={h2} id="publisher">Publisher</h2>
+    <p class={p}>
+      This site is published by <a href={author.links.GitHub}>{author.name}</a>, who writes about building things like
+      this at <a href={author.blog.url}>{author.blog.name}</a>. The data, the agent briefs, the brand charter and this
+      site are open at <a href={site.repo}>GitHub</a>. Every claim links back to its quote and every study verdict to
+      the lines it rests on, so you can check the checking.
+    </p>
+    <p class={p}>
+      Corrections go through the repository's issues: <a href={`${site.repo}/issues`}>raise one</a>. A corrected finding
+      is marked on its page with the date and the reason.
+    </p>
+    <p class={`${p} text-sm text-muted-foreground`}>
+      <a href={href('/')}>Back to the Public Record</a>.
+    </p>
+  </div>
 </Base>
