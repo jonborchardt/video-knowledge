@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { feedXml, xmlEscape } from '../syndication';
+import type { ArticleRelease, ArticleView } from '../../article';
+import type { ClaimView, SourceView, Topic } from '../../evidence';
+import type { PublicVideo } from '../../publishing';
+import type { Commission } from '../../../config/site';
+import type { Story } from '../../../shared/types';
+import type { MatterModel } from '../matter';
+import { verdictLabel } from '../../evidence';
+import { feedXml, matterMarkdown, xmlEscape } from '../syndication';
 
 const meta = { title: 'Site', url: 'https://example.test/', description: 'About. The disclosure.', language: 'en-US' };
 
@@ -44,5 +51,170 @@ describe('feedXml', () => {
     expect(xml).toContain('<channel>');
     expect(xml).not.toContain('<item>');
     expect(xml).not.toContain('<lastBuildDate>');
+  });
+});
+
+describe('matterMarkdown', () => {
+  const cite = 'heat-pumps/sources/nrel.txt#L10-L12';
+  const citeUrl = `https://github.com/x/blob/main/topics/${cite}`;
+  const view: ArticleView = {
+    headline: 'The headline',
+    dek: 'The dek.',
+    sections: [
+      {
+        heading: 'First section',
+        blocks: [
+          {
+            kind: 'p',
+            sentences: [
+              { id: 's01', text: 'First sentence.', refs: [1] },
+              { id: 's02', text: 'Second sentence.', refs: [2], correctedOn: '2026-11-02' },
+            ],
+          },
+          { kind: 'p', callout: 'unresolved', sentences: [{ id: 's03', text: 'A gap.', refs: [] }] },
+          { kind: 'table', caption: 'Costs', columns: ['Saving'], rows: [{ label: 'a | b', cells: ['53%'] }] },
+          {
+            kind: 'figure',
+            ref: 'f1',
+            caption: 'Projects',
+            draw: {
+              source: 'Doc, lines 1-2',
+              chart: {
+                type: 'bar',
+                points: [
+                  { label: 'Projects', value: 273, unit: 'count', display: '273', cite },
+                  { label: 'Largest rise', value: 1000, unit: 'usd', display: '$1,000', cite },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
+    refs: [
+      { n: 1, label: 'NREL model, lines 10-12', href: citeUrl },
+      { n: 2, label: 'Exhibit 3: A video', href: 'https://www.youtube.com/watch?v=abc' },
+    ],
+    corrections: [{ date: '2026-11-02', note: 'Fixed a figure.', sentences: ['s02'] }],
+    stale: null,
+  };
+  const claim = {
+    id: 'heat-pumps/c1',
+    text: 'Heat pumps cost less to run than oil.',
+    asserted: 2,
+    denied: 1,
+    verdict: 'partly',
+    confidence: 0.8,
+    note: 'Depends on the oil price.',
+    decidedBy: 'NREL model',
+    studies: 1,
+    lean: null,
+    sources: [
+      {
+        id: 'v1',
+        title: 'A video',
+        channel: 'Chan',
+        kind: 'video',
+        href: 'https://www.youtube.com/watch?v=abc',
+        stance: 'denies',
+        quote: 'Oil was cheaper that winter.',
+      },
+    ],
+    verdicts: [
+      { by: 'NREL model', verdict: 'partly', confidence: 0.8, note: 'Above a switchover temperature.', cite, date: '2026-10-01' },
+    ],
+    revisions: [
+      { kind: 'claim', id: 'heat-pumps/c1', at: '2026-11-01', note: 'Verdict moved from right to partly.', from: 'right', to: 'partly' },
+    ],
+  } as unknown as ClaimView;
+  const exhibit = {
+    id: 'v1',
+    title: 'A video',
+    channel: 'Chan',
+    kind: 'video',
+    href: 'https://www.youtube.com/watch?v=abc',
+    exhibit: 3,
+  } as SourceView;
+  const t = { name: 'heat-pumps', label: 'Heat pumps' } as Topic;
+  const s = {
+    id: 'decision:x',
+    title: 'Is it cheaper?',
+    question: 'Is a heat pump cheaper to run?',
+    tension: 'Some say yes.',
+    premise: 'Studies measured it.',
+    arc: { resolution: 'Mostly, except against oil.', takeaway: 'Check your oil price.' },
+    claims: ['heat-pumps/c1'],
+  } as unknown as Story;
+  const model = (over: Partial<MatterModel> = {}): MatterModel => ({
+    first: undefined,
+    claims: [claim],
+    groups: [{ label: 'qualification', claims: [claim] }],
+    exhibits: [exhibit],
+    revisions: [{ r: claim.revisions[0], text: claim.text }],
+    revised: '2026-11-01',
+    outputs: { video: null, releasing: null, shorts: [] },
+    embed: { url: 'https://www.youtube.com/watch?v=vid' } as PublicVideo,
+    release: {} as ArticleRelease,
+    firstArticle: false,
+    view,
+    path: '/heat-pumps/is-it-cheaper/',
+    ...over,
+  });
+  const c = { fullName: 'Commission on Spending' } as Commission;
+  const mdMeta = {
+    canonical: 'https://example.test/heat-pumps/is-it-cheaper/',
+    inquiryUrl: 'https://example.test/heat-pumps/',
+    repo: 'https://github.com/x',
+    disclosure: 'The disclosure.',
+    publisher: 'J',
+  };
+
+  it('keeps the article, its refs and URLs, tables, figure data, corrections, claims, quotes, cites, exhibits, revisions', () => {
+    const md = matterMarkdown(t, s, model(), c, mdMeta);
+    expect(md).toContain('# Is it cheaper?');
+    expect(md).toContain('Mostly, except against oil.');
+    expect(md).toContain('Video: https://www.youtube.com/watch?v=vid');
+    expect(md).toContain('Corrected 2026-11-02: Fixed a figure.');
+    expect(md).toContain('## The headline');
+    expect(md).toContain('> The dek.');
+    expect(md).toContain('First sentence. [1] Second sentence. [2] (Corrected 2026-11-02)');
+    expect(md).toContain('**Unresolved claim:** A gap.');
+    expect(md).toContain('| a \\| b | 53% |');
+    expect(md).toContain('|  | Saving |\n| --- | --- |');
+    expect(md).toContain('Source: Doc, lines 1-2');
+    expect(md).toContain('| Projects | 273 |');
+    expect(md).toContain('| Largest rise | $1,000 |');
+    expect(md).toContain(`1. [NREL model, lines 10-12](${citeUrl})`);
+    expect(md).toContain('2. [Exhibit 3: A video](https://www.youtube.com/watch?v=abc)');
+    expect(md).toContain('### Qualified claim');
+    const label = verdictLabel('partly', 0.8).text;
+    expect(md).toContain(`- **Heat pumps cost less to run than oil.** (${label}. Depends on the oil price.)`);
+    expect(md).toContain('  - Denies: [A video](https://www.youtube.com/watch?v=abc) (Chan) "Oil was cheaper that winter."');
+    expect(md).toContain(`  - ${label} by NREL model, [lines 10-12](${citeUrl}). Above a switchover temperature.`);
+    expect(md).toContain('  - Revised 2026-11-01: Verdict moved from right to partly.');
+    expect(md).toContain('- Exhibit 3: [A video](https://www.youtube.com/watch?v=abc) (Chan)');
+    expect(md).toContain('## Revisions');
+    expect(md).toContain('HTML version: https://example.test/heat-pumps/is-it-cheaper/');
+    expect(md.split('The disclosure.').length).toBe(2);
+    expect(md).not.toContain('undefined');
+  });
+
+  it('without an article it renders the dispute, the premise and the takeaway; a follow-up points at its first question', () => {
+    const first = { id: 'decision:first', title: 'The first question' } as Story;
+    const md = matterMarkdown(
+      t,
+      { ...s, partOf: first.id },
+      model({ view: null, release: null, first, firstArticle: true }),
+      c,
+      { ...mdMeta, firstUrl: 'https://example.test/heat-pumps/first/' },
+    );
+    expect(md).toContain('A follow-up question to [The first question](https://example.test/heat-pumps/first/).');
+    expect(md).toContain('## The dispute\n\nSome say yes.');
+    expect(md).toContain('## What the evidence shows\n\nStudies measured it.');
+    expect(md).toContain('**Takeaway:** Check your oil price.');
+    expect(md).toContain(
+      'The article answering this question is on [The first question](https://example.test/heat-pumps/first/#article).',
+    );
+    expect(md).not.toContain('## The headline');
   });
 });
