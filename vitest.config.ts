@@ -16,10 +16,12 @@ export default defineConfig({
           testTimeout: 30_000,
           // afterAll hooks delete many copied topic roots; on Windows under a full validate that takes minutes.
           hookTimeout: 300_000,
-          // Six workers, not vitest's default of one per logical processor (12 here): on 2026-11-06 two default runs
-          // failed on rotating timeouts with ~2 GB of 16 free, six passed every run since. The automated validate
-          // (a run's finish, the launch, the scan) runs beside whatever else the machine is doing, a render included.
-          maxWorkers: 6,
+          // Four workers, not vitest's default of one per logical processor (12 here). Measured 2026-11-06/07 on this
+          // 16 GB machine: the default failed two idle runs on rotating timeouts; six passed idle every time but
+          // failed beside a render (17 timeouts, 2306 s, ~2.8 GB free); the automated validate (a run's finish, the
+          // launch, the scan) runs beside whatever else the machine is doing, a render included, so the setting is
+          // the one that passes under that load.
+          maxWorkers: 4,
         },
       },
       {

@@ -29,6 +29,13 @@ rules every change keeps are `CLAUDE.md`.
   Remotion downloads Chrome on the first render. The watcher checkout (`../retire-sim/watcher`, or `WATCHER_DIR`) is
   needed by `npm run report`, `record`, `record-sources` and the research verbs, not by the site or the videos.
 - `npx playwright install chromium firefox webkit` once, for `npm run quality` and the browser suite.
+- The unit suite runs four vitest workers (`maxWorkers` in `vitest.config.ts`), not one per processor: measured on this
+  16 GB machine on 2026-11-06/07, the default failed two idle validates on rotating timeouts, six passed idle every
+  time (about 640 s) but failed beside a render (17 timeouts, 2,306 s, free memory down to 357 MB), and four beside a
+  render left two 30 s timeouts in `mail/tests/ask-cli.test.ts` (2,323 s). No worker count makes the suite pass
+  beside a render here, so a validate does not run beside one: unattended, the only job is the launch (section 4) and
+  no render runs; in a session, do not start a render while a launch or a validate runs. Change the number in the
+  config with a measurement beside it.
 - `npm run dev` (read-only) serves the site and the working pages: `/admin` (the board, Automation, Proposals, the
   maps), `/<topic>/stories/`, `/<topic>/scripts/<slug>/`, `/<topic>/review/<slug>` and `/<topic>/register`. None of
   them is built or deployed.
@@ -106,7 +113,8 @@ session.
 **One writer at a time.** The scheduler keeps each task to one instance ("Do not start a new instance", section 17);
 that setting is per task and serialises nothing you start by hand. A job by hand (`npm run run --
 story|topic|maintain|discover|pick|launch`, or `work` without `--job`) is started only when `npm run run -- status`
-and the live page show nothing running and no launch in progress; the review page's actions and the bare `publish`
+and the live page show nothing running and no launch in progress (a render beside the launch's validate is what
+makes the suite time out, section 1); the review page's actions and the bare `publish`
 verbs likewise, since a write during a live run is reverted by its guard or left dirty for the next preflight to name
 (section 9, `unexpected-edit`).
 
