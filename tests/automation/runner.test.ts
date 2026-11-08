@@ -583,4 +583,12 @@ describe('appendRunReport', () => {
     expect(text.startsWith(`# Run report: ${T} ${id}\n`)).toBe(true);
     expect(text).toContain('- awaiting-person: why');
   });
+  it('appends the same run once (a re-run after a git halt sees the same journal)', () => {
+    const root = newRoot();
+    const entries = [entry({ at: '2026-11-08T10:00:00.000Z', step: 'npm run x' })];
+    appendRunReport(T, S, root, runDir(T, S, root), entries);
+    appendRunReport(T, S, root, runDir(T, S, root), entries);
+    const text = readFileSync(join(scriptDir(T, S, root), 'video', 'review', 'run-report.md'), 'utf8');
+    expect(text.match(/^## Run 2026-11-08T10:00:00.000Z/gm)).toHaveLength(1);
+  });
 });

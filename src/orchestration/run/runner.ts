@@ -900,6 +900,8 @@ export function appendRunReport(
   ];
   const file = join(reviewDir, 'run-report.md');
   const before = existsSync(file) ? readFileSync(file, 'utf8') : null;
+  // a run halted at its commit and run again finishes on the same journal: its section is already there
+  if (before?.includes(`\n${lines[0]}\n`)) return;
   const head = before === null ? `# Run report: ${topic} ${storyId}\n\n` : before.endsWith('\n') ? '\n' : '\n\n';
   appendFileSync(file, head + lines.join('\n'));
 }
