@@ -12,14 +12,14 @@ const id = `table-${table.id}`; // a dataset is drawn once per page
 ---
 
 {/* The caption sits above the scroll region so a phone never clips it; the table is named by it (aria-labelledby). */}
-<section class="max-w-wide min-w-0">
+<div class="max-w-wide min-w-0">
   <p class="mb-1 text-sm text-muted-foreground" id={`${id}-caption`}>
     {caption ? `${caption} ` : ''}{table.title} ({table.asOf}, retrieved {table.retrieved}).{
       table.note ? ` ${table.note}` : ''
     }
     {dataHref && <a href={dataHref}> All figures in this inquiry.</a>}
   </p>
-  <div class="overflow-x-auto" tabindex="0">
+  <section class="overflow-x-auto" aria-labelledby={`${id}-caption`} tabindex="0">
     <table class="w-full border-collapse text-sm" aria-labelledby={`${id}-caption`}>
       <thead>
         <tr class="border-b text-left text-muted-foreground">
@@ -48,5 +48,5 @@ const id = `table-${table.id}`; // a dataset is drawn once per page
         }
       </tbody>
     </table>
-  </div>
-</section>
+  </section>
+</div>

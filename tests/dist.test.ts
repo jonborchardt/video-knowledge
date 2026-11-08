@@ -295,6 +295,19 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     }
   });
 
+  it('every focusable scroll region is a named region (a keyboard user hears what they landed on)', () => {
+    let seen = 0;
+    for (const p of pages) {
+      const html = readFileSync(join(DIST, p), 'utf8');
+      for (const tag of html.match(/<(?:div|section)[^>]*tabindex="0"[^>]*>/g) ?? []) {
+        seen++;
+        expect(tag, `${p}: ${tag}`).toMatch(/aria-label(?:ledby)?="[^"]+"/);
+        expect(tag, `${p}: ${tag}`).toMatch(/<section|role="region"/);
+      }
+    }
+    expect(seen).toBeGreaterThan(0);
+  });
+
   it('no claim filter opens on a disabled chip (a checked radio is never disabled)', () => {
     for (const n of liveTopics) {
       const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');

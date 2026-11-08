@@ -46,12 +46,12 @@ const notice = 'max-w-prose border-l-4 border-gold bg-card p-3 pl-4 text-sm';
           const table = b.kind === 'table' ? b : null;
           if (table)
             return (
-              <section class="max-w-wide min-w-0" aria-label={table.caption}>
+              <div class="max-w-wide min-w-0">
                 {/* The caption sits above the scroll region so a phone never clips it; it names the table. */}
                 <p class="mb-1 text-sm text-muted-foreground" id={`article-table-${i}-${j}`}>
                   {table.caption}
                 </p>
-                <div class="overflow-x-auto" tabindex="0">
+                <section class="overflow-x-auto" aria-labelledby={`article-table-${i}-${j}`} tabindex="0">
                   <table class="w-full border-collapse text-sm" aria-labelledby={`article-table-${i}-${j}`}>
                     <thead>
                       <tr class="border-b text-left text-muted-foreground">
@@ -78,8 +78,8 @@ const notice = 'max-w-prose border-l-4 border-gold bg-card p-3 pl-4 text-sm';
                       ))}
                     </tbody>
                   </table>
-                </div>
-              </section>
+                </section>
+              </div>
             );
           if (b.kind === 'figure')
             return b.draw ? (
