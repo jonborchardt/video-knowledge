@@ -41,7 +41,7 @@ entries):
     "sc18": {
       "key": "<the key check printed>",
       "verdict": "approved",
-      "notes": "",
+      "notes": "<one line: what you compared and found right>",
       "reviewer": "<model id>",
       "date": "<ISO date>"
     }
