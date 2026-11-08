@@ -3,7 +3,7 @@
 Website owns rendering, the content graph and building and deploying the site. It renders `article-release.json` and never decides whether a finding needs a correction (article owns corrections and reaffirmations). The Astro folders (`src/pages`, `components`, `layouts`, `styles`, `admin`, `tools`) and `astro.config.mjs` are part of it and stay where Astro needs them; they import `site-graph.ts` directly.
 
 - Inputs: `report.json`, `stories.json`, `public-record.json`, `article-release.json`, `publish.json`, `video/review/*`, `cta.json`, the datasets.
-- Outputs: the built site (`dist/`), `public-urls.json`, `.web-quality/`.
+- Outputs: the built site (`dist/`, with `feed.xml`, `llms.txt` and each matter's `index.md` rendered by `syndication.ts` from `matter.ts`, the matter page's loader), `public-urls.json`, `.web-quality/`.
 - Briefs: `briefs/cta.md`.
 - CLIs: `npm run links -- freeze|check|cta|cta approve|live` (`cli-links.ts`), `npm run quality` (`cli-quality.ts`), `npm run rehearse` (`cli-rehearse.ts`). `live <topic> <story-id>` (`live.ts`, phase 3) is the deploy confirmation: one request to the story's matter page on the public site, `RESULT: LIVE` when it answers 200, carries the live video's id and the path is in `public-urls.json`, else `RESULT: NOT LIVE (<why>)` and exit 1; `liveCheck(topic, storyId, fetchFn, root, { baseUrl, expectAbsent, frozen })` is the read API the tick's probe calls (a fixture's negative probe on the production host, its positive probe on the preview host).
 - Inspect: no.

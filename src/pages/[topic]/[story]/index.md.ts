@@ -8,6 +8,7 @@ import { matterModel } from '../../../modules/website/matter';
 import { siteGraph, siteTopicNames } from '../../../modules/website/site-graph';
 import { matterMarkdown } from '../../../modules/website/syndication';
 import type { Story } from '../../../shared/types';
+import { toolOf } from '../../../tools';
 
 // Each public matter as Markdown beside its page (`<topic>/<slug>/index.md`): the same stories as `[story].astro`,
 // the same model (matterModel), rendered by matterMarkdown. The page announces it with rel="alternate".
@@ -29,6 +30,7 @@ export function GET({ props }: APIContext) {
     canonical: absoluteUrl(m.path),
     inquiryUrl: absoluteUrl(`/${t.name}/`),
     firstUrl: m.first ? absoluteUrl(matterPath(t.name, m.first)) : undefined,
+    toolUrl: toolOf(t.name, s.id) ? absoluteUrl(`${m.path}#tool`) : undefined,
     repo: site.repo,
     disclosure: site.disclosure,
     publisher: author.name,

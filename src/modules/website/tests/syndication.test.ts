@@ -238,6 +238,7 @@ describe('matterMarkdown', () => {
     repo: 'https://github.com/x',
     disclosure: 'The disclosure.',
     publisher: 'J',
+    toolUrl: 'https://example.test/heat-pumps/is-it-cheaper/#tool',
   };
 
   it('keeps the article, its refs and URLs, tables, figure data, corrections, claims, quotes, cites, exhibits, revisions', () => {
@@ -267,6 +268,9 @@ describe('matterMarkdown', () => {
     expect(md).toContain('  - Revised 2026-11-01: Verdict moved from right to partly.');
     expect(md).toContain('- Exhibit 3: [A video](https://www.youtube.com/watch?v=abc) (Chan)');
     expect(md).toContain('## Revisions');
+    expect(md).toContain(
+      'Calculator: run the comparison with your own prices on the page, https://example.test/heat-pumps/is-it-cheaper/#tool',
+    );
     expect(md).toContain('HTML version: https://example.test/heat-pumps/is-it-cheaper/');
     expect(md.split('The disclosure.').length).toBe(2);
     expect(md).not.toContain('undefined');

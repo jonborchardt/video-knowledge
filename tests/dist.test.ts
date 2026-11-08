@@ -179,6 +179,10 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       // its own share card, the question drawn on it (npm run brand)
       expect(html).toContain(`<meta property="og:image" content="${CANON}og/stories/${topic}/${slug}.jpg"`);
       expect(existsSync(join(DIST, 'og/stories', topic, `${slug}.jpg`)), `${topic}/${slug} card`).toBe(true);
+      expect(html).toContain('<meta property="og:type" content="article"');
+      // a released article's SEO title is the whole title tag: the brief's 60 characters, no suffix added
+      const title = html.match(/<title>([^<]+)<\/title>/)![1];
+      if (loadArticleRelease(topic, s.id)) expect(title.length, title).toBeLessThanOrEqual(60);
       if (!s.partOf) {
         const c = Object.entries(commissions).find(([, c]) => c.topics.includes(topic))![0];
         expect(readFileSync(join(DIST, 'commissions', c, 'index.html'), 'utf8')).toContain(
@@ -361,6 +365,8 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     expect(image, 'og:image').toMatch(new RegExp(`^${CANON}`));
     expect(existsSync(join(DIST, image!.slice(CANON.length))), image).toBe(true);
     expect(html).toContain('<meta name="twitter:card" content="summary_large_image"');
+    if (!storyPages.some((x) => p === `${x.topic}/${x.slug}/index.html`))
+      expect(html).toContain('<meta property="og:type" content="website"');
   });
 
   it('404 is noindex and makes no canonical claim', () => {
@@ -378,6 +384,70 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     }
     expect(sitemap).not.toContain('404');
     expect(sitemap).not.toContain('/admin');
+  });
+
+  // The text outputs beside the pages (src/modules/website/syndication.ts): the feed, llms.txt and each matter's
+  // Markdown copy list exactly what the site lists and keep what the page shows. Escaping and ordering are the module
+  // tests'; this is the built site.
+  it('feed.xml lists exactly the public first questions, newest first, linking built pages', () => {
+    const xml = readFileSync(join(DIST, 'feed.xml'), 'utf8');
+    expect(xml.startsWith('<?xml')).toBe(true);
+    expect(xml.match(/<rss version="2.0">/g)).toHaveLength(1);
+    const items = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((m) => m[1]);
+    expect(items).toHaveLength(storyPages.filter((p) => !p.s.partOf).length);
+    for (const item of items) {
+      const link = item.match(/<link>([^<]+)<\/link>/)![1];
+      expect(link.startsWith(CANON), link).toBe(true);
+      expect(existsSync(join(DIST, link.slice(CANON.length), 'index.html')), link).toBe(true);
+    }
+    const dates = items.flatMap((i) => i.match(/<pubDate>([^<]+)<\/pubDate>/)?.[1] ?? []).map((d) => Date.parse(d));
+    expect(dates).toEqual([...dates].sort((a, b) => b - a));
+    expect(xml).not.toContain('/test-fixture/');
+    expect(xml).not.toMatch(/&(?!(amp|lt|gt|quot|apos|#\d+);)/);
+  });
+
+  it('every matter has an index.md that keeps its article, its sources and its exhibits', () => {
+    for (const p of storyPages) {
+      const md = readFileSync(join(DIST, p.topic, p.slug, 'index.md'), 'utf8');
+      const html = readFileSync(join(DIST, p.topic, p.slug, 'index.html'), 'utf8');
+      expect(md.startsWith(`# ${p.s.title}\n`)).toBe(true);
+      expect(md).toContain(`HTML version: ${CANON}${p.topic}/${p.slug}/`);
+      expect(md.split(site.disclosure)).toHaveLength(2);
+      expect(md).not.toContain('undefined');
+      const release = p.s.partOf ? null : loadArticleRelease(p.topic, p.s.id);
+      if (release) {
+        expect(md).toContain(`## ${release.article.meta.headline}`);
+        for (const b of release.article.sections[0].blocks)
+          if (b.kind === 'prose') for (const x of b.sentences) expect(md, x.id).toContain(x.text);
+        for (const n of html.matchAll(/<li id="ref-\d+"><a href="([^"]+)"/g)) expect(md).toContain(decode(n[1]));
+      }
+      // every exhibit the page lists, by its source URL
+      const exhibits = html.slice(html.indexOf('id="exhibits"'));
+      for (const m of exhibits.matchAll(/<\/svg><a href="(https?:[^"]+)"/g)) expect(md).toContain(decode(m[1]));
+    }
+  });
+
+  it('llms.txt links every matter page as Markdown', () => {
+    const txt = readFileSync(join(DIST, 'llms.txt'), 'utf8');
+    const links = [...txt.matchAll(/\]\((https?:[^)]+\/index\.md)\)/g)].map((m) => m[1]);
+    expect(links).toHaveLength(storyPages.length);
+    for (const l of links) {
+      expect(l.startsWith(CANON), l).toBe(true);
+      expect(existsSync(join(DIST, l.slice(CANON.length))), l).toBe(true);
+    }
+    expect(txt).not.toContain('/test-fixture/');
+  });
+
+  it.each(pages)('%s announces the feed, a matter page its Markdown copy', (p) => {
+    const html = readFileSync(join(DIST, p), 'utf8');
+    expect(html).toContain(
+      `<link rel="alternate" type="application/rss+xml" title="${site.name}" href="${BASE}feed.xml"`,
+    );
+    expect(html).toMatch(new RegExp(`<a href="${BASE}feed.xml"[^>]*>Feed</a>`));
+    const matter = storyPages.some((s) => p === `${s.topic}/${s.slug}/index.html`);
+    const alt = html.match(/<link rel="alternate" type="text\/markdown" href="([^"]+)"/)?.[1];
+    expect(!!alt, p).toBe(matter);
+    if (alt) expect(alt).toBe(`${BASE}${p.replace('index.html', 'index.md')}`);
   });
 
   it('privacy names the YouTube API Services, the Google policies and the revocation page, and is linked from every footer', () => {

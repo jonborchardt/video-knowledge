@@ -99,6 +99,7 @@ export interface MatterMeta {
   canonical: string; // the HTML page's absolute URL
   inquiryUrl: string;
   firstUrl?: string; // a follow-up's first question
+  toolUrl?: string; // the page's calculator, when the story has one (interactive: the page is the only copy)
   repo: string;
   disclosure: string;
   publisher: string;
@@ -137,7 +138,7 @@ function block(b: Block): string {
       )
     : d.chart
       ? table(
-          ['Value'],
+          [d.chart.title ?? 'Value'],
           d.chart.points.map((p) => [p.label, p.display]),
         )
       : '';
@@ -168,6 +169,7 @@ export function matterMarkdown(t: Topic, s: Story, m: MatterModel, c: Commission
     out.push('## The dispute', s.tension, '## What the evidence shows', s.premise);
     if (s.arc.takeaway) out.push(`**Takeaway:** ${s.arc.takeaway}`);
   }
+  if (meta.toolUrl) out.push(`Calculator: run the comparison with your own prices on the page, ${meta.toolUrl}`);
   out.push('## The claims examined');
   for (const g of m.groups) {
     out.push(`### ${FINDING_TEXT[g.label].name}`);
