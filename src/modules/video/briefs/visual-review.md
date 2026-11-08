@@ -20,8 +20,15 @@ it, and record a verdict; you change no code.
    - the citation is on screen when a claim is;
    - colours and marks are the institution's kit through `theme` (its ground, accent, faces); a
      graphic that picks its own colours is a `revise`.
-4. Verdict `approved`, or `revise` with notes the builder can act on (what is wrong, in which
-   frame, what it should show).
+4. Verdict `approved`, with one line of `notes` saying what you compared and found right (the frames, the
+   text, the points, the citation), or `revise` with notes the builder can act on: what is wrong, in which
+   frame, what it should show.
+
+## What does not count
+
+Taste is not a finding: a colour, a layout or a motion you would have chosen differently, when the kit and the
+storyboard allow it. Anything the storyboard asked for is not a finding; a storyboard that is wrong goes back
+through the script stage, not through `revise`.
 
 ## Output
 
