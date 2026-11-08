@@ -81,7 +81,8 @@ work plane, `launch` with its record under `.automation/launch/`, the halt also 
 `probeLaunches` for the tick: the deploy check (`liveCheck`), then, for a release a person decided `ok` (`releaseOf`
 in `resume.ts`: the main output approved, not live, with `decidedOk`; such a story is launchable before it is live and
 the job commits `releasing`), the step the output's state still owes first (a push or a read-back, by `automated:
-tick`; the go-live waits a tick), then `publish go-live` by the deciding person `via tick:<request>` and `verify`
+tick`; the go-live waits a tick; a person's step, or one still owed after `MAX_TRIES` ticks, halts `step-failed`
+like the go-live), then `publish go-live` by the deciding person `via tick:<request>` and `verify`
 (a final failure or a refusal halts `step-failed` at once, a retryable one after `MAX_TRIES` ticks since the
 decision; a person's hand go-live clears it), then the X post by policy and the launch mail from `requests.ts`
 `renderLaunched`, both only once `announceProblem` is null: the video verified since its publish and every uploaded

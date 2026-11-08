@@ -266,8 +266,9 @@ export function matterOrder(g: Graph, a: Node, b: Node): number {
   );
 }
 
-/** Related matters (D7): pins, then chain members, then stories sharing the most claims, then the same inquiry, then
- *  the same institution; within a tier `matterOrder`. Ready stories only, never the story itself or an exclusion. */
+/** Related matters (D7): pins, then stories sharing the most claims, then the same inquiry, then the same
+ *  institution; within a tier `matterOrder`. Ready stories only, never the story itself, a question of its own chain
+ *  (the page lists the chain itself) or an exclusion. */
 export function related(
   g: Graph,
   story: string,
@@ -283,18 +284,17 @@ export function related(
   const tier = (n: Node) =>
     opts.pin?.includes(n.id)
       ? 0
-      : chainRoot(g, n.id) === chainRoot(g, story)
-        ? 1
-        : shared.has(n.id)
-          ? 2
-          : n.topic === me.topic
-            ? 3
-            : inst(n.topic) === inst(me.topic)
-              ? 4
-              : 5;
+      : shared.has(n.id)
+        ? 2
+        : n.topic === me.topic
+          ? 3
+          : inst(n.topic) === inst(me.topic)
+            ? 4
+            : 5;
+  const mine = chainRoot(g, story);
   const pinAt = (n: Node) => opts.pin?.indexOf(n.id) ?? 0;
   return [...g.nodes.values()]
-    .filter((n) => n.kind === 'story' && n.public && n.id !== story && !opts.exclude?.includes(n.id))
+    .filter((n) => n.kind === 'story' && n.public && chainRoot(g, n.id) !== mine && !opts.exclude?.includes(n.id))
     .filter((n) => tier(n) < 5)
     .sort(
       (a, b) =>

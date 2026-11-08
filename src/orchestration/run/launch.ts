@@ -496,11 +496,16 @@ export async function probeLaunches(a: Automation, root = ROOT, d: ProbeDeps): P
         continue;
       }
       // what the output's state owes before the go-live (a read-back since `decide --paid` pushed the description):
-      // the automation's verb runs now and the go-live waits for a tick that finds it passed; a person's step waits
+      // the automation's verb runs now and the go-live waits for a tick that finds it passed; a person's step, or
+      // one still owed after MAX_TRIES ticks, is a person's: halted once, like the go-live
       if (main.state.step.verb !== 'go-live') {
         const { verb, actor } = main.state.step;
-        if (actor === 'automation' || actor === 'youtube')
-          await d.run('publish', [verb, rec.topic, rec.storyId, '--by', 'automated: tick']);
+        if (actor === 'person' || countTry(dir, `${verb}|owed`, decided.at) > MAX_TRIES) {
+          if (rec.halt?.kind !== 'step-failed') goLiveHalt(`${main.id}: ${main.state.next}`);
+          actions.push(`${tag}: ${main.state.next}: a person's`);
+          continue;
+        }
+        await d.run('publish', [verb, rec.topic, rec.storyId, '--by', 'automated: tick']);
         actions.push(`${tag}: ${main.state.next}; the go-live waits`);
         continue;
       }

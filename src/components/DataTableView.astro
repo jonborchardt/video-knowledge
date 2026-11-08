@@ -8,19 +8,21 @@ interface Props {
   dataHref?: string; // the inquiry's data page, linked from the caption (omit on the data page itself)
 }
 const { table, caption, dataHref } = Astro.props;
-const id = `table-${table.id}`; // a dataset is drawn once per page
 ---
 
-{/* The caption sits above the scroll region so a phone never clips it; the table is named by it (aria-labelledby). */}
+{
+  /* The caption sits above the scroll region so a phone never clips it; the region and the table are named by the
+  title (no ids: a dataset may be drawn twice on a page). */
+}
 <div class="max-w-wide min-w-0">
-  <p class="mb-1 text-sm text-muted-foreground" id={`${id}-caption`}>
+  <p class="mb-1 text-sm text-muted-foreground">
     {caption ? `${caption} ` : ''}{table.title} ({table.asOf}, retrieved {table.retrieved}).{
       table.note ? ` ${table.note}` : ''
     }
     {dataHref && <a href={dataHref}> All figures in this inquiry.</a>}
   </p>
-  <section class="overflow-x-auto" aria-labelledby={`${id}-caption`} tabindex="0">
-    <table class="w-full border-collapse text-sm" aria-labelledby={`${id}-caption`}>
+  <section class="overflow-x-auto" aria-label={table.title} tabindex="0">
+    <table class="w-full border-collapse text-sm" aria-label={table.title}>
       <thead>
         <tr class="border-b text-left text-muted-foreground">
           <th scope="col" class="py-2 pr-4 font-medium"><span class="sr-only">Measure</span></th>

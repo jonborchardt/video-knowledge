@@ -175,7 +175,7 @@ describe('content graph', () => {
     expect(urlOf(b, `${T}/decision:a`)).toBe('/heat-pumps/a/');
   });
 
-  it('chain first, never itself', () => {
+  it('never itself or a question of its own chain', () => {
     const g = graphOf(
       [
         { id: 'decision:a', claims: ['c1'], chain: [{ id: 'decision:b', question: '' }] },
@@ -187,9 +187,8 @@ describe('content graph', () => {
         'decision:c': (l) => live(l, 'youtube', 'vid00000002'),
       },
     );
-    const r = related(g, `${T}/decision:a`).map((n) => n.id);
-    expect(r[0]).toBe(`${T}/decision:b`);
-    expect(r).not.toContain(`${T}/decision:a`);
+    expect(related(g, `${T}/decision:a`).map((n) => n.id)).toEqual([`${T}/decision:c`]);
+    expect(related(g, `${T}/decision:b`).map((n) => n.id)).toEqual([`${T}/decision:c`]);
   });
 
   it('more shared claims rank higher; ties prefer the overall score', () => {

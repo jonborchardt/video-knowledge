@@ -1340,7 +1340,7 @@ export function requestProblem(
     if (st.live) return `${id} is live; a release is approved before it goes public`;
     // a withdrawn video is never re-released (the ledger keeps one approval per build, so a new decision on it
     // could never take effect): a re-release is a new output
-    if (o.events.some((e) => e.type === 'published'))
+    if (id === main && o.events.some((e) => e.type === 'published'))
       return `${id} was published once and taken down; a re-release is a new output: npm run publish -- add`;
     if (st.status === 'scheduled') return `${id} is scheduled already`;
     if (st.status !== 'uploaded' && st.status !== 'approved') return `${id} is ${st.status}: ${st.next}`;

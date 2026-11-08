@@ -44,6 +44,7 @@ import {
   readLaunch,
   writeLaunch as writeLaunchRecord,
 } from '../../src/orchestration/run/launch';
+import { MAX_TRIES } from '../../src/orchestration/run/publish-due';
 import { preflight } from '../../src/orchestration/run/preflight';
 import { launchDeps, nextJob } from '../../src/orchestration/run/work';
 import { cliArgv } from '../../src/shared/cli';
@@ -508,6 +509,18 @@ describe('launch', () => {
       });
       expect(r.join('\n')).toMatch(/the go-live waits/);
       expect(verbs).toEqual([`publish verify ${c.f.topic} ${c.f.story} --by automated: tick`]);
+      // still owed after MAX_TRIES ticks (the verify records nothing): a person's, halted once, no go-live
+      for (let i = 0; i < MAX_TRIES; i++)
+        await probeLaunches(a, c.f.root, {
+          now: () => T0 + 60_000 * (i + 2),
+          run,
+          mail: new FakeMailer(c.f.root),
+          fetchFn: livePage,
+        });
+      expect(verbs.filter((v) => v.includes('verify'))).toHaveLength(MAX_TRIES);
+      expect(verbs.filter((v) => v.includes('go-live'))).toEqual([]);
+      expect(readLaunch(c.f.topic, c.f.story, c.f.root)!.halt?.kind).toBe('step-failed');
+      expect(readHalt(runDir(c.f.topic, c.f.story, c.f.root))?.kind).toBe('step-failed');
     }, 120_000);
 
     it('the probe confirming the page runs go-live under the decision, then verify; the post and the mail wait for the live, verified video', async () => {
