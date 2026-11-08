@@ -88,10 +88,18 @@ const latest = [...graph.nodes.values()]
 
   <section aria-labelledby="institutions">
     <h2 class="mb-3 text-featured font-bold" id="institutions">Institutions</h2>
-    <ul class="grid list-none gap-1.5 p-0">
+    <ul class="grid list-none gap-2 p-0">
       {
         Object.values(commissions).map((c) => (
-          <li>
+          <li class="flex items-center gap-3">
+            <img
+              class="size-8"
+              src={href(`/commissions/${commissionKey(c)}.png`)}
+              alt=""
+              width="256"
+              height="256"
+              loading="lazy"
+            />
             <a href={href(`/commissions/${commissionKey(c)}/`)}>{c.name}</a>
           </li>
         ))
