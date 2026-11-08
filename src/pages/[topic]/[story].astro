@@ -103,7 +103,7 @@ if (ctas?.problems.length) throw new Error(`${t.name}/${s.id} cta.json: ${ctas.p
 const chainNodes = [...(s.chain ?? []).map((q) => q.id), ...(s.partOf ? [s.partOf] : [])].map((id) =>
   storyNode(t.name, id),
 );
-const rel = ctaFile?.related ?? {};
+const rel: { pin?: string[]; exclude?: string[] } = ctaFile?.related ?? {};
 const relatedItems = related(graph, node, { ...rel, exclude: [...(rel.exclude ?? []), ...chainNodes] }).map((n) =>
   matterItem(graph, n.id),
 );
