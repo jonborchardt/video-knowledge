@@ -92,7 +92,7 @@ const latest = [...graph.nodes.values()]
       {
         Object.values(commissions).map((c) => (
           <li>
-            <a href={href(`/commissions/${commissionKey(c)}/`)}>{c.ceremonialName}</a>
+            <a href={href(`/commissions/${commissionKey(c)}/`)}>{c.name}</a>
           </li>
         ))
       }
