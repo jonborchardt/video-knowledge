@@ -147,7 +147,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     expect(html).toContain('The Commonwealth is fictional. The research is real.');
   });
 
-  it('commission pages name the institution, its inquiries and their stories', () => {
+  it('commission pages name the institution, its inquiries and their matters', () => {
     for (const [k, c] of Object.entries(commissions)) {
       const html = readFileSync(join(DIST, 'commissions', k, 'index.html'), 'utf8');
       expect(html).toContain(c.ceremonialName);
@@ -155,6 +155,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       const published = c.topics.filter((n) => liveTopics.includes(n));
       for (const n of published) expect(html).toContain(`href="${BASE}${n}/"`);
       if (published.length) expect(html).toContain('Matters before the');
+      if (published.length) expect(html).not.toContain(' stories<'); // the lexicon's word is matters
       else expect(html).toContain('no inquiry published yet');
     }
   });
