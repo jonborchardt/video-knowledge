@@ -1,53 +1,53 @@
 <#
 .SYNOPSIS
-  The daily encrypted backup of what lives outside git (docs/OPERATIONS.md, "What lives outside git").
+  The daily backup of what lives outside git (docs/OPERATIONS.md, "What lives outside git") to K:\COR.
 
 .DESCRIPTION
-  Standalone: reads the publishing ledgers as JSON files and runs Windows' tar.exe and Git's gpg.exe. No npm verb,
-  nothing imported from src/, no key in automation.json. The include list (backup-paths.txt, gitignored, at the repo
-  root) is generated on every run: the fixed paths of the runbook's table, every run/ and history/ folder that exists,
-  and the release build of every output whose ledger holds a `published` event, checked against the sha the upload
-  bound. The archive is one tar stream encrypted to a public key, never written in plaintext; it is built as
-  <name>.part and renamed only after every check passed, so the destination holds a complete archive under its final
-  name or nothing under it. Any failure exits 1 (Task Scheduler's Last Run Result) and logs one line to
-  .automation/backup.log: names, sizes and outcomes only, never a file's contents.
+  Standalone: reads the publishing ledgers as JSON files and runs Windows' tar.exe. No npm verb, nothing imported
+  from src/, no key in automation.json. The include list is generated on every run: the fixed paths of the runbook's
+  table, every run/ and history/ folder that exists, and the release build of every output whose ledger holds a
+  `published` event, checked against the sha the upload bound (a missing one fails the run). The repository is only
+  read: the list, the log and the archive are written at the destination. The archive is built as <name>.part and
+  renamed only after tar exited 0 and the file is at least as large as the files it holds, so the destination holds a
+  complete archive under its final name or nothing under it; its SHA-256 is written beside it. Any failure exits 1
+  (Task Scheduler's Last Run Result) and logs one line (names, sizes and outcomes only, never a file's contents).
+  The archive is not encrypted: it holds .env, the OAuth client file and the mail records, so the destination must be
+  a private folder (the runbook says what was established about K:\COR). Dated archives are never pruned here.
 
 .EXAMPLE
-  powershell -NoProfile -ExecutionPolicy Bypass -File scripts\backup.ps1 -Destination K:\backups\video-knowledge -KeyId 1A2B3C4D
+  powershell -NoProfile -ExecutionPolicy Bypass -File scripts\backup.ps1
 #>
 param(
-  [Parameter(Mandatory = $true)][string]$Destination,
-  [Parameter(Mandatory = $true)][string]$KeyId,
+  [string]$Destination = 'K:\COR',
   [string]$Repo = '', # default: the folder above scripts/ ($PSScriptRoot is not set in a param default)
-  [string]$Gpg = 'C:\Program Files\Git\usr\bin\gpg.exe',
-  [string]$Tar = (Join-Path $env:SystemRoot 'System32\tar.exe'),
-  # the gpg keyring to use; empty = the user's own (a test passes a throwaway --homedir)
-  [string]$GpgHome = ''
+  [string]$Tar = (Join-Path $env:SystemRoot 'System32\tar.exe')
 )
 $ErrorActionPreference = 'Stop'
 $start = Get-Date
 if (-not $Repo) { $Repo = Split-Path -Parent $PSScriptRoot }
 $Repo = (Resolve-Path $Repo).Path.TrimEnd('\')
-$name = 'video-knowledge-' + $start.ToString('yyyy-MM-dd') + '.tar.gpg'
+$name = 'video-knowledge-' + $start.ToString('yyyy-MM-dd') + '.tar'
 $final = Join-Path $Destination $name
 $part = "$final.part"
-$tarfail = "$final.tarfail"
-$list = Join-Path $Repo 'backup-paths.txt'
-$log = Join-Path $Repo '.automation\backup.log'
+$list = "$final.paths.txt"
+$log = Join-Path $Destination 'backup.log'
 
 function Write-Log([string]$outcome, [string]$detail) {
-  New-Item -ItemType Directory -Force -Path (Split-Path -Parent $log) | Out-Null
   Add-Content -Encoding utf8 -Path $log -Value ("{0} {1} {2}: {3}" -f (Get-Date).ToString('s'), $name, $outcome, $detail)
 }
 function Fail([string]$why) {
-  Remove-Item -Force -ErrorAction SilentlyContinue -Path $part, $tarfail
-  Write-Log 'failed' $why
+  Remove-Item -Force -ErrorAction SilentlyContinue -LiteralPath $part
+  if (Test-Path -LiteralPath $Destination) { Write-Log 'failed' $why }
   Write-Host "backup failed: $why"
   exit 1
 }
 function Rel([string]$full) { return $full.Substring($Repo.Length + 1).Replace('\', '/') }
 
 try {
+  if (-not (Test-Path -LiteralPath $Tar)) { Fail "tar not found: $Tar" }
+  New-Item -ItemType Directory -Force -Path $Destination | Out-Null
+  if (Test-Path -LiteralPath $final) { Fail "$name already exists (one archive per day; nothing is overwritten)" }
+
   # 1. the include list: the fixed paths (each must exist), the folders that exist, the published finals
   $paths = New-Object System.Collections.Generic.List[string]
   foreach ($p in @('.env', '.secrets', '.automation', '.superpowers', 'docs\superpowers', 'readiness.json', 'automation.json')) {
@@ -80,35 +80,24 @@ try {
   }
   $paths = @($paths | Sort-Object -Unique)
   if ($paths.Count -eq 0) { Fail 'empty include list' }
-  Set-Content -Encoding ascii -Path $list -Value $paths
+  Set-Content -Encoding ascii -LiteralPath $list -Value $paths
   $files = @($paths | ForEach-Object { Get-ChildItem -LiteralPath (Join-Path $Repo $_) -Recurse -File -Force })
   $bytes = ($files | Measure-Object -Property Length -Sum).Sum
   Write-Host ("include list: {0} entries, {1} files, {2:N0} bytes, {3} published finals" -f $paths.Count, $files.Count, $bytes, $finals)
 
-  # 2. the archive: tar | gpg inside cmd (PowerShell 5.1 corrupts a binary pipe between native programs); a tar
-  #    failure leaves a marker, since a cmd pipeline's exit code is gpg's
-  if (-not (Test-Path -LiteralPath $Gpg)) { Fail "gpg not found: $Gpg" }
-  if (-not (Test-Path -LiteralPath $Tar)) { Fail "tar not found: $Tar" }
-  New-Item -ItemType Directory -Force -Path $Destination | Out-Null
-  if (Test-Path -LiteralPath $final) { Fail "$name already exists (one archive per day; delete it to run again)" }
-  Remove-Item -Force -ErrorAction SilentlyContinue -Path $part, $tarfail
-  $home_ = if ($GpgHome) { " --homedir `"$GpgHome`"" } else { '' }
-  $cmd = "(`"$Tar`" -cf - -C `"$Repo`" -T `"$list`" || echo tar failed > `"$tarfail`") | `"$Gpg`"$home_ --batch --no-tty --trust-model always --compress-level 0 --encrypt --recipient $KeyId --output `"$part`""
-  & cmd.exe /d /c $cmd | Out-Null
-  $gpgExit = $LASTEXITCODE
-
-  # 3. the checks, then the rename
-  # gpg first: when it dies, tar's write fails too and would be blamed
-  if ($gpgExit -ne 0) { Fail "gpg exited $gpgExit (is the public key $KeyId in the keyring?)" }
-  if (Test-Path -LiteralPath $tarfail) { Fail 'tar failed (a listed path unreadable or gone)' }
+  # 2. the archive, then the checks, then the rename
+  Remove-Item -Force -ErrorAction SilentlyContinue -LiteralPath $part
+  & $Tar -cf $part -C $Repo -T $list
+  $tarExit = $LASTEXITCODE
+  if ($tarExit -ne 0) { Fail "tar exited $tarExit (a listed path unreadable or gone)" }
   if (-not (Test-Path -LiteralPath $part)) { Fail 'no archive written' }
   $size = (Get-Item -LiteralPath $part).Length
   if ($size -lt $bytes) { Fail ("archive smaller than its files ({0:N0} < {1:N0} bytes): incomplete" -f $size, $bytes) }
   Move-Item -LiteralPath $part -Destination $final
-  (Get-FileHash -LiteralPath $final -Algorithm SHA256).Hash.ToLower() | Set-Content -Encoding ascii -Path "$final.sha256"
+  (Get-FileHash -LiteralPath $final -Algorithm SHA256).Hash.ToLower() | Set-Content -Encoding ascii -LiteralPath "$final.sha256"
   $seconds = [int]((Get-Date) - $start).TotalSeconds
   Write-Log 'ok' ("{0:N0} bytes, {1} files, {2} published finals, {3} s" -f $size, $files.Count, $finals, $seconds)
-  Write-Host ("wrote {0} ({1:N0} bytes) in {2} s" -f $final, $size, $seconds)
+  Write-Host ("wrote {0} ({1:N0} bytes, {2} files) in {3} s" -f $final, $size, $files.Count, $seconds)
   exit 0
 } catch {
   Fail ("unexpected: " + $_.Exception.Message)
