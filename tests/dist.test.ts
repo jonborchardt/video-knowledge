@@ -574,6 +574,18 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     if (liveTopics.some((t) => roots(t) >= 2)) expect(seen).toBeGreaterThan(0);
   });
 
+  it('a matter never lists a question of its own chain under Related matters', () => {
+    for (const { topic, slug } of storyPages) {
+      const html = readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8');
+      const sec = (id: string) => html.match(new RegExp(`<section aria-labelledby="${id}"[\\s\\S]*?</section>`))?.[0];
+      const chain = sec('chain');
+      const rel = sec('related');
+      if (!chain || !rel) continue;
+      // page links only, never the icon sprite's `<use href="#icon-...">`
+      for (const h of chain.match(/href="\/[^"]+"/g) ?? []) expect(rel, `${topic}/${slug} ${h}`).not.toContain(h);
+    }
+  });
+
   it('the built site keeps every url in public-urls.json', () => {
     const manifest = JSON.parse(readFileSync(join(ROOT, 'public-urls.json'), 'utf8')) as string[];
     const { built, indexed } = distPages(DIST);

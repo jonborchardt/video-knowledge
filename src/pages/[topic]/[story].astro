@@ -99,7 +99,14 @@ const rootId = s.partOf ?? s.id;
 const ctaFile = loadCta(t.name, s.id);
 const ctas = !first ? resolveCtas(ctaFile, graph, node) : null;
 if (ctas?.problems.length) throw new Error(`${t.name}/${s.id} cta.json: ${ctas.problems.join('; ')}`);
-const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => matterItem(graph, n.id));
+// The matter's own chain is listed under "Questions that follow" (or linked as its first question), never again here.
+const chainNodes = [...(s.chain ?? []).map((q) => q.id), ...(s.partOf ? [s.partOf] : [])].map((id) =>
+  storyNode(t.name, id),
+);
+const rel = ctaFile?.related ?? {};
+const relatedItems = related(graph, node, { ...rel, exclude: [...(rel.exclude ?? []), ...chainNodes] }).map((n) =>
+  matterItem(graph, n.id),
+);
 ---
 
 <Base
