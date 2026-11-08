@@ -45,12 +45,19 @@ export function publishedAt(topic: string, storyId: string, root = ROOT): string
   return o.state.live ? (o.out.events.findLast((e) => e.type === 'published')?.at ?? null) : null;
 }
 
+/** The main output as the launch reads it: its state, and the person's `decided ok` when the video is approved and
+ *  not yet public (plan B: the page is deployed on the decision, the tick goes live after the probe). */
+export function releaseOf(topic: string, storyId: string, root = ROOT) {
+  const main = openOutput(topic, storyId, { root });
+  const decided = !main.state.live && main.state.status === 'approved' ? decidedOk(main.out) : null;
+  return { main, decided };
+}
+
 /** When a person decided `ok` on the story's approved, not yet public video (the page goes up first, plan B), or
  *  null. A Short's id answers null: its decision is its parent's. */
 export function decidedAt(topic: string, storyId: string, root = ROOT): string | null {
   if (shortOf(storyId) || !loadLedger(topic, storyId, root)) return null;
-  const o = openOutput(topic, storyId, { root });
-  return !o.state.live && o.state.status === 'approved' ? (decidedOk(o.out)?.at ?? null) : null;
+  return releaseOf(topic, storyId, root).decided?.at ?? null;
 }
 
 /** Settles what still asks a person about a release already live: an `awaiting-person` halt older than the output's
@@ -73,6 +80,9 @@ export function settleFinished(
     // deploys the page and the tick goes live, and launchJobs starts nothing while a person's halt stands)
     const live = publishedAt(r.topic, r.storyId, root);
     const decided = live ? null : decidedAt(r.topic, r.storyId, root);
+    // the decision answers the release request; the article pass's halt (a correction that keeps failing) asks
+    // about something else and stays
+    if (decided && h.stage === 'article') continue;
     const since = live ?? decided;
     if (!since || h.at >= since) continue;
     if (live && ask(r.topic, r.storyId, root).halt?.kind !== 'published') continue;

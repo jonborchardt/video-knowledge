@@ -151,6 +151,25 @@ describe('requestProblem (through recordRequested)', () => {
     recordApproved(s.topic, s.story, { ...base(s), by: 'Jon', checked: 0 });
     recordScheduled(s.topic, s.story, { ...base(s), by: 'Jon', at: '2099-01-01T00:00:00Z' });
     expect(() => request(s)).toThrow(/scheduled/);
+
+    // published once and taken down: never requested again (a re-release is a new output)
+    const w = staged([]);
+    ready(w);
+    const wl = loadLedger(w.topic, w.story, w.root)!;
+    const withdrawn = [
+      { at: now.toISOString(), type: 'published' as const, by: 'Jon', id: 'vid00000000' },
+      { at: now.toISOString(), type: 'unpublished' as const, by: 'Jon', id: 'vid00000000', note: 'taken down' },
+      {
+        at: now.toISOString(),
+        type: 'verified' as const,
+        by: 'Jon',
+        id: 'vid00000000',
+        result: 'passed' as const,
+        checks: [{ name: 'title', result: 'pass' as const }],
+      },
+    ].reduce((l, e) => appendEvent(l, 'youtube', e).ledger, wl);
+    saveLedger(publishPath(w.topic, w.story, w.root), withdrawn);
+    expect(() => request(w)).toThrow(/taken down.*new output/);
   });
 
   it('refuses when the article was re-locked after the manifest', () => {

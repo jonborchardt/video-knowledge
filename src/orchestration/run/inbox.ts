@@ -365,8 +365,15 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
         const p = proposals.find((x) => x.slug === slug);
         if (!p?.decidedAt || p.status === want) return false; // undecided, or already what this line asks
         const decider = received.find((x) => x.messageId === p.via?.messageId);
-        if (!(Date.parse(decider?.date ?? p.decidedAt) > Date.parse(m.date))) return false;
-        since.push(`${slug}: ${p.status} by ${p.decidedBy ?? 'someone'} after this reply was sent`);
+        const decidedOn = Date.parse(decider?.date ?? p.decidedAt);
+        const sent = Date.parse(m.date);
+        // a date that cannot be read is "cannot tell", so the line is left too (never applied over a decision)
+        if (decidedOn <= sent) return false;
+        const when =
+          Number.isNaN(decidedOn) || Number.isNaN(sent)
+            ? 'at a time this reply cannot be placed against'
+            : 'after this reply was sent';
+        since.push(`${slug}: ${p.status} by ${p.decidedBy ?? 'someone'} ${when}`);
         return true;
       };
       const approve = t.approve === 'all' ? [...new Set([...inBatch, ...(t.named ?? [])])] : t.approve;

@@ -95,7 +95,8 @@ export const cols: Col[] = [
         d: ['store/topics.json: the watcher store;', 'never hand-edited'],
         owner: 'evidence',
         writer: 'npm run record, record-sources, the watcher CLI',
-        valid: 'the store is the only truth of claims and verdicts; a hand edit is reverted by the tree guard',
+        valid:
+          'the store is the only truth of claims and verdicts; a hand edit during a run is reverted by the tree guard, one between runs leaves the tree dirty for the preflight to name',
         file: 'topics/<topic>/store/topics.json',
       },
       {
@@ -152,7 +153,7 @@ export const cols: Col[] = [
         t: 'Dataset',
         d: ['data/<id>.json: evidence numbers with', 'a cite per point; shown on /data/'],
         owner: 'evidence',
-        writer: 'a person or an agent, through the data brief',
+        writer: 'a person (topics/<topic>/data/*.json, read by evidence datasets.ts)',
         valid: 'every point cites a passage; a tool’s defaults cite a dataset',
         file: 'topics/<topic>/data/<id>.json',
       },
@@ -362,7 +363,7 @@ export const cols: Col[] = [
       {
         id: 'manifest',
         t: 'Release manifest',
-        d: ['release-manifest.json: the outputs, article,', 'calls to action and X text one sha binds'],
+        d: ['release-manifest.json: the outputs, article and', 'calls to action one sha binds; the X text shown'],
         owner: 'packaging',
         writer: 'npm run video -- package (a release build); packaging -- manifest rewrites it',
         valid:
@@ -372,7 +373,7 @@ export const cols: Col[] = [
       {
         id: 'approval',
         t: 'Approval request and decision',
-        d: ['approval-requested binds the manifest sha;', 'decided by OK, OK at <when>, CHANGES: or the page'],
+        d: ['approval-requested binds the manifest sha;', 'decided by OK, OK at <when>, CHANGES: (publish decide)'],
         owner: 'publishing',
         writer: 'npm run publish -- request (automation), decide (a person, never automated:)',
         valid:

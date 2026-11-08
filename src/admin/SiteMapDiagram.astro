@@ -204,7 +204,7 @@ const dev: Page[] = [
   },
 ];
 
-// The three states of a story on the site.
+// The states of a story on the site.
 const states = [
   {
     t: 'Under examination',
@@ -213,6 +213,14 @@ const states = [
   {
     t: 'Packaged, no live video',
     d: 'a public node on the dev server only (the preview view): the matter page shows a dev-only banner linking its review page and plays the local mp4; a build leaves it out.',
+  },
+  {
+    t: 'Releasing',
+    d: 'a person decided OK and the video is still private: a public node with its video node, the page built and deployed with the embed before the tick takes the video live; no video JSON-LD and no publication date until it is.',
+  },
+  {
+    t: 'Withdrawn, page kept',
+    d: 'the video unpublished but the matter path frozen in public-urls.json: the page stays (a public URL never disappears) without an embed or VideoObject, and is not a preview.',
   },
   {
     t: 'Live video',

@@ -7,7 +7,7 @@ It reads each module through its `index.ts` (an `inspect()` where the module has
 The website reads it only through `index.ts`.
 It never writes a module's artifact and never judges content.
 The executor is here too (Milestone 2: scheduling, execution of the board's steps as child processes and `claude -p` agents, retries, budgets, notifications, the approval mail adapter); those are coordination, and the two rules above hold for them: a write is the owning module's CLI, and judgment is a brief handed to an agent.
-The runner (`run/`, `npm run run -- story | status`) is phase 0 of that: `runner.ts` is the loop over `boardNext`, `steps.ts` runs one step (a child with only its verb's secrets, or an agent followed by its validator), `agent.ts` and `roles.ts` spawn `claude -p` under per-role permission rules, `guard.ts` reverts writes outside a role's files and checks a graphics agent's components before a child loads them, `journal.ts` and `lock.ts` are its operational state under the story's gitignored `run/`, `status.ts` the read-only view the admin page may import through `index.ts`. What it uploads, publishes, posts or mails goes through the owning module's CLI as a child process (the release loop, the tick's due step, the launch job, the `Mailer` seam), and only the launch job pushes; it never imports a module file but its `index.ts`.
+The runner (`run/`, `npm run run -- story | status`) is phase 0 of that: `runner.ts` is the loop over `boardNext`, `steps.ts` runs one step (a child with only its verb's secrets, or an agent followed by its validator), `agent.ts` and `roles.ts` spawn `claude -p` under per-role permission rules, `guard.ts` reverts writes outside a role's files (except the files a live tick's verb names as `writing` in its lock: the tick commits those itself) and checks a graphics agent's components before a child loads them, `journal.ts` and `lock.ts` are its operational state under the story's gitignored `run/`, `status.ts` the read-only view the admin page may import through `index.ts`. What it uploads, publishes, posts or mails goes through the owning module's CLI as a child process (the release loop, the tick's due step, the launch job, the `Mailer` seam), and only the launch job pushes; it never imports a module file but its `index.ts`.
 Its only stored decision file is `production.json` (`queued`, `parked`); `automation.json` (Milestone 2) is policy, not state, and its operational files (`run/`, `.automation/`) are gitignored and decide no stage.
 The modules and their rules: `src/modules/README.md`.
 
@@ -39,7 +39,7 @@ and step), halts with a kind and an unblock (`RUN_HALT_KINDS` beside the board's
 the first step and after every guard, reverts writes outside the role's files, restores held untracked files and
 canaries, and typechecks a graphics agent's components before a child loads them. `fresh.ts` archives a fixture
 production for `--fresh`. The runner never publishes, posts, pushes or sends mail on its own: the release loop
-(phase 2) does the uploads and the request through the publishing CLI, and only a person goes live.
+(phase 2) does the uploads and the request through the publishing CLI, and only a person decides (the tick's go-live runs under that decision, by the person's name).
 
 ## Phase 2: the release loop
 
@@ -56,8 +56,14 @@ retryable failure resumes by backoff, a person's step halts `awaiting-person`.
 
 `run/tick.ts` is the scheduled short pass (preflight in `preflight.ts`, the outbox and halt emails in `notify.ts`,
 the digest in `digest.ts`, resume decisions and stuck detection in `resume.ts`, what is due in `schedule.ts`);
-`run/work.ts` runs one due long job (a resume, or the production pick in `pick.ts`) and exits; `run/view.ts` is the
-admin tab's model. Everything stays off until `automation.json` turns it on; the scheduler commands are printed, never
+`run/work.ts` runs one due long job (in order: a launch, a resume, a release loop, the production pick in `pick.ts`,
+a discovery, a topic run, a scan) and exits; the scheduled task is `work --job launch` with "Do not start a new
+instance", so no agent-written code runs unattended; `run/view.ts` is the admin tab's model. The tick commits what
+each of its own verbs writes as the verb returns (`committing`, `ownedFiles` in `tick.ts`: the ledger for a publish
+verb, the proposal for a topic decision, the article files and the public record for a correction, the post record;
+only on `main`, never a file that was dirty before, that a live run or a pending launch owns; the files are named
+`writing` in the tick's lock while the verb runs; a failing commit unstages and stops the rest of the pass). A story
+with a live run (`storyRunLive` in `lock.ts`: its own or a Short's) is left alone by the inbox and the due step. Everything stays off until `automation.json` turns it on; the scheduler commands are printed, never
 created. Mail is the mail module's (`src/modules/mail/`): orchestration decides what to send and when, and reaches the mailbox only through the `Mailer` seam (`run/mailer.ts`, the module's CLI as a child; `FakeMailer` in tests).
 
 ## Phase 3: approval by reply, publication and launch
@@ -72,8 +78,17 @@ for the release loop, which runs `video final` by the person's name); `run/publi
 (a schedule past its time, the Shorts of a published video in order with `--via tick:<request>`, a live Short's push,
 one renewal of an expired request then `request-expired`); `run/launch.ts` is the launch job (`launchJobs` for the
 work plane, `launch` with its record under `.automation/launch/`, the halt also in the story's run folder,
-`probeLaunches` for the tick: `links -- live`, the X post by policy, the launch mail from `requests.ts`
-`renderLaunched`; a fixture pushes `fixture/<run id>` and probes the production host negatively and the preview host
+`probeLaunches` for the tick: the deploy check (`liveCheck`), then, for a release a person decided `ok` (`releaseOf`
+in `resume.ts`: the main output approved, not live, with `decidedOk`; such a story is launchable before it is live and
+the job commits `releasing`), the step the output's state still owes first (a push or a read-back, by `automated:
+tick`; the go-live waits a tick), then `publish go-live` by the deciding person `via tick:<request>` and `verify`
+(a final failure or a refusal halts `step-failed` at once, a retryable one after `MAX_TRIES` ticks since the
+decision; a person's hand go-live clears it), then the X post by policy and the launch mail from `requests.ts`
+`renderLaunched`, both only once `announceProblem` is null: the video verified since its publish and every uploaded
+Short live. A finished launch older than a new `decided ok` on the still-private video (`launchStale`) runs again
+and its own earlier halt is moot; a record whose release was withdrawn (approved, no longer decided) waits for a
+decision. `settleFinished` (`resume.ts`, the tick and `npm run run -- settle`) clears an `awaiting-person` halt older
+than the publication or the `decided ok`, never the article pass's (stage `article`); a fixture pushes `fixture/<run id>` and probes the production host negatively and the preview host
 positively). `npm run run -- launch` is the hand verb. One launch of a story runs at a time (`.automation/launch/<topic>--<slug>.lock`;
 a second work instance ends `held`), it waits while another story of the topic has a live run, and it stages only
 the story's folder, the topic's top-level files and the site outputs. The tick's publication steps each run on their
@@ -104,7 +119,10 @@ resumes without a second batch, agent or mail (an unsent mail is the outbox flus
 halts `no-progress` for its slug alone (`.automation/discovery/halts/`, a status row under the pseudo-topic
 `proposals`, so the halt mail and the digest carry it). `run/inbox.ts` applies a reply to the batch mail (thread and
 `pb-` id required) line by line through `topics approve|reject` by the approver; `APPROVE ALL` expands over the
-batch's slugs only; a slug outside the batch is reported back. The digest lists the proposals pending and parked.
+batch's slugs only; a slug outside the batch is reported back; a line on a proposal decided after the reply was sent
+(or whose dates cannot be read) is left and reported (`decidedSince`); a line whose verb crashes (any exit but 0 or 2)
+keeps the message for the next poll and reaches the tick as `failedLines`, mailed once as a `step-failed` halt row
+under `batch:<id>`. The digest lists the proposals pending and parked.
 
 ## Phase 5: the research pipeline
 

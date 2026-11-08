@@ -419,7 +419,8 @@ The flow, as the board's next step walks it (every step is one `npm run publish 
    keeps it private until then; at least five minutes ahead). After the time, `sync` reads YouTube and records
    `published`; a schedule more than 15 minutes past with the video still private is a `failed` event.
 5. Later changes to the title, tags, thumbnail (`thumbnail <file>`) or the `metadata` block: `push` sends them and
-   records `updated`. A live video is never replaced: a re-release is a new output, `add <id> --kind youtube-video`.
+   records `updated`. A live video is never replaced, and a video published once and taken down is never requested
+   again: a re-release is a new output, `add <id> --kind youtube-video`.
 6. After any upload, push or go-live, `verify` checks what YouTube holds against the package (below).
 
 A Short is another output of the same ledger: `add short-1 --kind youtube-short --from youtube --source <file>`,
@@ -452,17 +453,21 @@ on its own line approves every paid link the mail numbered, `PAID OK 1, 3` the n
 `cta.json`, the package rewritten, the manifest's sha unchanged); `NOTES: 1 agree, 2 disagree` marks the shadow
 reviewer's notes. Anything else ("looks fine, go") gets one clarification mail naming the accepted lines, and the
 request stays open. `decide` applies it step by idempotent step with `decided` last: each paid link, one `approved`
-per output, a push when the metadata moved, a `sync`, then the video's go-live now or at the time; the Shorts are
-approved with it and go live from the tick after the video, in order. An expired request is renewed once by the
+per output, a push when the metadata moved, a `sync`, then for `OK at` the video's go-live at the time. A plain `OK`
+leaves the video private: the page goes up first (below), and the tick takes the video live under your decision
+once the page carries it. The Shorts are approved with it and go live from the tick after the video, in order. An expired request is renewed once by the
 tick (a fresh mail); a second expiry is yours (`request-expired`). By hand the same verb reads
 `npm run publish -- decide <topic> <story-id> --request <id> --by "<name>" --verdict ok|schedule|changes [--at <ISO>] [--note ... [--at-seconds n] [--scene id] [--sentence id]] [--paid <cta id>] --via cli`.
 
-**After go-live (phase 3).** Once the video is live and verified and every Short is live, the work plane runs the
-launch job (`npm run run -- launch <topic> <story-id>` by hand): `report -- seed`, `brand`, `build`, `links freeze`,
-`validate`, a commit of the story and the site outputs, `git push origin main`, each step recorded in
-`.automation/launch/<topic>--<slug>.json` so a crashed launch resumes at its step and never commits or pushes
-twice. The tick then probes the deploy once per pass (`npm run links -- live <topic> <story-id>`: the matter page
-answers 200 with the live video's id and the path is frozen), posts on X when the institution has an account and
+**After the decision (phase 3).** On your `OK` (or, for a scheduled or hand go-live, once the video is live and
+verified), the work plane runs the launch job (`npm run run -- launch <topic> <story-id>` by hand): `report -- seed`,
+`brand`, `build`, `links freeze`, `validate`, a commit of the story and the site outputs, `git push origin main`,
+each step recorded in `.automation/launch/<topic>--<slug>.json` so a crashed launch resumes at its step and never
+commits or pushes twice. The tick then probes the deploy once per pass (`npm run links -- live <topic> <story-id>`:
+the matter page answers 200 with the video's id and the path is frozen); for an `OK` it first runs any step the
+output still owes (a read-back after a paid link's push), then `publish go-live` under your name `via tick:<request>`
+and `verify`, and the Shorts follow in order on the next passes. Only once the video is verified and every uploaded
+Short is live does it post on X, when the institution has an account and
 `enabled.social` is on (`npm run social -- post`, the outcome read from the module's `social.json`, never from its
 output; "not configured" when the institution has no keys; a retryable failure tried on three ticks, then the story
 halts `step-failed`), and sends the launch mail: the public
@@ -698,9 +703,10 @@ npm run run -- schedule --print      # the two Task Scheduler commands and the p
 npm run mail -- test --await-reply   # one message through the outbox; your reply becomes a parsing fixture
 ```
 
-The tick never runs a story; the work plane runs at most one job per instance, and the scheduler starts work
-instances in parallel so a render never delays the next pick: the locks (`runs.maxConcurrentStoryRuns`, one tick at
-a time) bound how many jobs run, not the scheduler. What arrives by email: one message per new halt (what, which
+The tick never runs a story; the work plane runs at most one job per instance, and the scheduled work task is
+`work --job launch` with "Do not start a new instance" (one launch at a time, no agent-written code unattended;
+story, topic, scan and discovery runs are started by a person in a session); the locks
+(`runs.maxConcurrentStoryRuns`, one tick at a time) are the bound on what a person starts by hand. What arrives by email: one message per new halt (what, which
 column it holds, the one command, reply or edit that clears it; a resolved halt that recurs is sent again) and a
 weekly digest (live this week, in production, blocked with the unblock, what awaits you, parked items, unsent mail,
 the queue quantities and the week's spend against the caps). Every message goes through the outbox

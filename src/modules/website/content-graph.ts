@@ -40,11 +40,9 @@ export interface Graph {
   view: View; // what made the stories public: the preview markers exist only outside the live view
 }
 
-/** Whether a site path is frozen in `public-urls.json` (a public URL never disappears). */
-export const frozenPath = (root: string, path: string): boolean => {
-  const list = join(root, 'public-urls.json');
-  return existsSync(list) && (readJson<string[]>(list) ?? []).includes(path);
-};
+/** The site paths frozen in `public-urls.json` (a public URL never disappears). */
+const frozenPaths = (root: string) => new Set(readJson<string[]>(join(root, 'public-urls.json')) ?? []);
+export const frozenPath = (root: string, path: string): boolean => frozenPaths(root).has(path);
 
 export const storyNode = (topic: string, storyId: string) => `${topic}/${storyId}`;
 /** A matter page's root-relative path, from the story id (never its title). */
@@ -70,6 +68,7 @@ export function contentGraph(
 
 function buildGraph(root: string, topics: string[], view: View, assumeLive: string[]): Graph {
   const g: Graph = { nodes: new Map(), edges: [], stories: new Map(), view };
+  const frozen = frozenPaths(root);
   const node = (n: Node) => g.nodes.set(n.id, n);
   const edge = (from: string, to: string, kind: EdgeKind, weight?: number) =>
     g.edges.push({ from, to, kind, ...(weight !== undefined && { weight }) });
@@ -98,7 +97,7 @@ function buildGraph(root: string, topics: string[], view: View, assumeLive: stri
       const isLive =
         !!(outs.video ?? outs.releasing) ||
         assumeLive.includes(storyNode(topic, rootId)) ||
-        frozenPath(root, matterPath(topic, s));
+        frozen.has(matterPath(topic, s));
       const packaged =
         (view === 'preview' || (view === 'fixture' && isFixtureTopic(topic))) &&
         existsSync(join(scriptDir(topic, rootId, root), 'video', 'review', 'review.json'));

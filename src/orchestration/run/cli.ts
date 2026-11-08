@@ -39,8 +39,9 @@
 //                                      outbox, due resumes, stuck runs, halt emails, the digest. Never runs a story.
 //                                      --preflight: the preflight alone, as if enabled.tick and enabled.work were on;
 //                                      prints what a live tick would stop on and writes nothing (exit 1 on a problem).
-//   work [--job <kind>] [--dry-run]    the work plane (enabled.work): one due long job in the foreground (a resume, the
-//                                      production pick), then exit; the locks bound how many run at once.
+//   work [--job <kind>] [--dry-run]    the work plane (enabled.work): one due long job in the foreground (a launch, a
+//                                      resume, a release loop, the production pick, a discovery, a topic run, a scan),
+//                                      then exit; the scheduled task is `work --job launch`, one instance at a time.
 //   pick [--dry-run]                   the production pick by hand: the ranking, the knobs, the choice; starts it
 //                                      without --dry-run.
 //   schedule --print                   the two Task Scheduler (or cron) commands and the power settings, for you to

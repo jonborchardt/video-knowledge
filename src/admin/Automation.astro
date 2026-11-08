@@ -208,7 +208,8 @@ const b = a.agents.budgetUsd;
         {view.requests.map((r) => (
           <li>
             {r.topic} / {r.storyId}: {r.request}, sent {r.at} ({r.ageHours.toFixed(1)} h ago), expires {r.expiresAt};
-            reply OK, OK at &lt;when&gt; or CHANGES: to its mail, or decide on the review page
+            reply OK, OK at &lt;when&gt; or CHANGES: to its mail (publish decide), or approve each output on the review
+            page
           </li>
         ))}
       </ul>
@@ -253,7 +254,10 @@ const b = a.agents.budgetUsd;
   <h3 class="mt-4 font-semibold">Launches</h3>
   {
     view.launches.length === 0 ? (
-      <p class={`mt-1 ${small}`}>None yet: a launch job runs once a release group is live and verified.</p>
+      <p class={`mt-1 ${small}`}>
+        None yet: a launch job runs on a person's OK (the page before the video), or once a scheduled or hand-published
+        release group is live and verified.
+      </p>
     ) : (
       <ul class={`mt-1 list-disc pl-5 ${small}`}>
         {view.launches.map((l) => (

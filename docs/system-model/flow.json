@@ -118,8 +118,8 @@
       "shorts discover, shorts.md reviewer, a nested run per ready candidate (at most 3)",
       "cta.md agent chooses the calls to action; a paid one needs a person",
       "every output uploaded private, pushed, verified; packaging -- manifest; publish request --channel email",
-      "the person decides (OK, OK at <when>, CHANGES:, PAID OK); publish decide applies it: approved, push, sync, go-live or scheduled; Shorts follow in order",
-      "the launch job: report -- seed, brand, build, links freeze, validate, commit, push; the tick probes the deploy; the X post; the launch mail"
+      "the person decides (OK, OK at <when>, CHANGES:, PAID OK); publish decide applies it: approved, push, sync, and for OK at the schedule; an OK leaves the video private",
+      "the launch job: report -- seed, brand, build, links freeze, validate, commit, push (the page before the video); the tick probes the deploy, goes live under the decision and verifies; Shorts follow in order; then the X post and the launch mail"
     ],
     "halts": [
       "missing",
@@ -183,7 +183,7 @@
     ]
   },
   "workflow": {
-    "about": "the diagram on /admin (flow in src/admin/index.astro), condensed from its 30 boxes to 25 steps (the Studio upload fallback, the X post and the Short's start are folded into their neighbours): what runs and where a person acts; the order is the order of a release",
+    "about": "the diagram on /admin (flow in src/admin/index.astro), condensed from its 31 boxes to 25 steps (the Studio upload fallback, the X post and the Short's start are folded into their neighbours): what runs and where a person acts; the order is the order of a release",
     "steps": [
       {
         "n": 1,
@@ -298,15 +298,15 @@
       },
       {
         "n": 22,
-        "t": "Launch them together",
+        "t": "Decide (publish decide, the tick)",
         "you": false,
-        "runs": "publish decide: go-live or schedule; Shorts follow in order"
+        "runs": "publish decide: approved, push, sync; OK at hands YouTube the time; OK leaves the video private"
       },
       {
         "n": 23,
-        "t": "Refresh the site (the launch job)",
+        "t": "Deploy the page, then go live (the launch job, the tick)",
         "you": false,
-        "runs": "seed, brand, build, freeze, validate, commit, push; the tick probes the deploy; post on X"
+        "runs": "seed, brand, build, freeze, validate, commit, push; the tick probes the deploy, goes live under the decision, verifies; Shorts in order; then post on X and the launch mail"
       },
       {
         "n": 24,

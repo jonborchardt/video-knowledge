@@ -13,19 +13,18 @@ export function GET() {
   const g = siteGraph();
   const labels = new Map<string, string>();
   const label = (topic: string) => labels.get(topic) ?? labels.set(topic, loadTopic(topic).label).get(topic)!;
-  const items: FeedItem[] = [...g.stories].flatMap(([id, s]) => {
-    const n = g.nodes.get(id);
-    if (!n?.public || !n.topic || s.partOf || isFixtureTopic(n.topic)) return [];
-    return [
-      {
-        title: s.title,
-        url: absoluteUrl(urlOf(g, id)!),
-        answer: s.arc.resolution,
-        inquiry: label(n.topic),
-        publishedAt: storyOutputs(n.topic, s.id).video?.publishedAt,
-      },
-    ];
-  });
+  const items: FeedItem[] = [...g.stories]
+    .filter(([id, s]) => {
+      const n = g.nodes.get(id);
+      return n?.public && n.topic && !s.partOf && !isFixtureTopic(n.topic);
+    })
+    .map(([id, s]) => ({
+      title: s.title,
+      url: absoluteUrl(urlOf(g, id)!),
+      answer: s.arc.resolution,
+      inquiry: label(g.nodes.get(id)!.topic!),
+      publishedAt: storyOutputs(g.nodes.get(id)!.topic!, s.id).video?.publishedAt,
+    }));
   const xml = feedXml(items, {
     title: site.name,
     url: absoluteUrl('/'),

@@ -24,7 +24,7 @@ const flow: Step[] = [
   {
     t: 'Propose topics (weekly)',
     d: [
-      'npm run run -- discover (or the work plane when',
+      'npm run run -- discover (or work by hand when',
       'enabled.discovery): an agent proposes per institution,',
       'an independent agent reviews; the weak are parked',
     ],
@@ -41,7 +41,7 @@ const flow: Step[] = [
   {
     t: 'Research the approved topic (topic runner)',
     d: [
-      'npm run run -- topic, or the work plane: collect.md',
+      'npm run run -- topic, or work by hand: collect.md',
       'lists the sources, the watcher fetches, extract.md',
       'agents per group, merge.md, dedupe, collide, record',
     ],
@@ -81,7 +81,7 @@ const flow: Step[] = [
   {
     t: 'Start a ready story',
     d: [
-      'the production pick (npm run run -- work, when',
+      'the production pick (npm run run -- work by hand, when',
       'automation.json production is on: the cadence knobs),',
       'or you: npm run run -- story <topic> <story-id>, or /produce',
     ],
@@ -240,8 +240,8 @@ const flow: Step[] = [
     t: 'Post on X',
     d: [
       'the tick, once the video is verified and',
-      'every Short is live, if the institution has',
-      'an X account and keys: social -- post, once;',
+      'every Short is live, when enabled.social is on and',
+      'the institution has an X account and keys: social -- post, once;',
       'else "not configured" in the launch mail',
     ],
   },
@@ -258,7 +258,7 @@ const flow: Step[] = [
   {
     t: 'Scan for new evidence (monthly)',
     d: [
-      'the work plane (enabled.maintenance): a',
+      'npm run run -- maintain, or work by hand (enabled.maintenance): a',
       'new-sources.md agent per public topic, record-',
       'sources, evidence -- scanned, report, a note per',
       'revised finding, stories; a live video that',

@@ -72,7 +72,7 @@ const steps: Step[] = [
     col: 'Uploaded (release) to Approved',
     who: 'you',
     t: 'Approve the release build',
-    d: 'Tick every checklist item and approve with your name. The approval binds this mp4 and this title: a new render or a changed title asks again. A title or thumbnail edit is a Push (an updated event), never a re-render.',
+    d: 'By email (reply OK to the release request: every output approved and decided at once) or on the review page: tick every checklist item and approve with your name. The approval binds this mp4 and this title: a new render or a changed title asks again. A title or thumbnail edit is a Push (an updated event), never a re-render.',
     done: 'the card reads Approved',
   },
   {
@@ -88,7 +88,7 @@ const steps: Step[] = [
     col: 'Scheduled / Published',
     who: 'you',
     t: 'Go live',
-    d: 'On the review page: Go live now, or at a time (at least five minutes ahead). The video first, then each Short (go-live refuses a Short before its video). A scheduled video goes public on YouTube at the time; Sync afterwards records published. The matter page shows the video from the next build of the site.',
+    d: 'After an emailed OK nothing here is yours: the launch job deploys the matter page with the embed, the tick takes the video live under your decision once the page carries it, then each Short in order. By hand, on the review page: Go live now, or at a time (at least five minutes ahead). The video first, then each Short (go-live refuses a Short before its video). A scheduled video goes public on YouTube at the time; Sync afterwards records published.',
     run: `npm run publish -- go-live ${topic} ${story} --at 2026-11-01T15:00:00Z\nnpm run publish -- sync ${topic} ${story}`,
     done: 'the card reads Published',
   },
@@ -96,7 +96,7 @@ const steps: Step[] = [
     col: 'Published',
     who: 'you',
     t: 'After launch',
-    d: 'Set each Short’s related video in YouTube Studio (the API has no field) and record it. Push a changed title, tags or thumbnail. Rebuild the site, freeze the URL list if a page was added, commit. A corrected article: article -- correct with a note.',
+    d: 'Set each Short’s related video in YouTube Studio (the API has no field) and record it. Push a changed title, tags or thumbnail. The launch job rebuilds the site, freezes the URL list, commits and pushes (by hand: the commands below). A corrected article: article -- correct with a note.',
     run: `npm run publish -- updated ${topic} ${story}/shorts/<slug> --fields relatedVideo\nnpm run build && npm run links -- freeze`,
     where: { label: 'external services', href: '/admin#services' },
     done: 'nothing left on the card; the board stops /produce on a live video',
@@ -105,9 +105,9 @@ const steps: Step[] = [
     col: 'Published',
     who: 'agent',
     t: 'Post about it on X',
-    d: 'Built, off by default: once the launch job has the page live, the tick runs social -- post from the owning institution’s X account when automation.json enabled.social is on and the institution has a handle and keys in .env (X_<KEY>_*); otherwise the launch mail says "not configured". By hand it is the command below (--dry-run shows the text). The record is social.json beside the ledger, once per text; a fixture topic is never posted from a public account.',
+    d: 'Built, off by default: once the video is live and verified and every uploaded Short is live, the tick runs social -- post from the owning institution’s X account when automation.json enabled.social and launch.social.video are on and the institution has a handle and keys in .env (X_<KEY>_*); otherwise the launch record and mail say "not configured". By hand it is the command below (--dry-run shows the text). The record is social.json beside the ledger, once per text; a fixture topic is never posted from a public account.',
     run: `npm run social -- show ${topic} ${story}\nnpm run social -- post ${topic} ${story} --dry-run`,
-    done: 'social.json records the post id, or "not configured"',
+    done: 'social.json records the post id; the launch record says "not configured" otherwise',
   },
 ];
 const WHO = {

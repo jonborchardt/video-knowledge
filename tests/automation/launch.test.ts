@@ -141,8 +141,18 @@ function clone(opts: { live?: boolean; fixture?: boolean; decided?: boolean } = 
       id: 'vid00000000',
       visibility: 'private',
     }).ledger;
-    l = appendEvent(l, 'youtube', { at: '2026-10-31T01:00:00Z', type: 'approved', by: 'Jon', build, via }).ledger;
     if (opts.decided)
+      // a request needs a passing read-back since the upload (requestProblem), so a decided ledger carries one
+      l = appendEvent(l, 'youtube', {
+        at: '2026-10-31T00:01:00Z',
+        type: 'verified',
+        by: 'automation',
+        id: 'vid00000000',
+        result: 'passed',
+        checks: [{ name: 'visibility', result: 'pass' }],
+      }).ledger;
+    l = appendEvent(l, 'youtube', { at: '2026-10-31T01:00:00Z', type: 'approved', by: 'Jon', build, via }).ledger;
+    if (opts.decided) {
       l = appendEvent(l, 'youtube', {
         at: '2026-10-31T01:00:01Z',
         type: 'decided',
@@ -151,7 +161,7 @@ function clone(opts: { live?: boolean; fixture?: boolean; decided?: boolean } = 
         verdict: 'ok',
         via,
       }).ledger;
-    else {
+    } else {
       l = appendEvent(l, 'youtube', {
         at: '2026-11-01T00:00:00Z',
         type: 'published',
@@ -304,6 +314,10 @@ describe('launch', () => {
       expect(launchJobs(a, c.f.root)).toHaveLength(1);
       writeHalt(dir, halt('2026-10-31T02:00:00.000Z'));
       expect(settleFinished(c.f.root, { by: 'automated: test' })).toEqual([]);
+      // the article pass's halt asks about something else: the decision does not settle it
+      writeHalt(dir, { ...halt('2026-10-31T00:30:00.000Z'), stage: 'article', why: 'the correction still fails' });
+      expect(settleFinished(c.f.root, { by: 'automated: test' })).toEqual([]);
+      expect(readHalt(dir)?.stage).toBe('article');
     }, 120_000);
 
     it('a finished launch older than a new decision on the same upload is stale: the launch runs again', async () => {
@@ -407,6 +421,30 @@ describe('launch', () => {
       // the next ticks run nothing more
       await probeLaunches(a, c.f.root, { now: () => T0 + 120_000, run, mail, fetchFn: livePage });
       expect(verbs.filter((v) => v.includes('go-live'))).toHaveLength(1);
+      expect(launchJobs(a, c.f.root)).toEqual([]);
+      // a new decision on the same upload makes that halt moot: the launch runs again and clears it
+      const build1 = readJson<{ mp4Sha: string }>(join(c.f.dir, 'video', 'review', 'review.json'))!.mp4Sha;
+      const via1 = { channel: 'email' as const, request: 'rq-0000000000ef' };
+      let l1 = loadLedger(c.f.topic, c.f.story, c.f.root)!;
+      for (const e of [
+        { at: '2026-11-01T13:00:00Z', type: 'changes-requested' as const, build: build1, notes: [{ text: 'kit' }] },
+        { at: '2026-11-01T14:00:00Z', type: 'approved' as const, build: build1, via: via1 },
+        {
+          at: '2026-11-01T14:00:01Z',
+          type: 'decided' as const,
+          request: via1.request,
+          verdict: 'ok' as const,
+          via: via1,
+        },
+      ])
+        l1 = appendEvent(l1, 'youtube', { by: 'Jon', ...e }).ledger;
+      saveLedger(publishPath(c.f.topic, c.f.story, c.f.root), l1);
+      expect(launchJobs(a, c.f.root)).toHaveLength(1);
+      unlinkSync(join(c.f.root, 'brand-out.txt'));
+      const again = await launch(c.f.topic, c.f.story, a, c.deps({ now: () => T0 + 3 * 3600_000 }), c.f.root);
+      expect(again.outcome).toBe('done');
+      expect(readHalt(runDir(c.f.topic, c.f.story, c.f.root))).toBeNull();
+      expect(readLaunch(c.f.topic, c.f.story, c.f.root)!.halt ?? null).toBeNull();
       // a final failure recorded by the verb (YouTube kept it private) is the same: halted once, never retried
       const d = clone({ decided: true });
       await launch(d.f.topic, d.f.story, a, d.deps(), d.f.root);
@@ -440,6 +478,36 @@ describe('launch', () => {
       expect(readHalt(runDir(d.f.topic, d.f.story, d.f.root))).toBeNull();
       expect(r3.join('\n')).not.toMatch(/go-live/);
       expect(mail.sent).toHaveLength(1);
+    }, 120_000);
+
+    it('a read-back the state owes (a description pushed after the decision) runs before the go-live', async () => {
+      const c = clone({ decided: true });
+      await launch(c.f.topic, c.f.story, a, c.deps(), c.f.root);
+      // decide --paid pushed a new description: sent, not verified since
+      saveLedger(
+        publishPath(c.f.topic, c.f.story, c.f.root),
+        appendEvent(loadLedger(c.f.topic, c.f.story, c.f.root)!, 'youtube', {
+          at: '2026-11-01T12:05:00Z',
+          type: 'updated',
+          by: 'Jon',
+          id: 'vid00000000',
+          metadata: openOutput(c.f.topic, c.f.story, { root: c.f.root }).metadata!.sha, // composed: nothing behind
+          fields: ['description'],
+        }).ledger,
+      );
+      const verbs: string[] = [];
+      const run = (cli: string, args: string[]) => {
+        verbs.push([cli, ...args].join(' '));
+        return { status: 0, stdout: '', stderr: '' };
+      };
+      const r = await probeLaunches(a, c.f.root, {
+        now: () => T0 + 60_000,
+        run,
+        mail: new FakeMailer(c.f.root),
+        fetchFn: livePage,
+      });
+      expect(r.join('\n')).toMatch(/the go-live waits/);
+      expect(verbs).toEqual([`publish verify ${c.f.topic} ${c.f.story} --by automated: tick`]);
     }, 120_000);
 
     it('the probe confirming the page runs go-live under the decision, then verify; the post and the mail wait for the live, verified video', async () => {

@@ -85,9 +85,7 @@ export function llmsTxt(
     `> ${site.description}`,
     `${site.disclosure} Pages: ${site.url}. This file lists each public matter with its Markdown copy, which carries the article, its sources, the claims examined with their verdicts and the exhibits.`,
   ];
-  const byInquiry = new Map<string, LlmsEntry[]>();
-  for (const e of entries) byInquiry.set(e.inquiry, [...(byInquiry.get(e.inquiry) ?? []), e]);
-  for (const [inquiry, list] of byInquiry)
+  for (const [inquiry, list] of Map.groupBy(entries, (e) => e.inquiry))
     out.push(
       `## [${inquiry}](${list[0].inquiryUrl})`,
       list.map((e) => `- [${e.title}](${e.markdownUrl}): ${e.question}`).join('\n'),

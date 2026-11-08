@@ -53,8 +53,8 @@
         }
       },
       {
-        "act": "schedule or go live",
-        "how": "publish decide --verdict schedule --at, or publish -- go-live | scheduled",
+        "act": "decide the release: OK (the tick goes live under it once the page is up), OK at (a schedule), or go live by hand",
+        "how": "publish decide --verdict ok | schedule --at, or publish -- go-live | scheduled",
         "refusesAutomated": true,
         "short": "go-live or schedule",
         "gates": {
@@ -228,7 +228,7 @@
     },
     "work": {
       "verb": "npm run run -- work [--job]",
-      "what": "the work plane: one due long job then exit: a resume, the production pick, a topic run, a launch, a scan, the discovery job",
+      "what": "the work plane: one due long job then exit (a launch, a resume, a release loop, the production pick, a discovery, a topic run, a scan); the scheduled task is work --job launch, one instance at a time",
       "flag": "enabled.work plus the job's own flag (production, research, discovery, maintenance)"
     },
     "pick": {
@@ -261,7 +261,7 @@
     },
     "launch": {
       "verb": "npm run run -- launch <topic> <story-id>",
-      "what": "after go-live and verify: report -- seed, brand, build, links freeze, validate, commit, push; the tick probes the deploy and posts on X",
+      "what": "on the person's OK (or after a scheduled go-live and verify): report -- seed, brand, build, links freeze, validate, commit, push; the tick probes the deploy, goes live under the decision, verifies, then posts on X",
       "flag": "enabled.work, launch.push"
     },
     "defaults": "every enabled.* flag is false; review.draft is person; nothing runs unattended until a person verifies and enables each integration"

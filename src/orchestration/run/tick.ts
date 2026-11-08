@@ -334,7 +334,10 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
     const run = commits.run;
     // each publication step on its own: one that throws (a mailbox outage, a missing CLI) is reported as an
     // action and the pass goes on to the rest (the halts, the digest)
+    // After a commit that failed the tick writes nothing more this pass: the file stays as its verb left it, the
+    // next preflight finds it and mails the halt, and a person commits it.
     const step = async (name: string, fn: () => Promise<void>) => {
+      if (commits.stopped()) return void actions.push(`${name} skipped: a commit failed earlier in this pass`);
       try {
         await fn();
       } catch (e) {
@@ -343,38 +346,22 @@ export async function tick(a: Automation, root = ROOT, deps: TickDeps): Promise<
     };
     const env = deps.env ?? process.env;
     const failedLines: FailedLine[] = [];
-    const writing: [string, () => Promise<void>][] = [
-      [
-        'inbox',
-        async () => {
-          if (!deps.mail) return;
-          const inbox = await pollInbox(a, deps.mail, root, { now, run, alive: deps.alive });
-          failedLines.push(...inbox.failedLines);
-          if (inbox.fetched)
-            actions.push(
-              `inbox: ${inbox.fetched} fetched, ${inbox.applied.length} applied, ${inbox.clarified.length} clarified, ${inbox.refused.length} refused, ${inbox.failed.length} failed, ${inbox.ignored.length} ignored`,
-            );
-        },
-      ],
-      [
-        'due publications',
-        async () => {
-          actions.push(...(await publishDue(a, root, { now, run, mail: deps.mail, env, alive: deps.alive })));
-        },
-      ],
-      [
-        // one per pending launch, then the social post and the launch mail
-        'deploy probes',
-        async () => {
-          actions.push(...(await probeLaunches(a, root, { now, run, mail: deps.mail, fetchFn: deps.fetchFn, env })));
-        },
-      ],
-    ];
-    // after a commit that failed the tick writes nothing more this pass: the file stays as its verb left it, the
-    // next preflight finds it and mails the halt, and a person commits it
-    for (const [name, fn] of writing)
-      if (commits.stopped()) actions.push(`${name} skipped: a commit failed earlier in this pass`);
-      else await step(name, fn);
+    if (deps.mail)
+      await step('inbox', async () => {
+        const inbox = await pollInbox(a, deps.mail!, root, { now, run, alive: deps.alive });
+        failedLines.push(...inbox.failedLines);
+        if (inbox.fetched)
+          actions.push(
+            `inbox: ${inbox.fetched} fetched, ${inbox.applied.length} applied, ${inbox.clarified.length} clarified, ${inbox.refused.length} refused, ${inbox.failed.length} failed, ${inbox.ignored.length} ignored`,
+          );
+      });
+    await step('due publications', async () => {
+      actions.push(...(await publishDue(a, root, { now, run, mail: deps.mail, env, alive: deps.alive })));
+    });
+    // the deploy probes: one per pending launch, then the social post and the launch mail
+    await step('deploy probes', async () => {
+      actions.push(...(await probeLaunches(a, root, { now, run, mail: deps.mail, fetchFn: deps.fetchFn, env })));
+    });
     const settled = settleFinished(root, {
       by: 'automated: tick',
       now,

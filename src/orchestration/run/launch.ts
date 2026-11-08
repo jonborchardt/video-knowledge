@@ -10,7 +10,7 @@ import { isFixtureTopic } from '../../config/site';
 import type { CliResult } from '../../shared/cli';
 import { ROOT, readJson, scriptDir, storySlug, topicDir, writeJsonAtomic } from '../../shared/io';
 import type { Mailer } from './mailer';
-import { type PublishEvent, decidedOk, loadLedger, openOutput } from '../../modules/publishing';
+import { type PublishEvent, loadLedger, openOutput } from '../../modules/publishing';
 import { accountFor, loadSocial } from '../../modules/social';
 import { liveCheck } from '../../modules/website';
 import { type Halt, clearHalt, readHalt, runDir, writeHalt } from './journal';
@@ -19,6 +19,7 @@ import { alive } from './proc';
 import { automationDir } from './notify';
 import { MAX_TRIES, countTry, storiesWithLedgers, triesOf } from './publish-due';
 import { renderLaunched } from './requests';
+import { releaseOf } from './resume';
 import type { RunResult } from './runner';
 import type { Job } from './work';
 
@@ -79,27 +80,26 @@ export interface LaunchDeps {
   validate: () => { ok: boolean; output: string };
 }
 
-/** The main output as the launch reads it: its state, and the person's `decided ok` when the video is approved and
- *  not yet public (plan B: the page is deployed on the decision, the tick goes live after the probe). */
-function releaseOf(topic: string, storyId: string, root: string) {
-  const main = openOutput(topic, storyId, { root });
-  const decided = !main.state.live && main.state.status === 'approved' ? decidedOk(main.out) : null;
-  return { main, decided };
-}
+/** No passing verification since the last publish. */
+const notVerified = (ev: PublishEvent[]) =>
+  !ev
+    .slice(ev.findLastIndex((e) => e.type === 'published'))
+    .some((e) => e.type === 'verified' && e.result === 'passed');
+const unverified = (id: string) => `${id} is live but not verified since: npm run publish -- verify`;
 
 /** Why the story may not be launched, or null: the main output published and verified since, or approved and
  *  decided ok (the page goes up before the video); no live run of another story in the topic. */
-export function launchProblem(topic: string, storyId: string, root = ROOT): string | null {
+export function launchProblem(
+  topic: string,
+  storyId: string,
+  root = ROOT,
+  rel = () => releaseOf(topic, storyId, root),
+): string | null {
   const ledger = loadLedger(topic, storyId, root);
   if (!ledger) return 'no publish.json';
-  const { main, decided } = releaseOf(topic, storyId, root);
+  const { main, decided } = rel();
   if (!main.state.live && !decided) return `${main.id} is not live (${main.state.status})`;
-  if (main.state.live) {
-    const ev = ledger.outputs[main.id].events;
-    const published = ev.findLastIndex((e) => e.type === 'published');
-    const verified = ev.slice(published).find((e) => e.type === 'verified' && e.result === 'passed');
-    if (!verified) return `${main.id} is live but not verified since: npm run publish -- verify`;
-  }
+  if (main.state.live && notVerified(ledger.outputs[main.id].events)) return unverified(main.id);
   // another story of the topic with a live run writes under the same topic folder: the launch waits for it
   const mine = runDir(topic, storyId, root);
   const other = aliveLocks(root, alive).find(
@@ -116,10 +116,7 @@ export function announceProblem(topic: string, storyId: string, root = ROOT): st
   if (!ledger) return 'no publish.json';
   const main = openOutput(topic, storyId, { root });
   if (!main.state.live) return `${main.id} is not live (${main.state.status})`;
-  const ev = ledger.outputs[main.id].events;
-  const published = ev.findLastIndex((e) => e.type === 'published');
-  if (!ev.slice(published).some((e) => e.type === 'verified' && e.result === 'passed'))
-    return `${main.id} is live but not verified since: npm run publish -- verify`;
+  if (notVerified(ledger.outputs[main.id].events)) return unverified(main.id);
   for (const id of Object.keys(ledger.outputs)) {
     if (!id.startsWith('short:')) continue;
     const s = openOutput(topic, storyId, { root, output: id });
@@ -153,13 +150,18 @@ export function launchStaged(topic: string, storyId: string, root = ROOT): strin
 export function launchJobs(a: Automation, root = ROOT): Job[] {
   const out: Job[] = [];
   for (const [topic, storyId] of storiesWithLedgers(root)) {
-    if (launchProblem(topic, storyId, root)) continue;
+    if (!loadLedger(topic, storyId, root)) continue;
+    const rel = releaseOf(topic, storyId, root);
+    if (launchProblem(topic, storyId, root, () => rel)) continue;
     const held = readLock(launchLockDir(topic, storyId, root));
     if (held && alive(held.pid)) continue; // a work instance is launching it now
     const rec = readLaunch(topic, storyId, root);
-    if (rec?.halt || readHalt(runDir(topic, storyId, root))) continue; // a person's
-    const { main, decided } = releaseOf(topic, storyId, root);
-    if (rec && rec.committed && (rec.pushed || !a.launch.push) && !launchStale(rec, decided)) continue; // launched
+    const { main, decided } = rel;
+    // a halt is a person's, except the one a stale launch raised itself: the new decision makes it moot
+    const stale = launchStale(rec, decided);
+    const halt = readHalt(runDir(topic, storyId, root));
+    if ((rec?.halt && !stale) || (halt && !(stale && halt.why === rec?.halt?.why))) continue;
+    if (rec && rec.committed && (rec.pushed || !a.launch.push) && !stale) continue; // launched
     out.push({
       kind: 'launch',
       topic,
@@ -249,8 +251,12 @@ async function launchLocked(
 ): Promise<RunResult & { record: LaunchRecord | null }> {
   const { main, decided } = releaseOf(topic, storyId, root);
   const previous = readLaunch(topic, storyId, root);
-  // a record of an earlier decision on the still-private video is stale: the page is built and deployed again
-  const record: LaunchRecord = (launchStale(previous, decided) ? null : previous) ?? {
+  // a record of an earlier decision on the still-private video is stale: the page is built and deployed again, and
+  // the halt that launch raised (a go-live the tick gave up on) goes with it
+  const stale = launchStale(previous, decided);
+  if (stale && previous?.halt && readHalt(runDir(topic, storyId, root))?.why === previous.halt.why)
+    clearHalt(runDir(topic, storyId, root));
+  const record: LaunchRecord = (stale ? null : previous) ?? {
     topic,
     storyId,
     startedAt: new Date(now()).toISOString(),
@@ -494,6 +500,15 @@ export async function probeLaunches(a: Automation, root = ROOT, d: ProbeDeps): P
       }
       if (main.state.failed?.retryable && triesOf(dir, key, decided.at) >= MAX_TRIES) {
         actions.push(`${tag}: go-live keeps failing (${MAX_TRIES} tries): a person's`);
+        continue;
+      }
+      // what the output's state owes before the go-live (a read-back since `decide --paid` pushed the description):
+      // the automation's verb runs now and the go-live waits for a tick that finds it passed; a person's step waits
+      if (main.state.step.verb !== 'go-live') {
+        const { verb, actor } = main.state.step;
+        if (actor === 'automation' || actor === 'youtube')
+          await d.run('publish', [verb, rec.topic, rec.storyId, '--by', 'automated: tick']);
+        actions.push(`${tag}: ${main.state.next}; the go-live waits`);
         continue;
       }
       const r = await d.run('publish', [
