@@ -278,6 +278,15 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     }
   });
 
+  it('no claim filter opens on a disabled chip (a checked radio is never disabled)', () => {
+    for (const n of liveTopics) {
+      const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');
+      const radios = html.match(/<input type="radio"[^>]*>/g) ?? [];
+      expect(radios.length).toBeGreaterThan(0);
+      for (const r of radios) if (r.includes(' checked')) expect(r, r).not.toContain(' disabled');
+    }
+  });
+
   it('topic, matter and institution pages open with one report header and the seal', () => {
     const heads = [
       ...liveTopics.map((n) => `${n}/index.html`),

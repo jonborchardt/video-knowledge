@@ -27,6 +27,7 @@ const chips = [
   },
   { v: 'all', label: 'All', has: () => true },
 ];
+const first = chips.findIndex((f) => s.claims.some(f.has)); // never a chip with nothing to show
 ---
 
 <div class:list={[!s.exhibit && 'dev-only']} data-source>
@@ -66,7 +67,7 @@ const chips = [
                 id={`f-${group}-${s.id}-${f.v}`}
                 name={`f-${group}-${s.id}`}
                 value={f.v}
-                checked={i === 0}
+                checked={i === first}
                 disabled={!n}
               />
               {f.label} ({n})
