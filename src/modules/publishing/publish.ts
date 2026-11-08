@@ -1242,6 +1242,8 @@ export function recordSimple(
   type: 'unpublished' | 'retracted',
   a: VerbArgs & { note: string },
 ): VerbResult {
+  if (a.by.trim().startsWith('automated:'))
+    throw new Refusal(`a video is ${type} by a person, never by an automated run`);
   const o = openOutput(topic, storyId, a);
   if (!a.note) throw new Refusal(`${type} needs --note`);
   if (type === 'unpublished' && !o.state.id) throw new Refusal('nothing uploaded, nothing to unpublish');

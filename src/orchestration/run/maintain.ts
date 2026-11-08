@@ -416,6 +416,9 @@ export async function maintain(
       if (!hit.length) continue;
       const sdir = runDir(topic, s.id, root);
       const why = `a cited finding was revised after publication (${hit.join(', ')}); the video is never rebuilt`;
+      // the person's path is the runbook's: inspect, choose the response, complete it, then clear (the clear is the
+      // last act, never a shortcut); a description note goes in metadata.descriptionAppend, since metadata.description
+      // replaces the composed text
       if (readHalt(sdir)?.why !== why)
         writeHalt(sdir, {
           kind: 'needs-person',
@@ -423,7 +426,7 @@ export async function maintain(
           why,
           unblock: {
             kind: 'decide',
-            text: `add a note to metadata.description in publish.json and run npm run publish -- push ${topic} ${s.id}, or clear this halt with npm run run -- clear ${topic} ${s.id} if nothing is needed`,
+            text: `inspect the revised finding and the sentences that cite it, choose the response in docs/OPERATIONS.md ("A live video cites a revised finding": a correction with a dated note in metadata.descriptionAppend and npm run publish -- push ${topic} ${s.id}, a re-release, or a withdrawal) and complete it; then clear this halt with npm run run -- clear ${topic} ${s.id} --by "<name>"`,
           },
           at: stamp(),
           runId,

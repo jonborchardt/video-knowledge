@@ -573,6 +573,15 @@ describe('verbs', () => {
     expect(events(draft).at(-1)!.type).toBe('retracted');
   });
 
+  it('unpublishing and retraction are a person’s acts: an automated actor is refused, nothing written', () => {
+    const before = events(draft).length;
+    for (const type of ['unpublished', 'retracted'] as const)
+      expect(() =>
+        recordSimple(draft.topic, draft.story, type, a(draft, { by: 'automated: production pick', note: 'x' })),
+      ).toThrow(/person/);
+    expect(events(draft)).toHaveLength(before);
+  });
+
   it('adds an output', () => {
     addOutputTo(draft.topic, draft.story, 'short-1', 'youtube-short', { root: draft.root, derivedFrom: 'youtube' });
     expect(loadLedger(draft.topic, draft.story, draft.root)!.outputs['short-1'].derivedFrom).toBe('youtube');

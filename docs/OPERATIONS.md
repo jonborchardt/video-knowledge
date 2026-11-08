@@ -302,10 +302,48 @@ live <topic> <story-id>`, read-only: the page carries the video id) and, confirm
   the scan (a `new-sources.md` agent, `record-sources`, `evidence -- scanned`, `report`, a note per revised finding,
   `stories discover`, validate, one commit) and the article pass (a fresh reviewer reaffirms, or a writer corrects and
   a correction request is mailed). A live video whose script cites a revised finding halts `needs-person` and is never
-  rebuilt: add a note to its description and `publish -- push`, or `run -- clear`.
+  rebuilt: see "A live video cites a revised finding" below.
 - **Corrections**: `npm run article -- decide --verdict ok|changes --by "<name>"` applies your reply by hand;
   `article -- correct --approved-by --note` releases a correction directly; `reaffirm --note` keeps a stale text.
   Automation never releases a correction.
+
+### A live video cites a revised finding
+
+The scan halts the story `needs-person` ("a cited finding was revised after publication; the video is never rebuilt")
+and mails you the halt. Nothing clears it but you: the article pass, a correction, a publication and the tick leave it
+standing, and `npm run run -- clear <topic> <story-id> --by "<name>"` is the one way out, journaled under your name.
+Clear it last, after the response below is complete, never because the article alone is fixed; a `clear` on the day
+of the scan is written again if `maintain` runs again that day, so clear after the day's scan.
+
+1. **Read the finding.** The claim ids are in the halt's `why`. Open their revisions in
+   `topics/<topic>/public-record.json` (the scan's note says what changed) and the sentences that cite them in
+   `topics/<topic>/scripts/<slug>/script.json`. Decide which of the three responses fits; the wording of any note
+   or correction follows the facts of the case.
+2. **Minor: the video's answer holds, a detail moved.** Correct the text: reply to the mailed correction request or
+   `npm run article -- decide <topic> <story-id> --request <ar-id> --verdict ok --by "<name>"` (or
+   `npm run article -- correct ... --approved-by "<name>" --note "<note>"`); explain any open claim revision with
+   `npm run report -- note <topic> <claim> "<note>"` (`npm run report` lists what is open). If the video states the
+   changed detail, add a dated note to its description: set `metadata.descriptionAppend` in
+   `topics/<topic>/scripts/<slug>/publish.json` (it is appended after the composed description; `metadata.description`
+   would replace the whole text, chapters and links included), then `npm run publish -- push <topic> <story-id>`
+   (external effect: the snippet is updated, an `updated` event recorded) and `npm run publish -- verify` to read it
+   back. Bring the site up to date: `npm run report -- seed <topic>`, `npm run build`, commit. The video stays public.
+3. **Material: the video's answer is wrong.** Correct the text and the record as above. Decide the existing video's
+   fate yourself, in YouTube Studio: public with a note (`descriptionAppend` and `push`), unlisted or private
+   (recorded with `npm run publish -- unpublished <topic> <story-id> --note "<why>"`; nothing here changes a visibility
+   on its own, §13). Only if a replacement is warranted: `npm run publish -- add <topic> <story-id> youtube-2 --kind
+youtube-video` lifts the board's stop on the live story and makes `youtube-2` the main output; the ordinary stages
+   follow under `/produce` or `npm run run -- story` (the new output's publish verbs take `--output youtube-2`; without
+   the flag a verb acts on the original, `youtube`), and the page embeds the new video once it is live. Record the old
+   video's takedown, if any, when you make it.
+4. **Withdrawal: nothing replaces it.** Take the video down in Studio and record it (`unpublished --note`, or
+   `retracted --note` when it is gone for good); correct or qualify the claim and the article as above; `npm run
+build`. The matter page stays at its frozen URL (`public-urls.json`) with the article and the evidence and no
+   embed; commit.
+5. **Check, then clear.** The ledger holds the `updated`, `unpublished` or `retracted` event under your name;
+   `publish -- verify` or `sync` reads the video back; the built matter page shows what you intended;
+   `npm run links -- check` passes. Then `npm run run -- clear <topic> <story-id> --by "<name>"`; the journal's
+   `cleared by` line is the record.
 
 ## 13. Cleaning test uploads and previews
 

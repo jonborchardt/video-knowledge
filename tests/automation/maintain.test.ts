@@ -174,7 +174,13 @@ describe('maintain', () => {
     const h = readHalt(runDir(c.f.topic, c.f.story, c.f.root));
     expect(h?.kind, r.actions.join(' | ')).toBe('needs-person');
     expect(h?.why).toContain(c.target);
-    expect(h?.unblock.text).toMatch(/publish -- push|run -- clear/);
+    // the next step names the field that appends to the composed description (metadata.description replaces it),
+    // the runbook section with the three responses, and the clear as the last act, never a shortcut
+    expect(h?.unblock.text).toContain('metadata.descriptionAppend');
+    expect(h?.unblock.text).not.toContain('metadata.description in');
+    expect(h?.unblock.text).toContain('docs/OPERATIONS.md');
+    expect(h?.unblock.text).toMatch(/then .*npm run run -- clear/);
+    expect(h?.unblock.text).not.toMatch(/if nothing is needed/);
     expect(r.actions.join('\n')).toMatch(/live video cites a revised finding/);
     expect(readHalt(topicRunDir(c.f.topic, c.f.root))).toBeNull(); // the scan itself is not halted
     expect(scanJobs(a, c.f.root, NOW, [c.f.topic])).toEqual([]); // scanned today
