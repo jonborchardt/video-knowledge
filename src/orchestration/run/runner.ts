@@ -3,7 +3,7 @@
 // no stored progress: the board re-derives the stage from the files; the journal only supplies attempt counts.
 // Around every agent: snapshot, agent, guard, (component check), validator, guard; after every child: guard.
 import { execFileSync } from 'node:child_process';
-import { copyFileSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { appendFileSync, copyFileSync, existsSync, mkdirSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import type { Automation } from '../../shared/automation';
@@ -342,7 +342,7 @@ export async function runStory(topic: string, storyId: string, a: Automation, o:
         board,
       );
     }
-    writeRunReport(topic, storyId, root, dir, readJournal(dir));
+    appendRunReport(topic, storyId, root, dir, readJournal(dir));
     const problem = o.git === 'none' ? null : commit(git, a, topic, storyId, storyRel, board.stage);
     if (problem)
       return halt(
@@ -863,33 +863,43 @@ function commit(
   }
 }
 
-function writeRunReport(topic: string, storyId: string, root: string, dir: string, entries: JournalEntry[]): void {
+/** Appends this run's section to the story's run report: a session's prose and earlier runs stay, the title is written once. */
+export function appendRunReport(
+  topic: string,
+  storyId: string,
+  root: string,
+  dir: string,
+  entries: JournalEntry[],
+): void {
   const since = sinceFinish(entries);
   const reviewDir = join(scriptDir(topic, storyId, root), 'video', 'review');
   mkdirSync(reviewDir, { recursive: true });
   const prompts = since.filter((e) => e.kind === 'prompt');
   const runs = since.filter((e) => e.kind === 'run');
   const lines = [
-    `# Run report: ${topic} ${storyId}`,
+    `## Run ${since[0]?.at ?? ''} (unattended)`,
     '',
-    `Unattended run (npm run run -- story), ${since[0]?.at ?? ''} to ${since.at(-1)?.at ?? ''}; journal in ${dir}.`,
+    `npm run run -- story, to ${since.at(-1)?.at ?? ''}; journal in ${dir}.`,
     '',
-    '## Agents',
+    '### Agents',
     ...prompts.map(
       (e) =>
         `- ${e.step} (session ${e.sessionId ?? '?'}, ${(e.costUsd ?? 0).toFixed(2)} USD${e.error ? `, ${e.error}` : ''})`,
     ),
     '',
-    '## Commands',
+    '### Commands',
     ...runs.map(
       (e) => `- ${e.step} (exit ${e.exit}, ${Math.round((e.ms ?? 0) / 1000)} s${e.error ? `, ${e.error}` : ''})`,
     ),
     '',
-    '## Guard events and halts',
+    '### Guard events and halts',
     ...since.filter((e) => e.kind === 'halt' || e.kind === 'guard').map((e) => `- ${e.step}: ${e.error ?? ''}`),
     '',
     `Total agent cost: ${since.reduce((s, e) => s + (e.costUsd ?? 0), 0).toFixed(2)} USD.`,
     '',
   ];
-  writeFileSync(join(reviewDir, 'run-report.md'), lines.join('\n'));
+  const file = join(reviewDir, 'run-report.md');
+  const before = existsSync(file) ? readFileSync(file, 'utf8') : null;
+  const head = before === null ? `# Run report: ${topic} ${storyId}\n\n` : before.endsWith('\n') ? '\n' : '\n\n';
+  appendFileSync(file, head + lines.join('\n'));
 }

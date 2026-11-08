@@ -350,12 +350,13 @@ try {
       if (runPackage() !== 0) throw new Error('package failed');
       // the acceptance goes into the publishing ledger too, so the audit trail shows who accepted which draft
       if (accepts) acceptDraftViaCli(topic, storyId, flag('--approved-by')!, draft.sha, ROOT);
-      // the run report is the produce agent's prose and named the draft voice as a blocker: say what settled it
+      // the run report is the produce agent's prose and named the draft voice as a blocker: say what settled it,
+      // once per release build (keyed by the packaged build's sha, so a re-render's second release is recorded too)
       const runReport = p(`${REVIEW_DIR}/run-report.md`);
-      if (existsSync(runReport) && !readFileSync(runReport, 'utf8').includes('## Release build'))
+      if (existsSync(runReport))
         appendFileSync(
           runReport,
-          `\n## Release build\n\n- ${new Date().toISOString().slice(0, 10)}: \`${command}\` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.\n`,
+          `\n## Release build ${packaged()?.sha ?? 'unknown'}\n\n- ${new Date().toISOString().slice(0, 10)}: \`${command}\` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.\n`,
         );
       break;
     }

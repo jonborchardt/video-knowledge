@@ -1,16 +1,24 @@
 // The loop (spec §4.1) over a scripted board and a recording executor: order, halts, no-progress, retries, budget,
 // caps, the guard's halt kind and the execution order around a graphics agent.
 import { spawn } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { loadAutomation } from '../../src/shared/automation';
 import type { BoardNext, Step } from '../../src/orchestration/production';
-import { readAttempts, readHalt, readJournal, runDir, VALIDATE_LOG } from '../../src/orchestration/run/journal';
+import {
+  type JournalEntry,
+  readAttempts,
+  readHalt,
+  readJournal,
+  runDir,
+  VALIDATE_LOG,
+} from '../../src/orchestration/run/journal';
 import { readLock } from '../../src/orchestration/run/lock';
 import { alive } from '../../src/orchestration/run/proc';
-import { runStory, type RunOptions } from '../../src/orchestration/run/runner';
+import { appendRunReport, runStory, type RunOptions } from '../../src/orchestration/run/runner';
+import { scriptDir } from '../../src/shared/io';
 import type { StepOutcome } from '../../src/orchestration/run/steps';
 
 const roots: string[] = [];
@@ -538,5 +546,41 @@ describe('runStory', () => {
     expect(order).toEqual(['snapshot', 'agent', 'guard:agent', 'componentCheck']);
     expect(result.halt?.kind).toBe('unexpected-edit');
     expect(result.halt?.why).toContain('node:fs');
+  });
+});
+
+describe('appendRunReport', () => {
+  const entry = (over: Partial<JournalEntry>): JournalEntry =>
+    ({
+      at: 'T',
+      runId: 'r1',
+      stage: 'packaged',
+      next: 'x',
+      step: 'x',
+      kind: 'run',
+      attempt: 1,
+      ...over,
+    }) as JournalEntry;
+  it('keeps a session report and adds one dated section per run', () => {
+    const root = newRoot();
+    const dir = runDir(T, S, root);
+    const report = join(scriptDir(T, S, root), 'video', 'review', 'run-report.md');
+    mkdirSync(dirname(report), { recursive: true });
+    writeFileSync(report, '# Run report: t s\n\n## Needs a person\n- s13: the 8-9% condition'); // no trailing newline
+    appendRunReport(T, S, root, dir, [entry({ at: '2026-11-08T10:00:00.000Z', step: 'npm run x' })]);
+    appendRunReport(T, S, root, dir, [entry({ at: '2026-11-08T11:00:00.000Z', step: 'npm run y' })]);
+    const text = readFileSync(report, 'utf8');
+    expect(text).toContain('- s13: the 8-9% condition');
+    expect(text.match(/^# Run report:/gm)).toHaveLength(1);
+    expect(text).toContain('\n## Run 2026-11-08T10:00:00.000Z (unattended)');
+    expect(text).toContain('\n## Run 2026-11-08T11:00:00.000Z (unattended)');
+  });
+  it('writes the title once when no report exists, for a Short too', () => {
+    const root = newRoot();
+    const id = `${S}/shorts/the-panel-upgrade`;
+    appendRunReport(T, id, root, runDir(T, id, root), [entry({ kind: 'halt', step: 'awaiting-person', error: 'why' })]);
+    const text = readFileSync(join(scriptDir(T, id, root), 'video', 'review', 'run-report.md'), 'utf8');
+    expect(text.startsWith(`# Run report: ${T} ${id}\n`)).toBe(true);
+    expect(text).toContain('- awaiting-person: why');
   });
 });
