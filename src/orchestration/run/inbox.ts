@@ -369,10 +369,9 @@ export async function pollInbox(a: Automation, mail: Mailer, root = ROOT, deps: 
         const sent = Date.parse(m.date);
         // a date that cannot be read is "cannot tell", so the line is left too (never applied over a decision)
         if (decidedOn <= sent) return false;
-        const when =
-          Number.isNaN(decidedOn) || Number.isNaN(sent)
-            ? 'at a time this reply cannot be placed against'
-            : 'after this reply was sent';
+        const when = Number.isNaN(decidedOn - sent)
+          ? 'at a time this reply cannot be placed against'
+          : 'after this reply was sent';
         since.push(`${slug}: ${p.status} by ${p.decidedBy ?? 'someone'} ${when}`);
         return true;
       };

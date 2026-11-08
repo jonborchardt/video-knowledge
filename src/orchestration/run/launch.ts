@@ -89,15 +89,10 @@ const unverified = (id: string) => `${id} is live but not verified since: npm ru
 
 /** Why the story may not be launched, or null: the main output published and verified since, or approved and
  *  decided ok (the page goes up before the video); no live run of another story in the topic. */
-export function launchProblem(
-  topic: string,
-  storyId: string,
-  root = ROOT,
-  rel = () => releaseOf(topic, storyId, root),
-): string | null {
+export function launchProblem(topic: string, storyId: string, root = ROOT): string | null {
   const ledger = loadLedger(topic, storyId, root);
   if (!ledger) return 'no publish.json';
-  const { main, decided } = rel();
+  const { main, decided } = releaseOf(topic, storyId, root);
   if (!main.state.live && !decided) return `${main.id} is not live (${main.state.status})`;
   if (main.state.live && notVerified(ledger.outputs[main.id].events)) return unverified(main.id);
   // another story of the topic with a live run writes under the same topic folder: the launch waits for it
@@ -150,13 +145,11 @@ export function launchStaged(topic: string, storyId: string, root = ROOT): strin
 export function launchJobs(a: Automation, root = ROOT): Job[] {
   const out: Job[] = [];
   for (const [topic, storyId] of storiesWithLedgers(root)) {
-    if (!loadLedger(topic, storyId, root)) continue;
-    const rel = releaseOf(topic, storyId, root);
-    if (launchProblem(topic, storyId, root, () => rel)) continue;
+    if (launchProblem(topic, storyId, root)) continue;
     const held = readLock(launchLockDir(topic, storyId, root));
     if (held && alive(held.pid)) continue; // a work instance is launching it now
     const rec = readLaunch(topic, storyId, root);
-    const { main, decided } = rel;
+    const { main, decided } = releaseOf(topic, storyId, root);
     // a halt is a person's, except the one a stale launch raised itself: the new decision makes it moot
     const stale = launchStale(rec, decided);
     const halt = readHalt(runDir(topic, storyId, root));

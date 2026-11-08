@@ -165,10 +165,10 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       );
       const published = c.topics.filter((n) => liveTopics.includes(n));
       for (const n of published) expect(html).toContain(`href="${BASE}${n}/"`);
-      if (published.length) expect(html).toContain('Matters before the');
-      if (published.length)
+      if (published.length) {
+        expect(html).toContain('Matters before the');
         expect(html).not.toContain(' stories<'); // the lexicon's word is matters
-      else expect(html).toContain('no inquiry published yet');
+      } else expect(html).toContain('no inquiry published yet');
     }
   });
 
