@@ -17,6 +17,7 @@ import {
 import { datasetChart } from '../src/modules/storyboard';
 import { dataRef, loadDatasets } from '../src/modules/evidence';
 import { ROOT, readJson, topicDir } from '../src/shared/io';
+import { pointText } from '../src/shared/numbers';
 import { AUTOMATION_FILE, automationProblems } from '../src/shared/automation';
 import type { Storyboard } from '../src/shared/types';
 import { loadStories, storyUrlSlug } from '../src/modules/stories';
@@ -220,7 +221,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     }
   });
 
-  it('an article figure is an svg with a text alternative and its data table', () => {
+  it('an article figure writes every value as HTML text, never as SVG text, with its source', () => {
     let drawn = 0;
     for (const { topic, slug, s } of storyPages) {
       const r = s.partOf ? null : loadArticleRelease(topic, s.id);
@@ -239,12 +240,12 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       expect(charts, `${topic}/${slug}`).toHaveLength(specs.length);
       specs.forEach(({ spec, data }, i) => {
         const c = charts[i];
-        if (['bar', 'stacked-bar', 'dot-plot', 'stat-tiles'].includes(spec.type))
-          expect(c).toMatch(/<svg[^>]*role="img"[^>]*aria-label="[^"]+"/);
-        else expect(c).not.toContain('<svg');
-        if (data)
-          expect(c).not.toContain('<details'); // the dataset's own table carries the data
-        else expect(c).toMatch(/<details[\s\S]*<table[\s\S]*<td/);
+        // labels and values are HTML text at the page's sizes (readable at 375 wide); marks may be SVG, text never is
+        expect(c, `${topic}/${slug} figure ${i}`).not.toMatch(/<text[\s>]/);
+        expect(c).toContain(`data-chart="${spec.type}"`);
+        for (const p of spec.points) expect(c).toContain(pointText(p));
+        expect(c).not.toContain('<details'); // every value is already visible; the dataset's own table carries data
+        if (data) expect(c).not.toContain('<table');
         expect(c).toContain('Source:');
         drawn++;
       });

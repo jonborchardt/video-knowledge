@@ -22,6 +22,8 @@ to the rest. Repo conventions come first: CLAUDE.md (Rules: site pages, Names, b
   forbids inline 3-digit px widths).
 - Gate (browser): no horizontal scroll at 320, 375, 768, 1024, 1440 and a 48px sweep between, every tab, every
   `<details>` open, at 200% text (640px) and with WCAG text spacing (320px).
+- Text a reader must read is HTML text at the page's sizes, never SVG text that scales with a viewBox; marks may be SVG or CSS.
+  Gate (dist.test.ts): an article figure carries no `<text>`.
 - Not gated: orientation, safe areas (`env(safe-area-inset-*)` for anything fixed to an edge), touch-only behaviour.
 
 ## C. Accessibility (WCAG 2.2 AA)
