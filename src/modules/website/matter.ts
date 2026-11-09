@@ -1,6 +1,14 @@
 // What a matter page shows, loaded once: the HTML page and its Markdown copy render this same model, so they cannot
 // drift. Nothing here reads import.meta.env (the page passes `preview`).
-import { type ArticleRelease, type ArticleView, articleView, loadArticleRelease, releaseFigureDraws } from '../article';
+import {
+  type ArticleRelease,
+  type ArticleView,
+  articleView,
+  loadArticleRelease,
+  previewRelease,
+  releaseFigureDraws,
+} from '../article';
+import { ROOT } from '../../shared/io';
 import {
   type ClaimView,
   FINDING_LABELS,
@@ -23,7 +31,8 @@ export interface MatterModel {
   revised: string | null;
   outputs: ReturnType<typeof storyOutputs>;
   embed: PublicVideo | null; // the live video, else the releasing one
-  release: ArticleRelease | null; // null for a follow-up
+  release: ArticleRelease | null; // null for a follow-up; in a preview, the validated draft's snapshot when unreleased
+  previewArticle: boolean; // the view is a validated draft, not a release: the dev page marks it, a build never has one
   firstArticle: boolean;
   view: ArticleView | null;
   path: string;
@@ -33,8 +42,9 @@ export function matterModel(
   t: Topic,
   s: Story,
   stories: Story[],
-  opts: { repo: string; preview: boolean },
+  opts: { repo: string; preview: boolean; root?: string },
 ): MatterModel {
+  const root = opts.root ?? ROOT;
   const first = s.partOf ? stories.find((x) => x.id === s.partOf) : undefined;
   const claims = s.claims.map((id) => t.claims.find((c) => c.id === id)).filter((c) => !!c);
   const groups = FINDING_LABELS.map((label) => ({
@@ -51,13 +61,15 @@ export function matterModel(
     .sort((a, b) => a.r.at.localeCompare(b.r.at));
   // The video lives on the first question's page; a follow-up links to it. The embed shows a live video, or a releasing
   // one (decided ok, the page deployed before the tick takes it live).
-  const outputs = storyOutputs(t.name, s.partOf ?? s.id);
+  const outputs = storyOutputs(t.name, s.partOf ?? s.id, root);
   // The released companion article, each figure drawn from the release's snapshot, never the live files. A follow-up
-  // links to its first question's article.
-  const release = first ? null : loadArticleRelease(t.name, s.id);
-  const firstArticle = !!first && !!loadArticleRelease(t.name, first.id);
+  // links to its first question's article. The dev preview shows a validated draft before its lock, so the page
+  // review judges the page a visitor will see; a build has no draft.
+  const released = first ? null : loadArticleRelease(t.name, s.id, root);
+  const release = released ?? (first || !opts.preview ? null : previewRelease(t.name, s.id, root));
+  const firstArticle = !!first && !!loadArticleRelease(t.name, first.id, root);
   const figures = release ? releaseFigureDraws(release, t.docNames) : new Map();
-  const view = release ? articleView(release, t, loadPublicRecord(t.name), opts.repo, figures) : null;
+  const view = release ? articleView(release, t, loadPublicRecord(t.name, root), opts.repo, figures) : null;
   return {
     first,
     claims,
@@ -68,6 +80,7 @@ export function matterModel(
     outputs,
     embed: outputs.video ?? outputs.releasing,
     release,
+    previewArticle: !!release && !released,
     firstArticle,
     view,
     path: matterPath(t.name, s),

@@ -13,6 +13,7 @@ import {
   articleReviewUnits,
   correctArticle,
   lockArticle,
+  previewRelease,
   reaffirmArticle,
   releaseFigures,
   renderArticleMd,
@@ -556,4 +557,45 @@ describe('a figure drawn as a comparison (as)', () => {
     });
     expect(why(v)).toEqual([expect.stringContaining('qualifier')]);
   });
+});
+
+describe('previewRelease', () => {
+  const setup = (validation: object | null) => {
+    const root = mkdtempSync(join(tmpdir(), 'preview-release-'));
+    const dir = scriptDir('demo', 'decision:mlm-and-seminars', root);
+    mkdirSync(dir, { recursive: true });
+    const a = article();
+    writeFileSync(join(dir, 'article.json'), JSON.stringify(a));
+    if (validation) writeFileSync(join(dir, 'article-validation.json'), JSON.stringify(validation));
+    return { root, a };
+  };
+  it('is null without a passed validation of this revision', () => {
+    expect(previewRelease('demo', 'decision:mlm-and-seminars', setup(null).root)).toBeNull();
+    expect(
+      previewRelease(
+        'demo',
+        'decision:mlm-and-seminars',
+        setup({ status: 'needs-review', revision: 1, issues: [] }).root,
+      ),
+    ).toBeNull();
+    expect(
+      previewRelease('demo', 'decision:mlm-and-seminars', setup({ status: 'passed', revision: 2, issues: [] }).root),
+    ).toBeNull();
+  });
+  it('snapshots article.json as a preview, revision 0, approved by nobody', () => {
+    const { root, a } = setup({
+      status: 'passed',
+      revision: a0().revision,
+      packageFingerprint: 'p',
+      issues: [],
+      date: '2026-11-08',
+    });
+    const r = previewRelease('demo', 'decision:mlm-and-seminars', root)!;
+    expect(r.approvedBy).toBe('preview');
+    expect(r.revision).toBe(0);
+    expect(r.history).toEqual([]);
+    expect(r.fingerprints.article).toBe(articleFingerprint(a));
+    expect(r.article.meta.headline).toBe(a.meta.headline);
+  });
+  const a0 = () => article();
 });

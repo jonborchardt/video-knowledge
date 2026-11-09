@@ -59,8 +59,21 @@ const commission = commissionOf(t.name)!;
 // The page's model (src/modules/website/matter.ts), shared with the Markdown copy at index.md. A preview (dev server)
 // also lists sources without an exhibit number yet, last. The structured data and the publication date wait for the
 // live video (no fabricated date).
-const { first, claims, groups, exhibits, revisions, revised, outputs, embed, release, firstArticle, view, path } =
-  matterModel(t, s, stories, { repo: site.repo, preview: import.meta.env.DEV });
+const {
+  first,
+  claims,
+  groups,
+  exhibits,
+  revisions,
+  revised,
+  outputs,
+  embed,
+  release,
+  previewArticle,
+  firstArticle,
+  view,
+  path,
+} = matterModel(t, s, stories, { repo: site.repo, preview: import.meta.env.DEV });
 // The story's own share card (npm run brand), else its institution's.
 const card = `/og/stories/${t.name}/${storyUrlSlug(s)}.jpg`;
 const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionKey(commission)}.jpg`;
@@ -195,6 +208,14 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
   }
 
   <section id="article" class="grid gap-10">
+    {
+      previewArticle && release && (
+        <p class="dev-only text-sm font-semibold" data-article-preview={release.fingerprints.article}>
+          Article preview: validated, not released. `npm run article -- frames` photographs this text for the page
+          review.
+        </p>
+      )
+    }
     {
       firstArticle && (
         <p>

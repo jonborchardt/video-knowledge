@@ -226,6 +226,7 @@ describe('matterMarkdown', () => {
     outputs: { video: null, releasing: null, shorts: [] },
     embed: { url: 'https://www.youtube.com/watch?v=vid' } as PublicVideo,
     release: {} as ArticleRelease,
+    previewArticle: false,
     firstArticle: false,
     view,
     path: '/heat-pumps/is-it-cheaper/',

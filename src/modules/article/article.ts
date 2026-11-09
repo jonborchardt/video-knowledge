@@ -116,6 +116,17 @@ export const articleModified = (r: ArticleRelease) => r.history.findLast((h) => 
 export const loadArticleRelease = (topic: string, storyId: string, root = ROOT) =>
   readJson<ArticleRelease>(join(scriptDir(topic, storyId, root), ARTICLE_FILES.release));
 
+/** The validated, unreleased article.json as a release-shaped snapshot for the dev preview and the page review:
+ *  revision 0, approved by nobody, no history. Null unless the stored validation passed for this revision. The site
+ *  never builds from it; `frames` and the lock check the live validation themselves. */
+export function previewRelease(topic: string, storyId: string, root = ROOT): ArticleRelease | null {
+  const dir = scriptDir(topic, storyId, root);
+  const a = readJson<Article>(join(dir, ARTICLE_FILES.article));
+  const v = readJson<ScriptValidation>(join(dir, ARTICLE_FILES.validation));
+  if (!a || !v || v.status !== 'passed' || v.revision !== a.revision) return null;
+  return { ...snapshot(a, v, 'preview', v.date ?? '', 0), history: [] };
+}
+
 function releasable(v: ScriptValidation, approvedBy: string) {
   const why = approverProblem(approvedBy);
   if (why) throw new Refusal(why);

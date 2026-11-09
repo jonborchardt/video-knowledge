@@ -98,9 +98,11 @@ function buildGraph(root: string, topics: string[], view: View, assumeLive: stri
         !!(outs.video ?? outs.releasing) ||
         assumeLive.includes(storyNode(topic, rootId)) ||
         frozen.has(matterPath(topic, s));
+      // the dev preview also pages a story whose article is written, so the page review can see it before the lock
       const packaged =
         (view === 'preview' || (view === 'fixture' && isFixtureTopic(topic))) &&
-        existsSync(join(scriptDir(topic, rootId, root), 'video', 'review', 'review.json'));
+        (existsSync(join(scriptDir(topic, rootId, root), 'video', 'review', 'review.json')) ||
+          (view === 'preview' && existsSync(join(scriptDir(topic, rootId, root), 'article.json'))));
       node({ id, kind: 'story', title: s.title, topic, story: id, public: isLive || packaged });
       edge(id, topic, 'in');
     }

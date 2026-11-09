@@ -1,4 +1,8 @@
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import type { Story, Topic } from '../../../shared/types';
 import { loadArticleRelease } from '../../article';
 import { loadTopic } from '../../evidence';
 import { loadStories } from '../../stories';
@@ -32,5 +36,51 @@ describe('matterModel', () => {
     expect(m.release).toBeNull();
     expect(m.view).toBeNull();
     expect(m.firstArticle).toBe(!!loadArticleRelease('heat-pumps', followUp.partOf!));
+  });
+});
+
+// The dev preview renders a validated article before its lock (plan: report pages, Task 4); a build never does.
+describe('matterModel preview of an unreleased article', () => {
+  const setup = (validation: object | null) => {
+    const root = mkdtempSync(join(tmpdir(), 'matter-preview-'));
+    const dir = join(root, 'topics', 'demo', 'scripts', 'decision-x');
+    mkdirSync(dir, { recursive: true });
+    const sentence = (id: string, text: string) => ({ id, text, type: 'transitional', assertions: [] });
+    writeFileSync(
+      join(dir, 'article.json'),
+      JSON.stringify({
+        topic: 'demo',
+        story: 'decision:x',
+        revision: 1,
+        generation: { model: 'm', brief: 'b', date: 'd', wordsPerMinute: 150, evidencePackage: 'p' },
+        meta: {
+          headline: 'Draft headline',
+          seoTitle: 'Draft',
+          dek: sentence('meta.dek', 'Dek.'),
+          description: sentence('meta.description', 'Desc.'),
+        },
+        sections: [
+          { name: 'answer', heading: 'H', blocks: [{ kind: 'prose', sentences: [sentence('s01', 'Text.')] }] },
+        ],
+      }),
+    );
+    if (validation) writeFileSync(join(dir, 'article-validation.json'), JSON.stringify(validation));
+    const t = { name: 'demo', claims: [], sources: [], docNames: {} } as unknown as Topic;
+    const s = { id: 'decision:x', title: 'X', question: 'Q?', claims: [], arc: {} } as unknown as Story;
+    return { root, t, s };
+  };
+  it('shows the validated draft in the preview, with its fingerprint, and never in a build', () => {
+    const { root, t, s } = setup({ status: 'passed', revision: 1, issues: [], date: '2026-11-08' });
+    const m = matterModel(t, s, [s], { repo: site.repo, preview: true, root });
+    expect(m.view?.headline).toBe('Draft headline');
+    expect(m.previewArticle).toBe(true);
+    expect(m.release?.fingerprints.article).toBeTruthy();
+    const built = matterModel(t, s, [s], { repo: site.repo, preview: false, root });
+    expect(built.view).toBeNull();
+    expect(built.previewArticle).toBe(false);
+  });
+  it('shows nothing of a draft whose validation has not passed', () => {
+    const { root, t, s } = setup({ status: 'blocked', revision: 1, issues: [] });
+    expect(matterModel(t, s, [s], { repo: site.repo, preview: true, root }).view).toBeNull();
   });
 });

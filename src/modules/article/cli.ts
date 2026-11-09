@@ -1,6 +1,9 @@
 // npm run article -- <command> <topic> <story-id> [...]
 //   validate <topic> <story-id>      check article.json (+ article-review.json); writes article-validation.json, article.md
 //   show <topic> <story-id>          print article.md
+//   frames <topic> <story-id> [--port <n>]  validate afresh, start the dev server as a child and photograph the matter page
+//                                    as it renders the validated draft (375 and 1280 wide, light and dark, tiles under
+//                                    page/, index.json naming the article fingerprint the page carried) for the page review
 //   lock <topic> <story-id> --approved-by "<name>"                   release the article (article-release.json)
 //   correct <topic> <story-id> --approved-by "<name>" --note "<note>"  release changed text and record the correction
 //                                                                      as a revision in the topic's public-record.json
@@ -45,7 +48,8 @@ import {
 import { runCli } from '../../shared/cli';
 import { loadPublicRecord, publicRecordPath, withArticleRevision } from '../../shared/public-record';
 import { Refusal } from '../../shared/refusal';
-import { loadReview } from '../stories';
+import { loadReview, loadStories, storyUrlSlug } from '../stories';
+import { captureFrames } from './frames';
 import type { EvidencePackage, Script, ScriptValidation } from '../../shared/types';
 import { secretFromEnv } from '../../shared/request';
 import { approverProblem } from '../../shared/approver';
@@ -58,14 +62,16 @@ const flag = (name: string) => {
 };
 const flags = (name: string) => rest.flatMap((x, i) => (x === name && rest[i + 1] !== undefined ? [rest[i + 1]] : []));
 if (
-  !['validate', 'show', 'lock', 'correct', 'reaffirm', 'request-correction', 'decide', 'sent'].includes(cmd) ||
+  !['validate', 'show', 'frames', 'lock', 'correct', 'reaffirm', 'request-correction', 'decide', 'sent'].includes(
+    cmd,
+  ) ||
   !topic ||
   !storyId
 ) {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 15)
+      .slice(0, 18)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -121,6 +127,24 @@ function run() {
       console.log(v.status === 'passed' ? 'RESULT: PASSED' : `RESULT: FAILED (${v.status})`);
       process.exitCode = v.status === 'blocked' ? 2 : 0;
       return;
+    }
+    case 'frames': {
+      // the stored validation is what the dev page's preview release reads, so write it afresh first
+      const { a, v } = validate();
+      writeArtifact(dir, ARTICLE_FILES.validation, toJson(v));
+      if (v.status !== 'passed') throw new Refusal(`validation is ${v.status}, not passed: nothing to photograph yet`);
+      const s = loadStories(topic)?.stories.find((x) => x.id === storyId);
+      if (!s) throw new Refusal(`no story ${storyId} in topics/${topic}/stories.json`);
+      const port = Number(flag('--port') ?? 4322);
+      return captureFrames(topic, storyId, {
+        path: `/${topic}/${storyUrlSlug(s)}/`,
+        key: articleFingerprint(a),
+        port,
+      }).then(({ dir: out, index }) =>
+        console.log(
+          `wrote ${out}/: ${index.tiles.length} tiles in ${index.tiles.length ? 4 : 0} views, key ${index.key}`,
+        ),
+      );
     }
     case 'show': {
       if (!existsSync(p(ARTICLE_FILES.md)))
@@ -329,10 +353,11 @@ function run() {
   }
 }
 
-try {
-  run();
-} catch (e) {
-  if (!(e instanceof Refusal)) throw e;
-  console.error(`refused: ${e.message}`);
-  process.exitCode = 2;
-}
+// frames is the one asynchronous verb; a refusal from either path exits 2 with nothing written
+Promise.resolve()
+  .then(() => run())
+  .catch((e: unknown) => {
+    if (!(e instanceof Refusal)) throw e;
+    console.error(`refused: ${e.message}`);
+    process.exitCode = 2;
+  });
