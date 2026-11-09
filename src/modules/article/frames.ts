@@ -7,7 +7,7 @@
 import { spawn, spawnSync, type ChildProcess } from 'node:child_process';
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import { chromium } from 'playwright';
+import { type Browser, chromium } from 'playwright';
 import { ROOT, scriptDir, toJson } from '../../shared/io';
 import { Refusal } from '../../shared/refusal';
 
@@ -75,8 +75,9 @@ export async function captureFrames(
     windowsHide: true,
     detached: process.platform !== 'win32',
   });
-  const browser = await chromium.launch();
+  let browser: Browser | null = null;
   try {
+    browser = await chromium.launch();
     await waitFor(`${base}${opts.path}`, 120_000);
     const tiles: PageIndex['tiles'] = [];
     const shots: { file: string; buffer: Buffer }[] = [];
@@ -87,7 +88,10 @@ export async function captureFrames(
       const page = await context.newPage();
       const res = await page.goto(`${base}${opts.path}`, { waitUntil: 'networkidle' });
       if (!res || res.status() >= 400) throw new Refusal(`${opts.path} answered ${res?.status() ?? 'nothing'}`);
-      const carried = await page.getAttribute('[data-article-preview]', 'data-article-preview');
+      // read once, now: a page without the marker answers at once (a locator would wait on the selector)
+      const carried = await page.evaluate(
+        () => document.querySelector('[data-article-preview]')?.getAttribute('data-article-preview') ?? null,
+      );
       if (carried !== opts.key)
         throw new Refusal(
           `the page did not render the validated article: it carries ${carried ?? 'no preview marker'}, article.json is ${opts.key}`,
@@ -115,7 +119,7 @@ export async function captureFrames(
     writeFileSync(join(dir, PAGE_INDEX), toJson(index));
     return { dir: relative(root, dir).replaceAll('\\', '/'), index };
   } finally {
-    await browser.close();
+    await browser?.close();
     killTree(server);
   }
 }

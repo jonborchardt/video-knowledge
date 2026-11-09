@@ -6,9 +6,8 @@ export {
   articleModified,
   articleReviewUnits,
   loadArticleRelease,
-  previewRelease,
 } from './article';
-export { inspectArticle, validateArticleIn } from './validation';
+export { inspectArticle, previewRelease, validateArticleIn } from './validation';
 export { articleFingerprint } from './article';
 export {
   ARTICLE_REQUEST_FILE,

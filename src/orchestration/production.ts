@@ -979,7 +979,7 @@ function articleOf({
           return `npm run article -- frames ${topic} ${storyId}, then agent: src/modules/article/briefs/page-review.md -> ${r(ARTICLE_FILES.pageReview)}`;
         if (code === 'page-findings') return writer;
         if (code === 'page-defect')
-          return `stop: the page review found a defect the writer cannot fix: ${f}; fix it, then npm run article -- frames ${topic} ${storyId} and a fresh page-review.md agent`;
+          return `stop: the page review found a defect the writer cannot fix: ${f}; after the fix run npm run article -- frames ${topic} ${storyId} and a fresh page-review.md agent`;
         // A review of this package that holds every unapproved unit on findings is the writer's to answer; any other
         // unapproved unit (an edit beside a held sentence, a new headline) is the reviewer's, whatever the revision.
         return reviewHeld({ p, pkgFp: readJson<EvidencePackage>(p(FILES.pkg))?.fingerprint, live, text })

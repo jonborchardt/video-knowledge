@@ -167,23 +167,19 @@ export const articleModified = (r: ArticleRelease) => r.history.findLast((h) => 
 export const loadArticleRelease = (topic: string, storyId: string, root = ROOT) =>
   readJson<ArticleRelease>(join(scriptDir(topic, storyId, root), ARTICLE_FILES.release));
 
-/** The validated, unreleased article.json as a release-shaped snapshot for the dev preview and the page review:
- *  revision 0, approved by nobody, no history. Null unless the stored validation passed for this revision. The site
- *  never builds from it; `frames` and the lock check the live validation themselves. */
-export function previewRelease(topic: string, storyId: string, root = ROOT): ArticleRelease | null {
-  const dir = scriptDir(topic, storyId, root);
-  const a = readJson<Article>(join(dir, ARTICLE_FILES.article));
-  const v = readJson<ScriptValidation>(join(dir, ARTICLE_FILES.validation));
-  if (!a || !v || v.status !== 'passed' || v.revision !== a.revision) return null;
-  return { ...snapshot(a, v, 'preview', v.date ?? '', 0), history: [] };
-}
-
 function releasable(v: ScriptValidation, approvedBy: string) {
   const why = approverProblem(approvedBy);
   if (why) throw new Refusal(why);
   if (v.status !== 'passed') throw new Refusal(`validation is ${v.status}, not passed`);
 }
-const snapshot = (a: Article, v: ScriptValidation, approvedBy: string, date: string, revision: number) => ({
+/** The release-shaped record of a text and its validation; the lock, a correction and the preview all build on it. */
+export const releaseSnapshot = (
+  a: Article,
+  v: ScriptValidation,
+  approvedBy: string,
+  date: string,
+  revision: number,
+) => ({
   topic: a.topic,
   story: a.story,
   approvedBy,
@@ -239,7 +235,7 @@ export function lockArticle(
   if (same) return prev;
   if (prev) throw new Refusal(`released at revision ${prev.revision} with other text: use correct, with a note`);
   return {
-    ...snapshot(a, v, approvedBy, date, 1),
+    ...releaseSnapshot(a, v, approvedBy, date, 1),
     figures,
     history: [{ revision: 1, date, approvedBy, fingerprint: fp }],
   };
@@ -307,7 +303,7 @@ export function correctArticle(
   const revision = prev.revision + 1;
   return {
     release: {
-      ...snapshot(a, v, approvedBy, date, revision),
+      ...releaseSnapshot(a, v, approvedBy, date, revision),
       figures,
       history: [...prev.history, { revision, date, approvedBy, fingerprint: fp, note: note.trim(), sentences }],
     },

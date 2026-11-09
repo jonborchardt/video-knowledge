@@ -16,6 +16,9 @@ import {
   articleSentences,
   pageReviewOf,
   proseOf,
+  type ArticleRelease,
+  releaseFigures,
+  releaseSnapshot,
 } from './article';
 import {
   type Corpus,
@@ -297,6 +300,21 @@ export function figureData(topic: string, storyId: string, root = ROOT): Map<str
 
 export const figuresOf = (topic: string, storyId: string, root = ROOT): Set<string> =>
   new Set(figureData(topic, storyId, root).keys());
+
+/** The validated, unreleased article.json as a release-shaped snapshot for the dev preview and the page review:
+ *  revision 0, approved by nobody, no history, each figure's data snapshotted as a lock would. Null unless the stored
+ *  validation passed for this revision. The site never builds from it; `frames` and the lock validate live. */
+export function previewRelease(topic: string, storyId: string, root = ROOT): ArticleRelease | null {
+  const dir = scriptDir(topic, storyId, root);
+  const a = readJson<Article>(join(dir, ARTICLE_FILES.article));
+  const v = readJson<ScriptValidation>(join(dir, ARTICLE_FILES.validation));
+  if (!a || !v || v.status !== 'passed' || v.revision !== a.revision) return null;
+  return {
+    ...releaseSnapshot(a, v, 'preview', v.date ?? '', 0),
+    figures: releaseFigures(a, figureData(topic, storyId, root)),
+    history: [],
+  };
+}
 
 /** The sentences `inspectArticle` reports; the board acts on `Inspection.code`, never on these. */
 export const ARTICLE_FINDINGS = {

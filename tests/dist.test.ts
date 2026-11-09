@@ -579,7 +579,10 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     for (const n of liveTopics) {
       const ds = liveData(n);
       expect(existsSync(join(DIST, n, 'data/index.html'))).toBe(ds.length > 0);
+      const page = ds.length ? decode(readFileSync(join(DIST, n, 'data/index.html'), 'utf8')) : '';
       for (const d of ds) {
+        // every cell shows its unit on the page, as the Markdown copy prints it
+        for (const c of d.rows[0]?.cells ?? []) expect(page, `${n} ${d.id}`).toContain(pointText(c));
         expect(readFileSync(join(DIST, n, 'data', `${d.id}.csv`), 'utf8').split('\n')[0]).toBe(
           ['label', ...d.columns.map((c) => c.label)].map(csvCell).join(','),
         );

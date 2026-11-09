@@ -13,7 +13,6 @@ import {
   articleReviewUnits,
   correctArticle,
   lockArticle,
-  previewRelease,
   approvedPageReview,
   pageReviewOf,
   reaffirmArticle,
@@ -23,7 +22,7 @@ import {
 import type { ChartSpec, EvidencePackage, Sentence } from '../../../shared/types';
 import { Refusal } from '../../../shared/refusal';
 import { publicRecordProblems, withArticleRevision } from '../../../shared/public-record';
-import { LIMITS, figureData, figuresOf, validateArticle } from '../validation';
+import { LIMITS, figureData, figuresOf, previewRelease, validateArticle } from '../validation';
 import { buildPackage } from '../../script';
 import { scriptDir } from '../../../shared/io';
 import { approveArticle, article } from './article-helpers';
@@ -645,5 +644,28 @@ describe('the page review gate', () => {
   it('accepts an approved current review with no blocking finding', () => {
     const warning = { ...blocking, scope: 'renderer', unit: 'page', severity: 'warning' };
     expect(approvedPageReview('demo', S, setup(review(KEY, 'approved', [warning]), KEY)).verdict).toBe('approved');
+  });
+});
+
+describe('previewRelease and figures', () => {
+  it('snapshots the data of every figure the draft names, as a lock would', () => {
+    const root = mkdtempSync(join(tmpdir(), 'preview-figures-'));
+    const dir = scriptDir('demo', 'decision:mlm-and-seminars', root);
+    mkdirSync(dir, { recursive: true });
+    const chart = { type: 'stat-tiles', points: [{ label: 'a', value: 1, unit: 'usd', display: '1', cite: DOC_D }] };
+    writeFileSync(
+      join(dir, 'storyboard.json'),
+      JSON.stringify({ scenes: [{ id: 'sc01', visual: { category: 'chart', chart } }] }),
+    );
+    const ref = 'decision-mlm-and-seminars/sc01';
+    const a = article({
+      sections: [{ name: 'answer', heading: 'H', blocks: [{ kind: 'figure', ref, caption: 'c' }] }],
+    });
+    writeFileSync(join(dir, 'article.json'), JSON.stringify(a));
+    writeFileSync(
+      join(dir, 'article-validation.json'),
+      JSON.stringify({ status: 'passed', revision: a.revision, issues: [], date: 'd' }),
+    );
+    expect(previewRelease('demo', 'decision:mlm-and-seminars', root)?.figures).toEqual({ [ref]: { chart } });
   });
 });
