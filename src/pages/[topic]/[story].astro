@@ -195,18 +195,6 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
       ))
   }
 
-  {
-    ctas && (
-      <section aria-labelledby="next">
-        <div class="eyebrow text-gold">Next</div>
-        <h2 class={h2} id="next">
-          Where to go from here
-        </h2>
-        <NextSteps ctas={ctas} path={path} />
-      </section>
-    )
-  }
-
   <section id="article" class="grid gap-10">
     {
       previewArticle && release && (
@@ -262,6 +250,18 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
           Run the comparison with your prices
         </h2>
         <HeatingCost spec={tool} t={t} s={s} counts={labelCounts(claims)} />
+      </section>
+    )
+  }
+
+  {
+    ctas && (
+      <section aria-labelledby="next">
+        <div class="eyebrow text-gold">Next</div>
+        <h2 class={h2} id="next">
+          Where to go from here
+        </h2>
+        <NextSteps ctas={ctas} path={path} />
       </section>
     )
   }

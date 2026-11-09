@@ -71,40 +71,44 @@ const control = 'min-w-0 rounded-md border border-input bg-background px-2.5 py-
     </p>
   </section>
 
-  <section class="mt-4 max-w-wide overflow-x-auto" aria-labelledby="tool-examples" tabindex="0">
+  <section class="mt-4 max-w-wide" aria-labelledby="tool-examples">
     <h3 class={h3} id="tool-examples">Worked examples</h3>
-    <table class="mt-2 w-full border-collapse text-sm">
-      <caption class="mb-1 text-left text-muted-foreground">
-        {caption}
-        <a href={href(`/${t.name}/data/`)}>state prices table</a>, so a figure can differ by a cent from the source's
-        own. {noteText} (<a href={latestCite.href}>{latestCite.text}</a>).
-      </caption>
-      <thead>
-        <tr class="border-b text-left text-muted-foreground">
-          <th scope="col" class="py-2 pr-4 font-medium">Prices</th>
-          <th scope="col" class="py-2 pr-4 font-medium">Electricity, $ per MMBtu</th>
-          <th scope="col" class="py-2 pr-4 font-medium">Gas, $ per MMBtu</th>
-          <th scope="col" class="py-2 pr-4 font-medium">Break-even COP</th>
-          <th scope="col" class="py-2 pr-4 font-medium">Furnace, $ per MMBtu of heat</th>
-          <th scope="col" class="py-2 pr-4 font-medium">Heat pump, COP {cops[0].toFixed(2)}</th>
-          <th scope="col" class="py-2 pr-4 font-medium">Heat pump, COP {cops[1].toFixed(2)}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          examples.map((x) => (
-            <tr class="border-b">
-              <th scope="row" class="py-2 pr-4 text-left font-normal">
-                {x.label}
-              </th>
-              {[x.elec, x.gas, x.r.breakEven, x.r.perMmbtu.furnace, ...x.r.perMmbtu.heatPump].map((n) => (
-                <td class="py-2 pr-4 font-mono tabular-nums">{n.toFixed(2)}</td>
-              ))}
-            </tr>
-          ))
-        }
-      </tbody>
-    </table>
+    {/* The note sits above the scroll region so a phone never clips it; only the table scrolls. */}
+    <p class="mt-2 max-w-prose text-sm text-muted-foreground">
+      {caption}
+      <a href={href(`/${t.name}/data/`)}>state prices table</a>, so a figure can differ by a cent from the source's own. {
+        noteText
+      } (<a href={latestCite.href}>{latestCite.text}</a>).
+    </p>
+    <section class="overflow-x-auto" aria-label="Worked examples table" tabindex="0">
+      <table class="mt-2 w-full border-collapse text-sm">
+        <thead>
+          <tr class="border-b text-left text-muted-foreground">
+            <th scope="col" class="py-2 pr-4 font-medium">Prices</th>
+            <th scope="col" class="py-2 pr-4 font-medium">Electricity, $ per MMBtu</th>
+            <th scope="col" class="py-2 pr-4 font-medium">Gas, $ per MMBtu</th>
+            <th scope="col" class="py-2 pr-4 font-medium">Break-even COP</th>
+            <th scope="col" class="py-2 pr-4 font-medium">Furnace, $ per MMBtu of heat</th>
+            <th scope="col" class="py-2 pr-4 font-medium">Heat pump, COP {cops[0].toFixed(2)}</th>
+            <th scope="col" class="py-2 pr-4 font-medium">Heat pump, COP {cops[1].toFixed(2)}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            examples.map((x) => (
+              <tr class="border-b">
+                <th scope="row" class="py-2 pr-4 text-left font-normal">
+                  {x.label}
+                </th>
+                {[x.elec, x.gas, x.r.breakEven, x.r.perMmbtu.furnace, ...x.r.perMmbtu.heatPump].map((n) => (
+                  <td class="py-2 pr-4 font-mono tabular-nums">{n.toFixed(2)}</td>
+                ))}
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </section>
   </section>
 
   <section class={box} aria-labelledby="tool-estimate">
