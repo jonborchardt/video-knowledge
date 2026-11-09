@@ -340,6 +340,23 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     }
   });
 
+  it("a chain answers every question: each chained story's resolution in the answer box, the card and the feed", () => {
+    const xml = decode(readFileSync(join(DIST, 'feed.xml'), 'utf8'));
+    const home = decode(readFileSync(join(DIST, 'index.html'), 'utf8'));
+    for (const { topic, slug, s } of storyPages.filter((p) => p.s.chain?.length)) {
+      const html = decode(readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8'));
+      const start = html.indexOf('id="answer"');
+      const answer = html.slice(start, html.indexOf('</section>', start));
+      for (const q of s.chain!) {
+        const text = loadStories(topic)!.stories.find((x) => x.id === q.id)!.arc.resolution;
+        expect(answer, `${slug}: ${q.id}`).toContain(text);
+        expect(answer, `${slug}: ${q.id}`).toContain(q.question);
+        expect(xml, `feed: ${q.id}`).toContain(text);
+        if (home.includes(s.arc.resolution)) expect(home, `home: ${q.id}`).toContain(text);
+      }
+    }
+  });
+
   it('matter pages list their exhibits by number', () => {
     for (const { topic, slug } of storyPages) {
       const html = readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8');

@@ -22,8 +22,27 @@ import { loadPublicRecord } from '../../shared/public-record';
 import type { ClaimRevision, Story } from '../../shared/types';
 import { matterPath } from './content-graph';
 
+/** One question of a matter and what the Record finds on it. */
+export interface MatterAnswer {
+  id: string; // the story
+  question: string;
+  text: string; // its arc's resolution
+}
+
+/** "What the Record finds" for a whole matter: the story's own resolution, then, for a chain, each chained question
+ *  and its own story's resolution in chain order (a chained story missing from `find` is skipped). The consumers
+ *  (the matter page, its Markdown copy, the feed, the home card) lay the list out each in its own way. */
+export function matterAnswers(s: Story, find: (id: string) => Story | undefined): MatterAnswer[] {
+  const chained = (s.chain ?? []).flatMap((c) => {
+    const x = find(c.id);
+    return x ? [{ id: c.id, question: c.question, text: x.arc.resolution }] : [];
+  });
+  return [{ id: s.id, question: s.question, text: s.arc.resolution }, ...chained];
+}
+
 export interface MatterModel {
   first: Story | undefined; // the first question when `s` is a follow-up
+  answers: MatterAnswer[]; // what the Record finds, one per question of the matter
   claims: ClaimView[];
   groups: { label: FindingLabel; claims: ClaimView[] }[];
   exhibits: SourceView[]; // numbered exhibits; `preview` adds unnumbered ones last
@@ -72,6 +91,7 @@ export function matterModel(
   const view = release ? articleView(release, t, loadPublicRecord(t.name, root), opts.repo, figures) : null;
   return {
     first,
+    answers: matterAnswers(s, (id) => stories.find((x) => x.id === id)),
     claims,
     groups,
     exhibits,

@@ -153,7 +153,8 @@ export function matterMarkdown(t: Topic, s: Story, m: MatterModel, c: Commission
   );
   if (m.first && meta.firstUrl) out.push(`A follow-up question to [${m.first.title}](${meta.firstUrl}).`);
   if (m.embed) out.push(`Video: ${m.embed.url}`);
-  out.push('## What the Record finds', s.arc.resolution);
+  // One paragraph per question of the matter, as the page: the first bare, each chained one led by its question.
+  out.push('## What the Record finds', ...m.answers.map((a, i) => (i ? `**${a.question}** ${a.text}` : a.text)));
   if (m.firstArticle && m.first && meta.firstUrl)
     out.push(`The article answering this question is on [${m.first.title}](${meta.firstUrl}#article).`);
   const v = m.view;

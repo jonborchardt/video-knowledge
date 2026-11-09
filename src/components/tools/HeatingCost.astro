@@ -64,6 +64,10 @@ const control = 'min-w-0 rounded-md border border-input bg-background px-2.5 py-
 <div data-tool={spec.id} class="grid grid-cols-[minmax(0,1fr)]">
   <section class={box} aria-labelledby="tool-found">
     <h3 class={h3} id="tool-found">What the research found</h3>
+    {
+      /* The tool compares running costs, so this box keeps the running-cost answer alone; the matter's whole answer,
+        chained questions included, is the page's answer section above. */
+    }
     <p class="max-w-prose">{s.arc.resolution}</p>
     <LabelStrip counts={counts} base="#evidence-" />
     <p class="max-w-prose">

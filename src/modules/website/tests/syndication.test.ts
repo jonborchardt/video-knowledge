@@ -224,6 +224,7 @@ describe('matterMarkdown', () => {
     revisions: [{ r: claim.revisions[0], text: claim.text }],
     revised: '2026-11-01',
     outputs: { video: null, releasing: null, shorts: [] },
+    answers: [{ id: s.id, question: s.question, text: 'Mostly, except against oil.' }],
     embed: { url: 'https://www.youtube.com/watch?v=vid' } as PublicVideo,
     release: {} as ArticleRelease,
     previewArticle: false,
@@ -294,5 +295,23 @@ describe('matterMarkdown', () => {
       'The article answering this question is on [The first question](https://example.test/heat-pumps/first/#article).',
     );
     expect(md).not.toContain('## The headline');
+  });
+
+  it('a chain answers each question under What the Record finds, the follow-ups led by their question', () => {
+    const md = matterMarkdown(
+      t,
+      s,
+      model({
+        answers: [
+          { id: s.id, question: s.question, text: 'Mostly, except against oil.' },
+          { id: 'decision:pay', question: 'Does it pay back?', text: 'Rarely on energy alone.' },
+        ],
+      }),
+      c,
+      mdMeta,
+    );
+    expect(md).toContain(
+      '## What the Record finds\n\nMostly, except against oil.\n\n**Does it pay back?** Rarely on energy alone.',
+    );
   });
 });

@@ -7,7 +7,8 @@ import LabelStrip from '../components/LabelStrip.astro';
 import { commissionKey, commissions, site } from '../config/site';
 import { labelCounts } from '../modules/evidence';
 import { ROOT } from '../shared/io';
-import { hasVideo, matterOrder, matterPath } from '../modules/website';
+import { hasVideo, matterOrder, matterPath, storyNode } from '../modules/website';
+import { matterAnswers } from '../modules/website/matter';
 import { siteGraph } from '../modules/website/site-graph';
 import KindIcon from '../components/KindIcon.astro';
 import SourceIcons from '../components/SourceIcons.astro';
@@ -32,6 +33,7 @@ const latest = [...graph.nodes.values()]
     return {
       s,
       t,
+      answers: matterAnswers(s, (id) => graph.stories.get(storyNode(t.name, id))),
       path,
       card: existsSync(join(ROOT, 'public', card)) ? card : null,
       counts: labelCounts(claims),
@@ -64,7 +66,7 @@ const latest = [...graph.nodes.values()]
     {latest.length === 0 && <p class="text-muted-foreground">No findings published yet.</p>}
     <ul class="grid list-none grid-cols-[repeat(auto-fit,minmax(17rem,1fr))] gap-4 p-0">
       {
-        latest.map(({ s, t, path, card, counts, video }) => (
+        latest.map(({ s, t, answers, path, card, counts, video }) => (
           <li class="grid max-w-md content-start gap-2 rounded-lg border bg-card p-4 text-card-foreground">
             {card && <img class="w-full rounded-sm" src={href(card)} alt="" width="1200" height="675" loading="lazy" />}
             <span class="eyebrow text-muted-foreground">{t.label}</span>
@@ -78,7 +80,13 @@ const latest = [...graph.nodes.values()]
                 Video
               </span>
             )}
-            <p class="text-sm">{s.arc.resolution}</p>
+            {/* The card's question-and-answer pair, once per question of the matter. */}
+            {answers.map((a, i) => (
+              <>
+                {i > 0 && <span class="text-sm text-muted-foreground">{a.question}</span>}
+                <p class="text-sm">{a.text}</p>
+              </>
+            ))}
             <LabelStrip counts={counts} base={`${href(path)}#evidence-`} />
           </li>
         ))

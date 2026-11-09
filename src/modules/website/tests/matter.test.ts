@@ -8,7 +8,7 @@ import { loadTopic } from '../../evidence';
 import { loadStories } from '../../stories';
 import { site } from '../../../config/site';
 import { matterPath } from '../content-graph';
-import { matterModel } from '../matter';
+import { matterAnswers, matterModel } from '../matter';
 
 // Against the real heat-pumps topic: the loader returns exactly what the matter page renders.
 describe('matterModel', () => {
@@ -36,6 +36,28 @@ describe('matterModel', () => {
     expect(m.release).toBeNull();
     expect(m.view).toBeNull();
     expect(m.firstArticle).toBe(!!loadArticleRelease('heat-pumps', followUp.partOf!));
+  });
+
+  // "What the Record finds" is the whole matter: the first question's resolution, then each chained question's own.
+  it("a chain answers every question in order, from the chained stories' own resolutions", () => {
+    const first = stories.find((s) => s.chain?.length)!;
+    const find = (id: string) => stories.find((x) => x.id === id);
+    const answers = matterAnswers(first, find);
+    expect(answers.map((a) => a.id)).toEqual([first.id, ...first.chain!.map((c) => c.id)]);
+    expect(answers[0]).toEqual({ id: first.id, question: first.question, text: first.arc.resolution });
+    expect(answers[1]).toEqual({
+      id: first.chain![0].id,
+      question: first.chain![0].question,
+      text: find(first.chain![0].id)!.arc.resolution,
+    });
+    expect(matterModel(t, first, stories, { repo: site.repo, preview: false }).answers).toEqual(answers);
+  });
+  it('a follow-up answers only its own question, and a chained story not in the list is skipped', () => {
+    const first = stories.find((s) => s.chain?.length)!;
+    expect(matterAnswers(followUp, (id) => stories.find((x) => x.id === id))).toEqual([
+      { id: followUp.id, question: followUp.question, text: followUp.arc.resolution },
+    ]);
+    expect(matterAnswers(first, () => undefined)).toHaveLength(1);
   });
 });
 

@@ -61,6 +61,7 @@ const commission = commissionOf(t.name)!;
 // live video (no fabricated date).
 const {
   first,
+  answers,
   claims,
   groups,
   exhibits,
@@ -166,9 +167,22 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
   <section id="answer" aria-labelledby="answer-title">
     <div class="eyebrow text-gold">The answer</div>
     <h2 class={h2} id="answer-title">What the Record finds</h2>
-    <p class="max-w-prose font-heading text-[1.05rem] leading-relaxed">
-      {s.arc.resolution}
-    </p>
+    {
+      /* One paragraph per question of the matter: the story's own answer, then each chained question (linked to its
+         own page) with its answer. */
+      answers.map((a, i) => (
+        <p class:list={['max-w-prose font-heading text-[1.05rem] leading-relaxed', i > 0 && 'mt-3']}>
+          {i > 0 && (
+            <>
+              <a class="font-semibold" href={storyHref(a)}>
+                {a.question}
+              </a>{' '}
+            </>
+          )}
+          {a.text}
+        </p>
+      ))
+    }
     <div class="mt-3">
       <LabelStrip counts={labelCounts(claims)} base="#evidence-" />
     </div>
