@@ -3,6 +3,7 @@
 // stat-tiles) whose every value is also written as text, and the points as a table. Colours are theme tokens.
 import { barGeometry } from '../modules/storyboard';
 import type { ChartSpec } from '../shared/types';
+import { pointText } from '../shared/numbers';
 
 interface Props {
   spec: ChartSpec;
@@ -19,7 +20,7 @@ const BAR_W = 400; // the rest of the width is the value's text
 const H = ROW * spec.points.length;
 const bars = barGeometry(spec.points, BAR_W, H);
 const title = spec.title ?? caption;
-const label = `${title}: ${spec.points.map((p) => `${p.label} ${p.display}`).join(', ')}`;
+const label = `${title}: ${spec.points.map((p) => `${p.label} ${pointText(p)}`).join(', ')}`;
 ---
 
 <figure class="max-w-wide">
@@ -36,7 +37,7 @@ const label = `${title}: ${spec.points.map((p) => `${p.label} ${p.display}`).joi
               <g>
                 <rect x="0" y={i * ROW + 4} width={W} height={ROW - 8} class="fill-card stroke-border" />
                 <text x="12" y={i * ROW + 40} class="fill-foreground text-[22px] font-bold">
-                  {b.display}
+                  {pointText(b)}
                 </text>
                 <text x="140" y={i * ROW + 38} class="fill-muted-foreground text-[13px]">
                   {b.label}
@@ -57,7 +58,7 @@ const label = `${title}: ${spec.points.map((p) => `${p.label} ${p.display}`).joi
                   <rect x="0" y={b.y} width={b.w} height={b.h} class="fill-primary" />
                 )}
                 <text x={b.w + b.h / 2 + 6} y={b.y + b.h / 2 + 5} class="fill-foreground text-[14px] font-bold">
-                  {b.display}
+                  {pointText(b)}
                 </text>
               </g>
             ))}
@@ -85,7 +86,7 @@ const label = `${title}: ${spec.points.map((p) => `${p.label} ${p.display}`).joi
                 <th scope="row" class="py-1 pr-4 text-left font-normal">
                   {p.label}
                 </th>
-                <td class="py-1 pr-4 font-mono tabular-nums">{p.display}</td>
+                <td class="py-1 pr-4 font-mono tabular-nums">{pointText(p)}</td>
               </tr>
             ))}
           </tbody>

@@ -2,6 +2,7 @@
 // source marks numbered in first-use order, the noted corrections and a revised finding it relies on.
 import { type ArticleRelease, type Callout, articleSentences } from './article';
 import { chartProblems, datasetChart } from '../storyboard';
+import { pointText, unitLabel } from '../../shared/numbers';
 import { isClaimRevision } from '../../shared/public-record';
 import type { ChartSpec, DataTable, PublicRecord, Revision, Sentence } from '../../shared/types';
 import type { Topic } from '../evidence';
@@ -135,13 +136,25 @@ export function articleView(
               ...(correctedOn.has(s.id) && { correctedOn: correctedOn.get(s.id) }),
             })),
           };
-        if (b.kind === 'table')
+        if (b.kind === 'table') {
+          // A column whose cells all share one unit none of them shows carries the unit in its header; any other
+          // column shows it on each cell. The unit is never written into a display that already states it.
+          const shared = b.columns.map((_, i) => {
+            const cells = b.rows.map((x) => x.cells[i]).filter((c) => !!c);
+            const units = new Set(cells.map((c) => c.unit));
+            const label = units.size === 1 ? unitLabel(cells[0].unit) : '';
+            return label && cells.every((c) => pointText(c) !== c.display) ? label : '';
+          });
           return {
             kind: 'table',
             caption: b.caption,
-            columns: b.columns,
-            rows: b.rows.map((x) => ({ label: x.label, cells: x.cells.map((c) => c.display) })),
+            columns: b.columns.map((c, i) => (shared[i] ? `${c} (${shared[i]})` : c)),
+            rows: b.rows.map((x) => ({
+              label: x.label,
+              cells: x.cells.map((c, i) => (shared[i] ? c.display : pointText(c))),
+            })),
           };
+        }
         const draw = figures?.get(b.ref);
         return { kind: 'figure', ref: b.ref, caption: b.caption, ...(draw && { draw }) };
       }),

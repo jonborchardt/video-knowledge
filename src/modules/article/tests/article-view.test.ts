@@ -204,3 +204,52 @@ describe('article view', () => {
     ]);
   });
 });
+
+describe('table units', () => {
+  const cell = (display: string, unit: 'usd' | 'percent' | 'count') => ({
+    label: 'x',
+    value: 1,
+    unit,
+    display,
+    cite: A,
+  });
+  const withTable = (
+    rows: { label: string; cells: ReturnType<typeof cell>[] }[],
+    columns = ['Median installed cost'],
+  ) =>
+    release({
+      article: article({
+        sections: [
+          { name: 'answer', heading: 'H', blocks: [{ kind: 'table', id: 't1', caption: 'C', columns, rows }] },
+        ],
+      }),
+    });
+  it('puts the unit in the header when a whole column shares one and no cell shows it', () => {
+    const v = articleView(
+      withTable([
+        { label: 'a', cells: [cell('6,185', 'usd')] },
+        { label: 'b', cells: [cell('4,684', 'usd')] },
+      ]),
+      topic,
+      empty,
+      REPO,
+    );
+    const t = v.sections[0].blocks[0];
+    expect(t.kind === 'table' && t.columns).toEqual(['Median installed cost (USD)']);
+    expect(t.kind === 'table' && t.rows.map((r) => r.cells[0])).toEqual(['6,185', '4,684']);
+  });
+  it('leaves the header alone and marks the cells when a column mixes units', () => {
+    const v = articleView(
+      withTable([
+        { label: 'a', cells: [cell('6,185', 'usd')] },
+        { label: 'b', cells: [cell('12', 'percent')] },
+      ]),
+      topic,
+      empty,
+      REPO,
+    );
+    const t = v.sections[0].blocks[0];
+    expect(t.kind === 'table' && t.columns).toEqual(['Median installed cost']);
+    expect(t.kind === 'table' && t.rows.map((r) => r.cells[0])).toEqual(['$6,185', '12%']);
+  });
+});

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { hasFigure, nums, spokenWords, wordsToDigits } from '../src/shared/numbers';
+import { hasFigure, nums, pointText, spokenWords, unitLabel, wordsToDigits } from '../src/shared/numbers';
+import type { ChartPoint, Unit } from '../src/shared/types';
 
 describe('number words', () => {
   it.each([
@@ -58,5 +59,31 @@ describe('number words: review fixes', () => {
     expect(hasFigure('a 14.5 share', '14')).toBe(false);
     expect(hasFigure('averages just over $1,018,350.20', '1018350')).toBe(true);
     expect(hasFigure('less than $84.', '84')).toBe(true);
+  });
+});
+
+describe('pointText', () => {
+  it.each([
+    [{ display: '6,185', unit: 'usd' }, '$6,185'],
+    [{ display: '$6,185', unit: 'usd' }, '$6,185'],
+    [{ display: '-120', unit: 'usd' }, '-$120'],
+    [{ display: 'less than 84', unit: 'usd' }, 'less than $84'],
+    [{ display: '$1,000 or less', unit: 'usd' }, '$1,000 or less'],
+    [{ display: '120', unit: 'gbp' }, '\u00a3120'],
+    [{ display: '19.2', unit: 'percent' }, '19.2%'],
+    [{ display: 'about 8 to 9', unit: 'percent' }, 'about 8 to 9%'],
+    [{ display: '19.2 percent', unit: 'percent' }, '19.2 percent'],
+    [{ display: 'fourteen', unit: 'percent' }, 'fourteen'],
+    [{ display: '1 in 238', unit: 'ratio' }, '1 in 238'],
+    [{ display: '2,298', unit: 'count' }, '2,298'],
+  ])('%j -> %s', (p, out) => expect(pointText(p as ChartPoint)).toBe(out));
+  it('unitLabel names the unit a column header shows', () => {
+    expect(['usd', 'gbp', 'percent', 'count', 'ratio'].map((u) => unitLabel(u as Unit))).toEqual([
+      'USD',
+      'GBP',
+      '%',
+      '',
+      '',
+    ]);
   });
 });

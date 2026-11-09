@@ -3,6 +3,7 @@
 // ponytail: cardinals up to the billions only; ordinals ("third"), fractions ("half", "quarter") and decimals spelled
 // with "point" are left as words, so they can neither pass nor smuggle a figure.
 
+import type { ChartPoint, Unit } from './types';
 const UNITS: Record<string, number> = {
   zero: 0,
   one: 1,
@@ -161,4 +162,23 @@ export function hasFigure(haystack: string, figure: string): boolean {
   const f = plain.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const after = plain.replace(/\..*$/, '').length >= 4 ? '(?!\\d)' : '(?!\\.?\\d)';
   return new RegExp(`(^|[^\\d.])${f}${after}`).test(hay);
+}
+
+/** What a column header shows for a unit; empty where the display carries its own sense (a count, a ratio). */
+export function unitLabel(unit: Unit): string {
+  return unit === 'usd' ? 'USD' : unit === 'gbp' ? 'GBP' : unit === 'percent' ? '%' : '';
+}
+
+/** A point's display with its unit visible, changed in exactly two cases and otherwise as the passage states it: a
+ *  currency with no sign gets its sign before the first digit run; a percent with no sign or word gets `%` after the
+ *  last digit run. A display with no digit, a count and a ratio are never changed. */
+export function pointText(p: Pick<ChartPoint, 'display' | 'unit'>): string {
+  const d = p.display;
+  if (!/\d/.test(d)) return d;
+  if (p.unit === 'usd' || p.unit === 'gbp') {
+    const sign = p.unit === 'usd' ? '$' : '\u00a3';
+    return /[$\u00a3]|dollar|pound/i.test(d) ? d : d.replace(/\d/, (m) => sign + m);
+  }
+  if (p.unit === 'percent') return /%|per ?cent/i.test(d) ? d : d.replace(/^(.*\d)/, '$1%');
+  return d;
 }

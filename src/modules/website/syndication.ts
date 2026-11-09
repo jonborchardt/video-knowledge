@@ -6,6 +6,7 @@ import { FINDING_TEXT, type Topic, verdictLabel } from '../evidence';
 import type { Commission } from '../../config/site';
 import { citeHref, citeLines } from '../../lib/url';
 import { revisionLine } from '../../shared/public-record';
+import { pointText } from '../../shared/numbers';
 import type { Story } from '../../shared/types';
 import type { MatterModel } from './matter';
 
@@ -132,12 +133,12 @@ function block(b: Block): string {
   const data = d.table
     ? table(
         d.table.columns.map((c) => c.label),
-        d.table.rows.map((r) => [r.label, ...r.cells.map((c) => c.display)]),
+        d.table.rows.map((r) => [r.label, ...r.cells.map(pointText)]),
       )
     : d.chart
       ? table(
           [d.chart.title ?? 'Value'],
-          d.chart.points.map((p) => [p.label, p.display]),
+          d.chart.points.map((p) => [p.label, pointText(p)]),
         )
       : '';
   const note = d.chart?.note ? ` ${d.chart.note}` : '';
