@@ -1,18 +1,18 @@
 {
  "topic": "heat-pumps",
  "story": "decision:does-the-upfront-cost-eat-the-savings",
- "approvedBy": "automated: /produce run started by Jon Borchardt",
- "date": "2026-10-28",
- "revision": 1,
+ "approvedBy": "Jon",
+ "date": "2026-11-09",
+ "revision": 2,
  "fingerprints": {
-  "article": "4c9ca856f4",
+  "article": "2a1eae9823",
   "package": "191975032e",
-  "validation": "b6a66f99e6"
+  "validation": "b96210ab26"
  },
  "article": {
   "topic": "heat-pumps",
   "story": "decision:does-the-upfront-cost-eat-the-savings",
-  "revision": 2,
+  "revision": 3,
   "generation": {
    "model": "claude-opus-5-5",
    "brief": "scripts/briefs/article.md",
@@ -729,9 +729,38 @@
       ]
      },
      {
-      "kind": "figure",
-      "ref": "decision-does-the-upfront-cost-eat-the-savings/sc13",
-      "caption": "A heat pump against an air conditioner of the same size: the wholesale premium and the database costs of efficient models."
+      "kind": "table",
+      "id": "t5",
+      "caption": "Installed cost of an efficient heat pump and an equally efficient central air conditioner, from the NREL cost database as quoted in a Minnesota cold-climate report",
+      "columns": [
+       "Installed cost"
+      ],
+      "rows": [
+       {
+        "label": "Efficient air-source heat pump (NREL cost database, via the 2017 Minnesota report)",
+        "cells": [
+         {
+          "label": "Installed cost",
+          "value": 5550,
+          "unit": "usd",
+          "display": "$5,550",
+          "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1360-L1391"
+         }
+        ]
+       },
+       {
+        "label": "Efficient central air conditioner (same database)",
+        "cells": [
+         {
+          "label": "Installed cost",
+          "value": 5180,
+          "unit": "usd",
+          "display": "$5,180",
+          "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1360-L1391"
+         }
+        ]
+       }
+      ]
      },
      {
       "kind": "prose",
@@ -939,16 +968,16 @@
      {
       "kind": "table",
       "id": "t2",
-      "caption": "Upgrades needed to install cold-climate heat pump prototypes in a field test, share of sites, and the cost of electrical upgrades",
+      "caption": "Electrical upgrades needed to install cold-climate heat pump prototypes in a field test of 21 sites",
       "columns": [
-       "Value"
+       "Share of the 21 sites"
       ],
       "rows": [
        {
-        "label": "Sites needing a new panel (21 field-test sites)",
+        "label": "New electrical panel (21 field-test sites)",
         "cells": [
          {
-          "label": "Value",
+          "label": "Share of the 21 sites",
           "value": 38,
           "unit": "percent",
           "display": "38%",
@@ -957,10 +986,10 @@
         ]
        },
        {
-        "label": "Sites needing new breakers for auxiliary heat (same sites)",
+        "label": "New breakers for auxiliary heat (same sites)",
         "cells": [
          {
-          "label": "Value",
+          "label": "Share of the 21 sites",
           "value": 90,
           "unit": "percent",
           "display": "90%",
@@ -969,10 +998,10 @@
         ]
        },
        {
-        "label": "Sites needing new wiring (same sites)",
+        "label": "New wiring (same sites)",
         "cells": [
          {
-          "label": "Value",
+          "label": "Share of the 21 sites",
           "value": 55,
           "unit": "percent",
           "display": "55%",
@@ -981,37 +1010,13 @@
         ]
        },
        {
-        "label": "Sites needing a service line upgrade (same sites)",
+        "label": "Service line upgrade (same sites)",
         "cells": [
          {
-          "label": "Value",
+          "label": "Share of the 21 sites",
           "value": 24,
           "unit": "percent",
           "display": "24%",
-          "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1953-L1976"
-         }
-        ]
-       },
-       {
-        "label": "Electrical upgrades, lowest total, labour and materials (same sites)",
-        "cells": [
-         {
-          "label": "Value",
-          "value": 3750,
-          "unit": "usd",
-          "display": "$3,750",
-          "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1953-L1976"
-         }
-        ]
-       },
-       {
-        "label": "Electrical upgrades, highest total, labour and materials (same sites)",
-        "cells": [
-         {
-          "label": "Value",
-          "value": 8970,
-          "unit": "usd",
-          "display": "$8,970",
           "cite": "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1953-L1976"
          }
         ]
@@ -1428,6 +1433,79 @@
      },
      {
       "kind": "prose",
+      "sentences": [
+       {
+        "id": "s37",
+        "text": "Then, on May 29, 2026, the Department of Energy removed fuel-switching from the rebate: it now pays to upgrade existing electric equipment to more efficient electric equipment, and no longer to replace gas or other fossil-fuel appliances.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s37.a",
+          "text": "On May 29, 2026, the U.S. Department of Energy issued updated guidance under which HEAR rebates are no longer allowed for replacing gas or any other fossil fuel appliances.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "heat-pumps/since-mid-2026-federal-electric-appliance",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "heat-pumps/since-mid-2026-federal-electric-appliance",
+            "cite": "heat-pumps/sources/nc-2026-energy-saver-program-changes.txt#L4-L16"
+           }
+          ]
+         },
+         {
+          "id": "s37.b",
+          "text": "DOE's program notice removes allowances for fuel-switching and allows HVAC rebates only for upgrading existing electric equipment to more efficient electric equipment.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "heat-pumps/since-mid-2026-federal-electric-appliance",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "heat-pumps/since-mid-2026-federal-electric-appliance",
+            "cite": "heat-pumps/sources/doe-2026-heehr-program-notice-26-2.txt#L145-L155"
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "id": "s38",
+        "text": "According to North Carolina's state energy office, the change had to be in place by September 1, 2026.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s38.a",
+          "text": "North Carolina's state energy office says DOE's updated guidance must be implemented by Sept. 1, 2026.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "heat-pumps/since-mid-2026-federal-electric-appliance",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "heat-pumps/since-mid-2026-federal-electric-appliance",
+            "cite": "heat-pumps/sources/nc-2026-energy-saver-program-changes.txt#L4-L16"
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "prose",
       "callout": "unresolved",
       "claim": "heat-pumps/federal-inflation-reduction-act-rebates-heat",
       "sentences": [
@@ -1563,74 +1641,6 @@
       "kind": "prose",
       "sentences": [
        {
-        "id": "s37",
-        "text": "Then, on May 29, 2026, the Department of Energy removed fuel-switching from the rebate: it now pays to upgrade existing electric equipment to more efficient electric equipment, and no longer to replace gas or other fossil-fuel appliances.",
-        "type": "factual",
-        "assertions": [
-         {
-          "id": "s37.a",
-          "text": "On May 29, 2026, the U.S. Department of Energy issued updated guidance under which HEAR rebates are no longer allowed for replacing gas or any other fossil fuel appliances.",
-          "kind": "fact",
-          "claims": [
-           {
-            "id": "heat-pumps/since-mid-2026-federal-electric-appliance",
-            "stance": "asserts"
-           }
-          ],
-          "evidence": [
-           {
-            "kind": "study",
-            "claim": "heat-pumps/since-mid-2026-federal-electric-appliance",
-            "cite": "heat-pumps/sources/nc-2026-energy-saver-program-changes.txt#L4-L16"
-           }
-          ]
-         },
-         {
-          "id": "s37.b",
-          "text": "DOE's program notice removes allowances for fuel-switching and allows HVAC rebates only for upgrading existing electric equipment to more efficient electric equipment.",
-          "kind": "fact",
-          "claims": [
-           {
-            "id": "heat-pumps/since-mid-2026-federal-electric-appliance",
-            "stance": "asserts"
-           }
-          ],
-          "evidence": [
-           {
-            "kind": "study",
-            "claim": "heat-pumps/since-mid-2026-federal-electric-appliance",
-            "cite": "heat-pumps/sources/doe-2026-heehr-program-notice-26-2.txt#L145-L155"
-           }
-          ]
-         }
-        ]
-       },
-       {
-        "id": "s38",
-        "text": "According to North Carolina's state energy office, the change had to be in place by September 1, 2026.",
-        "type": "factual",
-        "assertions": [
-         {
-          "id": "s38.a",
-          "text": "North Carolina's state energy office says DOE's updated guidance must be implemented by Sept. 1, 2026.",
-          "kind": "fact",
-          "claims": [
-           {
-            "id": "heat-pumps/since-mid-2026-federal-electric-appliance",
-            "stance": "asserts"
-           }
-          ],
-          "evidence": [
-           {
-            "kind": "study",
-            "claim": "heat-pumps/since-mid-2026-federal-electric-appliance",
-            "cite": "heat-pumps/sources/nc-2026-energy-saver-program-changes.txt#L4-L16"
-           }
-          ]
-         }
-        ]
-       },
-       {
         "id": "s39",
         "text": "State and utility programs remain, and some are generous: Massachusetts' Mass Save pays a whole-home rebate of $8,500, or $16,000 at the income-based level, against an average installation of $22,000 in its 2022 program data.",
         "type": "factual",
@@ -1663,62 +1673,58 @@
      {
       "kind": "table",
       "id": "t3",
-      "caption": "Mass Save whole-home air-source heat pump rebate against the average installation cost",
+      "caption": "Mass Save whole-home air-source heat pump rebate against the program's average installation cost, by incentive tier",
       "columns": [
-       "Standard incentive",
-       "Income-based incentive"
+       "Average installation cost",
+       "Whole-home rebate",
+       "Net project cost"
       ],
       "rows": [
        {
-        "label": "Average installation cost (Mass Save program data, 2022 installations)",
+        "label": "Standard incentive (Massachusetts; average cost from Mass Save program data, 2022 installations)",
         "cells": [
          {
-          "label": "Standard incentive",
+          "label": "Average installation cost",
           "value": 22000,
           "unit": "usd",
           "display": "$22,000",
           "cite": "heat-pumps/sources/masssave-2026-air-source-heat-pump-rebates.txt#L98-L109"
          },
          {
-          "label": "Income-based incentive",
-          "value": 22000,
-          "unit": "usd",
-          "display": "$22,000",
-          "cite": "heat-pumps/sources/masssave-2026-air-source-heat-pump-rebates.txt#L98-L109"
-         }
-        ]
-       },
-       {
-        "label": "Mass Save whole-home rebate (Massachusetts)",
-        "cells": [
-         {
-          "label": "Standard incentive",
+          "label": "Whole-home rebate",
           "value": 8500,
           "unit": "usd",
           "display": "$8,500",
           "cite": "heat-pumps/sources/masssave-2026-air-source-heat-pump-rebates.txt#L98-L109"
          },
          {
-          "label": "Income-based incentive",
-          "value": 16000,
+          "label": "Net project cost",
+          "value": 13500,
           "unit": "usd",
-          "display": "$16,000",
+          "display": "$13,500",
           "cite": "heat-pumps/sources/masssave-2026-air-source-heat-pump-rebates.txt#L98-L109"
          }
         ]
        },
        {
-        "label": "Net project cost (Massachusetts)",
+        "label": "Income-based incentive (same program)",
         "cells": [
          {
-          "label": "Standard incentive",
-          "value": 13500,
+          "label": "Average installation cost",
+          "value": 22000,
           "unit": "usd",
-          "display": "$13,500",
+          "display": "$22,000",
           "cite": "heat-pumps/sources/masssave-2026-air-source-heat-pump-rebates.txt#L98-L109"
          },
          {
-          "label": "Income-based incentive",
+          "label": "Whole-home rebate",
+          "value": 16000,
+          "unit": "usd",
+          "display": "$16,000",
+          "cite": "heat-pumps/sources/masssave-2026-air-source-heat-pump-rebates.txt#L98-L109"
+         },
+         {
+          "label": "Net project cost",
           "value": 6000,
           "unit": "usd",
           "display": "$6,000",
@@ -1733,7 +1739,7 @@
       "sentences": [
        {
         "id": "s40",
-        "text": "That is a single program: across the projects in the laboratory's database, which predates today's rules, the median total rebate was $1,327, about 21 percent of gross project cost.",
+        "text": "That is a single program: across home retrofit projects of every kind in the laboratory's database, which predates today's rules, 71 percent reported some rebate and the median total rebate was $1,327, about 21 percent of gross project cost.",
         "type": "factual",
         "assertions": [
          {
@@ -1754,7 +1760,25 @@
            }
           ],
           "qualifications": [
-           "The sentence says these are whole projects in that database, not heat pumps alone, and calls Mass Save one program."
+           "The sentence says these are home retrofit projects of every kind in that database, not heat pumps alone, and calls Mass Save one program."
+          ]
+         },
+         {
+          "id": "s40.b",
+          "text": "71% of projects in the database reported some rebates.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "heat-pumps/state-utility-rebates-can-cover-large",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "heat-pumps/state-utility-rebates-can-cover-large",
+            "cite": "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt#L2532-L2536"
+           }
           ]
          }
         ]
@@ -1764,52 +1788,24 @@
      {
       "kind": "table",
       "id": "t4",
-      "caption": "Rebates across the retrofit projects in the national laboratory database",
+      "caption": "Rebates across home retrofit projects of every kind, not heat pumps alone, in the national laboratory database (2021 report)",
       "columns": [
-       "Value"
+       "Total rebate per project",
+       "Share of gross project cost"
       ],
       "rows": [
        {
-        "label": "Projects reporting some rebate (laboratory database, 2021 report)",
+        "label": "Median project (laboratory database, 2021 report)",
         "cells": [
          {
-          "label": "Value",
-          "value": 71,
-          "unit": "percent",
-          "display": "71%",
-          "cite": "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt#L2532-L2536"
-         }
-        ]
-       },
-       {
-        "label": "Median total rebate per project (same database)",
-        "cells": [
-         {
-          "label": "Value",
+          "label": "Total rebate per project",
           "value": 1327,
           "unit": "usd",
           "display": "$1,327",
           "cite": "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt#L2532-L2536"
-         }
-        ]
-       },
-       {
-        "label": "Mean total rebate per project (same database)",
-        "cells": [
+         },
          {
-          "label": "Value",
-          "value": 3053,
-          "unit": "usd",
-          "display": "$3,053",
-          "cite": "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt#L2532-L2536"
-         }
-        ]
-       },
-       {
-        "label": "Median rebate share of gross project cost (same database)",
-        "cells": [
-         {
-          "label": "Value",
+          "label": "Share of gross project cost",
           "value": 21,
           "unit": "percent",
           "display": "21%",
@@ -1818,10 +1814,17 @@
         ]
        },
        {
-        "label": "Mean rebate share of gross project cost (same database)",
+        "label": "Mean project (same database)",
         "cells": [
          {
-          "label": "Value",
+          "label": "Total rebate per project",
+          "value": 3053,
+          "unit": "usd",
+          "display": "$3,053",
+          "cite": "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt#L2532-L2536"
+         },
+         {
+          "label": "Share of gross project cost",
           "value": 30,
           "unit": "percent",
           "display": "30%",
@@ -1972,7 +1975,7 @@
       "sentences": [
        {
         "id": "s44",
-        "text": "For a heat pump installed in 2026, then, there is no federal tax credit, the federal rebate no longer pays to switch from gas, and state and utility rebates, where they exist, usually cut the price rather than erase it.",
+        "text": "For a heat pump installed in 2026, then, there is no federal tax credit, the federal rebate no longer pays to switch from gas, and state and utility rebates, where they exist, usually cut the price rather than erase it, judging by a database of home retrofits of every kind rather than of heat pumps alone.",
         "type": "factual",
         "assertions": [
          {
@@ -2091,36 +2094,6 @@
     ],
     "note": "Archetypal model projects, including hot water; not measured installs."
    }
-  },
-  "decision-does-the-upfront-cost-eat-the-savings/sc13": {
-   "chart": {
-    "type": "stat-tiles",
-    "title": "Heat pump vs. an air conditioner",
-    "points": [
-     {
-      "label": "Wholesale premium over a same-size AC",
-      "value": 500,
-      "unit": "usd",
-      "display": "$200–$500",
-      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L185-L191"
-     },
-     {
-      "label": "Efficient heat pump (NREL)",
-      "value": 5550,
-      "unit": "usd",
-      "display": "$5,550",
-      "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1360-L1391"
-     },
-     {
-      "label": "Efficient central AC (NREL)",
-      "value": 5180,
-      "unit": "usd",
-      "display": "$5,180",
-      "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1360-L1391"
-     }
-    ],
-    "note": "Wholesale prices, not installed; the NREL pair is 19 SEER equipment."
-   }
   }
  },
  "history": [
@@ -2129,7 +2102,23 @@
    "date": "2026-10-28",
    "approvedBy": "automated: /produce run started by Jon Borchardt",
    "fingerprint": "4c9ca856f4"
+  },
+  {
+   "revision": 2,
+   "date": "2026-11-09",
+   "approvedBy": "Jon",
+   "fingerprint": "2a1eae9823",
+   "note": "Page review corrections: the heat pump versus air conditioner figure becomes a table of the two installed costs (the wholesale premium stays in the text); the field-test table keeps only its shares of sites; the May 2026 rebate change moves up to follow the federal-help paragraph; the Mass Save and laboratory-database rebate tables are relaid by measure; the close and the database sentence name the population (home retrofits of every kind). No figure, cite or verdict changes.",
+   "sentences": [
+    "t5",
+    "t2",
+    "t3",
+    "s40",
+    "t4",
+    "s44",
+    "decision-does-the-upfront-cost-eat-the-savings/sc13"
+   ]
   }
  ],
- "recordSeen": 1
+ "recordSeen": 2
 }

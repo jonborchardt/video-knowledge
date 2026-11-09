@@ -1,10 +1,10 @@
 {
  "topic": "heat-pumps",
  "story": "decision:is-it-cheaper-to-run-than-gas",
- "revision": 6,
- "date": "2026-11-03T07:39:09.836Z",
+ "revision": 7,
+ "date": "2026-11-09T07:55:07.702Z",
  "status": "passed",
- "scriptFingerprint": "5fc0eff379",
+ "scriptFingerprint": "ef4f064a9b",
  "packageFingerprint": "6dd3b084bb",
  "wordsPerMinute": 150,
  "words": 1976,
@@ -6603,6 +6603,74 @@
    "issues": []
   },
   {
+   "id": "s40",
+   "section": "question-2",
+   "text": "Those homes ran on propane, not gas, so the years do not carry over to a gas home.",
+   "type": "factual",
+   "fingerprint": "965534980a",
+   "words": 18,
+   "status": "verified",
+   "approved": true,
+   "assertions": [
+    {
+     "id": "s40.a",
+     "text": "The Minnesota payback figures are for a ccASHP with propane furnace back-up, not natural gas.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s40.a",
+      "text": "The Minnesota payback figures are for a ccASHP with propane furnace back-up, not natural gas.",
+      "kind": "fact",
+      "modality": "plain",
+      "status": "supported",
+      "decision": "approved",
+      "review": true,
+      "verbatim": false,
+      "strength": 0.55,
+      "independent": 1,
+      "supporting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+         "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "CEE 2017, cold-climate heat pumps in Minnesota",
+        "verdict": "right",
+        "confidence": 0.55,
+        "note": "Simple payback ranged from 0.6 years (furnace and AC both failed) to 28.8 years (no failure, versus a condensing furnace), depending on what equipment is replaced and the baseline furnace efficiency.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "contradicting": [],
+      "qualifying": [],
+      "context": [],
+      "problems": [],
+      "limitations": [
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
+      "suggestions": [],
+      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.55)."
+     },
+     "issues": [
+      {
+       "sentence": "s40",
+       "category": "wording",
+       "severity": "info",
+       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+       "by": "deterministic",
+       "assertion": "s40.a"
+      }
+     ]
+    }
+   ],
+   "issues": []
+  },
+  {
    "id": "s39",
    "section": "question-2",
    "text": "When the furnace and the air conditioner both needed replacing, the extra cost fell to $370 and the payback to about a year or less (0.6 to 1.1 years), and the table shows the cases in between.",
@@ -6686,74 +6754,6 @@
        "assertion": "s39.a",
        "suggestion": "The writer says the narration carries it: s40 says these are propane homes, not gas.",
        "disposition": "The Canadian full-replacement limit does not bear on the Minnesota figure; s40 states the propane limit."
-      }
-     ]
-    }
-   ],
-   "issues": []
-  },
-  {
-   "id": "s40",
-   "section": "question-2",
-   "text": "Those homes ran on propane, not gas, so the years do not carry over to a gas home.",
-   "type": "factual",
-   "fingerprint": "965534980a",
-   "words": 18,
-   "status": "verified",
-   "approved": true,
-   "assertions": [
-    {
-     "id": "s40.a",
-     "text": "The Minnesota payback figures are for a ccASHP with propane furnace back-up, not natural gas.",
-     "kind": "fact",
-     "status": "verified",
-     "validation": {
-      "id": "s40.a",
-      "text": "The Minnesota payback figures are for a ccASHP with propane furnace back-up, not natural gas.",
-      "kind": "fact",
-      "modality": "plain",
-      "status": "supported",
-      "decision": "approved",
-      "review": true,
-      "verbatim": false,
-      "strength": 0.55,
-      "independent": 1,
-      "supporting": [
-       {
-        "ref": {
-         "kind": "study",
-         "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
-         "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
-        },
-        "cited": true,
-        "role": "supports",
-        "by": "CEE 2017, cold-climate heat pumps in Minnesota",
-        "verdict": "right",
-        "confidence": 0.55,
-        "note": "Simple payback ranged from 0.6 years (furnace and AC both failed) to 28.8 years (no failure, versus a condensing furnace), depending on what equipment is replaced and the baseline furnace efficiency.",
-        "applicability": "direct",
-        "basis": "heuristic",
-        "why": "the verdict bears on the claim as worded"
-       }
-      ],
-      "contradicting": [],
-      "qualifying": [],
-      "context": [],
-      "problems": [],
-      "limitations": [
-       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
-      ],
-      "suggestions": [],
-      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.55)."
-     },
-     "issues": [
-      {
-       "sentence": "s40",
-       "category": "wording",
-       "severity": "info",
-       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
-       "by": "deterministic",
-       "assertion": "s40.a"
       }
      ]
     }
@@ -8156,6 +8156,13 @@
   {
    "revision": 6,
    "date": "2026-11-03T07:39:09.836Z",
+   "status": "passed",
+   "blocking": 0,
+   "warnings": 0
+  },
+  {
+   "revision": 7,
+   "date": "2026-11-09T07:55:07.702Z",
    "status": "passed",
    "blocking": 0,
    "warnings": 0

@@ -1,22 +1,22 @@
 {
  "topic": "heat-pumps",
  "story": "decision:does-the-upfront-cost-eat-the-savings",
- "revision": 2,
- "date": "2026-11-03T07:38:51.015Z",
+ "revision": 3,
+ "date": "2026-11-09T07:55:45.807Z",
  "status": "passed",
- "scriptFingerprint": "7c011c7843",
+ "scriptFingerprint": "96e0dcbf62",
  "packageFingerprint": "191975032e",
  "wordsPerMinute": 150,
- "words": 1616,
- "spokenWords": 1748,
- "minutes": 11.7,
+ "words": 1642,
+ "spokenWords": 1775,
+ "minutes": 11.8,
  "counts": {
   "sentences": 49,
   "factual": 42,
-  "assertions": 59,
-  "verified": 59,
+  "assertions": 60,
+  "verified": 60,
   "blocking": 0,
-  "warnings": 31,
+  "warnings": 33,
   "dispositioned": 0,
   "unreviewed": 0
  },
@@ -2012,7 +2012,21 @@
      ]
     }
    ],
-   "issues": []
+   "issues": [
+    {
+     "sentence": "s16",
+     "fingerprint": "27dda5513b",
+     "revision": 3,
+     "category": "overgeneralization",
+     "severity": "warning",
+     "explanation": "Table t5 caption (and the t1/s15 phrasing it echoes) says the heat pump and air conditioner are \"of the same size\". The Minnesota report lines 1360-1391 give $5,550 (9.5 HSPF / 19 SEER heat pump) and $5,180 (19 SEER air conditioner) with no capacity or size; only the efficiency (SEER) matches. The figures are correct, but t5 is left unapproved until the caption says \"equally efficient\" (as s16 does) instead of \"of the same size\".",
+     "refs": [
+      "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1360-L1391"
+     ],
+     "suggestion": "Caption: Installed cost of an efficient heat pump and an equally efficient central air conditioner, from the NREL cost database as quoted in a Minnesota cold-climate report.",
+     "by": "review"
+    }
+   ]
   },
   {
    "id": "s17",
@@ -3903,6 +3917,197 @@
    "issues": []
   },
   {
+   "id": "s37",
+   "section": "question-2",
+   "text": "Then, on May 29, 2026, the Department of Energy removed fuel-switching from the rebate: it now pays to upgrade existing electric equipment to more efficient electric equipment, and no longer to replace gas or other fossil-fuel appliances.",
+   "type": "factual",
+   "fingerprint": "24355cd943",
+   "words": 37,
+   "status": "verified",
+   "approved": true,
+   "assertions": [
+    {
+     "id": "s37.a",
+     "text": "On May 29, 2026, the U.S. Department of Energy issued updated guidance under which HEAR rebates are no longer allowed for replacing gas or any other fossil fuel appliances.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s37.a",
+      "text": "On May 29, 2026, the U.S. Department of Energy issued updated guidance under which HEAR rebates are no longer allowed for replacing gas or any other fossil fuel appliances.",
+      "kind": "fact",
+      "modality": "possibility",
+      "status": "supported",
+      "decision": "approved",
+      "review": true,
+      "verbatim": false,
+      "strength": 0.75,
+      "independent": 1,
+      "supporting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/since-mid-2026-federal-electric-appliance",
+         "cite": "heat-pumps/sources/nc-2026-energy-saver-program-changes.txt#L4-L16"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "North Carolina 2026, Energy Saver program changes",
+        "verdict": "right",
+        "confidence": 0.75,
+        "note": "North Carolina's state energy office: under DOE's May 29, 2026 guidance, from Sept. 1, 2026 HEAR rebates are no longer allowed for replacing gas or other fossil-fuel appliances; only electric-to-electric upgrades qualify.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "contradicting": [],
+      "qualifying": [],
+      "context": [],
+      "problems": [],
+      "limitations": [
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
+      "suggestions": [],
+      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.75)."
+     },
+     "issues": [
+      {
+       "sentence": "s37",
+       "category": "wording",
+       "severity": "info",
+       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+       "by": "deterministic",
+       "assertion": "s37.a"
+      }
+     ]
+    },
+    {
+     "id": "s37.b",
+     "text": "DOE's program notice removes allowances for fuel-switching and allows HVAC rebates only for upgrading existing electric equipment to more efficient electric equipment.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s37.b",
+      "text": "DOE's program notice removes allowances for fuel-switching and allows HVAC rebates only for upgrading existing electric equipment to more efficient electric equipment.",
+      "kind": "fact",
+      "modality": "plain",
+      "status": "supported",
+      "decision": "approved",
+      "review": true,
+      "verbatim": false,
+      "strength": 0.85,
+      "independent": 1,
+      "supporting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/since-mid-2026-federal-electric-appliance",
+         "cite": "heat-pumps/sources/doe-2026-heehr-program-notice-26-2.txt#L145-L155"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "DOE 2026, Program Notice 26-2 on electric home rebates",
+        "verdict": "right",
+        "confidence": 0.85,
+        "note": "DOE Program Notice 26-2 (effective May 29, 2026) removes fuel-switching from the HEEHR (formerly HEAR) rebate, allowing HVAC rebates only for replacing existing electric equipment; launched programs must comply within three months, though existing reservations can still be honored.",
+        "applicability": "direct",
+        "basis": "review",
+        "why": "the program notice itself removes fuel-switching from the rebate; honoring existing reservations does not change that it no longer pays for new gas-to-heat-pump swaps"
+       }
+      ],
+      "contradicting": [],
+      "qualifying": [],
+      "context": [],
+      "problems": [],
+      "limitations": [
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
+      "suggestions": [],
+      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
+     },
+     "issues": [
+      {
+       "sentence": "s37",
+       "category": "wording",
+       "severity": "info",
+       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+       "by": "deterministic",
+       "assertion": "s37.b"
+      }
+     ]
+    }
+   ],
+   "issues": []
+  },
+  {
+   "id": "s38",
+   "section": "question-2",
+   "text": "According to North Carolina's state energy office, the change had to be in place by September 1, 2026.",
+   "type": "factual",
+   "fingerprint": "9fdcfa67e7",
+   "words": 18,
+   "status": "verified",
+   "approved": true,
+   "assertions": [
+    {
+     "id": "s38.a",
+     "text": "North Carolina's state energy office says DOE's updated guidance must be implemented by Sept. 1, 2026.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s38.a",
+      "text": "North Carolina's state energy office says DOE's updated guidance must be implemented by Sept. 1, 2026.",
+      "kind": "fact",
+      "modality": "plain",
+      "status": "supported",
+      "decision": "approved",
+      "review": true,
+      "verbatim": false,
+      "strength": 0.75,
+      "independent": 1,
+      "supporting": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/since-mid-2026-federal-electric-appliance",
+         "cite": "heat-pumps/sources/nc-2026-energy-saver-program-changes.txt#L4-L16"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "North Carolina 2026, Energy Saver program changes",
+        "verdict": "right",
+        "confidence": 0.75,
+        "note": "North Carolina's state energy office: under DOE's May 29, 2026 guidance, from Sept. 1, 2026 HEAR rebates are no longer allowed for replacing gas or other fossil-fuel appliances; only electric-to-electric upgrades qualify.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "contradicting": [],
+      "qualifying": [],
+      "context": [],
+      "problems": [],
+      "limitations": [
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
+      "suggestions": [],
+      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.75)."
+     },
+     "issues": [
+      {
+       "sentence": "s38",
+       "category": "wording",
+       "severity": "info",
+       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+       "by": "deterministic",
+       "assertion": "s38.a"
+      }
+     ]
+    }
+   ],
+   "issues": []
+  },
+  {
    "id": "s34",
    "section": "question-2",
    "text": "How many homeowners could use them is limited by design: the national-laboratory analysis estimated the $4.5 billion in electrification rebates could reach roughly up to 500,000 low-income households at $8,000 each, or 1 million moderate-income households at $4,000 each.",
@@ -4216,197 +4421,6 @@
    "issues": []
   },
   {
-   "id": "s37",
-   "section": "question-2",
-   "text": "Then, on May 29, 2026, the Department of Energy removed fuel-switching from the rebate: it now pays to upgrade existing electric equipment to more efficient electric equipment, and no longer to replace gas or other fossil-fuel appliances.",
-   "type": "factual",
-   "fingerprint": "24355cd943",
-   "words": 37,
-   "status": "verified",
-   "approved": true,
-   "assertions": [
-    {
-     "id": "s37.a",
-     "text": "On May 29, 2026, the U.S. Department of Energy issued updated guidance under which HEAR rebates are no longer allowed for replacing gas or any other fossil fuel appliances.",
-     "kind": "fact",
-     "status": "verified",
-     "validation": {
-      "id": "s37.a",
-      "text": "On May 29, 2026, the U.S. Department of Energy issued updated guidance under which HEAR rebates are no longer allowed for replacing gas or any other fossil fuel appliances.",
-      "kind": "fact",
-      "modality": "possibility",
-      "status": "supported",
-      "decision": "approved",
-      "review": true,
-      "verbatim": false,
-      "strength": 0.75,
-      "independent": 1,
-      "supporting": [
-       {
-        "ref": {
-         "kind": "study",
-         "claim": "heat-pumps/since-mid-2026-federal-electric-appliance",
-         "cite": "heat-pumps/sources/nc-2026-energy-saver-program-changes.txt#L4-L16"
-        },
-        "cited": true,
-        "role": "supports",
-        "by": "North Carolina 2026, Energy Saver program changes",
-        "verdict": "right",
-        "confidence": 0.75,
-        "note": "North Carolina's state energy office: under DOE's May 29, 2026 guidance, from Sept. 1, 2026 HEAR rebates are no longer allowed for replacing gas or other fossil-fuel appliances; only electric-to-electric upgrades qualify.",
-        "applicability": "direct",
-        "basis": "heuristic",
-        "why": "the verdict bears on the claim as worded"
-       }
-      ],
-      "contradicting": [],
-      "qualifying": [],
-      "context": [],
-      "problems": [],
-      "limitations": [
-       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
-      ],
-      "suggestions": [],
-      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.75)."
-     },
-     "issues": [
-      {
-       "sentence": "s37",
-       "category": "wording",
-       "severity": "info",
-       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
-       "by": "deterministic",
-       "assertion": "s37.a"
-      }
-     ]
-    },
-    {
-     "id": "s37.b",
-     "text": "DOE's program notice removes allowances for fuel-switching and allows HVAC rebates only for upgrading existing electric equipment to more efficient electric equipment.",
-     "kind": "fact",
-     "status": "verified",
-     "validation": {
-      "id": "s37.b",
-      "text": "DOE's program notice removes allowances for fuel-switching and allows HVAC rebates only for upgrading existing electric equipment to more efficient electric equipment.",
-      "kind": "fact",
-      "modality": "plain",
-      "status": "supported",
-      "decision": "approved",
-      "review": true,
-      "verbatim": false,
-      "strength": 0.85,
-      "independent": 1,
-      "supporting": [
-       {
-        "ref": {
-         "kind": "study",
-         "claim": "heat-pumps/since-mid-2026-federal-electric-appliance",
-         "cite": "heat-pumps/sources/doe-2026-heehr-program-notice-26-2.txt#L145-L155"
-        },
-        "cited": true,
-        "role": "supports",
-        "by": "DOE 2026, Program Notice 26-2 on electric home rebates",
-        "verdict": "right",
-        "confidence": 0.85,
-        "note": "DOE Program Notice 26-2 (effective May 29, 2026) removes fuel-switching from the HEEHR (formerly HEAR) rebate, allowing HVAC rebates only for replacing existing electric equipment; launched programs must comply within three months, though existing reservations can still be honored.",
-        "applicability": "direct",
-        "basis": "review",
-        "why": "the program notice itself removes fuel-switching from the rebate; honoring existing reservations does not change that it no longer pays for new gas-to-heat-pump swaps"
-       }
-      ],
-      "contradicting": [],
-      "qualifying": [],
-      "context": [],
-      "problems": [],
-      "limitations": [
-       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
-      ],
-      "suggestions": [],
-      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
-     },
-     "issues": [
-      {
-       "sentence": "s37",
-       "category": "wording",
-       "severity": "info",
-       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
-       "by": "deterministic",
-       "assertion": "s37.b"
-      }
-     ]
-    }
-   ],
-   "issues": []
-  },
-  {
-   "id": "s38",
-   "section": "question-2",
-   "text": "According to North Carolina's state energy office, the change had to be in place by September 1, 2026.",
-   "type": "factual",
-   "fingerprint": "9fdcfa67e7",
-   "words": 18,
-   "status": "verified",
-   "approved": true,
-   "assertions": [
-    {
-     "id": "s38.a",
-     "text": "North Carolina's state energy office says DOE's updated guidance must be implemented by Sept. 1, 2026.",
-     "kind": "fact",
-     "status": "verified",
-     "validation": {
-      "id": "s38.a",
-      "text": "North Carolina's state energy office says DOE's updated guidance must be implemented by Sept. 1, 2026.",
-      "kind": "fact",
-      "modality": "plain",
-      "status": "supported",
-      "decision": "approved",
-      "review": true,
-      "verbatim": false,
-      "strength": 0.75,
-      "independent": 1,
-      "supporting": [
-       {
-        "ref": {
-         "kind": "study",
-         "claim": "heat-pumps/since-mid-2026-federal-electric-appliance",
-         "cite": "heat-pumps/sources/nc-2026-energy-saver-program-changes.txt#L4-L16"
-        },
-        "cited": true,
-        "role": "supports",
-        "by": "North Carolina 2026, Energy Saver program changes",
-        "verdict": "right",
-        "confidence": 0.75,
-        "note": "North Carolina's state energy office: under DOE's May 29, 2026 guidance, from Sept. 1, 2026 HEAR rebates are no longer allowed for replacing gas or other fossil-fuel appliances; only electric-to-electric upgrades qualify.",
-        "applicability": "direct",
-        "basis": "heuristic",
-        "why": "the verdict bears on the claim as worded"
-       }
-      ],
-      "contradicting": [],
-      "qualifying": [],
-      "context": [],
-      "problems": [],
-      "limitations": [
-       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
-      ],
-      "suggestions": [],
-      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.75)."
-     },
-     "issues": [
-      {
-       "sentence": "s38",
-       "category": "wording",
-       "severity": "info",
-       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
-       "by": "deterministic",
-       "assertion": "s38.a"
-      }
-     ]
-    }
-   ],
-   "issues": []
-  },
-  {
    "id": "s39",
    "section": "question-2",
    "text": "State and utility programs remain, and some are generous: Massachusetts' Mass Save pays a whole-home rebate of $8,500, or $16,000 at the income-based level, against an average installation of $22,000 in its 2022 program data.",
@@ -4498,10 +4512,10 @@
   {
    "id": "s40",
    "section": "question-2",
-   "text": "That is a single program: across the projects in the laboratory's database, which predates today's rules, the median total rebate was $1,327, about 21 percent of gross project cost.",
+   "text": "That is a single program: across home retrofit projects of every kind in the laboratory's database, which predates today's rules, 71 percent reported some rebate and the median total rebate was $1,327, about 21 percent of gross project cost.",
    "type": "factual",
-   "fingerprint": "fe39008645",
-   "words": 29,
+   "fingerprint": "580286dd9a",
+   "words": 39,
    "status": "verified",
    "approved": true,
    "assertions": [
@@ -4560,7 +4574,66 @@
        "explanation": "Less 2021 (LBNL), cost of decarbonization retrofits: LBNL: 71% of projects got rebates, with a median of $1,327 (21% of gross cost, mean 30%); electrification programs such as MA DOER Home MVP gave higher shares (37%), so rebates covered a meaningful but usually minority share. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s40.a",
-       "suggestion": "The writer says the narration carries it: The sentence says these are whole projects in that database, not heat pumps alone, and calls Mass Save one program."
+       "suggestion": "The writer says the narration carries it: The sentence says these are home retrofit projects of every kind in that database, not heat pumps alone, and calls Mass Save one program."
+      }
+     ]
+    },
+    {
+     "id": "s40.b",
+     "text": "71% of projects in the database reported some rebates.",
+     "kind": "fact",
+     "status": "verified",
+     "validation": {
+      "id": "s40.b",
+      "text": "71% of projects in the database reported some rebates.",
+      "kind": "fact",
+      "modality": "possibility",
+      "status": "qualified",
+      "decision": "qualify",
+      "review": true,
+      "verbatim": false,
+      "strength": 0,
+      "independent": 0,
+      "supporting": [],
+      "contradicting": [],
+      "qualifying": [
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "heat-pumps/state-utility-rebates-can-cover-large",
+         "cite": "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt#L2532-L2536"
+        },
+        "cited": true,
+        "role": "qualifies",
+        "by": "Less 2021 (LBNL), cost of decarbonization retrofits",
+        "verdict": "partly",
+        "confidence": 0.35,
+        "note": "LBNL: 71% of projects got rebates, with a median of $1,327 (21% of gross cost, mean 30%); electrification programs such as MA DOER Home MVP gave higher shares (37%), so rebates covered a meaningful but usually minority share.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
+       }
+      ],
+      "context": [],
+      "problems": [],
+      "limitations": [
+       "Less 2021 (LBNL), cost of decarbonization retrofits: LBNL: 71% of projects got rebates, with a median of $1,327 (21% of gross cost, mean 30%); electrification programs such as MA DOER Home MVP gave higher shares (37%), so rebates covered a meaningful but usually minority share.",
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
+      ],
+      "suggestions": [
+       "Add the qualification: the evidence supports a narrower or weaker statement."
+      ],
+      "explanation": "qualified (qualify): no direct support, 1 qualifying."
+     },
+     "issues": [
+      {
+       "sentence": "s40",
+       "category": "needs-qualification",
+       "severity": "warning",
+       "explanation": "Less 2021 (LBNL), cost of decarbonization retrofits: LBNL: 71% of projects got rebates, with a median of $1,327 (21% of gross cost, mean 30%); electrification programs such as MA DOER Home MVP gave higher shares (37%), so rebates covered a meaningful but usually minority share. Add the qualification: the evidence supports a narrower or weaker statement.",
+       "by": "deterministic",
+       "assertion": "s40.b",
+       "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence."
       }
      ]
     }
@@ -4955,10 +5028,10 @@
   {
    "id": "s44",
    "section": "question-2",
-   "text": "For a heat pump installed in 2026, then, there is no federal tax credit, the federal rebate no longer pays to switch from gas, and state and utility rebates, where they exist, usually cut the price rather than erase it.",
+   "text": "For a heat pump installed in 2026, then, there is no federal tax credit, the federal rebate no longer pays to switch from gas, and state and utility rebates, where they exist, usually cut the price rather than erase it, judging by a database of home retrofits of every kind rather than of heat pumps alone.",
    "type": "factual",
-   "fingerprint": "48011398e5",
-   "words": 40,
+   "fingerprint": "fa5429e266",
+   "words": 56,
    "status": "verified",
    "approved": true,
    "assertions": [
@@ -5132,22 +5205,7 @@
      ]
     }
    ],
-   "issues": [
-    {
-     "sentence": "s44",
-     "assertion": "s44.b",
-     "fingerprint": "48011398e5",
-     "revision": 1,
-     "category": "missing-qualification",
-     "severity": "info",
-     "explanation": "DOE's change dates from 29 May 2026 and North Carolina had to implement it by 1 September 2026 (s37, s38), so a heat pump installed early in 2026 could still have been paid for under the old rules. Read as of the article's date the clause is accurate. Approved.",
-     "refs": [
-      "heat-pumps/sources/nc-2026-energy-saver-program-changes.txt#L4-L16"
-     ],
-     "suggestion": "Optional: 'for a heat pump installed now'.",
-     "by": "review"
-    }
-   ]
+   "issues": []
   },
   {
    "id": "s45",
@@ -5294,6 +5352,19 @@
   },
   {
    "sentence": "s16",
+   "fingerprint": "27dda5513b",
+   "revision": 3,
+   "category": "overgeneralization",
+   "severity": "warning",
+   "explanation": "Table t5 caption (and the t1/s15 phrasing it echoes) says the heat pump and air conditioner are \"of the same size\". The Minnesota report lines 1360-1391 give $5,550 (9.5 HSPF / 19 SEER heat pump) and $5,180 (19 SEER air conditioner) with no capacity or size; only the efficiency (SEER) matches. The figures are correct, but t5 is left unapproved until the caption says \"equally efficient\" (as s16 does) instead of \"of the same size\".",
+   "refs": [
+    "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1360-L1391"
+   ],
+   "suggestion": "Caption: Installed cost of an efficient heat pump and an equally efficient central air conditioner, from the NREL cost database as quoted in a Minnesota cold-climate report.",
+   "by": "review"
+  },
+  {
+   "sentence": "s16",
    "category": "needs-qualification",
    "severity": "warning",
    "explanation": "Wilson 2024 (NREL and LBNL), heat pumps for all?: Wholesale heat pumps cost only $200-$500 more than equivalent ACs, but heat pumps sized to fully electrify heating often cost more to install than AC plus furnace because of larger capacity, wiring and panel upgrades. Edwards 2024, inequities in heat pump bill savings: Edwards' national installed-cost medians put a heat pump at $6,185 against $4,684 for a central AC of the same 36,000 BTU/h size, so it adds heating for about $1,500 (roughly 30%) more, which is modest but not trivial. Add the qualification: the evidence supports a narrower or weaker statement.",
@@ -5398,7 +5469,16 @@
    "explanation": "Less 2021 (LBNL), cost of decarbonization retrofits: LBNL: 71% of projects got rebates, with a median of $1,327 (21% of gross cost, mean 30%); electrification programs such as MA DOER Home MVP gave higher shares (37%), so rebates covered a meaningful but usually minority share. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s40.a",
-   "suggestion": "The writer says the narration carries it: The sentence says these are whole projects in that database, not heat pumps alone, and calls Mass Save one program."
+   "suggestion": "The writer says the narration carries it: The sentence says these are home retrofit projects of every kind in that database, not heat pumps alone, and calls Mass Save one program."
+  },
+  {
+   "sentence": "s40",
+   "category": "needs-qualification",
+   "severity": "warning",
+   "explanation": "Less 2021 (LBNL), cost of decarbonization retrofits: LBNL: 71% of projects got rebates, with a median of $1,327 (21% of gross cost, mean 30%); electrification programs such as MA DOER Home MVP gave higher shares (37%), so rebates covered a meaningful but usually minority share. Add the qualification: the evidence supports a narrower or weaker statement.",
+   "by": "deterministic",
+   "assertion": "s40.b",
+   "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence."
   },
   {
    "sentence": "s41",
@@ -5674,30 +5754,6 @@
    "assertion": "s33.a"
   },
   {
-   "sentence": "s35",
-   "category": "wording",
-   "severity": "info",
-   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
-   "by": "deterministic",
-   "assertion": "s35.a"
-  },
-  {
-   "sentence": "s36",
-   "category": "wording",
-   "severity": "info",
-   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
-   "by": "deterministic",
-   "assertion": "s36.a"
-  },
-  {
-   "sentence": "s47",
-   "category": "wording",
-   "severity": "info",
-   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
-   "by": "deterministic",
-   "assertion": "s47.a"
-  },
-  {
    "sentence": "s37",
    "category": "wording",
    "severity": "info",
@@ -5722,6 +5778,30 @@
    "assertion": "s38.a"
   },
   {
+   "sentence": "s35",
+   "category": "wording",
+   "severity": "info",
+   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+   "by": "deterministic",
+   "assertion": "s35.a"
+  },
+  {
+   "sentence": "s36",
+   "category": "wording",
+   "severity": "info",
+   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+   "by": "deterministic",
+   "assertion": "s36.a"
+  },
+  {
+   "sentence": "s47",
+   "category": "wording",
+   "severity": "info",
+   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+   "by": "deterministic",
+   "assertion": "s47.a"
+  },
+  {
    "sentence": "s41",
    "assertion": "s41.a",
    "fingerprint": "36f08f752e",
@@ -5733,20 +5813,6 @@
     "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1482-L1488"
    ],
    "suggestion": "None needed for this revision.",
-   "by": "review"
-  },
-  {
-   "sentence": "s44",
-   "assertion": "s44.b",
-   "fingerprint": "48011398e5",
-   "revision": 1,
-   "category": "missing-qualification",
-   "severity": "info",
-   "explanation": "DOE's change dates from 29 May 2026 and North Carolina had to implement it by 1 September 2026 (s37, s38), so a heat pump installed early in 2026 could still have been paid for under the old rules. Read as of the article's date the clause is accurate. Approved.",
-   "refs": [
-    "heat-pumps/sources/nc-2026-energy-saver-program-changes.txt#L4-L16"
-   ],
-   "suggestion": "Optional: 'for a heat pump installed now'.",
    "by": "review"
   },
   {
@@ -5825,6 +5891,20 @@
    ],
    "suggestion": "Drop 'since then' and 'still', e.g. 'How far the rollout has got is not settled here: the tracker is an earlier snapshot in which Alabama, Alaska and Arkansas were only conditionally approved, and it gives no national count of launched programs.' (The tracker's date sits at L96/L128, outside the cited lines; only a person can add it.)",
    "resolvedBy": 2
+  },
+  {
+   "sentence": "s44",
+   "assertion": "s44.b",
+   "fingerprint": "48011398e5",
+   "revision": 1,
+   "category": "missing-qualification",
+   "severity": "info",
+   "explanation": "DOE's change dates from 29 May 2026 and North Carolina had to implement it by 1 September 2026 (s37, s38), so a heat pump installed early in 2026 could still have been paid for under the old rules. Read as of the article's date the clause is accurate. Approved.",
+   "refs": [
+    "heat-pumps/sources/nc-2026-energy-saver-program-changes.txt#L4-L16"
+   ],
+   "suggestion": "Optional: 'for a heat pump installed now'.",
+   "resolvedBy": 3
   }
  ],
  "history": [
@@ -5841,6 +5921,13 @@
    "status": "passed",
    "blocking": 0,
    "warnings": 31
+  },
+  {
+   "revision": 3,
+   "date": "2026-11-09T07:55:45.807Z",
+   "status": "passed",
+   "blocking": 0,
+   "warnings": 33
   }
  ]
 }

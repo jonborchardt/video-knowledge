@@ -2,18 +2,18 @@
  "topic": "heat-pumps",
  "story": "decision:is-it-cheaper-to-run-than-gas",
  "approvedBy": "Jon",
- "date": "2026-10-28",
- "revision": 2,
+ "date": "2026-11-09",
+ "revision": 3,
  "fingerprints": {
-  "article": "8e9be94742",
+  "article": "943e7c6c7a",
   "package": "6dd3b084bb",
-  "validation": "941191d7bb"
+  "validation": "7a1b3f3cff"
  },
  "article": {
   "topic": "heat-pumps",
   "story": "decision:is-it-cheaper-to-run-than-gas",
   "passStartRevision": 3,
-  "revision": 6,
+  "revision": 7,
   "generation": {
    "model": "claude-opus-5-5",
    "brief": "scripts/briefs/article.md",
@@ -319,14 +319,14 @@
       "id": "t1",
       "caption": "The break-even seasonal COP against a gas furnace at US average prices, 2024",
       "columns": [
-       "Value"
+       "Price ratio or seasonal COP"
       ],
       "rows": [
        {
         "label": "Electricity-to-gas price ratio, same energy content (US average, 2024)",
         "cells": [
          {
-          "label": "Value",
+          "label": "Price ratio or seasonal COP",
           "value": 3.45,
           "unit": "count",
           "display": "3.45",
@@ -338,7 +338,7 @@
         "label": "Break-even seasonal COP against a furnace of AFUE 0.95 (US average, 2024)",
         "cells": [
          {
-          "label": "Value",
+          "label": "Price ratio or seasonal COP",
           "value": 3.28,
           "unit": "count",
           "display": "3.28",
@@ -350,7 +350,7 @@
         "label": "Break-even seasonal COP against a furnace of AFUE 0.80 (US average, 2024)",
         "cells": [
          {
-          "label": "Value",
+          "label": "Price ratio or seasonal COP",
           "value": 2.76,
           "unit": "count",
           "display": "2.76",
@@ -405,7 +405,7 @@
      {
       "kind": "figure",
       "ref": "decision-is-it-cheaper-to-run-than-gas/sc09",
-      "caption": "States grouped by the seasonal COP a heat pump needs to beat a high-efficiency gas furnace at annual average prices."
+      "caption": "Number of states, the District of Columbia counted, in each band of the seasonal COP a heat pump needs to beat a high-efficiency gas furnace."
      },
      {
       "kind": "prose",
@@ -848,7 +848,7 @@
       ],
       "rows": [
        {
-        "label": "Extra running cost on the standard tariff (UK, 2024)",
+        "label": "Extra cost to run, against a gas boiler, on the standard tariff (UK, 2024)",
         "cells": [
          {
           "label": "Pounds a year",
@@ -860,7 +860,7 @@
         ]
        },
        {
-        "label": "Saved by disconnecting from mains gas (UK, 2024)",
+        "label": "Saving from disconnecting from mains gas (UK, 2024)",
         "cells": [
          {
           "label": "Pounds a year",
@@ -872,7 +872,7 @@
         ]
        },
        {
-        "label": "Saved on the Cosy time-of-use tariff against the standard tariff (UK study)",
+        "label": "Saving on the Cosy time-of-use tariff against the standard tariff (UK study)",
         "cells": [
          {
           "label": "Pounds a year",
@@ -884,7 +884,7 @@
         ]
        },
        {
-        "label": "Of which, from shifting use between times of day (UK study)",
+        "label": "Part of that Cosy saving from shifting use between times of day (UK study)",
         "cells": [
          {
           "label": "Pounds a year",
@@ -1789,6 +1789,34 @@
         ]
        },
        {
+        "id": "s40",
+        "text": "Those homes ran on propane, not gas, so the years do not carry over to a gas home.",
+        "type": "factual",
+        "assertions": [
+         {
+          "id": "s40.a",
+          "text": "The Minnesota payback figures are for a ccASHP with propane furnace back-up, not natural gas.",
+          "kind": "fact",
+          "claims": [
+           {
+            "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+            "stance": "asserts"
+           }
+          ],
+          "evidence": [
+           {
+            "kind": "study",
+            "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+            "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+           }
+          ],
+          "qualifications": [
+           "This sentence is the fuel limit on s38, s39 and the table."
+          ]
+         }
+        ]
+       },
+       {
         "id": "s39",
         "text": "When the furnace and the air conditioner both needed replacing, the extra cost fell to $370 and the payback to about a year or less (0.6 to 1.1 years), and the table shows the cases in between.",
         "type": "factual",
@@ -1937,34 +1965,6 @@
      {
       "kind": "prose",
       "sentences": [
-       {
-        "id": "s40",
-        "text": "Those homes ran on propane, not gas, so the years do not carry over to a gas home.",
-        "type": "factual",
-        "assertions": [
-         {
-          "id": "s40.a",
-          "text": "The Minnesota payback figures are for a ccASHP with propane furnace back-up, not natural gas.",
-          "kind": "fact",
-          "claims": [
-           {
-            "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
-            "stance": "asserts"
-           }
-          ],
-          "evidence": [
-           {
-            "kind": "study",
-            "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
-            "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
-           }
-          ],
-          "qualifications": [
-           "This sentence is the fuel limit on s38, s39 and the table."
-          ]
-         }
-        ]
-       },
        {
         "id": "s41",
         "text": "For gas homes, RMI's report finds that in many retrofits a heat pump costs more than new gas equipment, and names as a notable exception the customer who must replace both a furnace and an air conditioner, since one heat pump does both jobs.",
@@ -2248,7 +2248,19 @@
    "sentences": [
     "t3"
    ]
+  },
+  {
+   "revision": 3,
+   "date": "2026-11-09",
+   "approvedBy": "Jon",
+   "fingerprint": "943e7c6c7a",
+   "note": "Page review corrections: the break-even table's column says it holds a price ratio or seasonal COP; the states figure's caption says the bars count states; each row of the UK pounds-a-year table says whether it is a cost or a saving; the propane qualification moves before the payback figures it limits. No figure, cite or verdict changes.",
+   "sentences": [
+    "t1",
+    "decision-is-it-cheaper-to-run-than-gas/sc09",
+    "t3"
+   ]
   }
  ],
- "recordSeen": 1
+ "recordSeen": 3
 }

@@ -1,6 +1,6 @@
 # What a heat pump really costs to install, and what help is left in 2026 [meta.headline fp=eb3aad4624]
 
-Story `decision:does-the-upfront-cost-eat-the-savings` (heat-pumps), revision 2. SEO title: Heat pump installation cost and incentives in 2026 [meta.seoTitle fp=dbf22c1a60]. Validation: **passed**, 0 blocking, 31 warnings, 59/59 assertions verified.
+Story `decision:does-the-upfront-cost-eat-the-savings` (heat-pumps), revision 3. SEO title: Heat pump installation cost and incentives in 2026 [meta.seoTitle fp=dbf22c1a60]. Validation: **passed**, 0 blocking, 33 warnings, 60/60 assertions verified.
 
 > Against a furnace alone a heat pump costs more to install; against a new furnace and air conditioner together the studies disagree, and no federal tax credit applies to a heat pump installed in 2026. [meta.dek ok fp=0724a29d09]
 
@@ -38,7 +38,12 @@ A Canadian model reaches a different verdict on the upfront price: heat pumps co
 
 If the only thing due is the air conditioner, the gap narrows: wholesale air-source heat pumps cost only $200 to $500 more than air conditioners of the same size. [s15 ok fp=5a6d9216f2] A Minnesota cold-climate report quoting NREL's cost database put an efficient heat pump at $5,550 and an equally efficient central air conditioner at $5,180, a difference of $370. [s16 ok fp=27dda5513b] A later study's national medians from the same database, in the table above, tell a different story: there a heat pump cost about 32 percent more than a central air conditioner alone. [s17 ok fp=7447301527]
 
-Figure decision-does-the-upfront-cost-eat-the-savings/sc13: A heat pump against an air conditioner of the same size: the wholesale premium and the database costs of efficient models. [decision-does-the-upfront-cost-eat-the-savings/sc13 fp=53bbc421b8]
+Table t5: Installed cost of an efficient heat pump and an equally efficient central air conditioner, from the NREL cost database as quoted in a Minnesota cold-climate report [t5 fp=c07db9c36c]
+
+| | Installed cost |
+|---|---|
+| Efficient air-source heat pump (NREL cost database, via the 2017 Minnesota report) | $5,550 |
+| Efficient central air conditioner (same database) | $5,180 |
 
 **qualification (heat-pumps/choosing-heat-pump-instead-new-central):** Choosing a heat pump instead of a new air conditioner adds heating for little extra on wholesale prices and in one report's database costs, but a later study's medians put the premium higher, and a heat pump sized to heat the whole home can cost more than an air conditioner plus gas furnace. [s18 ok fp=21968b7469]
 
@@ -46,16 +51,14 @@ Figure decision-does-the-upfront-cost-eat-the-savings/sc13: A heat pump against 
 
 Within any comparison the price spreads widely: across 642 heat pump installations in the laboratory's database, the system's capacity and type, the home's floor area, the efficiency and the climate zone mattered most, and ground-source systems cost nearly three times as much as other types. [s20 ok fp=2dedca621b] Another study puts typical air-source installations at $5,000 to $10,000 in 2024 prices, varying with home size, efficiency, climate, labour and the installer's experience. [s21 ok fp=e096af2c0d] Then there is the electrical work: in a field test of cold-climate heat pump prototypes at 21 sites, 38 percent needed a new panel. [s22 ok fp=7f1c66663f]
 
-Table t2: Upgrades needed to install cold-climate heat pump prototypes in a field test, share of sites, and the cost of electrical upgrades [t2 fp=e4082cfefa]
+Table t2: Electrical upgrades needed to install cold-climate heat pump prototypes in a field test of 21 sites [t2 fp=6cdddc0947]
 
-| | Value |
+| | Share of the 21 sites |
 |---|---|
-| Sites needing a new panel (21 field-test sites) | 38% |
-| Sites needing new breakers for auxiliary heat (same sites) | 90% |
-| Sites needing new wiring (same sites) | 55% |
-| Sites needing a service line upgrade (same sites) | 24% |
-| Electrical upgrades, lowest total, labour and materials (same sites) | $3,750 |
-| Electrical upgrades, highest total, labour and materials (same sites) | $8,970 |
+| New electrical panel (21 field-test sites) | 38% |
+| New breakers for auxiliary heat (same sites) | 90% |
+| New wiring (same sites) | 55% |
+| Service line upgrade (same sites) | 24% |
 
 Where electrical upgrades were needed, labour and materials alone came to between $3,750 and $8,970, before the heat pump itself. [s23 ok fp=54725f9f0a] Outside that small test, the laboratory's report gives $1,954 as the typical cost of a 200-amp panel upgrade, plus the wiring for each dedicated circuit to a new appliance. [s24 ok fp=28515792a6] The NREL and LBNL analysis puts panel, service-wire, transformer and pole upgrades at $2,000 to $30,000, though utilities may cover some of that, and notes that 50 to 60 percent of homes already have a panel above 150 amps. [s25 ok fp=9c7c6906f6]
 
@@ -67,33 +70,31 @@ So the answer turns on the baseline: a heat pump costs more to install than a fu
 
 Older videos still promise federal help; The Thought Provocateur told viewers that "technically these heat pump tax credits based on the bill that was signed are available through 2033". [s29 ok fp=fe1a863b94] The credit did exist: from January 1, 2023, it was worth 30 percent of qualifying costs, up to $2,000 a year for a heat pump. [s30 ok fp=b092a00af9] But its end was brought forward, and the IRS now says the credit will not be allowed for any property placed in service after December 31, 2025, so a heat pump installed in 2026 cannot claim it. [s31 ok fp=bd694378f3] The Rebate Report pointed viewers to the other federal program instead: "the tax credit for heat pumps expired, but the rebate program for heat pumps survived". [s32 ok fp=c5ed96d41a] Those federal rebates, however, are run by state energy offices and aimed at low- to moderate-income households. [s33 ok fp=6a6fc4b49b]
 
+Then, on May 29, 2026, the Department of Energy removed fuel-switching from the rebate: it now pays to upgrade existing electric equipment to more efficient electric equipment, and no longer to replace gas or other fossil-fuel appliances. [s37 ok fp=24355cd943] According to North Carolina's state energy office, the change had to be in place by September 1, 2026. [s38 ok fp=9fdcfa67e7]
+
 **unresolved (heat-pumps/federal-inflation-reduction-act-rebates-heat):** How many homeowners could use them is limited by design: the national-laboratory analysis estimated the $4.5 billion in electrification rebates could reach roughly up to 500,000 low-income households at $8,000 each, or 1 million moderate-income households at $4,000 each. [s34 ok fp=0ccf14c450]
 
 The rollout has also been slow: in a state-by-state tracker, Alabama, Alaska and Arkansas had their applications only conditionally approved, with no expected launch date. [s35 ok fp=eb99cfc587] Owen Marsh, in a video on what survived, counted "12 states and the District of Columbia" with programs launched as of June. [s36 ok fp=5f6b959dfa]
 
 **unresolved (heat-pumps/federal-heat-pump-rebates-low-moderate):** How far the rollout has got is not settled here: the tracker is an earlier snapshot in which Alabama, Alaska and Arkansas were only conditionally approved, and it gives no national count of launched programs. [s47 ok fp=1d5a402617]
 
-Then, on May 29, 2026, the Department of Energy removed fuel-switching from the rebate: it now pays to upgrade existing electric equipment to more efficient electric equipment, and no longer to replace gas or other fossil-fuel appliances. [s37 ok fp=24355cd943] According to North Carolina's state energy office, the change had to be in place by September 1, 2026. [s38 ok fp=9fdcfa67e7] State and utility programs remain, and some are generous: Massachusetts' Mass Save pays a whole-home rebate of $8,500, or $16,000 at the income-based level, against an average installation of $22,000 in its 2022 program data. [s39 ok fp=67b6d8b400]
+State and utility programs remain, and some are generous: Massachusetts' Mass Save pays a whole-home rebate of $8,500, or $16,000 at the income-based level, against an average installation of $22,000 in its 2022 program data. [s39 ok fp=67b6d8b400]
 
-Table t3: Mass Save whole-home air-source heat pump rebate against the average installation cost [t3 fp=c873519bf6]
+Table t3: Mass Save whole-home air-source heat pump rebate against the program's average installation cost, by incentive tier [t3 fp=140a8fc8b2]
 
-| | Standard incentive | Income-based incentive |
+| | Average installation cost | Whole-home rebate | Net project cost |
+|---|---|---|---|
+| Standard incentive (Massachusetts; average cost from Mass Save program data, 2022 installations) | $22,000 | $8,500 | $13,500 |
+| Income-based incentive (same program) | $22,000 | $16,000 | $6,000 |
+
+That is a single program: across home retrofit projects of every kind in the laboratory's database, which predates today's rules, 71 percent reported some rebate and the median total rebate was $1,327, about 21 percent of gross project cost. [s40 ok fp=580286dd9a]
+
+Table t4: Rebates across home retrofit projects of every kind, not heat pumps alone, in the national laboratory database (2021 report) [t4 fp=08ec7cccf8]
+
+| | Total rebate per project | Share of gross project cost |
 |---|---|---|
-| Average installation cost (Mass Save program data, 2022 installations) | $22,000 | $22,000 |
-| Mass Save whole-home rebate (Massachusetts) | $8,500 | $16,000 |
-| Net project cost (Massachusetts) | $13,500 | $6,000 |
-
-That is a single program: across the projects in the laboratory's database, which predates today's rules, the median total rebate was $1,327, about 21 percent of gross project cost. [s40 ok fp=fe39008645]
-
-Table t4: Rebates across the retrofit projects in the national laboratory database [t4 fp=60af6958ff]
-
-| | Value |
-|---|---|
-| Projects reporting some rebate (laboratory database, 2021 report) | 71% |
-| Median total rebate per project (same database) | $1,327 |
-| Mean total rebate per project (same database) | $3,053 |
-| Median rebate share of gross project cost (same database) | 21% |
-| Mean rebate share of gross project cost (same database) | 30% |
+| Median project (laboratory database, 2021 report) | $1,327 | 21% |
+| Mean project (same database) | $3,053 | 30% |
 
 And a Canadian model found heat pumps there still cost more upfront, despite rebates meant to bring capital costs down. [s41 ok fp=36f08f752e]
 
@@ -101,7 +102,7 @@ And a Canadian model found heat pumps there still cost more upfront, despite reb
 
 **unresolved (gap 2):** Nor can the evidence here say how often incentives make a heat pump cheaper upfront than a furnace and air conditioner: a national study's medians already put them close, while in the Canadian model heat pumps stayed dearer upfront despite rebates. [s43 ok fp=855a3bb35d]
 
-For a heat pump installed in 2026, then, there is no federal tax credit, the federal rebate no longer pays to switch from gas, and state and utility rebates, where they exist, usually cut the price rather than erase it. [s44 ok fp=48011398e5]
+For a heat pump installed in 2026, then, there is no federal tax credit, the federal rebate no longer pays to switch from gas, and state and utility rebates, where they exist, usually cut the price rather than erase it, judging by a database of home retrofits of every kind rather than of heat pumps alone. [s44 ok fp=fa5429e266]
 
 ## What to check before you sign [heading:close fp=40cdef4a0a]
 
@@ -122,6 +123,7 @@ Start by naming the system you would install if the heat pump were off the table
 - **warning** s14 (s14.a) needs-qualification (deterministic): Contradicted by Canadian Climate Institute 2023, heat pumps pay off: Compared with the gas-plus-AC baseline, the Canadian model finds heat pumps have higher upfront costs and win only on lifetime costs through efficiency and doubling as cooling. Present the disagreement: name the studies on each side instead of stating one side as fact. Suggestion: The writer says the narration carries it: This callout is the qualification; s12 gives the Canadian model that disagrees.
 - **warning** s14 (s14.b) needs-qualification (deterministic): Wilson 2024 (NREL and LBNL), heat pumps for all?: Wholesale heat pumps cost only $200-$500 more than equivalent ACs, but heat pumps sized to fully electrify heating often cost more to install than AC plus furnace because of larger capacity, wiring and panel upgrades. Add the qualification: the evidence supports a narrower or weaker statement. Suggestion: Say where the narration carries this limitation (qualifications), or narrow the sentence.
 - **warning** s15 (s15.a) needs-qualification (deterministic): Wilson 2024 (NREL and LBNL), heat pumps for all?: Wholesale heat pumps cost only $200-$500 more than equivalent ACs, but heat pumps sized to fully electrify heating often cost more to install than AC plus furnace because of larger capacity, wiring and panel upgrades. Add the qualification: the evidence supports a narrower or weaker statement. Suggestion: The writer says the narration carries it: s14 says these are wholesale prices; s13 and s16 carry the installed cost.
+- **warning** s16 overgeneralization (review): Table t5 caption (and the t1/s15 phrasing it echoes) says the heat pump and air conditioner are "of the same size". The Minnesota report lines 1360-1391 give $5,550 (9.5 HSPF / 19 SEER heat pump) and $5,180 (19 SEER air conditioner) with no capacity or size; only the efficiency (SEER) matches. The figures are correct, but t5 is left unapproved until the caption says "equally efficient" (as s16 does) instead of "of the same size". Suggestion: Caption: Installed cost of an efficient heat pump and an equally efficient central air conditioner, from the NREL cost database as quoted in a Minnesota cold-climate report.
 - **warning** s16 (s16.a) needs-qualification (deterministic): Wilson 2024 (NREL and LBNL), heat pumps for all?: Wholesale heat pumps cost only $200-$500 more than equivalent ACs, but heat pumps sized to fully electrify heating often cost more to install than AC plus furnace because of larger capacity, wiring and panel upgrades. Edwards 2024, inequities in heat pump bill savings: Edwards' national installed-cost medians put a heat pump at $6,185 against $4,684 for a central AC of the same 36,000 BTU/h size, so it adds heating for about $1,500 (roughly 30%) more, which is modest but not trivial. Add the qualification: the evidence supports a narrower or weaker statement. Suggestion: The writer says the narration carries it: The qualification callout after s17 gives the higher median premium in a later study and the whole-home sizing cost.
 - **warning** s17 (s17.a) needs-qualification (deterministic): Contradicted by CEE 2017, cold-climate heat pumps in Minnesota: NREL cost database: heat pump $2,994 base / $5,550 efficient versus central AC $3,164 / $5,180; the report says heat pumps cost very similar to split AC of the same SEER. Present the disagreement: name the studies on each side instead of stating one side as fact. Suggestion: Say where the narration carries this limitation (qualifications), or narrow the sentence.
 - **warning** s18 (s18.a) needs-qualification (deterministic): Wilson 2024 (NREL and LBNL), heat pumps for all?: Wholesale heat pumps cost only $200-$500 more than equivalent ACs, but heat pumps sized to fully electrify heating often cost more to install than AC plus furnace because of larger capacity, wiring and panel upgrades. Add the qualification: the evidence supports a narrower or weaker statement. Suggestion: The writer says the narration carries it: This callout is the qualification: wholesale and one database against a later study's medians and whole-home sizing.
@@ -133,7 +135,8 @@ Start by naming the system you would install if the heat pump were off the table
 - **warning** s27 (s27.c) needs-qualification (deterministic): Wilson 2024 (NREL and LBNL), heat pumps for all?: Wholesale heat pumps cost only $200-$500 more than equivalent ACs, but heat pumps sized to fully electrify heating often cost more to install than AC plus furnace because of larger capacity, wiring and panel upgrades. Add the qualification: the evidence supports a narrower or weaker statement. Suggestion: Say where the narration carries this limitation (qualifications), or narrow the sentence.
 - **warning** s34 (s34.a) needs-qualification (deterministic): Context only, DOE 2026, Program Notice 26-2 on electric home rebates (wrong): a population base rate cannot rule out an individual outcome the sentence only says is possible. Context only, National Housing Trust 2026, state rebate tracker (wrong): a population base rate cannot rule out an individual outcome the sentence only says is possible. The strongest support is weak (0.4); say "one study suggests" or find stronger evidence. Suggestion: The writer says the narration carries it: This callout is the qualification: an estimate of reach, not a count of claims.
 - **warning** s39 (s39.a) needs-qualification (deterministic): Less 2021 (LBNL), cost of decarbonization retrofits: LBNL: 71% of projects got rebates, with a median of $1,327 (21% of gross cost, mean 30%); electrification programs such as MA DOER Home MVP gave higher shares (37%), so rebates covered a meaningful but usually minority share. Add the qualification: the evidence supports a narrower or weaker statement. Suggestion: The writer says the narration carries it: s40 and the unresolved callout after s41 say this is a single program.
-- **warning** s40 (s40.a) needs-qualification (deterministic): Less 2021 (LBNL), cost of decarbonization retrofits: LBNL: 71% of projects got rebates, with a median of $1,327 (21% of gross cost, mean 30%); electrification programs such as MA DOER Home MVP gave higher shares (37%), so rebates covered a meaningful but usually minority share. Add the qualification: the evidence supports a narrower or weaker statement. Suggestion: The writer says the narration carries it: The sentence says these are whole projects in that database, not heat pumps alone, and calls Mass Save one program.
+- **warning** s40 (s40.a) needs-qualification (deterministic): Less 2021 (LBNL), cost of decarbonization retrofits: LBNL: 71% of projects got rebates, with a median of $1,327 (21% of gross cost, mean 30%); electrification programs such as MA DOER Home MVP gave higher shares (37%), so rebates covered a meaningful but usually minority share. Add the qualification: the evidence supports a narrower or weaker statement. Suggestion: The writer says the narration carries it: The sentence says these are home retrofit projects of every kind in that database, not heat pumps alone, and calls Mass Save one program.
+- **warning** s40 (s40.b) needs-qualification (deterministic): Less 2021 (LBNL), cost of decarbonization retrofits: LBNL: 71% of projects got rebates, with a median of $1,327 (21% of gross cost, mean 30%); electrification programs such as MA DOER Home MVP gave higher shares (37%), so rebates covered a meaningful but usually minority share. Add the qualification: the evidence supports a narrower or weaker statement. Suggestion: Say where the narration carries this limitation (qualifications), or narrow the sentence.
 - **warning** s41 (s41.a) needs-qualification (deterministic): Canadian Climate Institute 2023, heat pumps pay off: In Canada heat pumps still cost more upfront despite rebates meant to lower capital costs, though some programs cover the full cost for low-income households. "always" is stronger than the evidence (strongest support 0). Add the qualification: the evidence supports a narrower or weaker statement. Suggestion: Say where the narration carries this limitation (qualifications), or narrow the sentence.
 - **warning** s42 (s42.a) needs-qualification (deterministic): Less 2021 (LBNL), cost of decarbonization retrofits: LBNL: 71% of projects got rebates, with a median of $1,327 (21% of gross cost, mean 30%); electrification programs such as MA DOER Home MVP gave higher shares (37%), so rebates covered a meaningful but usually minority share. Add the qualification: the evidence supports a narrower or weaker statement. Suggestion: The writer says the narration carries it: s33 says this is one program and gives the typical share.
 - **warning** s42 (s42.b) needs-qualification (deterministic): Less 2021 (LBNL), cost of decarbonization retrofits: LBNL: 71% of projects got rebates, with a median of $1,327 (21% of gross cost, mean 30%); electrification programs such as MA DOER Home MVP gave higher shares (37%), so rebates covered a meaningful but usually minority share. Add the qualification: the evidence supports a narrower or weaker statement. Suggestion: The writer says the narration carries it: s32 gives the generous exception; "usually" is the median from s33.
@@ -164,13 +167,12 @@ Start by naming the system you would install if the heat pump were off the table
 - **info** s31 (s31.b) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s32 (s32.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s33 (s33.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
-- **info** s35 (s35.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
-- **info** s36 (s36.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
-- **info** s47 (s47.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s37 (s37.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s37 (s37.b) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s38 (s38.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
+- **info** s35 (s35.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
+- **info** s36 (s36.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
+- **info** s47 (s47.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s41 (s41.a) missing-qualification (review): The verdict note for this passage adds that some Canadian programs cover the full cost for low-income households; that exception sits in Table 2 (L2040), outside the cited lines, so the writer cannot cite it. The sentence matches its passage and is approved; a person may add the passage if the exception should be said. Suggestion: None needed for this revision.
-- **info** s44 (s44.b) missing-qualification (review): DOE's change dates from 29 May 2026 and North Carolina had to implement it by 1 September 2026 (s37, s38), so a heat pump installed early in 2026 could still have been paid for under the old rules. Read as of the article's date the clause is accurate. Approved. Suggestion: Optional: 'for a heat pump installed now'.
 - **info** s44 (s44.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s44 (s44.b) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.

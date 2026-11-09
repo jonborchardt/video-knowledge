@@ -1,6 +1,6 @@
 # Is a heat pump cheaper to run than gas, and does it ever pay for itself? [meta.headline fp=27ced44e97]
 
-Story `decision:is-it-cheaper-to-run-than-gas` (heat-pumps), revision 6. SEO title: Heat pump vs gas furnace: running cost and payback [meta.seoTitle fp=ec4a7112ef]. Validation: **passed**, 0 blocking, 0 warnings, 60/60 assertions verified.
+Story `decision:is-it-cheaper-to-run-than-gas` (heat-pumps), revision 7. SEO title: Heat pump vs gas furnace: running cost and payback [meta.seoTitle fp=ec4a7112ef]. Validation: **passed**, 0 blocking, 0 warnings, 60/60 assertions verified.
 
 > Whether a heat pump heats a home for less than a gas furnace turns on local electricity and gas prices and on the unit you buy; whether it repays its price turns largely on timing, and for a gas home the clearest case is when the furnace and the air conditioner both need replacing. [meta.dek ok fp=585115616d]
 
@@ -16,9 +16,9 @@ Sellers say yes: the British energy supplier Octopus Energy tells customers "it'
 
 Each home has its own break-even number: the price of electricity divided by the price of gas, compared for the same energy content, multiplied by the furnace's efficiency, and a heat pump whose average efficiency over the heating season (its seasonal COP) is above that number heats the home more cheaply. [s06 ok fp=5744194bde] On 2024 national averages the price ratio was 3.45, which put the break-even seasonal COP at 3.28 for a high-efficiency furnace and lower for a less efficient one, as the table shows. [s07 ok fp=ba9ddd62b1]
 
-Table t1: The break-even seasonal COP against a gas furnace at US average prices, 2024 [t1 fp=9345296029]
+Table t1: The break-even seasonal COP against a gas furnace at US average prices, 2024 [t1 fp=06830fd2e8]
 
-| | Value |
+| | Price ratio or seasonal COP |
 |---|---|
 | Electricity-to-gas price ratio, same energy content (US average, 2024) | 3.45 |
 | Break-even seasonal COP against a furnace of AFUE 0.95 (US average, 2024) | 3.28 |
@@ -26,7 +26,7 @@ Table t1: The break-even seasonal COP against a gas furnace at US average prices
 
 State prices move the bar a long way: in 11 states a heat pump with a seasonal COP of 2.5 already beats a 95 percent furnace, while in 30 places, the District of Columbia among them, it needs a seasonal COP of 3.0 or more. [s08 ok fp=a3f385ef53]
 
-Figure decision-is-it-cheaper-to-run-than-gas/sc09: States grouped by the seasonal COP a heat pump needs to beat a high-efficiency gas furnace at annual average prices. [decision-is-it-cheaper-to-run-than-gas/sc09 fp=da72e74f00]
+Figure decision-is-it-cheaper-to-run-than-gas/sc09: Number of states, the District of Columbia counted, in each band of the seasonal COP a heat pump needs to beat a high-efficiency gas furnace. [decision-is-it-cheaper-to-run-than-gas/sc09 fp=ef85e27342]
 
 **qualification (heat-pumps/heat-pump-beats-gas-running-cost):** The bar is the price ratio multiplied by the furnace's efficiency, not the price ratio by itself, and it is built on average prices: it leaves out time-of-use rates and backup resistance heat, and an average gas price includes the fixed monthly charge, which a household that keeps its gas connection goes on paying and one that disconnects saves. [s09 ok fp=90097d2fd1]
 
@@ -45,14 +45,14 @@ Measured use tells a similar story: a large British study of homes that replaced
 
 **qualification (heat-pumps/switching-gas-heat-pump-raises-household):** Switching from gas raises the bill only under some conditions: in the NREL model most gas homes with air conditioning pay more with a minimum-efficiency unit and nearly all pay less with the best units, and in RMI's city models energy costs rose in cold Chicago and Providence but not in Houston and Oakland, where the saving was simply too small to repay the extra equipment cost. [s17 ok fp=40d96050ed]
 
-Table t3: UK homes that replaced a gas boiler with a heat pump: running costs and Cosy tariff savings, in pounds a year [t3 fp=0851385c36]
+Table t3: UK homes that replaced a gas boiler with a heat pump: running costs and Cosy tariff savings, in pounds a year [t3 fp=cdd4c206ee]
 
 | | Pounds a year |
 |---|---|
-| Extra running cost on the standard tariff (UK, 2024) | £190 |
-| Saved by disconnecting from mains gas (UK, 2024) | £100 |
-| Saved on the Cosy time-of-use tariff against the standard tariff (UK study) | £318 |
-| Of which, from shifting use between times of day (UK study) | £240 |
+| Extra cost to run, against a gas boiler, on the standard tariff (UK, 2024) | £190 |
+| Saving from disconnecting from mains gas (UK, 2024) | £100 |
+| Saving on the Cosy time-of-use tariff against the standard tariff (UK study) | £318 |
+| Part of that Cosy saving from shifting use between times of day (UK study) | £240 |
 
 **unresolved (heat-pumps/time-use-heat-pump-electricity-tariffs):** Whether a time-of-use tariff makes a heat pump cheaper to run is not settled in this evidence: in the British study, households that moved to Cosy, Octopus's own time-of-use tariff, saved £318 a year against the supplier's standard tariff, most of it by shifting use into cheaper hours, but that is one supplier's tariff measured against its own flat rate. [s18 ok fp=ea0ca257dd] In RMI's Houston model a tariff alone did not help: a standard heat pump on a free-nights plan cost more than on a flat rate, though a customer on that plan who controlled the heat pump to preheat and precool while power was free saved around $1,000 in net present cost. [s19 ok fp=de063396d7] The NREL authors add that where time-of-use rates are offered, controlling a heat pump to use less power at peak times may improve its bill savings. [s20 ok fp=4ae18987b7]
 
@@ -76,7 +76,7 @@ Deetjen's study, a separate model with its own costs and assumptions, finds that
 
 In Britain the same study as before put the net private cost of swapping a gas boiler for a heat pump at £4,121 over 20 years: the household's share of the purchase after the grant, minus the boiler it no longer has to buy, plus higher running costs, assuming it disconnects from mains gas. [s36 ok fp=a5963bc79b] The authors also valued the Cosy tariff's savings, if they last the full period, at £4,675, which is more than that net cost. [s37 ok fp=0fec354c06]
 
-Timing alone moves payback a long way: a Minnesota study priced a cold-climate heat pump with a propane furnace as backup at $9,450 installed, and with nothing broken that whole price was the extra cost, so the payback ran from 14.5 to 28.8 years depending on the furnace it was compared with. [s38 ok fp=22052efa3b] When the furnace and the air conditioner both needed replacing, the extra cost fell to $370 and the payback to about a year or less (0.6 to 1.1 years), and the table shows the cases in between. [s39 ok fp=2f2b584498]
+Timing alone moves payback a long way: a Minnesota study priced a cold-climate heat pump with a propane furnace as backup at $9,450 installed, and with nothing broken that whole price was the extra cost, so the payback ran from 14.5 to 28.8 years depending on the furnace it was compared with. [s38 ok fp=22052efa3b] Those homes ran on propane, not gas, so the years do not carry over to a gas home. [s40 ok fp=965534980a] When the furnace and the air conditioner both needed replacing, the extra cost fell to $370 and the payback to about a year or less (0.6 to 1.1 years), and the table shows the cases in between. [s39 ok fp=2f2b584498]
 
 Table t4: Extra cost and simple payback of a cold-climate heat pump with a propane furnace backup in Minnesota, by what needed replacing [t4 fp=589309bec2]
 
@@ -87,7 +87,7 @@ Table t4: Extra cost and simple payback of a cold-climate heat pump with a propa
 | Furnace failed (same study) | $5,550 | 16.9 | 8.5 |
 | Furnace and air conditioner both failed (same study) | $370 | 1.1 | 0.6 |
 
-Those homes ran on propane, not gas, so the years do not carry over to a gas home. [s40 ok fp=965534980a] For gas homes, RMI's report finds that in many retrofits a heat pump costs more than new gas equipment, and names as a notable exception the customer who must replace both a furnace and an air conditioner, since one heat pump does both jobs. [s41 ok fp=4b1e35e02f] And Lawrence Berkeley's cost study found the heat pump's price premium over gas equipment disappears once a home is adding cooling as well as heating. [s42 ok fp=d063f3a989]
+For gas homes, RMI's report finds that in many retrofits a heat pump costs more than new gas equipment, and names as a notable exception the customer who must replace both a furnace and an air conditioner, since one heat pump does both jobs. [s41 ok fp=4b1e35e02f] And Lawrence Berkeley's cost study found the heat pump's price premium over gas equipment disappears once a home is adding cooling as well as heating. [s42 ok fp=d063f3a989]
 
 **unresolved (gap 1):** None of these shares is your house's payback: the Edwards model's 19 percent of households that would pay more and 28 percent with no clear change describe a population, not whether a particular home's heat pump repays itself, and the NREL model found bill savings varied more from house to house within one area than from area to area. [s43 ok fp=9c791e41a1]
 
