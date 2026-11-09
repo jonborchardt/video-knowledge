@@ -195,7 +195,7 @@ A section is `{ "name", "heading", "blocks": [...] }`. Three kinds of block:
 - **Figures.** `ref` is `<story-slug>/<scene-id>` of a storyboard scene that has a chart
   (`figuresOf` in `src/modules/article/validation.ts`); anything else blocks. The caption describes the chart and
   carries no figure of its own. `as` (optional, `bar` or `dot-plot`) draws the chart as a comparison; the validator
-  blocks it over mixed units, a ratio or a qualified point, and Writing for the page says when the comparison is
+  blocks it over mixed units, a ratio, a qualified point or a negative value, and Writing for the page says when the comparison is
   honest.
 - A quotation is a sentence whose assertion carries a `quote`, as in a script.
 

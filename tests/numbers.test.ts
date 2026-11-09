@@ -69,6 +69,8 @@ describe('pointText', () => {
     [{ display: '-120', unit: 'usd' }, '-$120'],
     [{ display: 'less than 84', unit: 'usd' }, 'less than $84'],
     [{ display: '$1,000 or less', unit: 'usd' }, '$1,000 or less'],
+    [{ display: '120 to 240', unit: 'usd' }, '$120 to $240'],
+    [{ display: '1.5 million', unit: 'usd' }, '$1.5 million'],
     [{ display: '120', unit: 'gbp' }, '\u00a3120'],
     [{ display: '19.2', unit: 'percent' }, '19.2%'],
     [{ display: 'about 8 to 9', unit: 'percent' }, 'about 8 to 9%'],

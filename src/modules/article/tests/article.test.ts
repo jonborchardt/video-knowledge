@@ -558,6 +558,10 @@ describe('a figure drawn as a comparison (as)', () => {
     });
     expect(why(v)).toEqual([expect.stringContaining('qualifier')]);
   });
+  it('blocks a negative value, which the renderer would draw as no bar at all', () => {
+    const v = check(fig('bar'), { figures: new Set([ref]), figureData: data([pt('a', -120), pt('b', 90)]) });
+    expect(why(v)).toEqual([expect.stringContaining('negative')]);
+  });
 });
 
 describe('previewRelease', () => {

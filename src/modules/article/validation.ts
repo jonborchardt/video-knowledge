@@ -69,6 +69,8 @@ function comparisonProblem(d: FigureData | undefined): string | null {
   if (chart.points[0]?.unit === 'ratio') return 'a ratio is a denominator, not a length to compare';
   const bound = chart.points.find((p) => p.qualifier);
   if (bound) return `"${bound.label}" carries a qualifier (${bound.qualifier}); a bar of a bound reads as a value`;
+  const below = chart.points.find((p) => p.value < 0);
+  if (below) return `"${below.label}" is negative (${below.value}); a comparison draws lengths from zero`;
   return null;
 }
 

@@ -170,14 +170,14 @@ export function unitLabel(unit: Unit): string {
 }
 
 /** A point's display with its unit visible, changed in exactly two cases and otherwise as the passage states it: a
- *  currency with no sign gets its sign before the first digit run; a percent with no sign or word gets `%` after the
+ *  currency with no sign gets its sign before every digit run ("120 to 240" -> "$120 to $240"); a percent with no sign or word gets `%` after the
  *  last digit run. A display with no digit, a count and a ratio are never changed. */
 export function pointText(p: Pick<ChartPoint, 'display' | 'unit'>): string {
   const d = p.display;
   if (!/\d/.test(d)) return d;
   if (p.unit === 'usd' || p.unit === 'gbp') {
     const sign = p.unit === 'usd' ? '$' : '\u00a3';
-    return /[$\u00a3]|dollar|pound/i.test(d) ? d : d.replace(/\d/, (m) => sign + m);
+    return /[$\u00a3]|dollar|pound/i.test(d) ? d : d.replace(/\d[\d,]*(?:\.\d+)?/g, (m) => sign + m);
   }
   if (p.unit === 'percent') return /%|per ?cent/i.test(d) ? d : d.replace(/^(.*\d)/, '$1%');
   return d;
