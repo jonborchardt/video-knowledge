@@ -55,6 +55,7 @@ describe('roleOf and validatorFor', () => {
     expect(roleOf(prompt('extract.md'))).toBe('extraction');
     expect(roleOf(prompt('collect.md'))).toBe('collect');
     expect(roleOf(prompt('draft-review.md'))).toBe('draftReview');
+    expect(roleOf(prompt('page-review.md'))).toBe('reviewer');
     expect(roleOf(prompt('script.md'))).toBe('writer');
   });
   it('names the validator the brief used to run itself', () => {

@@ -22,6 +22,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import {
   ARTICLE_FILES,
+  approvedPageReview,
   articleFingerprint,
   type Article,
   correctArticle,
@@ -155,6 +156,7 @@ function run() {
     case 'lock': {
       const { a, v } = releasable();
       const prev = loadArticleRelease(topic, storyId);
+      if (!prev) approvedPageReview(topic, storyId); // the first release needs the rendered page reviewed at this text
       const r = lockArticle(
         prev,
         a,

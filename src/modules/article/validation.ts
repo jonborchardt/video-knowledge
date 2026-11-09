@@ -14,6 +14,7 @@ import {
   loadArticleRelease,
   articleReviewUnits,
   articleSentences,
+  pageReviewOf,
   proseOf,
 } from './article';
 import {
@@ -305,6 +306,7 @@ export const ARTICLE_FINDINGS = {
   revisionLimit: 'the revision limit is reached with blocking findings',
   blocking: 'the validation has blocking findings',
   unapproved: 'units are not yet approved by the independent review',
+  pageReview: 'the rendered page has no approved review at this text',
   passed: 'validation passed and every unit is approved',
   changed: 'the text differs from the release and passes; it is a correction',
 } as const;
@@ -358,7 +360,25 @@ export function inspectArticle(
       : bad('blocking', [ARTICLE_FINDINGS.blocking]);
   if (live.status === 'passed') {
     if (out && !corrects) return { status: 'ready', code: 'ready', findings: [], output: rel(ARTICLE_FILES.release) };
-    return out ? bad('changed', [ARTICLE_FINDINGS.changed]) : bad('passed', [ARTICLE_FINDINGS.passed]);
+    if (out) return bad('changed', [ARTICLE_FINDINGS.changed]);
+    // the first release waits for the rendered-page review at this text; a defect the writer cannot fix is named apart
+    const page = pageReviewOf(topic, storyId, root);
+    if (!page) return bad('page-review', [ARTICLE_FINDINGS.pageReview]);
+    if ('invalid' in page) return bad('page-review', [`${ARTICLE_FILES.pageReview} is invalid: ${page.invalid}`]);
+    if (page.verdict === 'changes') {
+      const blocking = page.findings.filter((f) => f.severity === 'blocking');
+      const defects = blocking.filter((f) => f.scope !== 'article');
+      if (defects.length)
+        return bad(
+          'page-defect',
+          defects.map((f) => `${f.scope}: ${f.text}`),
+        );
+      return bad(
+        'page-findings',
+        blocking.map((f) => `${f.unit}: ${f.text}`),
+      );
+    }
+    return bad('passed', [ARTICLE_FINDINGS.passed]);
   }
   return bad('unapproved', [ARTICLE_FINDINGS.unapproved]);
 }

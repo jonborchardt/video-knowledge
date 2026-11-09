@@ -973,6 +973,13 @@ function articleOf({
         if (code === 'changed')
           return `npm run article -- correct ${topic} ${storyId} --approved-by "<your name>" --note "<what changed>"`;
         if (code === 'passed') return `npm run article -- lock ${topic} ${storyId} --approved-by "<approver>"`;
+        // The rendered page: photographed, then judged by a fresh reviewer; its article findings are the writer's, a
+        // renderer or editorial defect stops the loop for a person (a text revision cannot fix it).
+        if (code === 'page-review')
+          return `npm run article -- frames ${topic} ${storyId}, then agent: src/modules/article/briefs/page-review.md -> ${r(ARTICLE_FILES.pageReview)}`;
+        if (code === 'page-findings') return writer;
+        if (code === 'page-defect')
+          return `stop: the page review found a defect the writer cannot fix: ${f}; fix it, then npm run article -- frames ${topic} ${storyId} and a fresh page-review.md agent`;
         // A review of this package that holds every unapproved unit on findings is the writer's to answer; any other
         // unapproved unit (an edit beside a held sentence, a new headline) is the reviewer's, whatever the revision.
         return reviewHeld({ p, pkgFp: readJson<EvidencePackage>(p(FILES.pkg))?.fingerprint, live, text })
@@ -1021,6 +1028,8 @@ function articleView(c: BoardContext): Production['article'] {
       if (code === 'blocking') return { state: 'blocked', next, ...k('blocking-findings') };
       if (code === 'changed') return { state: 'changed', next };
       if (code === 'passed') return { state: 'review', next, kind: 'lock' };
+      if (code === 'page-review') return { state: 'review', next, ...k('review-pending') };
+      if (code === 'page-findings' || code === 'page-defect') return { state: 'review', next, ...k('review-findings') };
       return {
         state: 'review',
         next,

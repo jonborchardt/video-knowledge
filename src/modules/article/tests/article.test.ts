@@ -14,6 +14,8 @@ import {
   correctArticle,
   lockArticle,
   previewRelease,
+  approvedPageReview,
+  pageReviewOf,
   reaffirmArticle,
   releaseFigures,
   renderArticleMd,
@@ -598,4 +600,50 @@ describe('previewRelease', () => {
     expect(r.article.meta.headline).toBe(a.meta.headline);
   });
   const a0 = () => article();
+});
+
+describe('the page review gate', () => {
+  const S = 'decision:mlm-and-seminars';
+  const KEY = articleFingerprint(article());
+  const setup = (review: unknown, indexKey?: string) => {
+    const root = mkdtempSync(join(tmpdir(), 'page-review-'));
+    const dir = scriptDir('demo', S, root);
+    mkdirSync(join(dir, 'page'), { recursive: true });
+    writeFileSync(join(dir, 'article.json'), JSON.stringify(article()));
+    if (indexKey !== undefined)
+      writeFileSync(
+        join(dir, 'page', 'index.json'),
+        JSON.stringify({ key: indexKey, path: '/x/', captured: 'c', tiles: [] }),
+      );
+    if (review) writeFileSync(join(dir, 'page-review.json'), JSON.stringify(review));
+    return root;
+  };
+  const review = (key: string, verdict: string, findings: unknown[] = []) => ({
+    key,
+    verdict,
+    findings,
+    reviewer: 'r',
+    date: 'd',
+  });
+  const blocking = { scope: 'article', unit: 's01', severity: 'blocking', text: 'the unit is missing' };
+  it('refuses without a review, at a stale key, or over tiles of another text', () => {
+    expect(() => approvedPageReview('demo', S, setup(null))).toThrow(/no page review/);
+    expect(() => approvedPageReview('demo', S, setup(review('old', 'approved'), 'old'))).toThrow(/no page review/);
+    expect(() => approvedPageReview('demo', S, setup(review(KEY, 'approved'), 'other'))).toThrow(/tiles/);
+    expect(() => approvedPageReview('demo', S, setup(review(KEY, 'approved')))).toThrow(/tiles/);
+  });
+  it('refuses changes, and never trusts a verdict its findings contradict', () => {
+    expect(() => approvedPageReview('demo', S, setup(review(KEY, 'changes', [blocking]), KEY))).toThrow(/changes/);
+    expect(() => approvedPageReview('demo', S, setup(review(KEY, 'approved', [blocking]), KEY))).toThrow(/blocking/);
+    expect(pageReviewOf('demo', S, setup(review(KEY, 'changes'), KEY))).toMatchObject({
+      invalid: expect.stringContaining('no blocking'),
+    });
+    expect(pageReviewOf('demo', S, setup(review(KEY, 'maybe'), KEY))).toMatchObject({
+      invalid: expect.stringContaining('verdict'),
+    });
+  });
+  it('accepts an approved current review with no blocking finding', () => {
+    const warning = { ...blocking, scope: 'renderer', unit: 'page', severity: 'warning' };
+    expect(approvedPageReview('demo', S, setup(review(KEY, 'approved', [warning]), KEY)).verdict).toBe('approved');
+  });
 });

@@ -27,7 +27,58 @@ export const ARTICLE_FILES = {
   validation: 'article-validation.json',
   md: 'article.md',
   release: 'article-release.json',
+  pageReview: 'page-review.json', // the rendered-page reviewer's verdict, keyed by the article fingerprint
+  pageIndex: 'page/index.json', // what `frames` photographed: the same key, or the review counts for nothing
 } as const;
+
+/** One finding of the rendered-page review. `scope` says who can act: the writer (`article`, a unit id), an
+ *  engineer (`renderer`, a shared component) or an editor (`matter`, the page around the article). */
+export interface PageFinding {
+  scope: 'article' | 'renderer' | 'matter';
+  unit: string; // a sentence, table, figure or heading id, or `page`
+  severity: 'blocking' | 'warning' | 'info';
+  text: string;
+  where?: { width: number; theme: 'light' | 'dark'; tile: number };
+}
+export interface PageReview {
+  key: string;
+  verdict: 'approved' | 'changes';
+  findings: PageFinding[];
+  reviewer: string;
+  date: string;
+}
+
+/** The page review that counts for the current article.json: one whose key, the tiles' key and the article's
+ *  fingerprint agree. Null when there is none at this text; `{ invalid }` when the file contradicts itself (an
+ *  approval with a blocking finding, a `changes` without one, an unknown verdict or scope): the reviewer's say-so is
+ *  never trusted over its own findings. */
+export function pageReviewOf(topic: string, storyId: string, root = ROOT): PageReview | { invalid: string } | null {
+  const dir = scriptDir(topic, storyId, root);
+  const a = readJson<Article>(join(dir, ARTICLE_FILES.article));
+  const r = readJson<PageReview>(join(dir, ARTICLE_FILES.pageReview));
+  if (!a || !r || r.key !== articleFingerprint(a)) return null;
+  const index = readJson<{ key: string }>(join(dir, ARTICLE_FILES.pageIndex));
+  if (index?.key !== r.key) return { invalid: `the tiles under page/ are of ${index?.key ?? 'no text'}, not this one` };
+  if (r.verdict !== 'approved' && r.verdict !== 'changes') return { invalid: `verdict ${JSON.stringify(r.verdict)}` };
+  if (!Array.isArray(r.findings)) return { invalid: 'findings is not a list' };
+  const bad = r.findings.find((f) => !['article', 'renderer', 'matter'].includes(f.scope));
+  if (bad) return { invalid: `finding on ${bad.unit} has scope ${JSON.stringify(bad.scope)}` };
+  const blocking = r.findings.filter((f) => f.severity === 'blocking');
+  if (r.verdict === 'approved' && blocking.length)
+    return { invalid: `approved with ${blocking.length} blocking finding(s): ${blocking[0].unit}` };
+  if (r.verdict === 'changes' && !blocking.length) return { invalid: 'changes with no blocking finding' };
+  return r;
+}
+
+/** The approved page review the lock needs, or a refusal saying what is missing. */
+export function approvedPageReview(topic: string, storyId: string, root = ROOT): PageReview {
+  const r = pageReviewOf(topic, storyId, root);
+  const how = `run npm run article -- frames ${topic} ${storyId}, then a fresh src/modules/article/briefs/page-review.md agent`;
+  if (!r) throw new Refusal(`no page review approved at this text: ${how}`);
+  if ('invalid' in r) throw new Refusal(`${ARTICLE_FILES.pageReview} is invalid (${r.invalid}): ${how}`);
+  if (r.verdict !== 'approved') throw new Refusal(`the page review asks for changes: the writer revises, then ${how}`);
+  return r;
+}
 
 export type Callout = 'qualification' | 'unresolved';
 export type Block =

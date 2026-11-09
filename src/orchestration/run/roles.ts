@@ -58,6 +58,7 @@ export function grantFor(role: AgentRole, s: Subject): RoleGrant {
           ? [
               'script-review.json',
               'article-review.json',
+              'page-review.json',
               'shorts-review.json',
               'video/visual-review.json',
               'video/draft-review.json',

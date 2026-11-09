@@ -705,6 +705,28 @@ describe('the article on the board', () => {
         ]),
         findings: [],
       });
+      // a passing, text-reviewed article asks for the rendered-page review: frames, then a fresh reviewer
+      const pageReviewNext = `npm run article -- frames ${fx.topic} ${fx.story}, then agent: src/modules/article/briefs/page-review.md -> ${relative(fx.root, join(fx.dir, 'page-review.json')).replaceAll(sep, '/')}`;
+      expect(articleState(fx)).toEqual({ state: 'review', next: pageReviewNext, kind: 'review-pending' });
+      expect(stepsOf(pageReviewNext, fx.topic, fx.story).map((s) => s.kind)).toEqual(['run', 'prompt']);
+      const page = (verdict: string, findings: unknown[]) => {
+        mkdirSync(join(fx.dir, 'page'), { recursive: true });
+        write(fx, 'page/index.json', { key: articleFingerprint(a), path: '/p/', captured: 'c', tiles: [] });
+        write(fx, 'page-review.json', { key: articleFingerprint(a), verdict, findings, reviewer: 'r', date: 'd' });
+      };
+      // a blocking renderer or editorial finding is not the writer's: the loop stops for a person
+      page('changes', [{ scope: 'renderer', unit: 'page', severity: 'blocking', text: 'a value is clipped at 375' }]);
+      const defect = articleState(fx)!;
+      expect(defect.kind).toBe('review-findings');
+      expect(defect.next).toMatch(/^stop: /);
+      expect(defect.next).toContain('a value is clipped at 375');
+      // a blocking article finding goes back to the writer
+      page('changes', [{ scope: 'article', unit: 's01', severity: 'blocking', text: 'the unit is missing' }]);
+      expect(articleState(fx)).toMatchObject({
+        kind: 'review-findings',
+        next: expect.stringContaining('article.md (revise)'),
+      });
+      page('approved', []);
       expect(articleState(fx)).toEqual({
         state: 'review',
         next: `npm run article -- lock ${fx.topic} ${fx.story} --approved-by "<approver>"`,

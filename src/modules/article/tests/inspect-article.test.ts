@@ -1,4 +1,4 @@
-import { writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { articleFingerprint, type Article, type ArticleRelease } from '../article';
@@ -52,6 +52,30 @@ describe('inspectArticle', () => {
       });
       expect(at(verdict('blocked', true)).code).toBe('revision-limit');
       expect(at(verdict('needs-review')).code).toBe('unapproved');
+      // a passing text waits for the rendered-page review, keyed by its fingerprint and the tiles the reviewer saw
+      expect(at(verdict('passed'))).toMatchObject({ code: 'page-review', findings: [ARTICLE_FINDINGS.pageReview] });
+      const key = articleFingerprint(a);
+      const page = (verdict: string, findings: unknown[]) => {
+        mkdirSync(join(fx.dir, 'page'), { recursive: true });
+        write(fx, 'page/index.json', { key, path: '/p/', captured: 'c', tiles: [] });
+        write(fx, 'page-review.json', { key, verdict, findings, reviewer: 'r', date: 'd' });
+      };
+      page('changes', [{ scope: 'article', unit: 's01', severity: 'blocking', text: 'the unit is missing' }]);
+      expect(at(verdict('passed'))).toMatchObject({ code: 'page-findings', findings: ['s01: the unit is missing'] });
+      page('changes', [
+        { scope: 'article', unit: 's01', severity: 'blocking', text: 'the unit is missing' },
+        { scope: 'renderer', unit: 'page', severity: 'blocking', text: 'a value is clipped at 375' },
+      ]);
+      expect(at(verdict('passed'))).toMatchObject({
+        code: 'page-defect',
+        findings: ['renderer: a value is clipped at 375'],
+      });
+      page('approved', [{ scope: 'article', unit: 's01', severity: 'blocking', text: 'contradiction' }]);
+      expect(at(verdict('passed'))).toMatchObject({
+        code: 'page-review',
+        findings: [expect.stringContaining('blocking')],
+      });
+      page('approved', []);
       expect(at(verdict('passed')).code).toBe('passed');
       expect(Object.keys(none)).not.toContain('kind');
 

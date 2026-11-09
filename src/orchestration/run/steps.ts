@@ -127,6 +127,7 @@ export function roleOf(step: Step): AgentRole {
     [
       'script-review.md',
       'article-review.md',
+      'page-review.md',
       'visual-review.md',
       'stories.md',
       'shorts-review.md',
