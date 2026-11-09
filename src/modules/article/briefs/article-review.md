@@ -69,7 +69,9 @@ When the fix needs a passage the package does not have, say so in the finding. O
   population and year are the passage's, that the cells in one column measure the same thing on the same
   baseline, and that the caption claims no more than the cells. A finding goes on the first sentence of the
   section that holds the table, or on the nearest sentence when that section has no prose, naming the table id.
-- **Figures.** The caption describes the storyboard chart it names and adds no figure.
+- **Figures.** The caption describes the storyboard chart it names and adds no figure. A figure with `as` draws the
+  points as a comparison: judge whether they measure the same thing on the same baseline for the same population
+  and period; a comparison the passages do not support is a blocking `incompatible-comparison` on the figure's unit.
 - **Chains.** When the package has `questions`: each question section answers its own question with its own
   claims, and the `close` answers nothing again.
 - **Repetition and the narration.** Read the article end to end once before judging sentences. A restatement

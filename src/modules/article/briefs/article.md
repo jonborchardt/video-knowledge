@@ -60,6 +60,36 @@ The video is heard once, in order; the article is scanned, searched and quoted. 
   and pointed back to in words after that.
 - **No URL anywhere** (prose, headings, captions, headline): sources are linked from cites when the page renders.
 
+## Writing for the page
+
+The article is read on a matter page under the answer and the video, above the claims and the exhibits. Write so a
+reader who scrolls gets the argument from the headings, the tables and the callouts alone, and the prose adds the
+meaning.
+
+- **Progression.** The hook says why the question matters and where the answer lands; each question section opens
+  with the belief and ends with what the evidence settles; the close says what a reader can do. Nothing is said
+  twice: a figure appears once, where it is first needed, and is pointed back to in words after that.
+- **Prose, table, callout or figure.** A sentence carries the one or two figures that make the point; a table
+  carries a set of figures a reader will compare, with its unit in the column header or the cells' `display`; a
+  callout carries a condition the verdict puts on a claim, beside the figure it limits; a figure carries a
+  comparison a reader should see at a glance. A table and a figure never carry the same points.
+- **Figures.** A storyboard chart was drawn for a video frame. Stat tiles show magnitudes; when the point of the
+  figure is that one value is bigger than another, draw it as a comparison with `"as": "bar"` (or `"dot-plot"`).
+  The validator allows it over points that share one unit, with no ratio and no qualifier; you judge the rest: the
+  points must measure the same thing, for the same population and period, on the same baseline. Two studies'
+  figures on different baselines, a modelled figure beside a metered one, or a share beside a count are a table
+  with a row label each, never a comparison. The points, their cites and their displays stay the storyboard's.
+- **Captions.** A caption says what the figure shows and how to read it (what the bars are, over whom, in what
+  period, what the figure does not show), in one or two sentences. It never repeats the sentence beside it and
+  carries no figure of its own.
+- **Data.** Every figure a reader sees carries its unit, in the column header or the display; precision is the
+  passage's, never finer; a qualifier (`about`, `lt`) stays in the `display`. A row label names the population
+  and year.
+- **Sources.** Source marks number the article's sources in order of first use; the exhibits below the article
+  are the inquiry's numbering. Say "the national laboratory's database" in prose and let the mark carry the cite.
+- **Length.** A section is as long as its evidence needs. A paragraph that restates the table, or a table a
+  paragraph already gave in full, goes.
+
 ## Sections
 
 The section names are the script's, from the package: `hook`, `setup`, `investigation`, `answer`, `takeaway`;
@@ -164,7 +194,9 @@ A section is `{ "name", "heading", "blocks": [...] }`. Three kinds of block:
   COP go under `count`.
 - **Figures.** `ref` is `<story-slug>/<scene-id>` of a storyboard scene that has a chart
   (`figuresOf` in `src/modules/article/validation.ts`); anything else blocks. The caption describes the chart and
-  carries no figure of its own.
+  carries no figure of its own. `as` (optional, `bar` or `dot-plot`) draws the chart as a comparison; the validator
+  blocks it over mixed units, a ratio or a qualified point, and Writing for the page says when the comparison is
+  honest.
 - A quotation is a sentence whose assertion carries a `quote`, as in a script.
 
 ## The file
@@ -214,7 +246,9 @@ included, and the reviewer's suggestions. The headline, SEO title, each heading,
 
 ## Revising
 
-After review, read `npm run article -- show` and `article-validation.json` (open issues, by sentence). For each
+After review, read `npm run article -- show` and `article-validation.json` (open issues, by sentence), and
+`page-review.json` when it exists: its `article` findings name your units (a sentence, a table, a figure, a heading)
+and what a reader of the rendered page met. For each
 blocking finding: remove the assertion, narrow or qualify it, rewrite it as attributed, say the evidence is
 insufficient, or record that it needs research. Change only what the findings touch; bump `revision`; keep ids.
 A changed sentence loses its approval and is reviewed again. A pass has three revisions (`MAX_REVISIONS`) to
