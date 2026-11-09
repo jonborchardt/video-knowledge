@@ -253,3 +253,24 @@ describe('table units', () => {
     expect(t.kind === 'table' && t.rows.map((r) => r.cells[0])).toEqual(['$6,185', '12%']);
   });
 });
+
+describe('a figure with as', () => {
+  it('draws the storyboard points with the asked type and keeps everything else', () => {
+    const ref = 'decision-mlm-and-seminars/sc09';
+    const points = [{ label: 'a', value: 1, unit: 'usd' as const, display: '1', cite: A }];
+    const r = release({
+      article: article({
+        sections: [{ name: 'answer', heading: 'H', blocks: [{ kind: 'figure', ref, caption: 'c', as: 'bar' }] }],
+      }),
+    });
+    const v = articleView(
+      r,
+      topic,
+      empty,
+      REPO,
+      new Map([[ref, { chart: { type: 'stat-tiles', points }, source: 's' }]]),
+    );
+    const b = v.sections[0].blocks[0];
+    expect(b.kind === 'figure' && b.draw?.chart).toEqual({ type: 'bar', points });
+  });
+});

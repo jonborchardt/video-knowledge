@@ -33,7 +33,7 @@ import { dataRef, findingLabel, loadDatasets } from '../evidence';
 import { readJson, ROOT, FILES, scriptDir, storySlug } from '../../shared/io';
 import { norm, revisionsInPass, sentenceFingerprint, sentences } from '../../shared/sentences';
 import { type ValidateOptions, validateScript } from '../../shared/sentence-validation';
-import { pointProblems } from '../storyboard';
+import { datasetChart, pointProblems } from '../storyboard';
 import { articleStale } from './view';
 import { loadPublicRecord } from '../../shared/public-record';
 import type { Inspection } from '../../shared/inspect';
@@ -53,11 +53,26 @@ const grams = (text: string) => {
   return Array.from({ length: Math.max(w.length - OVERLAP.n + 1, 0) }, (_, i) => w.slice(i, i + OVERLAP.n).join(' '));
 };
 
+/** Why a figure's points cannot be drawn as a comparison: the deterministic half (one unit, no ratio, no bound). Whether
+ *  the points measure the same thing on the same baseline is the writer's and the reviewers' judgment. */
+function comparisonProblem(d: FigureData | undefined): string | null {
+  if (!d) return null; // the ref check speaks, or the caller gave no chart data
+  const chart = 'chart' in d ? d.chart : datasetChart(d.table);
+  if (!chart) return 'the dataset has no single column of one unit to compare';
+  if (!['stat-tiles', 'table', 'waffle', 'bar'].includes(chart.type)) return `a ${chart.type} is already a comparison`;
+  const units = new Set(chart.points.map((p) => p.unit));
+  if (units.size !== 1) return `the points mix units (${[...units].join(', ')}); a comparison needs one`;
+  if (chart.points[0]?.unit === 'ratio') return 'a ratio is a denominator, not a length to compare';
+  const bound = chart.points.find((p) => p.qualifier);
+  if (bound) return `"${bound.label}" carries a qualifier (${bound.qualifier}); a bar of a bound reads as a value`;
+  return null;
+}
+
 export function articleIssues(
   a: Article,
   pkg: EvidencePackage,
   read: PassageReader,
-  opts: { script: Script | null; figures: Set<string> },
+  opts: { script: Script | null; figures: Set<string>; figureData?: Map<string, FigureData> },
 ): Issue[] {
   const out: Issue[] = [];
   const all = articleSentences(a);
@@ -145,6 +160,10 @@ export function articleIssues(
             );
     if (b.kind === 'figure' && !opts.figures.has(b.ref))
       out.push(issue(b.ref, 'figure', 'blocking', `figure ${b.ref} is not a chart this story has`));
+    else if (b.kind === 'figure' && b.as) {
+      const why = comparisonProblem(opts.figureData?.get(b.ref));
+      if (why) out.push(issue(b.ref, 'figure', 'blocking', `figure ${b.ref} as ${b.as}: ${why}`));
+    }
   }
 
   // Prose that reads the narration back: keyed on the section's first sentence, so a reviewer can disposition it.
@@ -180,7 +199,12 @@ export function validateArticle(
   a: Article,
   t: Corpus,
   read: PassageReader,
-  opts: ValidateOptions & { pkg: EvidencePackage; script: Script | null; figures: Set<string> },
+  opts: ValidateOptions & {
+    pkg: EvidencePackage;
+    script: Script | null;
+    figures: Set<string>;
+    figureData?: Map<string, FigureData>;
+  },
 ): ScriptValidation {
   const script = articleAsScript(a);
   const v = validateScript(script, t, read, { ...opts, pacing: false, duration: false });
@@ -248,11 +272,13 @@ export function validateArticleIn(
   root = ROOT,
 ): ScriptValidation {
   const p = (f: string) => join(scriptDir(topic, storyId, root), f);
+  const data = figureData(topic, storyId, root);
   return validateArticle(a, t, read, {
     ...opts,
     review: readJson<ScriptReviewFile>(p(ARTICLE_FILES.review)),
     previous: readJson<ScriptValidation>(p(ARTICLE_FILES.validation)),
-    figures: figuresOf(topic, storyId, root),
+    figures: new Set(data.keys()),
+    figureData: data,
   });
 }
 

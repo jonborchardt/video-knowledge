@@ -39,7 +39,9 @@ export type Block =
       columns: string[];
       rows: { label: string; cells: ChartPoint[] }[];
     }
-  | { kind: 'figure'; ref: string; caption: string };
+  // `as` draws the storyboard's cited points as a comparison instead of the scene's own form; the validator allows it
+  // only over points that share one unit, with no ratio and no qualifier, and the release keeps the storyboard's chart
+  | { kind: 'figure'; ref: string; caption: string; as?: 'bar' | 'dot-plot' };
 
 export interface ArticleSection {
   name: SectionName;

@@ -527,3 +527,33 @@ describe('article release', () => {
     expect(md).toContain('## Open issues');
   });
 });
+
+describe('a figure drawn as a comparison (as)', () => {
+  const ref = 'x/sc01';
+  const pt = (label: string, value: number, unit = 'usd', extra: Record<string, unknown> = {}) =>
+    ({ label, value, unit, display: String(value), cite: DOC_D, ...extra }) as ChartSpec['points'][number];
+  const data = (points: ChartSpec['points'], type: ChartSpec['type'] = 'stat-tiles') =>
+    new Map<string, FigureData>([[ref, { chart: { type, points } }]]);
+  const fig = (as: 'bar' | 'dot-plot') => withBlock({ kind: 'figure', ref, caption: 'c', as } as Block);
+  const why = (v: ReturnType<typeof check>) =>
+    v.issues.filter((i) => i.category === 'figure').map((i) => i.explanation);
+  it('passes over tiles whose points share one unit with no qualifier', () => {
+    const v = check(fig('bar'), { figures: new Set([ref]), figureData: data([pt('a', 1), pt('b', 2)]) });
+    expect(why(v)).toEqual([]);
+  });
+  it('blocks mixed units', () => {
+    const v = check(fig('bar'), { figures: new Set([ref]), figureData: data([pt('a', 1), pt('b', 2, 'percent')]) });
+    expect(why(v)).toEqual([expect.stringContaining('unit')]);
+  });
+  it('blocks a ratio', () => {
+    const v = check(fig('dot-plot'), { figures: new Set([ref]), figureData: data([pt('a', 238, 'ratio')]) });
+    expect(why(v)).toEqual([expect.stringContaining('ratio')]);
+  });
+  it('blocks a qualified point, whose bar would read as a value', () => {
+    const v = check(fig('bar'), {
+      figures: new Set([ref]),
+      figureData: data([pt('a', 84, 'usd', { qualifier: 'lt' }), pt('b', 90)]),
+    });
+    expect(why(v)).toEqual([expect.stringContaining('qualifier')]);
+  });
+});

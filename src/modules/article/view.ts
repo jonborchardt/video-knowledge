@@ -155,7 +155,9 @@ export function articleView(
             })),
           };
         }
-        const draw = figures?.get(b.ref);
+        // `as` changes the drawing only: the points, cites and displays stay the storyboard's
+        const d = figures?.get(b.ref);
+        const draw = d && b.as && d.chart ? { ...d, chart: { ...d.chart, type: b.as } } : d;
         return { kind: 'figure', ref: b.ref, caption: b.caption, ...(draw && { draw }) };
       }),
     })),
