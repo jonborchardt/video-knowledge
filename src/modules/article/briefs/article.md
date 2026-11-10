@@ -89,6 +89,12 @@ meaning.
   are the inquiry's numbering. Say "the national laboratory's database" in prose and let the mark carry the cite.
 - **Length.** A section is as long as its evidence needs. A paragraph that restates the table, or a table a
   paragraph already gave in full, goes.
+- **Exemplar.** Before writing, read the released article in
+  `topics/heat-pumps/scripts/decision-is-it-cheaper-to-run-than-gas/` (`article.md` as a reader sees it,
+  `article.json` for how it is built). Study its decisions, not its subject, length or chart types: each question
+  section opens on the belief, gives the mechanism before the figures, puts the set of figures in a table and the one
+  comparison in a figure, states each condition in a callout beside the figure it limits, and ends on a sentence that
+  answers the question with its condition and hands over to the next.
 
 ## Sections
 
