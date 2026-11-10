@@ -95,11 +95,11 @@ describe('matterModel preview of an unreleased article', () => {
     const { root, t, s } = setup({ status: 'passed', revision: 1, issues: [], date: '2026-11-08' });
     const m = matterModel(t, s, [s], { repo: site.repo, preview: true, root });
     expect(m.view?.headline).toBe('Draft headline');
-    expect(m.previewArticle).toBe(true);
+    expect(m.release?.revision).toBe(0);
     expect(m.release?.fingerprints.article).toBeTruthy();
     const built = matterModel(t, s, [s], { repo: site.repo, preview: false, root });
     expect(built.view).toBeNull();
-    expect(built.previewArticle).toBe(false);
+    expect(built.release).toBeNull();
   });
   it('shows nothing of a draft whose validation has not passed', () => {
     const { root, t, s } = setup({ status: 'blocked', revision: 1, issues: [] });

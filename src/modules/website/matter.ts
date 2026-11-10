@@ -50,8 +50,7 @@ export interface MatterModel {
   revised: string | null;
   outputs: ReturnType<typeof storyOutputs>;
   embed: PublicVideo | null; // the live video, else the releasing one
-  release: ArticleRelease | null; // null for a follow-up; in a preview, the validated draft's snapshot when unreleased
-  previewArticle: boolean; // the view is a validated draft, not a release: the dev page marks it, a build never has one
+  release: ArticleRelease | null; // null for a follow-up; in a preview, the validated draft's snapshot (revision 0) when unreleased
   firstArticle: boolean;
   view: ArticleView | null;
   path: string;
@@ -100,7 +99,6 @@ export function matterModel(
     outputs,
     embed: outputs.video ?? outputs.releasing,
     release,
-    previewArticle: !!release && !released,
     firstArticle,
     view,
     path: matterPath(t.name, s),

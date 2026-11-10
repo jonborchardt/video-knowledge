@@ -227,7 +227,6 @@ describe('matterMarkdown', () => {
     answers: [{ id: s.id, question: s.question, text: 'Mostly, except against oil.' }],
     embed: { url: 'https://www.youtube.com/watch?v=vid' } as PublicVideo,
     release: {} as ArticleRelease,
-    previewArticle: false,
     firstArticle: false,
     view,
     path: '/heat-pumps/is-it-cheaper/',

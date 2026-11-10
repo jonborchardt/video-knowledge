@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { hasFigure, nums, pointText, spokenWords, unitLabel, wordsToDigits } from '../src/shared/numbers';
-import type { ChartPoint, Unit } from '../src/shared/types';
+import { hasFigure, nums, pointText, spokenWords, wordsToDigits } from '../src/shared/numbers';
+import type { ChartPoint } from '../src/shared/types';
 
 describe('number words', () => {
   it.each([
@@ -79,13 +79,4 @@ describe('pointText', () => {
     [{ display: '1 in 238', unit: 'ratio' }, '1 in 238'],
     [{ display: '2,298', unit: 'count' }, '2,298'],
   ])('%j -> %s', (p, out) => expect(pointText(p as ChartPoint)).toBe(out));
-  it('unitLabel names the unit a column header shows', () => {
-    expect(['usd', 'gbp', 'percent', 'count', 'ratio'].map((u) => unitLabel(u as Unit))).toEqual([
-      'USD',
-      'GBP',
-      '%',
-      '',
-      '',
-    ]);
-  });
 });

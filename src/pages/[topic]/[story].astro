@@ -70,7 +70,6 @@ const {
   outputs,
   embed,
   release,
-  previewArticle,
   firstArticle,
   view,
   path,
@@ -211,7 +210,7 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
 
   <section id="article" class="grid gap-10">
     {
-      previewArticle && release && (
+      release?.revision === 0 && (
         <p class="dev-only text-sm font-semibold" data-article-preview={release.fingerprints.article}>
           Article preview: validated, not released. `npm run article -- frames` photographs this text for the page
           review.

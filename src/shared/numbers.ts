@@ -3,7 +3,7 @@
 // ponytail: cardinals up to the billions only; ordinals ("third"), fractions ("half", "quarter") and decimals spelled
 // with "point" are left as words, so they can neither pass nor smuggle a figure.
 
-import type { ChartPoint, Unit } from './types';
+import type { ChartPoint } from './types';
 const UNITS: Record<string, number> = {
   zero: 0,
   one: 1,
@@ -162,11 +162,6 @@ export function hasFigure(haystack: string, figure: string): boolean {
   const f = plain.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const after = plain.replace(/\..*$/, '').length >= 4 ? '(?!\\d)' : '(?!\\.?\\d)';
   return new RegExp(`(^|[^\\d.])${f}${after}`).test(hay);
-}
-
-/** What a column header shows for a unit; empty where the display carries its own sense (a count, a ratio). */
-export function unitLabel(unit: Unit): string {
-  return unit === 'usd' ? 'USD' : unit === 'gbp' ? 'GBP' : unit === 'percent' ? '%' : '';
 }
 
 /** A point's display with its unit visible, changed in exactly two cases and otherwise as the passage states it: a

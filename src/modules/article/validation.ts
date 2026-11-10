@@ -300,9 +300,6 @@ export function figureData(topic: string, storyId: string, root = ROOT): Map<str
   ]);
 }
 
-export const figuresOf = (topic: string, storyId: string, root = ROOT): Set<string> =>
-  new Set(figureData(topic, storyId, root).keys());
-
 /** The validated, unreleased article.json as a release-shaped snapshot for the dev preview and the page review:
  *  revision 0, approved by nobody, no history, each figure's data snapshotted as a lock would. Null unless the stored
  *  validation passed for this revision. The site never builds from it; `frames` and the lock validate live. */

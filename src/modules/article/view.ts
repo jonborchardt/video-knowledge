@@ -2,9 +2,9 @@
 // source marks numbered in first-use order, the noted corrections and a revised finding it relies on.
 import { type ArticleRelease, type Callout, articleSentences } from './article';
 import { chartProblems, datasetChart } from '../storyboard';
-import { pointText, unitLabel } from '../../shared/numbers';
+import { pointText } from '../../shared/numbers';
 import { isClaimRevision } from '../../shared/public-record';
-import type { ChartSpec, DataTable, PublicRecord, Revision, Sentence } from '../../shared/types';
+import type { ChartSpec, DataTable, PublicRecord, Revision, Sentence, Unit } from '../../shared/types';
 import type { Topic } from '../evidence';
 import { citeHref, citeLabel, datasetSource } from '../../lib/url';
 
@@ -82,6 +82,8 @@ export function articleStale(r: ArticleRelease, record: PublicRecord): Revision 
   );
 }
 
+const UNIT_LABEL: Partial<Record<Unit, string>> = { usd: 'USD', gbp: 'GBP', percent: '%' };
+
 export function articleView(
   r: ArticleRelease,
   t: Pick<Topic, 'sources' | 'docNames'>,
@@ -142,7 +144,8 @@ export function articleView(
           const shared = b.columns.map((_, i) => {
             const cells = b.rows.map((x) => x.cells[i]).filter((c) => !!c);
             const units = new Set(cells.map((c) => c.unit));
-            const label = units.size === 1 ? unitLabel(cells[0].unit) : '';
+            // what a header shows for a unit; a count or a ratio carries its own sense
+            const label = units.size === 1 ? (UNIT_LABEL[cells[0].unit] ?? '') : '';
             return label && cells.every((c) => pointText(c) !== c.display) ? label : '';
           });
           return {

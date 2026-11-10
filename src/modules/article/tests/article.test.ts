@@ -22,7 +22,7 @@ import {
 import type { ChartSpec, EvidencePackage, Sentence } from '../../../shared/types';
 import { Refusal } from '../../../shared/refusal';
 import { publicRecordProblems, withArticleRevision } from '../../../shared/public-record';
-import { LIMITS, figureData, figuresOf, previewRelease, validateArticle } from '../validation';
+import { LIMITS, figureData, previewRelease, validateArticle } from '../validation';
 import { buildPackage } from '../../script';
 import { scriptDir } from '../../../shared/io';
 import { approveArticle, article } from './article-helpers';
@@ -215,7 +215,7 @@ describe('article validation', () => {
     expect(v.issues.filter((i) => i.category === 'figure').map((i) => i.sentence)).toEqual(['x/sc99']);
     expect(cats(check(a, { figures: new Set(['x/sc99']) }))).not.toContain('figure');
   });
-  it('figureData lists storyboard charts and datasets, and figuresOf is its keys', { timeout: 5000 }, () => {
+  it('figureData lists storyboard charts and datasets', { timeout: 5000 }, () => {
     const root = mkdtempSync(join(tmpdir(), 'figures-'));
     const dir = scriptDir('demo', 'decision:mlm-and-seminars', root);
     mkdirSync(dir, { recursive: true });
@@ -224,14 +224,16 @@ describe('article validation', () => {
       { id: 'sc02', visual: { category: 'typography' } },
     ];
     writeFileSync(join(dir, 'storyboard.json'), JSON.stringify({ scenes }));
-    expect([...figuresOf('demo', 'decision:mlm-and-seminars', root)]).toEqual(['decision-mlm-and-seminars/sc01']);
+    expect([...figureData('demo', 'decision:mlm-and-seminars', root).keys()]).toEqual([
+      'decision-mlm-and-seminars/sc01',
+    ]);
     expect(figureData('demo', 'decision:mlm-and-seminars', root).get('decision-mlm-and-seminars/sc01')).toEqual({
       chart: { type: 'bar', points: [] },
     });
-    expect(figuresOf('demo', 'decision:none', root).size).toBe(0);
+    expect(figureData('demo', 'decision:none', root).size).toBe(0);
     mkdirSync(join(root, 'topics', 'demo', 'data'), { recursive: true });
     writeFileSync(join(root, 'topics', 'demo', 'data', 'prices.json'), JSON.stringify({ id: 'prices' }));
-    expect(figuresOf('demo', 'decision:none', root).has('data:demo/prices')).toBe(true);
+    expect(figureData('demo', 'decision:none', root).has('data:demo/prices')).toBe(true);
   });
   it('an article that repeats the narration warns once per section', () => {
     const a = article();

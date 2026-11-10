@@ -1,7 +1,7 @@
 // npm run article -- <command> <topic> <story-id> [...]
 //   validate <topic> <story-id>      check article.json (+ article-review.json); writes article-validation.json, article.md
 //   show <topic> <story-id>          print article.md
-//   frames <topic> <story-id> [--port <n>]  validate afresh, start the dev server as a child and photograph the matter page
+//   frames <topic> <story-id> [--port <n>]  validate afresh, start the dev server in-process and photograph the matter page
 //                                    as it renders the validated draft (375 and 1280 wide, light and dark, tiles under
 //                                    page/, index.json naming the article fingerprint the page carried) for the page review
 //   lock <topic> <story-id> --approved-by "<name>"                   release the article (article-release.json)
@@ -141,11 +141,7 @@ function run() {
         path: `/${topic}/${storyUrlSlug(s)}/`,
         key: articleFingerprint(a),
         port,
-      }).then(({ dir: out, index }) =>
-        console.log(
-          `wrote ${out}/: ${index.tiles.length} tiles in ${index.tiles.length ? 4 : 0} views, key ${index.key}`,
-        ),
-      );
+      }).then(({ dir: out, index }) => console.log(`wrote ${out}/: ${index.tiles.length} tiles, key ${index.key}`));
     }
     case 'show': {
       if (!existsSync(p(ARTICLE_FILES.md)))
