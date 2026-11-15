@@ -93,6 +93,8 @@ describe('mail ask', () => {
     const a = s.start('ask', 'which one', '--text', 'A or B?', '--poll', '1', '--timeout', '10');
     await until(() => sentOf(s).length === 1);
     await until(() => a.out().includes('ASKED'));
+    // ASKED and the fake's send precede the persisted sentAt; kill only once it is on disk.
+    await until(() => !!questions(s.dir)[0]?.sentAt);
     killTree(a.pid);
     await a.done;
     const [q] = questions(s.dir);
